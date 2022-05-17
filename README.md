@@ -1,2 +1,5 @@
-# upkie_pid_balancer
-PID balancer for wheeled biped robots
+# Upkie's locomotion
+
+* PID balancer
+* Bullet simulation
+* pi3hat spine
