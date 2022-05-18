@@ -64,7 +64,7 @@ bool FloorContact::check_wheel_contacts(const Dictionary& observation) {
     try {
       double velocity = servo(wheel)("velocity");
       double torque = servo(wheel)("torque");
-      wheel_contact.observe(torque, velocity);
+      wheel_contact.observe(torque, velocity, params_.dt);
       if (observation.has("joystick") &&
           observation("joystick").get<bool>("cross_button")) {
         wheel_contact.reset_contact();

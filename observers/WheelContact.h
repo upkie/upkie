@@ -61,9 +61,6 @@ class WheelContact {
     explicit Parameters(const Dictionary& config) { configure(config); }
 
     void configure(const Dictionary& config) {
-      if (config.has("spine_frequency")) {
-        dt = 1.0 / config.get<unsigned>("spine_frequency");
-      }
       if (config.has("wheel_contact")) {
         const Dictionary& module_config = config("wheel_contact");
         liftoff_inertia = module_config.get<double>("liftoff_inertia");
@@ -75,9 +72,6 @@ class WheelContact {
         touchdown_inertia = module_config.get<double>("touchdown_inertia");
       }
     }
-
-    //! Spine timestep, in [s]
-    double dt = std::numeric_limits<double>::quiet_NaN();
 
     /*! Hysteresis value of the apparent inertia that triggers liftoff
      * detection, in [m]² * [kg].
@@ -113,8 +107,10 @@ class WheelContact {
    *
    * \param[in] torque New torque observation.
    * \param[in] velocity New velocity observation.
+   * \param[in] dt Duration in seconds since last observation.
    */
-  void observe(const double torque, const double velocity) noexcept;
+  void observe(const double torque, const double velocity,
+               const double dt) noexcept;
 
   //! Low-pass filtered absolute wheel acceleration, in [rad] / [s]²
   double abs_acceleration() const noexcept { return abs_acceleration_; }
