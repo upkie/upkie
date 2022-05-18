@@ -7,9 +7,9 @@ load("//tools/lint:lint.bzl", "add_lint_tests")
 package(default_visibility = ["//visibility:public"])
 
 cc_library(
-    name = "servo_layout",
+    name = "upkie",
     hdrs = [
-        "servo_layout.h",
+        "upkie.h",
     ],
     deps = [
         "@vulp//actuation:servo_layout",
