@@ -25,7 +25,7 @@
 
 #include "vulp/observation/Observer.h"
 
-namespace robots::upkie::observers {
+namespace upkie_locomotion::observers {
 
 using palimpsest::Dictionary;
 using vulp::observation::Observer;
@@ -144,4 +144,4 @@ class WheelOdometry : public Observer {
   double velocity_;
 };
 
-}  // namespace robots::upkie::observers
+}  // namespace upkie_locomotion::observers

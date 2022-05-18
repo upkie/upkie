@@ -22,7 +22,7 @@
 #include <algorithm>
 #include <limits>
 
-namespace robots::upkie::observers {
+namespace upkie_locomotion::observers {
 
 using palimpsest::Dictionary;
 
@@ -151,4 +151,4 @@ class WheelContact {
   double velocity_;
 };
 
-}  // namespace robots::upkie::observers
+}  // namespace upkie_locomotion::observers

@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-#include "robots/upkie/observers/FloorContact.h"
+#include "upkie_locomotion/observers/FloorContact.h"
 
 #include <palimpsest/KeyError.h>
 
 #include "vulp/utils/low_pass_filter.h"
 
-namespace robots::upkie::observers {
+namespace upkie_locomotion::observers {
 
 using palimpsest::KeyError;
 using vulp::utils::low_pass_filter;
@@ -106,4 +106,4 @@ void FloorContact::write(Dictionary& observation) {
   }
 }
 
-}  // namespace robots::upkie::observers
+}  // namespace upkie_locomotion::observers

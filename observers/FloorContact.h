@@ -23,10 +23,10 @@
 #include <unordered_map>
 #include <vector>
 
-#include "robots/upkie/observers/WheelContact.h"
+#include "upkie_locomotion/observers/WheelContact.h"
 #include "vulp/observation/Observer.h"
 
-namespace robots::upkie::observers {
+namespace upkie_locomotion::observers {
 
 using palimpsest::Dictionary;
 using vulp::observation::Observer;
@@ -128,4 +128,4 @@ class FloorContact : public Observer {
   bool contact_;
 };
 
-}  // namespace robots::upkie::observers
+}  // namespace upkie_locomotion::observers
