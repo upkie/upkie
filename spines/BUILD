@@ -18,6 +18,25 @@ cc_library(
 )
 
 cc_binary(
+    name = "bullet",
+    srcs = [
+        "bullet.cpp",
+    ],
+    data = [
+        "@upkie_description",
+    ],
+    deps = [
+        "//observers",
+        "//spines:upkie",
+        "@vulp//actuation:bullet_interface",
+        "@vulp//observation",
+        "@vulp//observation/sources",
+        "@vulp//spine",
+        "@vulp//utils:datetime_now_string",
+    ],
+)
+
+cc_binary(
     name = "mock",
     srcs = [
         "mock.cpp",
