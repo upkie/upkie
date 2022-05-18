@@ -32,6 +32,11 @@ WheelContact::WheelContact(const Parameters& params)
 
 void WheelContact::observe(const double torque, const double velocity,
                            const double dt) noexcept {
+  if (params_.cutoff_period < 1e-6) {
+    // Observer is not configured, skip observation
+    return;
+  }
+
   const double prev_velocity = velocity_;
   velocity_ = low_pass_filter(velocity_, params_.cutoff_period, velocity, dt);
   const double new_acceleration = (velocity_ - prev_velocity) / dt;
