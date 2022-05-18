@@ -2,6 +2,7 @@
 #
 # Copyright 2022 Stéphane Caron
 
+load("//tools/workspace/pycodestyle:repository.bzl", "pycodestyle_repository")
 load("//tools/workspace/vulp:repository.bzl", "vulp_repository")
 
 def add_default_repositories():
@@ -11,4 +12,5 @@ def add_default_repositories():
 
     This function intended to be loaded and called from a WORKSPACE file.
     """
+    pycodestyle_repository()
     vulp_repository()
