@@ -26,10 +26,26 @@ cc_library(
     hdrs = [
         "FloorContact.h",
       ],
-    srcs = ["FloorContact.cpp"],
+    srcs = [
+        "FloorContact.cpp",
+    ],
     deps = [
         "@vulp//observation:observer",
         ":wheel_contact",
+    ],
+    include_prefix = "upkie_locomotion/observers",
+)
+
+cc_library(
+    name = "wheel_odometry",
+    hdrs = [
+        "WheelOdometry.h",
+    ],
+    srcs = [
+        "WheelOdometry.cpp",
+    ],
+    deps = [
+        "@vulp//observation:observer",
     ],
     include_prefix = "upkie_locomotion/observers",
 )
@@ -39,6 +55,7 @@ cc_library(
     deps = [
         ":floor_contact",
         ":wheel_contact",
+        ":wheel_odometry",
     ],
 )
 
