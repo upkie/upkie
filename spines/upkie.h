@@ -18,6 +18,9 @@
 
 #include <vulp/actuation/ServoLayout.h>
 
+#include <string>
+#include <vector>
+
 namespace upkie_locomotion::spines {
 
 namespace upkie {
