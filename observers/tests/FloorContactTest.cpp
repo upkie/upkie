@@ -31,10 +31,8 @@ class FloorContactTest : public ::testing::Test {
  protected:
   void SetUp() override {
     config_("spine_frequency") = 1000u;
-    config_("wheel_odometry")("signed_radius")("left_wheel") = 0.50;
-    config_("wheel_odometry")("signed_radius")("right_wheel") = -0.50;
 
-    FloorContact::Parameters params(config_);
+    FloorContact::Parameters params;
     floor_contact_ = std::make_unique<FloorContact>(params);
   }
 

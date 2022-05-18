@@ -54,12 +54,6 @@ class WheelContact {
  public:
   //! Observer parameters.
   struct Parameters {
-    /*! Initialize from global configuration.
-     *
-     * \param[in] config Global configuration dictionary.
-     */
-    explicit Parameters(const Dictionary& config) { configure(config); }
-
     void configure(const Dictionary& config) {
       if (config.has("wheel_contact")) {
         const Dictionary& module_config = config("wheel_contact");

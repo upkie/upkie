@@ -35,16 +35,6 @@ using vulp::observation::Observer;
 class FloorContact : public Observer {
  public:
   struct Parameters {
-    /*! Initialize from global configuration.
-     *
-     * \param[in] config Global configuration dictionary.
-     */
-    explicit Parameters(const Dictionary& config)
-        : wheel_contact_params(config) {
-      // TODO(scaron): remove config constructor argument.
-      configure(config);
-    }
-
     /*! Configure from dictionary.
      *
      * \param[in] config Global configuration dictionary.
