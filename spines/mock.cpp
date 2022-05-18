@@ -61,6 +61,9 @@ class CommandLineArguments {
       const auto& arg = args[i];
       if (arg == "-h" || arg == "--help") {
         help = true;
+      } else if (arg == "--spine-cpu") {
+        spine_cpu = std::stol(args.at(++i));
+        spdlog::info("Command line: spine_cpu = {}", spine_cpu);
       } else if (arg == "--spine-frequency") {
         spine_frequency = std::stol(args.at(++i));
         spdlog::info("Command line: spine_frequency = {} Hz", spine_frequency);
