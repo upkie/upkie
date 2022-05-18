@@ -17,4 +17,23 @@ cc_library(
     include_prefix = "upkie_locomotion/spines",
 )
 
+cc_binary(
+    name = "mock",
+    srcs = [
+        "mock.cpp",
+    ],
+    deps = [
+        "//observers",
+        "//spines:upkie",
+        "@vulp//actuation:mock_interface",
+        "@vulp//observation",
+        "@vulp//observation/sources",
+        "@vulp//spine",
+    ] + select({
+        "//:pi32_config": ["@org_llvm_libcxx//:libcxx"],
+        "//:pi64_config": ["@org_llvm_libcxx//:libcxx"],
+        "//conditions:default": [],
+    }),
+)
+
 add_lint_tests(enable_clang_format_lint = True)
