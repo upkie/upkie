@@ -18,11 +18,26 @@ cc_library(
         "@vulp//observation:observer",
         "@vulp//utils:low_pass_filter",
     ],
+    include_prefix = "upkie_locomotion/observers",
+)
+
+cc_library(
+    name = "floor_contact",
+    hdrs = [
+        "FloorContact.h",
+      ],
+    srcs = ["FloorContact.cpp"],
+    deps = [
+        "@vulp//observation:observer",
+        ":wheel_contact",
+    ],
+    include_prefix = "upkie_locomotion/observers",
 )
 
 cc_library(
     name = "observers",
     deps = [
+        ":floor_contact",
         ":wheel_contact",
     ],
 )
