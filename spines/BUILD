@@ -30,8 +30,14 @@ cc_binary(
         "@vulp//observation/sources",
         "@vulp//spine",
     ] + select({
-        "//:pi32_config": ["@org_llvm_libcxx//:libcxx"],
-        "//:pi64_config": ["@org_llvm_libcxx//:libcxx"],
+        "//:pi32_config": [
+            "@org_llvm_libcxx//:libcxx",
+            "@pi3hat//lib/cpp/mjbots/pi3hat:libpi3hat",
+        ],
+        "//:pi64_config": [
+            "@org_llvm_libcxx//:libcxx",
+            "@pi3hat//lib/cpp/mjbots/pi3hat:libpi3hat",
+        ],
         "//conditions:default": [],
     }),
 )

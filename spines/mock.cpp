@@ -81,6 +81,8 @@ class CommandLineArguments {
     std::cout << "Optional arguments:\n\n";
     std::cout << "-h, --help\n"
               << "    Print this help and exit.\n";
+    std::cout << "--spine-cpu <cpuid>\n"
+              << "    CPUID for the spine thread (default: -1).\n";
     std::cout << "--spine-frequency <frequency>\n"
               << "    Spine frequency in Hertz.\n";
     std::cout << "\n";
@@ -92,6 +94,9 @@ class CommandLineArguments {
 
   //! Help flag
   bool help = false;
+
+  //! CPUID for the spine thread (-1 to disable realtime).
+  int spine_cpu = -1;
 
   //! Spine frequency in Hz.
   unsigned spine_frequency = 1000u;
@@ -136,6 +141,7 @@ int main(const char* argv0, const CommandLineArguments& args) {
 
   // Spine
   Spine::Parameters spine_params;
+  spine_params.cpu = args.spine_cpu;
   spine_params.frequency = args.spine_frequency;
   spine_params.log_path = "/dev/shm/spine.mpack";
   Spine spine(spine_params, actuation, observation);
