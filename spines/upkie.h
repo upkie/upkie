@@ -42,7 +42,7 @@ inline const vulp::actuation::ServoLayout servo_layout() noexcept {
  * \return Vector of upper leg joint names.
  */
 inline const std::vector<std::string> upper_leg_joints() noexcept {
-  return { "left_hip", "left_knee", "right_hip", "right_knee" }
+  return {"left_hip", "left_knee", "right_hip", "right_knee"};
 }
 
 /*! Get list of wheel joints.
