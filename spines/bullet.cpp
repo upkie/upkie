@@ -144,7 +144,8 @@ int main(const char* argv0, const CommandLineArguments& args) {
   observation.append_observer(floor_contact);
 
   // Observation: Wheel odometry
-  WheelOdometry::Parameters odometry_params(Dictionary{});
+  WheelOdometry::Parameters odometry_params;
+  odometry_params.dt = 1.0 / args.spine_frequency;
   auto odometry = std::make_shared<WheelOdometry>(odometry_params);
   observation.append_observer(odometry);
 

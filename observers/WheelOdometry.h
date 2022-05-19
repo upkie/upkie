@@ -60,20 +60,11 @@ class WheelOdometry : public Observer {
  public:
   //! Observer parameters.
   struct Parameters {
-    /*! Initialize from global configuration.
-     *
-     * \param[in] config Global configuration dictionary.
-     */
-    explicit Parameters(const Dictionary& config) { configure(config); }
-
     /*! Configure from dictionary.
      *
      * \param[in] config Global configuration dictionary.
      */
     void configure(const Dictionary& config) {
-      if (config.has("spine_frequency")) {
-        dt = 1.0 / config.get<unsigned>("spine_frequency");
-      }
       if (config.has("wheel_odometry") &&
           config("wheel_odometry").has("signed_radius")) {
         const auto& signed_radius_dict =

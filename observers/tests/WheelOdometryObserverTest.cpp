@@ -30,11 +30,12 @@ using palimpsest::KeyError;
 class WheelOdometryTest : public ::testing::Test {
  protected:
   void SetUp() override {
-    config_("spine_frequency") = 1000u;
     config_("wheel_odometry")("signed_radius")("left_wheel") = 0.50;
     config_("wheel_odometry")("signed_radius")("right_wheel") = -0.50;
 
-    WheelOdometry::Parameters params(config_);
+    WheelOdometry::Parameters params;
+    params.dt = 1.0 / 1000u;
+    params.configure(config_);
     odom_ = std::make_unique<WheelOdometry>(params);
   }
 
