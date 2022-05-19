@@ -35,7 +35,7 @@
 #include "upkie_locomotion/observers/WheelOdometry.h"
 #include "upkie_locomotion/spines/upkie.h"
 
-namespace robots::upkie::spine {
+namespace upkie_locomotion::spines::mock {
 
 using palimpsest::Dictionary;
 using upkie_locomotion::observers::FloorContact;
@@ -105,7 +105,7 @@ class CommandLineArguments {
   unsigned spine_frequency = 1000u;
 };
 
-int main(const char* argv0, const CommandLineArguments& args) {
+int main(const CommandLineArguments& args) {
   if (!vulp::utils::lock_memory()) {
     spdlog::error("could not lock process memory to RAM");
     return -4;
@@ -153,15 +153,16 @@ int main(const char* argv0, const CommandLineArguments& args) {
   return EXIT_SUCCESS;
 }
 
-}  // namespace robots::upkie::spine
+}  // namespace upkie_locomotion::spines::mock
 
 int main(int argc, char** argv) {
-  robots::upkie::spine::CommandLineArguments args({argv + 1, argv + argc});
+  upkie_locomotion::spines::mock::CommandLineArguments args(
+      {argv + 1, argv + argc});
   if (args.error) {
     return EXIT_FAILURE;
   } else if (args.help) {
     args.print_usage(argv[0]);
     return EXIT_SUCCESS;
   }
-  return robots::upkie::spine::main(argv[0], args);
+  return upkie_locomotion::spines::mock::main(args);
 }
