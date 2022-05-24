@@ -211,3 +211,26 @@ class WheelBalancer:
         self.turning_decision_time = turning_decision_time
         self.turning_probability = 0.0
         self.wheel_radius = wheel_radius
+
+    def update_target_ground_velocity(
+        self, observation: dict, dt: float
+    ) -> None:
+        """
+        Update target ground velocity from joystick input.
+
+        Args:
+            observation: Latest observation.
+            dt: Time in [s] until next cycle.
+        """
+        try:
+            axis_value = observation["joystick"]["left_axis"][1]
+            unfiltered_velocity = -self.max_target_velocity * axis_value
+        except KeyError:
+            unfiltered_velocity = 0.0
+        self.target_ground_velocity = abs_bounded_derivative_filter(
+            self.target_ground_velocity,
+            unfiltered_velocity,
+            dt,
+            self.max_target_velocity,
+            self.max_target_accel,
+        )
