@@ -26,6 +26,6 @@ add_rpi_bazel_repositories()
 # Python packages
 load("@rules_python//python:pip.bzl", "pip_install")
 pip_install(
-    name = "pip_deps",
+    name = "pip",
     requirements = "//:requirements.txt",
 )
