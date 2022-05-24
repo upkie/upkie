@@ -277,3 +277,16 @@ class WheelBalancer:
         )
         if abs(self.target_yaw_velocity) > 0.01:  # still turning
             self.turning_probability = 1.0
+
+    def process_joystick_buttons(self, observation: Dict[str, Any]) -> None:
+        ground_position = observation["wheel_odometry"]["position"]
+        try:
+            if observation["joystick"]["cross_button"]:
+                # When the user presses the reset button, we assume there is no
+                # contact for sure (or we are in a situation where spinning the
+                # wheels is dangerous?) and thus perform a hard rather than
+                # soft reset of both integrators.
+                self.integral_error_velocity = 0.0  # [m] / [s]
+                self.target_ground_position = ground_position
+        except KeyError:
+            pass
