@@ -394,6 +394,37 @@ class WheelBalancer:
             self.ground_velocity, self.max_ground_velocity
         )
 
+    def get_wheel_velocities(
+        self, transform_right_to_left: pin.SE3
+    ) -> Tuple[float, float]:
+        """
+        Get left and right wheel velocities.
+
+        Args:
+            transform_right_to_left: Pose of the right contact frame with
+                respect to the left contact frame.
+
+        Note:
+            For now we assume that the two wheels are parallel to the ground,
+            so that the rotation from one frame to the other is the identity.
+
+        Returns:
+            left_wheel_velocity: Left wheel velocity in [rad] / [s].
+            right_wheel_velocity: Right wheel velocity in [rad] / [s].
+        """
+        # Sagittal translation
+        left_wheel_velocity: float = +self.ground_velocity / self.wheel_radius
+        right_wheel_velocity: float = -self.ground_velocity / self.wheel_radius
+
+        # Yaw rotation
+        position_right_in_left = transform_right_to_left.translation
+        contact_radius = 0.5 * np.linalg.norm(position_right_in_left)
+        yaw_to_wheel = contact_radius / self.wheel_radius
+        left_wheel_velocity += yaw_to_wheel * self.target_yaw_velocity
+        right_wheel_velocity += yaw_to_wheel * self.target_yaw_velocity
+
+        return left_wheel_velocity, right_wheel_velocity
+
     def log(self) -> dict:
         """
         Log internal state to a dictionary.
