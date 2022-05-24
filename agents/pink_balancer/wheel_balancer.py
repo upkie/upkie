@@ -393,3 +393,21 @@ class WheelBalancer:
         self.ground_velocity = clamp_abs(
             self.ground_velocity, self.max_ground_velocity
         )
+
+    def log(self) -> dict:
+        """
+        Log internal state to a dictionary.
+
+        Returns:
+            Log data as a dictionary.
+        """
+        return {
+            "error": self.error,
+            "gains": self.gains.__dict__,
+            "ground_velocity": self.ground_velocity,
+            "integral_error_velocity": self.integral_error_velocity,
+            "pitch": self.pitch,
+            "target_ground_position": self.target_ground_position,
+            "target_ground_velocity": self.target_ground_velocity,
+            "target_yaw_velocity": self.target_yaw_velocity,
+        }
