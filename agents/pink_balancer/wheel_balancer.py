@@ -290,3 +290,82 @@ class WheelBalancer:
                 self.target_ground_position = ground_position
         except KeyError:
             pass
+
+    def cycle(self, observation: Dict[str, Any], dt: float) -> None:
+        """
+        Compute a new ground velocity.
+
+        Args:
+            observation: Latest observation.
+            dt: Time in [s] until next cycle.
+        """
+        self.process_joystick_buttons(observation)
+        self.update_target_ground_velocity(observation, dt)
+        self.update_target_yaw_velocity(observation, dt)
+
+        pitch = compute_base_pitch_from_imu(observation["imu"]["orientation"])
+        self.pitch = pitch
+        if abs(pitch) > self.fall_pitch:
+            self.integral_error_velocity = 0.0  # [m] / [s]
+            self.ground_velocity = 0.0  # [m] / [s]
+            return
+
+        ground_position = observation["wheel_odometry"]["position"]
+        floor_contact = observation["floor_contact"]["contact"]
+
+        target_pitch: float = 0.0  # [rad]
+        error = np.array(
+            [
+                self.target_ground_position - ground_position,
+                target_pitch - pitch,
+            ]
+        )
+        self.error = error
+
+        if not floor_contact:
+            self.integral_error_velocity = low_pass_filter(
+                self.integral_error_velocity, self.air_return_period, 0.0, dt
+            )
+            # We don't reset self.target_ground_velocity: either takeoff
+            # detection is a false positive and we should resume close to the
+            # pre-takeoff state, or the robot is really in the air and the user
+            # should stop smashing the joystick like a bittern ;p
+            self.target_ground_position = low_pass_filter(
+                self.target_ground_position,
+                self.air_return_period,
+                ground_position,
+                dt,
+            )
+        else:  # floor_contact:
+            ki = np.array(
+                [
+                    self.gains.position_stiffness,
+                    self.gains.pitch_stiffness,
+                ]
+            )
+            self.integral_error_velocity += ki.dot(error) * dt
+            self.integral_error_velocity = clamp_abs(
+                self.integral_error_velocity, self.max_integral_error_velocity
+            )
+            self.target_ground_position += self.target_ground_velocity * dt
+            self.target_ground_position = clamp(
+                self.target_ground_position,
+                ground_position - self.max_target_distance,
+                ground_position + self.max_target_distance,
+            )
+
+        kp = np.array(
+            [
+                self.gains.position_damping,
+                self.gains.pitch_damping,
+            ]
+        )
+
+        upkie_trick_velocity = -self.target_ground_velocity
+
+        self.ground_velocity = (
+            upkie_trick_velocity - kp.dot(error) - self.integral_error_velocity
+        )
+        self.ground_velocity = clamp_abs(
+            self.ground_velocity, self.max_ground_velocity
+        )
