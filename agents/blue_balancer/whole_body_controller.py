@@ -47,66 +47,75 @@ def observe(observation, configuration, servo_layout) -> np.ndarray:
     return q
 
 
-def serialize_to_servo_action(
-    configuration, velocity, servo_layout
-) -> Dict[str, dict]:
+@gin.configurable
+def forward_kinematics(
+    q_hip: float, q_knee: float, limb_length: float
+) -> float:
     """
-    Serialize robot state for the spine.
+    Compute forward kinematics for a single leg.
 
     Args:
-        configuration: Robot configuration.
-        velocity: Robot velocity in tangent space.
-        servo_layout: Robot servo layout.
+        q_hip: Angle of the hip joint, in radians.
+        q_knee: Angle of the knee joint, in radians.
+        limb_length: (Model) Length of both links of the leg.
 
     Returns:
-        Dictionary of position and velocity targets for each joint.
+        Crouch distance (positive, zero for extended legs) in meters.
+
+    The derivation of this function is documented in `Kinematics of a
+    symmetric leg`_.
+
+    .. _`Kinematics of a symmetric leg`:
+        https://scaron.info/blog/kinematics-of-a-symmetric-leg.html
     """
-    target = {}
-    for joint, servo in servo_layout.items():
-        if "configuration_index" not in servo:
-            continue
-        i_q = servo["configuration_index"]
-        i_v = i_q - 1
-        target[joint] = {"position": configuration.q[i_q]}
-        target[joint]["velocity"] = velocity[i_v]
-    return target
+    height = limb_length * (np.cos(q_hip) + np.cos(q_hip + q_knee))
+    leg_length = 2.0 * limb_length
+    crouch = leg_length - height
+    return crouch
 
 
 @gin.configurable
-def solve_ik(
-    height: float,
-    height_derivative: float,
+def inverse_kinematics(
+    crouch: float,
+    crouch_velocity: float,
     limb_length: float,
     velocity_limit: float,
-) -> Tuple[float, float, float, float]:
+) -> Tuple[Tuple[float, float], Tuple[float, float]]:
     """
     Solve inverse kinematics for a single leg.
 
-    Returns:
-        ========  ============================================================
-        ``q_1``    Angle of the hip joint in radians.
-        ``q_2``    Angle of the knee joint in radians.
-        ``v_1``    Angular velocity for the hip joint in rad / s.
-        ``v_2``    Angular velocity for the knee joint in rad / s.
-        ========  ============================================================
+    Args:
+        crouch: Crouch distance (positive, zero for extended legs) in meters.
+        crouch_velocity: Time derivative of the crouch, in m / s.
+        limb_length: (Model) Length of both links of the leg.
+        velocity_limit: (Model) Maximum joint velocity in rad / s.
 
-    Note:
-        The derivation of this function is documented in this post: `Kinematics
-        of a symmetric leg`_.
+    Returns:
+        ===========  =========================================================
+        ``q_hip``     Angle of the hip joint in radians.
+        ``q_knee``    Angle of the knee joint in radians.
+        ``v_hip``     Angular velocity for the hip joint in rad / s.
+        ``v_knee``    Angular velocity for the knee joint in rad / s.
+        ===========  =========================================================
+
+    The derivation of this function is documented in `Kinematics of a
+    symmetric leg`_.
 
     .. _`Kinematics of a symmetric leg`:
         https://scaron.info/blog/kinematics-of-a-symmetric-leg.html
     """
     leg_length = 2.0 * limb_length
+    assert 0 < crouch < leg_length, "Leg is under- or over-extended"
+    height = leg_length - crouch
+    height_velocity = -crouch_velocity
     x = height / leg_length
-    assert x < 1.0, "Leg is over-extended"
-    q_1 = np.arccos(x)
-    q_2 = -2.0 * q_1
-    v_1 = -height_derivative / np.sqrt(leg_length ** 2 - height ** 2)
-    v_2 = -2.0 * v_1
-    v_1 = clamp_abs(v_1, velocity_limit)
-    v_2 = clamp_abs(v_2, velocity_limit)
-    return (q_1, q_2, v_1, v_2)
+    q_hip = np.arccos(x)
+    v_hip = -height_velocity / np.sqrt(leg_length ** 2 - height ** 2)
+    v_hip = clamp_abs(v_hip, velocity_limit)
+    q_knee = -2.0 * q_hip
+    v_knee = -2.0 * v_hip
+    v_knee = clamp_abs(v_knee, velocity_limit)
+    return (q_hip, q_knee), (v_hip, v_knee)
 
 
 @gin.configurable
@@ -116,43 +125,52 @@ class WholeBodyController:
     Coordinate inverse kinematics and wheel balancing.
 
     Attributes:
-        crouch_velocity: Maximum vertical velocity in [m] / [s].
         gain_scale: PD gain scale for hip and knee joints.
-        max_crouch_height: Maximum distance along the vertical axis that the
-            robot goes down while crouching, in [m].
-        robot: Robot model used for inverse kinematics.
-        target_lift: Target height in meters by which to lift the wheels, with
-            respect to the initial configuration where the legs are extended.
+        max_crouch: Maximum distance along the vertical axis that the
+            robot goes down while crouching, in meters.
+        max_crouch_velocity: Maximum vertical velocity in m / s.
+        position_right_in_left: Translation from the left contact frame to
+            the right contact frame, expressed in the left contact frame.
+        target_crouch: Target vertical distance in meters by which to crouch
+            (equivalently: lift the wheels), with respect to the initial
+            configuration where the legs are extended. The target height (e.g.
+            of the COM) above ground is therefore equal to ``maximum_height -
+            target_crouch``.
         transform_rest_to_world: Rest frame pose for each end effector.
         turning_gain_scale: Additional gain scale added when the robot is
             turning to keep the legs stiff while the ground pulls them apart.
     """
 
-    crouch_velocity: float
     gain_scale: float
-    max_crouch_height: float
+    max_crouch: float
+    max_crouch_velocity: float
+    target_crouch: float
     turning_gain_scale: float
 
     def __init__(
         self,
         config: Dict[str, Any],
-        crouch_velocity: float,
         gain_scale: float,
-        max_crouch_height: float,
+        max_crouch: float,
+        max_crouch_velocity: float,
         turning_gain_scale: float,
+        wheel_distance: float,
     ):
         """
         Create controller.
 
         Args:
             config: Global configuration dictionary.
-            crouch_velocity: Maximum vertical velocity in [m] / [s].
             gain_scale: PD gain scale for hip and knee joints.
-            max_crouch_height: Maximum distance along the vertical axis that
-                the robot goes down while crouching, in [m].
+            max_crouch: Maximum distance along the vertical axis that the robot
+                goes down while crouching, in meters.
+            max_crouch_velocity: Maximum vertical velocity in [m] / [s].
             turning_gain_scale: Additional gain scale added when the robot is
                 turning to keep the legs stiff in spite of the ground pulling
                 them apart.
+            wheel_distance: Lateral distance between the two wheels in meters.
+                This controller does not handle the case where the two wheels
+                are not in the lateral plane.
         """
         joint_names = [
             f"{side}_{joint}"
@@ -166,25 +184,23 @@ class WholeBodyController:
             }
             for joint in joint_names
         }
-        self.__initialized = False
-        self.servo_action = servo_action
-        self.crouch_velocity = crouch_velocity
+        self.crouch = np.nan
+        self.crouch_velocity = np.nan
         self.gain_scale = clamp(gain_scale, 0.1, 2.0)
-        self.max_crouch_height = max_crouch_height
+        self.max_crouch = max_crouch
+        self.max_crouch_velocity = max_crouch_velocity
+        self.position_right_in_left = np.ndarray([0.0, wheel_distance, 0.0])
+        self.servo_action = servo_action
         self.servo_layout = config["servo_layout"]
-        self.target_height = 0.0
-        self.transform_rest_to_world = {
-            "left_contact": np.zeros((4, 4)),
-            "right_contact": np.zeros((4, 4)),
-        }
-        self.wheel_balancer = WheelBalancer()  # type: ignore
+        self.target_crouch = 0.0
         self.turning_gain_scale = turning_gain_scale
+        self.wheel_balancer = WheelBalancer()  # type: ignore
 
-    def update_target_height(
+    def update_target_crouch(
         self, observation: Dict[str, Any], dt: float
     ) -> None:
         """
-        Update target base height from joystick inputs.
+        Update target crouch from joystick inputs.
 
         Args:
             observation: Observation from the spine.
@@ -267,8 +283,8 @@ class WholeBodyController:
         kp_scale = self.gain_scale + self.turning_gain_scale * turning_prob
         kd_scale = self.gain_scale + self.turning_gain_scale * turning_prob
         for joint_name in ["left_hip", "left_knee", "right_hip", "right_knee"]:
-            servo_action[joint_name]["kp_scale"] = kp_scale
-            servo_action[joint_name]["kd_scale"] = kd_scale
+            self.servo_action[joint_name]["kp_scale"] = kp_scale
+            self.servo_action[joint_name]["kd_scale"] = kd_scale
 
         return {
             "servo": self.servo_action,

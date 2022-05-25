@@ -23,10 +23,11 @@ import pink
 import pink.models
 import pinocchio as pin
 import upkie_description
-from agents.blue_balancer.wheel_balancer import WheelBalancer
 from pink import solve_ik
 from pink.tasks import BodyTask, PostureTask
 from pink.utils import custom_configuration_vector
+
+from agents.blue_balancer.wheel_balancer import WheelBalancer
 from utils.clamp import clamp
 
 
