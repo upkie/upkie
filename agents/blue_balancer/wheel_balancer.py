@@ -23,7 +23,7 @@ from typing import Any, Dict, Tuple
 
 import gin
 import numpy as np
-import pinocchio as pin
+
 from utils.clamp import clamp, clamp_abs
 from utils.filters import abs_bounded_derivative_filter, low_pass_filter
 from utils.imu import compute_base_pitch_from_imu
@@ -407,14 +407,17 @@ class WheelBalancer:
         )
 
     def get_wheel_velocities(
-        self, transform_right_to_left: pin.SE3
+        self,
+        position_right_in_left: np.ndarray,
     ) -> Tuple[float, float]:
         """
         Get left and right wheel velocities.
 
         Args:
-            transform_right_to_left: Pose of the right contact frame with
-                respect to the left contact frame.
+            position_right_in_left: Translation from the left contact frame to
+                the right contact frame, expressed in the left contact frame.
+                Equivalently, linear coordinates of the pose of the right
+                contact frame with respect to the left contact frame.
 
         Note:
             For now we assume that the two wheels are parallel to the ground,
@@ -429,7 +432,6 @@ class WheelBalancer:
         right_wheel_velocity: float = -self.ground_velocity / self.wheel_radius
 
         # Yaw rotation
-        position_right_in_left = transform_right_to_left.translation
         contact_radius = 0.5 * np.linalg.norm(position_right_in_left)
         yaw_to_wheel = contact_radius / self.wheel_radius
         left_wheel_velocity += yaw_to_wheel * self.target_yaw_velocity
