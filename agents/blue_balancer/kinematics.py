@@ -129,8 +129,6 @@ def velocity_limited_inverse_kinematics(
         ===========  =========================================================
         ``q_hip``     Angle of the hip joint in radians.
         ``q_knee``    Angle of the knee joint in radians.
-        ``v_hip``     Angular velocity for the hip joint in rad / s.
-        ``v_knee``    Angular velocity for the knee joint in rad / s.
         ===========  =========================================================
     """
     target_hip, target_knee = inverse_kinematics(crouch_height)
@@ -141,4 +139,4 @@ def velocity_limited_inverse_kinematics(
     v_hip = clamp_abs(v_hip, 0.5 * abs(v_knee))
     q_hip = current_hip + v_hip * dt
     q_knee = current_knee + v_knee * dt
-    return (q_hip, q_knee), (v_hip, v_knee)
+    return (q_hip, q_knee)

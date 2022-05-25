@@ -23,6 +23,7 @@ import numpy as np
 from agents.blue_balancer.kinematics import (
     forward_kinematics,
     velocity_limited_inverse_kinematics,
+    velocity_limited_joint_control,
 )
 from agents.blue_balancer.wheel_balancer import WheelBalancer
 from utils.clamp import clamp
@@ -107,7 +108,7 @@ class WholeBodyController:
                 This controller does not handle the case where the two wheels
                 are not in the lateral plane.
         """
-        self._leg_positions = (np.nan, np.nan)
+        self.average_leg_positions = (np.nan, np.nan)
         self.crouch_height = np.nan
         self.gain_scale = clamp(gain_scale, 0.1, 2.0)
         self.max_crouch_height = max_crouch_height
@@ -153,7 +154,14 @@ class WholeBodyController:
                 for knee in ["left_knee", "right_knee"]
             ]
         )
-        self._leg_positions = (q_hip, q_knee)
+        self.average_leg_positions = (q_hip, q_knee)
+        self.leg_positions = {
+            f"{side}_{joint}": observation["servo"][f"{side}_{joint}"][
+                "position"
+            ]
+            for side in ["left", "right"]
+            for joint in ["hip", "knee"]
+        }
         self.crouch_height = forward_kinematics(q_hip, q_knee)
 
     def cycle(self, observation: Dict[str, Any], dt: float) -> Dict[str, Any]:
@@ -170,37 +178,13 @@ class WholeBodyController:
         if np.isnan(self.crouch_height):
             self._initialize_crouch(observation)
 
-        self.update_target_crouch(observation, dt)
-        q, v = velocity_limited_inverse_kinematics(
-            self.crouch_height, self._leg_positions, dt
-        )
-        hip_position, knee_position = q
-        hip_velocity, knee_velocity = v
-        self._leg_positions = q
-
+        # Wheels
         self.wheel_balancer.cycle(observation, dt)
         w = self.wheel_balancer.get_wheel_velocities(
             self.position_right_in_left
         )
         left_wheel_velocity, right_wheel_velocity = w
-
         servo_action = {
-            "left_hip": {
-                "position": -hip_position,
-                "velocity": -hip_velocity,
-            },
-            "right_hip": {
-                "position": +hip_position,
-                "velocity": +hip_velocity,
-            },
-            "left_knee": {
-                "position": -knee_position,
-                "velocity": -knee_velocity,
-            },
-            "right_knee": {
-                "position": +knee_position,
-                "velocity": +knee_velocity,
-            },
             "left_wheel": {
                 "position": np.nan,
                 "velocity": left_wheel_velocity,
@@ -211,6 +195,32 @@ class WholeBodyController:
             },
         }
 
+        # Legs (hips and knees)
+        self.update_target_crouch(observation, dt)
+        q_avg = velocity_limited_inverse_kinematics(
+            self.crouch_height, self.average_leg_positions, dt
+        )
+        self.average_leg_positions = q_avg
+        average_hip_position, average_knee_position = q_avg
+        leg_targets = {
+            "left_hip": -average_hip_position,
+            "left_knee": -average_knee_position,
+            "right_hip": +average_hip_position,
+            "right_knee": +average_knee_position,
+        }
+        for side in ["left", "right"]:
+            for joint in ["hip", "knee"]:
+                joint_name = f"{side}_{joint}"
+                joint_velocity = velocity_limited_joint_control(
+                    leg_targets[joint_name], self.leg_positions[joint_name], dt
+                )
+                self.leg_positions[joint_name] += dt * joint_velocity
+                servo_action[joint_name] = {
+                    "position": self.leg_positions[joint_name],
+                    "velocity": joint_velocity,
+                }
+
+        # Increase leg stiffness while turning
         turning_prob = self.wheel_balancer.turning_probability
         # using the same numbers for both gain scales for now
         kp_scale = self.gain_scale + self.turning_gain_scale * turning_prob
