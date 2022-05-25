@@ -15,5 +15,5 @@ def add_pip_packages():
     """
     pip_install(
         name = "pip_upkie_locomotion",
-        requirements = "//tools/pip:requirements.txt",
+        requirements = Label("//tools/pip:requirements.txt"),
     )
