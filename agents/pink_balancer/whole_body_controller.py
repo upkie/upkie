@@ -115,14 +115,14 @@ class WholeBodyController:
         turning_gain_scale: float,
     ):
         """
-        Initialize controller.
+        Create controller.
 
         Args:
             config: Global configuration dictionary.
             crouch_velocity: Maximum vertical velocity in [m] / [s].
+            gain_scale: PD gain scale for hip and knee joints.
             max_crouch_height: Maximum distance along the vertical axis that
                 the robot goes down while crouching, in [m].
-            gain_scale: PD gain scale for hip and knee joints.
             turning_gain_scale: Additional gain scale added when the robot is
                 turning to keep the legs stiff in spite of the ground pulling
                 them apart.
@@ -193,9 +193,13 @@ class WholeBodyController:
             height, 0.0, self.max_crouch_height
         )
 
-    def update_ik_targets(self, observation, dt):
+    def update_ik_targets(self, observation: dict, dt: float) -> None:
         """
         Update IK frame targets from individual target positions.
+
+        Args:
+            observation: Observation from the spine.
+            dt: Duration in seconds until next cycle.
         """
         self.update_target_height(observation, dt)
         transform_common_to_rest = pin.SE3(
