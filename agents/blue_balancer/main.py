@@ -81,8 +81,9 @@ if __name__ == "__main__":
     agent_dir = path.dirname(__file__)
 
     # Gin configuration
-    gin.parse_config_file(f"{agent_dir}/whole_body_controller.gin")
+    gin.parse_config_file(f"{agent_dir}/kinematics.gin")
     gin.parse_config_file(f"{agent_dir}/wheel_balancer.gin")
+    gin.parse_config_file(f"{agent_dir}/whole_body_controller.gin")
     if args.config == "default":
         logging.warning('No configuration specified, assuming "bullet"')
         args.config = "bullet"

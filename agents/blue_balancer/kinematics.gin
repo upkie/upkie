@@ -14,10 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import agents.blue_balancer.whole_body_controller
+import agents.blue_balancer.kinematics
 
-WholeBodyController.gain_scale = 2.0
-WholeBodyController.max_crouch_height = 0.08      # [m]
-WholeBodyController.max_crouch_velocity = 0.05    # [m] / [s]
-WholeBodyController.turning_gain_scale = 2.0
-WholeBodyController.wheel_distance = 0.3048
+forward_kinematics.limb_length = 0.17
+inverse_kinematics.limb_length = 0.17
+inverse_kinematics.velocity_limit = 0.7
