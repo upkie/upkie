@@ -58,28 +58,28 @@ class WholeBodyController:
     Coordinate inverse kinematics and wheel balancing.
 
     Attributes:
+        crouch_height: Target vertical distance in meters by which to
+            crouch (equivalently: lift the wheels), with respect to the initial
+            configuration where the legs are extended. The target height (e.g.
+            of the COM) above ground is therefore equal to ``maximum_height -
+            crouch_height``.
+        crouch_velocity: Desired time derivative for the target crouch
+            height, in m / s.
         gain_scale: PD gain scale for hip and knee joints.
         max_crouch_height: Maximum distance along the vertical axis that the
             robot goes down while crouching, in meters.
         max_crouch_velocity: Maximum vertical velocity in m / s.
         position_right_in_left: Translation from the left contact frame to
             the right contact frame, expressed in the left contact frame.
-        target_crouch_height: Target vertical distance in meters by which to
-            crouch (equivalently: lift the wheels), with respect to the initial
-            configuration where the legs are extended. The target height (e.g.
-            of the COM) above ground is therefore equal to ``maximum_height -
-            target_crouch_height``.
-        target_crouch_velocity: Desired time derivative for the target crouch
-            height, in m / s.
         turning_gain_scale: Additional gain scale added when the robot is
             turning to keep the legs stiff while the ground pulls them apart.
     """
 
+    crouch_height: float
+    crouch_velocity: float
     gain_scale: float
     max_crouch_height: float
     max_crouch_velocity: float
-    target_crouch_height: float
-    target_crouch_velocity: float
     turning_gain_scale: float
 
     def __init__(
@@ -127,8 +127,6 @@ class WholeBodyController:
         self.position_right_in_left = np.array([0.0, wheel_distance, 0.0])
         self.servo_action = servo_action
         self.servo_layout = config["servo_layout"]
-        self.target_crouch_height = 0.0
-        self.target_crouch_velocity = np.nan
         self.turning_gain_scale = turning_gain_scale
         self.wheel_balancer = WheelBalancer()  # type: ignore
 
@@ -147,11 +145,9 @@ class WholeBodyController:
             velocity = self.max_crouch_velocity * axis_value
         except KeyError:
             velocity = 0.0
-        crouch_height = self.target_crouch_height + velocity * dt
-        self.target_crouch_height = clamp(
-            crouch_height, 0.0, self.max_crouch_height
-        )
-        self.target_crouch_velocity = velocity
+        crouch_height = self.crouch_height + velocity * dt
+        self.crouch_height = clamp(crouch_height, 0.0, self.max_crouch_height)
+        self.crouch_velocity = velocity
 
     def _initialize_crouch(self, observation: Dict[str, Any]) -> None:
         """
@@ -172,7 +168,7 @@ class WholeBodyController:
                 for knee in ["left_knee", "right_knee"]
             ]
         )
-        self.crouch = forward_kinematics(q_hip, q_knee)
+        self.crouch_height = forward_kinematics(q_hip, q_knee)
         self.crouch_velocity = 0.0
 
     def cycle(self, observation: Dict[str, Any], dt: float) -> Dict[str, Any]:
