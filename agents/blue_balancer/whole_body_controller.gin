@@ -16,7 +16,12 @@
 
 import agents.blue_balancer.whole_body_controller
 
-solve_ik.limb_length = 0.17
-solve_ik.velocity_limit = 0.00001
+forward_kinematics.limb_length = 0.17
+inverse_kinematics.limb_length = 0.17
+inverse_kinematics.velocity_limit = 0.7
 
+WholeBodyController.gain_scale = 2.0
+WholeBodyController.max_crouch = 0.08             # [m]
+WholeBodyController.max_crouch_velocity = 0.05    # [m] / [s]
+WholeBodyController.turning_gain_scale = 2.0
 WholeBodyController.wheel_distance = 0.3048
