@@ -15,7 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict
+from typing import Any, Dict, Tuple
 
 import gin
 import numpy as np
@@ -69,6 +69,37 @@ def serialize_to_servo_action(
         target[joint] = {"position": configuration.q[i_q]}
         target[joint]["velocity"] = velocity[i_v]
     return target
+
+
+def solve_ik(
+    height: float, height_derivative: float, limb_length: float
+) -> Tuple[float, float, float, float]:
+    """
+    Solve inverse kinematics for a single leg.
+
+    Returns:
+        ========  ============================================================
+        ``q_1``    Angle of the hip joint in radians.
+        ``q_2``    Angle of the knee joint in radians.
+        ``v_1``    Angular velocity for the hip joint in rad / s.
+        ``v_2``    Angular velocity for the knee joint in rad / s.
+        ========  ============================================================
+
+    Note:
+        The derivation of this function is documented in this post: `Kinematics
+        of a symmetric leg`_.
+
+    .. _`Kinematics of a symmetric leg`:
+        https://scaron.info/blog/kinematics-of-a-symmetric-leg.html
+    """
+    leg_length = 2.0 * limb_length
+    x = height / leg_length
+    assert x < 1.0, "Leg is over-extended"
+    q_1 = np.arccos(x)
+    v_1 = -height_derivative / np.sqrt(leg_length ** 2 - height ** 2)
+    q_2 = -2.0 * q_1
+    v_2 = -2.0 * v_1
+    return (q_1, q_2, v_1, v_2)
 
 
 @gin.configurable
@@ -194,7 +225,7 @@ class WholeBodyController:
         self.update_ik_targets(observation, dt)
         robot_velocity = solve_ik(self.configuration, self.tasks.values(), dt)
         q = self.configuration.integrate(robot_velocity, dt)
-        self.configuration = pink.apply_configuration(self.robot, q)
+        # ... solve_ik
         servo_action = serialize_to_servo_action(
             self.configuration, robot_velocity, self.servo_layout
         )
