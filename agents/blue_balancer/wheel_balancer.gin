@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import agents.pink_balancer.wheel_balancer
+import agents.blue_balancer.wheel_balancer
 
 WheelBalancer.air_return_period = 1.0             # [s]
 WheelBalancer.flexion_correction_gain = 0.0

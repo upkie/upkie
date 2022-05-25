@@ -147,17 +147,16 @@ if __name__ == "__main__":
     args = parse_command_line_arguments()
 
     agent_dir = path.dirname(__file__)
+    blue_balancer = path.join(agent_dir, "../blue_balancer")
     gin.parse_config_file(f"{agent_dir}/whole_body_controller.gin")
-    gin.parse_config_file(f"{agent_dir}/wheel_balancer.gin")
+    gin.parse_config_file(f"{blue_balancer}/wheel_balancer.gin")
     if args.config == "default":
         logging.warn('No configuration specified, assuming "bullet"')
         args.config = "bullet"
     if args.config == "pi3hat":
-        gin.parse_config_file(f"{agent_dir}/pi3hat.gin")
+        gin.parse_config_file(f"{blue_balancer}/pi3hat.gin")
     elif args.config == "bullet":
-        gin.parse_config_file(f"{agent_dir}/bullet.gin")
-
-    config_dir = f"{agent_dir}/../../config"
+        gin.parse_config_file(f"{blue_balancer}/bullet.gin")
     if args.config == "pi3hat":
         configure_cpu(config["cpu"])
 

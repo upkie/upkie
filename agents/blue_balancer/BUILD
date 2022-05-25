@@ -14,25 +14,25 @@ filegroup(
 )
 
 py_library(
-    name = "whole_body_controller",
+    name = "wheel_balancer",
     srcs = [
-        "whole_body_controller.py",
+        "wheel_balancer.py",
     ],
     deps = [
-        "//agents/blue_balancer:wheel_balancer",
+        "//utils:clamp",
+        "//utils:filters",
+        "//utils:imu",
         "@pip//pypi__gin_config",
-        "@pip//pypi__upkie_description",
     ],
 )
 
 py_binary(
-    name = "pink_balancer",
+    name = "blue_balancer",
     srcs = [
         "main.py",
     ],
     main = "main.py",
     data = [
-        "//agents/blue_balancer:config",
         ":config",
     ],
     deps = [
