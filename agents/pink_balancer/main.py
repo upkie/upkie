@@ -97,6 +97,21 @@ config = {
 }
 
 
+def parse_command_line_arguments():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "-c",
+        "--config",
+        metavar="config",
+        help="Agent configuration to apply",
+        default="default",
+        type=str,
+        required=False,
+        choices=["default", "bullet", "pi3hat"],
+    )
+    return parser.parse_args()
+
+
 async def run(
     spine: SpineInterface,
     config: Dict[str, Any],
