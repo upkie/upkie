@@ -53,7 +53,7 @@ py_binary(
         ":whole_body_controller",
         "@pip//pypi__aiorate",
         "@pip//pypi__gin_config",
-        "@pip//pypi__PyYAML",
+        "@pip//pypi__pyyaml",
         "@vulp//spine:python",
     ],
 )
