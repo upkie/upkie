@@ -10,6 +10,7 @@ filegroup(
     name = "config",
     srcs = glob([
         "*.gin",
+        "*.yaml",
     ]),
 )
 
@@ -40,6 +41,7 @@ py_binary(
         ":whole_body_controller",
         "@pip//pypi__aiorate",
         "@pip//pypi__gin_config",
+        "@pip//pypi__PyYAML",
         "@vulp//spine:python",
     ],
 )
