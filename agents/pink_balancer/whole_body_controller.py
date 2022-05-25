@@ -53,7 +53,7 @@ def observe(observation, configuration, servo_layout) -> np.ndarray:
     return q
 
 
-def serialize_to_servo_controller(
+def serialize_to_servo_action(
     configuration, velocity, servo_layout
 ) -> Dict[str, dict]:
     """
@@ -260,7 +260,7 @@ class WholeBodyController:
         robot_velocity = solve_ik(self.configuration, self.tasks.values(), dt)
         q = self.configuration.integrate(robot_velocity, dt)
         self.configuration = pink.apply_configuration(self.robot, q)
-        servo_controller = serialize_to_servo_controller(
+        servo_action = serialize_to_servo_action(
             self.configuration, robot_velocity, self.servo_layout
         )
 
@@ -280,11 +280,11 @@ class WholeBodyController:
             right_wheel_velocity,
         ) = self.wheel_balancer.get_wheel_velocities(transform_right_to_left)
 
-        servo_controller["left_wheel"] = {
+        servo_action["left_wheel"] = {
             "position": np.nan,
             "velocity": left_wheel_velocity,
         }
-        servo_controller["right_wheel"] = {
+        servo_action["right_wheel"] = {
             "position": np.nan,
             "velocity": right_wheel_velocity,
         }
@@ -294,11 +294,11 @@ class WholeBodyController:
         kp_scale = self.gain_scale + self.turning_gain_scale * turning_prob
         kd_scale = self.gain_scale + self.turning_gain_scale * turning_prob
         for joint_name in ["left_hip", "left_knee", "right_hip", "right_knee"]:
-            servo_controller[joint_name]["kp_scale"] = kp_scale
-            servo_controller[joint_name]["kd_scale"] = kd_scale
+            servo_action[joint_name]["kp_scale"] = kp_scale
+            servo_action[joint_name]["kd_scale"] = kd_scale
 
         return {
             "configuration": self.configuration.q,
-            "servo": servo_controller,
+            "servo": servo_action,
             "wheel_balancer": self.wheel_balancer.log(),
         }
