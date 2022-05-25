@@ -241,3 +241,64 @@ class WholeBodyController:
             self.tasks[target].set_target(transform_target_to_world)
             self.transform_rest_to_world[target] = transform_target_to_world
         self.__initialized = True
+
+    def cycle(self, observation: Dict[str, Any], dt: float) -> Dict[str, Any]:
+        """
+        Compute action for a new cycle.
+
+        Args:
+            observation: Latest observation.
+            dt: Duration in seconds until next cycle.
+
+        Returns:
+            Dictionary with the new action and some internal state for logging.
+        """
+        if not self.__initialized:
+            self._process_first_observation(observation)
+
+        self.update_ik_targets(observation, dt)
+        robot_velocity = solve_ik(self.configuration, self.tasks.values(), dt)
+        q = self.configuration.integrate(robot_velocity, dt)
+        self.configuration = pink.apply_configuration(self.robot, q)
+        servo_controller = serialize_to_servo_controller(
+            self.configuration, robot_velocity, self.servo_layout
+        )
+
+        self.wheel_balancer.cycle(observation, dt)
+
+        transform_left_to_world = self.tasks[
+            "left_contact"
+        ].transform_target_to_world
+        transform_right_to_world = self.tasks[
+            "right_contact"
+        ].transform_target_to_world
+        transform_right_to_left = transform_left_to_world.actInv(
+            transform_right_to_world
+        )
+        (
+            left_wheel_velocity,
+            right_wheel_velocity,
+        ) = self.wheel_balancer.get_wheel_velocities(transform_right_to_left)
+
+        servo_controller["left_wheel"] = {
+            "position": np.nan,
+            "velocity": left_wheel_velocity,
+        }
+        servo_controller["right_wheel"] = {
+            "position": np.nan,
+            "velocity": right_wheel_velocity,
+        }
+
+        turning_prob = self.wheel_balancer.turning_probability
+        # using the same numbers for both gain scales for now
+        kp_scale = self.gain_scale + self.turning_gain_scale * turning_prob
+        kd_scale = self.gain_scale + self.turning_gain_scale * turning_prob
+        for joint_name in ["left_hip", "left_knee", "right_hip", "right_knee"]:
+            servo_controller[joint_name]["kp_scale"] = kp_scale
+            servo_controller[joint_name]["kd_scale"] = kd_scale
+
+        return {
+            "configuration": self.configuration.q,
+            "servo": servo_controller,
+            "wheel_balancer": self.wheel_balancer.log(),
+        }
