@@ -16,6 +16,7 @@
 
 import agents.blue_balancer.kinematics
 
-forward_kinematics.limb_length = 0.17
-inverse_kinematics.limb_length = 0.17
-inverse_kinematics.velocity_limit = 0.7
+forward_kinematics.limb_length = 0.17        # [m]
+inverse_kinematics.limb_length = 0.17        # [m]
+
+velocity_limited_joint_control.max_joint_velocity = 0.7  # [rad] / [s]

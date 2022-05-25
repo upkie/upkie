@@ -49,8 +49,6 @@ def observe(observation, configuration, servo_layout) -> np.ndarray:
             continue
         i = servo["configuration_index"]
         q[i] = observation["servo"][joint]["position"]
-        # tangent_index = configuration_index - 1
-        # v[tangent_index] = observation["servo"][joint]["velocity"]
     return q
 
 

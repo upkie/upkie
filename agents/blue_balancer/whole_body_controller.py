@@ -22,7 +22,7 @@ import numpy as np
 
 from agents.blue_balancer.kinematics import (
     forward_kinematics,
-    inverse_kinematics,
+    velocity_limited_inverse_kinematics,
 )
 from agents.blue_balancer.wheel_balancer import WheelBalancer
 from utils.clamp import clamp
@@ -107,8 +107,8 @@ class WholeBodyController:
                 This controller does not handle the case where the two wheels
                 are not in the lateral plane.
         """
+        self._leg_positions = (np.nan, np.nan)
         self.crouch_height = np.nan
-        self.crouch_velocity = np.nan
         self.gain_scale = clamp(gain_scale, 0.1, 2.0)
         self.max_crouch_height = max_crouch_height
         self.max_crouch_velocity = max_crouch_velocity
@@ -133,7 +133,6 @@ class WholeBodyController:
             velocity = 0.0
         crouch_height = self.crouch_height + velocity * dt
         self.crouch_height = clamp(crouch_height, 0.0, self.max_crouch_height)
-        self.crouch_velocity = velocity
 
     def _initialize_crouch(self, observation: Dict[str, Any]) -> None:
         """
@@ -154,8 +153,8 @@ class WholeBodyController:
                 for knee in ["left_knee", "right_knee"]
             ]
         )
+        self._leg_positions = (q_hip, q_knee)
         self.crouch_height = forward_kinematics(q_hip, q_knee)
-        self.crouch_velocity = 0.0
 
     def cycle(self, observation: Dict[str, Any], dt: float) -> Dict[str, Any]:
         """
@@ -172,9 +171,12 @@ class WholeBodyController:
             self._initialize_crouch(observation)
 
         self.update_target_crouch(observation, dt)
-        q, v = inverse_kinematics(self.crouch_height, self.crouch_velocity)
+        q, v = velocity_limited_inverse_kinematics(
+            self.crouch_height, self._leg_positions, dt
+        )
         hip_position, knee_position = q
         hip_velocity, knee_velocity = v
+        self._leg_positions = q
 
         self.wheel_balancer.cycle(observation, dt)
         w = self.wheel_balancer.get_wheel_velocities(
