@@ -276,10 +276,11 @@ class WholeBodyController:
         transform_right_to_left = transform_left_to_world.actInv(
             transform_right_to_world
         )
+        position_right_in_left = transform_right_to_left.translation
         (
             left_wheel_velocity,
             right_wheel_velocity,
-        ) = self.wheel_balancer.get_wheel_velocities(transform_right_to_left)
+        ) = self.wheel_balancer.get_wheel_velocities(position_right_in_left)
 
         servo_action["left_wheel"] = {
             "position": np.nan,

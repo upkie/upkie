@@ -264,11 +264,11 @@ class WholeBodyController:
             self.position_right_in_left
         )
 
-        servo_action["left_wheel"] = {
+        self.servo_action["left_wheel"] = {
             "position": np.nan,
             "velocity": left_wheel_velocity,
         }
-        servo_action["right_wheel"] = {
+        self.servo_action["right_wheel"] = {
             "position": np.nan,
             "velocity": right_wheel_velocity,
         }
