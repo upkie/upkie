@@ -51,3 +51,28 @@ def observe(observation, configuration, servo_layout) -> np.ndarray:
         # tangent_index = configuration_index - 1
         # v[tangent_index] = observation["servo"][joint]["velocity"]
     return q
+
+
+def serialize_to_servo_controller(
+    configuration, velocity, servo_layout
+) -> Dict[str, dict]:
+    """
+    Serialize robot state for the spine.
+
+    Args:
+        configuration: Robot configuration.
+        velocity: Robot velocity in tangent space.
+        servo_layout: Robot servo layout.
+
+    Returns:
+        Dictionary of position and velocity targets for each joint.
+    """
+    target = {}
+    for joint, servo in servo_layout.items():
+        if "configuration_index" not in servo:
+            continue
+        i_q = servo["configuration_index"]
+        i_v = i_q - 1
+        target[joint] = {"position": configuration.q[i_q]}
+        target[joint]["velocity"] = velocity[i_v]
+    return target
