@@ -75,24 +75,35 @@ def inverse_kinematics(
         ``v_knee``    Angular velocity for the knee joint in rad / s.
         ===========  =========================================================
 
-    The derivation of this function is documented in `Kinematics of a
-    symmetric leg`_.
+    The derivation of this function is documented in `Kinematics of a symmetric
+    leg`_. We replaced the total height :math:`h` by the crouch height :math:`c
+    = 2 * \\ell - h`.
 
     .. _`Kinematics of a symmetric leg`:
         https://scaron.info/blog/kinematics-of-a-symmetric-leg.html
     """
     leg_length = 2.0 * limb_length
-    assert 0 < crouch_height < leg_length, (
+    assert 0.0 <= crouch_height < leg_length, (
         f"Invalid crouch height: {crouch_height} [m]; "
         "leg is under- or over-extended"
     )
-    height = leg_length - crouch_height
-    height_velocity = -crouch_velocity
-    x = height / leg_length
-    q_hip = np.arccos(x)
-    v_hip = -height_velocity / np.sqrt(leg_length ** 2 - height ** 2)
-    v_hip = clamp_abs(v_hip, velocity_limit)
-    q_knee = -2.0 * q_hip
-    v_knee = -2.0 * v_hip
-    v_knee = clamp_abs(v_knee, velocity_limit)
+
+    q_hip = clamp_abs(
+        np.arccos(1.0 - crouch_height / leg_length),
+        0.5 * np.pi,
+    )
+
+    # Time-derivative of the formula for q_hip
+    squared_denom = crouch_height * (2.0 * leg_length - crouch_height)
+    v_hip = (
+        clamp_abs(
+            crouch_velocity / np.sqrt(squared_denom),
+            velocity_limit,
+        )
+        if squared_denom > 1e-10
+        else np.sign(crouch_velocity) * velocity_limit
+    )
+
+    q_knee = clamp_abs(-2.0 * q_hip, np.pi)
+    v_knee = clamp_abs(-2.0 * v_hip, velocity_limit)
     return (q_hip, q_knee), (v_hip, v_knee)
