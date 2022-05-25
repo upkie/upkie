@@ -19,8 +19,9 @@ from typing import Any, Dict, Tuple
 
 import gin
 import numpy as np
+
 from agents.blue_balancer.wheel_balancer import WheelBalancer
-from utils.clamp import clamp
+from utils.clamp import clamp, clamp_abs
 
 
 def observe(observation, configuration, servo_layout) -> np.ndarray:
@@ -71,8 +72,12 @@ def serialize_to_servo_action(
     return target
 
 
+@gin.configurable
 def solve_ik(
-    height: float, height_derivative: float, limb_length: float
+    height: float,
+    height_derivative: float,
+    limb_length: float,
+    velocity_limit: float,
 ) -> Tuple[float, float, float, float]:
     """
     Solve inverse kinematics for a single leg.
@@ -96,9 +101,11 @@ def solve_ik(
     x = height / leg_length
     assert x < 1.0, "Leg is over-extended"
     q_1 = np.arccos(x)
-    v_1 = -height_derivative / np.sqrt(leg_length ** 2 - height ** 2)
     q_2 = -2.0 * q_1
+    v_1 = -height_derivative / np.sqrt(leg_length ** 2 - height ** 2)
     v_2 = -2.0 * v_1
+    v_1 = clamp_abs(v_1, velocity_limit)
+    v_2 = clamp_abs(v_2, velocity_limit)
     return (q_1, q_2, v_1, v_2)
 
 
