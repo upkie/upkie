@@ -98,9 +98,9 @@ class WholeBodyController:
             turning to keep the legs stiff while the ground pulls them apart.
     """
 
-    crouch_velocity: float
     gain_scale: float
     max_crouch_height: float
+    max_crouch_velocity: float
     robot: pin.RobotWrapper
     target_position_wheel_in_rest: np.ndarray
     tasks: Dict[str, Any]
@@ -110,9 +110,9 @@ class WholeBodyController:
     def __init__(
         self,
         config: Dict[str, Any],
-        crouch_velocity: float,
         gain_scale: float,
         max_crouch_height: float,
+        max_crouch_velocity: float,
         turning_gain_scale: float,
     ):
         """
@@ -120,7 +120,7 @@ class WholeBodyController:
 
         Args:
             config: Global configuration dictionary.
-            crouch_velocity: Maximum vertical velocity in [m] / [s].
+            max_crouch_velocity: Maximum vertical velocity in [m] / [s].
             gain_scale: PD gain scale for hip and knee joints.
             max_crouch_height: Maximum distance along the vertical axis that
                 the robot goes down while crouching, in [m].
@@ -157,9 +157,9 @@ class WholeBodyController:
         )
         self.__initialized = False
         self.configuration = configuration
-        self.crouch_velocity = crouch_velocity
         self.gain_scale = clamp(gain_scale, 0.1, 2.0)
         self.max_crouch_height = max_crouch_height
+        self.max_crouch_velocity = max_crouch_velocity
         self.robot = robot
         self.servo_layout = config["servo_layout"]
         self.target_position_wheel_in_rest = np.zeros(3)
@@ -172,10 +172,10 @@ class WholeBodyController:
             "left_contact": np.zeros((4, 4)),
             "right_contact": np.zeros((4, 4)),
         }
-        self.wheel_balancer = WheelBalancer()  # type: ignore
         self.turning_gain_scale = turning_gain_scale
+        self.wheel_balancer = WheelBalancer()  # type: ignore
 
-    def update_target_height(
+    def update_target_heights(
         self, observation: Dict[str, Any], dt: float
     ) -> None:
         """
@@ -187,7 +187,7 @@ class WholeBodyController:
         """
         try:
             axis_value: float = observation["joystick"]["pad_axis"][1]
-            velocity = self.crouch_velocity * axis_value
+            velocity = self.max_crouch_velocity * axis_value
         except KeyError:
             velocity = 0.0
         height = self.target_position_wheel_in_rest[2]
@@ -206,7 +206,7 @@ class WholeBodyController:
             observation: Observation from the spine.
             dt: Duration in seconds until next cycle.
         """
-        self.update_target_height(observation, dt)
+        self.update_target_heights(observation, dt)
         transform_common_to_rest = pin.SE3(
             rotation=np.eye(3),
             translation=self.target_position_wheel_in_rest,

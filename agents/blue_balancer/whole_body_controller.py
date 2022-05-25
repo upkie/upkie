@@ -15,13 +15,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Any, Dict, Tuple
+from typing import Any, Dict
 
 import gin
 import numpy as np
 
+from agents.blue_balancer.kinematics import (
+    forward_kinematics,
+    inverse_kinematics,
+)
 from agents.blue_balancer.wheel_balancer import WheelBalancer
-from utils.clamp import clamp, clamp_abs
+from utils.clamp import clamp
 
 
 def observe(observation, configuration, servo_layout) -> np.ndarray:
@@ -55,32 +59,31 @@ class WholeBodyController:
 
     Attributes:
         gain_scale: PD gain scale for hip and knee joints.
-        max_crouch: Maximum distance along the vertical axis that the
+        max_crouch_height: Maximum distance along the vertical axis that the
             robot goes down while crouching, in meters.
         max_crouch_velocity: Maximum vertical velocity in m / s.
         position_right_in_left: Translation from the left contact frame to
             the right contact frame, expressed in the left contact frame.
-        target_crouch: Target vertical distance in meters by which to crouch
-            (equivalently: lift the wheels), with respect to the initial
+        target_crouch_height: Target vertical distance in meters by which to
+            crouch (equivalently: lift the wheels), with respect to the initial
             configuration where the legs are extended. The target height (e.g.
             of the COM) above ground is therefore equal to ``maximum_height -
-            target_crouch``.
-        transform_rest_to_world: Rest frame pose for each end effector.
+            target_crouch_height``.
         turning_gain_scale: Additional gain scale added when the robot is
             turning to keep the legs stiff while the ground pulls them apart.
     """
 
     gain_scale: float
-    max_crouch: float
+    max_crouch_height: float
     max_crouch_velocity: float
-    target_crouch: float
+    target_crouch_height: float
     turning_gain_scale: float
 
     def __init__(
         self,
         config: Dict[str, Any],
         gain_scale: float,
-        max_crouch: float,
+        max_crouch_height: float,
         max_crouch_velocity: float,
         turning_gain_scale: float,
         wheel_distance: float,
@@ -91,8 +94,8 @@ class WholeBodyController:
         Args:
             config: Global configuration dictionary.
             gain_scale: PD gain scale for hip and knee joints.
-            max_crouch: Maximum distance along the vertical axis that the robot
-                goes down while crouching, in meters.
+            max_crouch_height: Maximum distance along the vertical axis that
+                the robot goes down while crouching, in meters.
             max_crouch_velocity: Maximum vertical velocity in [m] / [s].
             turning_gain_scale: Additional gain scale added when the robot is
                 turning to keep the legs stiff in spite of the ground pulling
@@ -113,10 +116,10 @@ class WholeBodyController:
             }
             for joint in joint_names
         }
-        self.crouch = np.nan
+        self.crouch_height = np.nan
         self.crouch_velocity = np.nan
         self.gain_scale = clamp(gain_scale, 0.1, 2.0)
-        self.max_crouch = max_crouch
+        self.max_crouch_height = max_crouch_height
         self.max_crouch_velocity = max_crouch_velocity
         self.position_right_in_left = np.array([0.0, wheel_distance, 0.0])
         self.servo_action = servo_action
@@ -140,9 +143,10 @@ class WholeBodyController:
             velocity = self.max_crouch_velocity * axis_value
         except KeyError:
             velocity = 0.0
-        crouch = self.target_crouch
-        crouch += velocity * dt
-        self.target_crouch = clamp(crouch, 0.0, self.max_crouch)
+        crouch_height = self.target_crouch_height + velocity * dt
+        self.target_crouch_height = clamp(
+            crouch_height, 0.0, self.max_crouch_height
+        )
         self.target_crouch_velocity = velocity
 
     def _initialize_crouch(self, observation: Dict[str, Any]) -> None:
@@ -153,12 +157,16 @@ class WholeBodyController:
             observation: Observation from the spine.
         """
         q_hip = np.mean(
-            observation["servo"][hip]["position"]
-            for hip in ["left_hip", "right_hip"]
+            [
+                observation["servo"][hip]["position"]
+                for hip in ["left_hip", "right_hip"]
+            ]
         )
         q_knee = np.mean(
-            observation["servo"][knee]["position"]
-            for knee in ["left_knee", "right_knee"]
+            [
+                observation["servo"][knee]["position"]
+                for knee in ["left_knee", "right_knee"]
+            ]
         )
         self.crouch = forward_kinematics(q_hip, q_knee)
         self.crouch_velocity = 0.0
@@ -174,12 +182,12 @@ class WholeBodyController:
         Returns:
             Dictionary with the new action and some internal state for logging.
         """
-        if np.isnan(self.crouch):
+        if np.isnan(self.crouch_height):
             self._initialize_crouch(observation)
 
         # TODO(scaron): velocities
         self.update_target_crouch(observation, dt)
-        q, v = inverse_kinematics(self.crouch, self.crouch_velocity)
+        q, v = inverse_kinematics(self.crouch_height, self.crouch_velocity)
         self.servo_action["left_hip"]["position"] = q[0]
         self.servo_action["left_knee"]["position"] = q[1]
         self.servo_action["right_hip"]["position"] = q[0]
