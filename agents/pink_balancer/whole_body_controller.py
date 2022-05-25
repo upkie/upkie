@@ -174,7 +174,14 @@ class WholeBodyController:
         self.wheel_balancer = WheelBalancer()  # type: ignore
         self.turning_gain_scale = turning_gain_scale
 
-    def update_target_height(self, observation, dt):
+    def update_target_height(self, observation: dict, dt: float) -> None:
+        """
+        Update target base height from joystick inputs.
+
+        Args:
+            observation: Observation from the spine.
+            dt: Duration in seconds until next cycle.
+        """
         try:
             axis_value: float = observation["joystick"]["pad_axis"][1]
             velocity = self.crouch_velocity * axis_value
