@@ -256,19 +256,13 @@ class WholeBodyController:
         self.servo_action["right_hip"]["position"] = q[0]
         self.servo_action["right_knee"]["position"] = q[1]
 
-        transform_left_to_world = self.tasks[
-            "left_contact"
-        ].transform_target_to_world
-        transform_right_to_world = self.tasks[
-            "right_contact"
-        ].transform_target_to_world
-        transform_right_to_left = transform_left_to_world.actInv(
-            transform_right_to_world
-        )
+        self.wheel_balancer.cycle(observation, dt)
         (
             left_wheel_velocity,
             right_wheel_velocity,
-        ) = self.wheel_balancer.get_wheel_velocities(transform_right_to_left)
+        ) = self.wheel_balancer.get_wheel_velocities(
+            self.position_right_in_left
+        )
 
         servo_action["left_wheel"] = {
             "position": np.nan,
