@@ -38,4 +38,22 @@ py_library(
     ],
 )
 
+py_binary(
+    name = "pink_balancer",
+    srcs = [
+        "main.py",
+    ],
+    main = "main.py",
+    data = [
+        ":config",
+    ],
+    deps = [
+        "//utils:realtime",
+        ":whole_body_controller",
+        "@pip//pypi__aiorate",
+        "@pip//pypi__gin_config",
+        "@vulp//spine:python",
+    ],
+)
+
 add_lint_tests(enable_clang_format_lint = True)
