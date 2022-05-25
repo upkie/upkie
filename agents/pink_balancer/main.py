@@ -135,3 +135,42 @@ async def run(
         action = whole_body_controller.cycle(observation, dt)
         spine.set_action(action)
         await rate.sleep()
+
+
+if __name__ == "__main__":
+    args = parse_command_line_arguments()
+
+    agent_dir = path.dirname(__file__)
+    gin.parse_config_file(f"{agent_dir}/whole_body_controller.gin")
+    gin.parse_config_file(f"{agent_dir}/wheel_balancer.gin")
+    if args.config == "default":
+        logging.warn('No configuration specified, assuming "bullet"')
+        args.config = "bullet"
+    if args.config == "pi3hat":
+        gin.parse_config_file(f"{agent_dir}/pi3hat.gin")
+    elif args.config == "bullet":
+        gin.parse_config_file(f"{agent_dir}/bullet.gin")
+
+    config_dir = f"{agent_dir}/../../config"
+    if args.config == "pi3hat":
+        configure_cpu(config["cpu"])
+
+    spine = SpineInterface()
+    try:
+        asyncio.run(run(spine, config))
+    except KeyboardInterrupt:
+        logging.info("Caught a keyboard interrupt")
+    except Exception:
+        logging.error("Controller raised an exception")
+        print("")
+        traceback.print_exc()
+        print("")
+
+    logging.info("Stopping the spine")
+    try:
+        spine.stop()
+    except Exception:
+        logging.error("Error while stopping the spine!")
+        print("")
+        traceback.print_exc()
+        print("")
