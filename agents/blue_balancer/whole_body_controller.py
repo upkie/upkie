@@ -83,8 +83,8 @@ class WholeBodyController:
         max_crouch_height: Maximum distance along the vertical axis that the
             robot goes down while crouching, in [m].
         robot: Robot model used for inverse kinematics.
-        target_position_wheel_in_rest: Target position in the rest frame.
-        tasks: Dictionary of inverse kinematics tasks.
+        target_lift: Target height in meters by which to lift the wheels, with
+            respect to the initial configuration where the legs are extended.
         transform_rest_to_world: Rest frame pose for each end effector.
         turning_gain_scale: Additional gain scale added when the robot is
             turning to keep the legs stiff while the ground pulls them apart.
@@ -93,10 +93,6 @@ class WholeBodyController:
     crouch_velocity: float
     gain_scale: float
     max_crouch_height: float
-    robot: pin.RobotWrapper
-    target_position_wheel_in_rest: np.ndarray
-    tasks: Dict[str, Any]
-    transform_rest_to_world: Dict[str, np.ndarray]
     turning_gain_scale: float
 
     def __init__(
@@ -134,17 +130,11 @@ class WholeBodyController:
         }
         self.__initialized = False
         self.servo_action = servo_action
-        self.configuration = configuration
         self.crouch_velocity = crouch_velocity
         self.gain_scale = clamp(gain_scale, 0.1, 2.0)
         self.max_crouch_height = max_crouch_height
         self.servo_layout = config["servo_layout"]
-        self.target_position_wheel_in_rest = np.zeros(3)
-        self.target_offset = {
-            "left_contact": np.zeros(3),
-            "right_contact": np.zeros(3),
-        }
-        self.tasks = tasks
+        self.target_height = 0.0
         self.transform_rest_to_world = {
             "left_contact": np.zeros((4, 4)),
             "right_contact": np.zeros((4, 4)),
@@ -167,38 +157,9 @@ class WholeBodyController:
             velocity = self.crouch_velocity * axis_value
         except KeyError:
             velocity = 0.0
-        height = self.target_position_wheel_in_rest[2]
+        height = self.target_height
         height += velocity * dt
-        self.target_position_wheel_in_rest[2] = clamp(
-            height, 0.0, self.max_crouch_height
-        )
-
-    def update_ik_targets(
-        self, observation: Dict[str, Any], dt: float
-    ) -> None:
-        """
-        Update IK frame targets from individual target positions.
-
-        Args:
-            observation: Observation from the spine.
-            dt: Duration in seconds until next cycle.
-        """
-        self.update_target_height(observation, dt)
-        transform_common_to_rest = pin.SE3(
-            rotation=np.eye(3),
-            translation=self.target_position_wheel_in_rest,
-        )
-        for target in ["left_contact", "right_contact"]:
-            transform_target_to_common = pin.SE3(
-                rotation=np.eye(3),
-                translation=self.target_offset[target],
-            )
-            transform_target_to_world = (
-                self.transform_rest_to_world[target]
-                * transform_common_to_rest
-                * transform_target_to_common
-            )
-            self.tasks[target].set_target(transform_target_to_world)
+        self.target_height = clamp(height, 0.0, self.max_crouch_height)
 
     def _process_first_observation(self, observation: Dict[str, Any]) -> None:
         """
@@ -208,9 +169,6 @@ class WholeBodyController:
             observation: Observation from the spine.
         """
         q = observe(observation, self.configuration, self.servo_layout)
-        self.tasks["base"].set_target(
-            self.configuration.get_transform_body_to_world("base")
-        )
         for target in ["left_contact", "right_contact"]:
             transform_target_to_world = (
                 self.configuration.get_transform_body_to_world(target)
