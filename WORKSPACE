@@ -11,17 +11,18 @@ BAZEL_VERSION_SHA_PI = "02fcc51686a2f7b360a629747134d62dec885012454fac4c8634fc52
 load("//tools/workspace:default.bzl", "add_default_repositories")
 add_default_repositories()
 
-load("//tools/pip:add_pip_packages.bzl", "add_pip_packages")
-add_pip_packages()
+# Depends on @rules_python which is added by add_default_repositories
+load("//tools/workspace:pip.bzl", "install_pypi_packages")
+install_pypi_packages()
 
-# @vulp is added from tools/workspace
+# @vulp is added by add_default_repositories
 load("@vulp//tools/workspace:default.bzl", add_vulp_repositories = "add_default_repositories")
 add_vulp_repositories()
 
-# @pi3hat is added from @vulp
+# @pi3hat is added by add_vulp_repositories
 load("@pi3hat//tools/workspace:default.bzl", add_pi3hat_repositories = "add_default_repositories")
 add_pi3hat_repositories()
 
-# @rpi_bazel is added from @pi3hat
+# @rpi_bazel is added by add_pi3hat_repositories
 load("@rpi_bazel//tools/workspace:default.bzl", add_rpi_bazel_repositories = "add_default_repositories")
 add_rpi_bazel_repositories()
