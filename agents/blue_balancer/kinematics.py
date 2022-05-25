@@ -15,12 +15,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Tuple
+from typing import Optional, Tuple
 
 import gin
 import numpy as np
 
-from utils.clamp import clamp_abs
+from utils.clamp import clamp, clamp_abs
 
 
 @gin.configurable
@@ -56,6 +56,8 @@ def inverse_kinematics(
     crouch_velocity: float,
     limb_length: float,
     velocity_limit: float,
+    previous_q_hip: Optional[float] = None,
+    dt: Optional[float] = None,
 ) -> Tuple[Tuple[float, float], Tuple[float, float]]:
     """
     Solve inverse kinematics for a single leg.
@@ -66,6 +68,10 @@ def inverse_kinematics(
         crouch_velocity: Time derivative of the crouch, in m / s.
         limb_length: (Model) Length of both links of the leg.
         velocity_limit: (Model) Maximum joint velocity in rad / s.
+        previous_q_hip: Previous output for the hip angle. Used to propagate
+            velocity limits onto positions.
+        dt: Duration in seconds since ``previous_q_hip``. Used to propagate
+            velocity limits onto positions.
 
     Returns:
         ===========  =========================================================
@@ -103,6 +109,13 @@ def inverse_kinematics(
         if squared_denom > 1e-10
         else np.sign(crouch_velocity) * velocity_limit
     )
+
+    if previous_q_hip is not None and dt is None:
+        q_hip = clamp(
+            q_hip,
+            lower=previous_q_hip - v_hip * dt,
+            upper=previous_q_hip + v_hip * dt,
+        )
 
     q_knee = clamp_abs(-2.0 * q_hip, np.pi)
     v_knee = clamp_abs(-2.0 * v_hip, velocity_limit)
