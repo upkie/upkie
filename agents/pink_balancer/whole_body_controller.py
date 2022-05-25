@@ -154,10 +154,10 @@ class WholeBodyController:
         tasks["posture"].set_target(
             custom_configuration_vector(robot, left_knee=0.2, right_knee=-0.2)
         )
+        self.__initialized = False
         self.configuration = configuration
         self.crouch_velocity = crouch_velocity
         self.gain_scale = clamp(gain_scale, 0.1, 2.0)
-        self.initialized = False
         self.max_crouch_height = max_crouch_height
         self.robot = robot
         self.servo_layout = config["servo_layout"]
@@ -217,3 +217,23 @@ class WholeBodyController:
                 * transform_target_to_common
             )
             self.tasks[target].set_target(transform_target_to_world)
+
+    def _process_first_observation(self, observation):
+        """
+        Function called at the first iteration of the controller.
+
+        Args:
+            observation: Observation from the spine.
+        """
+        q = observe(observation, self.configuration, self.servo_layout)
+        self.configuration = pink.apply_configuration(self.robot, q)
+        self.tasks["base"].set_target(
+            self.configuration.get_transform_body_to_world("base")
+        )
+        for target in ["left_contact", "right_contact"]:
+            transform_target_to_world = (
+                self.configuration.get_transform_body_to_world(target)
+            )
+            self.tasks[target].set_target(transform_target_to_world)
+            self.transform_rest_to_world[target] = transform_target_to_world
+        self.__initialized = True
