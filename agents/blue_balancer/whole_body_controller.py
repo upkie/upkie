@@ -107,26 +107,12 @@ class WholeBodyController:
                 This controller does not handle the case where the two wheels
                 are not in the lateral plane.
         """
-        joint_names = [
-            f"{side}_{joint}"
-            for side in ["left", "right"]
-            for joint in ["hip", "knee", "wheel"]
-        ]
-        servo_action = {
-            joint: {
-                "position": np.nan,
-                "velocity": np.nan,
-            }
-            for joint in joint_names
-        }
         self.crouch_height = np.nan
         self.crouch_velocity = np.nan
         self.gain_scale = clamp(gain_scale, 0.1, 2.0)
         self.max_crouch_height = max_crouch_height
         self.max_crouch_velocity = max_crouch_velocity
         self.position_right_in_left = np.array([0.0, wheel_distance, 0.0])
-        self.servo_action = servo_action
-        self.servo_layout = config["servo_layout"]
         self.turning_gain_scale = turning_gain_scale
         self.wheel_balancer = WheelBalancer()  # type: ignore
 
@@ -185,29 +171,42 @@ class WholeBodyController:
         if np.isnan(self.crouch_height):
             self._initialize_crouch(observation)
 
-        # TODO(scaron): velocities
         self.update_target_crouch(observation, dt)
         q, v = inverse_kinematics(self.crouch_height, self.crouch_velocity)
-        self.servo_action["left_hip"]["position"] = q[0]
-        self.servo_action["left_knee"]["position"] = q[1]
-        self.servo_action["right_hip"]["position"] = q[0]
-        self.servo_action["right_knee"]["position"] = q[1]
+        hip_position, knee_position = q
+        hip_velocity, knee_velocity = v
 
         self.wheel_balancer.cycle(observation, dt)
-        (
-            left_wheel_velocity,
-            right_wheel_velocity,
-        ) = self.wheel_balancer.get_wheel_velocities(
+        w = self.wheel_balancer.get_wheel_velocities(
             self.position_right_in_left
         )
+        left_wheel_velocity, right_wheel_velocity = w
 
-        self.servo_action["left_wheel"] = {
-            "position": np.nan,
-            "velocity": left_wheel_velocity,
-        }
-        self.servo_action["right_wheel"] = {
-            "position": np.nan,
-            "velocity": right_wheel_velocity,
+        servo_action = {
+            "left_hip": {
+                "position": -hip_position,
+                "velocity": -hip_velocity,
+            },
+            "right_hip": {
+                "position": +hip_position,
+                "velocity": +hip_velocity,
+            },
+            "left_knee": {
+                "position": -knee_position,
+                "velocity": -knee_velocity,
+            },
+            "right_knee": {
+                "position": +knee_position,
+                "velocity": +knee_velocity,
+            },
+            "left_wheel": {
+                "position": np.nan,
+                "velocity": left_wheel_velocity,
+            },
+            "right_wheel": {
+                "position": np.nan,
+                "velocity": right_wheel_velocity,
+            },
         }
 
         turning_prob = self.wheel_balancer.turning_probability
@@ -215,10 +214,10 @@ class WholeBodyController:
         kp_scale = self.gain_scale + self.turning_gain_scale * turning_prob
         kd_scale = self.gain_scale + self.turning_gain_scale * turning_prob
         for joint_name in ["left_hip", "left_knee", "right_hip", "right_knee"]:
-            self.servo_action[joint_name]["kp_scale"] = kp_scale
-            self.servo_action[joint_name]["kd_scale"] = kd_scale
+            servo_action[joint_name]["kp_scale"] = kp_scale
+            servo_action[joint_name]["kd_scale"] = kd_scale
 
         return {
-            "servo": self.servo_action,
+            "servo": servo_action,
             "wheel_balancer": self.wheel_balancer.log(),
         }
