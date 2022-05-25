@@ -192,3 +192,24 @@ class WholeBodyController:
         self.target_position_wheel_in_rest[2] = clamp(
             height, 0.0, self.max_crouch_height
         )
+
+    def update_ik_targets(self, observation, dt):
+        """
+        Update IK frame targets from individual target positions.
+        """
+        self.update_target_height(observation, dt)
+        transform_common_to_rest = pin.SE3(
+            rotation=np.eye(3),
+            translation=self.target_position_wheel_in_rest,
+        )
+        for target in ["left_contact", "right_contact"]:
+            transform_target_to_common = pin.SE3(
+                rotation=np.eye(3),
+                translation=self.target_offset[target],
+            )
+            transform_target_to_world = (
+                self.transform_rest_to_world[target]
+                * transform_common_to_rest
+                * transform_target_to_common
+            )
+            self.tasks[target].set_target(transform_target_to_world)
