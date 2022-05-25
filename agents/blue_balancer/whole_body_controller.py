@@ -189,7 +189,7 @@ class WholeBodyController:
         self.gain_scale = clamp(gain_scale, 0.1, 2.0)
         self.max_crouch = max_crouch
         self.max_crouch_velocity = max_crouch_velocity
-        self.position_right_in_left = np.ndarray([0.0, wheel_distance, 0.0])
+        self.position_right_in_left = np.array([0.0, wheel_distance, 0.0])
         self.servo_action = servo_action
         self.servo_layout = config["servo_layout"]
         self.target_crouch = 0.0
