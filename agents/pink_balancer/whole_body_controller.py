@@ -173,3 +173,15 @@ class WholeBodyController:
         }
         self.wheel_balancer = WheelBalancer()  # type: ignore
         self.turning_gain_scale = turning_gain_scale
+
+    def update_target_height(self, observation, dt):
+        try:
+            axis_value: float = observation["joystick"]["pad_axis"][1]
+            velocity = self.crouch_velocity * axis_value
+        except KeyError:
+            velocity = 0.0
+        height = self.target_position_wheel_in_rest[2]
+        height += velocity * dt
+        self.target_position_wheel_in_rest[2] = clamp(
+            height, 0.0, self.max_crouch_height
+        )
