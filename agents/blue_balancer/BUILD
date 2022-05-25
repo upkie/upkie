@@ -15,6 +15,17 @@ filegroup(
 )
 
 py_library(
+    name = "kinematics",
+    srcs = [
+        "kinematics.py",
+    ],
+    deps = [
+        "//utils:clamp",
+        "@pip//pypi__gin_config",
+    ],
+)
+
+py_library(
     name = "wheel_balancer",
     srcs = [
         "wheel_balancer.py",
@@ -33,6 +44,7 @@ py_library(
         "whole_body_controller.py",
     ],
     deps = [
+        ":kinematics",
         ":wheel_balancer",
         "@pip//pypi__gin_config",
         "@pip//pypi__upkie_description",
