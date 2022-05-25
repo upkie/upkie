@@ -208,28 +208,31 @@ class WholeBodyController:
         """
         try:
             axis_value: float = observation["joystick"]["pad_axis"][1]
-            velocity = self.crouch_velocity * axis_value
+            velocity = self.max_crouch_velocity * axis_value
         except KeyError:
             velocity = 0.0
-        height = self.target_height
-        height += velocity * dt
-        self.target_height = clamp(height, 0.0, self.max_crouch_height)
+        crouch = self.target_crouch
+        crouch += velocity * dt
+        self.target_crouch = clamp(crouch, 0.0, self.max_crouch)
+        self.target_crouch_velocity = velocity
 
-    def _process_first_observation(self, observation: Dict[str, Any]) -> None:
+    def _initialize_crouch(self, observation: Dict[str, Any]) -> None:
         """
-        Function called at the first iteration of the controller.
+        Initialize crouch and its derivative from first observation.
 
         Args:
             observation: Observation from the spine.
         """
-        q = observe(observation, self.configuration, self.servo_layout)
-        for target in ["left_contact", "right_contact"]:
-            transform_target_to_world = (
-                self.configuration.get_transform_body_to_world(target)
-            )
-            self.tasks[target].set_target(transform_target_to_world)
-            self.transform_rest_to_world[target] = transform_target_to_world
-        self.__initialized = True
+        q_hip = np.mean(
+            observation["servo"][hip]["position"]
+            for hip in ["left_hip", "right_hip"]
+        )
+        q_knee = np.mean(
+            observation["servo"][knee]["position"]
+            for knee in ["left_knee", "right_knee"]
+        )
+        self.crouch = forward_kinematics(q_hip, q_knee)
+        self.crouch_velocity = 0.0
 
     def cycle(self, observation: Dict[str, Any], dt: float) -> Dict[str, Any]:
         """
@@ -242,16 +245,8 @@ class WholeBodyController:
         Returns:
             Dictionary with the new action and some internal state for logging.
         """
-        if not self.__initialized:
-            self._process_first_observation(observation)
-
-        self.update_ik_targets(observation, dt)
-        robot_velocity = solve_ik(self.configuration, self.tasks.values(), dt)
-        q = self.configuration.integrate(robot_velocity, dt)
-        # ... solve_ik
-        servo_action = serialize_to_servo_action(
-            self.configuration, robot_velocity, self.servo_layout
-        )
+        if np.isnan(self.crouch):
+            self._initialize_crouch(observation)
 
         self.wheel_balancer.cycle(observation, dt)
 
