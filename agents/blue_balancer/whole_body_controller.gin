@@ -16,5 +16,7 @@
 
 import agents.blue_balancer.whole_body_controller
 
-solve_ik.limb_length = 0.24
+solve_ik.limb_length = 0.17
 solve_ik.velocity_limit = 0.00001
+
+WholeBodyController.wheel_distance = 0.3048
