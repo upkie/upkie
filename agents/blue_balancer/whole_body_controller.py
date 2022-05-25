@@ -248,7 +248,13 @@ class WholeBodyController:
         if np.isnan(self.crouch):
             self._initialize_crouch(observation)
 
-        self.wheel_balancer.cycle(observation, dt)
+        # TODO(scaron): velocities
+        self.update_target_crouch(observation, dt)
+        q, v = inverse_kinematics(self.crouch, self.crouch_velocity)
+        self.servo_action["left_hip"]["position"] = q[0]
+        self.servo_action["left_knee"]["position"] = q[1]
+        self.servo_action["right_hip"]["position"] = q[0]
+        self.servo_action["right_knee"]["position"] = q[1]
 
         transform_left_to_world = self.tasks[
             "left_contact"
