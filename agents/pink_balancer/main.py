@@ -95,3 +95,28 @@ config = {
         },
     },
 }
+
+
+async def run(
+    spine: SpineInterface,
+    config: Dict[str, Any],
+    frequency: float = 200.0,
+) -> None:
+    """
+    Read observations and send actions to the spine.
+
+    Args:
+        spine: Interface to the spine.
+        config: Configuration dictionary.
+        frequency: Control frequency in Hz.
+    """
+    whole_body_controller = WholeBodyController(config)
+    dt = 1.0 / frequency
+    rate = aiorate.Rate(frequency, "controller")
+    spine.start(config)
+    observation = spine.get_observation()  # pre-reset observation
+    while True:
+        observation = spine.get_observation()
+        action = whole_body_controller.cycle(observation, dt)
+        spine.set_action(action)
+        await rate.sleep()
