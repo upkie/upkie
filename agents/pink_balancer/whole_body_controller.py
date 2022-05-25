@@ -174,7 +174,9 @@ class WholeBodyController:
         self.wheel_balancer = WheelBalancer()  # type: ignore
         self.turning_gain_scale = turning_gain_scale
 
-    def update_target_height(self, observation: dict, dt: float) -> None:
+    def update_target_height(
+        self, observation: Dict[str, Any], dt: float
+    ) -> None:
         """
         Update target base height from joystick inputs.
 
@@ -193,7 +195,9 @@ class WholeBodyController:
             height, 0.0, self.max_crouch_height
         )
 
-    def update_ik_targets(self, observation: dict, dt: float) -> None:
+    def update_ik_targets(
+        self, observation: Dict[str, Any], dt: float
+    ) -> None:
         """
         Update IK frame targets from individual target positions.
 
@@ -218,7 +222,7 @@ class WholeBodyController:
             )
             self.tasks[target].set_target(transform_target_to_world)
 
-    def _process_first_observation(self, observation):
+    def _process_first_observation(self, observation: Dict[str, Any]) -> None:
         """
         Function called at the first iteration of the controller.
 
