@@ -22,6 +22,19 @@ py_library(
         "//utils:clamp",
         "//utils:filters",
         "//utils:imu",
+        "@pip//pypi__gin_config",
+    ],
+)
+
+py_library(
+    name = "whole_body_controller",
+    srcs = [
+        "whole_body_controller.py",
+    ],
+    deps = [
+        ":wheel_balancer",
+        "@pip//pypi__gin_config",
+        "@pip//pypi__upkie_description",
     ],
 )
 
