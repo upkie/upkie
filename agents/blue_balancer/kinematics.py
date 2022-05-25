@@ -82,7 +82,10 @@ def inverse_kinematics(
         https://scaron.info/blog/kinematics-of-a-symmetric-leg.html
     """
     leg_length = 2.0 * limb_length
-    assert 0 < crouch_height < leg_length, "Leg is under- or over-extended"
+    assert 0 < crouch_height < leg_length, (
+        f"Invalid crouch height: {crouch_height} [m]; "
+        "leg is under- or over-extended"
+    )
     height = leg_length - crouch_height
     height_velocity = -crouch_velocity
     x = height / leg_length

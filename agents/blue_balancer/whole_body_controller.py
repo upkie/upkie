@@ -69,6 +69,8 @@ class WholeBodyController:
             configuration where the legs are extended. The target height (e.g.
             of the COM) above ground is therefore equal to ``maximum_height -
             target_crouch_height``.
+        target_crouch_velocity: Desired time derivative for the target crouch
+            height, in m / s.
         turning_gain_scale: Additional gain scale added when the robot is
             turning to keep the legs stiff while the ground pulls them apart.
     """
@@ -77,6 +79,7 @@ class WholeBodyController:
     max_crouch_height: float
     max_crouch_velocity: float
     target_crouch_height: float
+    target_crouch_velocity: float
     turning_gain_scale: float
 
     def __init__(
@@ -124,7 +127,8 @@ class WholeBodyController:
         self.position_right_in_left = np.array([0.0, wheel_distance, 0.0])
         self.servo_action = servo_action
         self.servo_layout = config["servo_layout"]
-        self.target_crouch = 0.0
+        self.target_crouch_height = 0.0
+        self.target_crouch_velocity = np.nan
         self.turning_gain_scale = turning_gain_scale
         self.wheel_balancer = WheelBalancer()  # type: ignore
 
