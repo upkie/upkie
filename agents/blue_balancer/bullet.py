@@ -18,6 +18,7 @@
 import asyncio
 import logging
 import os
+import signal
 import time
 import traceback
 from os import path
@@ -108,3 +109,5 @@ if __name__ == "__main__":
             print("")
         finally:
             spine.stop()
+            os.kill(pid, signal.SIGINT)  # interrupt spine child process
+            os.waitpid(pid, 0)  # wait for spine to terminate
