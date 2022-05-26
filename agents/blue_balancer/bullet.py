@@ -26,9 +26,10 @@ from typing import Any, Dict
 import aiorate
 import gin
 import yaml
-from agents.blue_balancer.whole_body_controller import WholeBodyController
 from rules_python.python.runfiles import runfiles
 from vulp.spine import SpineInterface
+
+from agents.blue_balancer.whole_body_controller import WholeBodyController
 
 
 class ExampleAdvice(Exception):
@@ -80,10 +81,10 @@ if __name__ == "__main__":
         )
 
     # Gin configuration
-    gin.parse_config_file(f"{agent_dir}/bullet.gin")
     gin.parse_config_file(f"{agent_dir}/kinematics.gin")
     gin.parse_config_file(f"{agent_dir}/wheel_balancer.gin")
     gin.parse_config_file(f"{agent_dir}/whole_body_controller.gin")
+    gin.parse_config_file(f"{agent_dir}/bullet.gin")
 
     # Spine configuration
     with open(f"{agent_dir}/spine.yaml", "r") as fh:
