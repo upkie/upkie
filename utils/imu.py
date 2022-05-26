@@ -18,7 +18,6 @@
 
 from typing import Tuple
 
-import eigenpy
 import numpy as np
 
 from utils.clamp import clamp
@@ -74,6 +73,45 @@ def compute_pitch_frame_in_parent(
     return pitch
 
 
+def rotation_matrix_from_quaternion(quat: Tuple[float, float, float, float]) -> np.ndarray:
+    """
+    Convert a unit quaternion to the matrix representing the same rotation.
+
+    Args:
+        quat: Unit quaternion to convert, in ``[w, x, y, z]`` format.
+
+    Returns:
+        Rotation matrix corresponding to this quaternion.
+
+    See `Conversion between quaternions and rotation matrices`_.
+
+    .. _`Conversion between quaternions and rotation matrices`:
+        https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles#Rotation_matrices
+    """
+    if abs(np.dot(quat, quat) - 1.0) > 1e-5:
+        raise ValueError(f"Quaternion {quat} is not normalized")
+    qw, qx, qy, qz = quat
+    return np.array(
+        [
+            [
+                1 - 2 * (qy ** 2 + qz ** 2),
+                2 * (qx * qy - qz * qw),
+                2 * (qw * qy + qx * qz),
+            ],
+            [
+                2 * (qx * qy + qz * qw),
+                1 - 2 * (qx ** 2 + qz ** 2),
+                2 * (qy * qz - qx * qw),
+            ],
+            [
+                2 * (qx * qz - qy * qw),
+                2 * (qy * qz + qx * qw),
+                1 - 2 * (qx ** 2 + qy ** 2),
+            ],
+        ]
+    )
+
+
 def compute_base_pitch_from_imu(
     quat_imu_in_world: Tuple[float, float, float, float]
 ) -> float:
@@ -82,7 +120,7 @@ def compute_base_pitch_from_imu(
 
     Args:
         quat_imu_in_world: Quaternion representing the rotation matrix from
-            the *IMU* frame to the world frame.
+            the *IMU* frame to the world frame, in ``[w, x, y, z]`` format.
 
     Returns:
         Angle from the world z-axis (gravity) to the base z-axis.
@@ -94,8 +132,19 @@ def compute_base_pitch_from_imu(
         the input orientation is that of the IMU. Keep in mind that the IMU
         frame is turned 180 degrees around the yaw axis of the base frame.
     """
-    quat = eigenpy.Quaternion(*quat_imu_in_world)
-    orientation_imu_in_world = quat.toRotationMatrix()
+    # TODO(scaron): report why we eliminate dependency on eigenpy for now
+    # quat = eigenpy.Quaternion(*quat_imu_in_world)
+    # orientation_imu_in_world = quat.toRotationMatrix()
+    # assert (
+    #     np.linalg.norm(
+    #         orientation_imu_in_world
+    #         - rotation_matrix_from_quaternion(quat_imu_in_world)
+    #     )
+    #     < 1e-5
+    # )
+    orientation_imu_in_world = rotation_matrix_from_quaternion(
+        quat_imu_in_world
+    )
     pitch_imu_in_world = compute_pitch_frame_in_parent(
         orientation_imu_in_world
     )
