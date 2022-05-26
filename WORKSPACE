@@ -20,8 +20,8 @@ load("@vulp//tools/workspace:default.bzl", add_vulp_repositories = "add_default_
 add_vulp_repositories()
 
 # Vulp also has Python dependencies
-# load("@vulp//tools/workspace:install_python_deps.bzl", install_vulp_python_deps = "install_python_deps")
-# install_vulp_python_deps()
+load("@vulp//tools/workspace:install_python_deps.bzl", install_vulp_python_deps = "install_python_deps")
+install_vulp_python_deps()
 
 # @pi3hat is added by add_vulp_repositories
 load("@pi3hat//tools/workspace:default.bzl", add_pi3hat_repositories = "add_default_repositories")

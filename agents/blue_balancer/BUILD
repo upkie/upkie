@@ -21,7 +21,7 @@ py_library(
     ],
     deps = [
         "//utils:clamp",
-        "@pip//pypi__gin_config",
+        "@pip_upkie_locomotion//pypi__gin_config",
     ],
 )
 
@@ -34,7 +34,7 @@ py_library(
         "//utils:clamp",
         "//utils:filters",
         "//utils:imu",
-        "@pip//pypi__gin_config",
+        "@pip_upkie_locomotion//pypi__gin_config",
     ],
 )
 
@@ -46,8 +46,8 @@ py_library(
     deps = [
         ":kinematics",
         ":wheel_balancer",
-        "@pip//pypi__gin_config",
-        "@pip//pypi__upkie_description",
+        "@pip_upkie_locomotion//pypi__gin_config",
+        "@pip_upkie_locomotion//pypi__upkie_description",
     ],
 )
 
@@ -63,9 +63,9 @@ py_binary(
     deps = [
         "//utils:realtime",
         ":whole_body_controller",
-        "@pip//pypi__aiorate",
-        "@pip//pypi__gin_config",
-        "@pip//pypi__pyyaml",
+        "@pip_upkie_locomotion//pypi__aiorate",
+        "@pip_upkie_locomotion//pypi__gin_config",
+        "@pip_upkie_locomotion//pypi__pyyaml",
         "@vulp//spine:python",
     ],
 )
@@ -82,9 +82,9 @@ py_binary(
     ],
     deps = [
         ":whole_body_controller",
-        "@pip//pypi__aiorate",
-        "@pip//pypi__gin_config",
-        "@pip//pypi__pyyaml",
+        "@pip_upkie_locomotion//pypi__aiorate",
+        "@pip_upkie_locomotion//pypi__gin_config",
+        "@pip_upkie_locomotion//pypi__pyyaml",
         "@rules_python//python/runfiles",
         "@vulp//spine:python",
     ],

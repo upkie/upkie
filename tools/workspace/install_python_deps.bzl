@@ -4,18 +4,13 @@
 
 load("@rules_python//python:pip.bzl", "pip_install")
 
-def install_python_deps(name = "pip"):
+def install_python_deps():
     """
-    Install Python packages to an external repository (default: @pip).
+    Install Python packages to a @pip_upkie_locomotion external repository.
 
-    Args:
-        name (str, optional): Unique name for the created external repository.
-
-    This function intended to be loaded and called from a WORKSPACE. If your
-    project depends on @upkie_locomotion, you will need to call this function
-    from its WORKSPACE as well.
+    This function intended to be loaded and called from your WORKSPACE.
     """
     pip_install(
-        name = name,
-        requirements = Label("//tools/workspace/pip:requirements.txt"),
+        name = "pip_upkie_locomotion",
+        requirements = Label("//tools/workspace/pip_upkie_locomotion:requirements.txt"),
     )

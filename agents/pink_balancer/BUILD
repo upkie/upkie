@@ -20,8 +20,8 @@ py_library(
     ],
     deps = [
         "//agents/blue_balancer:wheel_balancer",
-        "@pip//pypi__gin_config",
-        "@pip//pypi__upkie_description",
+        "@pip_upkie_locomotion//pypi__gin_config",
+        "@pip_upkie_locomotion//pypi__upkie_description",
     ],
 )
 
@@ -38,8 +38,8 @@ py_binary(
     deps = [
         "//utils:realtime",
         ":whole_body_controller",
-        "@pip//pypi__aiorate",
-        "@pip//pypi__gin_config",
+        "@pip_upkie_locomotion//pypi__aiorate",
+        "@pip_upkie_locomotion//pypi__gin_config",
         "@vulp//spine:python",
     ],
 )
