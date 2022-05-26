@@ -70,4 +70,24 @@ py_binary(
     ],
 )
 
+py_binary(
+    name = "bullet",
+    srcs = [
+        "bullet.py",
+    ],
+    main = "bullet.py",
+    data = [
+        ":config",
+        "//spines:bullet",
+    ],
+    deps = [
+        ":whole_body_controller",
+        "@pip_upkie_locomotion//pypi__aiorate",
+        "@pip_upkie_locomotion//pypi__gin_config",
+        "@pip_upkie_locomotion//pypi__pyyaml",
+        "@rules_python//python/runfiles",
+        "@vulp//spine:python",
+    ],
+)
+
 add_lint_tests(enable_clang_format_lint = True)
