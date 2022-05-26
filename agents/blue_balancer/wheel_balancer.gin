@@ -17,7 +17,6 @@
 import agents.blue_balancer.wheel_balancer
 
 WheelBalancer.air_return_period = 1.0             # [s]
-WheelBalancer.flexion_correction_gain = 0.0
 WheelBalancer.max_ground_velocity = 1.0           # [m] / [s]
 WheelBalancer.max_integral_error_velocity = 10.0  # [m] / [s]
 WheelBalancer.max_target_accel = 0.3              # [m] / [s]²

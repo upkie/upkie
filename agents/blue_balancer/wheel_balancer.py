@@ -42,8 +42,6 @@ class WheelBalancer:
         air_return_period: Cutoff period for resetting integrators while the
             robot is in the air, in [s].
         error: Two-dimensional vector of ground position and base pitch errors.
-        flexion_correction_gain: Gain applied to the hackish flexion error to
-            compensate undesired leg flexion, particularly while turning.
         gains: velocity controller gains.
         ground_velocity: Sagittal velocity in [m] / [s].
         integral_error_velocity: Integral term contributing to the sagittal
@@ -135,7 +133,6 @@ class WheelBalancer:
 
     air_return_period: float
     error: np.ndarray
-    flexion_correction_gain: float
     gains: Gains
     ground_velocity: float
     integral_error_velocity: float
@@ -157,7 +154,6 @@ class WheelBalancer:
     def __init__(
         self,
         air_return_period: float,
-        flexion_correction_gain: float,
         max_ground_velocity: float,
         max_integral_error_velocity: float,
         max_target_accel: float,
@@ -176,9 +172,6 @@ class WheelBalancer:
         Args:
             air_return_period: Cutoff period for resetting integrators while
                 the robot is in the air, in [s].
-            flexion_correction_gain: Gain applied to the hackish flexion error
-                to compensate undesired leg flexion, particularly while
-                turning.
             max_ground_velocity: Maximum commanded ground velocity no matter
                 what, in [m] / [s].
             max_integral_error_velocity: Maximum integral error velocity, in
@@ -203,7 +196,6 @@ class WheelBalancer:
         self.air_return_period = air_return_period
         self.error = np.zeros(2)
         self.fall_pitch = fall_pitch
-        self.flexion_correction_gain = flexion_correction_gain
         self.gains = WheelBalancer.Gains()  # type: ignore
         self.ground_velocity = 0.0
         self.integral_error_velocity = 0.0
