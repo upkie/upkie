@@ -12,12 +12,16 @@ load("//tools/workspace:default.bzl", "add_default_repositories")
 add_default_repositories()
 
 # Depends on @rules_python which is added by add_default_repositories
-load("//tools/workspace:pip.bzl", "pip_install_upkie_locomotion")
-pip_install_upkie_locomotion()
+load("//tools/workspace:install_python_deps.bzl", "install_python_deps")
+install_python_deps()
 
 # @vulp is added by add_default_repositories
 load("@vulp//tools/workspace:default.bzl", add_vulp_repositories = "add_default_repositories")
 add_vulp_repositories()
+
+# Vulp also has Python dependencies
+# load("@vulp//tools/workspace:install_python_deps.bzl", install_vulp_python_deps = "install_python_deps")
+# install_vulp_python_deps()
 
 # @pi3hat is added by add_vulp_repositories
 load("@pi3hat//tools/workspace:default.bzl", add_pi3hat_repositories = "add_default_repositories")
