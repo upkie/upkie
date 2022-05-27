@@ -60,6 +60,10 @@ class CommandLineArguments {
    * \param[in] args List of command-line arguments.
    */
   explicit CommandLineArguments(const std::vector<std::string>& args) {
+    const char* env_log_dir = ::getenv("SPINE_LOG_DIR");
+    if (env_log_dir != nullptr) {
+      log_dir = std::string(env_log_dir);
+    }
     for (size_t i = 0; i < args.size(); i++) {
       const auto& arg = args[i];
       if (arg == "-h" || arg == "--help") {
@@ -71,6 +75,9 @@ class CommandLineArguments {
       } else if (arg == "--can-cpu") {
         can_cpu = std::stol(args.at(++i));
         spdlog::info("Command line: can_cpu = {}", can_cpu);
+      } else if (arg == "--log-dir") {
+        log_dir = args.at(++i);
+        spdlog::info("Command line: log_dir = {}", log_dir);
       } else if (arg == "--shm-name") {
         shm_name = args.at(++i);
         spdlog::info("Command line: shm_name = {}", shm_name);
@@ -101,6 +108,8 @@ class CommandLineArguments {
               << "    Attitude frequency in Hz.\n";
     std::cout << "--can-cpu <cpuid>\n"
               << "    CPUID for the CAN thread (default: 2).\n";
+    std::cout << "--log-dir <path>\n"
+              << "    Path to a directory for output logs.\n";
     std::cout << "--shm-name <name>\n"
               << "    Name for IPC shared memory file.\n";
     std::cout << "--spine-cpu <cpuid>\n"
@@ -122,6 +131,9 @@ class CommandLineArguments {
 
   //! Help flag.
   bool help = false;
+
+  //! Log directory
+  std::string log_dir = "";
 
   //! Name for the shared memory file.
   std::string shm_name = "/vulp";
@@ -192,9 +204,8 @@ int main(const CommandLineArguments& args) {
     Spine::Parameters spine_params;
     spine_params.cpu = args.spine_cpu;
     spine_params.frequency = args.spine_frequency;
-    const auto log_dir = std::string(::getenv("GUPIL_DIR")) + "/logs/";
     const auto now = vulp::utils::datetime_now_string();
-    spine_params.log_path = log_dir + "pi3hat_spine_" + now + ".mpack";
+    spine_params.log_path = args.log_dir + "pi3hat_spine_" + now + ".mpack";
     Spine spine(spine_params, interface, observation);
     spine.run();
   } catch (const ::mjbots::pi3hat::Error& error) {

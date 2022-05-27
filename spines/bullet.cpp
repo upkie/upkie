@@ -57,16 +57,23 @@ class CommandLineArguments {
    * \param[in] args List of command-line arguments.
    */
   explicit CommandLineArguments(const std::vector<std::string>& args) {
+    const char* env_log_dir = ::getenv("SPINE_LOG_DIR");
+    if (env_log_dir != nullptr) {
+      log_dir = std::string(env_log_dir);
+    }
     for (size_t i = 0; i < args.size(); i++) {
       const auto& arg = args[i];
       if (arg == "-h" || arg == "--help") {
         help = true;
-      } else if (arg == "--shm-name") {
-        shm_name = args.at(++i);
-        spdlog::info("Command line: shm_name = {}", shm_name);
+      } else if (arg == "--log-dir") {
+        log_dir = args.at(++i);
+        spdlog::info("Command line: log_dir = {}", log_dir);
       } else if (arg == "--nb-substeps") {
         nb_substeps = std::stol(args.at(++i));
         spdlog::info("Command line: nb_substeps = {}", nb_substeps);
+      } else if (arg == "--shm-name") {
+        shm_name = args.at(++i);
+        spdlog::info("Command line: shm_name = {}", shm_name);
       } else if (arg == "--show") {
         show = true;
       } else if (arg == "--spine-frequency") {
@@ -89,6 +96,8 @@ class CommandLineArguments {
     std::cout << "Optional arguments:\n\n";
     std::cout << "-h, --help\n"
               << "    Print this help and exit.\n";
+    std::cout << "--log-dir <path>\n"
+              << "    Path to a directory for output logs.\n";
     std::cout << "--nb-substeps <k>\n"
               << "    Number of simulation steps per action. "
               << "Makes spine pausing.\n";
@@ -107,6 +116,9 @@ class CommandLineArguments {
 
   //! Help flag
   bool help = false;
+
+  //! Log directory
+  std::string log_dir = "";
 
   //! Number of simulation substeps
   unsigned nb_substeps = 0u;
@@ -165,9 +177,8 @@ int main(const char* argv0, const CommandLineArguments& args) {
   // Spine
   Spine::Parameters spine_params;
   spine_params.frequency = args.spine_frequency;
-  const auto log_dir = std::string(::getenv("GUPIL_DIR")) + "/logs/";
   const auto now = vulp::utils::datetime_now_string();
-  spine_params.log_path = log_dir + "bullet_spine_" + now + ".mpack";
+  spine_params.log_path = args.log_dir + "bullet_spine_" + now + ".mpack";
   spine_params.shm_name = args.shm_name;
   Spine spine(spine_params, interface, observation);
   if (args.nb_substeps == 0u) {
