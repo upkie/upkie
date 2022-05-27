@@ -15,7 +15,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 from typing import Tuple
 
 import numpy as np
@@ -73,7 +72,9 @@ def compute_pitch_frame_in_parent(
     return pitch
 
 
-def rotation_matrix_from_quaternion(quat: Tuple[float, float, float, float]) -> np.ndarray:
+def rotation_matrix_from_quaternion(
+    quat: Tuple[float, float, float, float]
+) -> np.ndarray:
     """
     Convert a unit quaternion to the matrix representing the same rotation.
 
