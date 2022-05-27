@@ -1,6 +1,8 @@
 # Upkie locomotion
 
-Collection of Python agents, observers and Vulp spines for the [Upkie](https://www.youtube.com/watch?v=NO_TkHGS0wQ) wheeled biped.
+![C++ version](https://img.shields.io/badge/C++-17/20-blue.svg?style=flat)
+
+Collection of Python agents, observers and Vulp spines for the [Upkie](https://www.youtube.com/watch?v=NO_TkHGS0wQ) wheeled biped. 🚧 **Pre-release.**
 
 ### Try it out!
 
