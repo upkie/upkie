@@ -11,13 +11,13 @@ BAZEL_VERSION_SHA_PI = "02fcc51686a2f7b360a629747134d62dec885012454fac4c8634fc52
 load("//tools/workspace:default.bzl", "add_default_repositories")
 add_default_repositories()
 
-# Depends on @rules_python which is added by add_default_repositories
-load("//tools/workspace:install_python_deps.bzl", "install_python_deps")
-install_python_deps()
-
 # @vulp is added by add_default_repositories
 load("@vulp//tools/workspace:default.bzl", add_vulp_repositories = "add_default_repositories")
 add_vulp_repositories()
+
+# Depends on @rules_python which is added by add_default_repositories
+load("//tools/workspace:install_python_deps.bzl", "install_python_deps")
+install_python_deps()
 
 # Vulp also has Python dependencies
 load("@vulp//tools/workspace:install_python_deps.bzl", install_vulp_python_deps = "install_python_deps")
