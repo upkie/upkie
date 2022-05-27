@@ -57,10 +57,6 @@ class CommandLineArguments {
    * \param[in] args List of command-line arguments.
    */
   explicit CommandLineArguments(const std::vector<std::string>& args) {
-    const char* env_log_dir = ::getenv("SPINE_LOG_DIR");
-    if (env_log_dir != nullptr) {
-      log_dir = std::string(env_log_dir);
-    }
     for (size_t i = 0; i < args.size(); i++) {
       const auto& arg = args[i];
       if (arg == "-h" || arg == "--help") {
@@ -118,7 +114,7 @@ class CommandLineArguments {
   bool help = false;
 
   //! Log directory
-  std::string log_dir = "";
+  std::string log_dir = "/tmp";
 
   //! Number of simulation substeps
   unsigned nb_substeps = 0u;
@@ -178,7 +174,7 @@ int main(const char* argv0, const CommandLineArguments& args) {
   Spine::Parameters spine_params;
   spine_params.frequency = args.spine_frequency;
   const auto now = vulp::utils::datetime_now_string();
-  spine_params.log_path = args.log_dir + "bullet_spine_" + now + ".mpack";
+  spine_params.log_path = args.log_dir + "/bullet_spine_" + now + ".mpack";
   spine_params.shm_name = args.shm_name;
   Spine spine(spine_params, interface, observation);
   if (args.nb_substeps == 0u) {
