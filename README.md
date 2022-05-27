@@ -18,7 +18,7 @@ cd upkie_locomotion
 
 Connect a USB controller to move the robot around. 🎮
 
-There is no dependency to install on Linux thanks to [Bazel](https://bazel.build/), which builds all dependencies and runs the Python controller in one go. The syntax is the same to deploy to the Raspberry Pi of the [real robot](https://www.youtube.com/shorts/8b36XcCgh7s).
+There is no dependency to install on Linux thanks to [Bazel](https://bazel.build/), which builds all dependencies and runs the Python controller in one go. (This will take a while the first time.) The syntax is the same to deploy to the Raspberry Pi of the [real robot](https://www.youtube.com/shorts/8b36XcCgh7s).
 
 ## Contents
 
