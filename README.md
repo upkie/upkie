@@ -16,6 +16,8 @@ cd upkie_locomotion
 ./tools/bazelisk run -c opt //agents/blue_balancer:bullet
 ```
 
+Connect a USB controller to move the robot around. 🎮
+
 There is no dependency to install on Linux thanks to [Bazel](https://bazel.build/), which builds all dependencies and runs the Python controller in one go. The syntax is the same to deploy to the Raspberry Pi of the [real robot](https://www.youtube.com/shorts/8b36XcCgh7s).
 
 ## Contents
@@ -28,7 +30,7 @@ There is no dependency to install on Linux thanks to [Bazel](https://bazel.build
 ### Spines
 
 * Bullet: ...
-* pi3hat: ... 
+* pi3hat: ...
 
 ### Observers
 
