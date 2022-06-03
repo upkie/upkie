@@ -24,8 +24,8 @@ There is no dependency to install on Linux thanks to [Bazel](https://bazel.build
 
 ### Agents
 
-* Blue balancer: ...
-* Pink balancer: ...
+* **Blue balancer:** ...
+* **Pink balancer:** same as the Blue balancer, but inverse kinematics is computed by [Pink](https://github.com/tasts-robots/pink) rather than by a model-specific analytical solution. This is the controller that runs in the [first](https://www.youtube.com/shorts/8b36XcCgh7s) [two](https://www.youtube.com/watch?v=NO_TkHGS0wQ) videos of Upkie.
 
 ### Spines
 
