@@ -2,7 +2,7 @@
 
 ![C++ version](https://img.shields.io/badge/C++-17/20-blue.svg?style=flat)
 
-Collection of Python agents, observers and Vulp spines for the [Upkie](https://www.youtube.com/watch?v=NO_TkHGS0wQ) wheeled biped. 🚧 **Pre-release.**
+Collection of Python agents, observers and Vulp spines for the [Upkie](https://hackaday.io/project/185729-upkie-wheeled-biped-robot) wheeled biped. 🚧 **Pre-release.**
 
 ### Try it out!
 
@@ -18,7 +18,7 @@ cd upkie_locomotion
 
 Connect a USB controller to move the robot around. 🎮
 
-There is no dependency to install on Linux thanks to [Bazel](https://bazel.build/), which builds all dependencies and runs the Python controller in one go. (This will take a while the first time.) The syntax is the same to deploy to the Raspberry Pi of the [real robot](https://www.youtube.com/shorts/8b36XcCgh7s).
+There is no dependency to install on Linux thanks to [Bazel](https://bazel.build/), which builds all dependencies and runs the Python controller in one go. (This will take a while the first time.) The syntax is the same to deploy to the Raspberry Pi of the living-room version of the robot.
 
 ## Contents
 
