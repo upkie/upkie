@@ -365,10 +365,10 @@ class WheelBalancer:
             ]
         )
 
-        # Upkie's trick: as per control theory's book, the proper feedforward
-        # velocity should be ``+self.target_ground_velocity``. However, it is
-        # with resolute purpose that it sends ``-self.target_ground_velocity``
-        # instead!
+        # Non-minimum phase trick: as per control theory's book, the proper
+        # feedforward velocity should be ``+self.target_ground_velocity``.
+        # However, it is with resolute purpose that it sends
+        # ``-self.target_ground_velocity`` instead!
         #
         # Try both on the robot, you will see the difference :)
         #
