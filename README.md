@@ -4,7 +4,7 @@
 [![Build](https://img.shields.io/github/workflow/status/tasts-robots/upkie_locomotion/CI)](https://github.com/tasts-robots/upkie_locomotion/actions)
 [![Coverage](https://coveralls.io/repos/github/tasts-robots/upkie_locomotion/badge.svg?branch=main)](https://coveralls.io/github/tasts-robots/upkie_locomotion?branch=main)
 [![Documentation](https://img.shields.io/badge/docs-online-brightgreen?logo=read-the-docs&style=flat)](https://tasts-robots.org/doc/upkie_locomotion/)
-[![Vulp](https://img.shields.io/badge/%F0%9F%A6%8A%20vulp-0.9.0-orange)](https://github.com/tasts-robots/vulp)
+[![Vulp](https://img.shields.io/badge/%F0%9F%A6%8A%20vulp-1.0.0-orange)](https://github.com/tasts-robots/vulp)
 
 Collection of Python agents, observers and Vulp spines for the [Upkie](https://hackaday.io/project/185729-upkie-wheeled-biped-robot) wheeled biped. 🚧 **Pre-release.**
 
