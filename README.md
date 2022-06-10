@@ -1,7 +1,9 @@
 # Upkie locomotion
 
+[![Build](https://img.shields.io/github/workflow/status/tasts-robots/upkie_locomotion/CI)](https://github.com/tasts-robots/upkie_locomotion/actions)
 ![C++ version](https://img.shields.io/badge/C++-17/20-blue.svg?style=flat)
-[![C++ docs](https://img.shields.io/badge/C++-docs-blue.svg)](https://tasts-robots.org/doc/upkie_locomotion/)
+[![Documentation](https://img.shields.io/badge/docs-online-brightgreen?logo=read-the-docs&style=flat)](https://tasts-robots.org/doc/upkie_locomotion/)
+[![Vulp](https://img.shields.io/badge/%F0%9F%A6%8A%20vulp-0.9.0-orange)](https://github.com/tasts-robots/vulp)
 
 Collection of Python agents, observers and Vulp spines for the [Upkie](https://hackaday.io/project/185729-upkie-wheeled-biped-robot) wheeled biped. 🚧 **Pre-release.**
 
@@ -31,7 +33,7 @@ Additionally, spines can be extended with *controllers* and *observers* to trans
 
 #### 🔵 Blue balancer
 
-This agent is repeatable for checking out Upkie's physical capabilities, and a good entry point for newcomers. It balances the robot using PID feedback from the head's pitch to wheel velocities, plus a feedforward [non-minimum phase trick](https://github.com/tasts-robots/upkie_locomotion/blob/55a331c6a6a165761a85087b7bea35d1403a6cf9/agents/blue_balancer/wheel_balancer.py#L368) for smoother transitions from standing to rolling. An analytical inverse kinematics is also plugged in for crouching and standing up. (It is connected to the D-pad of the USB controller if one is found.)
+A 200 Hz agent designed to check out Upkie's physical capabilities. It is repeatable, and a good entry point for newcomers. It balances the robot using PID feedback from the head's pitch to wheel velocities, plus a feedforward [non-minimum phase trick](https://github.com/tasts-robots/upkie_locomotion/blob/55a331c6a6a165761a85087b7bea35d1403a6cf9/agents/blue_balancer/wheel_balancer.py#L368) for smoother transitions from standing to rolling. An analytical inverse kinematics is also plugged in for crouching and standing up. (It is connected to the D-pad of the USB controller if one is found.)
 
 #### 🟣 Pink balancer
 
