@@ -13,8 +13,8 @@ jobs:
             - name: "Checkout sources"
               uses: actions/checkout@v2
 
-            - name: "Build agents and observers"
+            - name: "Check unit tests"
               env:
                   BAZELISK_GITHUB_TOKEN: ${{ secrets.BAZELISK_GITHUB_TOKEN }}
               run: |
-                  tools/bazelisk build //agents/... //observers/...
+                  tools/bazelisk test //agents/... //observers/...
