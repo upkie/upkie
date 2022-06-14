@@ -1,3 +1,4 @@
 bazel-*
 doc/html
-doc/images
+doc/images/*.eps
+doc/images/*.png
