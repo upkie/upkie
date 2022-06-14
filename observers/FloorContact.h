@@ -31,7 +31,30 @@ namespace upkie_locomotion::observers {
 using palimpsest::Dictionary;
 using vulp::observation::Observer;
 
-//! Observer for leg contacts.
+/*! Observe contact between the wheels and the floor.
+ *
+ * This observer makes two assumptions:
+ *
+ * 1. The floor is a plane.
+ * 2. The robot's head plane is parallel to the floor.
+ *
+ * The two planes are depicted in this overview figure:
+ *
+ * \image html floor-contact.png
+ * \image latex floor-contact.eps
+ *
+ * It determines whether contact is established based on:
+ *
+ * - WheelContact observers associated with each wheel.
+ * - Hip and knee torques, whose norm is a good indicator of contact when the
+ *   floor is not orthogonal to gravity, or the legs are bent, but is an
+ *   unreliable indicator when the floor is horizontal and the legs are
+ *   stretched.
+ *
+ * The latter is an incremental improvement to filter out outliers from the
+ * former.
+ *
+ */
 class FloorContact : public Observer {
  public:
   struct Parameters {
