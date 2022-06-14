@@ -14,9 +14,18 @@ html:
 
 clean:
 	rm -rf $(HTMLDIR)
+	rm -f $(wildcard images/*.eps) $(wildcard images/*.png)
 
 open:
 	firefox $(HTMLDIR)/index.html
 
-upload: clean html
+images/%.eps : figures/%.svg
+	inkscape --without-gui --file=$< --export-eps=$@
+
+images/%.png : figures/%.svg
+	inkscape --without-gui --export-area-page --file=$< --export-png=$@
+
+figures: images/floor-contact.eps images/floor-contact.png
+
+upload: clean figures html
 	rsync -auvz --delete-after $(HTMLDIR)/ $(REMOTEDIR)/
