@@ -27,7 +27,7 @@ There is no dependency to install on Linux thanks to [Bazel](https://bazel.build
 
 ## Contents
 
-The code is organized into *spines*, which communicate with the simulator (Bullet) or actuators (pi3hat on the Raspberry Pi) using the [Vulp](https://github.com/tasts-robots/vulp) C++ library, and *agents*, the main programs that implement behaviors in Python.
+The code is organized into *spines*, which communicate with the simulator (Bullet) or actuators (pi3hat) using the [Vulp](https://github.com/tasts-robots/vulp) C++ library, and *agents*, the main programs that implement behaviors in Python.
 
 Additionally, spines can be extended with *controllers* and *observers* to transfer functionality from Python "thoughts" to C++ "reflexes". In the case of Upkie, there is no additional controller (actuators are commanded directly from Python) but there are additional observers to detect contacts and keep track of where the wheels are on the ground.
 
