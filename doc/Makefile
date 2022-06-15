@@ -25,7 +25,7 @@ images/%.eps : figures/%.svg
 images/%.png : figures/%.svg
 	inkscape --without-gui --export-area-page --file=$< --export-png=$@
 
-figures: images/floor-contact.eps images/floor-contact.png
+figures: images/floor-contact.eps images/floor-contact.png images/wheel-odometry.eps images/wheel-odometry.png
 
 upload: clean figures html
 	rsync -auvz --delete-after $(HTMLDIR)/ $(REMOTEDIR)/

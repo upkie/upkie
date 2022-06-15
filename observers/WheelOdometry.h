@@ -30,9 +30,11 @@ namespace upkie_locomotion::observers {
 using palimpsest::Dictionary;
 using vulp::observation::Observer;
 
-/*! Floating base odometry from wheel measurements.
+/*! Observe the relative motion of the floating base with respect to the floor.
  *
- * We can use a simple rigid body for each wheel. In the base frame:
+ * Consider a given wheel \f$i \in \{\mathit{left}, \mathit{right}\}\f$.
+ * Assuming the wheel is rolling without slipping on the floor, its velocity is
+ * related to that of the base, in the base frame \f$B\f$, by:
  *
  * \f[
  * \sideset{_B}{} {\begin{bmatrix} v_i^x \\ v_i^y \\ v_i^z \end{bmatrix}}
@@ -51,14 +53,17 @@ using vulp::observation::Observer;
  * body angular velocity of the base (in full: the magnitude of the angular
  * velocity from base to world in base, whose direction we assume is aligned
  * with the ground normal), \f$r_i\f$ is the position of the wheel contact
- * point in the base frame, and \f$\dot{r}_i\f$ its time derivative (e.g. if
- * the leg is moving).
+ * point in the base frame, and \f$\dot{r}_i\f$ its time derivative (zero if
+ * the hips and knees don't move, non-zero if they do).
+ *
+ * \image html wheel-odometry.png
+ * \image latex wheel-odometry.eps
  *
  * When we infer, all these equations should be satisfied simultaneously. The
  * system is over-determined so we can do it in a least-squares sense.
  *
- * In this implementation, we further assume that \f$\omega\f$ and
- * \f$\dot{r}_i\f$ are zero, so that the kinematics simplify to:
+ * In this observer, we further assume that \f$\omega\f$ and \f$\dot{r}_i\f$
+ * are zero, so that the kinematics simplify to:
  *
  * \f[
  * \sideset{_B}{} {\begin{bmatrix} v_i^x \\ v_i^y \end{bmatrix}}
@@ -66,10 +71,17 @@ using vulp::observation::Observer;
  * \sideset{_B}{} {\begin{bmatrix} v^x \\ v^y \end{bmatrix}}
  * \f]
  *
- * And we simply compute \f$v\f$ from \f$v_i\f$'s with an arithmetic average.
+ * We then simply compute \f$v\f$ from \f$v_i\f$'s with an arithmetic average.
+ * The relative position of the base with respect to the ground is finally
+ * computed by forward integration:
  *
- * \note Odometry is only incremented when at least one wheel is in contact
- * with the ground.
+ * \f[
+ * p(T) = \int_{t=0}^T v(t) {\rm d}t
+ * \f]
+ *
+ * The initial time \f$t = 0\f$ in this formula corresponds to touchdown.
+ * Odometry is only incremented when at least one wheel is in contact with the
+ * ground; its output is stationary when both legs are in the air.
  */
 class WheelOdometry : public Observer {
  public:
