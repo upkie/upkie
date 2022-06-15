@@ -34,24 +34,39 @@ using vulp::observation::Observer;
  *
  * We can use a simple rigid body for each wheel. In the base frame:
  *
- *    [ v_i.x ]     [ v.x ]     [   0   ]     [ r_i.x ]
- *    [ v_i.y ] =   [ v.y ] +   [   0   ] x   [ r_i.y ] + B_dot(r_i)
- *  B_[ v_i.z ]   B_[  0  ]   B_[ omega ]   B_[   0   ]
+ * \f[
+ * \sideset{_B}{} {\begin{bmatrix} v_i^x \\ v_i^y \\ v_i^z \end{bmatrix}}
+ * =
+ * \sideset{_B}{} {\begin{bmatrix} v^x \\ v^y \\ 0 \end{bmatrix}}
+ * +
+ * \sideset{_B}{} {\begin{bmatrix} 0 \\ 0 \\ \omega \end{bmatrix}}
+ * \times
+ * \sideset{_B}{} {\begin{bmatrix} r_i^x \\ r_i^y \\ 0 \end{bmatrix}}
+ * +
+ * \sideset{_B}{} {\begin{bmatrix} \dot{r}_i^x \\ \dot{r}_i^y \\ \dot{r}_i^z
+ * \end{bmatrix}} \f]
  *
- * where v_i is the linear velocity of the wheel point, v the linear velocity
- * of the base, omega its angular velocity, r_i the position of the wheel point
- * and dot(r_i) its time derivative (e.g. if the leg is moving).
+ * where \f$v_i\f$ is the linear velocity of the contact point at wheel
+ * \f$i\f$, \f$v\f$ is the linear velocity of the base, \f$\omega\f$ is the
+ * body angular velocity of the base (in full: the magnitude of the angular
+ * velocity from base to world in base, whose direction we assume is aligned
+ * with the ground normal), \f$r_i\f$ is the position of the wheel contact
+ * point in the base frame, and \f$\dot{r}_i\f$ its time derivative (e.g. if
+ * the leg is moving).
  *
- * When we infer all these equations should be satisfied simultaneously. The
+ * When we infer, all these equations should be satisfied simultaneously. The
  * system is over-determined so we can do it in a least-squares sense.
  *
- * In this implementation, we assume omega and dot(r_i) are zero, so that it
- * all simplifies to:
+ * In this implementation, we further assume that \f$\omega\f$ and
+ * \f$\dot{r}_i\f$ are zero, so that the kinematics simplify to:
  *
- *    [ v_i.x ] =   [ v.x ]
- *  B_[ v_i.y ]   B_[ v.y ]
+ * \f[
+ * \sideset{_B}{} {\begin{bmatrix} v_i^x \\ v_i^y \end{bmatrix}}
+ * =
+ * \sideset{_B}{} {\begin{bmatrix} v^x \\ v^y \end{bmatrix}}
+ * \f]
  *
- * And we simply compute v from v_i's with an arithmetic average.
+ * And we simply compute \f$v\f$ from \f$v_i\f$'s with an arithmetic average.
  *
  * \note Odometry is only incremented when at least one wheel is in contact
  * with the ground.
