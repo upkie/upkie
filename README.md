@@ -44,8 +44,8 @@ Same as the Blue balancer, but inverse kinematics is computed by [Pink](https://
 ### Observers
 
 * [Floor contact](https://tasts-robots.org/doc/upkie_locomotion/classupkie__locomotion_1_1observers_1_1FloorContact.html#details): Observe contact between the wheels and the floor.
-* [Wheel contact](https://tasts-robots.org/doc/upkie_locomotion/classupkie__locomotion_1_1observers_1_1WheelContact.html#details): ...
-* Wheel odometry: ...
+* [Wheel contact](https://tasts-robots.org/doc/upkie_locomotion/classupkie__locomotion_1_1observers_1_1WheelContact.html#details): Observe contact between a given wheel and the floor.
+* [Wheel odometry](https://tasts-robots.org/doc/upkie_locomotion/classupkie__locomotion_1_1observers_1_1WheelOdometry.html#details): ...
 
 ### Spines
 
