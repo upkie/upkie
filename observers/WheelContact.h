@@ -26,29 +26,36 @@ namespace upkie_locomotion::observers {
 
 using palimpsest::Dictionary;
 
-/*! Wheel contact observer.
+/*! Observe contact between a given wheel and the floor.
  *
  * We use an acceleration-from-torque simple linear regressor with no affine
- * term and online updates. There is a quick intro to the math in this post:
- * <https://scaron.info/blog/simple-linear-regression-with-online-updates.html>.
+ * term and online updates. There is a quick intro to the math in the following
+ * post on [simple linear regression with online
+ * updates](https://scaron.info/blog/simple-linear-regression-with-online-updates.html).
+ * The output of this regressor is an "inertia" (torque over acceleration
+ * slope) that is low during contact and large in the air (as then the wheel
+ * needs little torque to spin freely).
  *
- * The output slope is relatively low during contact, and takes high values in
- * the air (wheel spins with low torques). We further filter it by a
- * max-passthrough to detect contact loss fast, with otherwise exponential
- * decay exponentially so that we assume contact stays if there is no contact
- * loss for a while.
+ * The observer is made more reliable by three ~~hacks~~ post-processing stages:
  *
- * Filtering aside, the other memory in this observer comes from hysteresis.
- * Contact is detected when the slope goes below the touchdown slope, and lost
- * when it spikes above the liftoff slope. This allows a gray band of slope
- * variations while the robot moves around in contact.
+ * 1. **Max-passthrough filtering:** We further filter the output inertia by a
+ * max-passthrough, to detect contact loss fast, which otherwise decays
+ * exponentially, so that we tend to assume contact remains if there is no
+ * contact loss for a while.
  *
- * There is a second hysteresis around low filtered velocities or low filtered
- * torques. If filtered values are low then real values have been zero for a
- * while, which is inconclusive: the robot could be standing perfectly upright
- * rather than having lost contact. (Most likely, if it loses contact, these
- * values won't stay zero for long anyway.) When this happens we just keep the
- * memorized contact state and wait for more exciting data.
+ * 2. **Touchdown and liftoff hysteresis:** Filtering aside, the other memory
+ * in this observer comes from hysteresis. Contact is detected as soon as the
+ * contact inertia goes below the configured touchdown inertia, and lost when
+ * it spikes above the liftoff inertia. This allows a gray band of variations
+ * while the robot moves around in contact.
+ *
+ * 3. **No decision when acceleration or torque is low:** There is a second
+ * hysteresis around low filtered accelerations or low filtered torques. If
+ * filtered values are low then real values have been zero for a while, which
+ * is inconclusive: the robot could be standing perfectly upright rather than
+ * having lost contact. (Most likely, if it loses contact, these values won't
+ * stay zero for long anyway.) When this happens we just keep the memorized
+ * contact state and wait for more exciting data.
  */
 class WheelContact {
  public:
