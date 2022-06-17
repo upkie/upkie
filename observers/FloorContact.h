@@ -26,6 +26,11 @@
 #include "upkie_locomotion/observers/WheelContact.h"
 #include "vulp/observation/Observer.h"
 
+/*! Observers used by Upkie.
+ *
+ * \image html observers.png
+ * \image latex observers.eps
+ */
 namespace upkie_locomotion::observers {
 
 using palimpsest::Dictionary;
