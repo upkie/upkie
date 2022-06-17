@@ -29,25 +29,27 @@ There is no dependency to install on Linux thanks to [Bazel](https://bazel.build
 
 The code is organized into *spines*, which communicate with the simulator (Bullet) or actuators (pi3hat) using the [Vulp](https://github.com/tasts-robots/vulp) C++ library, and *agents*, the main programs that implement behaviors in Python.
 
-Additionally, spines can be extended with *controllers* and *observers* to transfer functionality from Python "thoughts" to C++ "reflexes". In the case of Upkie, there is no additional controller (actuators are commanded directly from Python) but there are additional observers to detect contacts and keep track of where the wheels are on the ground.
-
 ### Agents
 
 #### 🔵 Blue balancer
 
-A 200 Hz agent designed to check out Upkie's physical capabilities. It is repeatable, and a good entry point for newcomers. It balances the robot using PID feedback from the head's pitch to wheel velocities, plus a feedforward [non-minimum phase trick](https://github.com/tasts-robots/upkie_locomotion/blob/55a331c6a6a165761a85087b7bea35d1403a6cf9/agents/blue_balancer/wheel_balancer.py#L368) for smoother transitions from standing to rolling. An analytical inverse kinematics is also plugged in for crouching and standing up. (It is connected to the D-pad of the USB controller if one is found.)
+A 200 Hz agent designed to check out Upkie's physical capabilities. It is repeatable, and a good entry point for newcomers. It balances the robot using PID feedback from the head's pitch and wheel odometry to wheel velocities, plus a feedforward [non-minimum phase trick](https://github.com/tasts-robots/upkie_locomotion/blob/55a331c6a6a165761a85087b7bea35d1403a6cf9/agents/blue_balancer/wheel_balancer.py#L368) for smoother transitions from standing to rolling. An analytical inverse kinematics is also plugged in for crouching and standing up. (It is connected to the D-pad of the USB controller if one is found.)
 
 #### 🟣 Pink balancer
 
 Same as the Blue balancer, but inverse kinematics is computed by [Pink](https://github.com/tasts-robots/pink) rather than with a model-specific analytical solution. This is the controller that runs in the [first](https://www.youtube.com/shorts/8b36XcCgh7s) [two](https://www.youtube.com/watch?v=NO_TkHGS0wQ) videos of Upkie.
 
+### Observers
+
 <img src="https://tasts-robots.org/doc/upkie_locomotion/observers.png" align="right">
 
-### Observers
+The following observers are used to detect contacts and keep track of where the wheels are on the ground:
 
 * [Floor contact](https://tasts-robots.org/doc/upkie_locomotion/classupkie__locomotion_1_1observers_1_1FloorContact.html#details): contact between the wheels and the floor.
 * [Wheel contact](https://tasts-robots.org/doc/upkie_locomotion/classupkie__locomotion_1_1observers_1_1WheelContact.html#details): contact between a given wheel and the floor.
 * [Wheel odometry](https://tasts-robots.org/doc/upkie_locomotion/classupkie__locomotion_1_1observers_1_1WheelOdometry.html#details): relative motion of the floating base with respect to the floor.
+
+Both Blue and Pink agents use contact as a reset flag for their integrators, to avoid over-spinning the wheels while the robot is in the air. Wheel odometry is part of their secondary task (after keeping the head straight), which is to stay around the same spot on the floor.
 
 ### Spines
 
