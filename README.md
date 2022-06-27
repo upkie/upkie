@@ -53,5 +53,8 @@ Both Blue and Pink agents use contact as a reset flag for their integrators, to 
 
 ### Spines
 
-* Bullet: ...
-* pi3hat: ...
+
+* Bullet: spawn Upkie in a [Bullet](http://bulletphysics.org/) simulation. Resetting this spine moves the robot back to its initial configuration in this world.
+* pi3hat: spins the [mjbots pi3hat](https://mjbots.com/products/mjbots-pi3hat-r4-4b), this spine is made to be called from the onboard Raspberry Pi. Servos are stopped when the spine is stopped, and switch to [position mode](https://github.com/mjbots/moteus/blob/main/docs/reference.md#theory-of-operation) (which is a position-velocity-torque controller) when the spine idles.
+
+Check out the [spine state machine](https://tasts-robots.org/doc/vulp/classvulp_1_1spine_1_1StateMachine.html#details) for a summary of what "stop" and "idle" mean in this context.
