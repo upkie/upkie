@@ -23,23 +23,21 @@ cd upkie_locomotion
 
 Connect a USB controller to move the robot around. 🎮
 
-There is no dependency to install on Linux thanks to [Bazel](https://bazel.build/), which builds all dependencies and runs the Python controller in one go. (This will take a while the first time.) The syntax is the same to deploy to the Raspberry Pi of the living-room version of the robot.
+There is no dependency to install on Linux thanks to [Bazel](https://bazel.build/), which builds all dependencies and runs the Python controller in one go. (This will take a while the first time.) The syntax is the same to deploy to the Raspberry Pi on the robot.
 
-## Contents
+The code is organized into *spines*, which communicate with the simulator or actuators using the [Vulp](https://github.com/tasts-robots/vulp) C++ library, and *agents*, the main programs that implement behaviors in Python.
 
-The code is organized into *spines*, which communicate with the simulator (Bullet) or actuators (pi3hat) using the [Vulp](https://github.com/tasts-robots/vulp) C++ library, and *agents*, the main programs that implement behaviors in Python.
+## Agents
 
-### Agents
-
-#### 🔵 Blue balancer
+### 🔵 Blue balancer
 
 A 200 Hz agent designed to check out Upkie's physical capabilities. It is repeatable, and a good entry point for newcomers. It balances the robot using PID feedback from the head's pitch and wheel odometry to wheel velocities, plus a feedforward [non-minimum phase trick](https://github.com/tasts-robots/upkie_locomotion/blob/55a331c6a6a165761a85087b7bea35d1403a6cf9/agents/blue_balancer/wheel_balancer.py#L368) for smoother transitions from standing to rolling. An analytical inverse kinematics is also plugged in for crouching and standing up. (It is connected to the D-pad of the USB controller if one is found.)
 
-#### 🟣 Pink balancer
+### 🟣 Pink balancer
 
 Same as the Blue balancer, but inverse kinematics is computed by [Pink](https://github.com/tasts-robots/pink) rather than with a model-specific analytical solution. This is the controller that runs in the [first](https://www.youtube.com/shorts/8b36XcCgh7s) [two](https://www.youtube.com/watch?v=NO_TkHGS0wQ) videos of Upkie.
 
-### Observers
+## Observers
 
 <img src="https://tasts-robots.org/doc/upkie_locomotion/observers.png" align="right">
 
@@ -51,10 +49,14 @@ The following observers are used to detect contacts and keep track of where the 
 
 Both Blue and Pink agents use contact as a reset flag for their integrators, to avoid over-spinning the wheels while the robot is in the air. Wheel odometry is part of their secondary task (after keeping the head straight), which is to stay around the same spot on the floor.
 
-### Spines
+## Spines
 
+### 👾 Bullet
 
-* Bullet: spawn Upkie in a [Bullet](http://bulletphysics.org/) simulation. Resetting this spine moves the robot back to its initial configuration in this world.
-* pi3hat: spins the [mjbots pi3hat](https://mjbots.com/products/mjbots-pi3hat-r4-4b), this spine is made to be called from the onboard Raspberry Pi. Servos are stopped when the spine is stopped, and switch to [position mode](https://github.com/mjbots/moteus/blob/main/docs/reference.md#theory-of-operation) (which is a position-velocity-torque controller) when the spine idles.
+Spawn Upkie in a [Bullet](http://bulletphysics.org/) simulation. Resetting this spine moves the robot back to its initial configuration in this world.
+
+### 🤖 pi3hat
+
+This spine is made to be called from a Raspberry Pi with an onboard mjbots [pi3hat](https://mjbots.com/products/mjbots-pi3hat-r4-4b). Servos are stopped when the spine is stopped, and switch to [position mode](https://github.com/mjbots/moteus/blob/main/docs/reference.md#theory-of-operation) (which is a position-velocity-torque controller) when the spine idles.
 
 Check out the [spine state machine](https://tasts-robots.org/doc/vulp/classvulp_1_1spine_1_1StateMachine.html#details) for a summary of what "stop" and "idle" mean in this context.
