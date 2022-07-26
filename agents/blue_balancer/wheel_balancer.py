@@ -154,6 +154,7 @@ class WheelBalancer:
     def __init__(
         self,
         air_return_period: float,
+        fall_pitch: float,
         max_ground_velocity: float,
         max_integral_error_velocity: float,
         max_target_accel: float,
@@ -164,7 +165,6 @@ class WheelBalancer:
         turning_deadband: float,
         turning_decision_time: float,
         wheel_radius: float,
-        fall_pitch: float = 1.0,
     ):
         """
         Initialize balancer.
