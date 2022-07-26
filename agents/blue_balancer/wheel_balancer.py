@@ -225,10 +225,20 @@ class WheelBalancer:
         Args:
             observation: Latest observation.
             dt: Time in [s] until next cycle.
+
+        Note:
+            The target ground velocity is commanded by both the left axis and
+            right trigger of the joystick. When the right trigger is unpressed,
+            the commanded velocity is set from the left axis, interpolating
+            from 0 to 50% of its maximum configured value. Pressing the right
+            trigger increases it further up to 100% of the configured value.
         """
         try:
             axis_value = observation["joystick"]["left_axis"][1]
-            unfiltered_velocity = -self.max_target_velocity * axis_value
+            trigger_value = observation["joystick"]["right_trigger"]  # -1 to 1
+            boost_value = clamp_abs(0.5 * (trigger_value + 1.0), 1.0)  # 0 to 1
+            max_velocity = 0.5 * (1.0 + boost_value) * self.max_target_velocity
+            unfiltered_velocity = -max_velocity * axis_value
         except KeyError:
             unfiltered_velocity = 0.0
         self.target_ground_velocity = abs_bounded_derivative_filter(
