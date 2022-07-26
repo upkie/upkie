@@ -21,7 +21,7 @@ py_library(
     deps = [
         "//agents/blue_balancer:wheel_balancer",
         "@pip_upkie_locomotion//pypi__gin_config",
-        "@pip_upkie_locomotion//pypi__numpy",
+        # "@pip_upkie_locomotion//pypi__numpy",
         "@pip_upkie_locomotion//pypi__upkie_description",
     ],
 )
