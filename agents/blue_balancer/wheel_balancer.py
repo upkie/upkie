@@ -138,17 +138,17 @@ class WheelBalancer:
     integral_error_velocity: float
     max_ground_velocity: float
     max_integral_error_velocity: float
-    max_target_velocity: float
-    max_target_distance: float
     max_target_accel: float
+    max_target_distance: float
+    max_target_velocity: float
     pitch: float
     target_ground_position: float
     target_ground_velocity: float
     target_yaw_position: float
     target_yaw_velocity: float
     turning_deadband: float
-    turning_probability: float
     turning_decision_time: float
+    turning_probability: float
     wheel_radius: float
 
     def __init__(
