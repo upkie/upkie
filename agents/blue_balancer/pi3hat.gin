@@ -16,6 +16,26 @@
 
 import agents.blue_balancer.wheel_balancer
 
+# Smooth wheels with radius=5 cm, wood flooring
+# ---------------------------------------------
+#
+#Gains.pitch_damping = 3.0        # 4.0 marginal, 5.0 unstable
+#Gains.pitch_stiffness = 20.0     # can go up
+#Gains.position_damping = 3.0     # 4.0 marginal, 5.0 unstable
+#Gains.position_stiffness = 7.0   # can go up
+
+# 4WD wheels with radius=6 cm, carpet
+# -----------------------------------
+#
+# Pitch: 2 is roughly the good damping value for a stiffness of 15; 1 is too
+# low, resulting in oscillations of increasing magnitude; 3 is too high,
+# resulting in permanent small oscillations as the robot rolls around.
+#
+# Position: 2.5 is roughly a good value to match the (2, 15) in pitch; 1.6 is
+# also good on rough horizontal floor, 3.3 is too much and results in
+# oscillations of increasing magnitude. Going for 1.6 now because 2.5 feels a
+# bit more overshooty.
+#
 Gains.pitch_damping = 2.0
 Gains.pitch_stiffness = 15.0
 Gains.position_damping = 0.8
