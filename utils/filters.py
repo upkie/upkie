@@ -76,7 +76,6 @@ def bounded_derivative_filter(
     return clamp(output, *output_bounds)
 
 
-
 def low_pass_filter(
     prev_output: float,
     cutoff_period: float,
