@@ -41,21 +41,14 @@ py_library(
 )
 
 py_library(
-    name = "serialize",
-    srcs = [
-        "serialize.py",
-    ],
-)
-
-py_library(
     name = "logging",
     srcs = [
         "logging.py",
     ],
     deps = [
-        ":serialize",
         "@pip_upkie_locomotion//pypi__aiofiles",
         "@pip_upkie_locomotion//pypi__msgpack",
+        "@vulp//utils:serialize",
     ],
 )
 

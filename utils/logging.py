@@ -23,8 +23,7 @@ import asyncio
 
 import aiofiles
 import msgpack
-
-from .serialize import serialize
+from vulp.utils.serialize import serialize
 
 
 async def write_log(path: str, logging_queue: asyncio.Queue) -> None:
