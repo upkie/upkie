@@ -47,4 +47,16 @@ py_library(
     ],
 )
 
+py_library(
+    name = "logging",
+    srcs = [
+        "logging.py",
+    ],
+    deps = [
+        ":serialize",
+        "@pip_upkie_locomotion//pypi__aiofiles",
+        "@pip_upkie_locomotion//pypi__msgpack",
+    ],
+)
+
 add_lint_tests(enable_clang_format_lint = True)
