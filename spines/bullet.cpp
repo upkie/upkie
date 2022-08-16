@@ -102,7 +102,7 @@ class CommandLineArguments {
     std::cout << "--show\n"
               << "    Show the Bullet GUI.\n";
     std::cout << "--spine-frequency <frequency>\n"
-              << "    Spine frequency in Hertz.\n";
+              << "    Spine frequency in Hertz (default: 1000 Hz).\n";
     std::cout << "\n";
   }
 
