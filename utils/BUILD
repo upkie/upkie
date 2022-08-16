@@ -40,4 +40,11 @@ py_library(
     ],
 )
 
+py_library(
+    name = "serialize",
+    srcs = [
+        "serialize.py",
+    ],
+)
+
 add_lint_tests(enable_clang_format_lint = True)
