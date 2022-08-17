@@ -17,19 +17,23 @@
 
 import argparse
 import asyncio
-import logging
-import traceback
+import datetime
+import os
+import shutil
 import time
+import traceback
 from os import path
 from typing import Any, Dict
 
 import aiorate
 import gin
 import yaml
-from agents.blue_balancer.whole_body_controller import WholeBodyController
 from mpacklog.python import AsyncLogger
 from utils.realtime import configure_cpu
+from utils.spdlog import logging
 from vulp.spine import SpineInterface
+
+from agents.blue_balancer.whole_body_controller import WholeBodyController
 
 
 def parse_command_line_arguments() -> argparse.Namespace:
@@ -93,7 +97,8 @@ async def run(
         await rate.sleep()
 
 
-async def main(spine, config: Dict[str, Any], logger: AsyncLogger):
+async def main(spine, config: Dict[str, Any]):
+    logger = AsyncLogger("/dev/shm/brain.mpack")
     await asyncio.gather(
         run(spine, config, logger),
         logger.write(),
@@ -123,10 +128,9 @@ if __name__ == "__main__":
     if args.config == "pi3hat":
         configure_cpu(cpu=3)
 
-    logger = AsyncLogger("/dev/shm/brain.mpack")
     spine = SpineInterface()
     try:
-        asyncio.run(main(spine, config, logger))
+        asyncio.run(main(spine, config))
     except KeyboardInterrupt:
         logging.info("Caught a keyboard interrupt")
     except Exception:
@@ -135,7 +139,7 @@ if __name__ == "__main__":
         traceback.print_exc()
         print("")
 
-    logging.info("Stopping the spine")
+    logging.info("Stopping the spine...")
     try:
         spine.stop()
     except Exception:
@@ -143,3 +147,9 @@ if __name__ == "__main__":
         print("")
         traceback.print_exc()
         print("")
+
+    now = datetime.datetime.now()
+    stamp = now.strftime("%Y-%m-%d_%H%M%S")
+    save_path = os.path.expanduser(f"~/pink_balancer_{stamp}.mpack")
+    shutil.copy("/dev/shm/brain.mpack", save_path)
+    logging.info(f"Log saved to {save_path}")

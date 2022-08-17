@@ -38,7 +38,9 @@ py_binary(
     ],
     deps = [
         "//utils:realtime",
+        "//utils:spdlog",
         ":whole_body_controller",
+        "@mpacklog//python",
         "@pip_upkie_locomotion//pypi__aiorate",
         "@pip_upkie_locomotion//pypi__gin_config",
         "@vulp//spine:python",

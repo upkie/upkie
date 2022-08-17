@@ -41,6 +41,13 @@ py_library(
 )
 
 py_library(
+    name = "spdlog",
+    srcs = [
+        "spdlog.py",
+    ],
+)
+
+py_library(
     name = "logging",
     srcs = [
         "logging.py",
