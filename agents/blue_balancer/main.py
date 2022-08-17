@@ -19,6 +19,7 @@ import argparse
 import asyncio
 import logging
 import traceback
+import time
 from os import path
 from typing import Any, Dict
 
@@ -26,6 +27,7 @@ import aiorate
 import gin
 import yaml
 from agents.blue_balancer.whole_body_controller import WholeBodyController
+from mpacklog.python import AsyncLogger
 from utils.realtime import configure_cpu
 from vulp.spine import SpineInterface
 
@@ -54,6 +56,7 @@ def parse_command_line_arguments() -> argparse.Namespace:
 async def run(
     spine: SpineInterface,
     config: Dict[str, Any],
+    logger: AsyncLogger,
     frequency: float = 200.0,
 ) -> None:
     """
@@ -65,6 +68,7 @@ async def run(
         frequency: Control frequency in Hz.
     """
     whole_body_controller = WholeBodyController(config)
+    debug: Dict[str, Any] = {}
     dt = 1.0 / frequency
     rate = aiorate.Rate(frequency, "controller")
     spine.start(config)
@@ -72,8 +76,29 @@ async def run(
     while True:
         observation = spine.get_observation()
         action = whole_body_controller.cycle(observation, dt)
+        action_time = time.time()
         spine.set_action(action)
+        debug["rate"] = {
+            "measured_period": rate.measured_period,
+            "slack": rate.slack,
+        }
+        await logger.put(
+            {
+                "action": action,
+                "debug": debug,
+                "observation": observation,
+                "time": action_time,
+            }
+        )
         await rate.sleep()
+
+
+async def main(spine, config: Dict[str, Any], logger: AsyncLogger):
+    await asyncio.gather(
+        run(spine, config, logger),
+        logger.write(),
+        return_exceptions=False,  # make sure exceptions are raised
+    )
 
 
 if __name__ == "__main__":
@@ -98,9 +123,10 @@ if __name__ == "__main__":
     if args.config == "pi3hat":
         configure_cpu(cpu=3)
 
+    logger = AsyncLogger("/dev/shm/brain.mpack")
     spine = SpineInterface()
     try:
-        asyncio.run(run(spine, config))
+        asyncio.run(main(spine, config, logger))
     except KeyboardInterrupt:
         logging.info("Caught a keyboard interrupt")
     except Exception:
