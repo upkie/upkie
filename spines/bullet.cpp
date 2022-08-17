@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
+#include <mpacklog/Logger.h>
 #include <vulp/actuation/BulletInterface.h>
-#include <vulp/logging/Logger.h>
 #include <vulp/observation/ObserverPipeline.h>
 #include <vulp/observation/sources/CpuTemperature.h>
 #include <vulp/observation/sources/Joystick.h>
@@ -37,11 +37,11 @@
 
 namespace robots::upkie::spine {
 
+using mpacklog::Logger;
 using palimpsest::Dictionary;
 using upkie_locomotion::observers::FloorContact;
 using upkie_locomotion::observers::WheelOdometry;
 using vulp::actuation::BulletInterface;
-using vulp::logging::Logger;
 using vulp::observation::ObserverPipeline;
 using vulp::observation::sources::CpuTemperature;
 using vulp::observation::sources::Joystick;
