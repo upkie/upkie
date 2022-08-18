@@ -65,6 +65,7 @@ py_binary(
     ],
     deps = [
         "//utils:realtime",
+        "//utils:spdlog",
         ":whole_body_controller",
         "@mpacklog//python",
         "@pip_upkie_locomotion//pypi__aiorate",

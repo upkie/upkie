@@ -29,11 +29,11 @@ import aiorate
 import gin
 import yaml
 from mpacklog.python import AsyncLogger
-from utils.realtime import configure_cpu
-from utils.spdlog import logging
 from vulp.spine import SpineInterface
 
 from agents.blue_balancer.whole_body_controller import WholeBodyController
+from utils.realtime import configure_cpu
+from utils.spdlog import logging
 
 
 def parse_command_line_arguments() -> argparse.Namespace:
@@ -99,6 +99,12 @@ async def run(
 
 async def main(spine, config: Dict[str, Any]):
     logger = AsyncLogger("/dev/shm/brain.mpack")
+    await logger.put(
+        {
+            "config": config,
+            "time": time.time(),
+        }
+    )
     await asyncio.gather(
         run(spine, config, logger),
         logger.write(),
@@ -150,6 +156,6 @@ if __name__ == "__main__":
 
     now = datetime.datetime.now()
     stamp = now.strftime("%Y-%m-%d_%H%M%S")
-    save_path = os.path.expanduser(f"~/pink_balancer_{stamp}.mpack")
+    save_path = os.path.expanduser(f"~/blue_balancer_{stamp}.mpack")
     shutil.copy("/dev/shm/brain.mpack", save_path)
     logging.info(f"Log saved to {save_path}")

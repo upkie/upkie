@@ -33,7 +33,7 @@ from vulp.spine import SpineInterface
 from agents.blue_balancer.whole_body_controller import WholeBodyController
 
 
-class ExampleAdvice(Exception):
+class UsageAdvice(Exception):
 
     """
     Exception raised when this example is called with unexpected parameters.
@@ -74,7 +74,7 @@ if __name__ == "__main__":
     )
 
     if "-opt" not in spine_path or "-fastbuild" in spine_path:
-        raise ExampleAdvice(
+        raise UsageAdvice(
             "This example is meant to be called by ``bazel run -c opt`` "
             "so that the simulator performs well, but it seems the "
             'compilation mode is "fastbuild"? Go to the code and comment out '
