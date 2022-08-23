@@ -28,7 +28,7 @@ cc_binary(
     deps = [
         "//observers",
         "//spines:upkie",
-        "@mpacklog//cpp",
+        "@mpacklog",
         "@vulp//actuation:bullet_interface",
         "@vulp//observation",
         "@vulp//observation/sources",

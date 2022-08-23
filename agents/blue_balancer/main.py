@@ -28,7 +28,7 @@ from typing import Any, Dict
 import aiorate
 import gin
 import yaml
-from mpacklog.python import AsyncLogger
+from mpacklog import AsyncLogger
 from vulp.spine import SpineInterface
 
 from agents.blue_balancer.whole_body_controller import WholeBodyController
