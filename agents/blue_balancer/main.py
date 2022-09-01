@@ -25,15 +25,15 @@ import traceback
 from os import path
 from typing import Any, Dict
 
-import aiorate
 import gin
 import yaml
-from mpacklog import AsyncLogger
-from vulp.spine import SpineInterface
-
 from agents.blue_balancer.whole_body_controller import WholeBodyController
 from utils.realtime import configure_cpu
 from utils.spdlog import logging
+
+import aiorate
+import mpacklog
+from vulp.spine import SpineInterface
 
 
 def parse_command_line_arguments() -> argparse.Namespace:
@@ -60,7 +60,7 @@ def parse_command_line_arguments() -> argparse.Namespace:
 async def run(
     spine: SpineInterface,
     config: Dict[str, Any],
-    logger: AsyncLogger,
+    logger: mpacklog.Logger,
     frequency: float = 200.0,
 ) -> None:
     """
@@ -98,7 +98,7 @@ async def run(
 
 
 async def main(spine, config: Dict[str, Any]):
-    logger = AsyncLogger("/dev/shm/brain.mpack")
+    logger = mpacklog.Logger("/dev/shm/brain.mpack")
     await logger.put(
         {
             "config": config,
