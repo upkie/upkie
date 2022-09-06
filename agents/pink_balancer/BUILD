@@ -35,7 +35,11 @@ py_binary(
     data = [
         "//agents/blue_balancer:config",
         ":config",
-    ],
+    ] + select({
+        "//:pi32_config": ["//spines:pi3hat"],
+        "//:pi64_config": ["//spines:pi3hat"],
+        "//conditions:default": [],
+    }),
     deps = [
         "//utils:realtime",
         "//utils:spdlog",
