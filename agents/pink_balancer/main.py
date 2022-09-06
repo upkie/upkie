@@ -25,15 +25,15 @@ import traceback
 from os import path
 from typing import Any, Dict
 
+import aiorate
 import gin
+import mpacklog
 import yaml
+from vulp.spine import SpineInterface
+
 from agents.pink_balancer.whole_body_controller import WholeBodyController
 from utils.realtime import configure_cpu
 from utils.spdlog import logging
-
-import aiorate
-import mpacklog
-from vulp.spine import SpineInterface
 
 
 def parse_command_line_arguments() -> argparse.Namespace:
@@ -49,10 +49,9 @@ def parse_command_line_arguments() -> argparse.Namespace:
         "--config",
         metavar="config",
         help="Agent configuration to apply",
-        default="default",
         type=str,
-        required=False,
-        choices=["default", "bullet", "pi3hat"],
+        required=True,
+        choices=["bullet", "pi3hat"],
     )
     return parser.parse_args()
 
@@ -120,9 +119,6 @@ if __name__ == "__main__":
     # Gin configuration
     gin.parse_config_file(f"{agent_dir}/whole_body_controller.gin")
     gin.parse_config_file(f"{blue_balancer}/wheel_balancer.gin")
-    if args.config == "default":
-        logging.warning('No configuration specified, assuming "bullet"')
-        args.config = "bullet"
     if args.config == "pi3hat":
         gin.parse_config_file(f"{blue_balancer}/pi3hat.gin")
     elif args.config == "bullet":
