@@ -1,4 +1,2 @@
 bazel-*
 doc/html
-doc/images/*.eps
-doc/images/*.png
