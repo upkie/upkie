@@ -50,7 +50,7 @@ def parse_command_line_arguments() -> argparse.Namespace:
         metavar="config",
         help="Agent configuration to apply",
         type=str,
-        required=False,
+        required=True,
         choices=["bullet", "pi3hat"],
     )
     return parser.parse_args()
