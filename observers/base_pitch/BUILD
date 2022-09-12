@@ -14,7 +14,6 @@ py_library(
     ],
     deps = [
         "//utils:clamp",
-        "@pip_upkie_locomotion//pypi__eigenpy",
     ],
 )
 

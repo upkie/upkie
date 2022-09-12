@@ -24,16 +24,6 @@ py_library(
 )
 
 py_library(
-    name = "imu",
-    srcs = [
-        "imu.py",
-    ],
-    deps = [
-        ":clamp",
-    ],
-)
-
-py_library(
     name = "realtime",
     srcs = [
         "realtime.py",

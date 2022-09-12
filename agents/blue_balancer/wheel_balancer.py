@@ -26,7 +26,7 @@ import numpy as np
 
 from utils.clamp import clamp, clamp_abs
 from utils.filters import abs_bounded_derivative_filter, low_pass_filter
-from utils.imu import compute_base_pitch_from_imu
+from observers.base_pitch import compute_base_pitch_from_imu
 
 
 @gin.configurable

@@ -32,9 +32,9 @@ py_library(
         "wheel_balancer.py",
     ],
     deps = [
+        "//observers/base_pitch",
         "//utils:clamp",
         "//utils:filters",
-        "//utils:imu",
         "@pip_upkie_locomotion//pypi__gin_config",
         # "@pip_upkie_locomotion//pypi__numpy",
     ],

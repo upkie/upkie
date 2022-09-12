@@ -22,7 +22,7 @@ Test base pitch calculation.
 import unittest
 
 import numpy as np
-from observers.base_pitch import compute_pitch_frame_in_world
+from observers.base_pitch import compute_base_pitch_from_imu
 
 
 class TestBasePitch(unittest.TestCase):
@@ -37,7 +37,7 @@ class TestBasePitch(unittest.TestCase):
                 [0.0, 0.0, 1.0],
             ]
         )
-        imu_pitch = compute_pitch_frame_in_world(orientation_imu_in_world)
+        imu_pitch = compute_base_pitch_from_imu(orientation_imu_in_world)
         self.assertEqual(imu_pitch, 0.0)
 
     def test_close_to_zero(self, theta=1e-3):
@@ -51,7 +51,7 @@ class TestBasePitch(unittest.TestCase):
                 [-np.sin(theta), 0.0, np.cos(theta)],
             ]
         )
-        imu_pitch = compute_pitch_frame_in_world(orientation_imu_in_world)
+        imu_pitch = compute_base_pitch_from_imu(orientation_imu_in_world)
         self.assertTrue(np.isclose(imu_pitch, theta))
 
     def test_orientation_not_neatly_normalized(self, theta=1e-3):
@@ -67,7 +67,7 @@ class TestBasePitch(unittest.TestCase):
             ]
         )
         orientation_imu_in_world[:, 0] *= 1.0 - 1e-2
-        imu_pitch = compute_pitch_frame_in_world(orientation_imu_in_world)
+        imu_pitch = compute_base_pitch_from_imu(orientation_imu_in_world)
         self.assertTrue(np.isclose(imu_pitch, theta))
 
 

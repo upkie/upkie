@@ -15,8 +15,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .base_pitch import compute_pitch_frame_in_world
+from .base_pitch import compute_base_pitch_from_imu
 
 __all__ = [
-    "compute_pitch_frame_in_world",
+    "compute_base_pitch_from_imu",
 ]

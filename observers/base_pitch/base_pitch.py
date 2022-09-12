@@ -17,19 +17,19 @@
 
 from typing import Tuple
 
-import eigenpy
 import numpy as np
+
 from utils.clamp import clamp
 
 
-def compute_pitch_frame_in_world(
-    orientation_frame_in_world: np.ndarray,
+def compute_pitch_frame_in_parent(
+    orientation_frame_in_parent: np.ndarray,
 ) -> float:
     """
-    Get pitch angle of a given frame relative to the world vertical.
+    Get pitch angle of a given frame relative to the parent vertical.
 
     Figure:
-        world z
+        parent z
           ^    frame z
           |     /
           |    /
@@ -46,11 +46,11 @@ def compute_pitch_frame_in_world(
               frame x
 
     Args:
-        orientation_frame_in_world: Rotation matrix from the target frame to
-            the world frame.
+        orientation_frame_in_parent: Rotation matrix from the target frame to
+            the parent frame.
 
     Returns:
-        Angle from the world z-axis (gravity) to the frame z-axis.
+        Angle from the parent z-axis (gravity) to the frame z-axis.
         Equivalently, angle from the heading vector to the sagittal vector of
         the frame.
 
@@ -60,39 +60,83 @@ def compute_pitch_frame_in_world(
         which is ``(x)`` in the above schematic (pointing away) and not ``(.)``
         (poiting from screen to the reader).
     """
-    sagittal = orientation_frame_in_world[:, 0]
+    sagittal = orientation_frame_in_parent[:, 0]
     sagittal /= np.linalg.norm(sagittal)  # needed for prec around cos_pitch=0.
-    heading_in_world = sagittal - sagittal[2] * np.array([0.0, 0.0, 1.0])
-    heading_in_world /= np.linalg.norm(heading_in_world)
-    if orientation_frame_in_world[2, 2] < 0:
-        heading_in_world *= -1.0
+    heading_in_parent = sagittal - sagittal[2] * np.array([0.0, 0.0, 1.0])
+    heading_in_parent /= np.linalg.norm(heading_in_parent)
+    if orientation_frame_in_parent[2, 2] < 0:
+        heading_in_parent *= -1.0
     sign = +1 if sagittal[2] < 0 else -1
-    cos_pitch = clamp(np.dot(sagittal, heading_in_world), -1.0, 1.0)
+    cos_pitch = clamp(np.dot(sagittal, heading_in_parent), -1.0, 1.0)
     pitch: float = sign * np.arccos(cos_pitch)
     return pitch
 
 
-def compute_base_pitch_from_quat(
+def rotation_matrix_from_quaternion(
+    quat: Tuple[float, float, float, float]
+) -> np.ndarray:
+    """
+    Convert a unit quaternion to the matrix representing the same rotation.
+
+    Args:
+        quat: Unit quaternion to convert, in ``[w, x, y, z]`` format.
+
+    Returns:
+        Rotation matrix corresponding to this quaternion.
+
+    See `Conversion between quaternions and rotation matrices`_.
+
+    .. _`Conversion between quaternions and rotation matrices`:
+        https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles#Rotation_matrices
+    """
+    if abs(np.dot(quat, quat) - 1.0) > 1e-5:
+        raise ValueError(f"Quaternion {quat} is not normalized")
+    qw, qx, qy, qz = quat
+    return np.array(
+        [
+            [
+                1 - 2 * (qy ** 2 + qz ** 2),
+                2 * (qx * qy - qz * qw),
+                2 * (qw * qy + qx * qz),
+            ],
+            [
+                2 * (qx * qy + qz * qw),
+                1 - 2 * (qx ** 2 + qz ** 2),
+                2 * (qy * qz - qx * qw),
+            ],
+            [
+                2 * (qx * qz - qy * qw),
+                2 * (qy * qz + qx * qw),
+                1 - 2 * (qx ** 2 + qy ** 2),
+            ],
+        ]
+    )
+
+
+def compute_base_pitch_from_imu(
     quat_imu_in_world: Tuple[float, float, float, float]
 ) -> float:
     """
     Get pitch angle of the *base* relative to the world vertical.
 
     Args:
-        quat_imu_in_world: Quaternion representing the rotation matrix from the
-            *IMU* frame to the world frame.
+        quat_imu_in_world: Quaternion representing the rotation matrix from
+            the *IMU* frame to the world frame, in ``[w, x, y, z]`` format.
 
     Returns:
-        Angle from the world z-axis (gravity) to the base z-axis. Equivalently,
-        angle that the sagittal vector of the base frame makes with the heading
-        vector.
+        Angle from the world z-axis (gravity) to the base z-axis.
+        Equivalently, angle that the sagittal vector of the base frame makes
+        with the heading vector.
 
     Note:
         The output pitch angle is for the base (x-axis pointing forward), but
         the input orientation is that of the IMU. Keep in mind that the IMU
         frame is turned 180 degrees around the yaw axis of the base frame.
     """
-    quat = eigenpy.Quaternion(*quat_imu_in_world)
-    orientation_imu_in_world = quat.toRotationMatrix()
-    pitch_imu_in_world = compute_pitch_frame_in_world(orientation_imu_in_world)
+    orientation_imu_in_world = rotation_matrix_from_quaternion(
+        quat_imu_in_world
+    )
+    pitch_imu_in_world = compute_pitch_frame_in_parent(
+        orientation_imu_in_world
+    )
     return -pitch_imu_in_world  # 180 degrees yaw rotation
