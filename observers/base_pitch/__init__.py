@@ -15,8 +15,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from .base_pitch import compute_pitch_frame_in_parent
 from .base_pitch import compute_base_pitch_from_imu
 
 __all__ = [
     "compute_base_pitch_from_imu",
+    "compute_pitch_frame_in_parent",
 ]
