@@ -27,7 +27,6 @@ using vulp::utils::low_pass_filter;
 
 FloorContact::FloorContact(const Parameters& params)
     : params_(params), upper_leg_torque_(0.0), contact_(false) {
-  // TODO(scaron): factor with reset()
   for (const auto& wheel : params_.wheels) {
     wheel_contacts_.insert(
         {{wheel, WheelContact(params_.wheel_contact_params)}});

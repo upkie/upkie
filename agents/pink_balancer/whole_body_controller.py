@@ -128,6 +128,36 @@ class WholeBodyController:
         """
         robot = pink.models.build_from_urdf(upkie_description.urdf_path)
         configuration = pink.apply_configuration(robot, robot.q0)
+        servo_layout = {
+            "left_hip": {
+                "bus": 2,
+                "configuration_index": 7,
+                "id": 4,
+            },
+            "left_knee": {
+                "bus": 2,
+                "configuration_index": 8,
+                "id": 5,
+            },
+            "left_wheel": {
+                "bus": 2,
+                "id": 6,
+            },
+            "right_hip": {
+                "bus": 1,
+                "configuration_index": 10,
+                "id": 1,
+            },
+            "right_knee": {
+                "bus": 1,
+                "configuration_index": 11,
+                "id": 2,
+            },
+            "right_wheel": {
+                "bus": 1,
+                "id": 3,
+            },
+        }
         tasks = {
             "base": BodyTask(
                 "base",
@@ -159,7 +189,7 @@ class WholeBodyController:
         self.max_crouch_height = max_crouch_height
         self.max_crouch_velocity = max_crouch_velocity
         self.robot = robot
-        self.servo_layout = config["servo_layout"]
+        self.servo_layout = servo_layout
         self.target_position_wheel_in_rest = np.zeros(3)
         self.target_offset = {
             "left_contact": np.zeros(3),
