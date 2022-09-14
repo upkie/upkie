@@ -35,7 +35,7 @@
 
 #include "upkie_locomotion/observers/FloorContact.h"
 #include "upkie_locomotion/observers/WheelOdometry.h"
-#include "upkie_locomotion/spines/upkie.h"
+#include "upkie_locomotion/spines/upkie_layout.h"
 
 namespace upkie_locomotion::spines::pi3hat {
 
@@ -173,8 +173,8 @@ int main(const CommandLineArguments& args) {
   // Observation: Floor contact
   FloorContact::Parameters floor_contact_params;
   floor_contact_params.dt = 1.0 / args.spine_frequency;
-  floor_contact_params.upper_leg_joints = upkie::upper_leg_joints();
-  floor_contact_params.wheels = upkie::wheel_joints();
+  floor_contact_params.upper_leg_joints = upkie_layout::upper_leg_joints();
+  floor_contact_params.wheels = upkie_layout::wheel_joints();
   auto floor_contact = std::make_shared<FloorContact>(floor_contact_params);
   observation.append_observer(floor_contact);
 
@@ -193,7 +193,7 @@ int main(const CommandLineArguments& args) {
     pi3hat_config.mounting_deg.yaw = 0.;
 
     // pi3hat interface
-    const auto servo_layout = upkie::servo_layout();
+    const auto servo_layout = upkie_layout::servo_layout();
     Pi3HatInterface interface(servo_layout, args.can_cpu, pi3hat_config);
 
     // Spine

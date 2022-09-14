@@ -33,9 +33,9 @@
 
 #include "upkie_locomotion/observers/FloorContact.h"
 #include "upkie_locomotion/observers/WheelOdometry.h"
-#include "upkie_locomotion/spines/upkie.h"
+#include "upkie_locomotion/spines/upkie_layout.h"
 
-namespace robots::upkie::spine {
+namespace upkie_locomotion::spines::bullet {
 
 using mpacklog::Logger;
 using palimpsest::Dictionary;
@@ -146,8 +146,8 @@ int main(const char* argv0, const CommandLineArguments& args) {
   // Observation: Floor contact
   FloorContact::Parameters floor_contact_params;
   floor_contact_params.dt = 1.0 / args.spine_frequency;
-  floor_contact_params.upper_leg_joints = upkie::upper_leg_joints();
-  floor_contact_params.wheels = upkie::wheel_joints();
+  floor_contact_params.upper_leg_joints = upkie_layout::upper_leg_joints();
+  floor_contact_params.wheels = upkie_layout::wheel_joints();
   auto floor_contact = std::make_shared<FloorContact>(floor_contact_params);
   observation.append_observer(floor_contact);
 
@@ -161,7 +161,7 @@ int main(const char* argv0, const CommandLineArguments& args) {
   // a "b3AlignedObjectArray reserve out-of-memory" error below.
 
   // Simulator
-  const auto servo_layout = upkie::servo_layout();
+  const auto servo_layout = upkie_layout::servo_layout();
   BulletInterface::Parameters bullet_params(Dictionary{});
   bullet_params.argv0 = argv0;
   bullet_params.dt = 1.0 / args.spine_frequency;
@@ -187,15 +187,16 @@ int main(const char* argv0, const CommandLineArguments& args) {
   return EXIT_SUCCESS;
 }
 
-}  // namespace robots::upkie::spine
+}  // namespace upkie_locomotion::spines::bullet
 
 int main(int argc, char** argv) {
-  robots::upkie::spine::CommandLineArguments args({argv + 1, argv + argc});
+  upkie_locomotion::spines::bullet::CommandLineArguments args(
+      {argv + 1, argv + argc});
   if (args.error) {
     return EXIT_FAILURE;
   } else if (args.help) {
     args.print_usage(argv[0]);
     return EXIT_SUCCESS;
   }
-  return robots::upkie::spine::main(argv[0], args);
+  return upkie_locomotion::spines::bullet::main(argv[0], args);
 }

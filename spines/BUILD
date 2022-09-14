@@ -7,9 +7,9 @@ load("//tools/lint:lint.bzl", "add_lint_tests")
 package(default_visibility = ["//visibility:public"])
 
 cc_library(
-    name = "upkie",
+    name = "upkie_layout",
     hdrs = [
-        "upkie.h",
+        "upkie_layout.h",
     ],
     deps = [
         "@vulp//actuation:servo_layout",
@@ -27,7 +27,7 @@ cc_binary(
     ],
     deps = [
         "//observers",
-        "//spines:upkie",
+        ":upkie_layout",
         "@mpacklog",
         "@vulp//actuation:bullet_interface",
         "@vulp//observation",
@@ -44,7 +44,7 @@ cc_binary(
     ],
     deps = [
         "//observers",
-        "//spines:upkie",
+        ":upkie_layout",
         "@vulp//actuation:mock_interface",
         "@vulp//observation",
         "@vulp//observation/sources",
@@ -67,7 +67,7 @@ cc_binary(
     srcs = ["pi3hat.cpp"],
     deps = [
         "//observers",
-        "//spines:upkie",
+        ":upkie_layout",
         "@vulp//observation",
         "@vulp//observation/sources",
         "@vulp//spine",

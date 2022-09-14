@@ -33,7 +33,7 @@
 
 #include "upkie_locomotion/observers/FloorContact.h"
 #include "upkie_locomotion/observers/WheelOdometry.h"
-#include "upkie_locomotion/spines/upkie.h"
+#include "upkie_locomotion/spines/upkie_layout.h"
 
 namespace upkie_locomotion::spines::mock {
 
@@ -127,8 +127,8 @@ int main(const CommandLineArguments& args) {
   // Observation: Floor contact
   FloorContact::Parameters floor_contact_params;
   floor_contact_params.dt = 1.0 / args.spine_frequency;
-  floor_contact_params.upper_leg_joints = upkie::upper_leg_joints();
-  floor_contact_params.wheels = upkie::wheel_joints();
+  floor_contact_params.upper_leg_joints = upkie_layout::upper_leg_joints();
+  floor_contact_params.wheels = upkie_layout::wheel_joints();
   auto floor_contact = std::make_shared<FloorContact>(floor_contact_params);
   observation.append_observer(floor_contact);
 
@@ -139,7 +139,7 @@ int main(const CommandLineArguments& args) {
   observation.append_observer(odometry);
 
   // Mock actuators
-  const auto servo_layout = upkie::servo_layout();
+  const auto servo_layout = upkie_layout::servo_layout();
   const double dt = 1.0 / args.spine_frequency;
   MockInterface actuation(servo_layout, dt);
 
