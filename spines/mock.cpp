@@ -47,8 +47,6 @@ using vulp::observation::sources::CpuTemperature;
 using vulp::observation::sources::Joystick;
 using vulp::spine::Spine;
 
-namespace upkie = upkie_locomotion::spines::upkie;
-
 //! Command-line arguments for the mock spine.
 class CommandLineArguments {
  public:

@@ -50,8 +50,6 @@ using vulp::observation::sources::CpuTemperature;
 using vulp::observation::sources::Joystick;
 using vulp::spine::Spine;
 
-namespace upkie = upkie_locomotion::spines::upkie;
-
 //! Command-line arguments for the Bullet spine.
 class CommandLineArguments {
  public:
