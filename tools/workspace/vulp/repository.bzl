@@ -11,6 +11,6 @@ def vulp_repository():
     git_repository(
         name = "vulp",
         remote = "https://github.com/tasts-robots/vulp.git",
-        commit = "5fee7f18ccca652a3cceadb5a2232e0233777b44",
-        shallow_since = "1662485617 +0200",
+        commit = "bc5bea3f36536351fac046341fda21ad9d68b070",
+        shallow_since = "1663172557 +0200",
     )
