@@ -92,8 +92,13 @@ class WheelOdometry : public Observer {
      * \param[in] config Global configuration dictionary.
      */
     void configure(const Dictionary& config) {
-      if (config.has("wheel_odometry") &&
-          config("wheel_odometry").has("signed_radius")) {
+      if (!config.has("wheel_odometry")) {
+        spdlog::warn("No \"wheel_odometry\" configuration");
+        return;
+      }
+
+      spdlog::info("Applying \"wheel_odometry\" configuration");
+      if (config("wheel_odometry").has("signed_radius")) {
         const auto& signed_radius_dict =
             config("wheel_odometry")("signed_radius");
         signed_radius.clear();

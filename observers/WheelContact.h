@@ -62,16 +62,19 @@ class WheelContact {
   //! Observer parameters.
   struct Parameters {
     void configure(const Dictionary& config) {
-      if (config.has("wheel_contact")) {
-        const Dictionary& module_config = config("wheel_contact");
-        liftoff_inertia = module_config.get<double>("liftoff_inertia");
-        min_touchdown_acceleration =
-            module_config.get<double>("min_touchdown_acceleration");
-        min_touchdown_torque =
-            module_config.get<double>("min_touchdown_torque");
-        cutoff_period = module_config.get<double>("cutoff_period");
-        touchdown_inertia = module_config.get<double>("touchdown_inertia");
+      if (!config.has("wheel_contact")) {
+        spdlog::warn("No \"wheel_contact\" configuration");
+        return;
       }
+
+      spdlog::info("Applying \"wheel_contact\" configuration");
+      const Dictionary& wheel_contact = config("wheel_contact");
+      liftoff_inertia = wheel_contact.get<double>("liftoff_inertia");
+      min_touchdown_acceleration =
+          wheel_contact.get<double>("min_touchdown_acceleration");
+      min_touchdown_torque = wheel_contact.get<double>("min_touchdown_torque");
+      cutoff_period = wheel_contact.get<double>("cutoff_period");
+      touchdown_inertia = wheel_contact.get<double>("touchdown_inertia");
     }
 
     /*! Hysteresis value of the apparent inertia that triggers liftoff

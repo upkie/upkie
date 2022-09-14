@@ -68,14 +68,16 @@ class FloorContact : public Observer {
      * \param[in] config Global configuration dictionary.
      */
     void configure(const Dictionary& config) {
-      if (config.has("spine_frequency")) {
-        dt = 1.0 / config.get<unsigned>("spine_frequency");
-      }
-      if (config.has("floor_contact")) {
-        upper_leg_torque_threshold =
-            config("floor_contact")("upper_leg_torque_threshold");
-      }
       wheel_contact_params.configure(config);
+
+      if (!config.has("floor_contact")) {
+        spdlog::warn("No \"floor_contact\" configuration");
+        return;
+      }
+
+      spdlog::info("Applying \"floor_contact\" configuration");
+      upper_leg_torque_threshold =
+          config("floor_contact")("upper_leg_torque_threshold");
     }
 
     //! Spine timestep, in [s]

@@ -30,8 +30,6 @@ using palimpsest::KeyError;
 class FloorContactTest : public ::testing::Test {
  protected:
   void SetUp() override {
-    config_("spine_frequency") = 1000u;
-
     FloorContact::Parameters params;
     floor_contact_ = std::make_unique<FloorContact>(params);
   }
