@@ -93,11 +93,11 @@ class WheelOdometry : public Observer {
      */
     void configure(const Dictionary& config) {
       if (!config.has("wheel_odometry")) {
-        spdlog::warn("No \"wheel_odometry\" configuration");
+        spdlog::debug("No \"wheel_odometry\" runtime configuration");
         return;
       }
 
-      spdlog::info("Applying \"wheel_odometry\" configuration");
+      spdlog::info("Applying \"wheel_odometry\" runtime configuration");
       if (config("wheel_odometry").has("signed_radius")) {
         const auto& signed_radius_dict =
             config("wheel_odometry")("signed_radius");

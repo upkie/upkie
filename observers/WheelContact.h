@@ -63,11 +63,11 @@ class WheelContact {
   struct Parameters {
     void configure(const Dictionary& config) {
       if (!config.has("wheel_contact")) {
-        spdlog::warn("No \"wheel_contact\" configuration");
+        spdlog::debug("No \"wheel_contact\" runtime configuration");
         return;
       }
 
-      spdlog::info("Applying \"wheel_contact\" configuration");
+      spdlog::info("Applying \"wheel_contact\" runtime configuration");
       const Dictionary& wheel_contact = config("wheel_contact");
       liftoff_inertia = wheel_contact.get<double>("liftoff_inertia");
       min_touchdown_acceleration =

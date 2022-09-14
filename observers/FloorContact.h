@@ -71,11 +71,11 @@ class FloorContact : public Observer {
       wheel_contact_params.configure(config);
 
       if (!config.has("floor_contact")) {
-        spdlog::warn("No \"floor_contact\" configuration");
+        spdlog::debug("No \"floor_contact\" runtime configuration");
         return;
       }
 
-      spdlog::info("Applying \"floor_contact\" configuration");
+      spdlog::info("Applying \"floor_contact\" runtime configuration");
       upper_leg_torque_threshold =
           config("floor_contact")("upper_leg_torque_threshold");
     }
