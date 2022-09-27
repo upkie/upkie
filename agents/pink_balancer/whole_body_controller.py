@@ -286,7 +286,9 @@ class WholeBodyController:
             self._process_first_observation(observation)
 
         self.update_ik_targets(observation, dt)
-        robot_velocity = solve_ik(self.configuration, self.tasks.values(), dt)
+        robot_velocity = solve_ik(
+            self.configuration, self.tasks.values(), dt, solver="quadprog"
+        )
         q = self.configuration.integrate(robot_velocity, dt)
         self.configuration = pink.apply_configuration(self.robot, q)
         servo_action = serialize_to_servo_action(
