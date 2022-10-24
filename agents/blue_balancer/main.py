@@ -119,6 +119,7 @@ if __name__ == "__main__":
     gin.parse_config_file(f"{agent_dir}/kinematics.gin")
     gin.parse_config_file(f"{agent_dir}/wheel_balancer.gin")
     gin.parse_config_file(f"{agent_dir}/whole_body_controller.gin")
+    logging.info(f'Loading configuration "{args.config}.gin"')
     if args.config == "pi3hat":
         gin.parse_config_file(f"{agent_dir}/pi3hat.gin")
     elif args.config == "bullet":
