@@ -11,8 +11,6 @@ Locomotion code for the [Upkie](https://hackaday.io/project/185729-upkie-wheeled
 
 ### Try it out!
 
-<!-- GIF: https://user-images.githubusercontent.com/1189580/170491850-dfbb4786-12ff-4fe8-8080-9413d68acfc1.gif -->
-<!-- Issue: https://github.com/github/feedback/discussions/17256 -->
 <img src="https://user-images.githubusercontent.com/1189580/170496331-e1293dd3-b50c-40ee-9c2e-f75f3096ebd8.png" height="100" align="right" />
 
 ```console
