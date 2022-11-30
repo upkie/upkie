@@ -33,9 +33,9 @@ The code is organized into *spines*, which communicate with the simulator or act
     * [Blue balancer](#blue-balancer)
     * [Pink balancer](#pink-balancer)
 * [Observers](#observers)
-    * Floor contact
-    * Wheel contact
-    * Wheel odometry
+    * [Floor contact](#floor-contact)
+    * [Wheel contact](#wheel-contact)
+    * [Wheel odometry](#wheel-odometry)
 * [Spines](#spines)
     * [Bullet](#bullet)
     * [pi3hat](#pi3hat)
