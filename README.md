@@ -37,8 +37,8 @@ The code is organized into *spines*, which communicate with the simulator or act
     * [Wheel contact](#wheel-contact)
     * [Wheel odometry](#wheel-odometry)
 * [Spines](#spines)
-    * [Bullet](#bullet)
-    * [pi3hat](#pi3hat)
+    * [Bullet](#-bullet)
+    * [pi3hat](#-pi3hat)
 
 ### Agents
 
