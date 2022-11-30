@@ -9,9 +9,7 @@
 
 Locomotion code for the [Upkie](https://hackaday.io/project/185729-upkie-wheeled-biped-robot) wheeled biped.
 
-### Try it out!
-
-No installation required on Linux:
+Test it straight from the command line on Linux, no installation required:
 
 <img src="https://user-images.githubusercontent.com/1189580/170496331-e1293dd3-b50c-40ee-9c2e-f75f3096ebd8.png" height="100" align="right" />
 
@@ -23,7 +21,7 @@ cd upkie_locomotion
 
 Connect a USB controller to move the robot around. 🎮
 
-There is no dependency to install on Linux thanks to [Bazel](https://bazel.build/), which builds all dependencies and runs the Python controller in one go. (This will take a while the first time.) The syntax is the same to deploy to the Raspberry Pi on the robot.
+There is no dependency to install thanks to [Bazel](https://bazel.build/), which builds all dependencies and runs the Python controller in one go. (Compilation will only take a while the first time.) The syntax is the same to deploy to the Raspberry Pi on Upkie, *e.g.* using [raspunzel](https://github.com/tasts-robots/raspunzel).
 
 ## Overview
 
