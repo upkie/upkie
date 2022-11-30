@@ -30,8 +30,8 @@ There is no dependency to install on Linux thanks to [Bazel](https://bazel.build
 The code is organized into *spines*, which communicate with the simulator or actuators using the [Vulp](https://github.com/tasts-robots/vulp) C++ library, and *agents*, the main programs that implement behaviors in Python.
 
 * [Agents](#agents)
-    * [Blue balancer](#blue-balancer)
-    * [Pink balancer](#pink-balancer)
+    * [Blue balancer](#-blue-balancer)
+    * [Pink balancer](#-pink-balancer)
 * [Observers](#observers)
     * [Floor contact](#floor-contact)
     * [Wheel contact](#wheel-contact)
