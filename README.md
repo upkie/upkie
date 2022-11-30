@@ -56,11 +56,17 @@ Same as the Blue balancer, but inverse kinematics is computed by [Pink](https://
 
 The following observers are used to detect contacts and keep track of where the wheels are on the ground:
 
-* [Floor contact](https://tasts-robots.org/doc/upkie_locomotion/classupkie__locomotion_1_1observers_1_1FloorContact.html#details): contact between the wheels and the floor.
-* [Wheel contact](https://tasts-robots.org/doc/upkie_locomotion/classupkie__locomotion_1_1observers_1_1WheelContact.html#details): contact between a given wheel and the floor.
-* [Wheel odometry](https://tasts-robots.org/doc/upkie_locomotion/classupkie__locomotion_1_1observers_1_1WheelOdometry.html#details): relative motion of the floating base with respect to the floor.
+#### [Floor contact](https://tasts-robots.org/doc/upkie_locomotion/classupkie__locomotion_1_1observers_1_1FloorContact.html#details)
 
-Both Blue and Pink agents use contact as a reset flag for their integrators, to avoid over-spinning the wheels while the robot is in the air. Wheel odometry is part of their secondary task (after keeping the head straight), which is to stay around the same spot on the floor.
+Detect contact between the wheels and the floor. Both Blue and Pink agents use contact as a reset flag for their integrators, to avoid over-spinning the wheels while the robot is in the air.
+
+#### [Wheel contact](https://tasts-robots.org/doc/upkie_locomotion/classupkie__locomotion_1_1observers_1_1WheelContact.html#details)
+
+Detect contact between a given wheel and the floor.
+
+#### [Wheel odometry](https://tasts-robots.org/doc/upkie_locomotion/classupkie__locomotion_1_1observers_1_1WheelOdometry.html#details)
+
+Measure the relative motion of the floating base with respect to the floor. Wheel odometry is part of their secondary task (after keeping the head straight), which is to stay around the same spot on the floor.
 
 ### Spines
 
