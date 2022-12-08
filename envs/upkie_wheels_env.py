@@ -21,6 +21,16 @@ import gym
 
 @gin.configurable
 class UpkieWheelsEnv(gym.Env):
+
+    def id(self) -> str:
+        """
+        Name and version of this environment for registration.
+
+        Returns:
+            Name and version of the environment.
+        """
+        return f"UpkieWheelsEnv-v{self.version}"
+
     def detect_fall(self, pitch: float) -> bool:
         """
         Detect a fall based on the body-to-world pitch angle.
