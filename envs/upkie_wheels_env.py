@@ -89,8 +89,8 @@ class UpkieWheelsEnv(gym.Env):
         wheel_radius: float,
     ):
         if config is None:
-            agent_dir = path.dirname(__file__)
-            with open(f"{agent_dir}/spine.yaml", "r") as fh:
+            envs_dir = path.dirname(__file__)
+            with open(f"{envs_dir}/spine.yaml", "r") as fh:
                 config = yaml.safe_load(fh)
         spine = SpineInterface(shm_name)
 
@@ -227,11 +227,11 @@ class UpkieWheelsEnv(gym.Env):
             action: Action from the agent.
 
         Returns:
-            observation: agent's observation of the environment.
-            reward: amount of reward returned after previous action.
-            done: whether the episode has ended, in which case further step()
+            observation: Agent's observation of the environment.
+            reward: Amount of reward returned after previous action.
+            done: Whether the episode has ended, in which case further step()
                 calls will return undefined results.
-            info: contains auxiliary diagnostic information (helpful for
+            info: Contains auxiliary diagnostic information (helpful for
                 debugging, logging, and sometimes learning).
         """
         commanded_velocity: float = action[0]
