@@ -217,6 +217,44 @@ class UpkieWheelsEnv(gym.Env):
         else:  # return_info
             return observation, {}
 
+    def step(self, action: np.ndarray) -> Tuple[np.ndarray, float, bool, dict]:
+        """
+        Run one timestep of the environment's dynamics. When end of episode is
+        reached, you are responsible for calling `reset()` to reset the
+        environment's state.
+
+        Args:
+            action: Action from the agent.
+
+        Returns:
+            observation: agent's observation of the environment.
+            reward: amount of reward returned after previous action.
+            done: whether the episode has ended, in which case further step()
+                calls will return undefined results.
+            info: contains auxiliary diagnostic information (helpful for
+                debugging, logging, and sometimes learning).
+        """
+        commanded_velocity: float = action[0]
+        left_wheel = self.action_dict["servo"]["left_wheel"]
+        left_wheel["position"] = math.nan
+        left_wheel["velocity"] = +commanded_velocity / self.wheel_radius
+        right_wheel = self.action_dict["servo"]["right_wheel"]
+        right_wheel["position"] = math.nan
+        right_wheel["velocity"] = -commanded_velocity / self.wheel_radius
+        self.spine.set_action(self.action_dict)
+
+        # Observation
+        self.observation_dict = self.spine.get_observation()
+        observation = self.observation_vector_from_dict(self.observation_dict)
+
+        # Reward
+        reward = self.reward.get(observation)
+
+        # Termination
+        pitch = observation[0]
+        done = self.detect_fall(pitch)
+        return observation, reward, done, {}
+
     def detect_fall(self, pitch: float) -> bool:
         """
         Detect a fall based on the body-to-world pitch angle.
