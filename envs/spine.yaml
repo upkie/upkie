@@ -1,0 +1,8 @@
+bullet:
+    control_mode: torque
+    follower_camera: false
+    gui: true
+    position_init_base_in_world: [0.0, 0.0, 0.6]
+    torque_control:
+        kp: 20.0
+        kd: 1.0
