@@ -251,8 +251,7 @@ class UpkieWheelsEnv(gym.Env):
         reward = self.reward.get(observation)
 
         # Termination
-        pitch = observation[0]
-        done = self.detect_fall(pitch)
+        done = self.detect_fall(pitch=observation[0])
         return observation, reward, done, {}
 
     def detect_fall(self, pitch: float) -> bool:
