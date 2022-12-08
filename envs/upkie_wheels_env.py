@@ -67,7 +67,6 @@ class UpkieWheelsEnv(gym.Env):
     max_ground_velocity: float
     observation_dict: dict
     spine: SpineInterface
-    version: int
     wheel_radius: float
 
     def id(self) -> str:
@@ -77,7 +76,7 @@ class UpkieWheelsEnv(gym.Env):
         Returns:
             Name and version of the environment.
         """
-        return f"UpkieWheelsEnv-v{self.version}"
+        return "UpkieWheelsEnv-v1"
 
     def __init__(
         self,
@@ -176,12 +175,9 @@ class UpkieWheelsEnv(gym.Env):
         imu = spine_observation["imu"]
         obs = np.empty(self.observation_dim)
         obs[0] = compute_base_pitch_from_imu(imu["orientation"])
-        if self.version >= 2:
-            obs[1] = spine_observation["wheel_odometry"]["position"]
-        if self.version >= 3:
-            obs[2] = spine_observation["wheel_odometry"]["velocity"]
-        if self.version >= 4:
-            obs[3] = spine_observation["imu"]["angular_velocity"][1]
+        obs[1] = spine_observation["wheel_odometry"]["position"]
+        obs[2] = spine_observation["wheel_odometry"]["velocity"]
+        obs[3] = spine_observation["imu"]["angular_velocity"][1]
         return obs
 
     def reset(
