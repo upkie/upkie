@@ -31,6 +31,15 @@ class UpkieWheelsEnv(gym.Env):
         """
         return f"UpkieWheelsEnv-v{self.version}"
 
+    @staticmethod
+    def gin_config():
+        """
+        Path to the Gin configuration for this environment.
+        """
+        dirname = path.dirname(__file__)
+        basename = path.basename(__file__).replace(".py", ".gin")
+        return f"{dirname}/{basename}"
+
     def detect_fall(self, pitch: float) -> bool:
         """
         Detect a fall based on the body-to-world pitch angle.
