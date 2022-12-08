@@ -25,7 +25,7 @@ import traceback
 from os import path
 from typing import Any, Dict
 
-import aiorate
+from loop_rate_limiters import AsyncRateLimiter
 import gin
 import mpacklog
 import yaml
@@ -73,7 +73,7 @@ async def run(
     whole_body_controller = WholeBodyController(config)
     debug: Dict[str, Any] = {}
     dt = 1.0 / frequency
-    rate = aiorate.Rate(frequency, "controller")
+    rate = AsyncRateLimiter(frequency, "controller")
     spine.start(config)
     observation = spine.get_observation()  # pre-reset observation
     while True:

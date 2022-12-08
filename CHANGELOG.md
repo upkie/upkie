@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - Promote ``utils.imu`` to a proper Python observer
+- Switch from ``aiorate`` to ``loop_rate_limiters``
 
 ## [0.1.0] - 2022/09/12
 
