@@ -236,10 +236,10 @@ class UpkieWheelsEnv(gym.Env):
         """
         commanded_velocity: float = action[0]
         left_wheel = self.action_dict["servo"]["left_wheel"]
-        left_wheel["position"] = math.nan
-        left_wheel["velocity"] = +commanded_velocity / self.wheel_radius
         right_wheel = self.action_dict["servo"]["right_wheel"]
+        left_wheel["position"] = math.nan
         right_wheel["position"] = math.nan
+        left_wheel["velocity"] = +commanded_velocity / self.wheel_radius
         right_wheel["velocity"] = -commanded_velocity / self.wheel_radius
         self.spine.set_action(self.action_dict)
 
