@@ -15,12 +15,51 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import math
+from os import path
+from typing import Any, Dict, Optional, Tuple, Union
+
 import gin
 import gym
+import numpy as np
+import yaml
+from gym import spaces
+from vulp.spine import SpineInterface
+
+from upkie_locomotion.observers.base_pitch import compute_base_pitch_from_imu
+
+from .reward import Reward
 
 
 @gin.configurable
 class UpkieWheelsEnv(gym.Env):
+
+    """
+    Upkie with full observation but only wheel velocity actions.
+
+    Attributes:
+        action_dict: Dictionary of actions to send to the spine.
+        action_dim: Dimension of action space.
+        config: Configuration dictionary, also sent to the spine.
+        fall_pitch: Fall pitch angle, in radians.
+        max_ground_velocity: Maximum commanded ground velocity in [m] / [s].
+        observation_dict: Dictionary of last observation from the spine.
+        observation_dim: Dimension of observation space.
+
+            =====  ============================================================
+            Index  Description
+            =====  ============================================================
+            0      | Base pitch in rad.
+            1      | Position of the average wheel contact point, in m.
+            2      | Velocity of the average wheel contact point, in m/s.
+            3      | Body angular velocity of the IMU frame along its y-axis,
+                   | in rad/s.
+            =====  ============================================================
+
+        spine: Interface to the spine.
+        version: Version of the environment for registration.
+        wheel_radius: Wheel radius in [m].
+    """
 
     action_dict: dict
     config: dict
