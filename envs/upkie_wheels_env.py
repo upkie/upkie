@@ -161,6 +161,66 @@ class UpkieWheelsEnv(gym.Env):
         basename = path.basename(__file__).replace(".py", ".gin")
         return f"{dirname}/{basename}"
 
+    def observation_vector_from_dict(
+        self, spine_observation: dict
+    ) -> np.ndarray:
+        """
+        Extract observation vector from a full observation dictionary.
+
+        Args:
+            spine_observation: Full observation dictionary from the spine.
+
+        Returns:
+            Observation vector.
+        """
+        imu = spine_observation["imu"]
+        obs = np.empty(self.observation_dim)
+        obs[0] = compute_base_pitch_from_imu(imu["orientation"])
+        if self.version >= 2:
+            obs[1] = spine_observation["wheel_odometry"]["position"]
+        if self.version >= 3:
+            obs[2] = spine_observation["wheel_odometry"]["velocity"]
+        if self.version >= 4:
+            obs[3] = spine_observation["imu"]["angular_velocity"][1]
+        return obs
+
+    def reset(
+        self,
+        *,
+        seed: Optional[int] = None,
+        return_info: bool = False,
+        options: Optional[dict] = None,
+    ) -> Union[Any, Tuple[Any, Dict]]:
+        """
+        Resets the spine and get an initial observation.
+
+        Returns:
+            observation (object): the initial observation.
+            info (optional dictionary): a dictionary containing extra
+                information, this is only returned if return_info is set to
+                true.
+        """
+        # super().reset(seed=seed)  # for gym>=0.23.1
+        self.spine.stop()
+        self.spine.start(self.config)
+        self.spine.get_observation()  # might be a pre-reset observation
+        self.observation_dict = self.spine.get_observation()
+        servo = self.observation_dict["servo"]
+        self.action_dict = {
+            "servo": {
+                joint_name: {
+                    "position": servo_observation["position"],
+                    "velocity": 0.0,
+                }
+                for joint_name, servo_observation in servo.items()
+            }
+        }
+        observation = self.observation_vector_from_dict(self.observation_dict)
+        if not return_info:
+            return observation
+        else:  # return_info
+            return observation, {}
+
     def detect_fall(self, pitch: float) -> bool:
         """
         Detect a fall based on the body-to-world pitch angle.
