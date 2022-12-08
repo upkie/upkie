@@ -22,6 +22,15 @@ import gym
 @gin.configurable
 class UpkieWheelsEnv(gym.Env):
 
+    action_dict: dict
+    config: dict
+    fall_pitch: float
+    max_ground_velocity: float
+    observation_dict: dict
+    spine: SpineInterface
+    version: int
+    wheel_radius: float
+
     def id(self) -> str:
         """
         Name and version of this environment for registration.
@@ -30,6 +39,79 @@ class UpkieWheelsEnv(gym.Env):
             Name and version of the environment.
         """
         return f"UpkieWheelsEnv-v{self.version}"
+
+    def __init__(
+        self,
+        reward: Optional[Reward],
+        config: Optional[dict],
+        fall_pitch: float,
+        max_ground_velocity: float,
+        shm_name: str,
+        version: int,
+        wheel_radius: float,
+    ):
+        if config is None:
+            agent_dir = path.dirname(__file__)
+            with open(f"{agent_dir}/spine.yaml", "r") as fh:
+                config = yaml.safe_load(fh)
+        spine = SpineInterface(shm_name)
+
+        action_dim = 1
+        action_space = spaces.Box(
+            -max_ground_velocity,
+            +max_ground_velocity,
+            shape=(action_dim,),
+            dtype=np.float32,
+        )
+
+        high = []
+        observation_dim = 0
+        if version >= 1:
+            observation_dim += 1
+            high.append(np.pi)
+        if version >= 2:
+            observation_dim += 1
+            high.append(float("inf"))
+        if version >= 3:
+            observation_dim += 1
+            max_wheel_velocity = max_ground_velocity / wheel_radius
+            high.append(max_wheel_velocity)
+        if version >= 4:
+            observation_dim += 1
+            MAX_IMU_ANGULAR_VELOCITY = 1000.0  # rad/s
+            high.append(MAX_IMU_ANGULAR_VELOCITY)
+        high = np.array(high)
+        observation_space = spaces.Box(
+            -high,
+            +high,
+            shape=(observation_dim,),
+            dtype=np.float32,
+        )
+
+        # gym.Env members
+        self.action_space = action_space
+        self.observation_space = observation_space
+        self.reward_range = reward.get_range()
+
+        # Class members
+        self.action_dict = {}
+        self.action_dim = action_dim
+        self.config = config
+        self.fall_pitch = fall_pitch
+        self.max_ground_velocity = max_ground_velocity
+        self.observation_dict = {}
+        self.observation_dim = observation_dim
+        self.observation_dim = observation_dim
+        self.reward = reward
+        self.spine = spine
+        self.version = version
+        self.wheel_radius = wheel_radius
+
+    def close(self) -> None:
+        """
+        Stop the spine properly.
+        """
+        self.spine.stop()
 
     @staticmethod
     def gin_config():
