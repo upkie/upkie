@@ -20,7 +20,7 @@ cd upkie_locomotion
 
 Connect a USB controller to move the robot around. 🎮
 
-There is no dependency to install thanks to [Bazel](https://bazel.build/), which builds all dependencies and runs the Python controller in one go. (Compilation will only take a while the first time.) The syntax is the same to deploy to the Raspberry Pi on Upkie, *e.g.* using [raspunzel](https://github.com/tasts-robots/raspunzel).
+There is no dependency to install thanks to [Bazel](https://bazel.build/), which builds all dependencies and runs the Python controller in one go. (Compilation will only take a while the first time.) The syntax is the same to deploy to the Raspberry Pi on Upkie with [`raspunzel`](https://github.com/tasts-robots/raspunzel).
 
 ## Overview
 
