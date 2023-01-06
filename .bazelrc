@@ -3,23 +3,17 @@
 ## Host platform
 
 build --compilation_mode=fastbuild
-build --compiler=compiler
 build --copt="-Werror=return-type"
-build --cpu=k8
 build --cxxopt=-std=c++17
 
 coverage --combined_report=lcov
 coverage --compilation_mode=fastbuild
-coverage --compiler=compiler
 coverage --copt="-Werror=return-type"
-coverage --cpu=k8
 coverage --cxxopt=-std=c++17
 coverage --instrument_test_targets
 
 test --compilation_mode=fastbuild
-test --compiler=compiler
 test --copt="-Werror=return-type"
-test --cpu=k8
 test --cxxopt=-std=c++17
 test --test_output=errors
 
