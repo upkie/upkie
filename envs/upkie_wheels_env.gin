@@ -4,9 +4,9 @@
 
 import envs.upkie_wheels_env
 
-UpkieWheelsEnv.config = None
-UpkieWheelsEnv.fall_pitch = 1.0                       # [rad]
-UpkieWheelsEnv.max_ground_velocity = 1.0              # [m] / [s]
-UpkieWheelsEnv.reward = None
-UpkieWheelsEnv.shm_name = "/vulp"
-UpkieWheelsEnv.wheel_radius = 0.06                    # [m], actually it's 0.05 in the URDF
+envs.upkie_wheels_env.UpkieWheelsEnv.config = None
+envs.upkie_wheels_env.UpkieWheelsEnv.fall_pitch = 1.0                       # [rad]
+envs.upkie_wheels_env.UpkieWheelsEnv.max_ground_velocity = 1.0              # [m] / [s]
+envs.upkie_wheels_env.UpkieWheelsEnv.reward = None
+envs.upkie_wheels_env.UpkieWheelsEnv.shm_name = "/vulp"
+envs.upkie_wheels_env.UpkieWheelsEnv.wheel_radius = 0.06                    # [m], actually it's 0.05 in the URDF
