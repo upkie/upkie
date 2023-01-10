@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright 2022 Stéphane Caron
+# Copyright 2023 Inria
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -85,7 +86,6 @@ class UpkieWheelsEnv(gym.Env):
         fall_pitch: float,
         max_ground_velocity: float,
         shm_name: str,
-        version: int,
         wheel_radius: float,
     ):
         if config is None:
@@ -139,10 +139,8 @@ class UpkieWheelsEnv(gym.Env):
         self.max_ground_velocity = max_ground_velocity
         self.observation_dict = {}
         self.observation_dim = observation_dim
-        self.observation_dim = observation_dim
         self.reward = reward
         self.spine = spine
-        self.version = version
         self.wheel_radius = wheel_radius
 
     def close(self) -> None:
