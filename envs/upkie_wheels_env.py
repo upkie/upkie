@@ -31,6 +31,10 @@ from upkie_locomotion.observers.base_pitch import compute_base_pitch_from_imu
 
 from .reward import Reward
 
+MAX_BASE_PITCH = np.pi
+MAX_WHEEL_POSITION = float("inf")
+MAX_IMU_ANGULAR_VELOCITY = 1000.0  # rad/s
+
 
 @gin.configurable
 class UpkieWheelsEnv(gym.Env):
@@ -102,23 +106,16 @@ class UpkieWheelsEnv(gym.Env):
             dtype=np.float32,
         )
 
-        high = []
-        observation_dim = 0
-        if version >= 1:
-            observation_dim += 1
-            high.append(np.pi)
-        if version >= 2:
-            observation_dim += 1
-            high.append(float("inf"))
-        if version >= 3:
-            observation_dim += 1
-            max_wheel_velocity = max_ground_velocity / wheel_radius
-            high.append(max_wheel_velocity)
-        if version >= 4:
-            observation_dim += 1
-            MAX_IMU_ANGULAR_VELOCITY = 1000.0  # rad/s
-            high.append(MAX_IMU_ANGULAR_VELOCITY)
-        high = np.array(high)
+        observation_dim = 4
+        max_wheel_velocity = max_ground_velocity / wheel_radius
+        high = np.array(
+            [
+                MAX_BASE_PITCH,
+                MAX_WHEEL_POSITION,
+                max_wheel_velocity,
+                MAX_IMU_ANGULAR_VELOCITY,
+            ]
+        )
         observation_space = spaces.Box(
             -high,
             +high,
