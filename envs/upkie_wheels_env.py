@@ -62,15 +62,16 @@ class UpkieWheelsEnv(gym.Env):
             =====  ============================================================
 
         spine: Interface to the spine.
-        version: Version of the environment for registration.
         wheel_radius: Wheel radius in [m].
     """
 
     action_dict: dict
+    action_dim: int
     config: dict
     fall_pitch: float
     max_ground_velocity: float
     observation_dict: dict
+    observation_dim: int
     spine: SpineInterface
     wheel_radius: float
 
