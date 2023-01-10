@@ -31,9 +31,9 @@ from upkie_locomotion.observers.base_pitch import compute_base_pitch_from_imu
 
 from .reward import Reward
 
-MAX_BASE_PITCH = np.pi
-MAX_WHEEL_POSITION = float("inf")
-MAX_IMU_ANGULAR_VELOCITY = 1000.0  # rad/s
+MAX_BASE_PITCH: float = np.pi
+MAX_WHEEL_POSITION: float = float("inf")
+MAX_IMU_ANGULAR_VELOCITY: float = 1000.0  # rad/s
 
 
 @gin.configurable
