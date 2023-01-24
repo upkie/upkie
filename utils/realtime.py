@@ -31,5 +31,10 @@ def configure_cpu(cpu: int):
 
     Args:
         cpu: CPU core for this thread (on the Pi, CPUID in {0, 1, 2, 3}).
+
+    Notes:
+        Calling this function affects only a single thread. A thread created
+        with ``pthread_create`` will then inherit the CPU affinity mask of its
+        parent.
     """
     os.sched_setaffinity(0, {cpu})
