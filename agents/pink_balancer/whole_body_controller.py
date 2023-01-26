@@ -126,11 +126,8 @@ class WholeBodyController:
                 turning to keep the legs stiff in spite of the ground pulling
                 them apart.
         """
-        full_robot = load_robot_description(
-            "upkie_description", root_joint=None
-        )
-        robot = full_robot.buildReducedRobot(
-            list_of_joints_to_lock=["left_wheel", "right_wheel"]
+        robot = load_robot_description(
+            "upkie_description", root_joint=pin.JointModelFreeFlyer()
         )
         configuration = pink.apply_configuration(robot, robot.q0)
         servo_layout = {
