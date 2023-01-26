@@ -20,15 +20,15 @@ from typing import Any, Dict
 import gin
 import numpy as np
 import pink
-import pink.models
 import pinocchio as pin
-import upkie_description
 from pink import solve_ik
 from pink.tasks import BodyTask, PostureTask
 from pink.utils import custom_configuration_vector
+from robot_descriptions.loaders.pinocchio import load_robot_description
 
-from agents.blue_balancer.wheel_balancer import WheelBalancer
-from utils.clamp import clamp
+from utils import clamp
+
+from .wheel_balancer import WheelBalancer
 
 
 def observe(observation, configuration, servo_layout) -> np.ndarray:
@@ -126,7 +126,12 @@ class WholeBodyController:
                 turning to keep the legs stiff in spite of the ground pulling
                 them apart.
         """
-        robot = pink.models.build_from_urdf(upkie_description.urdf_path)
+        full_robot = load_robot_description(
+            "upkie_description", root_joint=None
+        )
+        robot = full_robot.buildReducedRobot(
+            list_of_joints_to_lock=["left_wheel", "right_wheel"]
+        )
         configuration = pink.apply_configuration(robot, robot.q0)
         servo_layout = {
             "left_hip": {
