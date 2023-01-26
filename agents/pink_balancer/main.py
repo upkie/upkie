@@ -25,10 +25,10 @@ import traceback
 from os import path
 from typing import Any, Dict
 
-from loop_rate_limiters import AsyncRateLimiter
 import gin
 import mpacklog
 import yaml
+from loop_rate_limiters import AsyncRateLimiter
 from vulp.spine import SpineInterface
 
 from agents.pink_balancer.whole_body_controller import WholeBodyController
