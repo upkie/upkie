@@ -22,7 +22,6 @@ py_library(
     deps = [
         "//utils:clamp",
         "@pip_upkie_locomotion//pypi__gin_config",
-        # "@pip_upkie_locomotion//pypi__numpy",
     ],
 )
 
@@ -36,7 +35,6 @@ py_library(
         "//utils:clamp",
         "//utils:filters",
         "@pip_upkie_locomotion//pypi__gin_config",
-        # "@pip_upkie_locomotion//pypi__numpy",
     ],
 )
 
@@ -49,8 +47,6 @@ py_library(
         ":kinematics",
         ":wheel_balancer",
         "@pip_upkie_locomotion//pypi__gin_config",
-        # "@pip_upkie_locomotion//pypi__numpy",
-        "@pip_upkie_locomotion//pypi__upkie_description",
     ],
 )
 
