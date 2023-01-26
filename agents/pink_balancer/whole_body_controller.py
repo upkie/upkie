@@ -26,7 +26,7 @@ from pink.tasks import BodyTask, PostureTask
 from pink.utils import custom_configuration_vector
 from robot_descriptions.loaders.pinocchio import load_robot_description
 
-from utils import clamp
+from utils.clamp import clamp
 
 from .wheel_balancer import WheelBalancer
 
