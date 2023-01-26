@@ -1,0 +1,20 @@
+bullet:
+    control_mode: torque
+    follower_camera: false
+    gui: true
+    position_init_base_in_world: [0.0, 0.0, 0.6]
+    torque_control:
+        kp: 20.0
+        kd: 1.0
+floor_contact:
+    upper_leg_torque_threshold: 10.0
+wheel_contact:
+    cutoff_period: 0.2
+    liftoff_inertia: 0.001
+    min_touchdown_acceleration: 2.0
+    min_touchdown_torque: 0.015
+    touchdown_inertia: 0.004
+wheel_odometry:
+    signed_radius:
+        left_wheel: +0.06
+        right_wheel: -0.06
