@@ -10,18 +10,21 @@ filegroup(
     name = "config",
     srcs = glob([
         "*.gin",
+        "*.yaml",
     ]),
 )
 
 py_library(
     name = "whole_body_controller",
     srcs = [
+        "wheel_balancer.py",
         "whole_body_controller.py",
     ],
     deps = [
-        "//agents/blue_balancer:wheel_balancer",
+        "//observers/base_pitch",
+        "//utils:clamp",
+        "//utils:filters",
         "@pip_upkie_locomotion//pypi__gin_config",
-        # "@pip_upkie_locomotion//pypi__numpy",
         "@pip_upkie_locomotion//pypi__upkie_description",
     ],
 )
@@ -33,7 +36,6 @@ py_binary(
     ],
     main = "main.py",
     data = [
-        "//agents/blue_balancer:config",
         ":config",
     ] + select({
         "//:pi32_config": ["//spines:pi3hat"],
