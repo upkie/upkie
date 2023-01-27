@@ -81,6 +81,7 @@ class WholeBodyController:
     gain_scale: float
     max_crouch_height: float
     max_crouch_velocity: float
+    max_joint_velocity: float
     turning_gain_scale: float
 
     def __init__(
@@ -89,6 +90,7 @@ class WholeBodyController:
         gain_scale: float,
         max_crouch_height: float,
         max_crouch_velocity: float,
+        max_joint_velocity: float,
         turning_gain_scale: float,
         wheel_distance: float,
     ):
@@ -101,6 +103,7 @@ class WholeBodyController:
             max_crouch_height: Maximum distance along the vertical axis that
                 the robot goes down while crouching, in meters.
             max_crouch_velocity: Maximum vertical velocity in [m] / [s].
+            max_joint_velocity: Maximum joint angular velocity in [rad] / [s].
             turning_gain_scale: Additional gain scale added when the robot is
                 turning to keep the legs stiff in spite of the ground pulling
                 them apart.
@@ -113,6 +116,7 @@ class WholeBodyController:
         self.gain_scale = clamp(gain_scale, 0.1, 2.0)
         self.max_crouch_height = max_crouch_height
         self.max_crouch_velocity = max_crouch_velocity
+        self.max_joint_velocity = max_joint_velocity
         self.position_right_in_left = np.array([0.0, wheel_distance, 0.0])
         self.turning_gain_scale = turning_gain_scale
         self.wheel_balancer = WheelBalancer()  # type: ignore
@@ -212,7 +216,10 @@ class WholeBodyController:
             for joint in ["hip", "knee"]:
                 joint_name = f"{side}_{joint}"
                 joint_velocity = velocity_limited_joint_control(
-                    leg_targets[joint_name], self.leg_positions[joint_name], dt
+                    leg_targets[joint_name],
+                    self.leg_positions[joint_name],
+                    dt,
+                    max_joint_velocity=self.max_joint_velocity,
                 )
                 self.leg_positions[joint_name] += dt * joint_velocity
                 servo_action[joint_name] = {
