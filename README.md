@@ -35,7 +35,7 @@ The ``-c opt`` argument to Bazel makes sure we compile optimized code, while the
 
 <dl>
   <dt>Blue balancer</dt>
-  <dd>A 200 Hz agent designed to check out Upkie's physical capabilities. It is repeatable, and a good entry point for newcomers. It balances the robot using PID feedback from the head's pitch and wheel odometry to wheel velocities, plus a feedforward <a href="https://github.com/tasts-robots/upkie_locomotion/blob/55a331c6a6a165761a85087b7bea35d1403a6cf9/agents/blue_balancer/wheel_balancer.py#L368">non-minimum phase trick</a> for smoother transitions from standing to rolling. An analytical inverse kinematics is also plugged in for crouching and standing up. (It is connected to the D-pad of the USB controller if one is found.)</dd>
+  <dd>A baseline agent designed to check out Upkie's physical capabilities. It balances the robot using PD feedback from the head's pitch and wheel odometry to wheel velocities, plus a feedforward <a href="https://github.com/tasts-robots/upkie_locomotion/blob/55a331c6a6a165761a85087b7bea35d1403a6cf9/agents/blue_balancer/wheel_balancer.py#L368">non-minimum phase trick</a> for smoother transitions from standing to rolling. An analytical inverse kinematics is plugged in for crouching and standing up (crouching is controlled from D-pad of the USB controller, if one is found).</dd>
   
   <dt>Pink balancer</dt>
   <dd>Same as the Blue balancer, but inverse kinematics is computed by <a href="https://github.com/tasts-robots/pink">Pink</a> rather than with a model-specific analytical solution. This is the controller that runs in the <a href="https://www.youtube.com/shorts/8b36XcCgh7s">first</a> <a href="https://www.youtube.com/watch?v=NO_TkHGS0wQ">two</a> videos of Upkie.</dd>
