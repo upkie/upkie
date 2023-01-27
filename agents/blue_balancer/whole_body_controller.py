@@ -202,7 +202,10 @@ class WholeBodyController:
         # Legs (hips and knees)
         self.update_target_crouch(observation, dt)
         q_avg = velocity_limited_inverse_kinematics(
-            self.crouch_height, self.average_leg_positions, dt
+            self.crouch_height,
+            self.average_leg_positions,
+            dt,
+            max_joint_velocity=self.maximum_joint_velocity,
         )
         self.average_leg_positions = q_avg
         average_hip_position, average_knee_position = q_avg

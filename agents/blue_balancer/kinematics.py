@@ -17,7 +17,6 @@
 
 from typing import Tuple
 
-import gin
 import numpy as np
 
 from utils.clamp import clamp_abs
@@ -110,11 +109,11 @@ def velocity_limited_joint_control(
     )
 
 
-@gin.configurable
 def velocity_limited_inverse_kinematics(
     crouch_height: float,
     current_positions: Tuple[float, float],
     dt: float,
+    max_joint_velocity: float,
 ) -> Tuple[Tuple[float, float], Tuple[float, float]]:
     """
     Solve inverse kinematics for a single leg.
@@ -124,6 +123,7 @@ def velocity_limited_inverse_kinematics(
             in meters.
         current_positions: Tuple of hip and joint angles, in radians.
         dt: Duration in seconds until next cycle.
+        max_joint_velocity: Maximum joint angular velocity in rad / s.
 
     Returns:
         ===========  =========================================================
@@ -133,8 +133,12 @@ def velocity_limited_inverse_kinematics(
     """
     target_hip, target_knee = inverse_kinematics(crouch_height)
     current_hip, current_knee = current_positions
-    v_hip = velocity_limited_joint_control(target_hip, current_hip, dt)
-    v_knee = velocity_limited_joint_control(target_knee, current_knee, dt)
+    v_hip = velocity_limited_joint_control(
+        target_hip, current_hip, dt, max_joint_velocity
+    )
+    v_knee = velocity_limited_joint_control(
+        target_knee, current_knee, dt, max_joint_velocity
+    )
     # On the manifold ``v_hip = -0.5 * v_knee``
     v_hip = clamp_abs(v_hip, 0.5 * abs(v_knee))
     q_hip = current_hip + v_hip * dt
