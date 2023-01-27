@@ -25,7 +25,9 @@ from utils.clamp import clamp_abs
 
 @gin.configurable
 def forward_kinematics(
-    q_hip: float, q_knee: float, limb_length: float
+    q_hip: float,
+    q_knee: float,
+    limb_length: float = 0.17,
 ) -> float:
     """
     Compute forward kinematics for a single leg.
@@ -52,7 +54,8 @@ def forward_kinematics(
 
 @gin.configurable
 def inverse_kinematics(
-    crouch_height: float, limb_length: float
+    crouch_height: float,
+    limb_length: float = 0.17,
 ) -> Tuple[float, float]:
     """
     Solve inverse kinematics for a single leg.
@@ -90,7 +93,7 @@ def velocity_limited_joint_control(
     target_position: float,
     current_position: float,
     dt: float,
-    max_joint_velocity: float,
+    max_joint_velocity: float = 0.7,
 ) -> float:
     """
     Joint velocity control with bounded output velocity.
