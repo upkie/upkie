@@ -47,8 +47,6 @@ def observe(observation, configuration, servo_layout) -> np.ndarray:
             continue
         i = servo["configuration_index"]
         q[i] = observation["servo"][joint]["position"]
-        # tangent_index = configuration_index - 1
-        # v[tangent_index] = observation["servo"][joint]["velocity"]
     return q
 
 
@@ -205,7 +203,7 @@ class WholeBodyController:
             self.crouch_height,
             self.average_leg_positions,
             dt,
-            max_joint_velocity=self.maximum_joint_velocity,
+            max_joint_velocity=self.max_joint_velocity,
         )
         self.average_leg_positions = q_avg
         average_hip_position, average_knee_position = q_avg

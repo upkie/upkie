@@ -45,9 +45,9 @@ py_library(
 py_binary(
     name = "blue_balancer",
     srcs = [
-        "main.py",
+        "blue_balancer.py",
     ],
-    main = "main.py",
+    main = "blue_balancer.py",
     data = [
         "//agents/blue_balancer/config",
     ] + select({
