@@ -6,35 +6,14 @@ load("//tools/lint:lint.bzl", "add_lint_tests")
 
 package(default_visibility = ["//visibility:public"])
 
-filegroup(
-    name = "config",
-    srcs = glob([
-        "*.gin",
-        "*.yaml",
-    ]),
-)
-
-py_library(
-    name = "whole_body_controller",
-    srcs = [
-        "wheel_balancer.py",
-        "whole_body_controller.py",
-    ],
-    deps = [
-        "//observers/base_pitch",
-        "//utils:clamp",
-        "//utils:filters",
-        "@pip_upkie_locomotion//pypi__gin_config",
-        "@pip_upkie_locomotion//pypi__upkie_description",
-    ],
-)
-
 py_binary(
     name = "pink_balancer",
     srcs = [
-        "main.py",
+        "pink_balancer.py",
+        "wheel_balancer.py",
+        "whole_body_controller.py",
     ],
-    main = "main.py",
+    main = "pink_balancer.py",
     data = [
         ":config",
     ] + select({
@@ -43,12 +22,16 @@ py_binary(
         "//conditions:default": [],
     }),
     deps = [
+        "//observers/base_pitch",
+        "//utils:clamp",
+        "//utils:filters",
         "//utils:realtime",
         "//utils:spdlog",
-        ":whole_body_controller",
         "@mpacklog//:python",
         "@pip_upkie_locomotion//pypi__gin_config",
+        "@pip_upkie_locomotion//pypi__gin_config",
         "@pip_upkie_locomotion//pypi__loop_rate_limiters",
+        "@pip_upkie_locomotion//pypi__upkie_description",
         "@vulp//spine:python",
     ],
 )
