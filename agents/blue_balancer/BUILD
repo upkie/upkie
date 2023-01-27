@@ -6,14 +6,6 @@ load("//tools/lint:lint.bzl", "add_lint_tests")
 
 package(default_visibility = ["//visibility:public"])
 
-filegroup(
-    name = "config",
-    srcs = glob([
-        "*.gin",
-        "*.yaml",
-    ]),
-)
-
 py_library(
     name = "kinematics",
     srcs = [
@@ -57,7 +49,7 @@ py_binary(
     ],
     main = "main.py",
     data = [
-        ":config",
+        "//agents/blue_balancer/config",
     ] + select({
         "//:pi32_config": ["//spines:pi3hat"],
         "//:pi64_config": ["//spines:pi3hat"],

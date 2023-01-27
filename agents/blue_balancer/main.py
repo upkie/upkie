@@ -25,10 +25,10 @@ import traceback
 from os import path
 from typing import Any, Dict
 
-from loop_rate_limiters import AsyncRateLimiter
 import gin
 import mpacklog
 import yaml
+from loop_rate_limiters import AsyncRateLimiter
 from vulp.spine import SpineInterface
 
 from agents.blue_balancer.whole_body_controller import WholeBodyController
@@ -116,17 +116,16 @@ if __name__ == "__main__":
     agent_dir = path.dirname(__file__)
 
     # Gin configuration
-    gin.parse_config_file(f"{agent_dir}/kinematics.gin")
-    gin.parse_config_file(f"{agent_dir}/wheel_balancer.gin")
-    gin.parse_config_file(f"{agent_dir}/whole_body_controller.gin")
+    gin.parse_config_file(f"{agent_dir}/config/wheel_balancer.gin")
+    gin.parse_config_file(f"{agent_dir}/config/whole_body_controller.gin")
     logging.info(f'Loading configuration "{args.config}.gin"')
     if args.config == "pi3hat":
-        gin.parse_config_file(f"{agent_dir}/pi3hat.gin")
+        gin.parse_config_file(f"{agent_dir}/config/pi3hat.gin")
     elif args.config == "bullet":
-        gin.parse_config_file(f"{agent_dir}/bullet.gin")
+        gin.parse_config_file(f"{agent_dir}/config/bullet.gin")
 
     # Spine configuration
-    with open(f"{agent_dir}/spine.yaml", "r") as fh:
+    with open(f"{agent_dir}/config/spine.yaml", "r") as fh:
         config = yaml.safe_load(fh)
     if args.config == "pi3hat":
         configure_cpu(cpu=3)

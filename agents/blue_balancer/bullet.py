@@ -24,9 +24,9 @@ import traceback
 from os import path
 from typing import Any, Dict
 
-from loop_rate_limiters import AsyncRateLimiter
 import gin
 import yaml
+from loop_rate_limiters import AsyncRateLimiter
 from rules_python.python.runfiles import runfiles
 from vulp.spine import SpineInterface
 
@@ -82,13 +82,12 @@ if __name__ == "__main__":
         )
 
     # Gin configuration
-    gin.parse_config_file(f"{agent_dir}/kinematics.gin")
-    gin.parse_config_file(f"{agent_dir}/wheel_balancer.gin")
-    gin.parse_config_file(f"{agent_dir}/whole_body_controller.gin")
-    gin.parse_config_file(f"{agent_dir}/bullet.gin")
+    gin.parse_config_file(f"{agent_dir}/config/wheel_balancer.gin")
+    gin.parse_config_file(f"{agent_dir}/config/whole_body_controller.gin")
+    gin.parse_config_file(f"{agent_dir}/config/bullet.gin")
 
     # Spine configuration
-    with open(f"{agent_dir}/spine.yaml", "r") as fh:
+    with open(f"{agent_dir}/config/spine.yaml", "r") as fh:
         config = yaml.safe_load(fh)
 
     pid = os.fork()
