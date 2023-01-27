@@ -116,8 +116,7 @@ if __name__ == "__main__":
     agent_dir = path.dirname(__file__)
 
     # Gin configuration
-    gin.parse_config_file(f"{agent_dir}/config/wheel_balancer.gin")
-    gin.parse_config_file(f"{agent_dir}/config/whole_body_controller.gin")
+    gin.parse_config_file(f"{agent_dir}/config/common.gin")
     logging.info(f'Loading configuration "{args.config}.gin"')
     if args.config == "pi3hat":
         gin.parse_config_file(f"{agent_dir}/config/pi3hat.gin")

@@ -82,8 +82,7 @@ if __name__ == "__main__":
         )
 
     # Gin configuration
-    gin.parse_config_file(f"{agent_dir}/config/wheel_balancer.gin")
-    gin.parse_config_file(f"{agent_dir}/config/whole_body_controller.gin")
+    gin.parse_config_file(f"{agent_dir}/config/common.gin")
     gin.parse_config_file(f"{agent_dir}/config/bullet.gin")
 
     # Spine configuration
