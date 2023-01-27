@@ -23,7 +23,6 @@ import numpy as np
 from utils.clamp import clamp_abs
 
 
-@gin.configurable
 def forward_kinematics(
     q_hip: float,
     q_knee: float,
@@ -52,7 +51,6 @@ def forward_kinematics(
     return crouch_height
 
 
-@gin.configurable
 def inverse_kinematics(
     crouch_height: float,
     limb_length: float = 0.17,
@@ -88,12 +86,11 @@ def inverse_kinematics(
     return (q_hip, q_knee)
 
 
-@gin.configurable
 def velocity_limited_joint_control(
     target_position: float,
     current_position: float,
     dt: float,
-    max_joint_velocity: float = 0.7,
+    max_joint_velocity: float,
 ) -> float:
     """
     Joint velocity control with bounded output velocity.
