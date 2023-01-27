@@ -29,7 +29,6 @@ py_binary(
         "//utils:spdlog",
         "@mpacklog//:python",
         "@pip_upkie_locomotion//pypi__gin_config",
-        "@pip_upkie_locomotion//pypi__gin_config",
         "@pip_upkie_locomotion//pypi__loop_rate_limiters",
         "@pip_upkie_locomotion//pypi__upkie_description",
         "@vulp//spine:python",
