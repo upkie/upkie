@@ -20,6 +20,21 @@ py_library(
 )
 
 py_binary(
+    name = "test",
+    srcs = ["test.py"],
+    data = glob([
+        "policies/*.zip",
+    ]),
+    deps = [
+        "//envs",
+        ":settings",
+        "@mpacklog//:python",
+        "@pip_upkie_locomotion//pypi__gin_config",
+        "@pip_upkie_locomotion//pypi__loop_rate_limiters",
+    ],
+)
+
+py_binary(
     name = "train",
     srcs = [
         "train.py",
