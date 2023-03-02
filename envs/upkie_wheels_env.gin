@@ -9,3 +9,9 @@ UpkieWheelsEnv.fall_pitch = 1.0                       # [rad]
 UpkieWheelsEnv.max_ground_velocity = 1.0              # [m] / [s]
 UpkieWheelsEnv.shm_name = "/vulp"
 UpkieWheelsEnv.wheel_radius = 0.06                    # [m], actually it's 0.05 in the URDF
+
+UpkieWheelsReward.lookahead_duration = 0.1            # [s]
+UpkieWheelsReward.max_pitch = 1.5707963267948966      # [rad]
+UpkieWheelsReward.max_position = 0.5                  # [m]
+UpkieWheelsReward.pitch_weight = 1.0
+UpkieWheelsReward.position_weight = 1.0
