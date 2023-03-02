@@ -226,23 +226,35 @@ class UpkieWheelsEnv(gym.Env):
             info: Contains auxiliary diagnostic information (helpful for
                 debugging, logging, and sometimes learning).
         """
+        # Send action
         commanded_velocity: float = action[0]
-        left_wheel = self.action_dict["servo"]["left_wheel"]
-        right_wheel = self.action_dict["servo"]["right_wheel"]
-        left_wheel["position"] = math.nan
-        right_wheel["position"] = math.nan
-        left_wheel["velocity"] = +commanded_velocity / self.wheel_radius
-        right_wheel["velocity"] = -commanded_velocity / self.wheel_radius
-        self.spine.set_action(self.action_dict)
+        action_dict = {
+            "servo": {
+                joint: {
+                    "position": self.init_position[joint],
+                    "velocity": 0.0,
+                }
+                for joint in self.LEG_JOINTS
+            }
+        }
+        action_dict["servo"]["left_wheel"] = {
+            "position": math.nan,
+            "velocity": +commanded_velocity / self.wheel_radius,
+        }
+        action_dict["servo"]["right_wheel"] = {
+            "position": math.nan,
+            "velocity": -commanded_velocity / self.wheel_radius,
+        }
+        self.spine.set_action(action_dict)
 
-        # Observation
+        # Read observation
         observation_dict = self.spine.get_observation()
         observation = self.vectorize_observation(observation_dict)
 
-        # Reward
+        # Compute reward
         reward = self.reward.get(observation)
 
-        # Termination
+        # Check termination
         done = self.detect_fall(pitch=observation[0])
         return observation, reward, done, {}
 
