@@ -187,7 +187,7 @@ class UpkieWheelsEnv(gym.Env):
                 information, this is only returned if return_info is set to
                 true.
         """
-        # super().reset(seed=seed)  # for gym>=0.23.1
+        super().reset(seed=seed)
         self.spine.stop()
         self.spine.start(self.config)
         self.spine.get_observation()  # might be a pre-reset observation
