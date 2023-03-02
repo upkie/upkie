@@ -20,14 +20,55 @@
 import unittest
 
 import gin
+import numpy as np
+import posix_ipc
 
 from upkie_locomotion.envs import UpkieWheelsEnv
+
+
+class MockSpine:
+    def __init__(self):
+        self.observation = {
+            "servo": {
+                f"{side}_{joint}": {"position": 0.0}
+                for side in ("left", "right")
+                for joint in ("hip", "knee", "wheel")
+            },
+            "imu": {
+                "orientation": np.array([1.0, 0.0, 0.0, 0.0]),
+                "angular_velocity": np.zeros(3),
+            },
+            "wheel_odometry": {
+                "position": 0.0,
+                "velocity": 0.0,
+            },
+            "number": 0,
+        }
+
+    def start(self, config: dict) -> None:
+        pass
+
+    def stop(self) -> None:
+        pass
+
+    def set_action(self, action) -> None:
+        self.action = action
+
+    def get_observation(self) -> dict:
+        self.observation["number"] += 1
+        return self.observation
 
 
 class TestUpkieWheelsEnv(unittest.TestCase):
     def setUp(self):
         gin.parse_config_file(UpkieWheelsEnv.gin_config())
-        self.env = UpkieWheelsEnv()
+        shm_name = "/vroum"
+        shared_memory = posix_ipc.SharedMemory(
+            shm_name, posix_ipc.O_RDWR | posix_ipc.O_CREAT, size=42
+        )
+        self.env = UpkieWheelsEnv(shm_name=shm_name)
+        shared_memory.close_fd()
+        self.env._spine = MockSpine()
 
     def test_reset(self):
         observation = self.env.reset()
