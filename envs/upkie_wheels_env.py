@@ -236,11 +236,8 @@ class UpkieWheelsEnv(gym.Env):
         Returns:
             observation: Agent's observation of the environment.
             reward: Amount of reward returned after previous action.
-            terminated: Whether the agent reaches the terminal state, which can
-                be a good or a bad thing. If true, the user needs to call
-                :func:`reset()`.
-            truncated: Can be used to end the episode prematurely before a
-                terminal state is reached. If true, the user needs to call
+            done: Whether the agent reaches the terminal state, which can be a
+                good or a bad thing. If true, the user needs to call
                 :func:`reset()`.
             info: Contains auxiliary diagnostic information (helpful for
                 debugging, logging, and sometimes learning).
@@ -274,10 +271,9 @@ class UpkieWheelsEnv(gym.Env):
         reward = self.reward.get(observation)
 
         # Check termination
-        terminated = self.detect_fall(pitch=observation[0])
-        truncated = False
+        done = self.detect_fall(pitch=observation[0])
         info = {}
-        return observation, reward, terminated, truncated, info
+        return observation, reward, done, info
 
     def detect_fall(self, pitch: float) -> bool:
         """
