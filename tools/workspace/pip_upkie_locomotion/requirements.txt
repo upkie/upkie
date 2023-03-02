@@ -1,6 +1,7 @@
 PyYAML==5.4
 aiofiles==0.7.0
 gin-config==0.5.0
+gymnasium==0.27.1
 loop-rate-limiters==0.2.0
 msgpack==0.6.2
 numpy==1.22.0
