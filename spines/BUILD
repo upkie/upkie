@@ -77,6 +77,11 @@ cc_binary(
         "//:pi64_config": ["@vulp//actuation:pi3hat_interface"],
         "//conditions:default": [],
     }),
+    target_compatible_with = select({
+        "//:pi32_config": [],
+        "//:pi64_config": [],
+        "//conditions:default": ["@platforms//:incompatible"],
+    }),
 )
 
 add_lint_tests(enable_clang_format_lint = True)
