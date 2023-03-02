@@ -153,24 +153,22 @@ class UpkieWheelsEnv(gym.Env):
         basename = path.basename(__file__).replace(".py", ".gin")
         return f"{dirname}/{basename}"
 
-    def observation_vector_from_dict(
-        self, spine_observation: dict
-    ) -> np.ndarray:
+    def vectorize_observation(self, observation_dict: dict) -> np.ndarray:
         """
         Extract observation vector from a full observation dictionary.
 
         Args:
-            spine_observation: Full observation dictionary from the spine.
+            observation_dict: Full observation dictionary from the spine.
 
         Returns:
             Observation vector.
         """
-        imu = spine_observation["imu"]
+        imu = observation_dict["imu"]
         obs = np.empty(self.observation_dim)
         obs[0] = compute_base_pitch_from_imu(imu["orientation"])
-        obs[1] = spine_observation["wheel_odometry"]["position"]
-        obs[2] = spine_observation["wheel_odometry"]["velocity"]
-        obs[3] = spine_observation["imu"]["angular_velocity"][1]
+        obs[1] = observation_dict["wheel_odometry"]["position"]
+        obs[2] = observation_dict["wheel_odometry"]["velocity"]
+        obs[3] = observation_dict["imu"]["angular_velocity"][1]
         return obs
 
     def reset(
