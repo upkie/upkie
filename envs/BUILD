@@ -17,6 +17,7 @@ py_library(
         "upkie_wheels_env.gin",
     ],
     deps = [
+        "@pip_upkie_locomotion//pypi__gym",
         "@upkie_locomotion//observers/base_pitch",
         "@vulp//spine:python",
     ],
