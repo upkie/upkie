@@ -14,6 +14,10 @@ class UpkieWheelsReward:
     pitch_weight: float
     position_weight: float
 
+    @staticmethod
+    def get_range():
+        return (-float("inf"), 1.0)
+
     def __init__(
         self,
         lookahead_duration: float,

@@ -7,16 +7,10 @@ load("//tools/lint:lint.bzl", "add_lint_tests")
 package(default_visibility = ["//visibility:public"])
 
 py_library(
-    name = "reward",
-    srcs = [
-        "reward.py",
-    ],
-)
-
-py_library(
     name = "upkie_wheels_env",
     srcs = [
         "upkie_wheels_env.py",
+        "upkie_wheels_reward.py",
     ],
     data = [
         "spine.yaml",
@@ -25,7 +19,6 @@ py_library(
     deps = [
         "@upkie_locomotion//observers/base_pitch",
         "@vulp//spine:python",
-        ":reward",
     ],
 )
 
