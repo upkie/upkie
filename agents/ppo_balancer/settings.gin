@@ -1,6 +1,6 @@
 # -*- python -*-
 #
-# Copyright 2022 Stéphane Caron
+# Copyright 2023 Inria
 
 Settings.batch_size = 64
 Settings.brain_frequency = 200

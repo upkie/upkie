@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright 2022 Stéphane Caron
+# Copyright 2023 Inria
 
 from dataclasses import dataclass
 from typing import Optional
