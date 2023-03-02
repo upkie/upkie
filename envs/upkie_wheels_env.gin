@@ -2,7 +2,7 @@
 #
 # Copyright 2022 Stéphane Caron
 
-import upkie_locomotion.envs.upkie_wheels_env
+import envs.upkie_wheels_env
 
 UpkieWheelsEnv.config = None
 UpkieWheelsEnv.fall_pitch = 1.0                       # [rad]
