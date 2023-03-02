@@ -65,7 +65,7 @@ class UpkieWheelsEnv(gym.Env):
         wheel_radius: Wheel radius in [m].
     """
 
-    __spine: SpineInterface
+    _spine: SpineInterface
     action_dim: int
     config: dict
     fall_pitch: float
@@ -137,7 +137,7 @@ class UpkieWheelsEnv(gym.Env):
         self.reward_range = UpkieWheelsReward.get_range()
 
         # Class members
-        self.__spine = spine
+        self._spine = spine
         self.action_dim = action_dim
         self.config = config
         self.fall_pitch = fall_pitch
@@ -153,14 +153,14 @@ class UpkieWheelsEnv(gym.Env):
         """
         Stop the spine properly.
         """
-        self.__spine.stop()
+        self._spine.stop()
 
-    def __act(self, action_dict) -> None:
-        self.__spine.set_action(action_dict)
+    def _act(self, action_dict) -> None:
+        self._spine.set_action(action_dict)
         self.last_action = action_dict
 
-    def __observe(self) -> dict:
-        observation_dict = self.__spine.get_observation()
+    def _observe(self) -> dict:
+        observation_dict = self._spine.get_observation()
         self.last_observation = observation_dict
         return observation_dict
 
@@ -208,10 +208,10 @@ class UpkieWheelsEnv(gym.Env):
                 true.
         """
         super().reset(seed=seed)
-        self.__spine.stop()
-        self.__spine.start(self.config)
-        self.__spine.get_observation()  # might be a pre-reset observation
-        observation_dict = self.__observe()  # sets self.last_observation
+        self._spine.stop()
+        self._spine.start(self.config)
+        self._spine.get_observation()  # might be a pre-reset observation
+        observation_dict = self._observe()  # sets self.last_observation
         self.init_position = {
             joint: observation_dict["servo"][joint]["position"]
             for joint in self.LEG_JOINTS
@@ -258,10 +258,10 @@ class UpkieWheelsEnv(gym.Env):
             "position": math.nan,
             "velocity": -commanded_velocity / self.wheel_radius,
         }
-        self.__act(action_dict)
+        self._act(action_dict)
 
         # Read observation
-        observation_dict = self.__observe()
+        observation_dict = self._observe()
         observation = self.vectorize_observation(observation_dict)
 
         # Compute reward
