@@ -17,8 +17,9 @@
 
 """Test UpkieWheelsEnv."""
 
-import gin
 import unittest
+
+import gin
 
 from upkie_locomotion.envs import UpkieWheelsEnv
 
@@ -28,8 +29,12 @@ class TestUpkieWheelsEnv(unittest.TestCase):
         gin.parse_config_file(UpkieWheelsEnv.gin_config())
         self.env = UpkieWheelsEnv()
 
-    def test_nop(self):
-        self.assertIsNotNone(self.env)
+    def test_reset(self):
+        observation = self.env.reset()
+        observation_dict = self.env.last_observation
+        self.assertAlmostEqual(
+            observation[1], observation_dict["wheel_odometry"]["position"]
+        )
 
 
 if __name__ == "__main__":
