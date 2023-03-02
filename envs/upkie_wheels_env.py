@@ -62,6 +62,7 @@ class UpkieWheelsEnv(gym.Env):
                    | in rad/s.
             =====  ============================================================
 
+        version: Environment version number.
         wheel_radius: Wheel radius in [m].
     """
 
@@ -74,6 +75,7 @@ class UpkieWheelsEnv(gym.Env):
     max_ground_velocity: float
     observation_dict: dict
     observation_dim: int
+    version: int = 1
     wheel_radius: float
 
     LEG_JOINTS = [
@@ -89,7 +91,7 @@ class UpkieWheelsEnv(gym.Env):
         Returns:
             Name and version of the environment.
         """
-        return "UpkieWheelsEnv-v1"
+        return f"UpkieWheelsEnv-v{self.version}"
 
     def __init__(
         self,
