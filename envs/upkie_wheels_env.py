@@ -21,10 +21,10 @@ from os import path
 from typing import Any, Dict, Optional, Tuple, Union
 
 import gin
-import gymnasium as gym
+import gym
 import numpy as np
 import yaml
-from gymnasium import spaces
+from gym import spaces
 from vulp.spine import SpineInterface
 
 from upkie_locomotion.observers.base_pitch import compute_base_pitch_from_imu
