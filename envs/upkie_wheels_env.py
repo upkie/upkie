@@ -191,18 +191,17 @@ class UpkieWheelsEnv(gym.Env):
         self.spine.stop()
         self.spine.start(self.config)
         self.spine.get_observation()  # might be a pre-reset observation
-        self.observation_dict = self.spine.get_observation()
-        servo = self.observation_dict["servo"]
+        observation_dict = self.spine.get_observation()
         self.action_dict = {
             "servo": {
                 joint_name: {
-                    "position": servo_observation["position"],
+                    "position": servo["position"],
                     "velocity": 0.0,
                 }
-                for joint_name, servo_observation in servo.items()
+                for joint_name, servo in observation_dict["servo"].items()
             }
         }
-        observation = self.observation_vector_from_dict(self.observation_dict)
+        observation = self.vectorize_observation(observation_dict)
         if not return_info:
             return observation
         else:  # return_info
@@ -235,8 +234,8 @@ class UpkieWheelsEnv(gym.Env):
         self.spine.set_action(self.action_dict)
 
         # Observation
-        self.observation_dict = self.spine.get_observation()
-        observation = self.observation_vector_from_dict(self.observation_dict)
+        observation_dict = self.spine.get_observation()
+        observation = self.vectorize_observation(observation_dict)
 
         # Reward
         reward = self.reward.get(observation)
