@@ -168,16 +168,13 @@ class UpkieWheelsEnv(gym.Env):
 
     @staticmethod
     def gin_config():
-        """
-        Path to the Gin configuration for this environment.
-        """
+        """Path to the Gin configuration for this environment."""
         dirname = path.dirname(__file__)
         basename = path.basename(__file__).replace(".py", ".gin")
         return f"{dirname}/{basename}"
 
     def vectorize_observation(self, observation_dict: dict) -> np.ndarray:
-        """
-        Extract observation vector from a full observation dictionary.
+        """Extract observation vector from a full observation dictionary.
 
         Args:
             observation_dict: Full observation dictionary from the spine.
