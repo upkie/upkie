@@ -29,6 +29,7 @@ from upkie_locomotion.envs import UpkieWheelsEnv
 class MockSpine:
     def __init__(self):
         self.observation = {
+            "number": 0,
             "servo": {
                 f"{side}_{joint}": {"position": 0.0}
                 for side in ("left", "right")
@@ -42,7 +43,6 @@ class MockSpine:
                 "position": 0.0,
                 "velocity": 0.0,
             },
-            "number": 0,
         }
 
     def start(self, config: dict) -> None:
@@ -76,6 +76,7 @@ class TestUpkieWheelsEnv(unittest.TestCase):
         self.assertAlmostEqual(
             observation[1], observation_dict["wheel_odometry"]["position"]
         )
+        self.assertGreaterEqual(observation_dict["number"], 1)
 
 
 if __name__ == "__main__":
