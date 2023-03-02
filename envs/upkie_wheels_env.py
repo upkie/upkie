@@ -43,10 +43,11 @@ class UpkieWheelsEnv(gym.Env):
     Upkie with full observation but only wheel velocity actions.
 
     Attributes:
-        action_dict: Dictionary of actions to send to the spine.
         action_dim: Dimension of action space.
         config: Configuration dictionary, also sent to the spine.
         fall_pitch: Fall pitch angle, in radians.
+        last_action: Dictionary of last action sent to the spine.
+        last_observation: Dictionary of last observation read from the spine.
         max_ground_velocity: Maximum commanded ground velocity in [m] / [s].
         observation_dict: Dictionary of last observation from the spine.
         observation_dim: Dimension of observation space.
@@ -61,18 +62,18 @@ class UpkieWheelsEnv(gym.Env):
                    | in rad/s.
             =====  ============================================================
 
-        spine: Interface to the spine.
         wheel_radius: Wheel radius in [m].
     """
 
-    action_dict: dict
+    __spine: SpineInterface
     action_dim: int
     config: dict
     fall_pitch: float
+    last_action: dict
+    last_observation: dict
     max_ground_velocity: float
     observation_dict: dict
     observation_dim: int
-    spine: SpineInterface
     wheel_radius: float
 
     LEG_JOINTS = [
@@ -105,16 +106,9 @@ class UpkieWheelsEnv(gym.Env):
         spine = SpineInterface(shm_name)
 
         action_dim = 1
-        action_space = spaces.Box(
-            -max_ground_velocity,
-            +max_ground_velocity,
-            shape=(action_dim,),
-            dtype=np.float32,
-        )
-
         observation_dim = 4
         max_wheel_velocity = max_ground_velocity / wheel_radius
-        high = np.array(
+        observation_limit = np.array(
             [
                 MAX_BASE_PITCH,
                 MAX_WHEEL_POSITION,
@@ -122,34 +116,53 @@ class UpkieWheelsEnv(gym.Env):
                 MAX_IMU_ANGULAR_VELOCITY,
             ]
         )
-        observation_space = spaces.Box(
-            -high,
-            +high,
+
+        # gym.Env: action_space
+        self.action_space = spaces.Box(
+            -max_ground_velocity,
+            +max_ground_velocity,
+            shape=(action_dim,),
+            dtype=np.float32,
+        )
+
+        # gym.Env: observation_space
+        self.observation_space = spaces.Box(
+            -observation_limit,
+            +observation_limit,
             shape=(observation_dim,),
             dtype=np.float32,
         )
 
-        # gym.Env members
-        self.action_space = action_space
-        self.observation_space = observation_space
+        # gym.Env: reward_range
+        self.reward_range = UpkieWheelsReward.get_range()
 
         # Class members
-        self.action_dict = {}
+        self.__spine = spine
         self.action_dim = action_dim
         self.config = config
         self.fall_pitch = fall_pitch
         self.init_position = {}
+        self.last_action = {}
+        self.last_observation = {}
         self.max_ground_velocity = max_ground_velocity
         self.observation_dim = observation_dim
         self.reward = UpkieWheelsReward()
-        self.spine = spine
         self.wheel_radius = wheel_radius
 
     def close(self) -> None:
         """
         Stop the spine properly.
         """
-        self.spine.stop()
+        self.__spine.stop()
+
+    def __act(self, action_dict) -> None:
+        self.__spine.set_action(action_dict)
+        self.last_action = action_dict
+
+    def __observe(self) -> dict:
+        observation_dict = self.__spine.get_observation()
+        self.last_observation = observation_dict
+        return observation_dict
 
     @staticmethod
     def gin_config():
@@ -195,10 +208,10 @@ class UpkieWheelsEnv(gym.Env):
                 true.
         """
         super().reset(seed=seed)
-        self.spine.stop()
-        self.spine.start(self.config)
-        self.spine.get_observation()  # might be a pre-reset observation
-        observation_dict = self.spine.get_observation()
+        self.__spine.stop()
+        self.__spine.start(self.config)
+        self.__spine.get_observation()  # might be a pre-reset observation
+        observation_dict = self.__observe()  # sets self.last_observation
         self.init_position = {
             joint: observation_dict["servo"][joint]["position"]
             for joint in self.LEG_JOINTS
@@ -245,10 +258,10 @@ class UpkieWheelsEnv(gym.Env):
             "position": math.nan,
             "velocity": -commanded_velocity / self.wheel_radius,
         }
-        self.spine.set_action(action_dict)
+        self.__act(action_dict)
 
         # Read observation
-        observation_dict = self.spine.get_observation()
+        observation_dict = self.__observe()
         observation = self.vectorize_observation(observation_dict)
 
         # Compute reward
