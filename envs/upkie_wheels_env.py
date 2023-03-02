@@ -29,7 +29,7 @@ from vulp.spine import SpineInterface
 
 from upkie_locomotion.observers.base_pitch import compute_base_pitch_from_imu
 
-from .reward import Reward
+from .upkie_wheels_reward import UpkieWheelsReward
 
 MAX_BASE_PITCH: float = np.pi
 MAX_WHEEL_POSITION: float = float("inf")
@@ -86,7 +86,6 @@ class UpkieWheelsEnv(gym.Env):
 
     def __init__(
         self,
-        reward: Optional[Reward],
         config: Optional[dict],
         fall_pitch: float,
         max_ground_velocity: float,
@@ -127,7 +126,6 @@ class UpkieWheelsEnv(gym.Env):
         # gym.Env members
         self.action_space = action_space
         self.observation_space = observation_space
-        self.reward_range = reward.get_range()
 
         # Class members
         self.action_dict = {}
@@ -135,9 +133,8 @@ class UpkieWheelsEnv(gym.Env):
         self.config = config
         self.fall_pitch = fall_pitch
         self.max_ground_velocity = max_ground_velocity
-        self.observation_dict = {}
         self.observation_dim = observation_dim
-        self.reward = reward
+        self.reward = UpkieWheelsReward()
         self.spine = spine
         self.wheel_radius = wheel_radius
 
