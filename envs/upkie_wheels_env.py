@@ -75,6 +75,12 @@ class UpkieWheelsEnv(gym.Env):
     spine: SpineInterface
     wheel_radius: float
 
+    LEG_JOINTS = [
+        f"{side}_{joint}"
+        for side in ("left", "right")
+        for joint in ("hip", "knee")
+    ]
+
     def id(self) -> str:
         """
         Name and version of this environment for registration.
@@ -132,6 +138,7 @@ class UpkieWheelsEnv(gym.Env):
         self.action_dim = action_dim
         self.config = config
         self.fall_pitch = fall_pitch
+        self.init_position = {}
         self.max_ground_velocity = max_ground_velocity
         self.observation_dim = observation_dim
         self.reward = UpkieWheelsReward()
@@ -192,14 +199,9 @@ class UpkieWheelsEnv(gym.Env):
         self.spine.start(self.config)
         self.spine.get_observation()  # might be a pre-reset observation
         observation_dict = self.spine.get_observation()
-        self.action_dict = {
-            "servo": {
-                joint_name: {
-                    "position": servo["position"],
-                    "velocity": 0.0,
-                }
-                for joint_name, servo in observation_dict["servo"].items()
-            }
+        self.init_position = {
+            joint: observation_dict["servo"][joint]["position"]
+            for joint in self.LEG_JOINTS
         }
         observation = self.vectorize_observation(observation_dict)
         if not return_info:
