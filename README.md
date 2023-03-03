@@ -48,10 +48,10 @@ The ``-c opt`` argument to Bazel makes sure we compile optimized code, while the
 <dl>
   <dt><a href="https://tasts-robots.org/doc/upkie_locomotion/classupkie__locomotion_1_1observers_1_1FloorContact.html#details">Floor contact</a></dt>
   <dd>Detect contact between the wheels and the floor. Both Blue and Pink agents use contact as a reset flag for their integrators, to avoid over-spinning the wheels while the robot is in the air.</dd>
-  
+
   <dt><a href="https://tasts-robots.org/doc/upkie_locomotion/classupkie__locomotion_1_1observers_1_1WheelContact.html#details">Wheel contact</a></dt>
   <dd>Detect contact between a given wheel and the floor.</dd>
-  
+
   <dt><a href="https://tasts-robots.org/doc/upkie_locomotion/classupkie__locomotion_1_1observers_1_1WheelOdometry.html#details">Wheel odometry</a></dt>
   <dd>Measure the relative motion of the floating base with respect to the floor. Wheel odometry is part of their secondary task (after keeping the head straight), which is to stay around the same spot on the floor.</dd>
 </dl>

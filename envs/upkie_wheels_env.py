@@ -18,7 +18,7 @@
 
 import math
 from os import path
-from typing import Any, Dict, Optional, Tuple, Union
+from typing import Dict, Optional, Tuple, Union
 
 import gin
 import gym
@@ -39,31 +39,48 @@ MAX_IMU_ANGULAR_VELOCITY: float = 1000.0  # rad/s
 @gin.configurable
 class UpkieWheelsEnv(gym.Env):
 
-    """
+    """!
     Upkie with full observation but only wheel velocity actions.
 
-    Attributes:
-        action_dim: Dimension of action space.
-        config: Configuration dictionary, also sent to the spine.
-        fall_pitch: Fall pitch angle, in radians.
-        last_action: Dictionary of last action sent to the spine.
-        last_observation: Dictionary of last observation read from the spine.
-        max_ground_velocity: Maximum commanded ground velocity in [m] / [s].
-        observation_dict: Dictionary of last observation from the spine.
-        observation_dim: Dimension of observation space.
+    The environment has the following attributes:
 
-            =====  ============================================================
-            Index  Description
-            =====  ============================================================
-            0      | Base pitch in rad.
-            1      | Position of the average wheel contact point, in m.
-            2      | Velocity of the average wheel contact point, in m/s.
-            3      | Body angular velocity of the IMU frame along its y-axis,
-                   | in rad/s.
-            =====  ============================================================
+    - ``action_dim``: Dimension of action space.
+    - ``config``: Configuration dictionary, also sent to the spine.
+    - ``fall_pitch``: Fall pitch angle, in radians.
+    - ``max_ground_velocity``: Maximum commanded ground velocity in m/s.
+    - ``shm_name``: Name of shared-memory file.
+    - ``wheel_radius``: Wheel radius in [m].
+    - ``last_action``: Dictionary of last action sent to the spine.
+    - ``last_observation``: Dictionary of last observation read from the spine.
+    - ``observation_dict``: Dictionary of last observation from the spine.
+    - ``observation_dim``: Dimension of observation space.
+    - ``version``: Environment version number.
 
-        version: Environment version number.
-        wheel_radius: Wheel radius in [m].
+    Vectorized observations have the following structure:
+
+    <table>
+        <tr>
+            <td><strong>Index</strong></td>
+            <td><strong>Description</strong></td>
+            </tr>
+        <tr>
+            <td>0</td>
+            <td>Base pitch in rad.</td>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>Position of the average wheel contact point, in m.</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>Velocity of the average wheel contact point, in m/s.</td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>Body angular velocity of the IMU frame along its y-axis, in
+            rad/s.</td>
+        </tr>
+    </table>
     """
 
     _spine: SpineInterface
@@ -85,7 +102,7 @@ class UpkieWheelsEnv(gym.Env):
     ]
 
     def id(self) -> str:
-        """
+        """!
         Name and version of this environment for registration.
 
         Returns:
@@ -101,6 +118,15 @@ class UpkieWheelsEnv(gym.Env):
         shm_name: str,
         wheel_radius: float,
     ):
+        """!
+        Initialize environment.
+
+        @param config Configuration dictionary, also sent to the spine.
+        @param fall_pitch Fall pitch angle, in radians.
+        @param max_ground_velocity Maximum commanded ground velocity in m/s.
+        @param shm_name Name of shared-memory file.
+        @param wheel_radius Wheel radius in [m].
+        """
         if config is None:
             envs_dir = path.dirname(__file__)
             with open(f"{envs_dir}/spine.yaml", "r") as fh:
@@ -152,35 +178,45 @@ class UpkieWheelsEnv(gym.Env):
         self.wheel_radius = wheel_radius
 
     def close(self) -> None:
-        """
+        """!
         Stop the spine properly.
         """
         self._spine.stop()
 
     def _act(self, action_dict) -> None:
+        """!
+        Internal function to send an action dictionary to the spine.
+
+        @param action_dict Action dictionary.
+        """
         self._spine.set_action(action_dict)
         self.last_action = action_dict
 
     def _observe(self) -> dict:
+        """!
+        Internal function to get an observation dictionary from the spine.
+
+        @returns Observation dictionary.
+        """
         observation_dict = self._spine.get_observation()
         self.last_observation = observation_dict
         return observation_dict
 
     @staticmethod
     def gin_config():
-        """Path to the Gin configuration for this environment."""
+        """!
+        Path to the Gin configuration for this environment.
+        """
         dirname = path.dirname(__file__)
         basename = path.basename(__file__).replace(".py", ".gin")
         return f"{dirname}/{basename}"
 
     def vectorize_observation(self, observation_dict: dict) -> np.ndarray:
-        """Extract observation vector from a full observation dictionary.
+        """!
+        Extract observation vector from a full observation dictionary.
 
-        Args:
-            observation_dict: Full observation dictionary from the spine.
-
-        Returns:
-            Observation vector.
+        @param observation_dict Full observation dictionary from the spine.
+        @returns Observation vector.
         """
         imu = observation_dict["imu"]
         obs = np.empty(self.observation_dim)
@@ -196,15 +232,17 @@ class UpkieWheelsEnv(gym.Env):
         seed: Optional[int] = None,
         return_info: bool = False,
         options: Optional[dict] = None,
-    ) -> Union[Any, Tuple[Any, Dict]]:
-        """
+    ) -> Union[np.ndarray, Tuple[np.ndarray, Dict]]:
+        """!
         Resets the spine and get an initial observation.
 
-        Returns:
-            observation (object): the initial observation.
-            info (optional dictionary): a dictionary containing extra
-                information, this is only returned if return_info is set to
-                true.
+        @param seed Will be used once we upgrade to gym >= 0.21.0.
+        @param return_info If true, return an extra info dictionary.
+        @param options Currently unused.
+        @returns
+            - ``observation``: the initial vectorized observation.
+            - ``info``: an optional dictionary containing extra information.
+                It is only returned if ``return_info`` is set to true.
         """
         # super().reset(seed=seed)  # we are pinned at gym==0.21.0
         self._spine.stop()
@@ -222,22 +260,20 @@ class UpkieWheelsEnv(gym.Env):
             return observation, {}
 
     def step(self, action: np.ndarray) -> Tuple[np.ndarray, float, bool, dict]:
-        """
+        """!
         Run one timestep of the environment's dynamics. When end of episode is
         reached, you are responsible for calling `reset()` to reset the
         environment's state.
 
-        Args:
-            action: Action from the agent.
-
-        Returns:
-            observation: Agent's observation of the environment.
-            reward: Amount of reward returned after previous action.
-            done: Whether the agent reaches the terminal state, which can be a
-                good or a bad thing. If true, the user needs to call
-                :func:`reset()`.
-            info: Contains auxiliary diagnostic information (helpful for
-                debugging, logging, and sometimes learning).
+        @param action Action from the agent.
+        @returns
+            - ``observation``: Agent's observation of the environment.
+            - ``reward``: Amount of reward returned after previous action.
+            - ``done``: Whether the agent reaches the terminal state, which can
+              be a good or a bad thing. If true, the user needs to call
+              :func:`reset()`.
+            - ``info``: Contains auxiliary diagnostic information (helpful for
+              debugging, logging, and sometimes learning).
         """
         # Send action
         commanded_velocity: float = action[0]
@@ -273,13 +309,10 @@ class UpkieWheelsEnv(gym.Env):
         return observation, reward, done, info
 
     def detect_fall(self, pitch: float) -> bool:
-        """
+        """!
         Detect a fall based on the body-to-world pitch angle.
 
-        Args:
-            pitch: Current pitch angle in [rad].
-
-        Returns:
-            True if and only if a fall is detected.
+        @param pitch Current pitch angle in [rad].
+        @returns True if and only if a fall is detected.
         """
         return abs(pitch) > self.fall_pitch
