@@ -84,6 +84,11 @@ class UpkieWheelsEnv(gym.Env):
 
     The reward function is defined in @ref
     envs.upkie_wheels_reward.UpkieWheelsReward "UpkieWheelsReward".
+
+    @note This environment is made to run on a single CPU thread rather than on
+    GPU/TPU. The downside for reinforcement learning is that computations are
+    not massively parallel. The upside is that it simplifies deployment to the
+    real robot, as it relies on the same spine interface that runs on Upkie.
     """
 
     _spine: SpineInterface

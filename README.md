@@ -41,14 +41,14 @@ The ``-c opt`` argument to Bazel makes sure we compile optimized code, while the
   <dd>Same as the Blue balancer, but inverse kinematics is computed by <a href="https://github.com/tasts-robots/pink">Pink</a> rather than with a model-specific analytical solution. This is the controller that runs in the <a href="https://www.youtube.com/shorts/8b36XcCgh7s">first</a> <a href="https://www.youtube.com/watch?v=NO_TkHGS0wQ">two</a> videos of Upkie.</dd>
 
   <dt>PPO balancer</dt>
-  <dd>An agent trained by reinforcement learning to balance with straight legs. Training uses the <code><a href="https://tasts-robots.org/doc/upkie_locomotion/classenvs_1_1upkie__wheels__env_1_1UpkieWheelsEnv.html">UpkieWheelsEnv</a></code> gym environment and the PPO implementation from <a href="https://github.com/DLR-RM/stable-baselines3/">Stable Baselines3</a>.</dd>
+  <dd>An agent trained by reinforcement learning to balance with straight legs. Training uses the <code><a href="https://tasts-robots.org/doc/upkie_locomotion/classenvs_1_1upkie__wheels__env_1_1UpkieWheelsEnv.html#details">UpkieWheelsEnv</a></code> gym environment and the PPO implementation from <a href="https://github.com/DLR-RM/stable-baselines3/">Stable Baselines3</a>.</dd>
 </dl>
 
 ## Environments
 
 <dl>
-  <dt><code><a href="https://tasts-robots.org/doc/upkie_locomotion/classenvs_1_1upkie__wheels__env_1_1UpkieWheelsEnv.html">UpkieWheelsEnv</a></code></dt>
-  <dd>Upkie with full observation but only wheel velocity actions.</dd>
+  <dt><code><a href="https://tasts-robots.org/doc/upkie_locomotion/classenvs_1_1upkie__wheels__env_1_1UpkieWheelsEnv.html#details">UpkieWheelsEnv</a></code></dt>
+  <dd>Upkie with full observation but only wheel velocity actions. This environment is single-threaded rather than vectorized. In return, it runs as-is on the real robot.</dd>
 </dl>
 
 ## Observers
