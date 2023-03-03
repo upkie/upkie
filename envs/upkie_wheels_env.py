@@ -82,7 +82,8 @@ class UpkieWheelsEnv(gym.Env):
         </tr>
     </table>
 
-    The reward function is defined in @ref envs.upkie_wheels_reward.UpkieWheelsReward "UpkieWheelsReward".
+    The reward function is defined in @ref
+    envs.upkie_wheels_reward.UpkieWheelsReward "UpkieWheelsReward".
     """
 
     _spine: SpineInterface
