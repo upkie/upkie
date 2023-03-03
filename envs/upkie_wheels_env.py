@@ -81,6 +81,8 @@ class UpkieWheelsEnv(gym.Env):
             rad/s.</td>
         </tr>
     </table>
+
+    The reward function is defined in @ref envs.upkie_wheels_reward.UpkieWheelsReward "UpkieWheelsReward".
     """
 
     _spine: SpineInterface
