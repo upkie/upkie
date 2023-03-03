@@ -36,9 +36,19 @@ The ``-c opt`` argument to Bazel makes sure we compile optimized code, while the
 <dl>
   <dt>Blue balancer</dt>
   <dd>A baseline agent designed to check out Upkie's physical capabilities. It balances the robot using PD feedback from the head's pitch and wheel odometry to wheel velocities, plus a feedforward <a href="https://github.com/tasts-robots/upkie_locomotion/blob/55a331c6a6a165761a85087b7bea35d1403a6cf9/agents/blue_balancer/wheel_balancer.py#L368">non-minimum phase trick</a> for smoother transitions from standing to rolling. An analytical inverse kinematics is plugged in for crouching and standing up (crouching is controlled from D-pad of the USB controller, if one is found).</dd>
-  
+
   <dt>Pink balancer</dt>
   <dd>Same as the Blue balancer, but inverse kinematics is computed by <a href="https://github.com/tasts-robots/pink">Pink</a> rather than with a model-specific analytical solution. This is the controller that runs in the <a href="https://www.youtube.com/shorts/8b36XcCgh7s">first</a> <a href="https://www.youtube.com/watch?v=NO_TkHGS0wQ">two</a> videos of Upkie.</dd>
+
+  <dt>PPO balancer</dt>
+  <dd>An agent trained by reinforcement learning to balance with straight legs. Training uses the <code><a href="https://tasts-robots.org/doc/upkie_locomotion/classenvs_1_1upkie__wheels__env_1_1UpkieWheelsEnv.html">UpkieWheelsEnv</a></code> gym environment and the PPO implementation from <a href="https://github.com/DLR-RM/stable-baselines3/">Stable Baselines3</a>.</dd>
+</dl>
+
+## Environments
+
+<dl>
+  <dt><code><a href="https://tasts-robots.org/doc/upkie_locomotion/classenvs_1_1upkie__wheels__env_1_1UpkieWheelsEnv.html">UpkieWheelsEnv</a></code></dt>
+  <dd>Upkie with full observation but only wheel velocity actions.</dd>
 </dl>
 
 ## Observers
