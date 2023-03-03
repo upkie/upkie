@@ -28,5 +28,6 @@ class Settings:
     sde_sample_freq: int
     spine_frequency: int
     target_kl: Optional[float]
+    total_timesteps: int
     use_sde: bool
     vf_coef: float

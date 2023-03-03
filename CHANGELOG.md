@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- PPO balancer: setting for total number of training timesteps
+
 ## [0.2.0] - 2023/03/03
 
 ### Added

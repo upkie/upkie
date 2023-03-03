@@ -117,7 +117,7 @@ def train_policy(
     tb_log_name = f"{agent_name}_env-v{env.version}"
     try:
         policy.learn(
-            total_timesteps=int(5e5),
+            total_timesteps=settings.total_timesteps,
             callback=[
                 CheckpointCallback(
                     save_freq=int(1e5),
@@ -191,6 +191,7 @@ if __name__ == "__main__":
     gin.parse_config_file(f"{agent_dir}/settings.gin")
 
     agent_name = generate_agent_name()
+    logging.info('New agent name is "%s"', agent_name)
     pid = os.fork()
     if pid == 0:  # child process: spine
         deez_runfiles = runfiles.Create()

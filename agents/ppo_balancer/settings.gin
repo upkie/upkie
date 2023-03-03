@@ -18,3 +18,4 @@ Settings.spine_frequency = 1000
 Settings.target_kl = None
 Settings.use_sde = False
 Settings.vf_coef = 0.5
+Settings.total_timesteps = 1e6
