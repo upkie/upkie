@@ -18,6 +18,7 @@ py_library(
     ],
     deps = [
         "@pip_upkie_locomotion//pypi__gym",
+        "@pip_upkie_locomotion//pypi__pyyaml",
         "@upkie_locomotion//observers/base_pitch",
         "@vulp//spine:python",
     ],

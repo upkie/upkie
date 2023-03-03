@@ -1,4 +1,4 @@
-PyYAML==5.4
+PyYAML==6.0
 aiofiles==0.7.0
 gin-config==0.5.0
 gym==0.21.0
