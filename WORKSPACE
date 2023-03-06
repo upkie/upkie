@@ -32,8 +32,10 @@ add_rpi_bazel_repositories()
 # ===================
 
 # Depends on @rules_python which is a @palimpsest repository
-load("//tools/workspace:install_python_deps.bzl", "install_python_deps")
-install_python_deps()
+load("//tools/workspace:parse_python_deps.bzl", "parse_python_deps")
+parse_python_deps()
+load("@pip_upkie_locomotion//:requirements.bzl", "install_deps")
+install_deps()
 
 # Vulp also has Python dependencies
 load("@vulp//tools/workspace:install_python_deps.bzl", install_vulp_python_deps = "install_python_deps")
