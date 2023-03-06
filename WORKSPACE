@@ -38,5 +38,7 @@ load("@pip_upkie_locomotion//:requirements.bzl", "install_deps")
 install_deps()
 
 # Vulp also has Python dependencies
-load("@vulp//tools/workspace:install_python_deps.bzl", install_vulp_python_deps = "install_python_deps")
-install_vulp_python_deps()
+load("@vulp//tools/workspace/pip_vulp:parse_deps.bzl", parse_vulp_deps = "parse_deps")
+parse_vulp_deps()
+load("@pip_vulp//:requirements.bzl", install_vulp_deps = "install_deps")
+install_vulp_deps()
