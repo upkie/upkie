@@ -27,7 +27,7 @@ fi
 
 BASEDIR=$(dirname 0)
 COMMAND=$@
-SRCDIR=${BASEDIR}/..
+SRCDIR=${BASEDIR}/../..
 TMPDIR=$(mktemp -d)
 
 echo "[debug] COMMAND=${COMMAND}"
