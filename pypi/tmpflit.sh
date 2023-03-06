@@ -38,9 +38,9 @@ for folder in envs observers/base_pitch utils; do
     mkdir -p ${TMPDIR}/upkie_locomotion/$(dirname ${folder})
     cp -r ${SRCDIR}/${folder} ${TMPDIR}/upkie_locomotion/${folder}
 done
-cp ${BASEDIR}/pyproject.toml ${TMPDIR}/pyproject.toml
-cp ${SRCDIR}/README.md ${TMPDIR}/README.md
-cp ${BASEDIR}/upkie_locomotion/__init__.py ${TMPDIR}/upkie_locomotion/__init__.py
 
-cd ${TMPDIR}
-flit ${COMMAND}
+cp ${BASEDIR}/pyproject.toml ${TMPDIR}/pyproject.toml
+cp ${BASEDIR}/upkie_locomotion/__init__.py ${TMPDIR}/upkie_locomotion/__init__.py
+cp ${SRCDIR}/README.md ${TMPDIR}/README.md
+
+cd ${TMPDIR} && flit ${COMMAND}
