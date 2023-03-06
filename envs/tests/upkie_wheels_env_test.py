@@ -19,7 +19,6 @@
 
 import unittest
 
-import gin
 import numpy as np
 import posix_ipc
 
@@ -61,7 +60,6 @@ class MockSpine:
 
 class TestUpkieWheelsEnv(unittest.TestCase):
     def setUp(self):
-        gin.parse_config_file(UpkieWheelsEnv.gin_config())
         shm_name = "/vroum"
         shared_memory = posix_ipc.SharedMemory(
             shm_name, posix_ipc.O_RDWR | posix_ipc.O_CREAT, size=42

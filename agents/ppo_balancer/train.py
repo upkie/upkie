@@ -187,7 +187,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     agent_dir = os.path.dirname(__file__)
-    gin.parse_config_file(UpkieWheelsEnv.gin_config())
     gin.parse_config_file(f"{agent_dir}/settings.gin")
 
     agent_name = generate_agent_name()

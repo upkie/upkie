@@ -15,7 +15,6 @@ py_library(
     ],
     data = [
         "spine.yaml",
-        "upkie_wheels_env.gin",
     ],
     deps = [
         "@upkie_locomotion//observers/base_pitch",

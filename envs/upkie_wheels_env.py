@@ -20,7 +20,6 @@ import math
 from os import path
 from typing import Dict, Optional, Tuple, Union
 
-import gin
 import gym
 import numpy as np
 import yaml
@@ -36,7 +35,6 @@ MAX_WHEEL_POSITION: float = float("inf")
 MAX_IMU_ANGULAR_VELOCITY: float = 1000.0  # rad/s
 
 
-@gin.configurable
 class UpkieWheelsEnv(gym.Env):
 
     """!
@@ -120,11 +118,11 @@ class UpkieWheelsEnv(gym.Env):
 
     def __init__(
         self,
-        config: Optional[dict],
-        fall_pitch: float,
-        max_ground_velocity: float,
-        shm_name: str,
-        wheel_radius: float,
+        config: Optional[dict] = None,
+        fall_pitch: float = 1.0,
+        max_ground_velocity: float = 1.0,
+        shm_name: str = "/vulp",
+        wheel_radius: float = 0.06,
     ):
         """!
         Initialize environment.
@@ -209,15 +207,6 @@ class UpkieWheelsEnv(gym.Env):
         observation_dict = self._spine.get_observation()
         self.last_observation = observation_dict
         return observation_dict
-
-    @staticmethod
-    def gin_config():
-        """!
-        Path to the Gin configuration for this environment.
-        """
-        dirname = path.dirname(__file__)
-        basename = path.basename(__file__).replace(".py", ".gin")
-        return f"{dirname}/{basename}"
 
     def vectorize_observation(self, observation_dict: dict) -> np.ndarray:
         """!
