@@ -19,7 +19,7 @@ from typing import Tuple
 
 import numpy as np
 
-from utils.clamp import clamp
+from upkie_locomotion.utils.clamp import clamp
 
 
 def compute_pitch_frame_in_parent(
