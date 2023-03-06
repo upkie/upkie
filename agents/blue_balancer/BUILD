@@ -3,6 +3,7 @@
 # Copyright 2022 Stéphane Caron
 
 load("//tools/lint:lint.bzl", "add_lint_tests")
+load("@pip_upkie_locomotion//:requirements.bzl", "requirement")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -13,7 +14,7 @@ py_library(
     ],
     deps = [
         "//utils:clamp",
-        "@pip_upkie_locomotion//pypi__gin_config",
+        requirement("gin-config"),
     ],
 )
 
@@ -26,7 +27,7 @@ py_library(
         "//observers/base_pitch",
         "//utils:clamp",
         "//utils:filters",
-        "@pip_upkie_locomotion//pypi__gin_config",
+        requirement("gin-config"),
     ],
 )
 
@@ -38,7 +39,7 @@ py_library(
     deps = [
         ":kinematics",
         ":wheel_balancer",
-        "@pip_upkie_locomotion//pypi__gin_config",
+        requirement("gin-config"),
     ],
 )
 
@@ -60,9 +61,9 @@ py_binary(
         "//utils:spdlog",
         ":whole_body_controller",
         "@mpacklog//:python",
-        "@pip_upkie_locomotion//pypi__gin_config",
-        "@pip_upkie_locomotion//pypi__loop_rate_limiters",
-        "@pip_upkie_locomotion//pypi__pyyaml",
+        requirement("gin-config"),
+        requirement("loop_rate_limiters"),
+        requirement("pyyaml"),
         "@vulp//spine:python",
     ],
 )
@@ -79,9 +80,9 @@ py_binary(
     ],
     deps = [
         ":whole_body_controller",
-        "@pip_upkie_locomotion//pypi__gin_config",
-        "@pip_upkie_locomotion//pypi__loop_rate_limiters",
-        "@pip_upkie_locomotion//pypi__pyyaml",
+        requirement("gin-config"),
+        requirement("loop_rate_limiters"),
+        requirement("pyyaml"),
         "@rules_python//python/runfiles",
         "@vulp//spine:python",
     ],

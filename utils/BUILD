@@ -3,6 +3,7 @@
 # Copyright 2022 Stéphane Caron
 
 load("//tools/lint:lint.bzl", "add_lint_tests")
+load("@pip_upkie_locomotion//:requirements.bzl", "requirement")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -43,9 +44,9 @@ py_library(
         "logging.py",
     ],
     deps = [
-        "@pip_upkie_locomotion//pypi__aiofiles",
-        "@pip_upkie_locomotion//pypi__msgpack",
         "@vulp//utils:serialize",
+        requirement("aiofiles"),
+        requirement("msgpack"),
     ],
 )
 
