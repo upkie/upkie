@@ -11,10 +11,10 @@ import time
 import gin
 import mpacklog
 from loop_rate_limiters import AsyncRateLimiter
-from settings import Settings
 from stable_baselines3 import PPO
-
 from upkie_locomotion.envs import UpkieWheelsEnv
+
+from settings import Settings
 
 keep_going = True
 
@@ -51,8 +51,7 @@ async def run_policy(policy):
     )
 
 
-def load_policy(policy_name: str):
-    agent_dir = os.path.dirname(__file__)
+def load_policy(agent_dir: str, policy_name: str):
     env = UpkieWheelsEnv(shm_name="/vulp")
     policy = PPO("MlpPolicy", env, verbose=1)
     policy.set_parameters(f"{agent_dir}/policies/{policy_name}")
@@ -60,7 +59,7 @@ def load_policy(policy_name: str):
 
 
 if __name__ == "__main__":
-    agent_dir = os.path.dirname(__file__)
+    agent_dir = os.path.abspath(os.path.dirname(__file__))
     gin.parse_config_file(UpkieWheelsEnv.gin_config())
     gin.parse_config_file(f"{agent_dir}/settings.gin")
 
@@ -68,6 +67,6 @@ if __name__ == "__main__":
     parser.add_argument("name", help="name of the policy to load")
     args = parser.parse_args()
 
-    policy = load_policy(args.name)
+    policy = load_policy(agent_dir, args.name)
     asyncio.run(run_policy(policy))
     policy.env.close()
