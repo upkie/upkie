@@ -11,10 +11,10 @@ import time
 import gin
 import mpacklog
 from loop_rate_limiters import AsyncRateLimiter
-from stable_baselines3 import PPO
-from upkie_locomotion.envs import UpkieWheelsEnv
-
 from settings import Settings
+from stable_baselines3 import PPO
+
+from upkie_locomotion.envs import UpkieWheelsEnv
 
 keep_going = True
 
@@ -60,7 +60,6 @@ def load_policy(agent_dir: str, policy_name: str):
 
 if __name__ == "__main__":
     agent_dir = os.path.abspath(os.path.dirname(__file__))
-    gin.parse_config_file(UpkieWheelsEnv.gin_config())
     gin.parse_config_file(f"{agent_dir}/settings.gin")
 
     parser = argparse.ArgumentParser(description=__doc__)

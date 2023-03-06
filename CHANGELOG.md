@@ -8,6 +8,10 @@ All notable changes to this project will be documented in this file.
 
 - PPO balancer: setting for total number of training timesteps
 
+### Changed
+
+- UpkieWheelsEnv: remove dependency on gin
+
 ## [0.2.0] - 2023/03/03
 
 ### Added
