@@ -64,6 +64,7 @@ dependencies = [
     "tqdm >=4.64.1",
     "typing_extensions >=4.5.0",
     "upkie_description >=1.1.0",
+    "vulp >=1.0.0",
     "wheel >=0.37.0",
     "zipp >=3.4.1",
 ]
