@@ -107,15 +107,6 @@ class UpkieWheelsEnv(gym.Env):
         for joint in ("hip", "knee")
     ]
 
-    def id(self) -> str:
-        """!
-        Name and version of this environment for registration.
-
-        Returns:
-            Name and version of the environment.
-        """
-        return f"UpkieWheelsEnv-v{self.version}"
-
     def __init__(
         self,
         config: Optional[dict] = None,
