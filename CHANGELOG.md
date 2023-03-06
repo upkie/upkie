@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 
 - Add ``upkie_locomotion.envs.register`` function
 - PPO balancer: setting for total number of training timesteps
+- UpkieWheelsEnv: simple example
 
 ### Changed
 
