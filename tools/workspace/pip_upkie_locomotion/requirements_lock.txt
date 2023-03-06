@@ -1,3 +1,4 @@
+GitPython==3.1.30
 Pillow==9.4.0
 PyYAML==6.0
 aiofiles==0.7.0
@@ -6,6 +7,7 @@ contourpy==1.0.6
 cycler==0.10.0
 fonttools==4.38.0
 gin-config==0.5.0
+gitdb==4.0.7
 gym==0.21.0
 importlib-metadata==4.13.0
 kiwisolver==1.0.1
@@ -26,8 +28,10 @@ qpsolvers==1.9.1
 robot_descriptions==1.3.1
 setuptools==67.4.0
 six==1.15.0
+smmap==4.0.0
 stable-baselines3==1.7.0
 torch==1.13.1
+tqdm==4.64.1
 typing_extensions==4.5.0
 upkie_description==1.1.0
 wheel==0.37.0
