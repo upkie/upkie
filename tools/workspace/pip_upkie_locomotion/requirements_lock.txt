@@ -34,5 +34,5 @@ torch==1.13.1
 tqdm==4.64.1
 typing_extensions==4.5.0
 upkie_description==1.1.0
-wheel==0.37.0
+wheel==0.38.1
 zipp==3.4.1
