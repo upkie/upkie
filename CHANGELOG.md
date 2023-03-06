@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Add ``upkie_locomotion.envs.register`` function
 - PPO balancer: setting for total number of training timesteps
 
 ### Changed

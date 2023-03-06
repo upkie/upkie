@@ -15,8 +15,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import gym
+
 from .upkie_wheels_env import UpkieWheelsEnv
+
+
+def register():
+    gym.envs.register(
+        id=f"UpkieWheelsEnv-v{UpkieWheelsEnv.version}",
+        entry_point="upkie_locomotion.envs:UpkieWheelsEnv",
+        max_episode_steps=1_000_000_000,
+    )
+
 
 __all__ = [
     "UpkieWheelsEnv",
+    "register",
 ]
