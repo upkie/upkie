@@ -13,7 +13,7 @@ bazel run //agents/ppo_balancer:train
 Start a Bullet spine:
 
 ```
-bazel run //spines:bullet -c opt -- --show
+bazel run //spines:bullet -c opt -- --nb-substeps 5 --show
 ```
 
 Then, run a trained policy from the [policies](policies/) folder, for instance let's test `woofers`:
