@@ -293,7 +293,10 @@ class UpkieWheelsEnv(gym.Env):
 
         # Check termination
         done = self.detect_fall(pitch=observation[0])
-        info = {}
+        info = {
+            "action": action_dict,
+            "observation": observation_dict,
+        }
         return observation, reward, done, info
 
     def detect_fall(self, pitch: float) -> bool:
