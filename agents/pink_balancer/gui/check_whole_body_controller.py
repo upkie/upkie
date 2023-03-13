@@ -15,6 +15,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""Upkie wheeled biped bending its knees."""
+
+import meshcat_shapes
+import numpy as np
+import pink
+import qpsolvers
+from loop_rate_limiters import RateLimiter
+from pink import solve_ik
+from pink.tasks import BodyTask, PostureTask
+from pink.utils import custom_configuration_vector
+from pink.visualization import start_meshcat_visualizer
+
+from agents.pink_balancer.whole_body_controller import WholeBodyController
 
 if __name__ == "__main__":
-    print("hello world")
+    config = {}
+    controller = WholeBodyController(
+        config,
+        gain_scale=1.0,
+        max_crouch_height=0.0,
+        max_crouch_velocity=100.0,
+        turning_gain_scale=1.0,
+    )
