@@ -25,9 +25,10 @@ if [ "$#" -lt 1 ]; then
     exit 1
 fi
 
-BASEDIR=$(dirname 0)
+SCRIPT=$(realpath "$0")
+SCRIPTDIR=$(dirname "${SCRIPT}")
 COMMAND=$@
-SRCDIR=${BASEDIR}/../..
+SRCDIR=${SCRIPTDIR}/../..
 TMPDIR=$(mktemp -d)
 
 echo "[debug] COMMAND=${COMMAND}"
@@ -39,8 +40,8 @@ for folder in envs observers/base_pitch utils; do
     cp -r ${SRCDIR}/${folder} ${TMPDIR}/upkie_locomotion/${folder}
 done
 
-cp ${BASEDIR}/pyproject.toml ${TMPDIR}/pyproject.toml
-cp ${BASEDIR}/upkie_locomotion/__init__.py ${TMPDIR}/upkie_locomotion/__init__.py
+cp ${SCRIPTDIR}/pyproject.toml ${TMPDIR}/pyproject.toml
+cp ${SCRIPTDIR}/upkie_locomotion/__init__.py ${TMPDIR}/upkie_locomotion/__init__.py
 cp ${SRCDIR}/README.md ${TMPDIR}/README.md
 
 cd ${TMPDIR} && flit ${COMMAND}

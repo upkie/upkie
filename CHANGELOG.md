@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.1] - 2023/03/15
+
+### Added
+
+- UpkieWheelsEnv: return action and observation dicts in ``info``
+
 ## [0.3.0] - 2023/03/13
 
 ### Added
