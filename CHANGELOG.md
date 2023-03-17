@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- PPO balancer: distribute sample policy
+
+### Fixed
+
+- PPO balancer: get environment id (thanks @Varun-GP)
+
 ## [0.3.1] - 2023/03/15
 
 ### Added
