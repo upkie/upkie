@@ -39,7 +39,7 @@ class SummaryWriterCallback(BaseCallback):
         )
         self.tb_formatter.writer.add_text(
             "env_id",
-            self.env.id(),
+            f"UpkieWheelsEnv-v{UpkieWheelsEnv.version}",
             global_step=None,
         )
         self.tb_formatter.writer.add_text(
