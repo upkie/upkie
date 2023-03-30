@@ -112,6 +112,7 @@ class WholeBodyController:
         max_crouch_height: float,
         max_crouch_velocity: float,
         turning_gain_scale: float,
+        visualize: bool,
     ):
         """
         Create controller.
@@ -126,6 +127,7 @@ class WholeBodyController:
                 turning to keep the legs stiff in spite of the ground pulling
                 them apart.
         """
+        print(f"{visualize=}")
         robot = load_robot_description(
             "upkie_description", root_joint=pin.JointModelFreeFlyer()
         )

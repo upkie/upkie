@@ -53,6 +53,12 @@ def parse_command_line_arguments() -> argparse.Namespace:
         required=True,
         choices=["bullet", "pi3hat"],
     )
+    parser.add_argument(
+        "--visualize",
+        help="Publish robot visualization to MeshCat for debugging",
+        default=False,
+        action="store_true",
+    )
     return parser.parse_args()
 
 
@@ -60,6 +66,7 @@ async def run(
     spine: SpineInterface,
     config: Dict[str, Any],
     logger: mpacklog.Logger,
+    args: argparse.Namespace,
     frequency: float = 20.0,
 ) -> None:
     """
@@ -70,7 +77,9 @@ async def run(
         config: Configuration dictionary.
         frequency: Control frequency in Hz.
     """
-    whole_body_controller = WholeBodyController(config)
+    whole_body_controller = WholeBodyController(
+        config, visualize=args.visualize
+    )
     debug: Dict[str, Any] = {}
     dt = 1.0 / frequency
     rate = AsyncRateLimiter(frequency, "controller")
@@ -96,7 +105,7 @@ async def run(
         await rate.sleep()
 
 
-async def main(spine, config: Dict[str, Any]):
+async def main(spine, config: Dict[str, Any], args: argparse.Namespace):
     logger = mpacklog.Logger("/dev/shm/brain.mpack")
     await logger.put(
         {
@@ -105,7 +114,7 @@ async def main(spine, config: Dict[str, Any]):
         }
     )
     await asyncio.gather(
-        run(spine, config, logger),
+        run(spine, config, logger, args),
         logger.write(),
         return_exceptions=False,  # make sure exceptions are raised
     )
@@ -130,7 +139,7 @@ if __name__ == "__main__":
 
     spine = SpineInterface()
     try:
-        asyncio.run(main(spine, config))
+        asyncio.run(main(spine, config, args))
     except KeyboardInterrupt:
         logging.info("Caught a keyboard interrupt")
     except Exception:

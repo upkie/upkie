@@ -34,3 +34,4 @@ WholeBodyController.gain_scale = 2.0
 WholeBodyController.max_crouch_height = 0.08      # [m]
 WholeBodyController.max_crouch_velocity = 0.05    # [m] / [s]
 WholeBodyController.turning_gain_scale = 2.0
+WholeBodyController.visualize = False
