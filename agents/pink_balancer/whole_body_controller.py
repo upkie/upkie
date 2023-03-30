@@ -138,19 +138,17 @@ class WholeBodyController:
                 turning to keep the legs stiff in spite of the ground pulling
                 them apart.
         """
-        robot = load_robot_description(
-            "upkie_description", root_joint=pin.JointModelFreeFlyer()
-        )
+        robot = load_robot_description("upkie_description", root_joint=None)
         configuration = pink.Configuration(robot.model, robot.data, robot.q0)
         servo_layout = {
             "left_hip": {
                 "bus": 2,
-                "configuration_index": 7,
+                "configuration_index": 0,
                 "id": 4,
             },
             "left_knee": {
                 "bus": 2,
-                "configuration_index": 8,
+                "configuration_index": 1,
                 "id": 5,
             },
             "left_wheel": {
@@ -159,12 +157,12 @@ class WholeBodyController:
             },
             "right_hip": {
                 "bus": 1,
-                "configuration_index": 10,
+                "configuration_index": 3,
                 "id": 1,
             },
             "right_knee": {
                 "bus": 1,
-                "configuration_index": 11,
+                "configuration_index": 4,
                 "id": 2,
             },
             "right_wheel": {
@@ -173,11 +171,6 @@ class WholeBodyController:
             },
         }
         tasks = {
-            "base": BodyTask(
-                "base",
-                position_cost=1.0,  # [cost] / [m]
-                orientation_cost=1.0,  # [cost] / [rad]
-            ),
             "left_contact": BodyTask(
                 "left_contact",
                 position_cost=[0.1, 0.0, 0.1],  # [cost] / [m]
@@ -282,9 +275,6 @@ class WholeBodyController:
         q = observe(observation, self.configuration, self.servo_layout)
         self.configuration = pink.Configuration(
             self.robot.model, self.robot.data, q
-        )
-        self.tasks["base"].set_target(
-            self.configuration.get_transform_body_to_world("base")
         )
         for target in ["left_contact", "right_contact"]:
             transform_target_to_world = (
