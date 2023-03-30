@@ -24,6 +24,7 @@ import pinocchio as pin
 from pink import solve_ik
 from pink.tasks import BodyTask, PostureTask
 from pink.utils import custom_configuration_vector
+from pink.visualization import start_meshcat_visualizer
 from robot_descriptions.loaders.pinocchio import load_robot_description
 
 from utils.clamp import clamp
@@ -127,10 +128,10 @@ class WholeBodyController:
                 turning to keep the legs stiff in spite of the ground pulling
                 them apart.
         """
-        print(f"{visualize=}")
         robot = load_robot_description(
             "upkie_description", root_joint=pin.JointModelFreeFlyer()
         )
+        visualizer = start_meshcat_visualizer(robot) if visualize else None
         configuration = pink.Configuration(robot.model, robot.data, robot.q0)
         servo_layout = {
             "left_hip": {
@@ -205,6 +206,7 @@ class WholeBodyController:
             "right_contact": np.zeros((4, 4)),
         }
         self.turning_gain_scale = turning_gain_scale
+        self.visualizer = visualizer
         self.wheel_balancer = WheelBalancer()  # type: ignore
 
     def update_target_heights(
@@ -296,6 +298,8 @@ class WholeBodyController:
             self.configuration, self.tasks.values(), dt, solver="quadprog"
         )
         self.configuration.integrate_inplace(robot_velocity, dt)
+        if self.visualizer is not None:
+            self.visualizer.display(self.configuration.q)
         servo_action = serialize_to_servo_action(
             self.configuration, robot_velocity, self.servo_layout
         )
