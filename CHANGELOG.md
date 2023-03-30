@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Pink balancer: ``--visualize`` argument
 - PPO balancer: distribute sample policy
 
 ### Fixed
