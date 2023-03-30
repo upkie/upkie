@@ -78,6 +78,16 @@ def serialize_to_servo_action(
     return target
 
 
+def add_target_frames(visualizer):
+    import meshcat_shapes
+
+    viewer = visualizer.viewer
+    meshcat_shapes.frame(viewer["left_contact_target"], opacity=0.5)
+    meshcat_shapes.frame(viewer["right_contact_target"], opacity=0.5)
+    meshcat_shapes.frame(viewer["left_contact"], opacity=1.0)
+    meshcat_shapes.frame(viewer["right_contact"], opacity=1.0)
+
+
 @gin.configurable
 class WholeBodyController:
 
@@ -131,7 +141,6 @@ class WholeBodyController:
         robot = load_robot_description(
             "upkie_description", root_joint=pin.JointModelFreeFlyer()
         )
-        visualizer = start_meshcat_visualizer(robot) if visualize else None
         configuration = pink.Configuration(robot.model, robot.data, robot.q0)
         servo_layout = {
             "left_hip": {
@@ -188,6 +197,12 @@ class WholeBodyController:
         tasks["posture"].set_target(
             custom_configuration_vector(robot, left_knee=0.2, right_knee=-0.2)
         )
+
+        visualizer = None
+        if visualize:
+            visualizer = start_meshcat_visualizer(robot)
+            add_target_frames(visualizer)
+
         self.__initialized = False
         self.configuration = configuration
         self.gain_scale = clamp(gain_scale, 0.1, 2.0)
@@ -298,8 +313,6 @@ class WholeBodyController:
             self.configuration, self.tasks.values(), dt, solver="quadprog"
         )
         self.configuration.integrate_inplace(robot_velocity, dt)
-        if self.visualizer is not None:
-            self.visualizer.display(self.configuration.q)
         servo_action = serialize_to_servo_action(
             self.configuration, robot_velocity, self.servo_layout
         )
@@ -320,6 +333,16 @@ class WholeBodyController:
             left_wheel_velocity,
             right_wheel_velocity,
         ) = self.wheel_balancer.get_wheel_velocities(position_right_in_left)
+
+        if self.visualizer is not None:
+            self.visualizer.display(self.configuration.q)
+            viewer = self.visualizer.viewer
+            viewer["left_contact_target"].set_transform(
+                transform_left_to_world.np
+            )
+            viewer["right_contact_target"].set_transform(
+                transform_right_to_world.np
+            )
 
         servo_action["left_wheel"] = {
             "position": np.nan,
