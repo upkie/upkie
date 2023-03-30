@@ -129,7 +129,7 @@ class WholeBodyController:
         robot = load_robot_description(
             "upkie_description", root_joint=pin.JointModelFreeFlyer()
         )
-        configuration = pink.apply_configuration(robot, robot.q0)
+        configuration = pink.Configuration(robot.model, robot.data, robot.q0)
         servo_layout = {
             "left_hip": {
                 "bus": 2,
@@ -261,7 +261,9 @@ class WholeBodyController:
             observation: Observation from the spine.
         """
         q = observe(observation, self.configuration, self.servo_layout)
-        self.configuration = pink.apply_configuration(self.robot, q)
+        self.configuration = pink.Configuration(
+            self.robot.model, self.robot.data, q
+        )
         self.tasks["base"].set_target(
             self.configuration.get_transform_body_to_world("base")
         )
@@ -291,8 +293,7 @@ class WholeBodyController:
         robot_velocity = solve_ik(
             self.configuration, self.tasks.values(), dt, solver="quadprog"
         )
-        q = self.configuration.integrate(robot_velocity, dt)
-        self.configuration = pink.apply_configuration(self.robot, q)
+        self.configuration.integrate_inplace(robot_velocity, dt)
         servo_action = serialize_to_servo_action(
             self.configuration, robot_velocity, self.servo_layout
         )
