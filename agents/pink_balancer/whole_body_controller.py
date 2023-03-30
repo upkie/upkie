@@ -175,13 +175,13 @@ class WholeBodyController:
                 "left_contact",
                 position_cost=[0.1, 0.0, 0.1],  # [cost] / [m]
                 orientation_cost=0.0,  # [cost] / [rad]
-                lm_damping=1e2,
+                lm_damping=10.0,
             ),
             "right_contact": BodyTask(
                 "right_contact",
                 position_cost=[0.1, 0.0, 0.1],  # [cost] / [m]
                 orientation_cost=0.0,  # [cost] / [rad]
-                lm_damping=1e2,
+                lm_damping=10.0,
             ),
             "posture": PostureTask(
                 cost=1e-3,  # [cost] / [rad]

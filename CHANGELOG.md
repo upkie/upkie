@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Pink balancer: reduce LM damping to fix stalling when crouching
 - PPO balancer: get environment id (thanks @Varun-GP)
 
 ## [0.3.1] - 2023/03/15
