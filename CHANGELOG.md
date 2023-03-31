@@ -9,6 +9,10 @@ All notable changes to this project will be documented in this file.
 - Pink balancer: ``--visualize`` argument
 - PPO balancer: distribute sample policy
 
+### Changed
+
+- Load description from local package rather than cloning a repository
+
 ### Fixed
 
 - Pink balancer: reduce LM damping to fix stalling when crouching
