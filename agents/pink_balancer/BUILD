@@ -18,7 +18,7 @@ py_library(
         "//utils:clamp",
         "//utils:filters",
         requirement("gin-config"),
-        requirement("robot_descriptions"),
+        requirement("upkie_description"),
     ],
 )
 
