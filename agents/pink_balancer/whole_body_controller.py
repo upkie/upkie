@@ -21,11 +21,11 @@ import gin
 import numpy as np
 import pink
 import pinocchio as pin
+import upkie_description
 from pink import solve_ik
 from pink.tasks import BodyTask, PostureTask
 from pink.utils import custom_configuration_vector
 from pink.visualization import start_meshcat_visualizer
-from robot_descriptions.loaders.pinocchio import load_robot_description
 
 from utils.clamp import clamp
 
@@ -138,7 +138,7 @@ class WholeBodyController:
                 turning to keep the legs stiff in spite of the ground pulling
                 them apart.
         """
-        robot = load_robot_description("upkie_description", root_joint=None)
+        robot = upkie_description.load_in_pinocchio(root_joint=None)
         configuration = pink.Configuration(robot.model, robot.data, robot.q0)
         servo_layout = {
             "left_hip": {
