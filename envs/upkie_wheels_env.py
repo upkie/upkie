@@ -17,17 +17,14 @@
 # limitations under the License.
 
 import math
-from os import path
 from typing import Dict, Optional, Tuple, Union
 
-import gym
 import numpy as np
-import yaml
 from gym import spaces
-from vulp.spine import SpineInterface
 
 from upkie_locomotion.observers.base_pitch import compute_base_pitch_from_imu
 
+from .upkie_base_env import UpkieBaseEnv
 from .upkie_wheels_reward import UpkieWheelsReward
 
 MAX_BASE_PITCH: float = np.pi
@@ -35,7 +32,7 @@ MAX_WHEEL_POSITION: float = float("inf")
 MAX_IMU_ANGULAR_VELOCITY: float = 1000.0  # rad/s
 
 
-class UpkieWheelsEnv(gym.Env):
+class UpkieWheelsEnv(UpkieBaseEnv):
 
     """!
     Upkie with full observation but only wheel velocity actions.
@@ -43,16 +40,11 @@ class UpkieWheelsEnv(gym.Env):
     The environment has the following attributes:
 
     - ``action_dim``: Dimension of action space.
-    - ``config``: Configuration dictionary, also sent to the spine.
     - ``fall_pitch``: Fall pitch angle, in radians.
     - ``max_ground_velocity``: Maximum commanded ground velocity in m/s.
-    - ``shm_name``: Name of shared-memory file.
-    - ``wheel_radius``: Wheel radius in [m].
-    - ``last_action``: Dictionary of last action sent to the spine.
-    - ``last_observation``: Dictionary of last observation read from the spine.
-    - ``observation_dict``: Dictionary of last observation from the spine.
     - ``observation_dim``: Dimension of observation space.
     - ``version``: Environment version number.
+    - ``wheel_radius``: Wheel radius in [m].
 
     Vectorized observations have the following structure:
 
@@ -89,14 +81,9 @@ class UpkieWheelsEnv(gym.Env):
     real robot, as it relies on the same spine interface that runs on Upkie.
     """
 
-    _spine: SpineInterface
     action_dim: int
-    config: dict
     fall_pitch: float
-    last_action: dict
-    last_observation: dict
     max_ground_velocity: float
-    observation_dict: dict
     observation_dim: int
     version: int = 1
     wheel_radius: float
@@ -124,11 +111,7 @@ class UpkieWheelsEnv(gym.Env):
         @param shm_name Name of shared-memory file.
         @param wheel_radius Wheel radius in [m].
         """
-        if config is None:
-            envs_dir = path.dirname(__file__)
-            with open(f"{envs_dir}/spine.yaml", "r") as fh:
-                config = yaml.safe_load(fh)
-        spine = SpineInterface(shm_name)
+        super().__init__(config, shm_name)
 
         action_dim = 1
         observation_dim = 4
@@ -162,42 +145,13 @@ class UpkieWheelsEnv(gym.Env):
         self.reward_range = UpkieWheelsReward.get_range()
 
         # Class members
-        self._spine = spine
         self.action_dim = action_dim
-        self.config = config
         self.fall_pitch = fall_pitch
         self.init_position = {}
-        self.last_action = {}
-        self.last_observation = {}
         self.max_ground_velocity = max_ground_velocity
         self.observation_dim = observation_dim
         self.reward = UpkieWheelsReward()
         self.wheel_radius = wheel_radius
-
-    def close(self) -> None:
-        """!
-        Stop the spine properly.
-        """
-        self._spine.stop()
-
-    def _act(self, action_dict) -> None:
-        """!
-        Internal function to send an action dictionary to the spine.
-
-        @param action_dict Action dictionary.
-        """
-        self._spine.set_action(action_dict)
-        self.last_action = action_dict
-
-    def _observe(self) -> dict:
-        """!
-        Internal function to get an observation dictionary from the spine.
-
-        @returns Observation dictionary.
-        """
-        observation_dict = self._spine.get_observation()
-        self.last_observation = observation_dict
-        return observation_dict
 
     def vectorize_observation(self, observation_dict: dict) -> np.ndarray:
         """!
@@ -232,11 +186,7 @@ class UpkieWheelsEnv(gym.Env):
             - ``info``: an optional dictionary containing extra information.
                 It is only returned if ``return_info`` is set to true.
         """
-        # super().reset(seed=seed)  # we are pinned at gym==0.21.0
-        self._spine.stop()
-        self._spine.start(self.config)
-        self._spine.get_observation()  # might be a pre-reset observation
-        observation_dict = self._observe()  # sets self.last_observation
+        observation_dict = self.dict_reset()
         self.init_position = {
             joint: observation_dict["servo"][joint]["position"]
             for joint in self.LEG_JOINTS
@@ -282,10 +232,10 @@ class UpkieWheelsEnv(gym.Env):
             "position": math.nan,
             "velocity": -commanded_velocity / self.wheel_radius,
         }
-        self._act(action_dict)
+        self.dict_act(action_dict)
 
         # Read observation
-        observation_dict = self._observe()
+        observation_dict = self.dict_observe()
         observation = self.vectorize_observation(observation_dict)
 
         # Compute reward

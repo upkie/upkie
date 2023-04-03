@@ -8,8 +8,10 @@ load("@pip_upkie_locomotion//:requirements.bzl", "requirement")
 package(default_visibility = ["//visibility:public"])
 
 py_library(
-    name = "upkie_wheels_env",
+    name = "envs",
     srcs = [
+        "__init__.py",
+        "upkie_base_env.py",
         "upkie_wheels_env.py",
         "upkie_wheels_reward.py",
     ],
@@ -21,16 +23,6 @@ py_library(
         "@vulp//spine:python",
         requirement("gym"),
         requirement("pyyaml"),
-    ],
-)
-
-py_library(
-    name = "envs",
-    srcs = [
-        "__init__.py",
-    ],
-    deps = [
-        ":upkie_wheels_env",
     ],
 )
 
