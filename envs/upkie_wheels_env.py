@@ -24,8 +24,8 @@ from gym import spaces
 
 from upkie_locomotion.observers.base_pitch import compute_base_pitch_from_imu
 
+from .standing_reward import StandingReward
 from .upkie_base_env import UpkieBaseEnv
-from .upkie_wheels_reward import UpkieWheelsReward
 
 MAX_BASE_PITCH: float = np.pi
 MAX_WHEEL_POSITION: float = float("inf")
@@ -73,7 +73,7 @@ class UpkieWheelsEnv(UpkieBaseEnv):
     </table>
 
     The reward function is defined in @ref
-    envs.upkie_wheels_reward.UpkieWheelsReward "UpkieWheelsReward".
+    envs.standing_reward.StandingReward "StandingReward".
 
     @note This environment is made to run on a single CPU thread rather than on
     GPU/TPU. The downside for reinforcement learning is that computations are
@@ -142,7 +142,7 @@ class UpkieWheelsEnv(UpkieBaseEnv):
         )
 
         # gym.Env: reward_range
-        self.reward_range = UpkieWheelsReward.get_range()
+        self.reward_range = StandingReward.get_range()
 
         # Class members
         self.action_dim = action_dim
@@ -150,7 +150,7 @@ class UpkieWheelsEnv(UpkieBaseEnv):
         self.init_position = {}
         self.max_ground_velocity = max_ground_velocity
         self.observation_dim = observation_dim
-        self.reward = UpkieWheelsReward()
+        self.reward = StandingReward()
         self.wheel_radius = wheel_radius
 
     def vectorize_observation(self, observation_dict: dict) -> np.ndarray:
