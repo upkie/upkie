@@ -28,7 +28,7 @@ from .standing_reward import StandingReward
 from .upkie_base_env import UpkieBaseEnv
 
 MAX_BASE_PITCH: float = np.pi
-MAX_WHEEL_POSITION: float = float("inf")
+MAX_GROUND_POSITION: float = float("inf")
 MAX_IMU_ANGULAR_VELOCITY: float = 1000.0  # rad/s
 
 
@@ -115,12 +115,11 @@ class UpkieWheelsEnv(UpkieBaseEnv):
 
         action_dim = 1
         observation_dim = 4
-        max_wheel_velocity = max_ground_velocity / wheel_radius
         observation_limit = np.array(
             [
                 MAX_BASE_PITCH,
-                MAX_WHEEL_POSITION,
-                max_wheel_velocity,
+                MAX_GROUND_POSITION,
+                max_ground_velocity,
                 MAX_IMU_ANGULAR_VELOCITY,
             ]
         )
