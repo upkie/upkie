@@ -17,6 +17,7 @@
 
 import gym
 
+from .upkie_base_env import UpkieBaseEnv
 from .upkie_wheels_env import UpkieWheelsEnv
 
 
@@ -29,6 +30,7 @@ def register():
 
 
 __all__ = [
+    "UpkieBaseEnv",
     "UpkieWheelsEnv",
     "register",
 ]
