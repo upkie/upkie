@@ -11,9 +11,9 @@ py_library(
     name = "envs",
     srcs = [
         "__init__.py",
+        "standing_reward.py",
         "upkie_base_env.py",
         "upkie_wheels_env.py",
-        "upkie_wheels_reward.py",
     ],
     data = [
         "spine.yaml",

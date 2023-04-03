@@ -8,7 +8,7 @@ from typing import Tuple
 import numpy as np
 
 
-class UpkieWheelsReward:
+class StandingReward:
 
     """!
     Reward function for balancing in place.

@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - Load description from local package rather than cloning a repository
+- Rename ``UpkieWheelsReward`` to ``StandingReward``
 
 ### Fixed
 
