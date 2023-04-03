@@ -15,14 +15,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Test UpkieWheelsEnv."""
+"""Test UpkieBaseEnv."""
 
 import unittest
 
 import numpy as np
 import posix_ipc
 
-from upkie_locomotion.envs import UpkieWheelsEnv
+from upkie_locomotion.envs import UpkieBaseEnv
 
 
 class MockSpine:
@@ -58,13 +58,13 @@ class MockSpine:
         return self.observation
 
 
-class TestUpkieWheelsEnv(unittest.TestCase):
+class TestUpkieBaseEnv(unittest.TestCase):
     def setUp(self):
         shm_name = "/vroum"
         shared_memory = posix_ipc.SharedMemory(
             shm_name, posix_ipc.O_RDWR | posix_ipc.O_CREAT, size=42
         )
-        self.env = UpkieWheelsEnv(shm_name=shm_name)
+        self.env = UpkieBaseEnv(shm_name=shm_name)
         shared_memory.close_fd()
         self.env._spine = MockSpine()
 
