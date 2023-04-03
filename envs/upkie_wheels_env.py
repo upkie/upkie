@@ -75,10 +75,8 @@ class UpkieWheelsEnv(UpkieBaseEnv):
     The reward function is defined in @ref
     envs.standing_reward.StandingReward "StandingReward".
 
-    @note This environment is made to run on a single CPU thread rather than on
-    GPU/TPU. The downside for reinforcement learning is that computations are
-    not massively parallel. The upside is that it simplifies deployment to the
-    real robot, as it relies on the same spine interface that runs on Upkie.
+    See also @ref envs.upkie_base_env.UpkieBaseEnv "UpkieBaseEnv" for notes on
+    using this environment.
     """
 
     action_dim: int
