@@ -16,6 +16,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- UpkieWheelsEnv: observation limits for ground position and velocity
 - Pink balancer: reduce LM damping to fix stalling when crouching
 - PPO balancer: get environment id (thanks @Varun-GP)
 
