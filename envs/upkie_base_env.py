@@ -60,10 +60,7 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
         Initialize environment.
 
         @param config Configuration dictionary, also sent to the spine.
-        @param fall_pitch Fall pitch angle, in radians.
-        @param max_ground_velocity Maximum commanded ground velocity in m/s.
         @param shm_name Name of shared-memory file.
-        @param wheel_radius Wheel radius in [m].
         """
         if config is None:
             envs_dir = path.dirname(__file__)
