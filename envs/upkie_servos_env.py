@@ -31,7 +31,7 @@ MAX_GROUND_VELOCITY: float = 10.0  # m/s
 MAX_IMU_ANGULAR_VELOCITY: float = 1000.0  # rad/s
 
 
-class UpkieLegsEnv(UpkieBaseEnv):
+class UpkieServosEnv(UpkieBaseEnv):
 
     """!
     Upkie with full observation and joint position-velocity actions.
