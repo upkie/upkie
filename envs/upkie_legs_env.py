@@ -41,7 +41,6 @@ class UpkieLegsEnv(UpkieBaseEnv):
 
     The environment has the following attributes:
 
-    - ``action_dim``: Dimension of action space.
     - ``fall_pitch``: Fall pitch angle, in radians.
     - ``observation_dim``: Dimension of observation space.
     - ``version``: Environment version number.
@@ -79,7 +78,6 @@ class UpkieLegsEnv(UpkieBaseEnv):
     using this environment.
     """
 
-    action_dim: int
     fall_pitch: float
     observation_dim: int
     robot: pin.RobotWrapper
@@ -104,7 +102,6 @@ class UpkieLegsEnv(UpkieBaseEnv):
         model = robot.model
 
         # gym.Env: action_space
-        action_dim = 1
         action_space = spaces.Box(
             np.hstack([model.lowerPositionLimit, -model.velocityLimit]),
             np.hstack([model.upperPositionLimit, +model.velocityLimit]),
@@ -133,11 +130,9 @@ class UpkieLegsEnv(UpkieBaseEnv):
         self.reward_range = StandingReward.get_range()
 
         # Class members
-        self.action_dim = action_dim
         self.action_space = action_space
         self.fall_pitch = fall_pitch
         self.joints = list(robot.model.names)[1:]
-        print(f"{self.joints=}")
         self.last_positions = {}
         self.observation_dim = observation_dim
         self.observation_space = observation_space

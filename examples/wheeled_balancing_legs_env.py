@@ -19,9 +19,9 @@ if __name__ == "__main__":
         if done:
             observation = env.reset()
         pitch = observation[0]
-        action[2] = np.nan
+        action[2] = np.nan  # no position target for left wheel
+        action[5] = np.nan  # same for right wheel
         action[6 + 2] = 200.0 * pitch
-        action[5] = np.nan
         action[6 + 5] = -200.0 * pitch
 
     env.close()
