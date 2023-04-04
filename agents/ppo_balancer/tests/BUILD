@@ -8,8 +8,8 @@ load("@pip_upkie_locomotion//:requirements.bzl", "requirement")
 package(default_visibility = ["//visibility:public"])
 
 py_test(
-    name = "logging_test",
-    srcs = ["logging_test.py"],
+    name = "callbacks_test",
+    srcs = ["callbacks_test.py"],
     deps = [
         "//agents/ppo_balancer:train",
         requirement("numpy"),  # workaround

@@ -30,10 +30,11 @@ from settings import Settings
 from stable_baselines3.common.callbacks import CheckpointCallback
 from torch import nn
 
+from upkie_locomotion.agents.ppo_balancer.callbacks import (
+    SummaryWriterCallback,
+)
 from upkie_locomotion.envs import UpkieWheelsEnv
 from upkie_locomotion.utils.spdlog import logging
-
-from .summary_writer_callback import SummaryWriterCallback
 
 
 def train_policy(

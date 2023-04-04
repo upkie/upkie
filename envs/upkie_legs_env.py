@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright 2022 Stéphane Caron
 # Copyright 2023 Inria
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -41,7 +40,6 @@ class UpkieLegsEnv(UpkieBaseEnv):
 
     The environment has the following attributes:
 
-    - ``fall_pitch``: Fall pitch angle, in radians.
     - ``observation_dim``: Dimension of observation space.
     - ``version``: Environment version number.
 
@@ -78,7 +76,6 @@ class UpkieLegsEnv(UpkieBaseEnv):
     using this environment.
     """
 
-    fall_pitch: float
     observation_dim: int
     robot: pin.RobotWrapper
     version: int = 1
@@ -131,7 +128,6 @@ class UpkieLegsEnv(UpkieBaseEnv):
 
         # Class members
         self.action_space = action_space
-        self.fall_pitch = fall_pitch
         self.joints = list(robot.model.names)[1:]
         self.last_positions = {}
         self.observation_dim = observation_dim
