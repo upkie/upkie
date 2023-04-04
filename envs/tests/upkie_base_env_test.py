@@ -58,18 +58,31 @@ class MockSpine:
         return self.observation
 
 
+class UpkieBaseChild(UpkieBaseEnv):
+    def parse_first_observation(self, observation_dict: dict) -> None:
+        pass
+
+    def vectorize_observation(self, observation_dict: dict) -> np.ndarray:
+        return np.empty(42)
+
+    def dictionarize_action(self, action: np.ndarray) -> dict:
+        return {}
+
+
 class TestUpkieBaseEnv(unittest.TestCase):
     def setUp(self):
         shm_name = "/vroum"
         shared_memory = posix_ipc.SharedMemory(
             shm_name, posix_ipc.O_RDWR | posix_ipc.O_CREAT, size=42
         )
-        self.env = UpkieBaseEnv(shm_name=shm_name)
+        self.env = UpkieBaseChild(
+            config=None, fall_pitch=1.0, shm_name=shm_name
+        )
         shared_memory.close_fd()
         self.env._spine = MockSpine()
 
     def test_reset(self):
-        observation_dict = self.env.dict_reset()
+        _, observation_dict = self.env.reset(return_info=True)
         self.assertGreaterEqual(observation_dict["number"], 1)
 
 
