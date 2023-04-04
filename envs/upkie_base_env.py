@@ -122,7 +122,7 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
             - ``info``: Contains auxiliary diagnostic information (helpful for
               debugging, logging, and sometimes learning).
         """
-        action_dict = self.compute_action_dict(action)
+        action_dict = self.dictionarize_action(action)
         self._spine.set_action(action_dict)
         observation_dict = self._spine.get_observation()
         imu = observation_dict["imu"]

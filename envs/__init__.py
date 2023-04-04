@@ -18,10 +18,16 @@
 import gym
 
 from .upkie_base_env import UpkieBaseEnv
+from .upkie_legs_env import UpkieLegsEnv
 from .upkie_wheels_env import UpkieWheelsEnv
 
 
 def register():
+    gym.envs.register(
+        id=f"UpkieLegsEnv-v{UpkieLegsEnv.version}",
+        entry_point="upkie_locomotion.envs:UpkieLegsEnv",
+        max_episode_steps=1_000_000_000,
+    )
     gym.envs.register(
         id=f"UpkieWheelsEnv-v{UpkieWheelsEnv.version}",
         entry_point="upkie_locomotion.envs:UpkieWheelsEnv",
