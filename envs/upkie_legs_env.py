@@ -22,8 +22,6 @@ import pinocchio as pin
 import upkie_description
 from gym import spaces
 
-from upkie_locomotion.observers.base_pitch import compute_base_pitch_from_imu
-
 from .standing_reward import StandingReward
 from .upkie_base_env import UpkieBaseEnv
 
@@ -95,28 +93,23 @@ class UpkieLegsEnv(UpkieBaseEnv):
 
         robot = upkie_description.load_in_pinocchio(root_joint=None)
         model = robot.model
+        x_min = np.hstack([model.lowerPositionLimit, -model.velocityLimit])
+        x_max = np.hstack([model.upperPositionLimit, +model.velocityLimit])
+        nx = model.nq + model.nv
 
         # gym.Env: action_space
         action_space = spaces.Box(
-            np.hstack([model.lowerPositionLimit, -model.velocityLimit]),
-            np.hstack([model.upperPositionLimit, +model.velocityLimit]),
-            shape=(model.nq + model.nv,),
+            x_min,
+            x_max,
+            shape=(nx,),
             dtype=np.float32,
         )
 
         # gym.Env: observation_space
-        observation_limit = np.array(
-            [
-                MAX_BASE_PITCH,
-                MAX_GROUND_POSITION,
-                MAX_GROUND_VELOCITY,
-                MAX_IMU_ANGULAR_VELOCITY,
-            ]
-        )
         observation_space = spaces.Box(
-            -observation_limit,
-            +observation_limit,
-            shape=(4,),
+            x_min,
+            x_max,
+            shape=(nx,),
             dtype=np.float32,
         )
 
@@ -149,10 +142,13 @@ class UpkieLegsEnv(UpkieBaseEnv):
         @param observation_dict Full observation dictionary from the spine.
         @returns Observation vector.
         """
-        imu = observation_dict["imu"]
-        obs = np.empty(4)
-        obs[0] = compute_base_pitch_from_imu(imu["orientation"])
-        obs[3] = observation_dict["imu"]["angular_velocity"][1]
+        nq, nv = self.robot.model.nq, self.robot.model.nv
+        model = self.robot.model
+        obs = np.empty(nq + nv)
+        for joint in self.joints:
+            i = model.getJointId(joint) - 1
+            obs[i] = observation_dict["servo"][joint]["position"]
+            obs[nq + i] = observation_dict["servo"][joint]["velocity"]
         return obs
 
     def dictionarize_action(self, action: np.ndarray) -> dict:

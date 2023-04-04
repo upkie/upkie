@@ -13,13 +13,18 @@ load("@pip_upkie_locomotion//:requirements.bzl", "requirement")
 py_binary(
     name = "wheeled_balancing",
     srcs = ["wheeled_balancing.py"],
-    deps = ["//envs"],
+    deps = [
+        "//envs",
+    ],
 )
 
 py_binary(
     name = "wheeled_balancing_legs_env",
     srcs = ["wheeled_balancing_legs_env.py"],
-    deps = ["//envs"],
+    deps = [
+        "//envs",
+        "//observers/base_pitch",
+    ],
 )
 
 add_lint_tests()
