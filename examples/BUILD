@@ -19,8 +19,8 @@ py_binary(
 )
 
 py_binary(
-    name = "wheeled_balancing_legs_env",
-    srcs = ["wheeled_balancing_legs_env.py"],
+    name = "wheeled_balancing_servos_env",
+    srcs = ["wheeled_balancing_servos_env.py"],
     deps = [
         "//envs",
         "//observers/base_pitch",

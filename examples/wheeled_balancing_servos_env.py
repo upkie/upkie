@@ -6,14 +6,14 @@
 import gym
 import numpy as np
 
-from upkie_locomotion.observers.base_pitch import compute_base_pitch_from_imu
 import upkie_locomotion.envs
+from upkie_locomotion.observers.base_pitch import compute_base_pitch_from_imu
 
 upkie_locomotion.envs.register()
 
 
 if __name__ == "__main__":
-    env = gym.make("UpkieLegsEnv-v1")
+    env = gym.make("UpkieServosEnv-v1")
     observation = env.reset(seed=42)
 
     action = 0.0 * env.action_space.sample()
