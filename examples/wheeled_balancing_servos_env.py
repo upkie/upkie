@@ -23,8 +23,6 @@ if __name__ == "__main__":
         if done:
             observation = env.reset()
         pitch = compute_base_pitch_from_imu(imu["orientation"])
-        # action[1] = 1.0
-        # action[3] = 1.0
         action[2] = np.nan  # no position target for left wheel
         action[5] = np.nan  # same for right wheel
         action[6 + 2] = 200.0 * pitch
