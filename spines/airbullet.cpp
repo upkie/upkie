@@ -16,9 +16,6 @@
 
 #include <mpacklog/Logger.h>
 #include <vulp/actuation/BulletInterface.h>
-#include <vulp/observation/ObserverPipeline.h>
-#include <vulp/observation/sources/CpuTemperature.h>
-#include <vulp/observation/sources/Joystick.h>
 #include <vulp/spine/Spine.h>
 #include <vulp/utils/datetime_now_string.h>
 
@@ -31,20 +28,13 @@
 #include <string>
 #include <vector>
 
-#include "upkie_locomotion/observers/FloorContact.h"
-#include "upkie_locomotion/observers/WheelOdometry.h"
 #include "upkie_locomotion/spines/upkie_layout.h"
 
-namespace upkie_locomotion::spines::bullet {
+namespace upkie_locomotion::spines::airbullet {
 
 using mpacklog::Logger;
 using palimpsest::Dictionary;
-using upkie_locomotion::observers::FloorContact;
-using upkie_locomotion::observers::WheelOdometry;
 using vulp::actuation::BulletInterface;
-using vulp::observation::ObserverPipeline;
-using vulp::observation::sources::CpuTemperature;
-using vulp::observation::sources::Joystick;
 using vulp::spine::Spine;
 
 //! Command-line arguments for the Bullet spine.
@@ -128,54 +118,23 @@ class CommandLineArguments {
 };
 
 int main(const char* argv0, const CommandLineArguments& args) {
-  ObserverPipeline observation;
-
-  // Observation: CPU temperature
-  auto cpu_temperature = std::make_shared<CpuTemperature>();
-  observation.connect_source(cpu_temperature);
-
-  // Observation: Joystick
-  auto joystick = std::make_shared<Joystick>();
-  if (joystick->present()) {
-    spdlog::info("Joystick found");
-    observation.connect_source(joystick);
-  }
-
-  // Observation: Floor contact
-  FloorContact::Parameters floor_contact_params;
-  floor_contact_params.dt = 1.0 / args.spine_frequency;
-  floor_contact_params.upper_leg_joints = upkie_layout::upper_leg_joints();
-  floor_contact_params.wheels = upkie_layout::wheel_joints();
-  auto floor_contact = std::make_shared<FloorContact>(floor_contact_params);
-  observation.append_observer(floor_contact);
-
-  // Observation: Wheel odometry
-  WheelOdometry::Parameters odometry_params;
-  odometry_params.dt = 1.0 / args.spine_frequency;
-  auto odometry = std::make_shared<WheelOdometry>(odometry_params);
-  observation.append_observer(odometry);
-
-  // Note that we don't lock memory in this spine. Otherwise Bullet will yield
-  // a "b3AlignedObjectArray reserve out-of-memory" error below.
-
-  // Simulator
   const auto servo_layout = upkie_layout::servo_layout();
   BulletInterface::Parameters bullet_params(Dictionary{});
   bullet_params.argv0 = argv0;
   bullet_params.dt = 1.0 / args.spine_frequency;
-  bullet_params.floor = true;
-  bullet_params.gravity = true;
+  bullet_params.floor = false;
+  bullet_params.gravity = false;
   bullet_params.gui = args.show;
-  bullet_params.position_init_base_in_world = Eigen::Vector3d(0., 0., 0.6);
+  bullet_params.position_init_base_in_world = Eigen::Vector3d(0., 0., 0.);
   bullet_params.urdf_path = "external/upkie_description/urdf/upkie.urdf";
   BulletInterface interface(servo_layout, bullet_params);
 
-  // Spine
   Spine::Parameters spine_params;
   spine_params.frequency = args.spine_frequency;
   const auto now = vulp::utils::datetime_now_string();
-  spine_params.log_path = args.log_dir + "/bullet_spine_" + now + ".mpack";
+  spine_params.log_path = args.log_dir + "/airbullet_spine_" + now + ".mpack";
   spine_params.shm_name = args.shm_name;
+  vulp::observation::ObserverPipeline observation;
   Spine spine(spine_params, interface, observation);
   if (args.nb_substeps == 0u) {
     spine.run();
@@ -187,10 +146,10 @@ int main(const char* argv0, const CommandLineArguments& args) {
   return EXIT_SUCCESS;
 }
 
-}  // namespace upkie_locomotion::spines::bullet
+}  // namespace upkie_locomotion::spines::airbullet
 
 int main(int argc, char** argv) {
-  upkie_locomotion::spines::bullet::CommandLineArguments args(
+  upkie_locomotion::spines::airbullet::CommandLineArguments args(
       {argv + 1, argv + argc});
   if (args.error) {
     return EXIT_FAILURE;
@@ -198,5 +157,5 @@ int main(int argc, char** argv) {
     args.print_usage(argv[0]);
     return EXIT_SUCCESS;
   }
-  return upkie_locomotion::spines::bullet::main(argv[0], args);
+  return upkie_locomotion::spines::airbullet::main(argv[0], args);
 }

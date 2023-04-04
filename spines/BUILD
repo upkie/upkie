@@ -18,6 +18,26 @@ cc_library(
 )
 
 cc_binary(
+    name = "airbullet",
+    srcs = [
+        "airbullet.cpp",
+    ],
+    data = [
+        "@upkie_description",
+    ],
+    deps = [
+        "//observers",
+        ":upkie_layout",
+        "@mpacklog",
+        "@vulp//actuation:bullet_interface",
+        "@vulp//observation",
+        "@vulp//observation/sources",
+        "@vulp//spine",
+        "@vulp//utils:datetime_now_string",
+    ],
+)
+
+cc_binary(
     name = "bullet",
     srcs = [
         "bullet.cpp",
