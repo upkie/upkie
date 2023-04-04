@@ -38,6 +38,7 @@ py_binary(
 py_binary(
     name = "train",
     srcs = [
+        "logging.py",
         "train.py",
     ],
     data = [

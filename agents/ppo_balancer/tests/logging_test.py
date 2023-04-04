@@ -33,7 +33,6 @@ class TestSummaryWriterCallback(unittest.TestCase):
         shared_memory.close_fd()
         writer = SummaryWriterCallback(env)
         self.assertIsNotNone(writer.env)
-        self.assertTrue(False)
 
 
 if __name__ == "__main__":
