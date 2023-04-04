@@ -126,6 +126,7 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
         self._spine.set_action(action_dict)
         observation_dict = self._spine.get_observation()
         imu = observation_dict["imu"]
+        # TODO(scaron): use tilt (angle to the vertical) rather than pitch
         pitch = compute_base_pitch_from_imu(imu["orientation"])
         observation = self.vectorize_observation(observation_dict)
         reward = self.reward.get(observation)
