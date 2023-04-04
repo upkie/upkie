@@ -23,6 +23,7 @@ py_library(
         "@vulp//spine:python",
         requirement("gym"),
         requirement("pyyaml"),
+        requirement("upkie_description"),
     ],
 )
 

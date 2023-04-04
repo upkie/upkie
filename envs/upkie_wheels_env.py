@@ -17,7 +17,7 @@
 # limitations under the License.
 
 import math
-from typing import Dict, Optional, Tuple, Union
+from typing import Optional
 
 import numpy as np
 from gym import spaces
@@ -150,6 +150,17 @@ class UpkieWheelsEnv(UpkieBaseEnv):
         self.reward = StandingReward()
         self.wheel_radius = wheel_radius
 
+    def parse_first_observation(self, observation_dict: dict) -> None:
+        """!
+        Parse first observation after the spine interface is initialize.
+
+        @param observation_dict First observation.
+        """
+        self.init_position = {
+            joint: observation_dict["servo"][joint]["position"]
+            for joint in self.LEG_JOINTS
+        }
+
     def vectorize_observation(self, observation_dict: dict) -> np.ndarray:
         """!
         Extract observation vector from a full observation dictionary.
@@ -165,52 +176,13 @@ class UpkieWheelsEnv(UpkieBaseEnv):
         obs[3] = observation_dict["imu"]["angular_velocity"][1]
         return obs
 
-    def reset(
-        self,
-        *,
-        seed: Optional[int] = None,
-        return_info: bool = False,
-        options: Optional[dict] = None,
-    ) -> Union[np.ndarray, Tuple[np.ndarray, Dict]]:
+    def dictionarize_action(self, action: np.ndarray) -> dict:
         """!
-        Resets the spine and get an initial observation.
+        Convert action vector into a spine action dictionary.
 
-        @param seed Will be used once we upgrade to gym >= 0.21.0.
-        @param return_info If true, return an extra info dictionary.
-        @param options Currently unused.
-        @returns
-            - ``observation``: the initial vectorized observation.
-            - ``info``: an optional dictionary containing extra information.
-                It is only returned if ``return_info`` is set to true.
+        @param action Action vector.
+        @returns Action dictionary.
         """
-        observation_dict = self.dict_reset()
-        self.init_position = {
-            joint: observation_dict["servo"][joint]["position"]
-            for joint in self.LEG_JOINTS
-        }
-        observation = self.vectorize_observation(observation_dict)
-        if not return_info:
-            return observation
-        else:  # return_info
-            return observation, {}
-
-    def step(self, action: np.ndarray) -> Tuple[np.ndarray, float, bool, dict]:
-        """!
-        Run one timestep of the environment's dynamics. When end of episode is
-        reached, you are responsible for calling `reset()` to reset the
-        environment's state.
-
-        @param action Action from the agent.
-        @returns
-            - ``observation``: Agent's observation of the environment.
-            - ``reward``: Amount of reward returned after previous action.
-            - ``done``: Whether the agent reaches the terminal state, which can
-              be a good or a bad thing. If true, the user needs to call
-              :func:`reset()`.
-            - ``info``: Contains auxiliary diagnostic information (helpful for
-              debugging, logging, and sometimes learning).
-        """
-        # Send action
         commanded_velocity: float = action[0]
         action_dict = {
             "servo": {
@@ -229,28 +201,4 @@ class UpkieWheelsEnv(UpkieBaseEnv):
             "position": math.nan,
             "velocity": -commanded_velocity / self.wheel_radius,
         }
-        self.dict_act(action_dict)
-
-        # Read observation
-        observation_dict = self.dict_observe()
-        observation = self.vectorize_observation(observation_dict)
-
-        # Compute reward
-        reward = self.reward.get(observation)
-
-        # Check termination
-        done = self.detect_fall(pitch=observation[0])
-        info = {
-            "action": action_dict,
-            "observation": observation_dict,
-        }
-        return observation, reward, done, info
-
-    def detect_fall(self, pitch: float) -> bool:
-        """!
-        Detect a fall based on the body-to-world pitch angle.
-
-        @param pitch Current pitch angle in [rad].
-        @returns True if and only if a fall is detected.
-        """
-        return abs(pitch) > self.fall_pitch
+        return action_dict
