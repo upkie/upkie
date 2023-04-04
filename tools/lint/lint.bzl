@@ -20,7 +20,7 @@ def add_lint_tests(
         bazel_lint_ignore = None,
         bazel_lint_extra_srcs = None,
         bazel_lint_exclude = None,
-        enable_clang_format_lint = False):
+        enable_clang_format_lint = True):
     """
     For every rule in the BUILD file so far, and for all Bazel files in this
     directory, adds test rules that run Drake's standard lint suite over the
