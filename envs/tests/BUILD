@@ -13,8 +13,6 @@ py_test(
     deps = [
         "//envs",
         requirement("gin-config"),
-        requirement("numpy"),  # workaround
-        # See https://github.com/tasts-robots/upkie_locomotion/issues/1
     ],
 )
 
@@ -24,8 +22,6 @@ py_test(
     deps = [
         "//envs",
         requirement("gin-config"),
-        requirement("numpy"),  # workaround
-        # See https://github.com/tasts-robots/upkie_locomotion/issues/1
     ],
 )
 
