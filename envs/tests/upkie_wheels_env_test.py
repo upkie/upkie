@@ -69,8 +69,7 @@ class TestUpkieWheelsEnv(unittest.TestCase):
         self.env._spine = MockSpine()
 
     def test_reset(self):
-        observation = self.env.reset()
-        observation_dict = self.env._last_observation
+        observation, observation_dict = self.env.reset(return_info=True)
         self.assertAlmostEqual(
             observation[1], observation_dict["wheel_odometry"]["position"]
         )
