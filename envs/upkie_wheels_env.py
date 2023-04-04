@@ -39,10 +39,8 @@ class UpkieWheelsEnv(UpkieBaseEnv):
 
     The environment has the following attributes:
 
-    - ``action_dim``: Dimension of action space.
     - ``fall_pitch``: Fall pitch angle, in radians.
     - ``max_ground_velocity``: Maximum commanded ground velocity in m/s.
-    - ``observation_dim``: Dimension of observation space.
     - ``version``: Environment version number.
     - ``wheel_radius``: Wheel radius in [m].
 
@@ -79,10 +77,8 @@ class UpkieWheelsEnv(UpkieBaseEnv):
     using this environment.
     """
 
-    action_dim: int
     fall_pitch: float
     max_ground_velocity: float
-    observation_dim: int
     version: int = 1
     wheel_radius: float
 
@@ -111,8 +107,6 @@ class UpkieWheelsEnv(UpkieBaseEnv):
         """
         super().__init__(config, fall_pitch, shm_name)
 
-        action_dim = 1
-        observation_dim = 4
         observation_limit = np.array(
             [
                 MAX_BASE_PITCH,
@@ -126,7 +120,7 @@ class UpkieWheelsEnv(UpkieBaseEnv):
         self.action_space = spaces.Box(
             -max_ground_velocity,
             +max_ground_velocity,
-            shape=(action_dim,),
+            shape=(1,),
             dtype=np.float32,
         )
 
@@ -134,7 +128,7 @@ class UpkieWheelsEnv(UpkieBaseEnv):
         self.observation_space = spaces.Box(
             -observation_limit,
             +observation_limit,
-            shape=(observation_dim,),
+            shape=(4,),
             dtype=np.float32,
         )
 
@@ -142,11 +136,9 @@ class UpkieWheelsEnv(UpkieBaseEnv):
         self.reward_range = StandingReward.get_range()
 
         # Class members
-        self.action_dim = action_dim
         self.fall_pitch = fall_pitch
         self.init_position = {}
         self.max_ground_velocity = max_ground_velocity
-        self.observation_dim = observation_dim
         self.reward = StandingReward()
         self.wheel_radius = wheel_radius
 
@@ -169,7 +161,7 @@ class UpkieWheelsEnv(UpkieBaseEnv):
         @returns Observation vector.
         """
         imu = observation_dict["imu"]
-        obs = np.empty(self.observation_dim)
+        obs = np.empty(4)
         obs[0] = compute_base_pitch_from_imu(imu["orientation"])
         obs[1] = observation_dict["wheel_odometry"]["position"]
         obs[2] = observation_dict["wheel_odometry"]["velocity"]
