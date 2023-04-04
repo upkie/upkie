@@ -32,11 +32,7 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
     """!
     Base class for Upkie environments.
 
-    This class implements "dict_" variants of the standard act, observe and
-    reset functions from the Gym API. Child classes are responsible for
-    implementing their own act, observe and reset functions.
-
-    The base environment has the following attributes:
+    This class has the following attributes:
 
     - ``config``: Configuration dictionary, also sent to the spine.
     - ``fall_pitch``: Fall pitch angle, in radians.
@@ -88,7 +84,8 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
         Resets the spine and get an initial observation.
 
         @param seed Will be used once we upgrade to gym >= 0.21.0.
-        @param return_info If true, return an extra info dictionary.
+        @param return_info If true, return the dictionary observation as an
+            extra info dictionary.
         @param options Currently unused.
         @returns
             - ``observation``: the initial vectorized observation.
@@ -105,7 +102,7 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
         if not return_info:
             return observation
         else:  # return_info
-            return observation, {}
+            return observation, observation_dict
 
     def step(self, action: np.ndarray) -> Tuple[np.ndarray, float, bool, dict]:
         """!
