@@ -16,10 +16,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import math
 from typing import Optional
 
 import numpy as np
+import pinocchio as pin
+import upkie_description
 from gym import spaces
 
 from upkie_locomotion.observers.base_pitch import compute_base_pitch_from_imu
@@ -29,22 +30,21 @@ from .upkie_base_env import UpkieBaseEnv
 
 MAX_BASE_PITCH: float = np.pi
 MAX_GROUND_POSITION: float = float("inf")
+MAX_GROUND_VELOCITY: float = 10.0  # m/s
 MAX_IMU_ANGULAR_VELOCITY: float = 1000.0  # rad/s
 
 
-class UpkieWheelsEnv(UpkieBaseEnv):
+class UpkieLegsEnv(UpkieBaseEnv):
 
     """!
-    Upkie with full observation but only wheel velocity actions.
+    Upkie with full observation and joint position-velocity actions.
 
     The environment has the following attributes:
 
     - ``action_dim``: Dimension of action space.
     - ``fall_pitch``: Fall pitch angle, in radians.
-    - ``max_ground_velocity``: Maximum commanded ground velocity in m/s.
     - ``observation_dim``: Dimension of observation space.
     - ``version``: Environment version number.
-    - ``wheel_radius``: Wheel radius in [m].
 
     Vectorized observations have the following structure:
 
@@ -81,57 +81,48 @@ class UpkieWheelsEnv(UpkieBaseEnv):
 
     action_dim: int
     fall_pitch: float
-    max_ground_velocity: float
     observation_dim: int
+    robot: pin.RobotWrapper
     version: int = 1
-    wheel_radius: float
-
-    LEG_JOINTS = [
-        f"{side}_{joint}"
-        for side in ("left", "right")
-        for joint in ("hip", "knee")
-    ]
 
     def __init__(
         self,
         config: Optional[dict] = None,
         fall_pitch: float = 1.0,
-        max_ground_velocity: float = 1.0,
         shm_name: str = "/vulp",
-        wheel_radius: float = 0.06,
     ):
         """!
         Initialize environment.
 
         @param config Configuration dictionary, also sent to the spine.
         @param fall_pitch Fall pitch angle, in radians.
-        @param max_ground_velocity Maximum commanded ground velocity in m/s.
         @param shm_name Name of shared-memory file.
-        @param wheel_radius Wheel radius in [m].
         """
         super().__init__(config, fall_pitch, shm_name)
 
+        robot = upkie_description.load_in_pinocchio(root_joint=None)
+        model = robot.model
+
+        # gym.Env: action_space
         action_dim = 1
+        action_space = spaces.Box(
+            np.hstack([model.lowerPositionLimit, -model.velocityLimit]),
+            np.hstack([model.upperPositionLimit, +model.velocityLimit]),
+            shape=(model.nq + model.nv,),
+            dtype=np.float32,
+        )
+
+        # gym.Env: observation_space
         observation_dim = 4
         observation_limit = np.array(
             [
                 MAX_BASE_PITCH,
                 MAX_GROUND_POSITION,
-                max_ground_velocity,
+                MAX_GROUND_VELOCITY,
                 MAX_IMU_ANGULAR_VELOCITY,
             ]
         )
-
-        # gym.Env: action_space
-        self.action_space = spaces.Box(
-            -max_ground_velocity,
-            +max_ground_velocity,
-            shape=(action_dim,),
-            dtype=np.float32,
-        )
-
-        # gym.Env: observation_space
-        self.observation_space = spaces.Box(
+        observation_space = spaces.Box(
             -observation_limit,
             +observation_limit,
             shape=(observation_dim,),
@@ -143,12 +134,15 @@ class UpkieWheelsEnv(UpkieBaseEnv):
 
         # Class members
         self.action_dim = action_dim
+        self.action_space = action_space
         self.fall_pitch = fall_pitch
-        self.init_position = {}
-        self.max_ground_velocity = max_ground_velocity
+        self.joints = list(robot.model.names)[1:]
+        print(f"{self.joints=}")
+        self.last_positions = {}
         self.observation_dim = observation_dim
+        self.observation_space = observation_space
         self.reward = StandingReward()
-        self.wheel_radius = wheel_radius
+        self.robot = robot
 
     def parse_first_observation(self, observation_dict: dict) -> None:
         """!
@@ -156,9 +150,9 @@ class UpkieWheelsEnv(UpkieBaseEnv):
 
         @param observation_dict First observation.
         """
-        self.init_position = {
+        self.last_positions = {
             joint: observation_dict["servo"][joint]["position"]
-            for joint in self.LEG_JOINTS
+            for joint in self.joints
         }
 
     def vectorize_observation(self, observation_dict: dict) -> np.ndarray:
@@ -183,22 +177,25 @@ class UpkieWheelsEnv(UpkieBaseEnv):
         @param action Action vector.
         @returns Action dictionary.
         """
-        commanded_velocity: float = action[0]
-        action_dict = {
-            "servo": {
-                joint: {
-                    "position": self.init_position[joint],
-                    "velocity": 0.0,
-                }
-                for joint in self.LEG_JOINTS
+        nq = self.robot.model.nq
+        model = self.robot.model
+        servo_action = {
+            joint: {
+                "position": self.last_positions[joint],
+                "velocity": 0.0,
             }
+            for joint in self.joints
         }
-        action_dict["servo"]["left_wheel"] = {
-            "position": math.nan,
-            "velocity": +commanded_velocity / self.wheel_radius,
-        }
-        action_dict["servo"]["right_wheel"] = {
-            "position": math.nan,
-            "velocity": -commanded_velocity / self.wheel_radius,
-        }
-        return action_dict
+
+        nq = model.nq
+        nv = model.nv
+        q = action[:nq]
+        v = action[nq : nq + nv]
+        # TODO(scaron): clamp q + test
+        # TODO(scaron): clamp v + test
+        for joint in self.joints:
+            i = model.getJointId(joint) - 1
+            servo_action[joint]["position"] = q[i]
+            servo_action[joint]["velocity"] = v[i]
+            self.last_positions[joint] = q[i]
+        return {"servo": servo_action}

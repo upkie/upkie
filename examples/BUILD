@@ -11,13 +11,15 @@ load("//tools/lint:lint.bzl", "add_lint_tests")
 load("@pip_upkie_locomotion//:requirements.bzl", "requirement")
 
 py_binary(
-    name = "upkie_wheels_env_simple",
-    srcs = [
-        "upkie_wheels_env_simple.py",
-    ],
-    deps = [
-        "//envs",
-    ],
+    name = "legs_balancing",
+    srcs = ["legs_balancing.py"],
+    deps = ["//envs"],
+)
+
+py_binary(
+    name = "wheels_balancing",
+    srcs = ["wheels_balancing.py"],
+    deps = ["//envs"],
 )
 
 add_lint_tests(enable_clang_format_lint = True)

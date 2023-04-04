@@ -13,6 +13,7 @@ py_library(
         "__init__.py",
         "standing_reward.py",
         "upkie_base_env.py",
+        "upkie_legs_env.py",
         "upkie_wheels_env.py",
     ],
     data = [
