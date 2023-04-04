@@ -19,7 +19,7 @@ import unittest
 
 import posix_ipc
 
-from agents.ppo_balancer.logging import SummaryWriterCallback
+from agents.ppo_balancer.callbacks import SummaryWriterCallback
 from upkie_locomotion.envs import UpkieWheelsEnv
 
 

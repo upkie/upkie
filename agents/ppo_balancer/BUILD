@@ -38,7 +38,7 @@ py_binary(
 py_binary(
     name = "train",
     srcs = [
-        "logging.py",
+        "callbacks.py",
         "train.py",
     ],
     data = [
