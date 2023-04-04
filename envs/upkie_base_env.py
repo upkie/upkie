@@ -38,8 +38,8 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
 
     The base environment has the following attributes:
 
-    - ``_config``: Configuration dictionary, also sent to the spine.
-    - ``_spine``: Internal spine interface.
+    - ``config``: Configuration dictionary, also sent to the spine.
+    - ``fall_pitch``: Fall pitch angle, in radians.
 
     @note This environment is made to run on a single CPU thread rather than on
     GPU/TPU. The downside for reinforcement learning is that computations are
@@ -47,8 +47,9 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
     real robot, as it relies on the same spine interface that runs on Upkie.
     """
 
-    _config: dict
     _spine: SpineInterface
+    config: dict
+    fall_pitch: float
 
     def __init__(
         self,
@@ -66,9 +67,9 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
             envs_dir = path.dirname(__file__)
             with open(f"{envs_dir}/spine.yaml", "r") as fh:
                 config = yaml.safe_load(fh)
-        self._config = config
-        self._fall_pitch = fall_pitch
         self._spine = SpineInterface(shm_name)
+        self.config = config
+        self.fall_pitch = fall_pitch
 
     def close(self) -> None:
         """!
@@ -96,7 +97,7 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
         """
         # super().reset(seed=seed)  # we are pinned at gym==0.21.0
         self._spine.stop()
-        self._spine.start(self._config)
+        self._spine.start(self.config)
         self._spine.get_observation()  # might be a pre-reset observation
         observation_dict = self._spine.get_observation()
         self.parse_first_observation(observation_dict)
@@ -144,7 +145,7 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
         @param pitch Current pitch angle in [rad].
         @returns True if and only if a fall is detected.
         """
-        return abs(pitch) > self._fall_pitch
+        return abs(pitch) > self.fall_pitch
 
     @abc.abstractmethod
     def parse_first_observation(self, observation_dict: dict) -> None:
