@@ -11,14 +11,14 @@ load("//tools/lint:lint.bzl", "add_lint_tests")
 load("@pip_upkie_locomotion//:requirements.bzl", "requirement")
 
 py_binary(
-    name = "legs_balancing",
-    srcs = ["legs_balancing.py"],
+    name = "legged_balancing",
+    srcs = ["legged_balancing.py"],
     deps = ["//envs"],
 )
 
 py_binary(
-    name = "wheels_balancing",
-    srcs = ["wheels_balancing.py"],
+    name = "wheeled_balancing",
+    srcs = ["wheeled_balancing.py"],
     deps = ["//envs"],
 )
 
