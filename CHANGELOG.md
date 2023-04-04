@@ -6,9 +6,10 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-- Air Bullet spine: same as Bullet but floating in the air
-- Pink balancer: ``--visualize`` argument
+- Environment: ``UpkieServosEnv-v1``
 - PPO balancer: distribute sample policy
+- Pink balancer: ``--visualize`` argument
+- Spine: Air Bullet, same as Bullet but floating in the air
 
 ### Changed
 
