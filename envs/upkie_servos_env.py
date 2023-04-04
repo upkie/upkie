@@ -38,6 +38,8 @@ class UpkieServosEnv(UpkieBaseEnv):
 
     The environment has the following attributes:
 
+    - ``reward``: Reward function.
+    - ``robot``: Pinocchio robot wrapper.
     - ``version``: Environment version number.
 
     Vectorized observations have the following structure:
@@ -48,21 +50,29 @@ class UpkieServosEnv(UpkieBaseEnv):
             <td><strong>Description</strong></td>
             </tr>
         <tr>
-            <td>0</td>
-            <td>Base pitch in rad.</td>
+            <td>[0:nq]</td>
+            <td>Joint positions in [rad].</td>
         </tr>
         <tr>
-            <td>1</td>
-            <td>Position of the average wheel contact point, in m.</td>
+            <td>[nq:nq + nv]</td>
+            <td>Joint velocities in [rad] / [s].</td>
+        </tr>
+    </table>
+
+    Vectorized actions have the following structure:
+
+    <table>
+        <tr>
+            <td><strong>Index</strong></td>
+            <td><strong>Description</strong></td>
+            </tr>
+        <tr>
+            <td>[0:nq]</td>
+            <td>Joint position commands in [rad].</td>
         </tr>
         <tr>
-            <td>2</td>
-            <td>Velocity of the average wheel contact point, in m/s.</td>
-        </tr>
-        <tr>
-            <td>3</td>
-            <td>Body angular velocity of the IMU frame along its y-axis, in
-            rad/s.</td>
+            <td>[nq:nq + nv]</td>
+            <td>Joint velocity commands in [rad] / [s].</td>
         </tr>
     </table>
 
@@ -73,6 +83,7 @@ class UpkieServosEnv(UpkieBaseEnv):
     using this environment.
     """
 
+    reward: StandingReward
     robot: pin.RobotWrapper
     version: int = 1
 
@@ -98,7 +109,7 @@ class UpkieServosEnv(UpkieBaseEnv):
         nx = model.nq + model.nv
 
         # gym.Env: action_space
-        action_space = spaces.Box(
+        self.action_space = spaces.Box(
             x_min,
             x_max,
             shape=(nx,),
@@ -106,7 +117,7 @@ class UpkieServosEnv(UpkieBaseEnv):
         )
 
         # gym.Env: observation_space
-        observation_space = spaces.Box(
+        self.observation_space = spaces.Box(
             x_min,
             x_max,
             shape=(nx,),
@@ -117,10 +128,8 @@ class UpkieServosEnv(UpkieBaseEnv):
         self.reward_range = StandingReward.get_range()
 
         # Class members
-        self.action_space = action_space
-        self.joints = list(robot.model.names)[1:]
-        self.last_positions = {}
-        self.observation_space = observation_space
+        self.__joints = list(robot.model.names)[1:]
+        self.__last_positions = {}
         self.reward = StandingReward()
         self.robot = robot
 
@@ -130,9 +139,9 @@ class UpkieServosEnv(UpkieBaseEnv):
 
         @param observation_dict First observation.
         """
-        self.last_positions = {
+        self.__last_positions = {
             joint: observation_dict["servo"][joint]["position"]
-            for joint in self.joints
+            for joint in self.__joints
         }
 
     def vectorize_observation(self, observation_dict: dict) -> np.ndarray:
@@ -145,7 +154,7 @@ class UpkieServosEnv(UpkieBaseEnv):
         nq, nv = self.robot.model.nq, self.robot.model.nv
         model = self.robot.model
         obs = np.empty(nq + nv)
-        for joint in self.joints:
+        for joint in self.__joints:
             i = model.getJointId(joint) - 1
             obs[i] = observation_dict["servo"][joint]["position"]
             obs[nq + i] = observation_dict["servo"][joint]["velocity"]
@@ -162,10 +171,10 @@ class UpkieServosEnv(UpkieBaseEnv):
         model = self.robot.model
         servo_action = {
             joint: {
-                "position": self.last_positions[joint],
+                "position": self.__last_positions[joint],
                 "velocity": 0.0,
             }
-            for joint in self.joints
+            for joint in self.__joints
         }
 
         nq = model.nq
@@ -174,9 +183,9 @@ class UpkieServosEnv(UpkieBaseEnv):
         v = action[nq : nq + nv]
         # TODO(scaron): clamp q + test
         # TODO(scaron): clamp v + test
-        for joint in self.joints:
+        for joint in self.__joints:
             i = model.getJointId(joint) - 1
             servo_action[joint]["position"] = q[i]
             servo_action[joint]["velocity"] = v[i]
-            self.last_positions[joint] = q[i]
+            self.__last_positions[joint] = q[i]
         return {"servo": servo_action}
