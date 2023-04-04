@@ -8,8 +8,10 @@ import numpy as np
 
 import upkie_locomotion.envs
 
+upkie_locomotion.envs.register()
+
+
 if __name__ == "__main__":
-    upkie_locomotion.envs.register()
     env = gym.make("UpkieLegsEnv-v1")
     observation = env.reset(seed=42)
 

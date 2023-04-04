@@ -4,10 +4,12 @@
 # Copyright 2023 Inria
 
 import gym
+
 import upkie_locomotion.envs
 
+upkie_locomotion.envs.register()
+
 if __name__ == "__main__":
-    upkie_locomotion.envs.register()
     env = gym.make("UpkieWheelsEnv-v1")
     observation = env.reset(seed=42)
 
