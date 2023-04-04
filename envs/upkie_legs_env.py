@@ -40,7 +40,6 @@ class UpkieLegsEnv(UpkieBaseEnv):
 
     The environment has the following attributes:
 
-    - ``observation_dim``: Dimension of observation space.
     - ``version``: Environment version number.
 
     Vectorized observations have the following structure:
@@ -76,7 +75,6 @@ class UpkieLegsEnv(UpkieBaseEnv):
     using this environment.
     """
 
-    observation_dim: int
     robot: pin.RobotWrapper
     version: int = 1
 
@@ -107,7 +105,6 @@ class UpkieLegsEnv(UpkieBaseEnv):
         )
 
         # gym.Env: observation_space
-        observation_dim = 4
         observation_limit = np.array(
             [
                 MAX_BASE_PITCH,
@@ -119,7 +116,7 @@ class UpkieLegsEnv(UpkieBaseEnv):
         observation_space = spaces.Box(
             -observation_limit,
             +observation_limit,
-            shape=(observation_dim,),
+            shape=(4,),
             dtype=np.float32,
         )
 
@@ -130,7 +127,6 @@ class UpkieLegsEnv(UpkieBaseEnv):
         self.action_space = action_space
         self.joints = list(robot.model.names)[1:]
         self.last_positions = {}
-        self.observation_dim = observation_dim
         self.observation_space = observation_space
         self.reward = StandingReward()
         self.robot = robot
@@ -154,10 +150,8 @@ class UpkieLegsEnv(UpkieBaseEnv):
         @returns Observation vector.
         """
         imu = observation_dict["imu"]
-        obs = np.empty(self.observation_dim)
+        obs = np.empty(4)
         obs[0] = compute_base_pitch_from_imu(imu["orientation"])
-        obs[1] = observation_dict["wheel_odometry"]["position"]
-        obs[2] = observation_dict["wheel_odometry"]["velocity"]
         obs[3] = observation_dict["imu"]["angular_velocity"][1]
         return obs
 
