@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 - PPO balancer: distribute sample policy
 - Pink balancer: ``--visualize`` argument
 - Spine: Air Bullet, same as Bullet but floating in the air
+- Utils: Pinocchio utility functions
 
 ### Changed
 
