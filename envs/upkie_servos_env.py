@@ -22,6 +22,12 @@ import pinocchio as pin
 import upkie_description
 from gym import spaces
 
+from upkie_locomotion.utils.pinocchio import (
+    box_position_limits,
+    box_torque_limits,
+    box_velocity_limits,
+)
+
 from .standing_reward import StandingReward
 from .upkie_base_env import UpkieBaseEnv
 
@@ -40,6 +46,8 @@ class UpkieServosEnv(UpkieBaseEnv):
 
     - ``reward``: Reward function.
     - ``robot``: Pinocchio robot wrapper.
+    - ``state_max``: Maximum values for the action and observation vectors.
+    - ``state_min``: Minimum values for the action and observation vectors.
     - ``version``: Environment version number.
 
     Vectorized observations have the following structure:
@@ -112,35 +120,27 @@ class UpkieServosEnv(UpkieBaseEnv):
 
         robot = upkie_description.load_in_pinocchio(root_joint=None)
         model = robot.model
-        x_min = np.hstack(
-            [
-                model.lowerPositionLimit,
-                -model.velocityLimit,
-                -model.effortLimit,
-            ]
-        )
-        x_max = np.hstack(
-            [
-                model.upperPositionLimit,
-                model.velocityLimit,
-                model.effortLimit,
-            ]
-        )
-        nx = model.nq + model.nv
+
+        q_min, q_max = box_position_limits(model)
+        v_min, v_max = box_velocity_limits(model)
+        tau_min, tau_max = box_torque_limits(model)
+        state_dim = model.nq + 2 * model.nv
+        state_max = np.hstack([q_max, v_max, tau_max])
+        state_min = np.hstack([q_min, v_min, tau_min])
 
         # gym.Env: action_space
         self.action_space = spaces.Box(
-            x_min,
-            x_max,
-            shape=(nx,),
+            state_min,
+            state_max,
+            shape=(state_dim,),
             dtype=np.float32,
         )
 
         # gym.Env: observation_space
         self.observation_space = spaces.Box(
-            x_min,
-            x_max,
-            shape=(nx,),
+            state_min,
+            state_max,
+            shape=(state_dim,),
             dtype=np.float32,
         )
 
@@ -152,6 +152,8 @@ class UpkieServosEnv(UpkieBaseEnv):
         self.__last_positions = {}
         self.reward = StandingReward()
         self.robot = robot
+        self.state_max = state_max
+        self.state_min = state_min
 
     def parse_first_observation(self, observation_dict: dict) -> None:
         """!
@@ -199,14 +201,11 @@ class UpkieServosEnv(UpkieBaseEnv):
             for joint in self.__joints
         }
 
-        nq = model.nq
-        nv = model.nv
-        q = action[:nq]
-        v = action[nq : nq + nv]
-        tau = action[nq + nv : nq + 2 * nv]
-        # TODO(scaron): clamp q + test
-        # TODO(scaron): clamp v + test
-        # TODO(scaron): clamp tau + test
+        clipped_action = np.clip(action, self.state_min, self.state_max)
+        nq, nv = model.nq, model.nv
+        q = clipped_action[:nq]
+        v = clipped_action[nq : nq + nv]
+        tau = clipped_action[nq + nv : nq + 2 * nv]
         for joint in self.__joints:
             i = model.getJointId(joint) - 1
             servo_action[joint]["position"] = q[i]
