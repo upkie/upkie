@@ -15,18 +15,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from typing import Tuple
+
 import numpy as np
 import pinocchio as pin
 
 
-def box_position_limits(model: pin.Model):
+def box_position_limits(model: pin.Model) -> Tuple[np.ndarray, np.ndarray]:
     r"""!
     Compute position limits in box format:
 
-        \f$q_{min} \leq q \leq q_{max}\f$
+    \f[
+    q_{min} \leq q \leq q_{max}
+    \f]
 
     @param model Pinocchio model.
-    @returns q_max Upper position limit.
+    @returns Tuple ``(q_min, q_max)`` of lower and upper position limits, with
+    -infinity and +infinity where there is no limit.
     """
     no_position_limit = np.logical_or(
         model.upperPositionLimit > 1e20,
@@ -36,16 +41,20 @@ def box_position_limits(model: pin.Model):
     q_max = model.upperPositionLimit.copy()
     q_min[no_position_limit] = -np.inf
     q_max[no_position_limit] = +np.inf
-    return q_max, q_min
+    return q_min, q_max
 
 
-def box_velocity_limits(model: pin.Model):
+def box_velocity_limits(model: pin.Model) -> Tuple[np.ndarray, np.ndarray]:
     r"""!
     Compute velocity limits in box format:
 
-        \f$v_{min} \lev v \lev v_{max}\f$
+    \f[
+    v_{min} \leq v \leq v_{max}
+    \f]
 
     @param model Pinocchio model.
+    @return Tuple ``(v_min, v_max)`` of lower and upper velocity limits, with
+    -infinity and +infinity where there is no limit.
     """
     no_velocity_limit = np.logical_or(
         model.velocityLimit > 1e20,
@@ -56,7 +65,18 @@ def box_velocity_limits(model: pin.Model):
     return -v_max, v_max
 
 
-def box_torque_limits(model: pin.Model):
+def box_torque_limits(model: pin.Model) -> Tuple[np.ndarray, np.ndarray]:
+    r"""!
+    Compute velocity limits in box format:
+
+    \f[
+    \tau_{min} \leq \tau \leq \tau_{max}
+    \f]
+
+    @param model Pinocchio model.
+    @return Tuple ``(tau_min, tau_max)`` of lower and upper velocity limits,
+    with -infinity and +infinity where there is no limit.
+    """
     no_torque_limit = np.logical_or(
         model.effortLimit > 1e20,
         model.effortLimit < 1e-10,
