@@ -57,6 +57,10 @@ class UpkieServosEnv(UpkieBaseEnv):
             <td>[nq:nq + nv]</td>
             <td>Joint velocities in [rad] / [s].</td>
         </tr>
+        <tr>
+            <td>[nq + nv:nq + 2 * nv]</td>
+            <td>Joint torques in [N] * [m].</td>
+        </tr>
     </table>
 
     Vectorized actions have the following structure:
@@ -73,6 +77,10 @@ class UpkieServosEnv(UpkieBaseEnv):
         <tr>
             <td>[nq:nq + nv]</td>
             <td>Joint velocity commands in [rad] / [s].</td>
+        </tr>
+        <tr>
+            <td>[nq + nv:nq + 2 * nv]</td>
+            <td>Joint torques in [N] * [m].</td>
         </tr>
     </table>
 
@@ -104,8 +112,20 @@ class UpkieServosEnv(UpkieBaseEnv):
 
         robot = upkie_description.load_in_pinocchio(root_joint=None)
         model = robot.model
-        x_min = np.hstack([model.lowerPositionLimit, -model.velocityLimit])
-        x_max = np.hstack([model.upperPositionLimit, +model.velocityLimit])
+        x_min = np.hstack(
+            [
+                model.lowerPositionLimit,
+                -model.velocityLimit,
+                -model.effortLimit,
+            ]
+        )
+        x_max = np.hstack(
+            [
+                model.upperPositionLimit,
+                model.velocityLimit,
+                model.effortLimit,
+            ]
+        )
         nx = model.nq + model.nv
 
         # gym.Env: action_space
@@ -153,11 +173,12 @@ class UpkieServosEnv(UpkieBaseEnv):
         """
         nq, nv = self.robot.model.nq, self.robot.model.nv
         model = self.robot.model
-        obs = np.empty(nq + nv)
+        obs = np.empty(nq + 2 * nv)
         for joint in self.__joints:
             i = model.getJointId(joint) - 1
             obs[i] = observation_dict["servo"][joint]["position"]
             obs[nq + i] = observation_dict["servo"][joint]["velocity"]
+            obs[nq + nv + i] = observation_dict["servo"][joint]["torque"]
         return obs
 
     def dictionarize_action(self, action: np.ndarray) -> dict:
@@ -173,6 +194,7 @@ class UpkieServosEnv(UpkieBaseEnv):
             joint: {
                 "position": self.__last_positions[joint],
                 "velocity": 0.0,
+                "torque": 0.0,
             }
             for joint in self.__joints
         }
@@ -181,11 +203,14 @@ class UpkieServosEnv(UpkieBaseEnv):
         nv = model.nv
         q = action[:nq]
         v = action[nq : nq + nv]
+        tau = action[nq + nv : nq + 2 * nv]
         # TODO(scaron): clamp q + test
         # TODO(scaron): clamp v + test
+        # TODO(scaron): clamp tau + test
         for joint in self.__joints:
             i = model.getJointId(joint) - 1
             servo_action[joint]["position"] = q[i]
             servo_action[joint]["velocity"] = v[i]
+            servo_action[joint]["torque"] = tau[i]
             self.__last_positions[joint] = q[i]
         return {"servo": servo_action}
