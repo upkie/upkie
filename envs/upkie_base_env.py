@@ -16,15 +16,26 @@
 # limitations under the License.
 
 import abc
-from os import path
 from typing import Dict, Optional, Tuple, Union
 
 import gym
 import numpy as np
-import yaml
 from vulp.spine import SpineInterface
 
 from upkie_locomotion.observers.base_pitch import compute_base_pitch_from_imu
+
+DEFAULT_CONFIG = {
+    "bullet": {
+        "control_mode": "torque",
+        "follower_camera": False,
+        "gui": True,
+        "position_init_base_in_world": [0.0, 0.0, 0.6],
+        "torque_control": {
+            "kp": 20.0,
+            "kd": 1.0,
+        },
+    }
+}
 
 
 class UpkieBaseEnv(abc.ABC, gym.Env):
@@ -61,9 +72,7 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
         @param shm_name Name of shared-memory file.
         """
         if config is None:
-            envs_dir = path.dirname(__file__)
-            with open(f"{envs_dir}/spine.yaml", "r") as fh:
-                config = yaml.safe_load(fh)
+            config = DEFAULT_CONFIG
         self._spine = SpineInterface(shm_name)
         self.config = config
         self.fall_pitch = fall_pitch
