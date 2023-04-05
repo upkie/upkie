@@ -53,8 +53,8 @@ def box_velocity_limits(model: pin.Model) -> Tuple[np.ndarray, np.ndarray]:
     \f]
 
     @param model Pinocchio model.
-    @return Tuple ``(v_min, v_max)`` of lower and upper velocity limits, with
-    -infinity and +infinity where there is no limit.
+    @return Velocity limits, with -infinity and +infinity where there is no
+    limit.
     """
     no_velocity_limit = np.logical_or(
         model.velocityLimit > 1e20,
@@ -62,7 +62,7 @@ def box_velocity_limits(model: pin.Model) -> Tuple[np.ndarray, np.ndarray]:
     )
     v_max = model.velocityLimit.copy()
     v_max[no_velocity_limit] = np.inf
-    return -v_max, v_max
+    return v_max
 
 
 def box_torque_limits(model: pin.Model) -> Tuple[np.ndarray, np.ndarray]:
@@ -74,8 +74,8 @@ def box_torque_limits(model: pin.Model) -> Tuple[np.ndarray, np.ndarray]:
     \f]
 
     @param model Pinocchio model.
-    @return Tuple ``(tau_min, tau_max)`` of lower and upper velocity limits,
-    with -infinity and +infinity where there is no limit.
+    @return Torque limits, with -infinity and +infinity where there is no
+    limit.
     """
     no_torque_limit = np.logical_or(
         model.effortLimit > 1e20,
@@ -83,4 +83,4 @@ def box_torque_limits(model: pin.Model) -> Tuple[np.ndarray, np.ndarray]:
     )
     tau_max = model.effortLimit.copy()
     tau_max[no_torque_limit] = np.inf
-    return -tau_max, tau_max
+    return tau_max

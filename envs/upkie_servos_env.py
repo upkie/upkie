@@ -22,6 +22,7 @@ import pinocchio as pin
 import upkie_description
 from gym import spaces
 
+from upkie_locomotion.utils.clamp import clamp_and_warn
 from upkie_locomotion.utils.pinocchio import (
     box_position_limits,
     box_torque_limits,
@@ -117,11 +118,11 @@ class UpkieServosEnv(UpkieBaseEnv):
         model = robot.model
 
         q_min, q_max = box_position_limits(model)
-        v_min, v_max = box_velocity_limits(model)
-        tau_min, tau_max = box_torque_limits(model)
+        v_max = box_velocity_limits(model)
+        tau_max = box_torque_limits(model)
         state_dim = model.nq + 2 * model.nv
         state_max = np.hstack([q_max, v_max, tau_max])
-        state_min = np.hstack([q_min, v_min, tau_min])
+        state_min = np.hstack([q_min, -v_max, -tau_max])
 
         # gym.Env: action_space
         self.action_space = spaces.Box(
@@ -145,10 +146,12 @@ class UpkieServosEnv(UpkieBaseEnv):
         # Class members
         self.__joints = list(robot.model.names)[1:]
         self.__last_positions = {}
+        self.q_max = q_max
+        self.q_min = q_min
         self.reward = StandingReward()
         self.robot = robot
-        self.state_max = state_max
-        self.state_min = state_min
+        self.tau_max = tau_max
+        self.v_max = v_max
 
     def parse_first_observation(self, observation_dict: dict) -> None:
         """!
@@ -196,13 +199,30 @@ class UpkieServosEnv(UpkieBaseEnv):
             for joint in self.__joints
         }
 
-        clipped_action = np.clip(action, self.state_min, self.state_max)
         nq, nv = model.nq, model.nv
-        q = clipped_action[:nq]
-        v = clipped_action[nq : nq + nv]
-        tau = clipped_action[nq + nv : nq + 2 * nv]
+        q = action[:nq]
+        v = action[nq : nq + nv]
+        tau = action[nq + nv : nq + 2 * nv]
         for joint in self.__joints:
             i = model.getJointId(joint) - 1
+            q[i] = clamp_and_warn(
+                q[i],
+                self.q_min[i],
+                self.q_max[i],
+                label=f"{joint}: position",
+            )
+            v[i] = clamp_and_warn(
+                v[i],
+                -self.v_max[i],
+                self.v_max[i],
+                label=f"{joint}: velocity",
+            )
+            tau[i] = clamp_and_warn(
+                tau[i],
+                -self.tau_max[i],
+                self.tau_max[i],
+                label=f"{joint}: torque",
+            )
             servo_action[joint]["position"] = q[i]
             servo_action[joint]["velocity"] = v[i]
             servo_action[joint]["torque"] = tau[i]
