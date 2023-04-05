@@ -10,6 +10,9 @@ package(default_visibility = ["//visibility:public"])
 py_library(
     name = "clamp",
     srcs = ["clamp.py"],
+    deps = [
+        ":spdlog",
+    ],
 )
 
 py_library(
