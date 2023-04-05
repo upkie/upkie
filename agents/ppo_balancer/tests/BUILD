@@ -12,8 +12,6 @@ py_test(
     srcs = ["callbacks_test.py"],
     deps = [
         "//agents/ppo_balancer:train",
-        requirement("numpy"),  # workaround
-        # See https://github.com/tasts-robots/upkie_locomotion/issues/1
     ],
 )
 
