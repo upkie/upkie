@@ -57,6 +57,7 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
         Initialize environment.
 
         @param config Configuration dictionary, also sent to the spine.
+        @param fall_pitch Fall pitch angle, in radians.
         @param shm_name Name of shared-memory file.
         """
         if config is None:
