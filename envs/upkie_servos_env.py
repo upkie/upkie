@@ -31,11 +31,6 @@ from upkie_locomotion.utils.pinocchio import (
 from .standing_reward import StandingReward
 from .upkie_base_env import UpkieBaseEnv
 
-MAX_BASE_PITCH: float = np.pi
-MAX_GROUND_POSITION: float = float("inf")
-MAX_GROUND_VELOCITY: float = 10.0  # m/s
-MAX_IMU_ANGULAR_VELOCITY: float = 1000.0  # rad/s
-
 
 class UpkieServosEnv(UpkieBaseEnv):
 
