@@ -22,11 +22,15 @@ import unittest
 import numpy as np
 import pinocchio as pin
 
-from upkie_locomotion.utils.pinocchio import box_position_limits
+from upkie_locomotion.utils.pinocchio import (
+    box_position_limits,
+    box_torque_limits,
+    box_velocity_limits,
+)
 
 
 class TestPinocchio(unittest.TestCase):
-    def test_box_position_limits(self):
+    def test_box_limits(self):
         model = pin.Model()
         model.addJoint(
             0,
@@ -34,9 +38,36 @@ class TestPinocchio(unittest.TestCase):
             pin.SE3.Identity(),
             "J1",
         )
-        q_max, q_min = box_position_limits(model)
-        self.assertTrue(np.allclose(q_max, [+np.inf]))
-        self.assertTrue(np.allclose(q_min, [-np.inf]))
+        model.addJoint(
+            1,
+            pin.JointModelRevoluteUnaligned(),
+            pin.SE3.Identity(),
+            "revolute",
+            max_effort=np.array([1.0]),
+            max_velocity=np.array([42.0]),
+            min_config=np.array([-12.0]),
+            max_config=np.array([12.0]),
+        )
+        model.addJoint(
+            2,
+            pin.JointModelRevoluteUnaligned(),
+            pin.SE3.Identity(),
+            "revolute",
+            max_effort=np.array([0.0]),
+            max_velocity=np.array([0.0]),
+            min_config=np.array([0.0]),
+            max_config=np.array([0.0]),
+        )
+        q_min, q_max = box_position_limits(model)
+        v_min, v_max = box_velocity_limits(model)
+        tau_min, tau_max = box_torque_limits(model)
+        print(f"{q_max=}")
+        self.assertTrue(np.allclose(q_max, [+np.inf, +np.inf, 12.0, +np.inf]))
+        self.assertTrue(np.allclose(q_min, [-np.inf, -np.inf, -12.0, -np.inf]))
+        self.assertTrue(np.allclose(v_min, [-np.inf, -42.0, -np.inf]))
+        self.assertTrue(np.allclose(v_max, [+np.inf, 42.0, +np.inf]))
+        self.assertTrue(np.allclose(tau_min, [-np.inf, -1.0, -np.inf]))
+        self.assertTrue(np.allclose(tau_max, [+np.inf, 1.0, +np.inf]))
 
 
 if __name__ == "__main__":
