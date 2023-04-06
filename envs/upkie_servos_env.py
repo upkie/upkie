@@ -36,7 +36,7 @@ from .upkie_base_env import UpkieBaseEnv
 class UpkieServosEnv(UpkieBaseEnv):
 
     """!
-    Upkie with full observation and joint position-velocity actions.
+    Upkie with full observation and joint position-velocity-torque actions.
 
     The environment has the following attributes:
 
@@ -54,15 +54,15 @@ class UpkieServosEnv(UpkieBaseEnv):
             <td><strong>Description</strong></td>
             </tr>
         <tr>
-            <td>[0:nq]</td>
+            <td>``[0:nq]``</td>
             <td>Joint positions in [rad].</td>
         </tr>
         <tr>
-            <td>[nq:nq + nv]</td>
+            <td>``[nq:nq + nv]``</td>
             <td>Joint velocities in [rad] / [s].</td>
         </tr>
         <tr>
-            <td>[nq + nv:nq + 2 * nv]</td>
+            <td>``[nq + nv:nq + 2 * nv]``</td>
             <td>Joint torques in [N] * [m].</td>
         </tr>
     </table>
@@ -75,15 +75,15 @@ class UpkieServosEnv(UpkieBaseEnv):
             <td><strong>Description</strong></td>
             </tr>
         <tr>
-            <td>[0:nq]</td>
+            <td>``[0:nq]``</td>
             <td>Joint position commands in [rad].</td>
         </tr>
         <tr>
-            <td>[nq:nq + nv]</td>
+            <td>``[nq:nq + nv]``</td>
             <td>Joint velocity commands in [rad] / [s].</td>
         </tr>
         <tr>
-            <td>[nq + nv:nq + 2 * nv]</td>
+            <td>``[nq + nv:nq + 2 * nv]``</td>
             <td>Joint torques in [N] * [m].</td>
         </tr>
     </table>

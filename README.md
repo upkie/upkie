@@ -48,9 +48,13 @@ The ``-c opt`` argument to Bazel makes sure we compile optimized code, while the
 ## Environments
 
 <dl>
+  <dt><code><a href="https://tasts-robots.org/doc/upkie_locomotion/classenvs_1_1upkie__servos__env_1_1UpkieServosEnv.html#details">UpkieServosEnv</a></code></dt>
+  <dd>Upkie with full observation and joint position-velocity-torque actions.</dd>
   <dt><code><a href="https://tasts-robots.org/doc/upkie_locomotion/classenvs_1_1upkie__wheels__env_1_1UpkieWheelsEnv.html#details">UpkieWheelsEnv</a></code></dt>
-  <dd>Upkie with full observation but only wheel velocity actions. This environment is single-threaded rather than vectorized. In return, it runs as-is on the real robot.</dd>
+  <dd>Upkie with full observation but only wheel velocity actions.</dd>
 </dl>
+
+Environments are single-threaded rather than vectorized. In return, they run as-is on the real robot.
 
 ## Observers
 
