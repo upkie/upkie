@@ -8,7 +8,11 @@
 
 Locomotion code for the [Upkie](https://hackaday.io/project/185729-upkie-wheeled-biped-robot) wheeled biped.
 
-Test it straight from the command line on Linux, no installation required:
+Questions about using the code, contributing, or balancing robots in general are welcome on the [Discord server](https://discord.gg/T8bYdXXE).
+
+## Getting started
+
+Test it right away from the command line, no installation required on Linux:
 
 <img src="https://user-images.githubusercontent.com/1189580/170496331-e1293dd3-b50c-40ee-9c2e-f75f3096ebd8.png" height="100" align="right" />
 
@@ -18,13 +22,9 @@ cd upkie_locomotion
 ./tools/bazelisk run -c opt //agents/blue_balancer:bullet
 ```
 
-Connect a USB controller to move the robot around. 🎮
+Connect a USB controller to move the robot around 🎮 There is no dependency to install thanks to [Bazel](https://bazel.build/), which builds everything locally. (Compilation will only take a while the first time.) The syntax is the same to deploy to the Raspberry Pi on Upkie using [`raspunzel`](https://github.com/tasts-robots/raspunzel).
 
-## Getting started
-
-There is no dependency to install thanks to [Bazel](https://bazel.build/), which builds everything locally. (Compilation will only take a while the first time.) The syntax is the same to deploy to the Raspberry Pi on Upkie with [`raspunzel`](https://github.com/tasts-robots/raspunzel).
-
-The code is organized into *spines*, which communicate with the simulator or actuators using the [Vulp](https://github.com/tasts-robots/vulp) C++ library, and *agents*, the main programs that implement behaviors in Python. In the example above we ran the blue agent. We could also run the Bullet spine independently:
+Locomotion code is organized into *spines*, which communicate with the simulator or actuators using [Vulp](https://github.com/tasts-robots/vulp), and *agents*, the main programs that implement behaviors in Python. In the example above we ran the blue agent. We could also start the Bullet spine independently, and let it run waiting for agents to connect:
 
 ```console
 bazel run -c opt //spines:bullet -- --show
