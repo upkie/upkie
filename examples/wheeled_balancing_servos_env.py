@@ -14,18 +14,19 @@ upkie_locomotion.envs.register()
 
 if __name__ == "__main__":
     env = gym.make("UpkieServosEnv-v1")
-    observation = env.reset(seed=42)
 
-    action = 0.0 * env.action_space.sample()
-    for step in range(1_000_000):
-        observation, reward, done, info = env.step(action)
-        imu = info["observation"]["imu"]
-        if done:
-            observation = env.reset()
-        pitch = compute_base_pitch_from_imu(imu["orientation"])
-        action[2] = np.nan  # no position target for left wheel
-        action[5] = np.nan  # same for right wheel
-        action[6 + 2] = 200.0 * pitch
-        action[6 + 5] = -200.0 * pitch
-
-    env.close()
+    try:
+        observation = env.reset(seed=42)  # connects to the spine
+        action = np.zeros(env.action_space.shape)
+        for step in range(1_000_000):
+            observation, reward, done, info = env.step(action)
+            imu = info["observation"]["imu"]
+            if done:
+                observation = env.reset()
+            pitch = compute_base_pitch_from_imu(imu["orientation"])
+            action[2] = np.nan  # no position target for left wheel
+            action[5] = np.nan  # same for right wheel
+            action[6 + 2] = 200.0 * pitch
+            action[6 + 5] = -200.0 * pitch
+    finally:  # make sure we disconnect from the spine
+        env.close()
