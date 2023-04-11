@@ -5,6 +5,7 @@
 [![Coverage](https://coveralls.io/repos/github/tasts-robots/upkie_locomotion/badge.svg?branch=main)](https://coveralls.io/github/tasts-robots/upkie_locomotion?branch=main)
 [![PyPI version](https://img.shields.io/pypi/v/upkie_locomotion)](https://pypi.org/project/upkie_locomotion/)
 [![Vulp](https://img.shields.io/badge/%F0%9F%A6%8A%20vulp-1.0.0-orange)](https://github.com/tasts-robots/vulp)
+[![Discord](https://img.shields.io/discord/1092067184940953690.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/YmDxMSjW)
 
 Locomotion code for the [Upkie](https://hackaday.io/project/185729-upkie-wheeled-biped-robot) wheeled biped.
 
