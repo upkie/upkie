@@ -8,6 +8,10 @@ All notable changes to this project will be documented in this file.
 
 - Script to start a simulation directly from the repository
 
+### Fixed
+
+- Examples: make sure environments are closed before exiting
+
 ## [0.4.0] - 2023/04/06
 
 ### Added
