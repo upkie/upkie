@@ -67,12 +67,12 @@ class SummaryWriterCallback(BaseCallback):
             reward = self.env.reward
             self.tb_formatter.writer.add_text(
                 "settings",
-                f"```\n{settings.__dict__}\n```",
+                f"```json\n{json.dumps(settings.__dict__, indent=4)}\n```",
                 global_step=None,
             )
             self.tb_formatter.writer.add_text(
                 "reward",
-                f"```\n{reward.__dict__}\n```",
+                f"```json\n{json.dumps(reward.__dict__, indent=4)}\n```",
                 global_step=None,
             )
 
