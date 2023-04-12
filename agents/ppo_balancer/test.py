@@ -30,8 +30,8 @@ async def _run_policy(policy, logger: mpacklog.Logger) -> None:
         observation, reward, done, info = policy.env.step(action)
         await logger.put(
             {
-                "action": info["action"],
-                "observation": info["observation"],
+                "action": info[0]["action"],
+                "observation": info[0]["observation"],
                 "policy": {
                     "action": action[0],
                     "observation": observation[0],
