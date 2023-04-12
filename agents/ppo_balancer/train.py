@@ -16,19 +16,59 @@
 # limitations under the License.
 
 import argparse
+import json
 import os
 import random
 
 import gin
+import gym
 import stable_baselines3
-from callbacks import SummaryWriterCallback
 from gym.wrappers.time_limit import TimeLimit
 from settings import Settings
-from stable_baselines3.common.callbacks import CheckpointCallback
+from stable_baselines3.common.callbacks import BaseCallback, CheckpointCallback
+from stable_baselines3.common.logger import TensorBoardOutputFormat
 from torch import nn
 
+import upkie_locomotion.envs
 from upkie_locomotion.envs import UpkieWheelsEnv
 from upkie_locomotion.utils.spdlog import logging
+
+upkie_locomotion.envs.register()
+
+
+class SummaryWriterCallback(BaseCallback):
+    def __init__(self, env: UpkieWheelsEnv):
+        super().__init__()
+        self.config = env.config
+        self.env = env
+
+    def _on_training_start(self):
+        output_formats = self.logger.output_formats
+        self.tb_formatter = next(
+            formatter
+            for formatter in output_formats
+            if isinstance(formatter, TensorBoardOutputFormat)
+        )
+        self.tb_formatter.writer.add_text(
+            "env_id",
+            f"UpkieWheelsEnv-v{UpkieWheelsEnv.version}",
+            global_step=None,
+        )
+        self.tb_formatter.writer.add_text(
+            "spine_config",
+            f"```json\n{json.dumps(self.config, indent=4)}\n```",
+            global_step=None,
+        )
+
+    def _on_step(self) -> bool:
+        if self.n_calls == 1:
+            # Wait for first call to log operative config so that parameters
+            # for functions called by the environment are logged as well.
+            self.tb_formatter.writer.add_text(
+                "gin_config",
+                f"```\n{gin.operative_config_str()}\n```",
+                global_step=None,
+            )
 
 
 def train_policy(agent_name: str, training_dir: str) -> None:
