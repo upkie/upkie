@@ -11,7 +11,7 @@ import upkie_locomotion.envs
 upkie_locomotion.envs.register()
 
 if __name__ == "__main__":
-    env = gym.make("UpkieWheelsEnv-v1")
+    env = gym.make("UpkieWheelsEnv-v2")
 
     try:
         observation = env.reset(seed=42)  # connects to the spine
