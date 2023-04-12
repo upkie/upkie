@@ -21,18 +21,17 @@ keep_going = True
 
 async def _run_policy(policy, logger: mpacklog.Logger) -> None:
     observation = policy.env.reset()
-    brain_frequency = Settings().brain_frequency
-    rate = AsyncRateLimiter(brain_frequency, "controller")
-    upkie_env = policy.env.envs[0].env
+    agent_frequency = Settings().agent_frequency
+    rate = AsyncRateLimiter(agent_frequency, "controller")
     while keep_going:
         await rate.sleep()
         action, _ = policy.predict(observation)
         action_time = time.time()
-        observation, reward, done, _ = policy.env.step(action)
+        observation, reward, done, info = policy.env.step(action)
         await logger.put(
             {
-                "action": upkie_env.last_action,
-                "observation": upkie_env.last_observation,
+                "action": info["action"],
+                "observation": info["observation"],
                 "policy": {
                     "action": action[0],
                     "observation": observation[0],
