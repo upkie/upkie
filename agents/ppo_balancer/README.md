@@ -6,7 +6,7 @@ For both training and testing you will need to start a spine separately:
 bazel run //spines:bullet -c opt -- --nb-substeps 5 --show
 ```
 
-The number of substeps should match the agent and spine frequencies defined in ``settings.gin``.
+The number of substeps should match the agent and spine frequencies defined in ``settings.py``.
 
 ## Training
 

@@ -20,7 +20,6 @@ import json
 import os
 import random
 
-import gin
 import gym
 import stable_baselines3
 from gym.wrappers.time_limit import TimeLimit
@@ -94,7 +93,6 @@ def train_policy(agent_name: str, training_dir: str) -> None:
     # Open threads:
     #
     # - policy initialization
-    # - faster training by adding base angular velocity
     # - cost function: penalize velocity, distance to target
 
     dt = 1.0 / agent_frequency
@@ -164,8 +162,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     agent_dir = os.path.dirname(__file__)
-    gin.parse_config_file(f"{agent_dir}/settings.gin")
-
     agent_name = generate_agent_name()
     logging.info('New agent name is "%s"', agent_name)
     training_dir = f"{agent_dir}/policies"
