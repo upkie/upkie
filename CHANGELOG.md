@@ -11,6 +11,9 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - Examples: make sure environments are closed before exiting
+- PPO balancer: fix testing script
+- PPO balancer: save policy with new environment
+- PPO balancer: simplify training
 
 ## [0.4.0] - 2023/04/06
 
