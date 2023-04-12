@@ -8,6 +8,17 @@ load("@pip_upkie_locomotion//:requirements.bzl", "requirement")
 package(default_visibility = ["//visibility:public"])
 
 py_library(
+    name = "callbacks",
+    srcs = [
+        "callbacks.py",
+    ],
+    deps = [
+        "//envs",
+        requirement("stable_baselines3"),
+    ],
+)
+
+py_library(
     name = "settings",
     srcs = [
         "settings.py",
@@ -38,7 +49,6 @@ py_binary(
 py_binary(
     name = "train",
     srcs = [
-        "callbacks.py",
         "train.py",
     ],
     data = [
@@ -47,6 +57,7 @@ py_binary(
     deps = [
         "//envs",
         "//utils:spdlog",
+        ":callbacks",
         ":settings",
         "@mpacklog//:python",
         "@rules_python//python/runfiles",

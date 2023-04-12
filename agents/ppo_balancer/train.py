@@ -67,7 +67,7 @@ def train_policy(
     # - faster training by adding base angular velocity
     # - cost function: penalize velocity, distance to target
 
-    dt = 1.0 / brain_frequency
+    dt = 1.0 / agent_frequency
     gamma = 1.0 - dt / settings.effective_time_horizon
     policy = stable_baselines3.PPO(
         "MlpPolicy",
@@ -123,31 +123,6 @@ def generate_agent_name():
     return words[word_index]
 
 
-def get_bullet_argv(agent_name: str, show: bool) -> List[str]:
-    """
-    Get command-line arguments for the Bullet spine.
-
-    Args:
-        agent_name: Agent name.
-        show: If true, show simulator GUI.
-
-    Returns:
-        Command-line arguments.
-    """
-    settings = Settings()
-    brain_frequency = settings.spine_frequency
-    spine_frequency = settings.spine_frequency
-    assert spine_frequency % brain_frequency == 0
-    nb_substeps = spine_frequency / brain_frequency
-    bullet_argv = []
-    bullet_argv.extend(["--shm-name", f"/{agent_name}"])
-    bullet_argv.extend(["--nb-substeps", str(nb_substeps)])
-    bullet_argv.extend(["--spine-frequency", str(spine_frequency)])
-    if show:
-        bullet_argv.append("--show")
-    return bullet_argv
-
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -156,12 +131,6 @@ if __name__ == "__main__":
         action="store_true",
         help="show simulator during trajectory rollouts",
     )
-    parser.add_argument(
-        "--wait",
-        help="duration to wait for the spine to start",
-        type=float,
-        default=2.0,
-    )
     args = parser.parse_args()
 
     agent_dir = os.path.dirname(__file__)
@@ -169,29 +138,11 @@ if __name__ == "__main__":
 
     agent_name = generate_agent_name()
     logging.info('New agent name is "%s"', agent_name)
-    pid = os.fork()
-    if pid == 0:  # child process: spine
-        deez_runfiles = runfiles.Create()
-        spine_path = os.path.join(
-            agent_dir,
-            deez_runfiles.Rlocation("upkie_locomotion/spines/bullet"),
-        )
-        argv = get_bullet_argv(agent_name, show=args.show)
-        os.execvp(spine_path, ["bullet"] + argv)
-    else:  # parent process: trainer
-        wait_duration = args.wait  # [s]
-        logging.info("Waiting %s s for simulator to spawn...", wait_duration)
-        logging.info("You can adapt this duration to your machine with --wait")
-        time.sleep(wait_duration)
-        try:
-            training_dir = f"{agent_dir}/policies"
-            logging.info("Logging to %s", training_dir)
-            logging.info(
-                "To track in TensorBoard:\n\n\t"
-                f"tensorboard --logdir {training_dir}"
-                "\n\n"
-            )
-            train_policy(agent_name, training_dir)
-        finally:
-            os.kill(pid, signal.SIGINT)  # interrupt spine child process
-            os.waitpid(pid, 0)  # wait for spine to terminate
+    training_dir = f"{agent_dir}/policies"
+    logging.info("Logging to %s", training_dir)
+    logging.info(
+        "To track in TensorBoard:\n\n\t"
+        f"tensorboard --logdir {training_dir}"
+        "\n\n"
+    )
+    train_policy(agent_name, training_dir)
