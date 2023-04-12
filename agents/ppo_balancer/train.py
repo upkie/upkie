@@ -63,9 +63,16 @@ class SummaryWriterCallback(BaseCallback):
         if self.n_calls == 1:
             # Wait for first call to log operative config so that parameters
             # for functions called by the environment are logged as well.
+            settings = Settings()
+            reward = self.env.reward
             self.tb_formatter.writer.add_text(
-                "gin_config",
-                f"```\n{gin.operative_config_str()}\n```",
+                "settings",
+                f"```\n{settings.__dict__}\n```",
+                global_step=None,
+            )
+            self.tb_formatter.writer.add_text(
+                "reward",
+                f"```\n{reward.__dict__}\n```",
                 global_step=None,
             )
 

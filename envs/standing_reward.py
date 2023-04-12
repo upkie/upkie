@@ -51,9 +51,8 @@ class StandingReward:
 
         @param lookahead_duration Length of the receding horizon, used to
             compute an internal divergent component of motion.
-        @param max_pitch Maximum pitch angle we expect to observe, in [rad].
-        @param max_position Maximum ground position we expect to observe, in
-            [m].
+        @param max_pitch Maximum pitch angle for standardization, in [rad].
+        @param max_position Large ground position for standardization, in [m].
         @param pitch_weight Weight of the pitch objective in the reward.
         @param position_weight Weight of the position objective in the reward.
         """
