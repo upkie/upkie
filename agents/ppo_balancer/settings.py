@@ -14,8 +14,8 @@ import gin
 class Settings:
     """Hyperparameters logged to TensorBoard."""
 
+    agent_frequency: int
     batch_size: int
-    brain_frequency: int
     clip_range: float
     clip_range_vf: Optional[float]
     effective_time_horizon: float

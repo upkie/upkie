@@ -18,47 +18,37 @@
 import argparse
 import os
 import random
-import signal
-import time
-from typing import List
 
 import gin
 import stable_baselines3
+from callbacks import SummaryWriterCallback
 from gym.wrappers.time_limit import TimeLimit
-from rules_python.python.runfiles import runfiles
 from settings import Settings
 from stable_baselines3.common.callbacks import CheckpointCallback
 from torch import nn
 
-from upkie_locomotion.agents.ppo_balancer.callbacks import (
-    SummaryWriterCallback,
-)
 from upkie_locomotion.envs import UpkieWheelsEnv
 from upkie_locomotion.utils.spdlog import logging
 
 
-def train_policy(
-    agent_name: str,
-    training_dir: str,
-    max_episode_duration: float = 10.0,
-) -> None:
+def train_policy(agent_name: str, training_dir: str) -> None:
     """
     Train a new policy and save it to a directory.
 
     Args:
         agent_name: Agent name.
         training_dir: Directory for logging and saving policies.
-        max_episode_duration: Maximum episode duration in seconds.
     """
     settings = Settings()
-    brain_frequency = settings.brain_frequency
+    agent_frequency = settings.agent_frequency
+    max_episode_duration = settings.max_episode_duration
     policy_kwargs = {
         "activation_fn": nn.Tanh,
         "net_arch": [dict(pi=[64, 64], vf=[64, 64])],
     }
     env = TimeLimit(
-        UpkieWheelsEnv(shm_name=f"/{agent_name}"),
-        max_episode_steps=int(max_episode_duration * brain_frequency),
+        UpkieWheelsEnv(),
+        max_episode_steps=int(max_episode_duration * agent_frequency),
     )
 
     # Open threads:

@@ -2,20 +2,21 @@
 #
 # Copyright 2023 Inria
 
+Settings.agent_frequency = 200
 Settings.batch_size = 64
-Settings.brain_frequency = 200
 Settings.clip_range = 0.2
 Settings.clip_range_vf = None
 Settings.effective_time_horizon = 0.5  # [s]
 Settings.ent_coef = 0.0
 Settings.gae_lambda = 0.95
 Settings.learning_rate = 3e-4
+Settings.max_episode_duration = 10.0  # [s]
 Settings.max_grad_norm = 0.5
 Settings.n_epochs = 10
 Settings.n_steps = 2048
 Settings.sde_sample_freq = -1
 Settings.spine_frequency = 1000
 Settings.target_kl = None
+Settings.total_timesteps = 1e6
 Settings.use_sde = False
 Settings.vf_coef = 0.5
-Settings.total_timesteps = 1e6
