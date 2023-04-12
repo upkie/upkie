@@ -1,8 +1,14 @@
 # PPO balancer
 
-## Training
+For both training and testing you will need to start a spine separately:
 
-Training forks its own simulation process, so we can just run:
+```
+bazel run //spines:bullet -c opt -- --nb-substeps 5 --show
+```
+
+The number of substeps should match the agent and spine frequencies defined in ``settings.gin``.
+
+## Training
 
 ```
 bazel run //agents/ppo_balancer:train
@@ -10,13 +16,7 @@ bazel run //agents/ppo_balancer:train
 
 ## Testing
 
-Start a Bullet spine:
-
-```
-bazel run //spines:bullet -c opt -- --nb-substeps 5 --show
-```
-
-Then, run a trained policy from the [policies](policies/) folder, for instance let's test `woofers`:
+Run a trained policy from the [policies](policies/) folder, for instance let's test `woofers`:
 
 ```
 bazel run //agents/ppo_balancer:test -- woofers
