@@ -40,8 +40,8 @@ for folder in envs observers/base_pitch utils; do
     cp -r ${SRCDIR}/${folder} ${TMPDIR}/upkie_locomotion/${folder}
 done
 
-cp ${SCRIPTDIR}/pyproject.toml ${TMPDIR}/pyproject.toml
 cp ${SCRIPTDIR}/upkie_locomotion/__init__.py ${TMPDIR}/upkie_locomotion/__init__.py
 cp ${SRCDIR}/README.md ${TMPDIR}/README.md
+cp ${SRCDIR}/pyproject.toml ${TMPDIR}/pyproject.toml
 
 cd ${TMPDIR} && flit ${COMMAND}

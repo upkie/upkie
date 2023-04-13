@@ -16,7 +16,7 @@ from stable_baselines3 import PPO
 from upkie_locomotion.envs import UpkieWheelsEnv
 
 
-async def run_policy(policy, logger: mpacklog.Logger) -> None:
+async def run_policy(policy, logger: mpacklog.Logger):
     """
     Run policy, logging its actions and observations.
 
@@ -52,10 +52,7 @@ async def main(args: argparse.Namespace):
     policy = PPO("MlpPolicy", env, verbose=1)
     policy.set_parameters(f"{agent_dir}/policies/{args.name}")
     logger = mpacklog.Logger("/dev/shm/rollout.mpack")
-    await asyncio.gather(
-        run_policy(policy, logger),
-        logger.write(),
-    )
+    await asyncio.gather(run_policy(policy, logger), logger.write())
     policy.env.close()
 
 
