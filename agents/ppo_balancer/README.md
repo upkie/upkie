@@ -1,12 +1,12 @@
 # PPO balancer
 
-## Training
+## Training a new policy
 
 ```
 bazel run //agents/ppo_balancer:train [-- --show]
 ```
 
-## Testing
+## Running a trained policy
 
 Testing a policy assumes the spine is already up and running. For instance:
 
@@ -14,8 +14,8 @@ Testing a policy assumes the spine is already up and running. For instance:
 bazel run //spines:bullet -c opt
 ```
 
-Pick a trained policy from the [policies](policies/) folder and pass its name as argument, for example for a saved policy `woofers.zip`:
+Pick a trained policy from the [policies](policies/) folder and pass its name as argument, for example for a saved policy `foobar.zip`:
 
 ```
-bazel run //agents/ppo_balancer:test -- woofers
+bazel run //agents/ppo_balancer:run_policy -- foobar
 ```

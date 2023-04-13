@@ -15,8 +15,8 @@ py_library(
 )
 
 py_binary(
-    name = "test",
-    srcs = ["test.py"],
+    name = "run_policy",
+    srcs = ["run_policy.py"],
     data = glob([
         "policies/*.zip",
     ]),
