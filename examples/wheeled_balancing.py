@@ -3,6 +3,8 @@
 #
 # Copyright 2023 Inria
 
+"""Smallest example: balancing using a proportional wheel controller."""
+
 import gym
 import numpy as np
 from loop_rate_limiters import RateLimiter
@@ -13,6 +15,7 @@ upkie_locomotion.envs.register()
 
 
 def balance(env: gym.Env):
+    """Run proportional balancer in gym environment."""
     observation = env.reset()  # connects to the spine
     action = np.zeros(env.action_space.shape)
     rate = RateLimiter(frequency=200.0)
