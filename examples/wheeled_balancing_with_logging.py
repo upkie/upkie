@@ -34,10 +34,6 @@ async def balance(env: gym.Env, logger: mpacklog.Logger):
             {
                 "action": info["action"],
                 "observation": info["observation"],
-                "policy": {
-                    "action": action,
-                    "observation": observation,
-                },
                 "time": time.time(),
             }
         )

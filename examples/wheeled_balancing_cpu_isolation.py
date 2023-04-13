@@ -3,7 +3,7 @@
 #
 # Copyright 2023 Inria
 
-"""Wheel balancing in separate CPU core with time-series logging."""
+"""Wheel balancing with CPU isolation for real-time performance."""
 
 import asyncio
 import os
@@ -13,9 +13,8 @@ import time
 import gym
 import mpacklog
 import numpy as np
-from loop_rate_limiters import AsyncRateLimiter
-
 import upkie_locomotion.envs
+from loop_rate_limiters import AsyncRateLimiter
 
 upkie_locomotion.envs.register()
 
@@ -34,14 +33,10 @@ async def balance(env: gym.Env, logger: mpacklog.Logger):
             observation = env.reset()
         pitch = observation[0]
         action[0] = 10.0 * pitch
-        await logger.put(  # log info to be written to file later
+        await logger.put(
             {
                 "action": info["action"],
                 "observation": info["observation"],
-                "policy": {
-                    "action": action,
-                    "observation": observation,
-                },
                 "time": time.time(),
             }
         )
@@ -52,10 +47,7 @@ async def main():
     env = gym.make("UpkieWheelsEnv-v2")
     logger = mpacklog.Logger("wheeled_balancing.mpack")
     try:
-        await asyncio.gather(
-            balance(env, logger),
-            logger.write(),  # write logs to file when there is time
-        )
+        await asyncio.gather(balance(env, logger), logger.write())
     finally:
         env.close()
 

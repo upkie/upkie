@@ -6,6 +6,8 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Example: wheeled balancing with CPU isolation
+- Example: wheeled balancing with action-observation logging
 - Script to start a simulation directly from the repository
 
 ### Changed
