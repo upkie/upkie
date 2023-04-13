@@ -15,7 +15,7 @@ upkie_locomotion.envs.register()
 def balance(env: gym.Env):
     observation = env.reset()  # connects to the spine
     action = np.zeros(env.action_space.shape)
-    rate = RateLimiter(frequency=400.0)
+    rate = RateLimiter(frequency=200.0)
     for step in range(1_000_000):
         observation, reward, done, _ = env.step(action)
         if done:
