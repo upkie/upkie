@@ -15,14 +15,19 @@ from stable_baselines3 import PPO
 
 from upkie_locomotion.envs import UpkieWheelsEnv
 
-keep_going = True
 
+async def run_policy(policy, logger: mpacklog.Logger) -> None:
+    """
+    Run policy, logging its actions and observations.
 
-async def _run_policy(policy, logger: mpacklog.Logger) -> None:
+    Args:
+        policy: Policy to run.
+        logger: Logger to write actions and observations to.
+    """
     observation = policy.env.reset()
     agent_frequency = Settings().agent_frequency
     rate = AsyncRateLimiter(agent_frequency, "controller")
-    while keep_going:
+    for _ in range(1_000_000):
         await rate.sleep()
         action, _ = policy.predict(observation)
         action_time = time.time()
@@ -41,27 +46,21 @@ async def _run_policy(policy, logger: mpacklog.Logger) -> None:
     await logger.stop()
 
 
-async def run_policy(policy):
-    logger = mpacklog.Logger("/dev/shm/rollout.mpack")
-    await asyncio.gather(
-        _run_policy(policy, logger),
-        logger.write(),
-    )
-
-
-def load_policy(agent_dir: str, policy_name: str):
+async def main(args: argparse.Namespace):
+    agent_dir = os.path.abspath(os.path.dirname(__file__))
     env = UpkieWheelsEnv(shm_name="/vulp")
     policy = PPO("MlpPolicy", env, verbose=1)
-    policy.set_parameters(f"{agent_dir}/policies/{policy_name}")
-    return policy
+    policy.set_parameters(f"{agent_dir}/policies/{args.name}")
+    logger = mpacklog.Logger("/dev/shm/rollout.mpack")
+    await asyncio.gather(
+        run_policy(policy, logger),
+        logger.write(),
+    )
+    policy.env.close()
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("name", help="name of the policy to load")
     args = parser.parse_args()
-
-    agent_dir = os.path.abspath(os.path.dirname(__file__))
-    policy = load_policy(agent_dir, args.name)
-    asyncio.run(run_policy(policy))
-    policy.env.close()
+    asyncio.run(main(args))
