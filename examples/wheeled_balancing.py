@@ -7,9 +7,8 @@
 
 import gym
 import numpy as np
-from loop_rate_limiters import RateLimiter
-
 import upkie_locomotion.envs
+from loop_rate_limiters import RateLimiter
 
 upkie_locomotion.envs.register()
 
