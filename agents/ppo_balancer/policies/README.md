@@ -1,1 +1,1 @@
-Store trained policies in this directory.
+Trained policies are stored in this directory.

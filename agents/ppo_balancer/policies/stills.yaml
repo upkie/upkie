@@ -1,0 +1,38 @@
+env: UpkieWheelsEnv-v2
+reward:
+    lookahead_duration: 0.2
+    max_pitch: 1.5707963267948966
+    max_position: 0.5
+    pitch_weight: 1
+    position_weight: 1
+settings:
+    agent_frequency: 200
+    batch_size: 64
+    clip_range: 0.2
+    clip_range_vf:
+    effective_time_horizon: 0.5
+    ent_coef: 0
+    gae_lambda: 0.95
+    learning_rate: 0.0003
+    max_episode_duration: 10
+    max_grad_norm: 0.5
+    n_epochs: 10
+    n_steps: 2048
+    sde_sample_freq: -1
+    spine_frequency: 1000
+    target_kl:
+    total_timesteps: 500000
+    use_sde: false
+    vf_coef: 0.5
+spine_config:
+    bullet:
+        control_mode: torque
+        follower_camera: false
+        gui: true
+        position_init_base_in_world:
+            - 0
+            - 0
+            - 0.6
+        torque_control:
+            kp: 20
+            kd: 1

@@ -40,7 +40,7 @@ class StandingReward:
 
     def __init__(
         self,
-        lookahead_duration: float = 0.1,
+        lookahead_duration: float = 0.2,
         max_pitch: float = 1.5707963267948966,
         max_position: float = 0.5,
         pitch_weight: float = 1.0,
