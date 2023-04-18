@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-#include <mpacklog/Logger.h>
 #include <vulp/actuation/Pi3HatInterface.h>
 #include <vulp/observation/ObserverPipeline.h>
 #include <vulp/observation/sources/CpuTemperature.h>
@@ -40,7 +39,6 @@
 namespace upkie_locomotion::spines::pi3hat {
 
 using Pi3Hat = ::mjbots::pi3hat::Pi3Hat;
-using mpacklog::Logger;
 using palimpsest::Dictionary;
 using upkie_locomotion::observers::FloorContact;
 using upkie_locomotion::observers::WheelOdometry;
