@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-#include <mpacklog/Logger.h>
 #include <vulp/actuation/MockInterface.h>
 #include <vulp/observation/ObserverPipeline.h>
 #include <vulp/observation/sources/CpuTemperature.h>
@@ -37,7 +36,6 @@
 
 namespace upkie_locomotion::spines::mock {
 
-using mpacklog::Logger;
 using palimpsest::Dictionary;
 using upkie_locomotion::observers::FloorContact;
 using upkie_locomotion::observers::WheelOdometry;

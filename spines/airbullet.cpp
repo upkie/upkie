@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-#include <mpacklog/Logger.h>
 #include <vulp/actuation/BulletInterface.h>
 #include <vulp/spine/Spine.h>
 #include <vulp/utils/datetime_now_string.h>
@@ -32,7 +31,6 @@
 
 namespace upkie_locomotion::spines::airbullet {
 
-using mpacklog::Logger;
 using palimpsest::Dictionary;
 using vulp::actuation::BulletInterface;
 using vulp::spine::Spine;
