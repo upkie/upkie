@@ -12,7 +12,6 @@ py_test(
     srcs = ["upkie_base_env_test.py"],
     deps = [
         "//envs",
-        requirement("gin-config"),
     ],
 )
 
@@ -21,7 +20,6 @@ py_test(
     srcs = ["upkie_wheels_env_test.py"],
     deps = [
         "//envs",
-        requirement("gin-config"),
     ],
 )
 
