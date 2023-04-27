@@ -20,8 +20,8 @@ import math
 from typing import Optional
 
 import numpy as np
-from gym import spaces
 
+from gym import spaces
 from upkie_locomotion.observers.base_pitch import compute_base_pitch_from_imu
 
 from .standing_reward import StandingReward
@@ -113,13 +113,14 @@ class UpkieWheelsEnv(UpkieBaseEnv):
                 MAX_GROUND_POSITION,
                 max_ground_velocity,
                 MAX_IMU_ANGULAR_VELOCITY,
-            ]
+            ],
+            dtype=np.float32,
         )
 
         # gym.Env: action_space
         self.action_space = spaces.Box(
-            -max_ground_velocity,
-            +max_ground_velocity,
+            -np.float32(max_ground_velocity),
+            +np.float32(max_ground_velocity),
             shape=(1,),
             dtype=np.float32,
         )
