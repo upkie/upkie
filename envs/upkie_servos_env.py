@@ -123,6 +123,8 @@ class UpkieServosEnv(UpkieBaseEnv):
         state_dim = model.nq + 2 * model.nv
         state_max = np.hstack([q_max, v_max, tau_max])
         state_min = np.hstack([q_min, -v_max, -tau_max])
+        state_max = np.float32(state_max)
+        state_min = np.float32(state_min)
 
         # gym.Env: action_space
         self.action_space = spaces.Box(
