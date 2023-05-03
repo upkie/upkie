@@ -79,7 +79,7 @@ class UpkieWheelsEnv(UpkieBaseEnv):
 
     fall_pitch: float
     max_ground_velocity: float
-    version: int = 2
+    version: int = 3
     wheel_radius: float
 
     LEG_JOINTS = [
