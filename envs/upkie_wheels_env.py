@@ -92,6 +92,7 @@ class UpkieWheelsEnv(UpkieBaseEnv):
         self,
         config: Optional[dict] = None,
         fall_pitch: float = 1.0,
+        frequency: float = 200.0,
         max_ground_velocity: float = 1.0,
         shm_name: str = "/vulp",
         wheel_radius: float = 0.06,
@@ -101,11 +102,12 @@ class UpkieWheelsEnv(UpkieBaseEnv):
 
         @param config Configuration dictionary, also sent to the spine.
         @param fall_pitch Fall pitch angle, in radians.
+        @param frequency Regulated frequency of the control loop, in Hz.
         @param max_ground_velocity Maximum commanded ground velocity in m/s.
         @param shm_name Name of shared-memory file.
         @param wheel_radius Wheel radius in [m].
         """
-        super().__init__(config, fall_pitch, shm_name)
+        super().__init__(config, fall_pitch, frequency, shm_name)
 
         observation_limit = np.array(
             [

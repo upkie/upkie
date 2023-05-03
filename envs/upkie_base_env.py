@@ -21,6 +21,7 @@ from typing import Dict, Optional, Tuple, Union
 import gym
 import numpy as np
 from vulp.spine import SpineInterface
+from loop_rate_limiters import RateLimiter
 
 from upkie.observers.base_pitch import compute_base_pitch_from_imu
 
@@ -62,6 +63,7 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
         self,
         config: Optional[dict],
         fall_pitch: float,
+        frequency: float,
         shm_name: str,
     ) -> None:
         """!
@@ -69,10 +71,12 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
 
         @param config Configuration dictionary, also sent to the spine.
         @param fall_pitch Fall pitch angle, in radians.
+        @param frequency Regulated frequency of the control loop, in Hz.
         @param shm_name Name of shared-memory file.
         """
         if config is None:
             config = DEFAULT_CONFIG
+        self._rate = RateLimiter(frequency)
         self._spine = SpineInterface(shm_name)
         self.config = config
         self.fall_pitch = fall_pitch
@@ -131,10 +135,10 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
               debugging, logging, and sometimes learning).
         """
         action_dict = self.dictionarize_action(action)
+        self._rate.sleep()  # wait until clock tick to send the action
         self._spine.set_action(action_dict)
         observation_dict = self._spine.get_observation()
         imu = observation_dict["imu"]
-        # TODO(scaron): use tilt (angle to the vertical) rather than pitch
         pitch = compute_base_pitch_from_imu(imu["orientation"])
         observation = self.vectorize_observation(observation_dict)
         reward = self.reward.get(observation)
