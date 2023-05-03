@@ -14,7 +14,7 @@ from upkie_locomotion.observers.base_pitch import compute_base_pitch_from_imu
 
 if __name__ == "__main__":
     upkie_locomotion.envs.register()
-    with gym.make("UpkieServosEnv-v1") as env:
+    with gym.make("UpkieServosEnv-v1", frequency=200.0) as env:
         observation = env.reset()  # connects to the spine
         action = np.zeros(env.action_space.shape)
         rate = RateLimiter(frequency=200.0)
