@@ -16,12 +16,13 @@
 # limitations under the License.
 
 import abc
+import asyncio
 from typing import Dict, Optional, Tuple, Union
 
 import gym
 import numpy as np
+from loop_rate_limiters import AsyncRateLimiter, RateLimiter
 from vulp.spine import SpineInterface
-from loop_rate_limiters import RateLimiter
 
 from upkie.observers.base_pitch import compute_base_pitch_from_imu
 
@@ -55,6 +56,9 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
     real robot, as it relies on the same spine interface that runs on Upkie.
     """
 
+    __frequency: float
+    _async_rate: Optional[AsyncRateLimiter]
+    _rate: Optional[RateLimiter]
     _spine: SpineInterface
     config: dict
     fall_pitch: float
@@ -76,7 +80,7 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
         """
         if config is None:
             config = DEFAULT_CONFIG
-        self._rate = RateLimiter(frequency)
+        self.__frequency = frequency
         self._spine = SpineInterface(shm_name)
         self.config = config
         self.fall_pitch = fall_pitch
@@ -107,6 +111,7 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
                 It is only returned if ``return_info`` is set to true.
         """
         # super().reset(seed=seed)  # we are pinned at gym==0.21.0
+        self.__reset_rates()
         self._spine.stop()
         self._spine.start(self.config)
         self._spine.get_observation()  # might be a pre-reset observation
@@ -117,6 +122,15 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
             return observation
         else:  # return_info
             return observation, observation_dict
+
+    def __reset_rates(self):
+        self._async_rate = None
+        self._rate = None
+        try:
+            asyncio.get_running_loop()
+            self._async_rate = AsyncRateLimiter(self.__frequency)
+        except RuntimeError:  # not asyncio
+            self._rate = RateLimiter(self.__frequency)
 
     def step(self, action: np.ndarray) -> Tuple[np.ndarray, float, bool, dict]:
         """!
@@ -136,26 +150,53 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
         """
         action_dict = self.dictionarize_action(action)
         self._rate.sleep()  # wait until clock tick to send the action
+        return self.__step(action_dict)
+
+    async def async_step(
+        self, action: np.ndarray
+    ) -> Tuple[np.ndarray, float, bool, dict]:
+        """!
+        Run one timestep of the environment's dynamics using asynchronous I/O.
+        When the end of the episode is reached, you are responsible for calling
+        `reset()` to reset the environment's state.
+
+        @param action Action from the agent.
+        @returns
+            - ``observation``: Agent's observation of the environment.
+            - ``reward``: Amount of reward returned after previous action.
+            - ``done``: Whether the agent reaches the terminal state, which can
+              be a good or a bad thing. If true, the user needs to call
+              :func:`reset()`.
+            - ``info``: Contains auxiliary diagnostic information (helpful for
+              debugging, logging, and sometimes learning).
+        """
+        action_dict = self.dictionarize_action(action)
+        await self._async_rate.sleep()  # send action at next clock tick
+        return self.__step(action_dict)
+
+    def __step(
+        self, action_dict: dict
+    ) -> Tuple[np.ndarray, float, bool, dict]:
         self._spine.set_action(action_dict)
         observation_dict = self._spine.get_observation()
-        imu = observation_dict["imu"]
-        pitch = compute_base_pitch_from_imu(imu["orientation"])
         observation = self.vectorize_observation(observation_dict)
         reward = self.reward.get(observation)
-        done = self.detect_fall(pitch)
+        done = self.detect_fall(observation_dict)
         info = {
             "action": action_dict,
             "observation": observation_dict,
         }
         return observation, reward, done, info
 
-    def detect_fall(self, pitch: float) -> bool:
+    def detect_fall(self, observation_dict: dict) -> bool:
         """!
         Detect a fall based on the body-to-world pitch angle.
 
         @param pitch Current pitch angle in [rad].
         @returns True if and only if a fall is detected.
         """
+        imu = observation_dict["imu"]
+        pitch = compute_base_pitch_from_imu(imu["orientation"])
         return abs(pitch) > self.fall_pitch
 
     @abc.abstractmethod
