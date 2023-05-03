@@ -16,6 +16,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Conversion warnings in servos and wheels environments
 - Examples: make sure environments are closed before exiting
 - PPO balancer: fix testing script
 - PPO balancer: save policy with new environment
