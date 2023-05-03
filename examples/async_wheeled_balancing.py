@@ -3,11 +3,9 @@
 #
 # Copyright 2023 Inria
 
-"""Wheel balancing with time-series logging of observations and actions."""
+"""Wheel balancing using asyncio for parallel action and logging."""
 
 import asyncio
-import os
-import sys
 import time
 
 import gym
@@ -17,8 +15,6 @@ import numpy as np
 import upkie.envs
 
 upkie.envs.register()
-
-CPUID = 3  # CPU core to use on the Raspberry Pi
 
 
 async def balance(env: gym.Env, logger: mpacklog.Logger):
@@ -44,12 +40,11 @@ async def main():
     """Main function of our asyncio program."""
     logger = mpacklog.Logger("wheeled_balancing.mpack")
     with gym.make("UpkieWheelsEnv-v2", frequency=200.0) as env:
-        await asyncio.gather(balance(env, logger), logger.write())
+        await asyncio.gather(
+            balance(env, logger),
+            logger.write(),  # write logs to file when there is time
+        )
 
 
 if __name__ == "__main__":
-    if os.geteuid() != 0:  # run as root so that we can set CPU affinity
-        args = ["sudo", "-E", sys.executable] + sys.argv + [os.environ]
-        os.execlpe("sudo", *args)
-    os.sched_setaffinity(0, {CPUID})
     asyncio.run(main())
