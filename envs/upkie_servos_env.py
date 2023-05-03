@@ -97,7 +97,7 @@ class UpkieServosEnv(UpkieBaseEnv):
 
     reward: StandingReward
     robot: pin.RobotWrapper
-    version: int = 1
+    version: int = 2
 
     def __init__(
         self,
