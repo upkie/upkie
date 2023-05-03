@@ -107,7 +107,12 @@ class UpkieWheelsEnv(UpkieBaseEnv):
         @param shm_name Name of shared-memory file.
         @param wheel_radius Wheel radius in [m].
         """
-        super().__init__(config, fall_pitch, frequency, shm_name)
+        super().__init__(
+            config=config,
+            fall_pitch=fall_pitch,
+            frequency=frequency,
+            shm_name=shm_name,
+        )
 
         observation_limit = np.array(
             [

@@ -103,6 +103,7 @@ class UpkieServosEnv(UpkieBaseEnv):
         self,
         config: Optional[dict] = None,
         fall_pitch: float = 1.0,
+        frequency: float = 200.0,
         shm_name: str = "/vulp",
     ):
         """!
@@ -112,7 +113,12 @@ class UpkieServosEnv(UpkieBaseEnv):
         @param fall_pitch Fall pitch angle, in radians.
         @param shm_name Name of shared-memory file.
         """
-        super().__init__(config, fall_pitch, shm_name)
+        super().__init__(
+            config=config,
+            fall_pitch=fall_pitch,
+            frequency=frequency,
+            shm_name=shm_name,
+        )
 
         robot = upkie_description.load_in_pinocchio(root_joint=None)
         model = robot.model
