@@ -20,8 +20,8 @@ import math
 from typing import Optional
 
 import numpy as np
-
 from gym import spaces
+
 from upkie.observers.base_pitch import compute_base_pitch_from_imu
 
 from .standing_reward import StandingReward
