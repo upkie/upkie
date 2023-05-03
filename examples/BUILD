@@ -11,12 +11,6 @@ load("//tools/lint:lint.bzl", "add_lint_tests")
 load("@pip_upkie//:requirements.bzl", "requirement")
 
 py_binary(
-    name = "async_wheeled_balancing",
-    srcs = ["async_wheeled_balancing.py"],
-    deps = ["//envs"],
-)
-
-py_binary(
     name = "servos_env",
     srcs = ["servos_env.py"],
     deps = [
@@ -28,6 +22,18 @@ py_binary(
 py_binary(
     name = "wheeled_balancing",
     srcs = ["wheeled_balancing.py"],
+    deps = ["//envs"],
+)
+
+py_binary(
+    name = "wheeled_balancing_async",
+    srcs = ["wheeled_balancing_async.py"],
+    deps = ["//envs"],
+)
+
+py_binary(
+    name = "wheeled_balancing_cpu_isolation",
+    srcs = ["wheeled_balancing_cpu_isolation.py"],
     deps = ["//envs"],
 )
 
