@@ -4,7 +4,7 @@
 [![Documentation](https://img.shields.io/badge/docs-online-brightgreen?style=flat)](https://tasts-robots.org/doc/upkie_locomotion/)
 [![Coverage](https://coveralls.io/repos/github/tasts-robots/upkie_locomotion/badge.svg?branch=main)](https://coveralls.io/github/tasts-robots/upkie_locomotion?branch=main)
 [![PyPI version](https://img.shields.io/pypi/v/upkie_locomotion)](https://pypi.org/project/upkie_locomotion/)
-[![Vulp](https://img.shields.io/badge/%F0%9F%A6%8A%20vulp-1.0.0-orange)](https://github.com/tasts-robots/vulp)
+[![Vulp](https://img.shields.io/badge/%F0%9F%A6%8A%20vulp-1.1.1-orange)](https://github.com/tasts-robots/vulp)
 [![Chat](https://img.shields.io/badge/matrix-joint%20chat-%234eb899)](https://app.element.io/#/room/#tasts-robots:matrix.org)
 
 Locomotion code for the [Upkie](https://hackaday.io/project/185729-upkie-wheeled-biped-robot) wheeled biped.
