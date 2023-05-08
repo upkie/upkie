@@ -37,7 +37,7 @@ build:  ## build Raspberry Pi targets
 	bazel build --config=pi64 //agents/pink_balancer
 	bazel build --config=pi64 //spines:pi3hat
 
-run_bullet_spine:  ## run a Bullet spine with GUI
+run_bullet_spine:  ## run a Bullet simulation with GUI
 	bazel run -c opt //spines:bullet  -- --show
 
 upload: build  ## upload built targets to the Raspberry Pi
