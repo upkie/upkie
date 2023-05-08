@@ -8,19 +8,9 @@ load("@pip_upkie_locomotion//:requirements.bzl", "requirement")
 package(default_visibility = ["//visibility:public"])
 
 py_library(
-    name = "kinematics",
-    srcs = [
-        "kinematics.py",
-    ],
-    deps = [
-        "//utils:clamp",
-        requirement("gin-config"),
-    ],
-)
-
-py_library(
     name = "wheel_balancer",
     srcs = [
+        "controller.py",
         "wheel_balancer.py",
     ],
     deps = [
@@ -45,7 +35,6 @@ py_binary(
     deps = [
         "//utils:realtime",
         "//utils:spdlog",
-        ":kinematics",
         ":wheel_balancer",
         "@mpacklog//:python",
         "@vulp//spine:python",
