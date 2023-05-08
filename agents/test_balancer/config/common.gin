@@ -18,7 +18,6 @@ import agents.test_balancer.controller
 import agents.test_balancer.wheel_balancer
 
 Controller.gain_scale = 2.0
-Controller.max_joint_velocity = 0.7               # [rad] / [s]
 Controller.turning_gain_scale = 2.0
 Controller.wheel_distance = 0.3048
 
