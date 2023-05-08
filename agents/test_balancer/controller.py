@@ -20,28 +20,8 @@ from typing import Any, Dict
 import gin
 import numpy as np
 from agents.blue_balancer.wheel_balancer import WheelBalancer
+
 from utils.clamp import clamp
-
-
-def observe(observation, configuration, servo_layout) -> np.ndarray:
-    """
-    Compute configuration vector from a new observation.
-
-    Args:
-        observation: Observation dictionary.
-        configuration: Previous configuration.
-        servo_layout: Robot servo layout.
-
-    Returns:
-        Configuration vector from observation.
-    """
-    q = configuration.q.copy()
-    for joint, servo in servo_layout.items():
-        if "configuration_index" not in servo:
-            continue
-        i = servo["configuration_index"]
-        q[i] = observation["servo"][joint]["position"]
-    return q
 
 
 @gin.configurable
