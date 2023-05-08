@@ -20,12 +20,12 @@ Test it right away from the command line, no installation required on Linux:
 ```console
 git clone https://github.com/tasts-robots/upkie_locomotion.git
 cd upkie_locomotion
-./tools/bazelisk run -c opt //agents/test_balancer:bullet
+./start_test_balancer.sh
 ```
 
 Connect a USB controller to move the robot around 🎮 There is no dependency to install thanks to [Bazel](https://bazel.build/), which builds everything locally. (Compilation will only take a while the first time.) The syntax is the same to deploy to the Raspberry Pi on Upkie using [`raspunzel`](https://github.com/tasts-robots/raspunzel).
 
-Locomotion code is organized into *spines*, which communicate with the simulator or actuators using [Vulp](https://github.com/tasts-robots/vulp), and *agents*, the main programs that implement behaviors in Python. In the example above we ran the blue agent. We could also start the Bullet spine independently, and let it run waiting for agents to connect:
+Locomotion code is organized into *spines*, which communicate with the simulator or actuators using [Vulp](https://github.com/tasts-robots/vulp), and *agents*, the main programs that implement behaviors in Python. In the example above we ran the test balancer. We could also start the Bullet spine independently, and let it run waiting for agents to connect:
 
 ```console
 bazel run -c opt //spines:bullet -- --show
@@ -36,11 +36,11 @@ The ``-c opt`` argument to Bazel makes sure we compile optimized code, while the
 ## Agents
 
 <dl>
-  <dt>Blue balancer</dt>
+  <dt>Test balancer</dt>
   <dd>A baseline agent designed to check out Upkie's physical capabilities. It balances the robot using PD feedback from the head's pitch and wheel odometry to wheel velocities, plus a feedforward <a href="https://github.com/tasts-robots/upkie_locomotion/blob/55a331c6a6a165761a85087b7bea35d1403a6cf9/agents/blue_balancer/wheel_balancer.py#L368">non-minimum phase trick</a> for smoother transitions from standing to rolling. An analytical inverse kinematics is plugged in for crouching and standing up (crouching is controlled from D-pad of the USB controller, if one is found).</dd>
 
   <dt>Pink balancer</dt>
-  <dd>Same as the Blue balancer, but inverse kinematics is computed by <a href="https://github.com/tasts-robots/pink">Pink</a> rather than with a model-specific analytical solution. This is the controller that runs in the <a href="https://www.youtube.com/shorts/8b36XcCgh7s">first</a> <a href="https://www.youtube.com/watch?v=NO_TkHGS0wQ">two</a> videos of Upkie.</dd>
+  <dd>A more capable agent that combines wheeled balancing with inverse kinematics computed by <a href="https://github.com/tasts-robots/pink">Pink</a>. This is the controller that runs in the <a href="https://www.youtube.com/shorts/8b36XcCgh7s">first</a> <a href="https://www.youtube.com/watch?v=NO_TkHGS0wQ">two</a> videos of Upkie.</dd>
 
   <dt>PPO balancer</dt>
   <dd>An agent trained by reinforcement learning to balance with straight legs. Training uses the <code><a href="https://tasts-robots.org/doc/upkie_locomotion/classenvs_1_1upkie__wheels__env_1_1UpkieWheelsEnv.html#details">UpkieWheelsEnv</a></code> gym environment and the PPO implementation from <a href="https://github.com/DLR-RM/stable-baselines3/">Stable Baselines3</a>.</dd>
@@ -63,7 +63,7 @@ Environments are single-threaded rather than vectorized. In return, they run as-
 
 <dl>
   <dt><a href="https://tasts-robots.org/doc/upkie_locomotion/classupkie__locomotion_1_1observers_1_1FloorContact.html#details">Floor contact</a></dt>
-  <dd>Detect contact between the wheels and the floor. Both Blue and Pink agents use contact as a reset flag for their integrators, to avoid over-spinning the wheels while the robot is in the air.</dd>
+  <dd>Detect contact between the wheels and the floor. The Pink and test balancers use contact as a reset flag for their integrators, to avoid over-spinning the wheels while the robot is in the air.</dd>
 
   <dt><a href="https://tasts-robots.org/doc/upkie_locomotion/classupkie__locomotion_1_1observers_1_1WheelContact.html#details">Wheel contact</a></dt>
   <dd>Detect contact between a given wheel and the floor.</dd>
