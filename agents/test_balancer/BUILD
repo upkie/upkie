@@ -45,19 +45,20 @@ py_binary(
 )
 
 py_binary(
-    name = "standalone",
-    srcs = ["standalone.py"],
-    main = "standalone.py",
+    name = "bullet",
+    srcs = ["bullet.py"],
+    main = "bullet.py",
     data = [
         ":config",
         "//spines:bullet",
     ],
     deps = [
+        ":wheel_balancer",
+        "@rules_python//python/runfiles",
+        "@vulp//spine:python",
         requirement("gin-config"),
         requirement("loop_rate_limiters"),
         requirement("pyyaml"),
-        "@rules_python//python/runfiles",
-        "@vulp//spine:python",
     ],
 )
 
