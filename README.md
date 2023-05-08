@@ -20,7 +20,7 @@ Test it right away from the command line, no installation required on Linux:
 ```console
 git clone https://github.com/tasts-robots/upkie_locomotion.git
 cd upkie_locomotion
-./tools/bazelisk run -c opt //agents/blue_balancer:bullet
+./tools/bazelisk run -c opt //agents/test_balancer:bullet
 ```
 
 Connect a USB controller to move the robot around 🎮 There is no dependency to install thanks to [Bazel](https://bazel.build/), which builds everything locally. (Compilation will only take a while the first time.) The syntax is the same to deploy to the Raspberry Pi on Upkie using [`raspunzel`](https://github.com/tasts-robots/raspunzel).
