@@ -152,6 +152,6 @@ if __name__ == "__main__":
     now = datetime.datetime.now()
     stamp = now.strftime("%Y-%m-%d_%H%M%S")
     log_dir = os.environ.get("UPKIE_LOG_PATH", "~")
-    save_path = os.path.expanduser(f"{log_dir}/blue_balancer_{stamp}.mpack")
+    save_path = os.path.expanduser(f"{log_dir}/test_balancer_{stamp}.mpack")
     shutil.copy("/dev/shm/brain.mpack", save_path)
     logging.info(f"Log saved to {save_path}")

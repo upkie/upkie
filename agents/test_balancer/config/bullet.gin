@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import agents.blue_balancer.wheel_balancer
+import agents.test_balancer.wheel_balancer
 
 Gains.pitch_damping = 10.0
 Gains.pitch_stiffness = 20.0
