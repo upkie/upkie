@@ -19,7 +19,7 @@ from typing import Any, Dict
 
 import gin
 import numpy as np
-from agents.blue_balancer.wheel_balancer import WheelBalancer
+from agents.test_balancer.wheel_balancer import WheelBalancer
 
 from utils.clamp import clamp
 
