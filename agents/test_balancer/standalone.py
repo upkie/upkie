@@ -26,11 +26,10 @@ from typing import Any, Dict
 
 import gin
 import yaml
+from agents.test_balancer.controller import Controller
 from loop_rate_limiters import AsyncRateLimiter
 from rules_python.python.runfiles import runfiles
 from vulp.spine import SpineInterface
-
-from agents.blue_balancer.whole_body_controller import WholeBodyController
 
 
 class CompilationModeError(Exception):
@@ -53,14 +52,14 @@ async def run(
         config: Configuration dictionary.
         frequency: Control frequency in Hz.
     """
-    whole_body_controller = WholeBodyController(config)
+    controller = Controller(config)
     dt = 1.0 / frequency
     rate = AsyncRateLimiter(frequency, "controller")
     spine.start(config)
     observation = spine.get_observation()  # pre-reset observation
     while True:
         observation = spine.get_observation()
-        action = whole_body_controller.cycle(observation, dt)
+        action = controller.cycle(observation, dt)
         spine.set_action(action)
         await rate.sleep()
 
