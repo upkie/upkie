@@ -8,9 +8,9 @@ load("@pip_upkie_locomotion//:requirements.bzl", "requirement")
 package(default_visibility = ["//visibility:public"])
 
 py_library(
-    name = "wheel_balancer",
+    name = "servo_controller",
     srcs = [
-        "controller.py",
+        "servo_controller.py",
         "wheel_balancer.py",
     ],
     deps = [
@@ -35,10 +35,9 @@ py_binary(
     deps = [
         "//utils:realtime",
         "//utils:spdlog",
-        ":wheel_balancer",
+        ":servo_controller",
         "@mpacklog//:python",
         "@vulp//spine:python",
-        requirement("gin-config"),
         requirement("loop_rate_limiters"),
         requirement("pyyaml"),
     ],
@@ -53,10 +52,9 @@ py_binary(
         "//spines:bullet",
     ],
     deps = [
-        ":wheel_balancer",
+        ":servo_controller",
         "@rules_python//python/runfiles",
         "@vulp//spine:python",
-        requirement("gin-config"),
         requirement("loop_rate_limiters"),
         requirement("pyyaml"),
     ],

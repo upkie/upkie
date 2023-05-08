@@ -25,7 +25,7 @@ from utils.clamp import clamp
 
 
 @gin.configurable
-class Controller:
+class ServoController:
     """Balance Upkie using its wheels.
 
     Attributes:
@@ -41,7 +41,6 @@ class Controller:
 
     def __init__(
         self,
-        config: Dict[str, Any],
         gain_scale: float,
         turning_gain_scale: float,
         wheel_distance: float,
@@ -49,7 +48,6 @@ class Controller:
         """Create controller.
 
         Args:
-            config: Global configuration dictionary.
             gain_scale: PD gain scale for hip and knee joints.
             turning_gain_scale: Additional gain scale added when the robot is
                 turning to keep the legs stiff in spite of the ground pulling
