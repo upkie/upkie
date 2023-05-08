@@ -24,24 +24,29 @@ REMOTE_HOST = upkie
 # http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 .PHONY: help
 help:
-	@echo "Host targets:"
-	@grep -P '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
-	@echo ""
-	@echo "Remote targets:"
-	@grep -P '^[a-zA-Z_-]+:.*?### .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?### "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+	@echo "Host:\n"
+	@grep -P '^[a-zA-Z0-9_-]+:.*? ## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "    \033[36m%-24s\033[0m %s\n", $$1, $$2}'
+	@echo "\nRemote:\n"
+	@grep -P '^[a-zA-Z0-9_-]+:.*?### .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?### "}; {printf "    \033[36m%-24s\033[0m %s\n", $$1, $$2}'
 .DEFAULT_GOAL := help
 
-build:  ### build Raspberry Pi targets
+# Host targets
+# ============
+
+build:  ## build Raspberry Pi targets
 	bazel build --config=pi64 //spines:pi3hat
 
 run_bullet_spine:  ## run a Bullet spine with GUI
 	bazel run -c opt //spines:bullet  -- --show
 
-run_pi3hat_spine:  ## run the pi3hat spine on the Raspberry Pi
+upload: build  ## upload built targets to the Raspberry Pi
+	rsync -Lrtu --delete-after $(CURDIR)/ ~/test__/
+
+# Remote targets
+# ==============
+
+run_pi3hat_spine:  ### run the pi3hat spine on the Raspberry Pi
 	$(RASPUNZEL) -s run //spines:pi3hat
 
-run_pink_balancer:  ## run the pink balancer on the Raspberry Pi
+run_pink_balancer:  ### run the pink balancer on the Raspberry Pi
 	$(RASPUNZEL) -s run //agents/pink_balancer -- --config pi3hat
-
-upload: build  ## upload built targets to the Raspberry Pi
-	rsync -Lrtu --delete-after $(CURDIR)/ test__/  # keep the trailing slashes
