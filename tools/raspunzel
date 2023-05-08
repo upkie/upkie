@@ -17,17 +17,12 @@
 
 """Run Bazel targets on systems where Bazel is not installed."""
 
-import logging
-from os import path
-
-import os
-from typing import Optional
-
 import argparse
+import logging
+import os
 import sys
-
-from typing import List
-
+from os import path
+from typing import List, Optional
 
 __version__ = "0.3.0"
 
@@ -78,8 +73,8 @@ class Workspace:
         workspace_file = find_file("WORKSPACE", required=True)
         name = self.get_workspace_name(workspace_file)
         logging.info(f"Found bazel-bin at {bazel_bin}")
-        logging.info(f"Found workspace \"{name}\" at {workspace_file}")
-        logging.info(f"Read workspace name as '{name}'")
+        logging.info(f"Found workspace file at {workspace_file}")
+        logging.info(f"Read workspace name as \"{name}\"")
         self.bazel_bin = bazel_bin
         self.name = name
         self.root = path.dirname(workspace_file)
@@ -169,7 +164,7 @@ def run(workspace: Workspace, target: str, subargs: List[str]) -> None:
     try:
         arch = read_arch(workspace.bazel_bin, target_dir, target_name)
     except FileNotFoundError:
-        logging.warn(
+        logging.warning(
             "Couldn't read arch from "
             f"'{workspace.bazel_bin}/{target_dir}/{target_name}-2.params', "
             "maybe the target is not a Python script?"
@@ -204,6 +199,7 @@ def get_argument_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="verbose mode",
     )
+    parser.add_argument("command", help="Bazel command")
     parser.add_argument("target", help="Bazel target")
     parser.add_argument(
         "subargs",
@@ -216,14 +212,17 @@ def get_argument_parser() -> argparse.ArgumentParser:
 def main():
     """Entry point for the command-line tool."""
     parser = get_argument_parser()
-    args = parser.parse_args(sys.argv)
+    args = parser.parse_args()
     if args.verbose:
         logger = logging.getLogger()
         logger.setLevel(logging.INFO)
     if args.sudo and os.geteuid() != 0:
         args = ["sudo", "-E", sys.executable] + sys.argv + [os.environ]
         os.execlpe("sudo", *args)
-    run(Workspace(), args.target, args.subargs)
+    if args.command == "run":
+        run(Workspace(), args.target, args.subargs)
+    else:  # unknown command
+        logging.error(f'Command "{args.command}" not available with raspunzel')
 
 
 if __name__ == "__main__":
