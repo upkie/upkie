@@ -1,6 +1,7 @@
-# Makefile for Sphinx documentation
+# Makefile for upkie_locomotion targets
 #
 # Copyright 2022 Stéphane Caron
+# Copyright 2023 Inria
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -23,12 +24,15 @@ ONLINEDIR     = tasts-robots.org:public_html/doc/pink
 
 .PHONY: help Makefile upload
 
+# Help snippet from:
+# http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
+.PHONY: help
 help:
-	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS)
+	@grep -P '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+.DEFAULT_GOAL := help
 
 %: Makefile
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS)
 
-upload: clean html
+upload: clean html  ## test
 	rsync -auvz --delete-after $(BUILDDIR)/html/ $(ONLINEDIR)/
-
