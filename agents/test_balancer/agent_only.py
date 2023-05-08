@@ -31,7 +31,7 @@ import yaml
 from loop_rate_limiters import AsyncRateLimiter
 from vulp.spine import SpineInterface
 
-from agents.test_balancer.controller import Controller
+from agents.test_balancer.servo_controller import ServoController
 from utils.realtime import configure_cpu
 from utils.spdlog import logging
 
@@ -70,7 +70,7 @@ async def run(
         config: Configuration dictionary.
         frequency: Control frequency in Hz.
     """
-    controller = Controller(config)
+    controller = ServoController()
     debug: Dict[str, Any] = {}
     dt = 1.0 / frequency
     rate = AsyncRateLimiter(frequency, "controller")

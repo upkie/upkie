@@ -26,17 +26,15 @@ from typing import Any, Dict
 
 import gin
 import yaml
-from agents.test_balancer.controller import Controller
 from loop_rate_limiters import AsyncRateLimiter
 from rules_python.python.runfiles import runfiles
 from vulp.spine import SpineInterface
 
+from agents.test_balancer.servo_controller import ServoController
+
 
 class CompilationModeError(Exception):
-
-    """
-    Exception raised when this example is called with unexpected parameters.
-    """
+    """Raised when the example is called with unexpected parameters."""
 
 
 async def run(
@@ -52,7 +50,7 @@ async def run(
         config: Configuration dictionary.
         frequency: Control frequency in Hz.
     """
-    controller = Controller(config)
+    controller = ServoController()
     dt = 1.0 / frequency
     rate = AsyncRateLimiter(frequency, "controller")
     spine.start(config)

@@ -14,12 +14,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import agents.test_balancer.controller
+import agents.test_balancer.servo_controller
 import agents.test_balancer.wheel_balancer
 
-Controller.gain_scale = 2.0
-Controller.turning_gain_scale = 2.0
-Controller.wheel_distance = 0.3048
+ServoController.gain_scale = 2.0
+ServoController.turning_gain_scale = 2.0
+ServoController.wheel_distance = 0.3048
 
 WheelBalancer.air_return_period = 1.0             # [s]
 WheelBalancer.fall_pitch = 1.0                    # [rad]
