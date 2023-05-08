@@ -31,26 +31,12 @@ py_library(
     ],
 )
 
-py_library(
-    name = "whole_body_controller",
-    srcs = [
-        "whole_body_controller.py",
-    ],
-    deps = [
-        ":kinematics",
-        ":wheel_balancer",
-        requirement("gin-config"),
-    ],
-)
-
 py_binary(
-    name = "blue_balancer",
-    srcs = [
-        "blue_balancer.py",
-    ],
-    main = "blue_balancer.py",
+    name = "agent_only",
+    srcs = ["agent_only.py"],
+    main = "agent_only.py",
     data = [
-        "//agents/blue_balancer/config",
+        "//agents/test_balancer/config",
     ] + select({
         "//:pi32_config": ["//spines:pi3hat"],
         "//:pi64_config": ["//spines:pi3hat"],
@@ -59,27 +45,25 @@ py_binary(
     deps = [
         "//utils:realtime",
         "//utils:spdlog",
-        ":whole_body_controller",
+        ":kinematics",
+        ":wheel_balancer",
         "@mpacklog//:python",
+        "@vulp//spine:python",
         requirement("gin-config"),
         requirement("loop_rate_limiters"),
         requirement("pyyaml"),
-        "@vulp//spine:python",
     ],
 )
 
 py_binary(
-    name = "bullet",
-    srcs = [
-        "bullet.py",
-    ],
-    main = "bullet.py",
+    name = "standalone",
+    srcs = ["standalone.py"],
+    main = "standalone.py",
     data = [
         ":config",
         "//spines:bullet",
     ],
     deps = [
-        ":whole_body_controller",
         requirement("gin-config"),
         requirement("loop_rate_limiters"),
         requirement("pyyaml"),
