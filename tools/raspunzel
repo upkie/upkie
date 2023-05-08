@@ -1,0 +1,230 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+#
+# Copyright 2022 Stéphane Caron
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+"""Run Bazel targets on systems where Bazel is not installed."""
+
+import logging
+from os import path
+
+import os
+from typing import Optional
+
+import argparse
+import sys
+
+from typing import List
+
+
+__version__ = "0.3.0"
+
+
+def find_file(name: str, required: bool) -> Optional[str]:
+    """Search for a file or directory in the script's parent folders.
+
+    Args:
+        name: Name of the file or directory to search.
+        required: If True, raise an exception if the file is not found.
+
+    Returns:
+        File path, if found, None otherwise.
+
+    Raises:
+        FileNotFoundError: if the file was not found.
+    """
+    cur_path = os.getcwd()
+    while cur_path:
+        bin_path = path.join(cur_path, name)
+        if path.exists(bin_path):
+            return bin_path
+        old_path = cur_path
+        cur_path = path.dirname(cur_path)
+        if cur_path == old_path:
+            break
+    if required:
+        raise FileNotFoundError(f"Cannot find {name} in parent folders")
+    return None
+
+
+class Workspace:
+    """Bazel workspace information.
+
+    Attributes:
+        bazel_bin: Path to bazel-bin directory.
+        name: Name of the workspace, defined in WORKSPACE file.
+        root: Path to the workspace root directory.
+    """
+
+    bazel_bin: str
+    name: str
+    root: str
+
+    def __init__(self):
+        """Initialize Bazel workspace information."""
+        bazel_bin = find_file("bazel-bin", required=True)
+        workspace_file = find_file("WORKSPACE", required=True)
+        name = self.get_workspace_name(workspace_file)
+        logging.info(f"Found bazel-bin at {bazel_bin}")
+        logging.info(f"Found workspace \"{name}\" at {workspace_file}")
+        logging.info(f"Read workspace name as '{name}'")
+        self.bazel_bin = bazel_bin
+        self.name = name
+        self.root = path.dirname(workspace_file)
+
+    def get_workspace_name(workspace_file: str) -> str:
+        """Read workspace name from WORKSPACE file.
+
+        Args:
+            workspace_file: Path to WORKSPACE file.
+
+        Returns:
+            Workspace name, if found.
+
+        Raises:
+            ValueError: if workspace name could not be found.
+        """
+        for line in open(workspace_file, encoding="utf-8").readlines():
+            if line.startswith('workspace(name = "'):
+                return line.split('"')[1]
+
+        raise ValueError(
+            "Could not find name in WORKSPACE. "
+            "Note that we don't parse Starlark beyond "
+            '``workspace(name = "something")``.'
+        )
+
+
+def read_arch(bazel_bin, target, name):
+    """Read system architecture."""
+    suffix = "-2.params"
+    if path.exists(f"{bazel_bin}/{target}/{name}_spine-2.params"):
+        suffix = "_spine-2.params"  # for C++ agents
+    with open(f"{bazel_bin}/{target}/{name}{suffix}", "r") as params:
+        for line in params:
+            if line.startswith("bazel-out"):
+                return line.split("/")[1]
+
+
+def log_run(target_name: str, arch: str) -> None:
+    """Log target name and build configuration.
+
+    Args:
+        target_name: Name of the Bazel target.
+        arch: Build configuration found.
+    """
+    RED: str = "\033[31m"
+    GREEN: str = "\033[32m"
+    YELLOW: str = "\033[33m"
+    RESET: str = "\033[0m"
+
+    target_message = f"Found target {YELLOW}{target_name}{RESET}"
+    target_message += "for build configuration "
+    color = RED
+    if "opt" in arch:
+        color = GREEN
+    elif "fastbuild" in arch:
+        color = YELLOW
+    elif "unknown" in arch:
+        color = RED
+    target_message += color + arch + RESET
+    logging.info(target_message)
+
+
+def run(workspace: Workspace, target: str, subargs: List[str]) -> None:
+    """Run target from a Bazel workspace.
+
+    Args:
+        workspace: Bazel workspace information.
+        target: Label of the Bazel target to run.
+        subargs: Command-line arguments for the target.
+    """
+    try:
+        if ":" in target:
+            target_dir, target_name = target.split(":")
+        else:  # target name is directory name
+            target_dir = target
+            target_name = target.split("/")[-1]
+    except ValueError as e:
+        raise ValueError(
+            f"{target} does not appear to be a valid Bazel label"
+        ) from e
+    target_dir = target_dir.lstrip("/")
+    if target_dir[0] == "@":
+        external_name, target_dir = target_dir[1:].split("//")
+        target_dir = f"external/{external_name}/{target_dir}"
+
+    try:
+        arch = read_arch(workspace.bazel_bin, target_dir, target_name)
+    except FileNotFoundError:
+        logging.warn(
+            "Couldn't read arch from "
+            f"'{workspace.bazel_bin}/{target_dir}/{target_name}-2.params', "
+            "maybe the target is not a Python script?"
+        )
+        arch = "unknown"
+
+    log_run(target_name, arch)
+
+    execution_path = (
+        f"{workspace.bazel_bin}/{target_dir}/"
+        f"{target_name}.runfiles/{workspace.name}/{target_dir}"
+    )
+
+    os.chdir(execution_path)
+    os.execv(target_name, [target_name] + subargs)
+
+
+def get_argument_parser() -> argparse.ArgumentParser:
+    """Get command-line argument parser."""
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "-s",
+        "--sudo",
+        default=False,
+        action="store_true",
+        help="run as administrator (sudo -E)",
+    )
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        default=False,
+        action="store_true",
+        help="verbose mode",
+    )
+    parser.add_argument("target", help="Bazel target")
+    parser.add_argument(
+        "subargs",
+        nargs=argparse.REMAINDER,
+        help="arguments forwarded to the target",
+    )
+    return parser
+
+
+def main():
+    """Entry point for the command-line tool."""
+    parser = get_argument_parser()
+    args = parser.parse_args(sys.argv)
+    if args.verbose:
+        logger = logging.getLogger()
+        logger.setLevel(logging.INFO)
+    if args.sudo and os.geteuid() != 0:
+        args = ["sudo", "-E", sys.executable] + sys.argv + [os.environ]
+        os.execlpe("sudo", *args)
+    run(Workspace(), args.target, args.subargs)
+
+
+if __name__ == "__main__":
+    main()
