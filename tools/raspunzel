@@ -84,7 +84,7 @@ class Workspace:
         self.name = name
         self.root = path.dirname(workspace_file)
 
-    def get_workspace_name(workspace_file: str) -> str:
+    def get_workspace_name(self, workspace_file: str) -> str:
         """Read workspace name from WORKSPACE file.
 
         Args:
