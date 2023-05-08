@@ -12,6 +12,8 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Rename "blue balancer" agent to "test balancer"
+- Simplify test balancer code
 - UpkieWheelsEnv: version 2
 
 ### Fixed
