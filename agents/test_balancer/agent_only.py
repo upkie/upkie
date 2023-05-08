@@ -31,7 +31,7 @@ import yaml
 from loop_rate_limiters import AsyncRateLimiter
 from vulp.spine import SpineInterface
 
-from agents.blue_balancer.whole_body_controller import WholeBodyController
+from agents.test_balancer.controller import Controller
 from utils.realtime import configure_cpu
 from utils.spdlog import logging
 
@@ -70,7 +70,7 @@ async def run(
         config: Configuration dictionary.
         frequency: Control frequency in Hz.
     """
-    whole_body_controller = WholeBodyController(config)
+    controller = Controller(config)
     debug: Dict[str, Any] = {}
     dt = 1.0 / frequency
     rate = AsyncRateLimiter(frequency, "controller")
@@ -78,7 +78,7 @@ async def run(
     observation = spine.get_observation()  # pre-reset observation
     while True:
         observation = spine.get_observation()
-        action = whole_body_controller.cycle(observation, dt)
+        action = controller.cycle(observation, dt)
         action_time = time.time()
         spine.set_action(action)
         debug["rate"] = {
