@@ -144,6 +144,7 @@ int main(const CommandLineArguments& args) {
   spine_params.cpu = args.spine_cpu;
   spine_params.frequency = args.spine_frequency;
   spine_params.log_path = "/dev/shm/spine.mpack";
+  spdlog::info("Spine data logged to {}", spine_params.log_path);
   Spine spine(spine_params, actuation, observation);
   spine.run();
 

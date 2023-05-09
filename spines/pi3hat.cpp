@@ -198,6 +198,7 @@ int main(const CommandLineArguments& args) {
     spine_params.frequency = args.spine_frequency;
     const auto now = vulp::utils::datetime_now_string();
     spine_params.log_path = args.log_dir + "/pi3hat_spine_" + now + ".mpack";
+    spdlog::info("Spine data logged to {}", spine_params.log_path);
     Spine spine(spine_params, interface, observation);
     spine.run();
   } catch (const ::mjbots::pi3hat::Error& error) {

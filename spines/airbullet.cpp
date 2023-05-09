@@ -132,6 +132,7 @@ int main(const char* argv0, const CommandLineArguments& args) {
   const auto now = vulp::utils::datetime_now_string();
   spine_params.log_path = args.log_dir + "/airbullet_spine_" + now + ".mpack";
   spine_params.shm_name = args.shm_name;
+  spdlog::info("Spine data logged to {}", spine_params.log_path);
   vulp::observation::ObserverPipeline observation;
   Spine spine(spine_params, interface, observation);
   if (args.nb_substeps == 0u) {
