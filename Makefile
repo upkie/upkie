@@ -35,6 +35,7 @@ help:
 
 build:  ## build Raspberry Pi targets
 	bazel build --config=pi64 //agents/pink_balancer
+	bazel build --config=pi64 //agents/test_balancer:agent
 	bazel build --config=pi64 //spines:pi3hat
 
 run_bullet_spine:  ## run a Bullet simulation with GUI
@@ -54,3 +55,6 @@ run_pi3hat_spine:  ### run the pi3hat spine on the Raspberry Pi
 
 run_pink_balancer:  ### run the pink balancer on the Raspberry Pi
 	$(RASPUNZEL) run -v -s //agents/pink_balancer -- --config pi3hat
+
+run_test_balancer:  ### run the test balancer on the Raspberry Pi
+	$(RASPUNZEL) run -v -s //agents/test_balancer:agent -- --config pi3hat
