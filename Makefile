@@ -40,8 +40,11 @@ build:  ## build Raspberry Pi targets
 run_bullet_spine:  ## run a Bullet simulation with GUI
 	bazel run -c opt //spines:bullet  -- --show
 
+# Running ``raspunzel -s`` can create __pycache__ directories owned by root
+# that rsync is not allowed to remove. We therefore give permissions first.
 upload: build  ## upload built targets to the Raspberry Pi
-	rsync -Lrtu --delete-after --exclude bazel-out/ --exclude bazel-testlogs/ --exclude bazel-$(PROJECT_NAME)/ --delete-excluded $(CURDIR)/ $(REMOTE_HOST):$(PROJECT_NAME)/
+	ssh $(REMOTE_HOST) sudo find $(PROJECT_NAME) -type d -name __pycache__ -user root -exec chmod go+wx {} "\;"
+	rsync -Lrtu --delete-after --delete-excluded --exclude bazel-out/ --exclude bazel-testlogs/ --exclude bazel-$(PROJECT_NAME)/ $(CURDIR)/ $(REMOTE_HOST):$(PROJECT_NAME)/
 
 # Remote targets
 # ==============
