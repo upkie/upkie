@@ -22,9 +22,9 @@ py_library(
 )
 
 py_binary(
-    name = "agent_only",
-    srcs = ["agent_only.py"],
-    main = "agent_only.py",
+    name = "agent",
+    srcs = ["agent.py"],
+    main = "agent.py",
     data = [
         "//agents/test_balancer/config",
     ] + select({
