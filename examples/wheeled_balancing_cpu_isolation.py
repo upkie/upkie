@@ -13,8 +13,9 @@ import time
 import gym
 import mpacklog
 import numpy as np
-import upkie_locomotion.envs
 from loop_rate_limiters import AsyncRateLimiter
+
+import upkie_locomotion.envs
 
 upkie_locomotion.envs.register()
 
@@ -44,12 +45,9 @@ async def balance(env: gym.Env, logger: mpacklog.Logger):
 
 async def main():
     """Main function of our asyncio program."""
-    env = gym.make("UpkieWheelsEnv-v2")
     logger = mpacklog.Logger("wheeled_balancing.mpack")
-    try:
+    with gym.make("UpkieWheelsEnv-v2") as env:
         await asyncio.gather(balance(env, logger), logger.write())
-    finally:
-        env.close()
 
 
 if __name__ == "__main__":
