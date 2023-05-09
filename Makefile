@@ -47,7 +47,7 @@ run_bullet_spine:  ## run a Bullet simulation with GUI
 upload: build  ## upload built targets to the Raspberry Pi
 	ssh $(REMOTE_HOST) sudo date -s "$(CURDATE)"
 	ssh $(REMOTE_HOST) sudo find $(PROJECT_NAME) -type d -name __pycache__ -user root -exec chmod go+wx {} "\;"
-	rsync -Lrtu --delete-after --delete-excluded --exclude bazel-out/ --exclude bazel-testlogs/ --exclude bazel-$(PROJECT_NAME)/ $(CURDIR)/ $(REMOTE_HOST):$(PROJECT_NAME)/
+	rsync -Lrtu --delete-after --delete-excluded --exclude bazel-out/ --exclude bazel-testlogs/ --exclude bazel-$(PROJECT_NAME)/ --progress $(CURDIR)/ $(REMOTE_HOST):$(PROJECT_NAME)/
 
 # Remote targets
 # ==============
