@@ -41,15 +41,12 @@ async def balance(env: gym.Env, logger: mpacklog.Logger):
 
 async def main():
     """Main function of our asyncio program."""
-    env = gym.make("UpkieWheelsEnv-v2")
     logger = mpacklog.Logger("wheeled_balancing.mpack")
-    try:
+    with gym.make("UpkieWheelsEnv-v2") as env:
         await asyncio.gather(
             balance(env, logger),
             logger.write(),  # write logs to file when there is time
         )
-    finally:
-        env.close()
 
 
 if __name__ == "__main__":
