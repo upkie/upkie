@@ -16,6 +16,7 @@
 # limitations under the License.
 
 BAZEL_DIR = bazel-bin
+CURDATE = $(shell date --iso=seconds)
 PROJECT_NAME = upkie_locomotion
 RASPUNZEL = $(CURDIR)/tools/raspunzel
 REMOTE_HOST = upkie
@@ -44,6 +45,7 @@ run_bullet_spine:  ## run a Bullet simulation with GUI
 # Running ``raspunzel -s`` can create __pycache__ directories owned by root
 # that rsync is not allowed to remove. We therefore give permissions first.
 upload: build  ## upload built targets to the Raspberry Pi
+	ssh $(REMOTE_HOST) sudo date -s "$(CURDATE)"
 	ssh $(REMOTE_HOST) sudo find $(PROJECT_NAME) -type d -name __pycache__ -user root -exec chmod go+wx {} "\;"
 	rsync -Lrtu --delete-after --delete-excluded --exclude bazel-out/ --exclude bazel-testlogs/ --exclude bazel-$(PROJECT_NAME)/ $(CURDIR)/ $(REMOTE_HOST):$(PROJECT_NAME)/
 
