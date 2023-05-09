@@ -19,6 +19,7 @@
 #include <vulp/utils/datetime_now_string.h>
 
 #include <algorithm>
+#include <cstdlib>
 #include <future>
 #include <iostream>
 #include <map>
@@ -66,6 +67,10 @@ class CommandLineArguments {
         error = true;
       }
     }
+    if (log_dir.length() < 1) {
+      const char* env_log_dir = std::getenv("UPKIE_LOG_PATH");
+      log_dir = (env_log_dir != nullptr) ? env_log_dir : "/tmp";
+    }
   }
 
   /*! Show help message
@@ -100,7 +105,7 @@ class CommandLineArguments {
   bool help = false;
 
   //! Log directory
-  std::string log_dir = "/tmp";
+  std::string log_dir = "";
 
   //! Number of simulation substeps
   unsigned nb_substeps = 0u;
