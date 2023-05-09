@@ -41,7 +41,7 @@ run_bullet_spine:  ## run a Bullet simulation with GUI
 	bazel run -c opt //spines:bullet  -- --show
 
 upload: build  ## upload built targets to the Raspberry Pi
-	rsync -Lrtu --delete-after --exclude bazel-out/ --exclude bazel-testlogs/ --exclude bazel-$(PROJECT_NAME)/ --delete-excluded $(CURDIR)/ ~/$(REMOTE_HOST):$(PROJECT_NAME)/
+	rsync -Lrtu --delete-after --exclude bazel-out/ --exclude bazel-testlogs/ --exclude bazel-$(PROJECT_NAME)/ --delete-excluded $(CURDIR)/ $(REMOTE_HOST):$(PROJECT_NAME)/
 
 # Remote targets
 # ==============
