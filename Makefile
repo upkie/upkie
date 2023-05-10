@@ -14,12 +14,15 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
+# NB: this Makefile is for Raspberry Pi targets only. Use Bazel or Bazelisk to
+# build targets on your computer.
 
-BAZEL_DIR = bazel-bin
+RASPI = upkie  # hostname or IP address of the Raspberry Pi
+PROJECT_NAME = upkie_locomotion  # same as in WORKSPACE
+
 CURDATE = $(shell date --iso=seconds)
-PROJECT_NAME = upkie_locomotion
 RASPUNZEL = $(CURDIR)/tools/raspunzel
-REMOTE_HOST = upkie
 
 # Targets
 # =======
@@ -46,9 +49,9 @@ run_test_balancer:  ### run the test balancer on the Raspberry Pi
 # that rsync is not allowed to remove. We therefore give permissions first.
 .PHONY: upload
 upload: build  ## upload built targets to the Raspberry Pi
-	ssh $(REMOTE_HOST) sudo date -s "$(CURDATE)"
-	ssh $(REMOTE_HOST) sudo find $(PROJECT_NAME) -type d -name __pycache__ -user root -exec chmod go+wx {} "\;"
-	rsync -Lrtu --delete-after --delete-excluded --exclude bazel-out/ --exclude bazel-testlogs/ --exclude bazel-$(PROJECT_NAME)/ --progress $(CURDIR)/ $(REMOTE_HOST):$(PROJECT_NAME)/
+	ssh $(RASPI) sudo date -s "$(CURDATE)"
+	ssh $(RASPI) sudo find $(PROJECT_NAME) -type d -name __pycache__ -user root -exec chmod go+wx {} "\;"
+	rsync -Lrtu --delete-after --delete-excluded --exclude bazel-out/ --exclude bazel-testlogs/ --exclude bazel-$(PROJECT_NAME)/ --progress $(CURDIR)/ $(RASPI):$(PROJECT_NAME)/
 
 # Help
 # ====
