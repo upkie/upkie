@@ -2,6 +2,7 @@
 #
 # Copyright 2018 The Bazel Authors
 # Copyright 2022 Stéphane Caron
+# Copyright 2023 Inria
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,6 +15,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+# Value of BAZELISK_GITHUB_TOKEN is set as a secret in the GitHub workflow.
+readonly BAZELISK_VERSION="v1.16.0"
+readonly BAZELISK_URL="https://github.com/bazelbuild/bazelisk/releases/download/${BAZELISK_VERSION}/bazelisk-${os}-amd64"
 
 set -euo pipefail
 
@@ -33,13 +38,10 @@ done
 os="$(uname -s | tr "[:upper:]" "[:lower:]")"
 readonly os
 
-# Value of BAZELISK_GITHUB_TOKEN is set as a secret in the GitHub workflow.
-readonly bazelisk_version="v1.6.1"
-readonly url="https://github.com/bazelbuild/bazelisk/releases/download/${bazelisk_version}/bazelisk-${os}-amd64"
 bazel="${TMPDIR:-/tmp}/bazelisk"
 readonly bazel
 
-curl -L -sSf -o "${bazel}" "${url}"
+curl -L -sSf -o "${bazel}" "${BAZELISK_URL}"
 chmod a+x "${bazel}"
 
 set -x
