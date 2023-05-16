@@ -42,9 +42,9 @@ py_binary(
         "//utils:spdlog",
         ":whole_body_controller",
         "@mpacklog//:python",
+        "@vulp//spine:python",
         requirement("gin-config"),
         requirement("loop_rate_limiters"),
-        "@vulp//spine:python",
     ],
 )
 
