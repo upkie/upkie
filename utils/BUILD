@@ -24,16 +24,6 @@ py_library(
 )
 
 py_library(
-    name = "logging",
-    srcs = ["logging.py"],
-    deps = [
-        "@vulp//utils:serialize",
-        requirement("aiofiles"),
-        requirement("msgpack"),
-    ],
-)
-
-py_library(
     name = "pinocchio",
     srcs = ["pinocchio.py"],
 )

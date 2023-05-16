@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Remove ``utils.logging`` submodule, deprecated by mpacklog
 - Rename "blue balancer" agent to "test balancer"
 - Simplify test balancer code
 - Update Bazelisk to v1.16.0
