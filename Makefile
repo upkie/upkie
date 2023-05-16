@@ -18,17 +18,24 @@
 # NB: this Makefile is for Raspberry Pi targets only. Use Bazel or Bazelisk to
 # build targets on your computer.
 
-RASPI = upkie  # hostname or IP address of the Raspberry Pi
-PROJECT_NAME = upkie_locomotion  # same as in WORKSPACE
+# Hostname or IP address of the Raspberry Pi
+RASPI = upkie
+
+# Project name, needs to match the one in WORKSPACE
+PROJECT_NAME = upkie_locomotion
 
 CURDATE = $(shell date --iso=seconds)
 RASPUNZEL = $(CURDIR)/tools/raspunzel
+
+.PHONY: clean_broken_links
+clean_broken_links:
+	find -L $(CURDIR) -type l ! -exec test -e {} \; -delete
 
 # Targets
 # =======
 
 .PHONY: build
-build:  ## build Raspberry Pi targets
+build: clean_broken_links  ## build Raspberry Pi targets
 	bazel build --config=pi64 //agents/pink_balancer
 	bazel build --config=pi64 //agents/test_balancer:agent
 	bazel build --config=pi64 //spines:pi3hat
