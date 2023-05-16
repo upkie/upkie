@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
 
 - Rename "blue balancer" agent to "test balancer"
 - Simplify test balancer code
+- Update Bazelisk to v1.16.0
 - UpkieWheelsEnv: version 2
 
 ### Fixed
