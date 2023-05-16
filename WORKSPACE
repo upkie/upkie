@@ -32,10 +32,16 @@ add_rpi_bazel_repositories()
 # ===================
 
 # Depends on @rules_python which is a @palimpsest repository
-load("//tools/workspace:parse_python_deps.bzl", "parse_python_deps")
-parse_python_deps()
+load("//tools/workspace/pip_upkie_locomotion:parse_deps.bzl", "parse_deps")
+parse_deps()
 load("@pip_upkie_locomotion//:requirements.bzl", "install_deps")
 install_deps()
+
+# mpacklog also has Python dependencies
+load("@mpacklog//tools/workspace/pip_mpacklog:parse_deps.bzl", parse_mpacklog_deps = "parse_deps")
+parse_mpacklog_deps()
+load("@pip_mpacklog//:requirements.bzl", install_mpacklog_deps = "install_deps")
+install_mpacklog_deps()
 
 # Vulp also has Python dependencies
 load("@vulp//tools/workspace/pip_vulp:parse_deps.bzl", parse_vulp_deps = "parse_deps")
