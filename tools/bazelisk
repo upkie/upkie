@@ -16,10 +16,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Value of BAZELISK_GITHUB_TOKEN is set as a secret in the GitHub workflow.
-readonly BAZELISK_VERSION="v1.16.0"
-readonly BAZELISK_URL="https://github.com/bazelbuild/bazelisk/releases/download/${BAZELISK_VERSION}/bazelisk-${os}-amd64"
-
 set -euo pipefail
 
 toolchain_name=""
@@ -37,6 +33,10 @@ done
 
 os="$(uname -s | tr "[:upper:]" "[:lower:]")"
 readonly os
+
+# Value of BAZELISK_GITHUB_TOKEN is set as a secret in the GitHub workflow.
+readonly BAZELISK_VERSION="v1.16.0"
+readonly BAZELISK_URL="https://github.com/bazelbuild/bazelisk/releases/download/${BAZELISK_VERSION}/bazelisk-${os}-amd64"
 
 bazel="${TMPDIR:-/tmp}/bazelisk"
 readonly bazel
