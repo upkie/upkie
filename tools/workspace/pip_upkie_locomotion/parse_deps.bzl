@@ -4,7 +4,7 @@
 
 load("@rules_python//python:pip.bzl", "pip_parse")
 
-def parse_python_deps():
+def parse_deps():
     """
     Parse PyPI packages to a @pip_upkie_locomotion external repository.
 
