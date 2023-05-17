@@ -24,6 +24,7 @@ RASPI = upkie
 # Project name, needs to match the one in WORKSPACE
 PROJECT_NAME = upkie_locomotion
 
+BAZEL = $(CURDIR)/tools/bazelisk
 CURDATE = $(shell date --iso=seconds)
 RASPUNZEL = $(CURDIR)/tools/raspunzel
 
@@ -36,9 +37,9 @@ clean_broken_links:
 
 .PHONY: build
 build: clean_broken_links  ## build Raspberry Pi targets
-	bazel build --config=pi64 //agents/pink_balancer
-	bazel build --config=pi64 //agents/test_balancer:agent
-	bazel build --config=pi64 //spines:pi3hat
+	$(BAZEL) build --config=pi64 //agents/pink_balancer
+	$(BAZEL) build --config=pi64 //agents/test_balancer:agent
+	$(BAZEL) build --config=pi64 //spines:pi3hat
 
 run_pi3hat_spine:  ### run the pi3hat spine on the Raspberry Pi
 	$(RASPUNZEL) run -s //spines:pi3hat
