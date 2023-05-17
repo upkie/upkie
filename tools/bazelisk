@@ -43,8 +43,13 @@ readonly CURDIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
 bazel="${CURDIR}/bazel"
 readonly bazel
 
-curl -L -sSf -o "${bazel}" "${BAZELISK_URL}"
-chmod a+x "${bazel}"
+if [ -f "${bazel}" ]; then
+    echo "Using existing Bazel binary from ${bazel}..."
+else
+    echo "Downloading Bazel binary from ${BAZELISK_URL}..."
+    curl -L -Sf --progress-bar -o "${bazel}" "${BAZELISK_URL}"
+    chmod a+x "${bazel}"
+fi
 
 set -x
 "${bazel}" version
