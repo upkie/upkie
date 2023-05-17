@@ -19,7 +19,10 @@
 # build targets on your computer.
 
 # Hostname or IP address of the Raspberry Pi
-RASPI = upkie
+# Uses the value from the ROBOT_NAME environment variable, if defined
+# Otherwise defaults to "upkie"
+REMOTE = ${ROBOT_NAME}
+REMOTE ?= upkie
 
 # Project name, needs to match the one in WORKSPACE
 PROJECT_NAME = upkie_locomotion
@@ -57,10 +60,10 @@ run_test_balancer:  ### run the test balancer on the Raspberry Pi
 # that rsync is not allowed to remove. We therefore give permissions first.
 .PHONY: upload
 upload: build  ## upload built targets to the Raspberry Pi
-	ssh $(RASPI) sudo date -s "$(CURDATE)"
-	ssh $(RASPI) mkdir -p $(PROJECT_NAME)
-	ssh $(RASPI) sudo find $(PROJECT_NAME) -type d -name __pycache__ -user root -exec chmod go+wx {} "\;"
-	rsync -Lrtu --delete-after --delete-excluded --exclude bazel-out/ --exclude bazel-testlogs/ --exclude bazel-$(PROJECT_NAME)/ --progress $(CURDIR)/ $(RASPI):$(PROJECT_NAME)/
+	ssh $(REMOTE) sudo date -s "$(CURDATE)"
+	ssh $(REMOTE) mkdir -p $(PROJECT_NAME)
+	ssh $(REMOTE) sudo find $(PROJECT_NAME) -type d -name __pycache__ -user root -exec chmod go+wx {} "\;"
+	rsync -Lrtu --delete-after --delete-excluded --exclude bazel-out/ --exclude bazel-testlogs/ --exclude bazel-$(PROJECT_NAME)/ --progress $(CURDIR)/ $(REMOTE):$(PROJECT_NAME)/
 
 # Help
 # ====
