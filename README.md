@@ -1,7 +1,7 @@
 # Upkie locomotion
 
 [![Build](https://img.shields.io/github/actions/workflow/status/tasts-robots/upkie_locomotion/bazel.yml?branch=main)](https://github.com/tasts-robots/upkie_locomotion/actions/workflows/bazel.yml)
-[![Documentation](https://img.shields.io/badge/docs-online-brightgreen?style=flat)](https://tasts-robots.org/doc/upkie_locomotion/)
+[![Documentation](https://img.shields.io/badge/docs-online-brightgreen?logo=read-the-docs&style=flat)](https://tasts-robots.org/doc/upkie_locomotion/)
 [![Coverage](https://coveralls.io/repos/github/tasts-robots/upkie_locomotion/badge.svg?branch=main)](https://coveralls.io/github/tasts-robots/upkie_locomotion?branch=main)
 [![PyPI version](https://img.shields.io/pypi/v/upkie_locomotion)](https://pypi.org/project/upkie_locomotion/)
 [![Vulp](https://img.shields.io/badge/%F0%9F%A6%8A%20vulp-1.1.1-orange)](https://github.com/tasts-robots/vulp)
