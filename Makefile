@@ -21,8 +21,10 @@
 # Hostname or IP address of the Raspberry Pi
 # Uses the value from the ROBOT_NAME environment variable, if defined
 # Otherwise defaults to "upkie"
-REMOTE = ${ROBOT_NAME}
-REMOTE ?= upkie
+REMOTE = upkie
+ifdef ROBOT_NAME
+	REMOTE := ${ROBOT_NAME}
+endif
 
 # Project name, needs to match the one in WORKSPACE
 PROJECT_NAME = upkie_locomotion
