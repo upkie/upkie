@@ -27,6 +27,7 @@ All notable changes to this project will be documented in this file.
 - PPO balancer: fix testing script
 - PPO balancer: save policy with new environment
 - PPO balancer: simplify training
+- Pink balancer: default frequency is 200 Hz
 
 ## [0.4.0] - 2023/04/06
 
