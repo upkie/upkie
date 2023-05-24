@@ -67,7 +67,7 @@ async def run(
     config: Dict[str, Any],
     logger: mpacklog.Logger,
     args: argparse.Namespace,
-    frequency: float = 20.0,
+    frequency: float = 200.0,
 ) -> None:
     """
     Read observations and send actions to the spine.
