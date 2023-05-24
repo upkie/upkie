@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 - Example: wheeled balancing with action-observation logging
 - Makefile to build, upload and run Raspberry Pi targets
 - Script to start a simulation directly from the repository
+- Specify Bazel version in ``.bazelversion``
 
 ### Changed
 
