@@ -1,0 +1,18 @@
+#!/bin/sh
+#
+# Copyright 2023 Inria
+#
+# To configure a secondary Wi-Fi access, e.g. using a USB dongle:
+#
+# 1. Configure the network you want to connect to in /etc/wpa_supplicant/wpa_supplicant.conf
+# 2. Add the following lines to /etc/dhcpcd.conf
+#
+# ```
+# # USB wireless dongle
+# interface wlan1
+# hook wpa_supplicant
+# ```
+#
+# 3. Run this script
+
+sudo wpa_supplicant -iwlan1 -D wext -c/etc/wpa_supplicant/wpa_supplicant.conf
