@@ -124,17 +124,20 @@ class UpkieTool:
         sorted_results = sorted(results, key=get_result_id)
         print(
             f"{'id':2} "
+            f"{'Mode':6} "
             f"{'Position (rad)':14} "
             f"{'Velocity (rad / s)':18} "
             f"{'Torque (N * m)':14}"
         )
         print(
             f"{'--':2} "
+            f"{'----':6} "
             f"{'--------------':14} "
             f"{'------------------':18} "
             f"{'--------------':14}"
         )
         for result in sorted_results:
+            mode = result.values[moteus.Register.MODE]
             position = result.values[moteus.Register.POSITION]
             velocity = result.values[moteus.Register.VELOCITY]
             torque = result.values[moteus.Register.TORQUE]
@@ -143,6 +146,7 @@ class UpkieTool:
             torque_N_m = round(torque, 3)
             print(
                 f"{result.id:2} "
+                f"{mode:6} "
                 f"{position_rad:14} "
                 f"{velocity_rps:18} "
                 f"{torque_N_m:14}"
