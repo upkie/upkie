@@ -1,0 +1,11 @@
+#!/bin/zsh
+#
+# Copyright 2022 Stéphane Caron
+
+for ((i=1; i<=6; i++)); do
+    echo "Setting zero offset on servo ${i}..."
+    sudo moteus_tool --pi3hat-cfg "1=1,2,3;2=4,5,6" --zero-offset -t $i
+done
+
+sudo upkie_tool stats
+touch /tmp/rezero_success
