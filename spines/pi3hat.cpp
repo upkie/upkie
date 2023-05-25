@@ -166,10 +166,10 @@ int main(const CommandLineArguments& args) {
 
   // Observation: Joystick
   auto joystick = std::make_shared<Joystick>();
-  if (joystick->present()) {
-    spdlog::info("Joystick found");
-    observation.connect_source(joystick);
+  if (!joystick->present()) {
+    throw std::runtime_error("Joystick required to run the pi3hat spine");
   }
+  observation.connect_source(joystick);
 
   // Observation: Floor contact
   FloorContact::Parameters floor_contact_params;
