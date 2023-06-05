@@ -154,8 +154,7 @@ int main(const CommandLineArguments& args) {
 }  // namespace upkie::spines::mock
 
 int main(int argc, char** argv) {
-  upkie::spines::mock::CommandLineArguments args(
-      {argv + 1, argv + argc});
+  upkie::spines::mock::CommandLineArguments args({argv + 1, argv + argc});
   if (args.error) {
     return EXIT_FAILURE;
   } else if (args.help) {
