@@ -33,6 +33,7 @@ py_binary(
         "//conditions:default": [],
     }),
     deps = [
+        "//utils:exceptions",
         "//utils:realtime",
         "//utils:spdlog",
         ":servo_controller",
@@ -52,6 +53,7 @@ py_binary(
         "//spines:bullet",
     ],
     deps = [
+        "//utils:exceptions",
         ":servo_controller",
         "@rules_python//python/runfiles",
         "@vulp//spine:python",
