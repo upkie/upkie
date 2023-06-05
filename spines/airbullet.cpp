@@ -153,8 +153,7 @@ int main(const char* argv0, const CommandLineArguments& args) {
 }  // namespace upkie::spines::airbullet
 
 int main(int argc, char** argv) {
-  upkie::spines::airbullet::CommandLineArguments args(
-      {argv + 1, argv + argc});
+  upkie::spines::airbullet::CommandLineArguments args({argv + 1, argv + argc});
   if (args.error) {
     return EXIT_FAILURE;
   } else if (args.help) {
