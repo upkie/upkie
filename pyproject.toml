@@ -36,7 +36,7 @@ dependencies = [
     "upkie_description >=1.2.0",
     "vulp >=1.1.1",
 ]
-keywords = ["motion control", "real time", "robotics"]
+keywords = ["wheeled", "biped", "robot", "balance", "motion", "control", "robotics"]
 
 [project.urls]
 Documentation = "https://tasts-robots.org/doc/upkie/"
