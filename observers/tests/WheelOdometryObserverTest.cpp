@@ -20,9 +20,9 @@
 #include <memory>
 
 #include "gtest/gtest.h"
-#include "upkie_locomotion/observers/WheelOdometry.h"
+#include "upkie/observers/WheelOdometry.h"
 
-namespace upkie_locomotion::observers::tests {
+namespace upkie::observers::tests {
 
 using palimpsest::Dictionary;
 using palimpsest::KeyError;
@@ -100,4 +100,4 @@ TEST_F(WheelOdometryTest, ZeroVelocityWhenNoContact) {
   ASSERT_DOUBLE_EQ(observation("wheel_odometry")("velocity"), 0.0);
 }
 
-}  // namespace upkie_locomotion::observers::tests
+}  // namespace upkie::observers::tests

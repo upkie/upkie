@@ -15,9 +15,9 @@ import mpacklog
 import numpy as np
 from loop_rate_limiters import AsyncRateLimiter
 
-import upkie_locomotion.envs
+import upkie.envs
 
-upkie_locomotion.envs.register()
+upkie.envs.register()
 
 CPUID = 3  # CPU core to use on the Raspberry Pi
 

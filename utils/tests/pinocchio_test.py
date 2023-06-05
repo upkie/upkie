@@ -22,7 +22,7 @@ import unittest
 import numpy as np
 import pinocchio as pin
 
-from upkie_locomotion.utils.pinocchio import (
+from upkie.utils.pinocchio import (
     box_position_limits,
     box_torque_limits,
     box_velocity_limits,

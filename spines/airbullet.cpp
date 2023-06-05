@@ -28,9 +28,9 @@
 #include <string>
 #include <vector>
 
-#include "upkie_locomotion/spines/upkie_layout.h"
+#include "upkie/spines/upkie_layout.h"
 
-namespace upkie_locomotion::spines::airbullet {
+namespace upkie::spines::airbullet {
 
 using palimpsest::Dictionary;
 using vulp::actuation::BulletInterface;
@@ -150,10 +150,10 @@ int main(const char* argv0, const CommandLineArguments& args) {
   return EXIT_SUCCESS;
 }
 
-}  // namespace upkie_locomotion::spines::airbullet
+}  // namespace upkie::spines::airbullet
 
 int main(int argc, char** argv) {
-  upkie_locomotion::spines::airbullet::CommandLineArguments args(
+  upkie::spines::airbullet::CommandLineArguments args(
       {argv + 1, argv + argc});
   if (args.error) {
     return EXIT_FAILURE;
@@ -161,5 +161,5 @@ int main(int argc, char** argv) {
     args.print_usage(argv[0]);
     return EXIT_SUCCESS;
   }
-  return upkie_locomotion::spines::airbullet::main(argv[0], args);
+  return upkie::spines::airbullet::main(argv[0], args);
 }

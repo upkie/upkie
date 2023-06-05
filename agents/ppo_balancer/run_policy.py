@@ -13,7 +13,7 @@ from loop_rate_limiters import AsyncRateLimiter
 from settings import Settings
 from stable_baselines3 import PPO
 
-from upkie_locomotion.envs import UpkieWheelsEnv
+from upkie.envs import UpkieWheelsEnv
 
 
 async def run_policy(policy, logger: mpacklog.Logger):

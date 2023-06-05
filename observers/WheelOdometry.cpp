@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-#include "upkie_locomotion/observers/WheelOdometry.h"
+#include "upkie/observers/WheelOdometry.h"
 
-namespace upkie_locomotion::observers {
+namespace upkie::observers {
 
 WheelOdometry::WheelOdometry(const Parameters& params)
     : params_(params), position_(0.0), velocity_(0.0) {}
@@ -66,4 +66,4 @@ void WheelOdometry::write(Dictionary& observation) {
   output("velocity") = velocity_;
 }
 
-}  // namespace upkie_locomotion::observers
+}  // namespace upkie::observers

@@ -22,8 +22,8 @@ import pinocchio as pin
 import upkie_description
 from gym import spaces
 
-from upkie_locomotion.utils.clamp import clamp_and_warn
-from upkie_locomotion.utils.pinocchio import (
+from upkie.utils.clamp import clamp_and_warn
+from upkie.utils.pinocchio import (
     box_position_limits,
     box_torque_limits,
     box_velocity_limits,

@@ -25,12 +25,12 @@ from .upkie_wheels_env import UpkieWheelsEnv
 def register():
     gym.envs.register(
         id=f"UpkieServosEnv-v{UpkieServosEnv.version}",
-        entry_point="upkie_locomotion.envs:UpkieServosEnv",
+        entry_point="upkie.envs:UpkieServosEnv",
         max_episode_steps=1_000_000_000,
     )
     gym.envs.register(
         id=f"UpkieWheelsEnv-v{UpkieWheelsEnv.version}",
-        entry_point="upkie_locomotion.envs:UpkieWheelsEnv",
+        entry_point="upkie.envs:UpkieWheelsEnv",
         max_episode_steps=1_000_000_000,
     )
 

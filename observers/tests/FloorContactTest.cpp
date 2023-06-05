@@ -20,9 +20,9 @@
 #include <memory>
 
 #include "gtest/gtest.h"
-#include "upkie_locomotion/observers/FloorContact.h"
+#include "upkie/observers/FloorContact.h"
 
-namespace upkie_locomotion::observers::tests {
+namespace upkie::observers::tests {
 
 using palimpsest::Dictionary;
 using palimpsest::KeyError;
@@ -50,4 +50,4 @@ TEST_F(FloorContactTest, WriteEvenAfterEmptyRead) {
   ASSERT_FALSE(observation.is_empty());
 }
 
-}  // namespace upkie_locomotion::observers::tests
+}  // namespace upkie::observers::tests

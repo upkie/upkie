@@ -12,8 +12,8 @@ def add_default_repositories():
     built into Bazel, of course).
 
     This function intended to be loaded and called from a WORKSPACE file. If
-    your project depends on @upkie_locomotion, you will need to call this
-    function from its WORKSPACE.
+    your project depends on @upkie, you will need to call this function from
+    its WORKSPACE.
     """
     pycodestyle_repository()
     upkie_description_repository()

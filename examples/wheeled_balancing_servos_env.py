@@ -9,11 +9,11 @@ import gym
 import numpy as np
 from loop_rate_limiters import RateLimiter
 
-import upkie_locomotion.envs
-from upkie_locomotion.observers.base_pitch import compute_base_pitch_from_imu
+import upkie.envs
+from upkie.observers.base_pitch import compute_base_pitch_from_imu
 
 if __name__ == "__main__":
-    upkie_locomotion.envs.register()
+    upkie.envs.register()
     with gym.make("UpkieServosEnv-v1") as env:
         observation = env.reset()  # connects to the spine
         action = np.zeros(env.action_space.shape)

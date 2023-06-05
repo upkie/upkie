@@ -5,7 +5,7 @@
 # You can also set these variables from the command line.
 DOXYGEN      = doxygen
 HTMLDIR      = html
-REMOTEDIR    = tasts-robots.org:public_html/doc/upkie_locomotion
+REMOTEDIR    = tasts-robots.org:public_html/doc/upkie
 
 .PHONY: clean html open upload
 
