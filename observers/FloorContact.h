@@ -23,7 +23,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include "upkie_locomotion/observers/WheelContact.h"
+#include "upkie/observers/WheelContact.h"
 #include "vulp/observation/Observer.h"
 
 /*! Observers used by Upkie.
@@ -31,7 +31,7 @@
  * \image html observers.png
  * \image latex observers.eps
  */
-namespace upkie_locomotion::observers {
+namespace upkie::observers {
 
 using palimpsest::Dictionary;
 using vulp::observation::Observer;
@@ -148,4 +148,4 @@ class FloorContact : public Observer {
   bool contact_;
 };
 
-}  // namespace upkie_locomotion::observers
+}  // namespace upkie::observers

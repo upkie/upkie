@@ -3,7 +3,7 @@ requires = ["flit_core >=2,<4"]
 build-backend = "flit_core.buildapi"
 
 [project]
-name = "upkie_locomotion"
+name = "upkie"
 readme = "README.md"
 authors = [
     {name = "Stéphane Caron", email = "stephane.caron@normalesup.org"},
@@ -39,16 +39,16 @@ dependencies = [
 keywords = ["motion control", "real time", "robotics"]
 
 [project.urls]
-Documentation = "https://tasts-robots.org/doc/upkie_locomotion/"
-Source = "https://github.com/tasts-robots/upkie_locomotion"
-Tracker = "https://github.com/tasts-robots/upkie_locomotion/issues"
-Changelog = "https://github.com/tasts-robots/upkie_locomotion/blob/main/CHANGELOG.md"
+Documentation = "https://tasts-robots.org/doc/upkie/"
+Source = "https://github.com/tasts-robots/upkie"
+Tracker = "https://github.com/tasts-robots/upkie/issues"
+Changelog = "https://github.com/tasts-robots/upkie/blob/main/CHANGELOG.md"
 
 [tool.flit.sdist]
 include = [
-    "upkie_locomotion/envs/*.py",
-    "upkie_locomotion/observers/base_pitch/*.py",
-    "upkie_locomotion/utils/*.py",
+    "upkie/envs/*.py",
+    "upkie/observers/base_pitch/*.py",
+    "upkie/utils/*.py",
 ]
 
 [tool.ruff]

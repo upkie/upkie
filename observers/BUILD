@@ -18,7 +18,7 @@ cc_library(
         "@vulp//observation:observer",
         "@vulp//utils:low_pass_filter",
     ],
-    include_prefix = "upkie_locomotion/observers",
+    include_prefix = "upkie/observers",
 )
 
 cc_library(
@@ -33,7 +33,7 @@ cc_library(
         "@vulp//observation:observer",
         ":wheel_contact",
     ],
-    include_prefix = "upkie_locomotion/observers",
+    include_prefix = "upkie/observers",
 )
 
 cc_library(
@@ -47,7 +47,7 @@ cc_library(
     deps = [
         "@vulp//observation:observer",
     ],
-    include_prefix = "upkie_locomotion/observers",
+    include_prefix = "upkie/observers",
 )
 
 cc_library(

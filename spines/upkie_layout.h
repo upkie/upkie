@@ -21,7 +21,7 @@
 #include <string>
 #include <vector>
 
-namespace upkie_locomotion::spines::upkie_layout {
+namespace upkie::spines::upkie_layout {
 
 /*! Get Upkie's servo layout.
  *
@@ -54,4 +54,4 @@ inline const std::vector<std::string> wheel_joints() noexcept {
   return {"left_wheel", "right_wheel"};
 }
 
-}  // namespace upkie_locomotion::spines::upkie_layout
+}  // namespace upkie::spines::upkie_layout

@@ -31,15 +31,15 @@
 #include <string>
 #include <vector>
 
-#include "upkie_locomotion/observers/FloorContact.h"
-#include "upkie_locomotion/observers/WheelOdometry.h"
-#include "upkie_locomotion/spines/upkie_layout.h"
+#include "upkie/observers/FloorContact.h"
+#include "upkie/observers/WheelOdometry.h"
+#include "upkie/spines/upkie_layout.h"
 
-namespace upkie_locomotion::spines::bullet {
+namespace upkie::spines::bullet {
 
 using palimpsest::Dictionary;
-using upkie_locomotion::observers::FloorContact;
-using upkie_locomotion::observers::WheelOdometry;
+using upkie::observers::FloorContact;
+using upkie::observers::WheelOdometry;
 using vulp::actuation::BulletInterface;
 using vulp::observation::ObserverPipeline;
 using vulp::observation::sources::CpuTemperature;
@@ -191,10 +191,10 @@ int main(const char* argv0, const CommandLineArguments& args) {
   return EXIT_SUCCESS;
 }
 
-}  // namespace upkie_locomotion::spines::bullet
+}  // namespace upkie::spines::bullet
 
 int main(int argc, char** argv) {
-  upkie_locomotion::spines::bullet::CommandLineArguments args(
+  upkie::spines::bullet::CommandLineArguments args(
       {argv + 1, argv + argc});
   if (args.error) {
     return EXIT_FAILURE;
@@ -202,5 +202,5 @@ int main(int argc, char** argv) {
     args.print_usage(argv[0]);
     return EXIT_SUCCESS;
   }
-  return upkie_locomotion::spines::bullet::main(argv[0], args);
+  return upkie::spines::bullet::main(argv[0], args);
 }

@@ -22,7 +22,7 @@ import unittest
 import numpy as np
 import posix_ipc
 
-from upkie_locomotion.envs import UpkieBaseEnv
+from upkie.envs import UpkieBaseEnv
 
 
 class MockSpine:

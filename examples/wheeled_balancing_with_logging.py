@@ -13,9 +13,9 @@ import mpacklog
 import numpy as np
 from loop_rate_limiters import AsyncRateLimiter
 
-import upkie_locomotion.envs
+import upkie.envs
 
-upkie_locomotion.envs.register()
+upkie.envs.register()
 
 
 async def balance(env: gym.Env, logger: mpacklog.Logger):

@@ -9,10 +9,10 @@ import gym
 import numpy as np
 from loop_rate_limiters import RateLimiter
 
-import upkie_locomotion.envs
+import upkie.envs
 
 if __name__ == "__main__":
-    upkie_locomotion.envs.register()
+    upkie.envs.register()
     with gym.make("UpkieWheelsEnv-v2") as env:
         observation = env.reset()  # connects to the spine
         action = np.zeros(env.action_space.shape)

@@ -32,11 +32,11 @@ from stable_baselines3.common.callbacks import BaseCallback, CheckpointCallback
 from stable_baselines3.common.logger import TensorBoardOutputFormat
 from torch import nn
 
-import upkie_locomotion.envs
-from upkie_locomotion.envs import UpkieWheelsEnv
-from upkie_locomotion.utils.spdlog import logging
+import upkie.envs
+from upkie.envs import UpkieWheelsEnv
+from upkie.utils.spdlog import logging
 
-upkie_locomotion.envs.register()
+upkie.envs.register()
 
 
 class SummaryWriterCallback(BaseCallback):
@@ -211,7 +211,7 @@ if __name__ == "__main__":
         deez_runfiles = runfiles.Create()
         spine_path = os.path.join(
             agent_dir,
-            deez_runfiles.Rlocation("upkie_locomotion/spines/bullet"),
+            deez_runfiles.Rlocation("upkie/spines/bullet"),
         )
         argv = get_bullet_argv(agent_name, show=args.show)
         os.execvp(spine_path, ["bullet"] + argv)

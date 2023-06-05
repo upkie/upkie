@@ -14,7 +14,7 @@ cc_library(
     deps = [
         "@vulp//actuation:servo_layout",
     ],
-    include_prefix = "upkie_locomotion/spines",
+    include_prefix = "upkie/spines",
 )
 
 cc_binary(

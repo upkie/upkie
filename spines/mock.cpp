@@ -30,15 +30,15 @@
 #include <string>
 #include <vector>
 
-#include "upkie_locomotion/observers/FloorContact.h"
-#include "upkie_locomotion/observers/WheelOdometry.h"
-#include "upkie_locomotion/spines/upkie_layout.h"
+#include "upkie/observers/FloorContact.h"
+#include "upkie/observers/WheelOdometry.h"
+#include "upkie/spines/upkie_layout.h"
 
-namespace upkie_locomotion::spines::mock {
+namespace upkie::spines::mock {
 
 using palimpsest::Dictionary;
-using upkie_locomotion::observers::FloorContact;
-using upkie_locomotion::observers::WheelOdometry;
+using upkie::observers::FloorContact;
+using upkie::observers::WheelOdometry;
 using vulp::actuation::MockInterface;
 using vulp::observation::ObserverPipeline;
 using vulp::observation::sources::CpuTemperature;
@@ -151,10 +151,10 @@ int main(const CommandLineArguments& args) {
   return EXIT_SUCCESS;
 }
 
-}  // namespace upkie_locomotion::spines::mock
+}  // namespace upkie::spines::mock
 
 int main(int argc, char** argv) {
-  upkie_locomotion::spines::mock::CommandLineArguments args(
+  upkie::spines::mock::CommandLineArguments args(
       {argv + 1, argv + argc});
   if (args.error) {
     return EXIT_FAILURE;
@@ -162,5 +162,5 @@ int main(int argc, char** argv) {
     args.print_usage(argv[0]);
     return EXIT_SUCCESS;
   }
-  return upkie_locomotion::spines::mock::main(args);
+  return upkie::spines::mock::main(args);
 }

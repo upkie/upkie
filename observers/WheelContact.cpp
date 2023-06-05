@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-#include "upkie_locomotion/observers/WheelContact.h"
+#include "upkie/observers/WheelContact.h"
 
 #include "vulp/utils/low_pass_filter.h"
 
-namespace upkie_locomotion::observers {
+namespace upkie::observers {
 
 using vulp::utils::low_pass_filter;
 
@@ -61,4 +61,4 @@ void WheelContact::observe(const double torque, const double velocity,
   }
 }
 
-}  // namespace upkie_locomotion::observers
+}  // namespace upkie::observers

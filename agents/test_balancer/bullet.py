@@ -67,7 +67,7 @@ if __name__ == "__main__":
     deez_runfiles = runfiles.Create()
     spine_path = os.path.join(
         agent_dir,
-        deez_runfiles.Rlocation("upkie_locomotion/spines/bullet"),
+        deez_runfiles.Rlocation("upkie/spines/bullet"),
     )
 
     if "-opt" not in spine_path or "-fastbuild" in spine_path:

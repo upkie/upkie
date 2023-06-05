@@ -33,16 +33,16 @@
 #include <string>
 #include <vector>
 
-#include "upkie_locomotion/observers/FloorContact.h"
-#include "upkie_locomotion/observers/WheelOdometry.h"
-#include "upkie_locomotion/spines/upkie_layout.h"
+#include "upkie/observers/FloorContact.h"
+#include "upkie/observers/WheelOdometry.h"
+#include "upkie/spines/upkie_layout.h"
 
-namespace upkie_locomotion::spines::pi3hat {
+namespace upkie::spines::pi3hat {
 
 using Pi3Hat = ::mjbots::pi3hat::Pi3Hat;
 using palimpsest::Dictionary;
-using upkie_locomotion::observers::FloorContact;
-using upkie_locomotion::observers::WheelOdometry;
+using upkie::observers::FloorContact;
+using upkie::observers::WheelOdometry;
 using vulp::actuation::Pi3HatInterface;
 using vulp::observation::ObserverPipeline;
 using vulp::observation::sources::CpuTemperature;
@@ -150,7 +150,7 @@ inline bool calibration_needed() {
 
 int main(const CommandLineArguments& args) {
   if (calibration_needed()) {
-    spdlog::error("Calibration needed: did you run `rezero`?");
+    spdlog::error("Calibration needed: did you run `upkie_tool rezero`?");
     return -3;
   }
   if (!vulp::utils::lock_memory()) {
@@ -218,10 +218,10 @@ int main(const CommandLineArguments& args) {
   return EXIT_SUCCESS;
 }
 
-}  // namespace upkie_locomotion::spines::pi3hat
+}  // namespace upkie::spines::pi3hat
 
 int main(int argc, char** argv) {
-  upkie_locomotion::spines::pi3hat::CommandLineArguments args(
+  upkie::spines::pi3hat::CommandLineArguments args(
       {argv + 1, argv + argc});
   if (args.error) {
     return EXIT_FAILURE;
@@ -229,5 +229,5 @@ int main(int argc, char** argv) {
     args.print_usage(argv[0]);
     return EXIT_SUCCESS;
   }
-  return upkie_locomotion::spines::pi3hat::main(args);
+  return upkie::spines::pi3hat::main(args);
 }

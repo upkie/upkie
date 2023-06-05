@@ -19,7 +19,7 @@
 
 import unittest
 
-from upkie_locomotion.utils.clamp import clamp, clamp_abs, clamp_and_warn
+from upkie.utils.clamp import clamp, clamp_abs, clamp_and_warn
 
 
 class TestClamp(unittest.TestCase):

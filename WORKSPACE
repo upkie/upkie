@@ -2,7 +2,7 @@
 #
 # Copyright 2022 Stéphane Caron
 
-workspace(name = "upkie_locomotion")
+workspace(name = "upkie")
 
 # Repositories
 # ============
@@ -32,9 +32,9 @@ add_rpi_bazel_repositories()
 # ===================
 
 # Depends on @rules_python which is a @palimpsest repository
-load("//tools/workspace/pip_upkie_locomotion:parse_deps.bzl", "parse_deps")
+load("//tools/workspace/pip_upkie:parse_deps.bzl", "parse_deps")
 parse_deps()
-load("@pip_upkie_locomotion//:requirements.bzl", "install_deps")
+load("@pip_upkie//:requirements.bzl", "install_deps")
 install_deps()
 
 # mpacklog also has Python dependencies

@@ -22,7 +22,7 @@ import gym
 import numpy as np
 from vulp.spine import SpineInterface
 
-from upkie_locomotion.observers.base_pitch import compute_base_pitch_from_imu
+from upkie.observers.base_pitch import compute_base_pitch_from_imu
 
 DEFAULT_CONFIG = {
     "bullet": {
