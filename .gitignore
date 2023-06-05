@@ -3,3 +3,4 @@ bazel-*
 coverage/
 doc/html/
 tools/bazel
+wiki/
