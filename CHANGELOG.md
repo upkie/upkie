@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+
+### Changed
+
+- Rename main repository and project to just "upkie"
+
 ## [0.5.0] - 2023/06/05
 
 ### Added
