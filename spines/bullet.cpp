@@ -194,8 +194,7 @@ int main(const char* argv0, const CommandLineArguments& args) {
 }  // namespace upkie::spines::bullet
 
 int main(int argc, char** argv) {
-  upkie::spines::bullet::CommandLineArguments args(
-      {argv + 1, argv + argc});
+  upkie::spines::bullet::CommandLineArguments args({argv + 1, argv + argc});
   if (args.error) {
     return EXIT_FAILURE;
   } else if (args.help) {
