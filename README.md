@@ -1,4 +1,4 @@
-# Upkie locomotion
+# Upkie wheeled biped
 
 [![Build](https://img.shields.io/github/actions/workflow/status/tasts-robots/upkie/bazel.yml?branch=main)](https://github.com/tasts-robots/upkie/actions/workflows/bazel.yml)
 [![Documentation](https://img.shields.io/badge/docs-online-brightgreen?logo=read-the-docs&style=flat)](https://tasts-robots.org/doc/upkie/)
