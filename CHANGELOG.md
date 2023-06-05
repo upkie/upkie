@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Rename ``ROBOT_NAME`` to ``ROBOT`` in the main Makefile
 - Rename main repository and project to just "upkie"
 
 ## [0.5.0] - 2023/06/05

@@ -19,11 +19,11 @@
 # build targets on your computer.
 
 # Hostname or IP address of the Raspberry Pi
-# Uses the value from the ROBOT_NAME environment variable, if defined
-# Otherwise defaults to "upkie"
+# Uses the value from the ROBOT environment variable, if defined.
+# Valid usage: ``make upload ROBOT=foobar``
 REMOTE = upkie
-ifdef ROBOT_NAME
-	REMOTE := ${ROBOT_NAME}
+ifdef ROBOT
+	REMOTE := ${ROBOT}
 endif
 
 # Project name, needs to match the one in WORKSPACE
