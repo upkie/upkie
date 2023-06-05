@@ -1,4 +1,4 @@
-# Makefile for upkie_locomotion targets
+# Makefile for upkie targets
 #
 # Copyright 2022 Stéphane Caron
 # Copyright 2023 Inria
@@ -27,7 +27,7 @@ ifdef ROBOT_NAME
 endif
 
 # Project name, needs to match the one in WORKSPACE
-PROJECT_NAME = upkie_locomotion
+PROJECT_NAME = upkie
 
 BAZEL = $(CURDIR)/tools/bazelisk
 CURDATE = $(shell date --iso=seconds)
