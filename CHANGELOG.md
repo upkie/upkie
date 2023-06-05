@@ -66,7 +66,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-- Add ``upkie_locomotion.envs.register`` function
+- Add Gym environment registration function
 - PPO balancer: setting for total number of training timesteps
 - UpkieWheelsEnv: simple example
 
