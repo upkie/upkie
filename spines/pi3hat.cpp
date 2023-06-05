@@ -221,8 +221,7 @@ int main(const CommandLineArguments& args) {
 }  // namespace upkie::spines::pi3hat
 
 int main(int argc, char** argv) {
-  upkie::spines::pi3hat::CommandLineArguments args(
-      {argv + 1, argv + argc});
+  upkie::spines::pi3hat::CommandLineArguments args({argv + 1, argv + argc});
   if (args.error) {
     return EXIT_FAILURE;
   } else if (args.help) {
