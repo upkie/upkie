@@ -36,11 +36,11 @@ echo "[debug] SRCDIR=${SRCDIR}"
 echo "[debug] TMPDIR=${TMPDIR}"
 
 for folder in envs observers/base_pitch utils; do
-    mkdir -p ${TMPDIR}/upkie_locomotion/$(dirname ${folder})
-    cp -r ${SRCDIR}/${folder} ${TMPDIR}/upkie_locomotion/${folder}
+    mkdir -p ${TMPDIR}/upkie/$(dirname ${folder})
+    cp -r ${SRCDIR}/${folder} ${TMPDIR}/upkie/${folder}
 done
 
-cp ${SCRIPTDIR}/upkie_locomotion/__init__.py ${TMPDIR}/upkie_locomotion/__init__.py
+cp ${SCRIPTDIR}/upkie/__init__.py ${TMPDIR}/upkie/__init__.py
 cp ${SRCDIR}/README.md ${TMPDIR}/README.md
 cp ${SRCDIR}/pyproject.toml ${TMPDIR}/pyproject.toml
 
