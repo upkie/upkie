@@ -16,7 +16,7 @@
 # limitations under the License.
 
 """
-Keep Upkie up! Using its wheels.
+Keep the robot up using its wheels.
 """
 
 from typing import Any, Dict, Tuple

@@ -51,7 +51,12 @@ def parse_command_line_arguments() -> argparse.Namespace:
         help="Agent configuration to apply",
         type=str,
         required=True,
-        choices=["bullet", "pi3hat"],
+    )
+    parser.add_argument(
+        "--configure-cpu",
+        help="Isolate process to CPU core number 3",
+        default=False,
+        action="store_true",
     )
     return parser.parse_args()
 
@@ -118,15 +123,12 @@ if __name__ == "__main__":
     # Gin configuration
     gin.parse_config_file(f"{agent_dir}/config/common.gin")
     logging.info(f'Loading configuration "{args.config}.gin"')
-    if args.config == "pi3hat":
-        gin.parse_config_file(f"{agent_dir}/config/pi3hat.gin")
-    elif args.config == "bullet":
-        gin.parse_config_file(f"{agent_dir}/config/bullet.gin")
+    gin.parse_config_file(f"{agent_dir}/config/{args.config}.gin")
 
     # Spine configuration
     with open(f"{agent_dir}/config/spine.yaml", "r") as fh:
         config = yaml.safe_load(fh)
-    if args.config == "pi3hat":
+    if args.configure_cpu:
         configure_cpu(cpu=3)
 
     spine = SpineInterface()

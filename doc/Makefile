@@ -28,4 +28,4 @@ images/%.png : figures/%.svg
 figures: images/floor-contact.eps images/floor-contact.png images/observers.eps images/observers.png images/wheel-odometry.eps images/wheel-odometry.png
 
 upload: clean figures html
-	rsync -auvz --delete-after $(HTMLDIR)/ $(REMOTEDIR)/
+	rsync -auz --delete-after --progress $(HTMLDIR)/ $(REMOTEDIR)/

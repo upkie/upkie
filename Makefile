@@ -53,7 +53,7 @@ run_pink_balancer:  ### run the pink balancer on the Raspberry Pi
 	$(RASPUNZEL) run -v -s //agents/pink_balancer -- --config pi3hat
 
 run_test_balancer:  ### run the test balancer on the Raspberry Pi
-	$(RASPUNZEL) run -v -s //agents/test_balancer:agent -- --config pi3hat
+	$(RASPUNZEL) run -v -s //agents/test_balancer:agent -- --config pi3hat --configure-cpu
 
 # Upload from host to Raspberry Pi
 # ================================
