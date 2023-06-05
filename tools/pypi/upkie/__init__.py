@@ -15,6 +15,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Real-time motion control for Python."""
+"""Python module to control Upkie wheeled bipeds."""
 
-__version__ = "0.4.0"
+__version__ = "0.5.0"
