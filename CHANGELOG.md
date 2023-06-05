@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## Next unreleased (hum!)
+
+### Added
+
+- Utils: base class and Upkie-specific exceptions
+
 ## Unreleased
 
 ### Added
