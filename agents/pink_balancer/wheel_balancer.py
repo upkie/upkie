@@ -19,6 +19,7 @@
 Keep Upkie up! Using its wheels.
 """
 
+from dataclasses import dataclass
 from typing import Any, Dict, Tuple
 
 import gin
@@ -131,6 +132,14 @@ class WheelBalancer:
                 f"position_stiffness={self.position_stiffness}, "
             )
 
+    @gin.configurable
+    @dataclass
+    class BalancingPlaneInIMUFrame:
+        """Axes of the balancing plane expressed in the IMU frame."""
+
+        sagittal_axis: int
+        vertical_axis: int
+
     air_return_period: float
     error: np.ndarray
     gains: Gains
@@ -194,6 +203,7 @@ class WheelBalancer:
         """
         assert 0.0 <= turning_deadband <= 1.0
         self.air_return_period = air_return_period
+        self.balancing_plane = WheelBalancer.BalancingPlaneInIMUFrame()
         self.error = np.zeros(2)
         self.fall_pitch = fall_pitch
         self.gains = WheelBalancer.Gains()  # type: ignore

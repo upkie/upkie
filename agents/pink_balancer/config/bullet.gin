@@ -16,6 +16,9 @@
 
 import agents.pink_balancer.wheel_balancer
 
+BalancingPlaneInIMUFrame.sagittal_axis = 0
+BalancingPlaneInIMUFrame.vertical_axis = 2
+
 Gains.pitch_damping = 10.0
 Gains.pitch_stiffness = 20.0
 Gains.position_damping = 5.0
