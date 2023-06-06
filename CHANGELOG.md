@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 
 - Rename ``ROBOT_NAME`` to ``ROBOT`` in the main Makefile
 - Rename main repository and project to just "upkie"
+- Update Vulp to v1.2.0
 
 ## [0.5.0] - 2023/06/05
 
