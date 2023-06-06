@@ -13,7 +13,7 @@ import upkie.envs
 
 nb_genuflections = 10
 genuflection_steps = 200
-amplitude = 2.0  # in radians
+amplitude = 1.0  # in radians
 
 config = {
     "bullet": {
@@ -31,7 +31,7 @@ if __name__ == "__main__":
         for step in range(nb_genuflections * genuflection_steps):
             observation, _, _, _ = env.step(action)
             x = float(step % genuflection_steps) / genuflection_steps
-            y = 2.0 * x * (1.0 - x)  # in [0, 1]
+            y = 4.0 * x * (1.0 - x)  # in [0, 1]
             A = amplitude  # in radians
             action[[0, 1, 3, 4]] = A * y * np.array([1.0, -2.0, -1.0, 2.0])
             rate.sleep()
