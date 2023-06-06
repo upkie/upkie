@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+### Added
+
+- Example: lying genuflections
+
 ### Changed
 
 - Rename ``ROBOT_NAME`` to ``ROBOT`` in the main Makefile
