@@ -37,6 +37,7 @@ def register():
 
 __all__ = [
     "UpkieBaseEnv",
+    "UpkieServosEnv",
     "UpkieWheelsEnv",
     "register",
 ]
