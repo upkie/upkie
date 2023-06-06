@@ -3,14 +3,13 @@
 #
 # Copyright 2023 Inria
 
-"""Wheel proportional balancing with dictionary observations and actions."""
+"""Genuflect while lying on a horizontal floor."""
 
 import gym
 import numpy as np
 from loop_rate_limiters import RateLimiter
 
 import upkie.envs
-from upkie.observers.base_pitch import compute_base_pitch_from_imu
 
 nb_genuflections = 10
 genuflection_steps = 200
@@ -30,9 +29,7 @@ if __name__ == "__main__":
         action = np.zeros(env.action_space.shape)
         rate = RateLimiter(frequency=200.0)
         for step in range(nb_genuflections * genuflection_steps):
-            observation, reward, done, info = env.step(action)
-            imu = info["observation"]["imu"]
-            pitch = compute_base_pitch_from_imu(imu["orientation"])
+            observation, _, _, _ = env.step(action)
             x = float(step % genuflection_steps) / genuflection_steps
             y = 2.0 * x * (1.0 - x)  # in [0, 1]
             A = amplitude  # in radians
