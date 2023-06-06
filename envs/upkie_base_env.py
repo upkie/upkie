@@ -60,7 +60,7 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
 
     def __init__(
         self,
-        config: dict,
+        config: Optional[dict],
         fall_pitch: float,
         shm_name: str,
     ) -> None:
