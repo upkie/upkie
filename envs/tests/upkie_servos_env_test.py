@@ -22,7 +22,7 @@ import unittest
 import numpy as np
 import posix_ipc
 
-from upkie.envs import UpkieServosEnv
+from envs import UpkieServosEnv
 
 
 class MockSpine:
