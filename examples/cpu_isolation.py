@@ -10,9 +10,10 @@ import sys
 
 import gym
 import numpy as np
-import upkie_locomotion.envs
 
-upkie_locomotion.envs.register()
+import upkie.envs
+
+upkie.envs.register()
 
 CPUID = 3  # CPU core to use on the Raspberry Pi
 
