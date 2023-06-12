@@ -57,9 +57,9 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
     """
 
     __frequency: float
-    _async_rate: Optional[AsyncRateLimiter]
-    _rate: Optional[RateLimiter]
-    _spine: SpineInterface
+    __async_rate: Optional[AsyncRateLimiter]
+    __rate: Optional[RateLimiter]
+    __spine: SpineInterface
     config: dict
     fall_pitch: float
 
@@ -81,7 +81,7 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
         if config is None:
             config = DEFAULT_CONFIG
         self.__frequency = frequency
-        self._spine = SpineInterface(shm_name)
+        self.__spine = SpineInterface(shm_name)
         self.config = config
         self.fall_pitch = fall_pitch
 
@@ -89,7 +89,7 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
         """!
         Stop the spine properly.
         """
-        self._spine.stop()
+        self.__spine.stop()
 
     def reset(
         self,
@@ -112,10 +112,10 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
         """
         # super().reset(seed=seed)  # we are pinned at gym==0.21.0
         self.__reset_rates()
-        self._spine.stop()
-        self._spine.start(self.config)
-        self._spine.get_observation()  # might be a pre-reset observation
-        observation_dict = self._spine.get_observation()
+        self.__spine.stop()
+        self.__spine.start(self.config)
+        self.__spine.get_observation()  # might be a pre-reset observation
+        observation_dict = self.__spine.get_observation()
         self.parse_first_observation(observation_dict)
         observation = self.vectorize_observation(observation_dict)
         if not return_info:
@@ -124,13 +124,13 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
             return observation, observation_dict
 
     def __reset_rates(self):
-        self._async_rate = None
-        self._rate = None
+        self.__async_rate = None
+        self.__rate = None
         try:
             asyncio.get_running_loop()
-            self._async_rate = AsyncRateLimiter(self.__frequency)
+            self.__async_rate = AsyncRateLimiter(self.__frequency)
         except RuntimeError:  # not asyncio
-            self._rate = RateLimiter(self.__frequency)
+            self.__rate = RateLimiter(self.__frequency)
 
     def step(self, action: np.ndarray) -> Tuple[np.ndarray, float, bool, dict]:
         """!
@@ -149,7 +149,7 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
               debugging, logging, and sometimes learning).
         """
         action_dict = self.dictionarize_action(action)
-        self._rate.sleep()  # wait until clock tick to send the action
+        self.__rate.sleep()  # wait until clock tick to send the action
         return self.__step(action_dict)
 
     async def async_step(
@@ -171,14 +171,14 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
               debugging, logging, and sometimes learning).
         """
         action_dict = self.dictionarize_action(action)
-        await self._async_rate.sleep()  # send action at next clock tick
+        await self.__async_rate.sleep()  # send action at next clock tick
         return self.__step(action_dict)
 
     def __step(
         self, action_dict: dict
     ) -> Tuple[np.ndarray, float, bool, dict]:
-        self._spine.set_action(action_dict)
-        observation_dict = self._spine.get_observation()
+        self.__spine.set_action(action_dict)
+        observation_dict = self.__spine.get_observation()
         observation = self.vectorize_observation(observation_dict)
         reward = self.reward.get(observation)
         done = self.detect_fall(observation_dict)
