@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 
 - Environment: ``UpkieServosEnv-v2`` with frequency regulation
 - Environment: ``UpkieWheelsEnv-v3`` with frequency regulation
+- Environment: regulate loop frequencies
 - Rename ``ROBOT_NAME`` to ``ROBOT`` in the main Makefile
 - Rename main repository and project to just "upkie"
 - Update Vulp to v1.2.0
