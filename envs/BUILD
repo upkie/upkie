@@ -17,6 +17,7 @@ py_library(
         "@upkie//observers/base_pitch",
         "@vulp//spine:python",
         requirement("gym"),
+        requirement("loop_rate_limiters"),
         requirement("pyyaml"),
         requirement("upkie_description"),
     ],
