@@ -2,20 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
-## Next unreleased (hum!)
-
-### Added
-
-- Utils: base class and Upkie-specific exceptions
-
 ## Unreleased
 
 ### Added
 
 - Example: lying genuflections
+- Utils: base class and Upkie-specific exceptions
 
 ### Changed
 
+- Environment: ``UpkieServosEnv-v2`` with frequency regulation
+- Environment: ``UpkieWheelsEnv-v3`` with frequency regulation
 - Rename ``ROBOT_NAME`` to ``ROBOT`` in the main Makefile
 - Rename main repository and project to just "upkie"
 - Update Vulp to v1.2.0
