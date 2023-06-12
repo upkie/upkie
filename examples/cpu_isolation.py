@@ -10,7 +10,6 @@ import sys
 
 import gym
 import numpy as np
-
 import upkie_locomotion.envs
 
 upkie_locomotion.envs.register()
@@ -31,7 +30,8 @@ def balance(env: gym.Env):
 
 
 if __name__ == "__main__":
-    if os.geteuid() != 0:  # run as root so that we can set CPU affinity
+    if os.geteuid() != 0:
+        print("Re-running as root so that we can set CPU affinity")
         args = ["sudo", "-E", sys.executable] + sys.argv + [os.environ]
         os.execlpe("sudo", *args)
     os.sched_setaffinity(0, {CPUID})
