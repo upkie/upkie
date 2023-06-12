@@ -111,6 +111,7 @@ class UpkieServosEnv(UpkieBaseEnv):
 
         @param config Configuration dictionary, also sent to the spine.
         @param fall_pitch Fall pitch angle, in radians.
+        @param frequency Regulated frequency of the control loop, in Hz.
         @param shm_name Name of shared-memory file.
         """
         super().__init__(
