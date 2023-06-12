@@ -59,7 +59,7 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
     __frequency: float
     __async_rate: Optional[AsyncRateLimiter]
     __rate: Optional[RateLimiter]
-    __spine: SpineInterface
+    _spine: SpineInterface
     config: dict
     fall_pitch: float
 
@@ -81,7 +81,7 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
         if config is None:
             config = DEFAULT_CONFIG
         self.__frequency = frequency
-        self.__spine = SpineInterface(shm_name)
+        self._spine = SpineInterface(shm_name)
         self.config = config
         self.fall_pitch = fall_pitch
 
@@ -89,7 +89,7 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
         """!
         Stop the spine properly.
         """
-        self.__spine.stop()
+        self._spine.stop()
 
     def reset(
         self,
@@ -112,10 +112,10 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
         """
         # super().reset(seed=seed)  # we are pinned at gym==0.21.0
         self.__reset_rates()
-        self.__spine.stop()
-        self.__spine.start(self.config)
-        self.__spine.get_observation()  # might be a pre-reset observation
-        observation_dict = self.__spine.get_observation()
+        self._spine.stop()
+        self._spine.start(self.config)
+        self._spine.get_observation()  # might be a pre-reset observation
+        observation_dict = self._spine.get_observation()
         self.parse_first_observation(observation_dict)
         observation = self.vectorize_observation(observation_dict)
         if not return_info:
@@ -177,8 +177,8 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
     def __step(
         self, action_dict: dict
     ) -> Tuple[np.ndarray, float, bool, dict]:
-        self.__spine.set_action(action_dict)
-        observation_dict = self.__spine.get_observation()
+        self._spine.set_action(action_dict)
+        observation_dict = self._spine.get_observation()
         observation = self.vectorize_observation(observation_dict)
         reward = self.reward.get(observation)
         done = self.detect_fall(observation_dict)
