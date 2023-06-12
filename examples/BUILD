@@ -11,8 +11,14 @@ load("//tools/lint:lint.bzl", "add_lint_tests")
 load("@pip_upkie//:requirements.bzl", "requirement")
 
 py_binary(
-    name = "servos_env",
-    srcs = ["servos_env.py"],
+    name = "cpu_isolation",
+    srcs = ["cpu_isolation.py"],
+    deps = ["//envs"],
+)
+
+py_binary(
+    name = "lying_genuflection",
+    srcs = ["lying_genuflection.py"],
     deps = [
         "//envs",
         "//observers/base_pitch",
@@ -28,12 +34,6 @@ py_binary(
 py_binary(
     name = "wheeled_balancing_async",
     srcs = ["wheeled_balancing_async.py"],
-    deps = ["//envs"],
-)
-
-py_binary(
-    name = "wheeled_balancing_cpu_isolation",
-    srcs = ["wheeled_balancing_cpu_isolation.py"],
     deps = ["//envs"],
 )
 
