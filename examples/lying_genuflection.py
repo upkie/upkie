@@ -7,7 +7,6 @@
 
 import gym
 import numpy as np
-from loop_rate_limiters import RateLimiter
 
 import upkie.envs
 
@@ -24,14 +23,12 @@ config = {
 
 if __name__ == "__main__":
     upkie.envs.register()
-    with gym.make("UpkieServosEnv-v1", config=config) as env:
+    with gym.make("UpkieServosEnv-v2", config=config, frequency=200.0) as env:
         observation = env.reset()
         action = np.zeros(env.action_space.shape)
-        rate = RateLimiter(frequency=200.0)
         for step in range(nb_genuflections * genuflection_steps):
             observation, _, _, _ = env.step(action)
             x = float(step % genuflection_steps) / genuflection_steps
             y = 4.0 * x * (1.0 - x)  # in [0, 1]
             A = amplitude  # in radians
             action[[0, 1, 3, 4]] = A * y * np.array([1.0, -2.0, -1.0, 2.0])
-            rate.sleep()
