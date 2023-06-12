@@ -68,7 +68,11 @@ class TestUpkieServosEnv(unittest.TestCase):
         shared_memory = posix_ipc.SharedMemory(
             shm_name, posix_ipc.O_RDWR | posix_ipc.O_CREAT, size=42
         )
-        self.env = UpkieServosEnv(shm_name=shm_name)
+        self.env = UpkieServosEnv(
+            fall_pitch=1.0,
+            frequency=100.0,
+            shm_name=shm_name,
+        )
         shared_memory.close_fd()
         self.env._spine = MockSpine()
 
