@@ -28,22 +28,19 @@ Connect a USB controller to move the robot around 🎮
 
 ```python
 import gym
-import loop_rate_limiters
 import upkie.envs
 
 upkie.envs.register()
 
-with gym.make("UpkieWheelsEnv-v2") as env:
+with gym.make("UpkieWheelsEnv-v2", frequency=200.0) as env:
     observation = env.reset()
     action = 0.0 * env.action_space.sample()
-    rate = loop_rate_limiters.RateLimiter(frequency=200.0)
     for step in range(1_000_000):
         observation, reward, done, _ = env.step(action)
         if done:
             observation = env.reset()
         pitch = observation[0]
         action[0] = 10.0 * pitch
-        rate.sleep()
 ```
 
 ## Installation
