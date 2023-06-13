@@ -192,7 +192,7 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
         """!
         Detect a fall based on the body-to-world pitch angle.
 
-        @param pitch Current pitch angle in [rad].
+        @param observation_dict Observation dictionary with an "imu" key.
         @returns True if and only if a fall is detected.
         """
         imu = observation_dict["imu"]
