@@ -43,6 +43,12 @@ with gym.make("UpkieWheelsEnv-v2", frequency=200.0) as env:
         action[0] = 10.0 * pitch
 ```
 
+This example runs alongside a [spine](#spines), for instance a simulation spine started by:
+
+```console
+$ ./start_simulation.sh
+```
+
 ## Installation
 
 ### PyPI
