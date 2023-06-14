@@ -43,7 +43,7 @@ clean_broken_links:
 .PHONY: build
 build: clean_broken_links  ## build Raspberry Pi targets
 	$(BAZEL) build --config=pi64 //agents/pink_balancer
-	$(BAZEL) build --config=pi64 //agents/test_balancer:agent
+	$(BAZEL) build --config=pi64 //agents/wheel_balancer:agent
 	$(BAZEL) build --config=pi64 //spines:pi3hat
 
 run_pi3hat_spine:  ### run the pi3hat spine on the Raspberry Pi
@@ -52,8 +52,8 @@ run_pi3hat_spine:  ### run the pi3hat spine on the Raspberry Pi
 run_pink_balancer:  ### run the pink balancer on the Raspberry Pi
 	$(RASPUNZEL) run -v -s //agents/pink_balancer -- --config pi3hat
 
-run_test_balancer:  ### run the test balancer on the Raspberry Pi
-	$(RASPUNZEL) run -v -s //agents/test_balancer:agent -- --config pi3hat --configure-cpu
+run_wheel_balancer:  ### run the test balancer on the Raspberry Pi
+	$(RASPUNZEL) run -v -s //agents/wheel_balancer:agent -- --config pi3hat --configure-cpu
 
 # Upload from host to Raspberry Pi
 # ================================

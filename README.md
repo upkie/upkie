@@ -19,7 +19,7 @@ Run a simulated Upkie right away from the command line, no installation required
 ```console
 $ git clone https://github.com/tasts-robots/upkie.git
 $ cd upkie
-$ ./start_test_balancer.sh
+$ ./start_wheel_balancer.sh
 ```
 
 Connect a USB controller to move the robot around 🎮
@@ -75,8 +75,8 @@ The ``-c opt`` argument to Bazel makes sure we compile optimized code, while the
 ### Agents
 
 <dl>
-  <dt>Test balancer</dt>
-  <dd>A baseline agent designed to check out Upkie's physical capabilities. It balances the robot using PD feedback from the head's pitch and wheel odometry to wheel velocities, plus a feedforward <a href="https://github.com/tasts-robots/upkie/blob/662d76180e03a855e8810d60eeb5b229c95b68fb/agents/test_balancer/wheel_balancer.py#L378-L400">non-minimum phase trick</a> for smoother transitions from standing to rolling.</dd>
+  <dt>Wheel balancer</dt>
+  <dd>A baseline agent designed to check out Upkie's physical capabilities. The robot balances with its wheels only, following PD feedback from the head pitch and wheel odometry to wheel velocities, plus a feedforward <a href="https://github.com/tasts-robots/upkie/blob/662d76180e03a855e8810d60eeb5b229c95b68fb/agents/wheel_balancer/wheel_balancer.py#L378-L400">non-minimum phase trick</a> for smoother transitions from standing to rolling.</dd>
 
   <dt>Pink balancer</dt>
   <dd>A more capable agent that combines wheeled balancing with inverse kinematics computed by <a href="https://github.com/tasts-robots/pink">Pink</a>. This is the controller that runs in the <a href="https://www.youtube.com/shorts/8b36XcCgh7s">first</a> <a href="https://www.youtube.com/watch?v=NO_TkHGS0wQ">two</a> videos of Upkie.</dd>

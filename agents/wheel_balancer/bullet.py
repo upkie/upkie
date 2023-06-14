@@ -30,7 +30,7 @@ from loop_rate_limiters import AsyncRateLimiter
 from rules_python.python.runfiles import runfiles
 from vulp.spine import SpineInterface
 
-from agents.test_balancer.servo_controller import ServoController
+from agents.wheel_balancer.servo_controller import ServoController
 
 
 class CompilationModeError(Exception):

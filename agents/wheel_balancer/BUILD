@@ -26,7 +26,7 @@ py_binary(
     srcs = ["agent.py"],
     main = "agent.py",
     data = [
-        "//agents/test_balancer/config",
+        "//agents/wheel_balancer/config",
     ] + select({
         "//:pi32_config": ["//spines:pi3hat"],
         "//:pi64_config": ["//spines:pi3hat"],

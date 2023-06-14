@@ -31,7 +31,7 @@ import yaml
 from loop_rate_limiters import AsyncRateLimiter
 from vulp.spine import SpineInterface
 
-from agents.test_balancer.servo_controller import ServoController
+from agents.wheel_balancer.servo_controller import ServoController
 from utils.realtime import configure_cpu
 from utils.spdlog import logging
 
@@ -154,6 +154,6 @@ if __name__ == "__main__":
     now = datetime.datetime.now()
     stamp = now.strftime("%Y-%m-%d_%H%M%S")
     log_dir = os.environ.get("UPKIE_LOG_PATH", "~")
-    save_path = os.path.expanduser(f"{log_dir}/test_balancer_{stamp}.mpack")
+    save_path = os.path.expanduser(f"{log_dir}/wheel_balancer_{stamp}.mpack")
     shutil.copy("/dev/shm/brain.mpack", save_path)
     logging.info(f"Log saved to {save_path}")
