@@ -8,10 +8,10 @@ load("@pip_upkie//:requirements.bzl", "requirement")
 package(default_visibility = ["//visibility:public"])
 
 py_library(
-    name = "servo_controller",
+    name = "controllers",
     srcs = [
         "servo_controller.py",
-        "wheel_balancer.py",
+        "wheel_controller.py",
     ],
     deps = [
         "//observers/base_pitch",
@@ -36,7 +36,7 @@ py_binary(
         "//utils:exceptions",
         "//utils:realtime",
         "//utils:spdlog",
-        ":servo_controller",
+        ":controllers",
         "@mpacklog//:python",
         "@vulp//spine:python",
         requirement("loop_rate_limiters"),
@@ -54,7 +54,7 @@ py_binary(
     ],
     deps = [
         "//utils:exceptions",
-        ":servo_controller",
+        ":controllers",
         "@rules_python//python/runfiles",
         "@vulp//spine:python",
         requirement("loop_rate_limiters"),
