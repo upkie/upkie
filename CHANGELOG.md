@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+
+### Changed
+
+- Rename "test balancer" to "wheel balancer"
+
 ## [1.0.0] - 2023/06/12
 
 ### Added
