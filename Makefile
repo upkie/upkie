@@ -28,10 +28,10 @@ endif
 
 # Project name, needs to match the one in WORKSPACE
 PROJECT_NAME = upkie
-CURDIR_NAME = $(shell basename $(CURDIR))
 
 BAZEL = $(CURDIR)/tools/bazelisk
 CURDATE = $(shell date --iso=seconds)
+CURDIR_NAME = $(shell basename $(CURDIR))
 RASPUNZEL = $(CURDIR)/tools/raspunzel
 
 .PHONY: clean_broken_links
