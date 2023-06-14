@@ -15,7 +15,7 @@
 # limitations under the License.
 
 import agents.wheel_balancer.servo_controller
-import agents.wheel_balancer.wheel_balancer
+import agents.wheel_balancer.wheel_controller
 
 ServoController.gain_scale = 2.0
 ServoController.turning_gain_scale = 2.0
