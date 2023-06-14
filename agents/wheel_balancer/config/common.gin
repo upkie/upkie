@@ -14,22 +14,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import agents.test_balancer.servo_controller
-import agents.test_balancer.wheel_balancer
+import agents.wheel_balancer.servo_controller
+import agents.wheel_balancer.wheel_balancer
 
 ServoController.gain_scale = 2.0
 ServoController.turning_gain_scale = 2.0
 ServoController.wheel_distance = 0.3048
 
-WheelBalancer.air_return_period = 1.0             # [s]
-WheelBalancer.fall_pitch = 1.0                    # [rad]
-WheelBalancer.max_ground_velocity = 1.0           # [m] / [s]
-WheelBalancer.max_integral_error_velocity = 10.0  # [m] / [s]
-WheelBalancer.max_target_accel = 0.3              # [m] / [s]²
-WheelBalancer.max_target_distance = 1.0           # [m]
-WheelBalancer.max_target_velocity = 0.6           # [m] / [s]
-WheelBalancer.max_yaw_accel = 10.0                # [rad] / [s]²
-WheelBalancer.max_yaw_velocity = 1.0              # [rad] / [s]
-WheelBalancer.turning_deadband = 0.3
-WheelBalancer.turning_decision_time = 0.2         # [s]
-WheelBalancer.wheel_radius = 0.06                 # [m]
+WheelController.air_return_period = 1.0             # [s]
+WheelController.fall_pitch = 1.0                    # [rad]
+WheelController.max_ground_velocity = 1.0           # [m] / [s]
+WheelController.max_integral_error_velocity = 10.0  # [m] / [s]
+WheelController.max_target_accel = 0.3              # [m] / [s]²
+WheelController.max_target_distance = 1.0           # [m]
+WheelController.max_target_velocity = 0.6           # [m] / [s]
+WheelController.max_yaw_accel = 10.0                # [rad] / [s]²
+WheelController.max_yaw_velocity = 1.0              # [rad] / [s]
+WheelController.turning_deadband = 0.3
+WheelController.turning_decision_time = 0.2         # [s]
+WheelController.wheel_radius = 0.06                 # [m]

@@ -20,7 +20,7 @@ from typing import Any, Dict
 import gin
 import numpy as np
 
-from agents.test_balancer.wheel_balancer import WheelBalancer
+from agents.wheel_balancer.wheel_controller import WheelController
 from utils.clamp import clamp
 
 
@@ -60,7 +60,7 @@ class ServoController:
         self.position_right_in_left = np.array([0.0, wheel_distance, 0.0])
         self.servo_action = None
         self.turning_gain_scale = turning_gain_scale
-        self.wheel_balancer = WheelBalancer()  # type: ignore
+        self.wheel_balancer = WheelController()  # type: ignore
 
     def initialize_servo_action(self, observation: Dict[str, Any]) -> None:
         """Initialize default servo action from initial observation.

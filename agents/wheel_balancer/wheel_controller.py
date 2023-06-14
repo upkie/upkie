@@ -30,7 +30,7 @@ from observers.base_pitch import compute_base_pitch_from_imu
 
 
 @gin.configurable
-class WheelBalancer:
+class WheelController:
 
     """
     Balancing by proportional-derivative feedback of the body pitch error to
@@ -124,7 +124,7 @@ class WheelBalancer:
 
         def __repr__(self):
             return (
-                "WheelBalancer.Gains("
+                "WheelController.Gains("
                 f"pitch_damping={self.pitch_damping}, "
                 f"pitch_stiffness={self.pitch_stiffness}, "
                 f"position_damping={self.position_damping}, "
@@ -196,7 +196,7 @@ class WheelBalancer:
         self.air_return_period = air_return_period
         self.error = np.zeros(2)
         self.fall_pitch = fall_pitch
-        self.gains = WheelBalancer.Gains()  # type: ignore
+        self.gains = WheelController.Gains()  # type: ignore
         self.ground_velocity = 0.0
         self.integral_error_velocity = 0.0
         self.max_ground_velocity = max_ground_velocity
