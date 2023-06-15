@@ -21,5 +21,5 @@ COUNTRY=${4}
 WIFI_PREFIX=${5}
 ETH_PREFIX=${6}
 
-scp -r ${CURDIR}/scripts ${ROBOT}:scripts
+scp -r ${CURDIR}/remote ${ROBOT}:scripts
 ssh ${ROBOT} sudo ./scripts/setup-system.py ${SSID} ${WIFI_PASSWORD} ${COUNTRY} ${WIFI_PREFIX} ${ETH_PREFIX}
