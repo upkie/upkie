@@ -21,10 +21,7 @@
 # Hostname or IP address of the Raspberry Pi
 # Uses the value from the ROBOT environment variable, if defined.
 # Valid usage: ``make upload ROBOT=foobar``
-REMOTE = upkie
-ifdef ROBOT
-	REMOTE := ${ROBOT}
-endif
+REMOTE = ${ROBOT}
 
 # Project name, needs to match the one in WORKSPACE
 PROJECT_NAME = upkie
@@ -37,6 +34,17 @@ RASPUNZEL = $(CURDIR)/tools/raspunzel
 .PHONY: clean_broken_links
 clean_broken_links:
 	find -L $(CURDIR) -type l ! -exec test -e {} \; -delete
+
+.PHONY: check-robot
+check-robot:
+	@ if [ -z "${ROBOT}" ]; then \
+		echo "ERROR: Environment variable ROBOT is not set\n"; \
+		echo "You can define it inline for a one-time use:\n"; \
+		echo "    make some_target ROBOT=your_robot_hostname\n"; \
+		echo "Or add the following line to your shell configuration:\n"; \
+		echo "    export ROBOT=your_robot_hostname\n"; \
+		exit 1; \
+	fi
 
 # Targets
 # =======
@@ -62,7 +70,7 @@ run_wheel_balancer:  ### run the test balancer on the Raspberry Pi
 # Running ``raspunzel -s`` can create __pycache__ directories owned by root
 # that rsync is not allowed to remove. We therefore give permissions first.
 .PHONY: upload
-upload: build  ## upload built targets to the Raspberry Pi
+upload: check-robot build  ## upload built targets to the Raspberry Pi
 	ssh $(REMOTE) sudo date -s "$(CURDATE)"
 	ssh $(REMOTE) mkdir -p $(PROJECT_NAME)
 	ssh $(REMOTE) sudo find $(PROJECT_NAME) -type d -name __pycache__ -user root -exec chmod go+wx {} "\;"
@@ -74,9 +82,9 @@ upload: build  ## upload built targets to the Raspberry Pi
 # Help snippet from:
 # http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 .PHONY: help
-help:
-	@echo "Host:\n"
+help: check-robot
+	@echo "Host targets:\n"
 	@grep -P '^[a-zA-Z0-9_-]+:.*? ## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "    \033[36m%-24s\033[0m %s\n", $$1, $$2}'
-	@echo "\nRemote:\n"
+	@echo "\nRaspberry Pi targets:\n"
 	@grep -P '^[a-zA-Z0-9_-]+:.*?### .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?### "}; {printf "    \033[36m%-24s\033[0m %s\n", $$1, $$2}'
 .DEFAULT_GOAL := help
