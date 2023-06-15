@@ -38,8 +38,9 @@ clean_broken_links:
 .PHONY: check-robot
 check-robot:
 	@ if [ -z "${ROBOT}" ]; then \
-		echo "ERROR: Environment variable ROBOT is not set\n"; \
-		echo "You can define it inline for a one-time use:\n"; \
+		echo "ERROR: Environment variable ROBOT is not set.\n"; \
+		echo "This variable should contain the robot's hostname or IP address for SSH. You"; \
+		echo "can define it inline for a one-time use:\n"; \
 		echo "    make some_target ROBOT=your_robot_hostname\n"; \
 		echo "Or add the following line to your shell configuration:\n"; \
 		echo "    export ROBOT=your_robot_hostname\n"; \
