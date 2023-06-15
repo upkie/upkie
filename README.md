@@ -119,7 +119,3 @@ Environments are single-threaded rather than vectorized. In return, they run as-
   <dt>pi3hat</dt>
   <dd>Spine is made to be called from a Raspberry Pi with an onboard mjbots <a href="https://mjbots.com/products/mjbots-pi3hat-r4-4b">pi3hat</a>. Servos are stopped when the spine is stopped, and switch to <a href="https://github.com/mjbots/moteus/blob/main/docs/reference.md#theory-of-operation">position mode</a> (which is a position-velocity-torque controller) when the spine idles. Check out the <a href="https://tasts-robots.org/doc/vulp/classvulp_1_1spine_1_1StateMachine.html#details">spine state machine</a> for details.</dd>
 </dl>
-
-## See also
-
-- [Project page on Hackaday](https://hackaday.io/project/185729-upkie-wheeled-biped-robot)
