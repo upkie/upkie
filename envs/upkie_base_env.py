@@ -116,7 +116,7 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
         """!
         Resets the spine and get an initial observation.
 
-        @param seed is not used yet but should be (TODO).
+        @param seed It is not used yet but should be (TODO).
         @param return_info If true, return the dictionary observation as an
             extra info dictionary.
         @param options Currently unused.
@@ -159,8 +159,8 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
         @returns
             - ``observation``: Agent's observation of the environment.
             - ``reward``: Amount of reward returned after previous action.
-            - ``terminated``: Whether the agent reaches the terminal state, which can
-              be a good or a bad thing. If true, the user needs to call
+            - ``terminated``: Whether the agent reaches the terminal state, which
+              can be a good or a bad thing. If true, the user needs to call
               :func:`reset()`.
             - ``truncated'': Whether the episode is reaching max number of steps.
             - ``info``: Contains auxiliary diagnostic information (helpful for
@@ -183,8 +183,8 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
         @returns
             - ``observation``: Agent's observation of the environment.
             - ``reward``: Amount of reward returned after previous action.
-            - ``terminated``: Whether the agent reaches the terminal state, which can
-              be a good or a bad thing. If true, the user needs to call
+            - ``terminated``: Whether the agent reaches the terminal state, which
+              can be a good or a bad thing. If true, the user needs to call
               :func:`reset()`.
             - ``truncated'': Whether the episode is reaching max nr of steps.
             - ``info``: Contains auxiliary diagnostic information (helpful for
