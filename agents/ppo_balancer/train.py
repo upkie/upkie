@@ -23,7 +23,7 @@ import signal
 import time
 from typing import List
 
-import gym
+import gymnasium as gym
 import stable_baselines3
 from gym.wrappers.time_limit import TimeLimit
 from rules_python.python.runfiles import runfiles

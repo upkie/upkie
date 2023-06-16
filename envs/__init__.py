@@ -15,7 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import gym
+import gymnasium as gym
 
 from .upkie_base_env import UpkieBaseEnv
 from .upkie_servos_env import UpkieServosEnv
@@ -23,12 +23,12 @@ from .upkie_wheels_env import UpkieWheelsEnv
 
 
 def register():
-    gym.envs.register(
+    gym.envs.registration.register(
         id=f"UpkieServosEnv-v{UpkieServosEnv.version}",
         entry_point="upkie.envs:UpkieServosEnv",
         max_episode_steps=1_000_000_000,
     )
-    gym.envs.register(
+    gym.envs.registration.register(
         id=f"UpkieWheelsEnv-v{UpkieWheelsEnv.version}",
         entry_point="upkie.envs:UpkieWheelsEnv",
         max_episode_steps=1_000_000_000,
