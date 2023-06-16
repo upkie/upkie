@@ -11,6 +11,7 @@ import time
 import gymnasium as gym
 import mpacklog
 import numpy as np
+
 import upkie.envs
 
 upkie.envs.register()
@@ -26,7 +27,7 @@ async def balance(env: gym.Env, logger: mpacklog.AsyncLogger):
             reward,
             terminated,
             truncated,
-            info
+            info,
         ) = await env.async_step(action)
         if terminated or truncated:
             observation = env.reset()
