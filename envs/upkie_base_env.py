@@ -164,8 +164,8 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
             - ``terminated``: Whether the agent reaches the terminal state,
               which can be a good or a bad thing. If true, the user needs to
               call :func:`reset()`.
-            - ``truncated'': Whether the episode is truncated (reaching max
-              number of steps).
+            - ``truncated'': Whether the episode is reaching max number of
+              steps.
             - ``info``: Contains auxiliary diagnostic information (helpful for
               debugging, logging, and sometimes learning).
         """
@@ -186,11 +186,11 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
         @returns
             - ``observation``: Agent's observation of the environment.
             - ``reward``: Amount of reward returned after previous action.
-            - ``terminated``: Whether the agent reaches the terminal
-              state, which can be a good or a bad thing. If true, the
-              user needs to call :func:`reset()`.
-            - ``truncated'': Whether the episode is truncated (reaching
-              max number of steps).
+            - ``terminated``: Whether the agent reaches the terminal state,
+              which can be a good or a bad thing. If true, the user needs to
+              call :func:`reset()`.
+            - ``truncated'': Whether the episode is truncated (reaching max
+              number of steps).
             - ``info``: Contains auxiliary diagnostic information (helpful for
               debugging, logging, and sometimes learning).
         """
