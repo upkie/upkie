@@ -8,7 +8,7 @@
 import asyncio
 import time
 
-import gym
+import gymnasium as gym
 import mpacklog
 import numpy as np
 
@@ -22,8 +22,8 @@ async def balance(env: gym.Env, logger: mpacklog.Logger):
     observation = env.reset()  # connects to the spine
     action = np.zeros(env.action_space.shape)
     for step in range(1_000_000):
-        observation, reward, done, info = await env.async_step(action)
-        if done:
+        observation, reward, terminated, truncated, info = await env.async_step(action)
+        if terminated or truncated:
             observation = env.reset()
         pitch = observation[0]
         action[0] = 10.0 * pitch

@@ -7,7 +7,7 @@ cycler==0.10.0
 fonttools==4.38.0
 gin-config==0.5.0
 gitdb==4.0.7
-gym==0.21.0
+gymnasium==0.28.1
 importlib-metadata==4.13.0
 kiwisolver==1.0.1
 loop-rate-limiters==0.2.0

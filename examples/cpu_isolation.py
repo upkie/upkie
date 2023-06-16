@@ -8,7 +8,7 @@
 import os
 import sys
 
-import gym
+import gymnasium as gym
 import numpy as np
 
 import upkie.envs

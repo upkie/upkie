@@ -5,7 +5,7 @@
 
 """Genuflect while lying on a horizontal floor."""
 
-import gym
+import gymnasium as gym
 import numpy as np
 
 import upkie.envs
@@ -27,7 +27,7 @@ if __name__ == "__main__":
         observation = env.reset()
         action = np.zeros(env.action_space.shape)
         for step in range(nb_genuflections * genuflection_steps):
-            observation, _, _, _ = env.step(action)
+            observation, _, _, _, _ = env.step(action)
             x = float(step % genuflection_steps) / genuflection_steps
             y = 4.0 * x * (1.0 - x)  # in [0, 1]
             A = amplitude  # in radians
