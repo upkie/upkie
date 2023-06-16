@@ -5,7 +5,7 @@
 
 """Smallest example: balancing using a proportional wheel controller."""
 
-import gym
+import gymnasium as gym
 import numpy as np
 
 import upkie.envs
@@ -17,8 +17,8 @@ if __name__ == "__main__":
         observation = env.reset()  # connects to the spine
         action = np.zeros(env.action_space.shape)
         for step in range(1_000_000):
-            observation, reward, done, _ = env.step(action)
-            if done:
+            observation, reward, terminated, truncated, _ = env.step(action)
+            if terminated or truncated:
                 observation = env.reset()
             pitch = observation[0]
             action[0] = 10.0 * pitch  # 1D action: [ground_velocity]
