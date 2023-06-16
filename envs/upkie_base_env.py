@@ -110,7 +110,7 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
             - ``info``: an optional dictionary containing extra information.
                 It is only returned if ``return_info`` is set to true.
         """
-        # super().reset(seed=seed) 
+        # super().reset(seed=seed)
         self.__reset_rates()
         self._spine.stop()
         self._spine.start(self.config)
@@ -132,7 +132,10 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
         except RuntimeError:  # not asyncio
             self.__rate = RateLimiter(self.__frequency)
 
-    def step(self, action: np.ndarray) -> Tuple[np.ndarray, float, bool, bool, dict]:
+    def step(
+        self,
+        action: np.ndarray
+    ) -> Tuple[np.ndarray, float, bool, bool, dict]:
         """!
         Run one timestep of the environment's dynamics. When the end of the
         episode is reached, you are responsible for calling `reset()` to reset
@@ -142,10 +145,10 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
         @returns
             - ``observation``: Agent's observation of the environment.
             - ``reward``: Amount of reward returned after previous action.
-            - ``terminated``: Whether the agent reaches the terminal state, which
-              can be a good or a bad thing. If true, the user needs to call
+            - ``terminated``: Whether the agent reaches the terminal state,
+               which can be good or bad. If true, the user needs to call
               :func:`reset()`.
-            - ``truncated'': Whether the episode is reaching max number of steps.
+            - ``truncated'': Whether the episode is reaching max nr of steps.
             - ``info``: Contains auxiliary diagnostic information (helpful for
               debugging, logging, and sometimes learning).
         """
@@ -165,8 +168,8 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
         @returns
             - ``observation``: Agent's observation of the environment.
             - ``reward``: Amount of reward returned after previous action.
-            - ``terminated``: Whether the agent reaches the terminal state, which
-              can be a good or a bad thing. If true, the user needs to call
+            - ``terminated``: Whether the agent reaches the terminal state,
+              which can be good or bad. If true, the user needs to call
               :func:`reset()`.
             - ``truncated'': Whether the episode is reaching max nr of steps.
             - ``info``: Contains auxiliary diagnostic information (helpful for
