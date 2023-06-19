@@ -195,7 +195,6 @@ class WheelBalancer:
         """
         assert 0.0 <= turning_deadband <= 1.0
         self.air_return_period = air_return_period
-        self.balancing_plane = WheelBalancer.BalancingPlaneInIMUFrame()
         self.error = np.zeros(2)
         self.fall_pitch = fall_pitch
         self.gains = WheelBalancer.Gains()  # type: ignore
