@@ -15,7 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Tuple
+from typing import Optional, Tuple
 
 import numpy as np
 
@@ -24,8 +24,6 @@ from upkie.utils.clamp import clamp
 
 def compute_pitch_frame_in_parent(
     orientation_frame_in_parent: np.ndarray,
-    sagittal_axis: int = 0,
-    vertical_axis: int = 2,
 ) -> float:
     """
     Get pitch angle of a given frame relative to the parent vertical.
@@ -50,8 +48,6 @@ def compute_pitch_frame_in_parent(
     Args:
         orientation_frame_in_parent: Rotation matrix from the target frame to
             the parent frame.
-        sagittal_axis: Index of the sagittal axis in vector representation.
-        vertical_axis: Index of the vertical axis in vector representation.
 
     Returns:
         Angle from the parent z-axis (gravity) to the frame z-axis.
@@ -64,14 +60,14 @@ def compute_pitch_frame_in_parent(
         which is ``(x)`` in the above schematic (pointing away) and not ``(.)``
         (poiting from screen to the reader).
     """
-    sagittal = orientation_frame_in_parent[:, sagittal_axis]
+    sagittal = orientation_frame_in_parent[:, 0]
     sagittal /= np.linalg.norm(sagittal)  # needed for prec around cos_pitch=0.
     e_z = np.array([0.0, 0.0, 1.0])
-    heading_in_parent = sagittal - sagittal[vertical_axis] * e_z
+    heading_in_parent = sagittal - sagittal[2] * e_z
     heading_in_parent /= np.linalg.norm(heading_in_parent)
-    if orientation_frame_in_parent[vertical_axis, vertical_axis] < 0:
+    if orientation_frame_in_parent[2, 2] < 0:
         heading_in_parent *= -1.0
-    sign = +1 if sagittal[vertical_axis] < 0 else -1
+    sign = +1 if sagittal[2] < 0 else -1
     cos_pitch = clamp(np.dot(sagittal, heading_in_parent), -1.0, 1.0)
     pitch: float = sign * np.arccos(cos_pitch)
     return pitch
@@ -120,17 +116,16 @@ def rotation_matrix_from_quaternion(
 
 def compute_base_pitch_from_imu(
     quat_imu_in_ars: Tuple[float, float, float, float],
-    sagittal_axis: int = 0,
-    vertical_axis: int = 2,
+    rotation_base_to_imu: Optional[np.ndarray] = None,
 ) -> float:
     """
     Get pitch angle of the *base* relative to the attitude reference frame.
 
     Args:
         quat_imu_in_ars: Quaternion representing the rotation matrix from
-            the *IMU* frame to the ARS frame, in ``[w, x, y, z]`` format.
-        sagittal_axis: Index of the sagittal axis in vector representation.
-        vertical_axis: Index of the vertical axis in vector representation.
+            the IMU frame to the ARS frame, in ``[w, x, y, z]`` format.
+        rotation_base_to_imu: Rotation matrix from the base frame to the IMU
+            frame.
 
     Returns:
         Angle from the world z-axis (unit vector opposite to gravity) to the
