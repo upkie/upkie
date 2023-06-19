@@ -83,21 +83,13 @@ class TestBasePitch(unittest.TestCase):
                 -0.002443076206500708,
             ]
         )
-        rotation_imu_to_ars = np.array(
-            [
-                [0.98140294, 0.19193185, 0.00322969],
-                [0.19184905, -0.9812713, 0.01733697],
-                [0.00649672, -0.01639494, -0.99984449],
-            ]
+        rotation_base_to_imu = np.array(
+            [[0.0, -1.0, 0.0], [1.0, 0.0, 0.0], [0.0, 0.0, 1.0]]
         )
-        pitch_imu_in_ars = compute_pitch_frame_in_parent(
-            rotation_imu_to_ars, sagittal_axis=1, vertical_axis=2
+        pitch_base_in_world = compute_base_pitch_from_imu(
+            quat_imu_in_ars, rotation_base_to_imu
         )
-        self.assertAlmostEqual(pitch_imu_in_ars, 3.125, places=3)
-        pitch_imu_in_world = compute_base_pitch_from_imu(
-            quat_imu_in_ars, sagittal_axis=1, vertical_axis=2
-        )
-        self.assertAlmostEqual(pitch_imu_in_world, -0.016, places=3)
+        self.assertAlmostEqual(pitch_base_in_world, -0.016, places=3)
 
 
 if __name__ == "__main__":
