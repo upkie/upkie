@@ -138,11 +138,17 @@ def compute_base_pitch_from_imu(
         frame is turned 180 degrees around the yaw axis of the base frame.
 
     """
+    if rotation_base_to_imu is None:
+        rotation_base_to_imu = np.diag([1.0, -1.0, -1.0])
     rotation_imu_to_ars = rotation_matrix_from_quaternion(quat_imu_in_ars)
+
+    # The attitude reference system frame has +x forward, +y right and +z down,
+    # whereas our world frame has +x forward, +y left and +z up:
     # https://github.com/mjbots/pi3hat/blob/master/docs/reference.md#orientation
     rotation_ars_to_world = np.diag([1.0, -1.0, -1.0])
-    rotation_imu_to_world = rotation_ars_to_world @ rotation_imu_to_ars
-    pitch_imu_in_world = compute_pitch_frame_in_parent(
-        rotation_imu_to_world, sagittal_axis, vertical_axis
+
+    rotation_base_to_world = (
+        rotation_ars_to_world @ rotation_imu_to_ars @ rotation_base_to_imu
     )
-    return pitch_imu_in_world
+    pitch_base_in_world = compute_pitch_frame_in_parent(rotation_base_to_world)
+    return pitch_base_in_world
