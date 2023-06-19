@@ -83,7 +83,7 @@ upload: check-robot build  ## upload built targets to the Raspberry Pi
 # Help snippet from:
 # http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 .PHONY: help
-help: check-robot
+help:
 	@echo "Host targets:\n"
 	@grep -P '^[a-zA-Z0-9_-]+:.*? ## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "    \033[36m%-24s\033[0m %s\n", $$1, $$2}'
 	@echo "\nRaspberry Pi targets:\n"
