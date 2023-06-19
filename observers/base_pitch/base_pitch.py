@@ -62,8 +62,7 @@ def compute_pitch_frame_in_parent(
     """
     sagittal = orientation_frame_in_parent[:, 0]
     sagittal /= np.linalg.norm(sagittal)  # needed for prec around cos_pitch=0.
-    e_z = np.array([0.0, 0.0, 1.0])
-    heading_in_parent = sagittal - sagittal[2] * e_z
+    heading_in_parent = sagittal - sagittal[2] * np.array([0.0, 0.0, 1.0])
     heading_in_parent /= np.linalg.norm(heading_in_parent)
     if orientation_frame_in_parent[2, 2] < 0:
         heading_in_parent *= -1.0
@@ -125,7 +124,8 @@ def compute_base_pitch_from_imu(
         quat_imu_in_ars: Quaternion representing the rotation matrix from
             the IMU frame to the ARS frame, in ``[w, x, y, z]`` format.
         rotation_base_to_imu: Rotation matrix from the base frame to the IMU
-            frame.
+            frame. When not specified, the default Upkie mounting orientation
+            is used.
 
     Returns:
         Angle from the world z-axis (unit vector opposite to gravity) to the
