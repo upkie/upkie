@@ -139,7 +139,10 @@ def compute_base_pitch_from_imu(
 
     """
     if rotation_base_to_imu is None:
-        rotation_base_to_imu = np.diag([1.0, -1.0, -1.0])
+        # Default Upkie mounting orientation: USB connectors of the raspi
+        # pointing to the left of the robot (XT-30 of the pi3hat to the right)
+        rotation_base_to_imu = np.diag([-1.0, 1.0, -1.0])
+
     rotation_imu_to_ars = rotation_matrix_from_quaternion(quat_imu_in_ars)
 
     # The attitude reference system frame has +x forward, +y right and +z down,
