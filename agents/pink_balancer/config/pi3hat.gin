@@ -16,17 +16,6 @@
 
 import agents.pink_balancer.wheel_balancer
 
-BalancingPlaneInIMUFrame.sagittal_axis = 0
-BalancingPlaneInIMUFrame.vertical_axis = 2
-
-# Smooth wheels with radius=5 cm, wood flooring
-# ---------------------------------------------
-#
-#Gains.pitch_damping = 3.0        # 4.0 marginal, 5.0 unstable
-#Gains.pitch_stiffness = 20.0     # can go up
-#Gains.position_damping = 3.0     # 4.0 marginal, 5.0 unstable
-#Gains.position_stiffness = 7.0   # can go up
-
 # 4WD wheels with radius=6 cm, carpet
 # -----------------------------------
 #

@@ -19,7 +19,6 @@
 Keep Upkie up! Using its wheels.
 """
 
-from dataclasses import dataclass
 from typing import Any, Dict, Tuple
 
 import gin
@@ -27,7 +26,6 @@ import numpy as np
 
 from observers.base_pitch import compute_base_pitch_from_imu
 from utils.clamp import clamp, clamp_abs
-
 from utils.exceptions import FallDetected
 from utils.filters import abs_bounded_derivative_filter, low_pass_filter
 
@@ -133,14 +131,6 @@ class WheelBalancer:
                 f"position_damping={self.position_damping}, "
                 f"position_stiffness={self.position_stiffness}, "
             )
-
-    @gin.configurable
-    @dataclass
-    class BalancingPlaneInIMUFrame:
-        """Axes of the balancing plane expressed in the IMU frame."""
-
-        sagittal_axis: int
-        vertical_axis: int
 
     air_return_period: float
     error: np.ndarray
