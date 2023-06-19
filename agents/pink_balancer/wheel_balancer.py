@@ -27,7 +27,8 @@ import numpy as np
 
 from observers.base_pitch import compute_base_pitch_from_imu
 from utils.clamp import clamp, clamp_abs
-# from utils.exceptions import FallDetected
+
+from utils.exceptions import FallDetected
 from utils.filters import abs_bounded_derivative_filter, low_pass_filter
 
 
@@ -337,8 +338,7 @@ class WheelBalancer:
         if abs(pitch) > self.fall_pitch:
             self.integral_error_velocity = 0.0  # [m] / [s]
             self.ground_velocity = 0.0  # [m] / [s]
-            return
-            # raise FallDetected(f"Base angle {pitch=:.3} rad denotes a fall")
+            raise FallDetected(f"Base angle {pitch=:.3} rad denotes a fall")
 
         ground_position = observation["wheel_odometry"]["position"]
         floor_contact = observation["floor_contact"]["contact"]
