@@ -118,11 +118,12 @@ def compute_base_pitch_from_imu(
     rotation_base_to_imu: Optional[np.ndarray] = None,
 ) -> float:
     """
-    Get pitch angle of the *base* relative to the attitude reference frame.
+    Get pitch angle of the base frame relative to the world frame.
 
     Args:
         quat_imu_in_ars: Quaternion representing the rotation matrix from
-            the IMU frame to the ARS frame, in ``[w, x, y, z]`` format.
+            the IMU frame to the  attitude reference system (ARS) frame, in
+            ``[w, x, y, z]`` format.
         rotation_base_to_imu: Rotation matrix from the base frame to the IMU
             frame. When not specified, the default Upkie mounting orientation
             is used.
