@@ -7,27 +7,12 @@ load("@pip_upkie//:requirements.bzl", "requirement")
 
 package(default_visibility = ["//visibility:public"])
 
-py_library(
-    name = "whole_body_controller",
-    srcs = [
-        "wheel_balancer.py",
-        "whole_body_controller.py",
-    ],
-    deps = [
-        "//observers/base_pitch",
-        "//utils:clamp",
-        "//utils:filters",
-        requirement("gin-config"),
-        requirement("upkie_description"),
-    ],
-)
-
 py_binary(
     name = "pink_balancer",
     srcs = [
+        "joint_controller.py",
         "pink_balancer.py",
         "wheel_balancer.py",
-        "whole_body_controller.py",
     ],
     main = "pink_balancer.py",
     data = [
@@ -38,14 +23,17 @@ py_binary(
         "//conditions:default": [],
     }),
     deps = [
+        "//observers/base_pitch",
+        "//utils:clamp",
+        "//utils:filters",
         "//utils:realtime",
         "//utils:spdlog",
-        ":whole_body_controller",
         "@mpacklog//:python",
         "@vulp//spine:python",
         requirement("gin-config"),
         requirement("loop_rate_limiters"),
         requirement("pyyaml"),
+        requirement("upkie_description"),
     ],
 )
 
