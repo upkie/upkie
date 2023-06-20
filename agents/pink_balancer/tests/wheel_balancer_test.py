@@ -22,7 +22,7 @@ import unittest
 
 import gin
 
-from agents.pink_balancer.whole_body_controller import WholeBodyController
+from agents.pink_balancer.wheel_balancer import WheelBalancer
 
 
 class TestWholeBodyController(unittest.TestCase):
@@ -30,19 +30,8 @@ class TestWholeBodyController(unittest.TestCase):
         agent_dir = os.path.dirname(os.path.dirname(__file__))
         gin.parse_config_file(f"{agent_dir}/config/common.gin")
         gin.parse_config_file(f"{agent_dir}/config/bullet.gin")
-        controller = WholeBodyController(
-            config={},
-            gain_scale=10.0,
-            max_crouch_height=2.0,
-            max_crouch_velocity=3.0,
-            turning_gain_scale=1.0,
-            visualize=False,
-        )
-        self.assertLess(controller.gain_scale, 10.0)
-        self.assertAlmostEqual(controller.max_crouch_height, 2.0)
-        self.assertAlmostEqual(controller.max_crouch_velocity, 3.0)
-        self.assertAlmostEqual(controller.turning_gain_scale, 1.0)
-        self.assertEquals(controller.visualizer, None)
+        balancer = WheelBalancer(wheel_radius=1.0)
+        self.assertEquals(balancer.wheel_radius, 1.0)
 
 
 if __name__ == "__main__":
