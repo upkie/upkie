@@ -140,13 +140,14 @@ class WholeBodyController:
 
         Args:
             config: Global configuration dictionary.
-            max_crouch_velocity: Maximum vertical velocity in [m] / [s].
             gain_scale: PD gain scale for hip and knee joints.
             max_crouch_height: Maximum distance along the vertical axis that
                 the robot goes down while crouching, in [m].
+            max_crouch_velocity: Maximum vertical velocity in [m] / [s].
             turning_gain_scale: Additional gain scale added when the robot is
                 turning to keep the legs stiff in spite of the ground pulling
                 them apart.
+            visualize: If true, open a MeshCat visualizer on the side.
         """
         robot = upkie_description.load_in_pinocchio(root_joint=None)
         configuration = pink.Configuration(robot.model, robot.data, robot.q0)
