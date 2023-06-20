@@ -23,7 +23,7 @@ import pink
 import pinocchio as pin
 import upkie_description
 from pink import solve_ik
-from pink.tasks import BodyTask, PostureTask
+from pink.tasks import FrameTask, PostureTask
 from pink.utils import custom_configuration_vector
 from pink.visualization import start_meshcat_visualizer
 
@@ -171,13 +171,13 @@ class WholeBodyController:
             },
         }
         tasks = {
-            "left_contact": BodyTask(
+            "left_contact": FrameTask(
                 "left_contact",
                 position_cost=[0.1, 0.0, 0.1],  # [cost] / [m]
                 orientation_cost=0.0,  # [cost] / [rad]
                 lm_damping=10.0,
             ),
-            "right_contact": BodyTask(
+            "right_contact": FrameTask(
                 "right_contact",
                 position_cost=[0.1, 0.0, 0.1],  # [cost] / [m]
                 orientation_cost=0.0,  # [cost] / [rad]
@@ -278,7 +278,7 @@ class WholeBodyController:
         )
         for target in ["left_contact", "right_contact"]:
             transform_target_to_world = (
-                self.configuration.get_transform_body_to_world(target)
+                self.configuration.get_transform_frame_to_world(target)
             )
             self.tasks[target].set_target(transform_target_to_world)
             self.transform_rest_to_world[target] = transform_target_to_world
