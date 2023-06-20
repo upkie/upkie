@@ -8,6 +8,11 @@ All notable changes to this project will be documented in this file.
 
 - Check that ``ROBOT`` environment variable is defined in Makefile
 - Rename "test balancer" to "wheel balancer"
+- Update Pink balancer to the latest version of the library
+
+### Fixed
+
+- Configure IMU orientation in the base pitch observer
 
 ## [1.0.0] - 2023/06/12
 
