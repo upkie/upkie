@@ -22,6 +22,7 @@ import numpy as np
 import pink
 import pinocchio as pin
 import upkie_description
+from packaging import version
 from pink import solve_ik
 from pink.tasks import FrameTask, PostureTask
 from pink.utils import custom_configuration_vector
@@ -30,6 +31,15 @@ from pink.visualization import start_meshcat_visualizer
 from utils.clamp import clamp
 
 from .wheel_balancer import WheelBalancer
+
+# Runtime version check for Pink for now
+# See https://github.com/stephane-caron/bazel_pinocchio/issues/1 for context
+MINIMUM_PINK_VERSION = "0.11.0"
+if version.parse(pink.__version__) < version.parse(MINIMUM_PINK_VERSION):
+    raise ImportError(
+        f"Pink version {pink.__version__} is installed "
+        f"but {MINIMUM_PINK_VERSION} is required"
+    )
 
 
 def observe(observation, configuration, servo_layout) -> np.ndarray:

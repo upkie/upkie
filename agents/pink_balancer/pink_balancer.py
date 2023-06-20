@@ -35,7 +35,6 @@ from agents.pink_balancer.whole_body_controller import WholeBodyController
 from utils.realtime import configure_cpu
 from utils.spdlog import logging
 
-
 def parse_command_line_arguments() -> argparse.Namespace:
     """
     Parse command line arguments.
