@@ -34,15 +34,11 @@ class TestWholeBodyController(unittest.TestCase):
             config={},
             gain_scale=10.0,
             max_crouch_height=2.0,
-            max_crouch_velocity=3.0,
-            turning_gain_scale=1.0,
             visualize=False,
         )
         self.assertLess(controller.gain_scale, 10.0)
         self.assertAlmostEqual(controller.max_crouch_height, 2.0)
-        self.assertAlmostEqual(controller.max_crouch_velocity, 3.0)
-        self.assertAlmostEqual(controller.turning_gain_scale, 1.0)
-        self.assertEquals(controller.visualizer, None)
+        self.assertIsNone(controller.visualizer)
 
 
 if __name__ == "__main__":
