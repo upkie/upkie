@@ -16,6 +16,18 @@ py_test(
 )
 
 py_test(
+    name = "wheel_balancer_test",
+    srcs = ["wheel_balancer_test.py"],
+    data = [
+        "//agents/pink_balancer/config",
+    ],
+    deps = [
+        "//agents/pink_balancer:pink_balancer",
+        requirement("gin-config"),
+    ],
+)
+
+py_test(
     name = "whole_body_controller_test",
     srcs = ["whole_body_controller_test.py"],
     data = [
