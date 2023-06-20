@@ -10,9 +10,9 @@ package(default_visibility = ["//visibility:public"])
 py_binary(
     name = "pink_balancer",
     srcs = [
-        "joint_controller.py",
         "pink_balancer.py",
         "wheel_balancer.py",
+        "whole_body_controller.py",
     ],
     main = "pink_balancer.py",
     data = [

@@ -92,7 +92,7 @@ def add_target_frames(visualizer):
 class WholeBodyController:
 
     """
-    Coordinate inverse kinematics and wheel balancing.
+    Coordinate leg inverse kinematics and wheel balancing.
 
     Attributes:
         crouch_velocity: Maximum vertical velocity in [m] / [s].
