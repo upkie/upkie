@@ -25,6 +25,7 @@ py_binary(
     deps = [
         "//observers/base_pitch",
         "//utils:clamp",
+        "//utils:exceptions",
         "//utils:filters",
         "//utils:realtime",
         "//utils:spdlog",
