@@ -23,6 +23,11 @@
 # Valid usage: ``make upload ROBOT=foobar``
 REMOTE = ${ROBOT}
 
+# Additional configuration file to adapt for robotic hardware
+# Valid usage : ``make run_wheel_balancer CONFIG=foobar``
+# where foobar.gin is a file in ./agents/wheel_balancer/config/
+SETTINGS = $(or ${CONFIG}, pi3hat)
+
 # Project name, needs to match the one in WORKSPACE
 PROJECT_NAME = upkie
 
@@ -63,7 +68,7 @@ run_pink_balancer:  ### run the pink balancer on the Raspberry Pi
 	$(RASPUNZEL) run -v -s //agents/pink_balancer -- --config pi3hat
 
 run_wheel_balancer:  ### run the test balancer on the Raspberry Pi
-	$(RASPUNZEL) run -v -s //agents/wheel_balancer:agent -- --config pi3hat --configure-cpu
+	$(RASPUNZEL) run -v -s //agents/wheel_balancer:agent -- --config $(SETTINGS) --configure-cpu
 
 # Upload from host to Raspberry Pi
 # ================================
