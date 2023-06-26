@@ -8,7 +8,7 @@
 
 Main repository to build and control **Upkie** wheeled bipeds. Made for Linux 🐧
 
-Questions about using the code, contributing, or balancing robots in general are welcome in the [Discussions](https://github.com/tasts-robots/upkie/discussions) forum or on the [Chat](https://github.com/tasts-robots/upkie/discussions).
+Questions about building and using an Upkie, or balancing robots in general, are all welcome in the [Discussions](https://github.com/tasts-robots/upkie/discussions) forum or on the [Chat](https://app.element.io/#/room/#tasts-robots:matrix.org).
 
 ## Quick test
 
