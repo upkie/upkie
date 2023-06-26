@@ -26,7 +26,7 @@ Connect a USB controller to move the robot around 🎮
 
 ## Python API
 
-The Python API allows us to control Upkie from standalone Python scripts:
+The Python API allows us to control Upkie from standalone Python scripts. It is convenient for rapid prototyping directly on the robot.
 
 ### Installation
 
@@ -39,7 +39,7 @@ $ pip install upkie
 
 ### Example
 
-The following example uses an OpenAI Gym (TODO: update to Gymnasium) environment to send actions to an Upkie robot. To try it out, you will first need to start a simulation [spine](#spines):
+The following example uses an OpenAI Gym ([upcoming](https://github.com/tasts-robots/upkie/pull/69): Gymnasium) environment to send actions to an Upkie robot. To try it out, you will first need to start a simulation [spine](#spines):
 
 ```console
 $ ./start_simulation.sh
@@ -67,7 +67,7 @@ This code will connect to the simulation, reset it and execute the policy contin
 
 ## Bazel agents
 
-Alternatively to the Python API above, we can use [Bazel](https://bazel.build/) to develop new agents directly in the repository (no installation required). One benefit of this choice is that there is no dependency to install (Bazel builds everything locally in a local cache), and it allows us to [upload to the Raspberry Pi](#upload-to-the-raspberry-pi).
+Alternatively to the Python API, we can use [Bazel](https://bazel.build/) to develop new agents in the repository. One benefit of this choice is that there is no dependency to install (Bazel builds everything locally in a local cache), and it allows us to upload consistent builds [to the Raspberry Pi](#upload-to-the-raspberry-pi). The Bazel workflow is more suited to long-term developments, while the Python API is better for prototyping.
 
 ## Upload to the Raspberry Pi
 
