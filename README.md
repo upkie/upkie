@@ -39,7 +39,12 @@ $ pip install upkie
 
 ### Example
 
-Here is an OpenAI Gym (TODO: update to Gymnasium) environment that balances Upkie upright by wheel velocity feedback:
+The following example uses an OpenAI Gym (TODO: update to Gymnasium) environment to send actions to an Upkie robot. To try it out, you will first need to start a simulation [spine](#spines):
+
+```console
+$ ./start_simulation.sh
+```
+You can then run the following code in a Python interpreter or as a Python script:
 
 ```python
 import gym
