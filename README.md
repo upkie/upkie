@@ -32,11 +32,11 @@ The code of Upkie is organized into *spines*, which communicate with the simulat
 $ ./start_simulation.sh
 ```
 
-Let's assume we did that. Now there are two ways we can run an agent: the [PyPI](#pypi) way and the [Bazel](#bazel). The former is better for prototyping while the latter is better for sharing code with other Upkie users.
+Let's assume we did that. Now there are two ways we can run an agent: the [PyPI](#pypi) way and the [Bazel](#bazel). PyPI is better for prototyping while Bazel is better for sharing code with other Upkie's.
 
 ### PyPI
 
-The PyPI way allows us to control Upkie from standalone Python scripts. It is better for rapid prototyping, *e.g.* to modify things directly on the robot.
+The PyPI way allows us to control Upkie from standalone Python scripts. It is better for rapid prototyping, for example to edit and retry scripts directly on the robot.
 
 #### Installation
 
@@ -72,7 +72,7 @@ This code will connect to the simulation, reset it and execute the policy contin
 
 ### Bazel
 
-We use [Bazel](https://bazel.build/) to build C++ spines that can run on both your host computer and the Raspberry Pi. It is also possible to make Python agents in Bazel, as for instance with the wheel balancer and PPO balancer. Bazel makes sure that all versions of all dependencies are correct, which is better for sharing code with the community. The recommended development workflow is to use PyPI packages for prototyping then switch to Bazel when a new agent is ready.
+We use [Bazel](https://bazel.build/) to build C++ spines that can run on both your host computer and the Raspberry Pi. Everything you see in the ``agents/`` and ``spines/`` directories is built with Bazel, including for instance the wheel and PPO balancers. Bazel makes sure that all versions of all dependencies are correct, which is better for sharing code with other Upkie's (no need to worry about what each user did or did not ``pip install`). Overall, the recommended workflow is to use PyPI packages for prototyping then switch to Bazel when a new agent is ready.
 
 #### Upload to the Raspberry Pi
 
