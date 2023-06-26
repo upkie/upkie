@@ -56,4 +56,16 @@ py_library(
     srcs = ["spdlog.py"],
 )
 
+py_library(
+    name = "python",
+    deps = [
+        ":clamp",
+        ":exceptions",
+        ":filters",
+        ":pinocchio",
+        ":realtime",
+        ":spdlog",
+    ],
+)
+
 add_lint_tests()
