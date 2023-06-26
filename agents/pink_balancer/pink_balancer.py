@@ -81,7 +81,16 @@ async def run(
     debug: Dict[str, Any] = {}
     dt = 1.0 / frequency
     rate = AsyncRateLimiter(frequency, "controller")
-    spine.start(config)
+
+    wheel_radius = controller.wheel_balancer.wheel_radius
+    spine_config["wheel_odometry"] = {
+        "signed_radius": {
+            "left_wheel": +wheel_radius,
+            "right_wheel": -wheel_radius,
+        }
+    }
+
+    spine.start(spine_config)
     observation = spine.get_observation()  # pre-reset observation
     while True:
         observation = spine.get_observation()
