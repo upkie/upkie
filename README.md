@@ -63,13 +63,7 @@ with gym.make("UpkieWheelsEnv-v2", frequency=200.0) as env:
         action[0] = 10.0 * pitch
 ```
 
-To run this example, start a simulation [spine](#spines) by:
-
-```console
-$ ./start_simulation.sh
-```
-
-Then run the code above. It will connect to the simulation, reset it and execute the policy continuously.
+This code will connect to the simulation, reset it and execute the policy continuously. If instead of a simulation spine you are [running a pi3hat spine](#upload-to-the-raspberry-pi) on the robot, this code will control the robot directly.
 
 ## Bazel agents
 
@@ -77,20 +71,28 @@ Alternatively to the Python API above, we can use [Bazel](https://bazel.build/) 
 
 ## Upload to the Raspberry Pi
 
-To run an agent on the Raspberry Pi, we first build it locally, then upload it to the Raspberry Pi, and finally run it there:
+To run an agent on the Raspberry Pi, we first build it locally and upload it to the Raspberry Pi:
 
 ```console
 $ make build
 $ make upload ROBOT=your_robot_name
+```
+
+Next, connect to the robot and run a pi3hat spine:
+
+```
 $ ssh user@robot
 user@robot:~$ cd upkie
-user@robot:~$ make run_pi3hat_spine
-user@robot:~$ make run_wheel_balancer
+user@robot:upkie$ make run_pi3hat_spine
+```
+
+Finally, in a separate shell on the robot, 
+
+```
+user@robot:upkie$ make run_wheel_balancer
 ```
 
 ## Code overview
-
-This repository uses [Bazel](https://bazel.build/) for building and testing.  Compilation will only take a while the first time.
 
 Locomotion code is organized into *spines*, which communicate with the simulator or actuators using [Vulp](https://github.com/tasts-robots/vulp), and *agents*, the main programs that implement behaviors in Python. In the example above we ran the test balancer. We could also start the Bullet spine independently, and let it run waiting for agents to connect:
 
