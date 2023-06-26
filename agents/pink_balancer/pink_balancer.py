@@ -64,7 +64,7 @@ def parse_command_line_arguments() -> argparse.Namespace:
 
 async def run(
     spine: SpineInterface,
-    config: Dict[str, Any],
+    spine_config: Dict[str, Any],
     logger: mpacklog.Logger,
     args: argparse.Namespace,
     frequency: float = 200.0,
@@ -77,9 +77,7 @@ async def run(
         config: Configuration dictionary.
         frequency: Control frequency in Hz.
     """
-    whole_body_controller = WholeBodyController(
-        config, visualize=args.visualize
-    )
+    controller = WholeBodyController(spine_config, visualize=args.visualize)
     debug: Dict[str, Any] = {}
     dt = 1.0 / frequency
     rate = AsyncRateLimiter(frequency, "controller")
@@ -87,7 +85,7 @@ async def run(
     observation = spine.get_observation()  # pre-reset observation
     while True:
         observation = spine.get_observation()
-        action = whole_body_controller.cycle(observation, dt)
+        action = controller.cycle(observation, dt)
         action_time = time.time()
         spine.set_action(action)
         debug["rate"] = {
@@ -133,13 +131,13 @@ if __name__ == "__main__":
 
     # Spine configuration
     with open(f"{agent_dir}/config/spine.yaml", "r") as fh:
-        config = yaml.safe_load(fh)
+        spine_config = yaml.safe_load(fh)
     if args.config == "pi3hat":
         configure_cpu(cpu=3)
 
     spine = SpineInterface()
     try:
-        asyncio.run(main(spine, config, args))
+        asyncio.run(main(spine, spine_config, args))
     except KeyboardInterrupt:
         logging.info("Caught a keyboard interrupt")
     except Exception:
