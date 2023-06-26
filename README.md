@@ -32,11 +32,11 @@ The code of Upkie is organized into *spines*, which communicate with the simulat
 $ ./start_simulation.sh
 ```
 
-Let's assume we did that. Now there are two ways we can run an agent: the [PyPI](#pypi) way and the [Bazel](#bazel). PyPI is better for prototyping while Bazel is better for sharing code with other Upkie's.
+Let's assume we did that. Now there are two ways we can run an agent: the [PyPI](#pypi) way and the [Bazel](#bazel). Go for PyPI to use the robot in Python, and for Bazel to recompile things from source.
 
 ### PyPI
 
-The PyPI way allows us to control Upkie from standalone Python scripts. It is better for rapid prototyping, for example to edit and retry scripts directly on the robot.
+The PyPI distribution is the recommended way to control Upkie in Python. It is already [fast enough](https://github.com/tasts-robots/vulp#performance) for real-time control.
 
 #### Installation
 
