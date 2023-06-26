@@ -10,7 +10,7 @@ Main repository to build and control **Upkie** wheeled bipeds. Made for Linux ðŸ
 
 Questions about building and using an Upkie, or balancing robots in general, are all welcome in the [Discussions](https://github.com/tasts-robots/upkie/discussions) forum or on the [Chat](https://app.element.io/#/room/#tasts-robots:matrix.org).
 
-## Quick test
+## Quick sim
 
 Run a simulated Upkie right away from the command line, no installation required:
 
@@ -24,7 +24,22 @@ $ ./start_wheel_balancer.sh
 
 Connect a USB controller to move the robot around ðŸŽ®
 
-## Example
+## Python API
+
+The Python API allows us to control Upkie from standalone Python scripts:
+
+### Installation
+
+[![PyPI version](https://img.shields.io/pypi/v/upkie)](https://pypi.org/project/upkie/)
+[![PyPI downloads](https://pepy.tech/badge/upkie/month)](https://pepy.tech/project/upkie)
+
+```console
+$ pip install upkie
+```
+
+### Example
+
+Here is an OpenAI Gym (TODO: update to Gymnasium) environment that balances Upkie upright by wheel velocity feedback:
 
 ```python
 import gym
@@ -43,22 +58,13 @@ with gym.make("UpkieWheelsEnv-v2", frequency=200.0) as env:
         action[0] = 10.0 * pitch
 ```
 
-This example runs alongside a [spine](#spines), for instance a simulation spine started by:
+To run this example, start a simulation [spine](#spines) by:
 
 ```console
 $ ./start_simulation.sh
 ```
 
-## Installation
-
-### PyPI
-
-[![PyPI version](https://img.shields.io/pypi/v/upkie)](https://pypi.org/project/upkie/)
-[![PyPI downloads](https://pepy.tech/badge/upkie/month)](https://pepy.tech/project/upkie)
-
-```console
-$ pip install upkie
-```
+Then run the code above. It will connect to the simulation, reset it and execute the policy continuously.
 
 ## Code overview
 
