@@ -7,6 +7,19 @@ load("@pip_upkie//:requirements.bzl", "requirement")
 
 package(default_visibility = ["//visibility:public"])
 
+cc_library(
+    name = "datetime_now_string",
+    hdrs = ["datetime_now_string.h"],
+    include_prefix = "upkie/utils",
+)
+
+cc_library(
+    name = "cpp",
+    deps = [
+        ":datetime_now_string",
+    ],
+)
+
 py_library(
     name = "clamp",
     srcs = ["clamp.py"],

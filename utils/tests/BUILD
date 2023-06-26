@@ -7,6 +7,19 @@ load("@pip_upkie//:requirements.bzl", "requirement")
 
 package(default_visibility = ["//visibility:public"])
 
+cc_test(
+    name = "tests",
+    srcs = glob([
+        "*.cpp",
+        "*.h",
+    ]),
+    deps = [
+        "//utils:cpp",
+        "@eigen",
+        "@googletest//:main",
+    ],
+)
+
 py_test(
     name = "clamp_test",
     srcs = ["clamp_test.py"],
