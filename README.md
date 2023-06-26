@@ -70,6 +70,8 @@ with gym.make("UpkieWheelsEnv-v2", frequency=200.0) as env:
 
 This code will connect to the simulation, reset it and execute the policy continuously. If instead of a simulation spine you are [running a pi3hat spine](#upload-to-the-raspberry-pi) on the robot, this code will control the robot directly.
 
+Check out the ``examples/`` directory for other examples.
+
 ### Bazel
 
 We use [Bazel](https://bazel.build/) to build C++ spines that can run on both your host computer and the Raspberry Pi. Everything you see in the ``agents/`` and ``spines/`` directories is built with Bazel, including for instance the wheel and PPO balancers. Bazel makes sure that all versions of all dependencies are correct, which is better for sharing code with other Upkie's (no need to worry about what each user did or did not ``pip install`). Overall, the recommended workflow is to use PyPI packages for prototyping then switch to Bazel when a new agent is ready.
