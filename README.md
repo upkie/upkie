@@ -66,9 +66,26 @@ $ ./start_simulation.sh
 
 Then run the code above. It will connect to the simulation, reset it and execute the policy continuously.
 
+## Bazel agents
+
+Alternatively to the Python API above, we can use [Bazel](https://bazel.build/) to develop new agents directly in the repository (no installation required). One benefit of this choice is that there is no dependency to install (Bazel builds everything locally in a local cache), and it allows us to [upload to the Raspberry Pi](#upload-to-the-raspberry-pi).
+
+## Upload to the Raspberry Pi
+
+To run an agent on the Raspberry Pi, we first build it locally, then upload it to the Raspberry Pi, and finally run it there:
+
+```console
+$ make build
+$ make upload ROBOT=your_robot_name
+$ ssh user@robot
+user@robot:~$ cd upkie
+user@robot:~$ make run_pi3hat_spine
+user@robot:~$ make run_wheel_balancer
+```
+
 ## Code overview
 
-This repository uses [Bazel](https://bazel.build/) for building and testing. One benefit of this choice is that there is no dependency to install: Bazel builds everything locally in a local cache. Compilation will only take a while the first time.
+This repository uses [Bazel](https://bazel.build/) for building and testing.  Compilation will only take a while the first time.
 
 Locomotion code is organized into *spines*, which communicate with the simulator or actuators using [Vulp](https://github.com/tasts-robots/vulp), and *agents*, the main programs that implement behaviors in Python. In the example above we ran the test balancer. We could also start the Bullet spine independently, and let it run waiting for agents to connect:
 
