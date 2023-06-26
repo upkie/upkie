@@ -26,7 +26,7 @@ Connect a USB controller to move the robot around 🎮
 
 ## Getting started
 
-The code of Upkie is organized into *spines*, which communicate with the simulator or actuators using [Vulp](https://github.com/tasts-robots/vulp), and *agents*, the programs that implement robot behaviors. In the example above we ran the wheel balancer. We could also start the Bullet spine independently, and let it run waiting for agents to connect:
+The code of Upkie is organized into *spines*, which communicate with the simulation or mjbots actuators, and *agents*, the programs that implement robot behaviors (check out [this introduction](https://github.com/tasts-robots/vulp#readme) for more details on agents and spines). In the example above we ran an agent called "wheel balancer". We could also start the simulation spine independently, and let it run waiting for agents to connect:
 
 ```console
 $ ./start_simulation.sh
