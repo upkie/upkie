@@ -1,4 +1,4 @@
-name: Bazel
+name: CI
 
 on:
     push:
