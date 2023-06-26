@@ -24,11 +24,21 @@ $ ./start_wheel_balancer.sh
 
 Connect a USB controller to move the robot around 🎮
 
-## Python API
+## Getting started
 
-The Python API allows us to control Upkie from standalone Python scripts. It is convenient for rapid prototyping directly on the robot.
+The code of Upkie is organized into *spines*, which communicate with the simulator or actuators using [Vulp](https://github.com/tasts-robots/vulp), and *agents*, the programs that implement robot behaviors. In the example above we ran the wheel balancer. We could also start the Bullet spine independently, and let it run waiting for agents to connect:
 
-### Installation
+```console
+$ ./start_simulation.sh
+```
+
+Let's assume we did that. Now there are two ways we can run an agent: the [PyPI](#pypi) way and the [Bazel](#bazel). The former is better for prototyping while the latter is better for sharing code with other Upkie users.
+
+### PyPI
+
+The PyPI way allows us to control Upkie from standalone Python scripts. It is better for rapid prototyping, *e.g.* to modify things directly on the robot.
+
+#### Installation
 
 [![PyPI version](https://img.shields.io/pypi/v/upkie)](https://pypi.org/project/upkie/)
 [![PyPI downloads](https://pepy.tech/badge/upkie/month)](https://pepy.tech/project/upkie)
@@ -37,14 +47,9 @@ The Python API allows us to control Upkie from standalone Python scripts. It is 
 $ pip install upkie
 ```
 
-### Example
+#### Example
 
-The following example uses an OpenAI Gym ([upcoming](https://github.com/tasts-robots/upkie/pull/69): Gymnasium) environment to send actions to an Upkie robot. To try it out, you will first need to start a simulation [spine](#spines):
-
-```console
-$ ./start_simulation.sh
-```
-You can then run the following code in a Python interpreter or as a Python script:
+With a simulation or robot spine running, you can run the following code in a Python interpreter or as a standalone Python script:
 
 ```python
 import gym
@@ -65,42 +70,34 @@ with gym.make("UpkieWheelsEnv-v2", frequency=200.0) as env:
 
 This code will connect to the simulation, reset it and execute the policy continuously. If instead of a simulation spine you are [running a pi3hat spine](#upload-to-the-raspberry-pi) on the robot, this code will control the robot directly.
 
-## Bazel agents
+### Bazel
 
-Alternatively to the Python API, we can use [Bazel](https://bazel.build/) to develop new agents in the repository. One benefit of this choice is that there is no dependency to install (Bazel builds everything locally in a local cache), and it allows us to upload consistent builds [to the Raspberry Pi](#upload-to-the-raspberry-pi). The Bazel workflow is more suited to long-term developments, while the Python API is better for prototyping.
+We use [Bazel](https://bazel.build/) to build C++ spines that can run on both your host computer and the Raspberry Pi. It is also possible to make Python agents in Bazel, as for instance with the wheel balancer and PPO balancer. Bazel makes sure that all versions of all dependencies are correct, which is better for sharing code with the community. The recommended development workflow is to use PyPI packages for prototyping then switch to Bazel when a new agent is ready.
 
-## Upload to the Raspberry Pi
+#### Upload to the Raspberry Pi
 
 To run an agent on the Raspberry Pi, we first build it locally and upload it to the Raspberry Pi:
 
 ```console
 $ make build
-$ make upload ROBOT=your_robot_name
+$ make upload ROBOT=your_upkie
 ```
 
 Next, connect to the robot and run a pi3hat spine:
 
 ```
-$ ssh user@robot
-user@robot:~$ cd upkie
-user@robot:upkie$ make run_pi3hat_spine
+$ ssh user@your_upkie
+user@your_upkie:~$ cd upkie
+user@your_upkie:upkie$ make run_pi3hat_spine
 ```
 
-Finally, in a separate shell on the robot, 
+Finally, run the agent in a separate shell on the robot:
 
 ```
 user@robot:upkie$ make run_wheel_balancer
 ```
 
 ## Code overview
-
-Locomotion code is organized into *spines*, which communicate with the simulator or actuators using [Vulp](https://github.com/tasts-robots/vulp), and *agents*, the main programs that implement behaviors in Python. In the example above we ran the test balancer. We could also start the Bullet spine independently, and let it run waiting for agents to connect:
-
-```console
-$ ./tools/bazelisk run -c opt //spines:bullet -- --show
-```
-
-The ``-c opt`` argument to Bazel makes sure we compile optimized code, while the ``--show`` argument to the spine displays the Bullet visualization.
 
 ### Agents
 
@@ -132,7 +129,7 @@ Environments are single-threaded rather than vectorized. In return, they run as-
 
 <dl>
   <dt><a href="https://tasts-robots.org/doc/upkie/classupkie__locomotion_1_1observers_1_1FloorContact.html#details">Floor contact</a></dt>
-  <dd>Detect contact between the wheels and the floor. The Pink and test balancers use contact as a reset flag for their integrators, to avoid over-spinning the wheels while the robot is in the air.</dd>
+  <dd>Detect contact between the wheels and the floor. The pink and wheel balancers use contact as a reset flag for their integrators, to avoid over-spinning the wheels while the robot is in the air.</dd>
 
   <dt><a href="https://tasts-robots.org/doc/upkie/classupkie__locomotion_1_1observers_1_1WheelContact.html#details">Wheel contact</a></dt>
   <dd>Detect contact between a given wheel and the floor.</dd>
