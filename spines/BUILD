@@ -27,13 +27,13 @@ cc_binary(
     ],
     deps = [
         "//observers",
+        "//utils:datetime_now_string",
         ":upkie_layout",
         "@mpacklog",
         "@vulp//actuation:bullet_interface",
         "@vulp//observation",
         "@vulp//observation/sources",
         "@vulp//spine",
-        "@vulp//utils:datetime_now_string",
     ],
 )
 
@@ -47,13 +47,13 @@ cc_binary(
     ],
     deps = [
         "//observers",
+        "//utils:datetime_now_string",
         ":upkie_layout",
         "@mpacklog",
         "@vulp//actuation:bullet_interface",
         "@vulp//observation",
         "@vulp//observation/sources",
         "@vulp//spine",
-        "@vulp//utils:datetime_now_string",
     ],
 )
 
@@ -87,11 +87,11 @@ cc_binary(
     srcs = ["pi3hat.cpp"],
     deps = [
         "//observers",
+        "//utils:datetime_now_string",
         ":upkie_layout",
         "@vulp//observation",
         "@vulp//observation/sources",
         "@vulp//spine",
-        "@vulp//utils:datetime_now_string",
     ] + select({
         "//:pi32_config": ["@vulp//actuation:pi3hat_interface"],
         "//:pi64_config": ["@vulp//actuation:pi3hat_interface"],

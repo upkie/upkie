@@ -16,7 +16,6 @@
 
 #include <vulp/actuation/BulletInterface.h>
 #include <vulp/spine/Spine.h>
-#include <vulp/utils/datetime_now_string.h>
 
 #include <algorithm>
 #include <cstdlib>
@@ -29,6 +28,7 @@
 #include <vector>
 
 #include "upkie/spines/upkie_layout.h"
+#include "upkie/utils/datetime_now_string.h"
 
 namespace upkie::spines::airbullet {
 
@@ -134,8 +134,8 @@ int main(const char* argv0, const CommandLineArguments& args) {
 
   Spine::Parameters spine_params;
   spine_params.frequency = args.spine_frequency;
-  const auto now = vulp::utils::datetime_now_string();
-  spine_params.log_path = args.log_dir + "/airbullet_spine_" + now + ".mpack";
+  const auto now = upkie::utils::datetime_now_string();
+  spine_params.log_path = args.log_dir + "/" + now + "_airbullet_spine.mpack";
   spine_params.shm_name = args.shm_name;
   spdlog::info("Spine data logged to {}", spine_params.log_path);
   vulp::observation::ObserverPipeline observation;

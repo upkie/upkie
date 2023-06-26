@@ -19,7 +19,6 @@
 #include <vulp/observation/sources/CpuTemperature.h>
 #include <vulp/observation/sources/Joystick.h>
 #include <vulp/spine/Spine.h>
-#include <vulp/utils/datetime_now_string.h>
 
 #include <algorithm>
 #include <cstdlib>
@@ -34,6 +33,7 @@
 #include "upkie/observers/FloorContact.h"
 #include "upkie/observers/WheelOdometry.h"
 #include "upkie/spines/upkie_layout.h"
+#include "upkie/utils/datetime_now_string.h"
 
 namespace upkie::spines::bullet {
 
@@ -176,8 +176,8 @@ int main(const char* argv0, const CommandLineArguments& args) {
   // Spine
   Spine::Parameters spine_params;
   spine_params.frequency = args.spine_frequency;
-  const auto now = vulp::utils::datetime_now_string();
-  spine_params.log_path = args.log_dir + "/bullet_spine_" + now + ".mpack";
+  const auto now = upkie::utils::datetime_now_string();
+  spine_params.log_path = args.log_dir + "/" + now + "_bullet_spine.mpack";
   spine_params.shm_name = args.shm_name;
   spdlog::info("Spine data logged to {}", spine_params.log_path);
   Spine spine(spine_params, interface, observation);
