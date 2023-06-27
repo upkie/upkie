@@ -17,9 +17,9 @@ If you have Python and a C++ compiler (Ubuntu: ``sudo apt install curl g++ pytho
 <img src="https://user-images.githubusercontent.com/1189580/170496331-e1293dd3-b50c-40ee-9c2e-f75f3096ebd8.png" height="100" align="right" />
 
 ```console
-$ git clone https://github.com/tasts-robots/upkie.git
-$ cd upkie
-$ ./start_wheel_balancer.sh
+git clone https://github.com/tasts-robots/upkie.git
+cd upkie
+./start_wheel_balancer.sh
 ```
 
 Connect a USB controller to move the robot around 🎮
@@ -29,7 +29,7 @@ Connect a USB controller to move the robot around 🎮
 The code of Upkie is organized into *spines*, which communicate with the simulation or mjbots actuators, and *agents*, the programs that implement robot behaviors (check out [this introduction](https://github.com/tasts-robots/vulp#readme) for more details on agents and spines). In the example above we ran an agent called "wheel balancer". We could also start the simulation spine independently, and let it run waiting for agents to connect:
 
 ```console
-$ ./start_simulation.sh
+./start_simulation.sh
 ```
 
 Let's assume we did that. Now there are two ways we can run an agent: the [PyPI](#pypi) way and the [Bazel](#bazel). Go for PyPI to use the robot in Python, and for Bazel to recompile things from source.
@@ -44,7 +44,7 @@ The PyPI distribution is the recommended way to control Upkie in Python. It is a
 [![PyPI downloads](https://pepy.tech/badge/upkie/month)](https://pepy.tech/project/upkie)
 
 ```console
-$ pip install upkie
+pip install upkie
 ```
 
 #### Example
@@ -81,13 +81,13 @@ We use [Bazel](https://bazel.build/) to build C++ spines that can run on both yo
 To run an agent on the Raspberry Pi, we first build it locally and upload it to the Raspberry Pi:
 
 ```console
-$ make build
-$ make upload ROBOT=your_upkie
+make build
+make upload ROBOT=your_upkie
 ```
 
 Next, connect to the robot and run a pi3hat spine:
 
-```
+```console
 $ ssh user@your_upkie
 user@your_upkie:~$ cd upkie
 user@your_upkie:upkie$ make run_pi3hat_spine
