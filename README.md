@@ -1,7 +1,7 @@
 # Upkie wheeled biped
 
-[![Build instructions](https://img.shields.io/badge/Build-instructions-brightgreen?logo=read-the-docs&style=flat)](https://tasts-robots.org/doc/upkie/)
 [![CI](https://github.com/tasts-robots/upkie/actions/workflows/bazel.yml/badge.svg)](https://github.com/tasts-robots/upkie/actions/workflows/bazel.yml)
+[![Making a new robot](https://img.shields.io/badge/making-a-new-robot-brightgreen?logo=read-the-docs&style=flat)](https://github.com/tasts-robots/upkie/wiki)
 [![Coverage](https://coveralls.io/repos/github/tasts-robots/upkie/badge.svg?branch=main)](https://coveralls.io/github/tasts-robots/upkie?branch=main)
 [![Vulp](https://img.shields.io/badge/%F0%9F%A6%8A%20vulp-1.2.0-orange)](https://github.com/tasts-robots/vulp)
 [![Chat](https://img.shields.io/matrix/tasts-robots:matrix.org?color=4EB899)](https://app.element.io/#/room/#tasts-robots:matrix.org)
