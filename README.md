@@ -12,7 +12,7 @@ Questions about building and using an Upkie, or balancing robots in general, are
 
 ## Quick sim
 
-Run a simulated Upkie right away from the command line, no installation required:
+If you have Python and a C++ compiler (Ubuntu: ``sudo apt install curl g++ python3-dev``), you can run an Upkie simulation right from the command line:
 
 <img src="https://user-images.githubusercontent.com/1189580/170496331-e1293dd3-b50c-40ee-9c2e-f75f3096ebd8.png" height="100" align="right" />
 
