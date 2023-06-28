@@ -29,12 +29,12 @@ namespace upkie::spines::upkie_layout {
  */
 inline const vulp::actuation::ServoLayout servo_layout() noexcept {
   vulp::actuation::ServoLayout layout;
-  layout.add_servo(1, 1, "right_hip");
-  layout.add_servo(2, 1, "right_knee");
-  layout.add_servo(3, 1, "right_wheel");
-  layout.add_servo(4, 2, "left_hip");
-  layout.add_servo(5, 2, "left_knee");
-  layout.add_servo(6, 2, "left_wheel");
+  layout.add_servo(1, 1, "left_hip");
+  layout.add_servo(2, 1, "left_knee");
+  layout.add_servo(3, 1, "left_wheel");
+  layout.add_servo(4, 2, "right_hip");
+  layout.add_servo(5, 2, "right_knee");
+  layout.add_servo(6, 2, "right_wheel");
   return layout;
 }
 
