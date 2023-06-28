@@ -148,7 +148,7 @@ def compute_base_pitch_from_imu(
 
     # The attitude reference system frame has +x forward, +y right and +z down,
     # whereas our world frame has +x forward, +y left and +z up:
-    # https://github.com/mjbots/pi3hat/blob/master/docs/reference.md#orientation
+    # https://github.com/mjbots/pi3hat/blob/ab632c82bd501b9fcb6f8200df0551989292b7a1/docs/reference.md#orientation
     rotation_ars_to_world = np.diag([1.0, -1.0, -1.0])
 
     rotation_base_to_world = (
