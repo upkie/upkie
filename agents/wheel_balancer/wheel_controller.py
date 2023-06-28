@@ -24,9 +24,9 @@ from typing import Any, Dict, Tuple
 import gin
 import numpy as np
 
+from observers.base_pitch import compute_base_pitch_from_imu
 from utils.clamp import clamp, clamp_abs
 from utils.filters import abs_bounded_derivative_filter, low_pass_filter
-from observers.base_pitch import compute_base_pitch_from_imu
 
 
 @gin.configurable
@@ -125,10 +125,10 @@ class WheelController:
         def __repr__(self):
             return (
                 "WheelController.Gains("
-                f"pitch_damping={self.pitch_damping}, "
                 f"pitch_stiffness={self.pitch_stiffness}, "
-                f"position_damping={self.position_damping}, "
+                f"pitch_damping={self.pitch_damping}, "
                 f"position_stiffness={self.position_stiffness}, "
+                f"position_damping={self.position_damping})"
             )
 
     air_return_period: float
