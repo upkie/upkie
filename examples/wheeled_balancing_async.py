@@ -11,13 +11,12 @@ import time
 import gym
 import mpacklog
 import numpy as np
-
 import upkie.envs
 
 upkie.envs.register()
 
 
-async def balance(env: gym.Env, logger: mpacklog.Logger):
+async def balance(env: gym.Env, logger: mpacklog.AsyncLogger):
     """Run proportional balancer in gym environment with logging."""
     observation = env.reset()  # connects to the spine
     action = np.zeros(env.action_space.shape)
@@ -38,7 +37,7 @@ async def balance(env: gym.Env, logger: mpacklog.Logger):
 
 async def main():
     """Main function of our asyncio program."""
-    logger = mpacklog.Logger("wheeled_balancing.mpack")
+    logger = mpacklog.AsyncLogger("wheeled_balancing.mpack")
     with gym.make("UpkieWheelsEnv-v2", frequency=200.0) as env:
         await asyncio.gather(
             balance(env, logger),
