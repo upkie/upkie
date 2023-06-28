@@ -63,7 +63,7 @@ def parse_command_line_arguments() -> argparse.Namespace:
 
 async def run(
     spine: SpineInterface,
-    config: Dict[str, Any],
+    spine_config: Dict[str, Any],
     logger: mpacklog.Logger,
     frequency: float = 200.0,
 ) -> None:
@@ -72,7 +72,7 @@ async def run(
 
     Args:
         spine: Interface to the spine.
-        config: Configuration dictionary.
+        spine_config: Configuration dictionary.
         frequency: Control frequency in Hz.
     """
     controller = ServoController()
@@ -101,16 +101,16 @@ async def run(
         await rate.sleep()
 
 
-async def main(spine, config: Dict[str, Any]):
+async def main(spine, spine_config: Dict[str, Any]):
     logger = mpacklog.Logger("/dev/shm/brain.mpack")
     await logger.put(
         {
-            "config": config,
+            "config": spine_config,
             "time": time.time(),
         }
     )
     await asyncio.gather(
-        run(spine, config, logger),
+        run(spine, spine_config, logger),
         logger.write(),
         return_exceptions=False,  # make sure exceptions are raised
     )
@@ -127,13 +127,13 @@ if __name__ == "__main__":
 
     # Spine configuration
     with open(f"{agent_dir}/config/spine.yaml", "r") as fh:
-        config = yaml.safe_load(fh)
+        spine_config = yaml.safe_load(fh)
     if args.configure_cpu:
         configure_cpu(cpu=3)
 
     spine = SpineInterface()
     try:
-        asyncio.run(main(spine, config))
+        asyncio.run(main(spine, spine_config))
     except KeyboardInterrupt:
         logging.info("Caught a keyboard interrupt")
     except Exception:
