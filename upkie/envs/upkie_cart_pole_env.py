@@ -91,7 +91,7 @@ class UpkieCartPoleEnv(UpkieBaseEnv):
     init_position: Dict[str, float]
     fall_pitch: float
     max_ground_force: float
-    version: int = 3
+    version: int = 1
     wheel_radius: float
 
     # TODO(scaron): move to Python Upkie layout
