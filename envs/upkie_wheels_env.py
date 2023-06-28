@@ -70,6 +70,19 @@ class UpkieWheelsEnv(UpkieBaseEnv):
         </tr>
     </table>
 
+    Vectorized actions have the following structure:
+
+    <table>
+        <tr>
+            <td><strong>Index</strong></td>
+            <td><strong>Description</strong></td>
+            </tr>
+        <tr>
+            <td>``0``</td>
+            <td>Ground velocity in [m] / [s].</td>
+        </tr>
+    </table>
+
     The reward function is defined in @ref
     envs.standing_reward.StandingReward "StandingReward".
 
