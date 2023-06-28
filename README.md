@@ -26,7 +26,7 @@ Connect a USB controller to move the robot around 🎮
 
 ## Running a spine
 
-The code of Upkie is organized into *spines*, which communicate with the simulation or mjbots actuators, and *agents*, the programs that implement robot behaviors (check out [this introduction](https://github.com/tasts-robots/vulp#readme) for more details on agents and spines).
+The code of Upkie is organized into *spines*, which communicate with the simulation or mjbots actuators, and *agents*, the programs that implement robot behaviors. Check out [this introduction](https://github.com/tasts-robots/vulp#readme) for more details.
 
 ### Simulation spine
 
