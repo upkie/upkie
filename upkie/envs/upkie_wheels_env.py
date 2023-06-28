@@ -17,7 +17,7 @@
 # limitations under the License.
 
 import math
-from typing import Optional
+from typing import Dict, Optional
 
 import numpy as np
 from gymnasium import spaces
@@ -99,7 +99,7 @@ class UpkieWheelsEnv(UpkieBaseEnv):
 
     """
 
-    fall_pitch: float
+    init_position: Dict[str, float]
     max_ground_velocity: float
     version: int = 4
     wheel_radius: float
@@ -168,7 +168,6 @@ class UpkieWheelsEnv(UpkieBaseEnv):
         )
 
         # Class members
-        self.fall_pitch = fall_pitch
         self.init_position = {}
         self.max_ground_velocity = max_ground_velocity
         self.wheel_radius = wheel_radius

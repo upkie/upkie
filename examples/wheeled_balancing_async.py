@@ -30,8 +30,8 @@ async def balance(env: gym.Env, logger: mpacklog.AsyncLogger):
             info,
         ) = await env.async_step(action)
         if terminated or truncated:
-            observation, info = env.reset()
-        pitch = observation[0]
+            observation = env.reset()
+        pitch, ground_position, pitch_velocity, ground_velocity = observation
         action[0] = 10.0 * pitch  # 1D action: [ground_velocity]
         await logger.put(  # log info to be written to file later
             {
