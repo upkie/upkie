@@ -1,12 +1,12 @@
 # Upkie wheeled biped
 
+[![Build instructions](https://img.shields.io/badge/build-instructions-brightgreen?logo=read-the-docs&style=flat)](https://github.com/tasts-robots/upkie/wiki)
 [![CI](https://github.com/tasts-robots/upkie/actions/workflows/bazel.yml/badge.svg)](https://github.com/tasts-robots/upkie/actions/workflows/bazel.yml)
-[![Making a new robot](https://img.shields.io/badge/making-a%20new%20robot-brightgreen?logo=read-the-docs&style=flat)](https://github.com/tasts-robots/upkie/wiki)
 [![Coverage](https://coveralls.io/repos/github/tasts-robots/upkie/badge.svg?branch=main)](https://coveralls.io/github/tasts-robots/upkie?branch=main)
 [![Vulp](https://img.shields.io/badge/%F0%9F%A6%8A%20vulp-1.2.0-orange)](https://github.com/tasts-robots/vulp)
 [![Chat](https://img.shields.io/matrix/tasts-robots:matrix.org?color=4EB899)](https://app.element.io/#/room/#tasts-robots:matrix.org)
 
-Main repository to build and control **Upkie** wheeled bipeds. Made for Linux 🐧
+Build and control **Upkie** wheeled bipeds. Made for Linux 🐧
 
 Questions about building and using an Upkie, or balancing robots in general, are all welcome in the [Discussions](https://github.com/tasts-robots/upkie/discussions) forum or on the [Chat](https://app.element.io/#/room/#tasts-robots:matrix.org).
 
@@ -65,12 +65,12 @@ There are two ways we can develop and run agents: using the [PyPI](#pypi) distri
 
 ### PyPI
 
+[![PyPI version](https://img.shields.io/pypi/v/upkie)](https://pypi.org/project/upkie/)
+[![PyPI downloads](https://pepy.tech/badge/upkie/month)](https://pepy.tech/project/upkie)
+
 The PyPI distribution is the recommended way to control Upkie in Python. It is already [fast enough](https://github.com/tasts-robots/vulp#performance) for real-time control.
 
 #### Installation
-
-[![PyPI version](https://img.shields.io/pypi/v/upkie)](https://pypi.org/project/upkie/)
-[![PyPI downloads](https://pepy.tech/badge/upkie/month)](https://pepy.tech/project/upkie)
 
 ```console
 pip install upkie
