@@ -155,4 +155,4 @@ def compute_base_pitch_from_imu(
         rotation_ars_to_world @ rotation_imu_to_ars @ rotation_base_to_imu
     )
     pitch_base_in_world = compute_pitch_frame_in_parent(rotation_base_to_world)
-    return -pitch_base_in_world
+    return pitch_base_in_world
