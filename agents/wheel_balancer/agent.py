@@ -28,12 +28,11 @@ from typing import Any, Dict
 import gin
 import mpacklog
 import yaml
-from loop_rate_limiters import AsyncRateLimiter
-from vulp.spine import SpineInterface
-
 from agents.wheel_balancer.servo_controller import ServoController
+from loop_rate_limiters import AsyncRateLimiter
 from utils.realtime import configure_cpu
 from utils.spdlog import logging
+from vulp.spine import SpineInterface
 
 
 def parse_command_line_arguments() -> argparse.Namespace:
@@ -79,7 +78,16 @@ async def run(
     debug: Dict[str, Any] = {}
     dt = 1.0 / frequency
     rate = AsyncRateLimiter(frequency, "controller")
-    spine.start(config)
+
+    wheel_radius = controller.wheel_balancer.wheel_radius
+    spine_config["wheel_odometry"] = {
+        "signed_radius": {
+            "left_wheel": +wheel_radius,
+            "right_wheel": -wheel_radius,
+        }
+    }
+
+    spine.start(spine_config)
     observation = spine.get_observation()  # pre-reset observation
     while True:
         observation = spine.get_observation()
