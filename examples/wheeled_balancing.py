@@ -21,4 +21,4 @@ if __name__ == "__main__":
             if done:
                 observation = env.reset()
             pitch = observation[0]
-            action[0] = 10.0 * pitch
+            action[0] = 10.0 * pitch  # 1D action: [ground_velocity]
