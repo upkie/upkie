@@ -13,6 +13,8 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - Configure IMU orientation in the base pitch observer
+- Update Vulp for IMU frame simulation fix
+- Update ``upkie_description`` for IMU orientation fix
 
 ## [1.0.0] - 2023/06/12
 
