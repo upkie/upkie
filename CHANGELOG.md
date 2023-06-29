@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+### Added
+
+- Allow faster-than-realtime Gym environment execution (thanks to @perrin-isir)
+
 ### Changed
 
 - Check that ``ROBOT`` environment variable is defined in Makefile
