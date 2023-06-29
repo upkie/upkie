@@ -66,7 +66,7 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
     real robot, as it relies on the same spine interface that runs on Upkie.
     """
 
-    __frequency: float
+    __frequency: Optional[float]
     __async_rate: Optional[AsyncRateLimiter]
     __rate: Optional[RateLimiter]
     _spine: SpineInterface
@@ -77,7 +77,7 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
         self,
         config: Optional[dict],
         fall_pitch: float,
-        frequency: float,
+        frequency: Optional[float],
         shm_name: str,
     ) -> None:
         """!
@@ -85,7 +85,8 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
 
         @param config Configuration dictionary, also sent to the spine.
         @param fall_pitch Fall pitch angle, in radians.
-        @param frequency Regulated frequency of the control loop, in Hz.
+        @param frequency Regulated frequency of the control loop, in Hz. Set to
+            ``None`` to disable loop frequency regulation.
         @param shm_name Name of shared-memory file.
         """
         if config is None:
