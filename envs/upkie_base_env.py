@@ -141,6 +141,8 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
     def __reset_rates(self):
         self.__async_rate = None
         self.__rate = None
+        if self.__frequency is None:  # no rate
+            return
         try:
             asyncio.get_running_loop()
             self.__async_rate = AsyncRateLimiter(self.__frequency)
@@ -164,7 +166,8 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
               debugging, logging, and sometimes learning).
         """
         action_dict = self.dictionarize_action(action)
-        self.__rate.sleep()  # wait until clock tick to send the action
+        if self.__rate is not None:
+            self.__rate.sleep()  # wait until clock tick to send the action
         return self.__step(action_dict)
 
     async def async_step(
@@ -186,7 +189,8 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
               debugging, logging, and sometimes learning).
         """
         action_dict = self.dictionarize_action(action)
-        await self.__async_rate.sleep()  # send action at next clock tick
+        if self.__async_rate is not None:
+            await self.__async_rate.sleep()  # send action at next clock tick
         return self.__step(action_dict)
 
     def __step(
