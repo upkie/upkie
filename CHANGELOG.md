@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+### Added
+
+- Allow faster-than-realtime Gym environment execution (thanks to @perrin-isir)
+
 ### Changed
 
 - Automatically ``sudo`` when running ``upkie_tool``
