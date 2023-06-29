@@ -86,6 +86,10 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
         self.config = config
         self.fall_pitch = fall_pitch
 
+    @property
+    def frequency(self) -> Optional[float]:
+        return self.__frequency
+
     def close(self) -> None:
         """!
         Stop the spine properly.
