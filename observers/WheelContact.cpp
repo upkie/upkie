@@ -33,7 +33,8 @@ WheelContact::WheelContact(const Parameters& params)
 void WheelContact::observe(const double torque, const double velocity,
                            const double dt) noexcept {
   if (params_.cutoff_period < 1e-6) {
-    throw std::runtime_error("[WheelContact::observe] Cutoff period not configured");
+    spdlog::warn("[WheelContact::observe] Observer is not not configured");
+    return;
   }
 
   const double prev_velocity = velocity_;
