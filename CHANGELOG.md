@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Automatically ``sudo`` when running ``upkie_tool``
 - Check that ``ROBOT`` environment variable is defined in Makefile
 - Rename "test balancer" to "wheel balancer"
 - Update Pink balancer to the latest version of the library

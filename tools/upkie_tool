@@ -8,6 +8,7 @@ import argparse
 import asyncio
 import math
 import os
+import sys
 from dataclasses import dataclass
 from typing import Dict, List
 from pathlib import Path
@@ -192,8 +193,9 @@ def parse_command_line_arguments() -> argparse.Namespace:
 
 
 if __name__ == "__main__":
-    if os.getuid() != 0:
-        raise RuntimeError("must be run as root")
+    if os.geteuid() != 0:
+        args = ["sudo", "-E", sys.executable] + sys.argv + [os.environ]
+        os.execlpe("sudo", *args)
     args = parse_command_line_arguments()
     upkie_tool = UpkieTool()
     asyncio.run(main(upkie_tool, args.command))

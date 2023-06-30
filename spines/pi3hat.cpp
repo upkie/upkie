@@ -150,7 +150,7 @@ inline bool calibration_needed() {
 
 int main(const CommandLineArguments& args) {
   if (calibration_needed()) {
-    spdlog::error("Calibration needed: did you run `sudo upkie_tool rezero`?");
+    spdlog::error("Calibration needed: did you run `upkie_tool rezero`?");
     return -3;
   }
   if (!vulp::utils::lock_memory()) {
