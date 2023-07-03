@@ -34,3 +34,4 @@ typing_extensions==4.5.0
 upkie_description==1.3.0
 wheel==0.38.1
 zipp==3.4.1
+farama-notifications==0.0.1
