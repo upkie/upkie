@@ -20,6 +20,7 @@ import asyncio
 import datetime
 import os
 import shutil
+import socket
 import time
 import traceback
 from os import path
@@ -127,16 +128,26 @@ async def main(spine, config: Dict[str, Any], args: argparse.Namespace):
     )
 
 
+def load_gin_configuration(name: str) -> None:
+    logging.info(f"Loading configuration '{name}.gin'")
+    try:
+        gin.parse_config_file(f"{agent_dir}/config/{name}.gin")
+    except OSError as e:
+        raise FileNotFoundError(f"Configuration '{name}.gin' not found") from e
+
+
 if __name__ == "__main__":
     args = parse_command_line_arguments()
     agent_dir = path.dirname(__file__)
 
-    # Gin configuration
-    gin.parse_config_file(f"{agent_dir}/config/common.gin")
-    if args.config == "pi3hat":
-        gin.parse_config_file(f"{agent_dir}/config/pi3hat.gin")
-    elif args.config == "bullet":
-        gin.parse_config_file(f"{agent_dir}/config/bullet.gin")
+    # Agent configuration
+    load_gin_configuration("common")
+    if args.config == "hostname":
+        hostname = socket.gethostname().lower()
+        logging.info(f"Loading configuration from hostname '{hostname}'")
+        load_gin_configuration(hostname)
+    elif args.config is not None:
+        load_gin_configuration(args.config)
 
     # Spine configuration
     with open(f"{agent_dir}/config/spine.yaml", "r") as fh:
