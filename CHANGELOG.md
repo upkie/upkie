@@ -6,21 +6,24 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-- Allow faster-than-realtime Gym environment execution (thanks to @perrin-isir)
+- agents: Detect config from hostname when running on the Pi
+- envs: Allow faster-than-realtime Gym environment execution (thanks to @perrin-isir)
+- envs: Getter for environment frequency
 
 ### Changed
 
-- Automatically ``sudo`` when running ``upkie_tool``
-- Check that ``ROBOT`` environment variable is defined in Makefile
-- Rename "test balancer" to "wheel balancer"
-- Update Pink balancer to the latest version of the library
+- agents: Rename "test balancer" to "wheel balancer"
+- agents: Update Pink balancer to the latest version of the library
+- Makefile: Check that ``ROBOT`` environment variable is defined
+- tools: Automatically ``sudo`` when running ``upkie_tool``
 
 ### Fixed
 
-- Add missing observer configuration in base Upkie environment
-- Configure IMU orientation in the base pitch observer
-- Update Vulp for IMU frame simulation fix
-- Update ``upkie_description`` for IMU orientation fix
+- observers: Add missing observer configuration in base Upkie environment
+- observers: Configure IMU orientation in the base pitch observer
+- spines: Fix joint IDs to left leg (1, 2, 3), right leg (4, 5, 6)
+- workspace: Update Vulp for IMU frame simulation fix
+- workspace: Update ``upkie_description`` for IMU orientation fix
 
 ## [1.0.0] - 2023/06/12
 
