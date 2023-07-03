@@ -20,6 +20,7 @@ import asyncio
 import datetime
 import os
 import shutil
+import socket
 import time
 import traceback
 from os import path
@@ -28,11 +29,12 @@ from typing import Any, Dict
 import gin
 import mpacklog
 import yaml
-from agents.wheel_balancer.servo_controller import ServoController
 from loop_rate_limiters import AsyncRateLimiter
+from vulp.spine import SpineInterface
+
+from agents.wheel_balancer.servo_controller import ServoController
 from utils.realtime import configure_cpu
 from utils.spdlog import logging
-from vulp.spine import SpineInterface
 
 
 def parse_command_line_arguments() -> argparse.Namespace:
@@ -124,14 +126,26 @@ async def main(spine, spine_config: Dict[str, Any]):
     )
 
 
+def load_gin_configuration(name: str) -> None:
+    logging.info(f"Loading configuration '{name}.gin'")
+    try:
+        gin.parse_config_file(f"{agent_dir}/config/{name}.gin")
+    except OSError as e:
+        raise FileNotFoundError(f"Configuration '{name}.gin' not found") from e
+
+
 if __name__ == "__main__":
     args = parse_command_line_arguments()
     agent_dir = path.dirname(__file__)
 
-    # Gin configuration
-    gin.parse_config_file(f"{agent_dir}/config/common.gin")
-    logging.info(f'Loading configuration "{args.config}.gin"')
-    gin.parse_config_file(f"{agent_dir}/config/{args.config}.gin")
+    # Agent configuration
+    load_gin_configuration("common")
+    if args.config == "hostname":
+        hostname = socket.gethostname().lower()
+        logging.info(f"Loading configuration from hostname '{hostname}'")
+        load_gin_configuration(hostname)
+    elif args.config is not None:
+        load_gin_configuration(args.config)
 
     # Spine configuration
     with open(f"{agent_dir}/config/spine.yaml", "r") as fh:
