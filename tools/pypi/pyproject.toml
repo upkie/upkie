@@ -34,7 +34,7 @@ dependencies = [
     "numpy >=1.22.0",
     "qpsolvers >=1.9.1",
     "upkie_description >=1.2.0",
-    "vulp >=1.1.1",
+    "vulp >=1.2.1",
 ]
 keywords = ["wheeled", "biped", "robot", "balance", "motion", "control", "robotics"]
 
