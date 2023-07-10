@@ -29,7 +29,7 @@ qpsolvers==1.9.1
 setuptools==67.4.0
 six==1.15.0
 smmap==4.0.0
-stable-baselines3==1.7.0
+stable-baselines3==2.0.0
 torch==1.13.1
 tqdm==4.64.1
 typing_extensions==4.5.0
