@@ -116,7 +116,7 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
         """!
         Resets the spine and get an initial observation.
 
-        @param seed It is not used yet but should be (TODO).
+        @param seed It is not used yet but should be. TODO(perrin-isir)
         @param return_info If true, return the dictionary observation as an
             extra info dictionary.
         @param options Currently unused.
