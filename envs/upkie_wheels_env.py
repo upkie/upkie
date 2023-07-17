@@ -37,13 +37,6 @@ class UpkieWheelsEnv(UpkieBaseEnv):
     """!
     Upkie with full observation but only wheel velocity actions.
 
-    The environment has the following attributes:
-
-    - ``fall_pitch``: Fall pitch angle, in radians.
-    - ``max_ground_velocity``: Maximum commanded ground velocity in m/s.
-    - ``version``: Environment version number.
-    - ``wheel_radius``: Wheel radius in [m].
-
     Vectorized observations have the following structure:
 
     <table>
@@ -83,11 +76,16 @@ class UpkieWheelsEnv(UpkieBaseEnv):
         </tr>
     </table>
 
-    The reward function is defined in @ref
-    envs.standing_reward.StandingReward "StandingReward".
+    The environment has the following attributes:
 
-    See also @ref envs.upkie_base_env.UpkieBaseEnv "UpkieBaseEnv" for notes on
-    using this environment.
+    - ``fall_pitch``: Fall pitch angle, in radians.
+    - ``max_ground_velocity``: Maximum commanded ground velocity in m/s.
+    - ``version``: Environment version number.
+    - ``wheel_radius``: Wheel radius in [m].
+
+    The reward function is defined in @ref envs.standing_reward.StandingReward
+    "StandingReward". See also @ref envs.upkie_base_env.UpkieBaseEnv
+    "UpkieBaseEnv" for notes on using this environment.
     """
 
     fall_pitch: float
