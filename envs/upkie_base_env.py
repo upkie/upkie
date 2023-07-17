@@ -57,7 +57,7 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
 
     This class has the following attributes:
 
-    - ``config``: Configuration dictionary, also sent to the spine.
+    - ``config``: Configuration dictionary sent to the spine.
     - ``fall_pitch``: Fall pitch angle, in radians.
 
     @note This environment is made to run on a single CPU thread rather than on
@@ -83,7 +83,7 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
         """!
         Initialize environment.
 
-        @param config Configuration dictionary, also sent to the spine.
+        @param config Configuration dictionary sent to the spine.
         @param fall_pitch Fall pitch angle, in radians.
         @param frequency Regulated frequency of the control loop, in Hz. Set to
             ``None`` to disable loop frequency regulation.

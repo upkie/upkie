@@ -156,3 +156,28 @@ def compute_base_pitch_from_imu(
     )
     pitch_base_in_world = compute_pitch_frame_in_parent(rotation_base_to_world)
     return pitch_base_in_world
+
+
+def compute_base_angular_velocity_from_imu(
+    angular_velocity_imu_in_imu: np.ndarray,
+) -> np.ndarray:
+    """
+    Kron
+
+        R_{WI}
+        Rdot_{WI} = R_{WI} (I_omega_{WI} x)
+        R_{WB} = R_WI R_IB
+        Rdot_{WB} = Rdot_WI R_IB
+                  = R_WI (I_omega_WI x) R_IB
+                  = R_WI R_IB (B_omega_WIx)
+                  = R_WB (B_omega_WIx) = R_WB (B_omega_WBx)
+        thus:
+           B_omega_WB = R_BI I_omega_WI
+    """
+    # TODO(scaron): move to config
+    rotation_base_to_imu = np.diag([-1.0, 1.0, -1.0])
+    rotation_imu_to_base = rotation_base_to_imu.T
+    angular_velocity_base_in_base = (
+        rotation_imu_to_base @ angular_velocity_imu_in_imu
+    )
+    return angular_velocity_base_in_base
