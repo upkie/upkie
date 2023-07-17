@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - Compile in optimized mode by default (previsouly: fast build)
+- envs: Observation vector reordered, angular velocity is now that of the base.
 
 ## [1.1.0] - 2023/07/07
 

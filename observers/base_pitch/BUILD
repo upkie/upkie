@@ -14,6 +14,7 @@ py_library(
     ],
     deps = [
         "//utils:clamp",
+        "//utils:rotations",
     ],
 )
 
