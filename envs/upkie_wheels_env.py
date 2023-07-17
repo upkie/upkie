@@ -22,7 +22,10 @@ from typing import Optional
 import numpy as np
 from gymnasium import spaces
 
-from upkie.observers.base_pitch import compute_base_pitch_from_imu
+from upkie.observers.base_pitch import (
+    compute_base_angular_velocity_from_imu,
+    compute_base_pitch_from_imu,
+)
 
 from .standing_reward import StandingReward
 from .upkie_base_env import UpkieBaseEnv
