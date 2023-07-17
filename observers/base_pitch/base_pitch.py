@@ -20,6 +20,7 @@ from typing import Optional, Tuple
 import numpy as np
 
 from upkie.utils.clamp import clamp
+from upkie.utils.rotations import rotation_matrix_from_quaternion
 
 
 def compute_pitch_frame_in_parent(
@@ -72,53 +73,11 @@ def compute_pitch_frame_in_parent(
     return pitch
 
 
-def rotation_matrix_from_quaternion(
-    quat: Tuple[float, float, float, float]
-) -> np.ndarray:
-    """
-    Convert a unit quaternion to the matrix representing the same rotation.
-
-    Args:
-        quat: Unit quaternion to convert, in ``[w, x, y, z]`` format.
-
-    Returns:
-        Rotation matrix corresponding to this quaternion.
-
-    See `Conversion between quaternions and rotation matrices`_.
-
-    .. _`Conversion between quaternions and rotation matrices`:
-        https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles#Rotation_matrices
-    """
-    if abs(np.dot(quat, quat) - 1.0) > 1e-5:
-        raise ValueError(f"Quaternion {quat} is not normalized")
-    qw, qx, qy, qz = quat
-    return np.array(
-        [
-            [
-                1 - 2 * (qy ** 2 + qz ** 2),
-                2 * (qx * qy - qz * qw),
-                2 * (qw * qy + qx * qz),
-            ],
-            [
-                2 * (qx * qy + qz * qw),
-                1 - 2 * (qx ** 2 + qz ** 2),
-                2 * (qy * qz - qx * qw),
-            ],
-            [
-                2 * (qx * qz - qy * qw),
-                2 * (qy * qz + qx * qw),
-                1 - 2 * (qx ** 2 + qy ** 2),
-            ],
-        ]
-    )
-
-
-def compute_base_pitch_from_imu(
+def compute_base_orientation_from_imu(
     quat_imu_in_ars: Tuple[float, float, float, float],
     rotation_base_to_imu: Optional[np.ndarray] = None,
-) -> float:
-    """
-    Get pitch angle of the base frame relative to the world frame.
+) -> np.ndarray:
+    """Get the orientation of the base frame with respect to the world frame.
 
     Args:
         quat_imu_in_ars: Quaternion representing the rotation matrix from
@@ -129,15 +88,7 @@ def compute_base_pitch_from_imu(
             is used.
 
     Returns:
-        Angle from the world z-axis (unit vector opposite to gravity) to the
-        base z-axis. Equivalently, angle that the sagittal vector of the base
-        frame makes with the heading vector.
-
-    Note:
-        The output pitch angle is for the base (x-axis pointing forward), but
-        the input orientation is that of the IMU. Keep in mind that the IMU
-        frame is turned 180 degrees around the yaw axis of the base frame.
-
+        Rotation matrix from the base frame to the world frame.
     """
     if rotation_base_to_imu is None:
         # Default Upkie mounting orientation: USB connectors of the raspi
@@ -153,6 +104,30 @@ def compute_base_pitch_from_imu(
 
     rotation_base_to_world = (
         rotation_ars_to_world @ rotation_imu_to_ars @ rotation_base_to_imu
+    )
+    return rotation_base_to_world
+
+
+def compute_base_pitch_from_imu(
+    quat_imu_in_ars: Tuple[float, float, float, float],
+    rotation_base_to_imu: Optional[np.ndarray] = None,
+) -> float:
+    """Get pitch angle of the base frame relative to the world frame.
+
+    Args:
+        quat_imu_in_ars: Quaternion representing the rotation matrix from
+            the IMU frame to the  attitude reference system (ARS) frame, in
+            ``[w, x, y, z]`` format.
+        rotation_base_to_imu: Rotation matrix from the base frame to the IMU
+            frame. When not specified, the default Upkie mounting orientation
+            is used.
+
+    Returns:
+        Angle from the world z-axis (unit vector opposite to gravity) to the
+        base z-axis. This angle is positive when the base leans forward.
+    """
+    rotation_base_to_world = compute_base_orientation_from_imu(
+        quat_imu_in_ars, rotation_base_to_imu
     )
     pitch_base_in_world = compute_pitch_frame_in_parent(rotation_base_to_world)
     return pitch_base_in_world
