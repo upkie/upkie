@@ -23,18 +23,16 @@ import os
 
 
 def configure_cpu(cpu: int):
-    """
+    """!
     Set the current thread to run on a given CPU core.
 
     This function is meant to be used in conjunction with the ``isolcpus``
     kernel parameter. Check out the Raspberry Pi page in the documentation.
 
-    Args:
-        cpu: CPU core for this thread (on the Pi, CPUID in {0, 1, 2, 3}).
+    @param cpu CPU core for this thread (on the Pi, CPUID in {0, 1, 2, 3}).
 
-    Notes:
-        Calling this function affects only a single thread. A thread created
-        with ``pthread_create`` will then inherit the CPU affinity mask of its
-        parent.
+    @note Calling this function affects only a single thread. A thread created
+    with ``pthread_create`` will then inherit the CPU affinity mask of its
+    parent.
     """
     os.sched_setaffinity(0, {cpu})

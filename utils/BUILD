@@ -52,6 +52,11 @@ py_library(
 )
 
 py_library(
+    name = "rotations",
+    srcs = ["rotations.py"],
+)
+
+py_library(
     name = "spdlog",
     srcs = ["spdlog.py"],
 )
@@ -64,6 +69,7 @@ py_library(
         ":filters",
         ":pinocchio",
         ":realtime",
+        ":rotations",
         ":spdlog",
     ],
 )
