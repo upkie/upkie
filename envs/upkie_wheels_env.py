@@ -32,7 +32,7 @@ from .upkie_base_env import UpkieBaseEnv
 
 MAX_BASE_PITCH: float = np.pi
 MAX_GROUND_POSITION: float = float("inf")
-MAX_IMU_ANGULAR_VELOCITY: float = 1000.0  # rad/s
+MAX_BASE_ANGULAR_VELOCITY: float = 1000.0  # rad/s
 
 
 class UpkieWheelsEnv(UpkieBaseEnv):
@@ -49,20 +49,22 @@ class UpkieWheelsEnv(UpkieBaseEnv):
             </tr>
         <tr>
             <td>0</td>
-            <td>Base pitch in rad.</td>
+            <td>Pitch angle of the base with respect to the world vertical, in
+            radians. This angle is positive when the robot leans forward.</td>
         </tr>
         <tr>
             <td>1</td>
-            <td>Position of the average wheel contact point, in m.</td>
+            <td>Position of the average wheel contact point, in meters.</td>
         </tr>
         <tr>
             <td>2</td>
-            <td>Velocity of the average wheel contact point, in m/s.</td>
+            <td>Body angular velocity of the base frame along its lateral axis,
+            in radians per seconds.</td>
         </tr>
         <tr>
             <td>3</td>
-            <td>Body angular velocity of the IMU frame along its y-axis, in
-            rad/s.</td>
+            <td>Velocity of the average wheel contact point, in meters per
+            seconds.</td>
         </tr>
     </table>
 
@@ -132,8 +134,8 @@ class UpkieWheelsEnv(UpkieBaseEnv):
             [
                 MAX_BASE_PITCH,
                 MAX_GROUND_POSITION,
+                MAX_BASE_ANGULAR_VELOCITY,
                 max_ground_velocity,
-                MAX_IMU_ANGULAR_VELOCITY,
             ],
             dtype=np.float32,
         )
@@ -183,12 +185,20 @@ class UpkieWheelsEnv(UpkieBaseEnv):
         @returns Observation vector.
         """
         imu = observation_dict["imu"]
-        obs = np.empty(4)
-        obs[0] = compute_base_pitch_from_imu(imu["orientation"])
-        obs[1] = observation_dict["wheel_odometry"]["position"]
-        obs[2] = observation_dict["wheel_odometry"]["velocity"]
-        obs[3] = observation_dict["imu"]["angular_velocity"][1]
-        return obs
+        pitch_base_in_world = compute_base_pitch_from_imu(imu["orientation"])
+        angular_velocity_base_in_base = compute_base_angular_velocity_from_imu(
+            observation_dict["imu"]["angular_velocity"]
+        )
+        ground_position = observation_dict["wheel_odometry"]["position"]
+        ground_velocity = observation_dict["wheel_odometry"]["velocity"]
+        return np.array(
+            [
+                pitch_base_in_world,
+                ground_position,
+                angular_velocity_base_in_base[1],
+                ground_velocity,
+            ]
+        )
 
     def dictionarize_action(self, action: np.ndarray) -> dict:
         """!
