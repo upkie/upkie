@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## Unreleased
 
+### Added
+
+- hard_rezero: Search for upkie_tool and skip if not found
+
 ### Changed
 
 - Compile in optimized mode by default (previsouly: fast build)
