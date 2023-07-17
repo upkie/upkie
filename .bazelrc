@@ -2,17 +2,17 @@
 
 ## Host platform
 
-build --compilation_mode=fastbuild
+build --compilation_mode=opt
 build --copt="-Werror=return-type"
 build --cxxopt=-std=c++17
 
 coverage --combined_report=lcov
-coverage --compilation_mode=fastbuild
+coverage --compilation_mode=opt
 coverage --copt="-Werror=return-type"
 coverage --cxxopt=-std=c++17
 coverage --instrument_test_targets
 
-test --compilation_mode=fastbuild
+test --compilation_mode=opt
 test --copt="-Werror=return-type"
 test --cxxopt=-std=c++17
 test --test_output=errors
