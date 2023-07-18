@@ -11,8 +11,13 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
-- Compile in optimized mode by default (previsouly: fast build)
+- build: Compile in optimized mode by default (previsouly: fast build)
 - envs: Observation vector reordered, angular velocity is now that of the base.
+
+### Fixed
+
+- build: Only run lint tests when ``--config lint`` is supplied
+- envs: Make sure vectorized observations are float32
 
 ## [1.1.0] - 2023/07/07
 
