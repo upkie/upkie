@@ -4,11 +4,13 @@ PyYAML==6.0
 cloudpickle==1.6.0
 contourpy==1.0.6
 cycler==0.10.0
+farama-notifications==0.0.1
 fonttools==4.38.0
 gin-config==0.5.0
 gitdb==4.0.7
-gym==0.21.0
+gymnasium==0.28.1
 importlib-metadata==4.13.0
+jax-jumpy==1.0.0
 kiwisolver==1.0.1
 loop-rate-limiters==0.2.0
 matplotlib==3.6.2
@@ -26,7 +28,7 @@ pytz==2021.1
 setuptools==67.4.0
 six==1.15.0
 smmap==4.0.0
-stable-baselines3==1.7.0
+stable-baselines3==2.0.0
 torch==1.13.1
 tqdm==4.64.1
 typing_extensions==4.5.0

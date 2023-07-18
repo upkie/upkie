@@ -20,7 +20,7 @@ from typing import Optional
 import numpy as np
 import pinocchio as pin
 import upkie_description
-from gym import spaces
+from gymnasium import spaces
 
 from upkie.utils.clamp import clamp_and_warn
 from upkie.utils.pinocchio import (
