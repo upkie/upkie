@@ -36,7 +36,7 @@ if __name__ == "__main__":
         args = ["sudo", "-E", sys.executable] + sys.argv + [os.environ]
         os.execlpe("sudo", *args)
     os.sched_setaffinity(0, {CPUID})
-    env = gym.make("UpkieWheelsEnv-v2", frequency=200.0)
+    env = gym.make("UpkieWheelsEnv-v4", frequency=200.0)
     try:
         balance(env)
     finally:  # make sure we disconnect from the spine

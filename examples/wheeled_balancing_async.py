@@ -45,7 +45,7 @@ async def balance(env: gym.Env, logger: mpacklog.AsyncLogger):
 async def main():
     """Main function of our asyncio program."""
     logger = mpacklog.AsyncLogger("wheeled_balancing.mpack")
-    with gym.make("UpkieWheelsEnv-v3", frequency=200.0) as env:
+    with gym.make("UpkieWheelsEnv-v4", frequency=200.0) as env:
         await asyncio.gather(
             balance(env, logger),
             logger.write(),  # write logs to file when there is time

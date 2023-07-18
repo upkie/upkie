@@ -38,7 +38,14 @@ MAX_BASE_ANGULAR_VELOCITY: float = 1000.0  # rad/s
 class UpkieWheelsEnv(UpkieBaseEnv):
 
     """!
-    Upkie with full observation but only wheel velocity actions.
+    Upkie with ground velocity as the action.
+
+    <table>
+        <tr>
+            <td><strong>Environment id</strong></td>
+            <td>UpkieWheelsEnv-v4</td>
+        </tr>
+    </table>
 
     Vectorized observations have the following structure:
 
@@ -46,7 +53,7 @@ class UpkieWheelsEnv(UpkieBaseEnv):
         <tr>
             <td><strong>Index</strong></td>
             <td><strong>Description</strong></td>
-            </tr>
+        </tr>
         <tr>
             <td>0</td>
             <td>Pitch angle of the base with respect to the world vertical, in
@@ -95,7 +102,7 @@ class UpkieWheelsEnv(UpkieBaseEnv):
 
     fall_pitch: float
     max_ground_velocity: float
-    version: int = 3
+    version: int = 4
     wheel_radius: float
 
     LEG_JOINTS = [

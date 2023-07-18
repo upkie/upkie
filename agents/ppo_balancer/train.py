@@ -97,7 +97,7 @@ def train_policy(agent_name: str, training_dir: str) -> None:
         "net_arch": [dict(pi=[64, 64], vf=[64, 64])],
     }
     env = TimeLimit(
-        gym.make("UpkieWheelsEnv-v2", shm_name=f"/{agent_name}"),
+        gym.make("UpkieWheelsEnv-v4", shm_name=f"/{agent_name}"),
         max_episode_steps=int(max_episode_duration * agent_frequency),
     )
 
