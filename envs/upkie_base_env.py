@@ -150,7 +150,8 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
             self.__rate = RateLimiter(self.__frequency)
 
     def step(
-        self, action: np.ndarray
+        self,
+        action: np.ndarray,
     ) -> Tuple[np.ndarray, float, bool, bool, dict]:
         """!
         Run one timestep of the environment's dynamics. When the end of the
