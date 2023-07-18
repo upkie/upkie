@@ -6,7 +6,8 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-- hard_rezero: Search for upkie_tool and skip if not found
+- tools: add ``vcgencheck`` utility script
+- tools: make ``hard_rezero`` search for ``upkie_tool`` and skip if not found
 
 ### Changed
 
