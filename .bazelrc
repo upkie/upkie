@@ -16,6 +16,7 @@ test --compilation_mode=opt
 test --copt="-Werror=return-type"
 test --cxxopt=-std=c++17
 test --test_output=errors
+test --test_tag_filters=-lint
 
 ## Linter
 
@@ -36,7 +37,7 @@ test:pi32 --cpu=armeabihf
 test:pi32 --crosstool_top=@rpi_bazel//tools/cc_toolchain:toolchain
 test:pi32 --test_output=errors
 
-## Target platform: 64-bit Raspberry Pi OS
+# Target platform: 64-bit Raspberry Pi OS
 
 build:pi64 --compilation_mode=opt
 build:pi64 --compiler=clang

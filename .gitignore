@@ -3,4 +3,5 @@ bazel-*
 coverage/
 doc/html/
 tools/bazel
+upkie.wiki/
 wiki/
