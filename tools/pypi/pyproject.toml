@@ -32,7 +32,6 @@ dependencies = [
     "loop-rate-limiters >=0.4.0",
     "mpacklog >=3.0.0",
     "numpy >=1.22.0",
-    "qpsolvers >=1.9.1",
     "upkie_description >=1.2.0",
     "vulp >=1.2.1",
 ]

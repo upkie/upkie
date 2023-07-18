@@ -151,7 +151,7 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
 
     def step(
         self,
-        action: np.ndarray
+        action: np.ndarray,
     ) -> Tuple[np.ndarray, float, bool, bool, dict]:
         """!
         Run one timestep of the environment's dynamics. When the end of the
@@ -163,9 +163,10 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
             - ``observation``: Agent's observation of the environment.
             - ``reward``: Amount of reward returned after previous action.
             - ``terminated``: Whether the agent reaches the terminal state,
-               which can be good or bad. If true, the user needs to call
-              :func:`reset()`.
-            - ``truncated'': Whether the episode is reaching max nr of steps.
+              which can be a good or a bad thing. If true, the user needs to
+              call :func:`reset()`.
+            - ``truncated'': Whether the episode is reaching max number of
+              steps.
             - ``info``: Contains auxiliary diagnostic information (helpful for
               debugging, logging, and sometimes learning).
         """
@@ -187,9 +188,10 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
             - ``observation``: Agent's observation of the environment.
             - ``reward``: Amount of reward returned after previous action.
             - ``terminated``: Whether the agent reaches the terminal state,
-              which can be good or bad. If true, the user needs to call
-              :func:`reset()`.
-            - ``truncated'': Whether the episode is reaching max nr of steps.
+              which can be a good or a bad thing. If true, the user needs to
+              call :func:`reset()`.
+            - ``truncated'': Whether the episode is truncated (reaching max
+              number of steps).
             - ``info``: Contains auxiliary diagnostic information (helpful for
               debugging, logging, and sometimes learning).
         """
@@ -200,7 +202,7 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
 
     def __step(
         self, action_dict: dict
-    ) -> Tuple[np.ndarray, float, bool, dict]:
+    ) -> Tuple[np.ndarray, float, bool, bool, dict]:
         self._spine.set_action(action_dict)
         observation_dict = self._spine.get_observation()
         observation = self.vectorize_observation(observation_dict)

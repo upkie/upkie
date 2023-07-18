@@ -25,7 +25,6 @@ pandas==1.5.2
 pyparsing==3.0.9
 python-dateutil==2.8.1
 pytz==2021.1
-qpsolvers==1.9.1
 setuptools==67.4.0
 six==1.15.0
 smmap==4.0.0
