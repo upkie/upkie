@@ -38,14 +38,9 @@ MAX_BASE_ANGULAR_VELOCITY: float = 1000.0  # rad/s
 class UpkieWheelsEnv(UpkieBaseEnv):
 
     """!
-    Upkie with ground velocity as the action.
+    Upkie with ground velocity actions.
 
-    <table>
-        <tr>
-            <td><strong>Environment id</strong></td>
-            <td>UpkieWheelsEnv-v4</td>
-        </tr>
-    </table>
+    The environment id is ``UpkieWheelsEnv-v4``.
 
     Vectorized observations have the following structure:
 
