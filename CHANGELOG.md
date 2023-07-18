@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.1] - 2023/07/18
+
+### Changed
+
+- envs: Bump UpkieWheelsEnv version number to 4
+
 ## [1.2.0] - 2023/07/18
 
 ### Added
