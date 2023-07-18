@@ -191,14 +191,13 @@ class UpkieWheelsEnv(UpkieBaseEnv):
         )
         ground_position = observation_dict["wheel_odometry"]["position"]
         ground_velocity = observation_dict["wheel_odometry"]["velocity"]
-        return np.array(
-            [
-                pitch_base_in_world,
-                ground_position,
-                angular_velocity_base_in_base[1],
-                ground_velocity,
-            ]
-        )
+
+        obs = np.empty(4, dtype=np.float32)
+        obs[0] = pitch_base_in_world
+        obs[1] = ground_position
+        obs[2] = angular_velocity_base_in_base[1]
+        obs[3] = ground_velocity
+        return obs
 
     def dictionarize_action(self, action: np.ndarray) -> dict:
         """!
