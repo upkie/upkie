@@ -182,7 +182,7 @@ class UpkieServosEnv(UpkieBaseEnv):
         """
         nq, nv = self.robot.model.nq, self.robot.model.nv
         model = self.robot.model
-        obs = np.empty(nq + 2 * nv)
+        obs = np.empty(nq + 2 * nv, dtype=np.float32)
         for joint in self.__joints:
             i = model.getJointId(joint) - 1
             obs[i] = observation_dict["servo"][joint]["position"]
