@@ -91,7 +91,7 @@ if __name__ == "__main__":
         spine_argv = ["--spine-frequency", "1000.0", "--show"]
         os.execvp(spine_path, ["bullet"] + spine_argv)
     else:
-        time.sleep(2.5)  # wait for Bullet to start
+        time.sleep(1.5)  # wait for Bullet to start
         spine = SpineInterface()
         try:
             asyncio.run(run(spine, config))
