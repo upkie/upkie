@@ -144,15 +144,15 @@ int main(const char* argv0, const CommandLineArguments& args) {
   // Observation: CPU temperature
   auto cpu_temperature = std::make_shared<CpuTemperature>();
   observation.connect_source(cpu_temperature);
-  
-  #ifndef __APPLE__
+
+#ifndef __APPLE__
   // Observation: Joystick
   auto joystick = std::make_shared<Joystick>();
   if (joystick->present()) {
     spdlog::info("Joystick found");
     observation.connect_source(joystick);
   }
-  #endif
+#endif
 
   // Observation: Floor contact
   FloorContact::Parameters floor_contact_params;
