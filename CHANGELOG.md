@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- Support macOS operating systems (thanks to @boragokbakan)
+
 ## [1.2.1] - 2023/07/18
 
 ### Changed
