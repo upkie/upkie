@@ -17,7 +17,11 @@
 #include <vulp/actuation/BulletInterface.h>
 #include <vulp/observation/ObserverPipeline.h>
 #include <vulp/observation/sources/CpuTemperature.h>
+
+#ifndef __APPLE__
 #include <vulp/observation/sources/Joystick.h>
+#endif
+
 #include <vulp/spine/Spine.h>
 
 #include <algorithm>
@@ -43,7 +47,11 @@ using upkie::observers::WheelOdometry;
 using vulp::actuation::BulletInterface;
 using vulp::observation::ObserverPipeline;
 using vulp::observation::sources::CpuTemperature;
+
+#ifndef __APPLE__
 using vulp::observation::sources::Joystick;
+#endif
+
 using vulp::spine::Spine;
 
 //! Command-line arguments for the Bullet spine.
@@ -136,13 +144,15 @@ int main(const char* argv0, const CommandLineArguments& args) {
   // Observation: CPU temperature
   auto cpu_temperature = std::make_shared<CpuTemperature>();
   observation.connect_source(cpu_temperature);
-
+  
+  #ifndef __APPLE__
   // Observation: Joystick
   auto joystick = std::make_shared<Joystick>();
   if (joystick->present()) {
     spdlog::info("Joystick found");
     observation.connect_source(joystick);
   }
+  #endif
 
   // Observation: Floor contact
   FloorContact::Parameters floor_contact_params;
