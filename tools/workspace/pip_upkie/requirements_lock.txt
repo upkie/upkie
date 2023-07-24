@@ -10,10 +10,11 @@ gin-config==0.5.0
 gitdb==4.0.7
 gymnasium==0.28.1
 importlib-metadata==4.13.0
+importlib-resources==5.9.0
 jax-jumpy==1.0.0
 kiwisolver==1.0.1
 loop-rate-limiters==0.2.0
-matplotlib==3.6.2
+matplotlib==3.7.0
 numpy==1.23.4
 nvidia-cublas-cu11==11.10.3.66
 nvidia-cuda-nvrtc-cu11==11.7.99

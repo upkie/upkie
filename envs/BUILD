@@ -24,16 +24,6 @@ py_library(
 )
 
 py_library(
-    name = "upkie_wheels_env",
-    srcs = [
-        "upkie_wheels_env.py",
-    ],
-    deps = [
-        ":upkie_base_env",
-    ],
-)
-
-py_library(
     name = "upkie_servos_env",
     srcs = [
         "upkie_servos_env.py",
@@ -41,6 +31,16 @@ py_library(
     deps = [
         ":upkie_base_env",
         "//utils:pinocchio",
+    ],
+)
+
+py_library(
+    name = "upkie_wheels_env",
+    srcs = [
+        "upkie_wheels_env.py",
+    ],
+    deps = [
+        ":upkie_base_env",
     ],
 )
 
