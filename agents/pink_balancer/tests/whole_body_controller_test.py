@@ -31,7 +31,6 @@ class TestWholeBodyController(unittest.TestCase):
         gin.parse_config_file(f"{agent_dir}/config/common.gin")
         gin.parse_config_file(f"{agent_dir}/config/bullet.gin")
         controller = WholeBodyController(
-            config={},
             gain_scale=10.0,
             max_crouch_height=2.0,
             visualize=False,
