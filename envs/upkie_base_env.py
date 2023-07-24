@@ -21,33 +21,10 @@ from typing import Dict, Optional, Tuple, Union
 
 import gymnasium as gym
 import numpy as np
+import upkie.config
 from loop_rate_limiters import AsyncRateLimiter, RateLimiter
-from vulp.spine import SpineInterface
-
 from upkie.observers.base_pitch import compute_base_pitch_from_imu
-
-DEFAULT_CONFIG = {
-    "bullet": {
-        "control_mode": "torque",
-        "follower_camera": False,
-        "gui": True,
-        "position_init_base_in_world": [0.0, 0.0, 0.6],
-        "torque_control": {
-            "kp": 20.0,
-            "kd": 1.0,
-        },
-    },
-    "floor_contact": {
-        "upper_leg_torque_threshold": 10.0,
-    },
-    "wheel_contact": {
-        "cutoff_period": 0.2,
-        "liftoff_inertia": 0.001,
-        "min_touchdown_acceleration": 2.0,
-        "min_touchdown_torque": 0.015,
-        "touchdown_inertia": 0.004,
-    },
-}
+from vulp.spine import SpineInterface
 
 
 class UpkieBaseEnv(abc.ABC, gym.Env):
@@ -66,34 +43,35 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
     real robot, as it relies on the same spine interface that runs on Upkie.
     """
 
-    __frequency: Optional[float]
     __async_rate: Optional[AsyncRateLimiter]
+    __frequency: Optional[float]
     __rate: Optional[RateLimiter]
     _spine: SpineInterface
-    config: dict
     fall_pitch: float
+    spine_config: dict
 
     def __init__(
         self,
-        config: Optional[dict],
         fall_pitch: float,
         frequency: Optional[float],
         shm_name: str,
+        spine_config: Optional[dict],
     ) -> None:
         """!
         Initialize environment.
 
-        @param config Configuration dictionary sent to the spine.
         @param fall_pitch Fall pitch angle, in radians.
         @param frequency Regulated frequency of the control loop, in Hz. Set to
             ``None`` to disable loop frequency regulation.
         @param shm_name Name of shared-memory file.
+        @param spine_config Additional spine configuration overriding the
+            defaults from ``//config:spine.yaml``. The combined configuration
+            dictionary is sent to the spine at every :func:`reset`.
         """
-        if config is None:
-            config = DEFAULT_CONFIG
+        spine_config = upkie.config.SPINE_CONFIG.copy()
         self.__frequency = frequency
         self._spine = SpineInterface(shm_name)
-        self.config = config
+        self.spine_config = spine_config
         self.fall_pitch = fall_pitch
 
     @property
@@ -128,7 +106,7 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
         # super().reset(seed=seed)
         self.__reset_rates()
         self._spine.stop()
-        self._spine.start(self.config)
+        self._spine.start(self.spine_config)
         self._spine.get_observation()  # might be a pre-reset observation
         observation_dict = self._spine.get_observation()
         self.parse_first_observation(observation_dict)
