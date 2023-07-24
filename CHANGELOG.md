@@ -7,6 +7,11 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - Support macOS operating systems (thanks to @boragokbakan)
+- Top-level configuration submodule for robot-wide configuration
+
+### Changed
+
+- envs: Rename ``config`` parameter to a more explicit ``spine_config``
 
 ### Fixed
 
@@ -22,8 +27,8 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-- tools: add ``vcgencheck`` utility script
-- tools: make ``hard_rezero`` search for ``upkie_tool`` and skip if not found
+- tools: Add ``vcgencheck`` utility script
+- tools: Make ``hard_rezero`` search for ``upkie_tool`` and skip if not found
 
 ### Changed
 

@@ -76,10 +76,10 @@ class TestUpkieBaseEnv(unittest.TestCase):
             shm_name, posix_ipc.O_RDWR | posix_ipc.O_CREAT, size=42
         )
         self.env = UpkieBaseChild(
-            config=None,
             fall_pitch=1.0,
             frequency=100.0,
             shm_name=shm_name,
+            spine_config=None,
         )
         shared_memory.close_fd()
         self.env._spine = MockSpine()

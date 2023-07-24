@@ -21,7 +21,6 @@ import numpy as np
 import pinocchio as pin
 import upkie_description
 from gymnasium import spaces
-
 from upkie.utils.clamp import clamp_and_warn
 from upkie.utils.pinocchio import (
     box_position_limits,
@@ -101,24 +100,26 @@ class UpkieServosEnv(UpkieBaseEnv):
 
     def __init__(
         self,
-        config: Optional[dict] = None,
         fall_pitch: float = 1.0,
         frequency: float = 200.0,
         shm_name: str = "/vulp",
+        spine_config: Optional[dict] = None,
     ):
         """!
         Initialize environment.
 
-        @param config Configuration dictionary, also sent to the spine.
         @param fall_pitch Fall pitch angle, in radians.
         @param frequency Regulated frequency of the control loop, in Hz.
         @param shm_name Name of shared-memory file.
+        @param spine_config Additional spine configuration overriding the
+            defaults from ``//config:spine.yaml``. The combined configuration
+            dictionary is sent to the spine at every :func:`reset`.
         """
         super().__init__(
-            config=config,
             fall_pitch=fall_pitch,
             frequency=frequency,
             shm_name=shm_name,
+            spine_config=spine_config,
         )
 
         robot = upkie_description.load_in_pinocchio(root_joint=None)

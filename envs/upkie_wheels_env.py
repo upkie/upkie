@@ -21,7 +21,6 @@ from typing import Optional
 
 import numpy as np
 from gymnasium import spaces
-
 from upkie.observers.base_pitch import (
     compute_base_angular_velocity_from_imu,
     compute_base_pitch_from_imu,
@@ -108,28 +107,30 @@ class UpkieWheelsEnv(UpkieBaseEnv):
 
     def __init__(
         self,
-        config: Optional[dict] = None,
         fall_pitch: float = 1.0,
         frequency: float = 200.0,
         max_ground_velocity: float = 1.0,
         shm_name: str = "/vulp",
+        spine_config: Optional[dict] = None,
         wheel_radius: float = 0.06,
     ):
         """!
         Initialize environment.
 
-        @param config Configuration dictionary, also sent to the spine.
         @param fall_pitch Fall pitch angle, in radians.
         @param frequency Regulated frequency of the control loop, in Hz.
         @param max_ground_velocity Maximum commanded ground velocity in m/s.
         @param shm_name Name of shared-memory file.
+        @param spine_config Additional spine configuration overriding the
+            defaults from ``//config:spine.yaml``. The combined configuration
+            dictionary is sent to the spine at every :func:`reset`.
         @param wheel_radius Wheel radius in [m].
         """
         super().__init__(
-            config=config,
             fall_pitch=fall_pitch,
             frequency=frequency,
             shm_name=shm_name,
+            spine_config=spine_config,
         )
 
         observation_limit = np.array(
