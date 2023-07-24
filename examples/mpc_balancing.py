@@ -55,7 +55,12 @@ async def balance(env: gym.Env, logger: mpacklog.AsyncLogger):
         nb_timesteps=5,
         sampling_period=0.05,
     )
-    mpc_problem = CartPole.build_mpc_problem(cart_pole_params)
+    mpc_problem = CartPole.build_mpc_problem(
+        cart_pole_params,
+        terminal_cost_weight=10.0,
+        stage_state_cost_weight=1.0,
+        stage_input_cost_weight=1e-3,
+    )
     cart_pole = CartPole(cart_pole_params, initial_state=np.zeros(4))
     cart_pole.init_live_plot(order="velocities")
 
