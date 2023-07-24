@@ -98,6 +98,10 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
 
     @property
     def frequency(self) -> Optional[float]:
+        """!
+        Regulated frequency of the control loop in Hz, or ``None`` if there is
+        no loop frequency regulation.
+        """
         return self.__frequency
 
     def close(self) -> None:

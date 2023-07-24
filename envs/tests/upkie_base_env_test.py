@@ -85,7 +85,8 @@ class TestUpkieBaseEnv(unittest.TestCase):
         self.env._spine = MockSpine()
 
     def test_reset(self):
-        _, observation_dict = self.env.reset(return_info=True)
+        _, info = self.env.reset()
+        observation_dict = info["observation"]
         self.assertGreaterEqual(observation_dict["number"], 1)
 
 
