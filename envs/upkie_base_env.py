@@ -110,10 +110,11 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         observation_dict = self._spine.get_observation()
         self.parse_first_observation(observation_dict)
         observation = self.vectorize_observation(observation_dict)
-        if not return_info:
-            return observation
-        else:  # return_info
-            return observation, observation_dict
+        info = {
+            "action": None,
+            "observation": observation_dict,
+        }
+        return observation, info
 
     def __reset_rates(self):
         self.__async_rate = None
