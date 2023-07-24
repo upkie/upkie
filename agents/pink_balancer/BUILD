@@ -23,6 +23,7 @@ py_binary(
         "//conditions:default": [],
     }),
     deps = [
+        "//config",
         "//observers/base_pitch",
         "//utils:clamp",
         "//utils:exceptions",
@@ -34,7 +35,6 @@ py_binary(
         requirement("gin-config"),
         requirement("loop_rate_limiters"),
         requirement("packaging"),
-        requirement("pyyaml"),
         requirement("upkie_description"),
     ],
 )

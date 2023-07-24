@@ -28,7 +28,7 @@ from typing import Any, Dict
 
 import gin
 import mpacklog
-import yaml
+import upkie.config
 from loop_rate_limiters import AsyncRateLimiter
 from vulp.spine import SpineInterface
 
@@ -66,8 +66,8 @@ def parse_command_line_arguments() -> argparse.Namespace:
 async def run(
     spine: SpineInterface,
     spine_config: Dict[str, Any],
+    controller: WholeBodyController,
     logger: mpacklog.Logger,
-    args: argparse.Namespace,
     frequency: float = 200.0,
 ) -> None:
     """
@@ -75,21 +75,14 @@ async def run(
 
     Args:
         spine: Interface to the spine.
-        config: Configuration dictionary.
+        spine_config: Spine configuration dictionary.
+        controller: Whole-body controller.
+        logger: Dictionary logger.
         frequency: Control frequency in Hz.
     """
-    controller = WholeBodyController(spine_config, visualize=args.visualize)
     debug: Dict[str, Any] = {}
     dt = 1.0 / frequency
     rate = AsyncRateLimiter(frequency, "controller")
-
-    wheel_radius = controller.wheel_balancer.wheel_radius
-    spine_config["wheel_odometry"] = {
-        "signed_radius": {
-            "left_wheel": +wheel_radius,
-            "right_wheel": -wheel_radius,
-        }
-    }
 
     spine.start(spine_config)
     observation = spine.get_observation()  # pre-reset observation
@@ -113,16 +106,22 @@ async def run(
         await rate.sleep()
 
 
-async def main(spine, config: Dict[str, Any], args: argparse.Namespace):
+async def main(spine, args: argparse.Namespace):
+    controller = WholeBodyController(visualize=args.visualize)
+    spine_config = upkie.config.SPINE_CONFIG.copy()
+    wheel_radius = controller.wheel_balancer.wheel_radius
+    wheel_odometry_config = spine_config["wheel_odometry"]
+    wheel_odometry_config["signed_radius"]["left_wheel"] = +wheel_radius
+    wheel_odometry_config["signed_radius"]["right_wheel"] = -wheel_radius
     logger = mpacklog.Logger("/dev/shm/brain.mpack")
     await logger.put(
         {
-            "config": config,
+            "config": spine_config,
             "time": time.time(),
         }
     )
     await asyncio.gather(
-        run(spine, config, logger, args),
+        run(spine, spine_config, controller, logger),
         logger.write(),
         return_exceptions=False,  # make sure exceptions are raised
     )
@@ -149,15 +148,12 @@ if __name__ == "__main__":
     elif args.config is not None:
         load_gin_configuration(args.config)
 
-    # Spine configuration
-    with open(f"{agent_dir}/config/spine.yaml", "r") as fh:
-        spine_config = yaml.safe_load(fh)
     if args.config == "pi3hat":
         configure_cpu(cpu=3)
 
     spine = SpineInterface()
     try:
-        asyncio.run(main(spine, spine_config, args))
+        asyncio.run(main(spine, args))
     except KeyboardInterrupt:
         logging.info("Caught a keyboard interrupt")
     except Exception:

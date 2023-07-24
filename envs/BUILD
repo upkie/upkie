@@ -14,11 +14,11 @@ py_library(
         "upkie_base_env.py",
     ],
     deps = [
+        "//config",
         "@upkie//observers/base_pitch",
         "@vulp//spine:python",
         requirement("gymnasium"),
         requirement("loop_rate_limiters"),
-        requirement("pyyaml"),
         requirement("upkie_description"),
     ],
 )

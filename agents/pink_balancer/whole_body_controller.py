@@ -128,7 +128,6 @@ class WholeBodyController:
 
     def __init__(
         self,
-        config: Dict[str, Any],
         gain_scale: float,
         max_crouch_height: float,
         max_crouch_velocity: float,
@@ -139,7 +138,6 @@ class WholeBodyController:
         Create controller.
 
         Args:
-            config: Global configuration dictionary.
             gain_scale: PD gain scale for hip and knee joints.
             max_crouch_height: Maximum distance along the vertical axis that
                 the robot goes down while crouching, in [m].
