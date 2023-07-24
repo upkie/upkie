@@ -17,9 +17,9 @@
 
 import abc
 import asyncio
-from typing import Dict, Optional, Tuple, Union
+from typing import Dict, Optional, Tuple
 
-import gymnasium as gym
+import gymnasium
 import numpy as np
 import upkie.config
 from loop_rate_limiters import AsyncRateLimiter, RateLimiter
@@ -27,7 +27,7 @@ from upkie.observers.base_pitch import compute_base_pitch_from_imu
 from vulp.spine import SpineInterface
 
 
-class UpkieBaseEnv(abc.ABC, gym.Env):
+class UpkieBaseEnv(abc.ABC, gymnasium.Env):
 
     """!
     Base class for Upkie environments.
@@ -88,22 +88,21 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
         self,
         *,
         seed: Optional[int] = None,
-        return_info: bool = True,
         options: Optional[dict] = None,
-    ) -> Union[np.ndarray, Tuple[np.ndarray, Dict]]:
+    ) -> Tuple[np.ndarray, Dict]:
         """!
         Resets the spine and get an initial observation.
 
         @param seed It is not used yet but should be. TODO(perrin-isir)
-        @param return_info If true, return the dictionary observation as an
-            extra info dictionary.
         @param options Currently unused.
         @returns
-            - ``observation``: the initial vectorized observation.
-            - ``info``: an optional dictionary containing extra information.
-                It is only returned if ``return_info`` is set to true.
+            - ``observation``: Initial vectorized observation, i.e. an element
+              of the environment's ``observation_space``.
+            - ``info``: Dictionary with auxiliary diagnostic information. For
+              us this will be the full observation dictionary coming sent by
+              the spine.
         """
-        # super().reset(seed=seed)
+        super().reset(seed=seed)
         self.__reset_rates()
         self._spine.stop()
         self._spine.start(self.spine_config)

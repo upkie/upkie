@@ -84,7 +84,7 @@ pip install upkie
 While [running a spine](#running-a-spine), you can execute the following code in a Python interpreter or as a standalone Python script:
 
 ```python
-import gym
+import gymnasium as gym
 import upkie.envs
 
 upkie.envs.register()
