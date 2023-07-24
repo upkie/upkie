@@ -33,7 +33,7 @@ WheelContact::WheelContact(const Parameters& params)
 void WheelContact::observe(const double torque, const double velocity,
                            const double dt) noexcept {
   if (params_.cutoff_period < 1e-6) {
-    spdlog::warn("[WheelContact::observe] Observer is not not configured");
+    spdlog::warn("[WheelContact] Observer is not not configured");
     return;
   }
 
