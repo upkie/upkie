@@ -14,3 +14,7 @@ wheel_contact:
     min_touchdown_acceleration: 2.0
     min_touchdown_torque: 0.015
     touchdown_inertia: 0.004
+wheel_odometry:
+    signed_radius:
+        left_wheel: +0.05
+        right_wheel: -0.05
