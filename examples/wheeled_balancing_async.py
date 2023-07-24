@@ -19,7 +19,7 @@ upkie.envs.register()
 
 async def balance(env: gym.Env, logger: mpacklog.AsyncLogger):
     """Run proportional balancer in gym environment with logging."""
-    observation = env.reset()  # connects to the spine
+    env.reset()  # connects to the spine
     action = np.zeros(env.action_space.shape)
     for step in range(1_000_000):
         (
@@ -30,7 +30,7 @@ async def balance(env: gym.Env, logger: mpacklog.AsyncLogger):
             info,
         ) = await env.async_step(action)
         if terminated or truncated:
-            observation = env.reset()
+            observation, info = env.reset()
         pitch = observation[0]
         action[0] = 10.0 * pitch  # 1D action: [ground_velocity]
         await logger.put(  # log info to be written to file later

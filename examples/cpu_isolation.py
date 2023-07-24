@@ -20,12 +20,12 @@ CPUID = 3  # CPU core to use on the Raspberry Pi
 
 def balance(env: gym.Env):
     """Run proportional balancer in gym environment."""
-    observation = env.reset()  # connects to the spine
+    env.reset()  # connects to the spine
     action = np.zeros(env.action_space.shape)
     for step in range(1_000_000):
         observation, reward, done, _ = env.step(action)
         if done:
-            observation = env.reset()
+            observation, _ = env.reset()
         pitch = observation[0]
         action[0] = 10.0 * pitch
 

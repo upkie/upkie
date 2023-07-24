@@ -24,7 +24,7 @@ config = {
 if __name__ == "__main__":
     upkie.envs.register()
     with gym.make("UpkieServosEnv-v2", config=config, frequency=200.0) as env:
-        observation = env.reset()
+        env.reset()  # connects to the spine
         action = np.zeros(env.action_space.shape)
         for step in range(nb_genuflections * genuflection_steps):
             observation, _, _, _, _ = env.step(action)
