@@ -56,6 +56,7 @@ double WheelOdometry::compute_average_velocity(const Dictionary& floor_contact,
   if (nb_wheels_in_contact > 0) {
     return (velocity_sum / nb_wheels_in_contact);
   } else {
+    spdlog::warn("[WheelOdometry] Contact detected, but no wheel in contact?");
     return 0.0;
   }
 }
