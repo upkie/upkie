@@ -40,6 +40,7 @@ async def balance(env: gym.Env, logger: mpacklog.AsyncLogger):
                 "time": time.time(),
             }
         )
+    await logger.stop()
 
 
 async def main():
