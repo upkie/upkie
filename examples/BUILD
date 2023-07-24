@@ -28,6 +28,7 @@ py_binary(
         "//utils:clamp",
         "//utils:spdlog",
         # TODO(scaron): add ltv-mpc
+        requirement("qpsolvers"),
     ],
 )
 
