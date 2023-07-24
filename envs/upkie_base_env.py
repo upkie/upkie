@@ -78,6 +78,14 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         self.spine_config = merged_spine_config
 
     @property
+    def dt(self) -> Optional[float]:
+        """!
+        Regulated period of the control loop in seconds, or ``None`` if there
+        is no loop frequency regulation.
+        """
+        return 1.0 / self.__frequency if self.__frequency is not None else None
+
+    @property
     def frequency(self) -> Optional[float]:
         """!
         Regulated frequency of the control loop in Hz, or ``None`` if there is
