@@ -17,6 +17,10 @@ All notable changes to this project will be documented in this file.
 
 - PPO balancer: fix time-limit import
 
+### Changed
+
+- envs: Update to the Gymnasium API (thanks to @perrin-isir)
+
 ## [1.2.1] - 2023/07/18
 
 ### Changed

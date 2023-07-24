@@ -138,15 +138,19 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
 
         @param action Action from the agent.
         @returns
-            - ``observation``: Agent's observation of the environment.
-            - ``reward``: Amount of reward returned after previous action.
-            - ``terminated``: Whether the agent reaches the terminal state,
-              which can be a good or a bad thing. If true, the user needs to
+            - ``observation``: Observation of the environment, i.e. an element
+              of its ``observation_space``.
+            - ``reward``: Reward returned after taking the action.
+            - ``terminated``: Whether the agent reached a terminal state,
+              which can be a good or a bad thing. When true, the user needs to
               call :func:`reset()`.
             - ``truncated'': Whether the episode is reaching max number of
-              steps.
-            - ``info``: Contains auxiliary diagnostic information (helpful for
-              debugging, logging, and sometimes learning).
+              steps. This boolean can signal a premature end of the episode,
+              i.e. before a terminal state is reached. When true, the user
+              needs to call :func:`reset()`.
+            - ``info``: Dictionary with auxiliary diagnostic information. For
+              us this will be the full observation dictionary coming sent by
+              the spine.
         """
         action_dict = self.dictionarize_action(action)
         if self.__rate is not None:
@@ -163,15 +167,19 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
 
         @param action Action from the agent.
         @returns
-            - ``observation``: Agent's observation of the environment.
-            - ``reward``: Amount of reward returned after previous action.
-            - ``terminated``: Whether the agent reaches the terminal state,
-              which can be a good or a bad thing. If true, the user needs to
+            - ``observation``: Observation of the environment, i.e. an element
+              of its ``observation_space``.
+            - ``reward``: Reward returned after taking the action.
+            - ``terminated``: Whether the agent reached a terminal state,
+              which can be a good or a bad thing. When true, the user needs to
               call :func:`reset()`.
-            - ``truncated'': Whether the episode is truncated (reaching max
-              number of steps).
-            - ``info``: Contains auxiliary diagnostic information (helpful for
-              debugging, logging, and sometimes learning).
+            - ``truncated'': Whether the episode is reaching max number of
+              steps. This boolean can signal a premature end of the episode,
+              i.e. before a terminal state is reached. When true, the user
+              needs to call :func:`reset()`.
+            - ``info``: Dictionary with auxiliary diagnostic information. For
+              us this will be the full observation dictionary coming sent by
+              the spine.
         """
         action_dict = self.dictionarize_action(action)
         if self.__async_rate is not None:

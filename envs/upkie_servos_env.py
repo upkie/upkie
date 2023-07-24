@@ -143,7 +143,7 @@ class UpkieServosEnv(UpkieBaseEnv):
         state_max = np.float32(state_max)
         state_min = np.float32(state_min)
 
-        # gym.Env: action_space
+        # gymnasium.Env: action_space
         self.action_space = spaces.Box(
             state_min,
             state_max,
@@ -151,7 +151,7 @@ class UpkieServosEnv(UpkieBaseEnv):
             dtype=np.float32,
         )
 
-        # gym.Env: observation_space
+        # gymnasium.Env: observation_space
         self.observation_space = spaces.Box(
             state_min,
             state_max,
@@ -159,7 +159,7 @@ class UpkieServosEnv(UpkieBaseEnv):
             dtype=np.float32,
         )
 
-        # gym.Env: reward_range
+        # gymnasium.Env: reward_range
         self.reward_range = StandingReward.get_range()
 
         # Class members
