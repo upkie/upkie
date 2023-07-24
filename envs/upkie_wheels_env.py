@@ -21,6 +21,7 @@ from typing import Optional
 
 import numpy as np
 from gymnasium import spaces
+
 from upkie.observers.base_pitch import (
     compute_base_angular_velocity_from_imu,
     compute_base_pitch_from_imu,
@@ -40,6 +41,23 @@ class UpkieWheelsEnv(UpkieBaseEnv):
     Upkie with ground velocity actions.
 
     The environment id is ``UpkieWheelsEnv-v4``.
+
+    ### Action space
+
+    Vectorized actions have the following structure:
+
+    <table>
+        <tr>
+            <td><strong>Index</strong></td>
+            <td><strong>Description</strong></td>
+            </tr>
+        <tr>
+            <td>``0``</td>
+            <td>Ground velocity in [m] / [s].</td>
+        </tr>
+    </table>
+
+    ### Observation space
 
     Vectorized observations have the following structure:
 
@@ -69,29 +87,21 @@ class UpkieWheelsEnv(UpkieBaseEnv):
         </tr>
     </table>
 
-    Vectorized actions have the following structure:
+    ### Rewards
 
-    <table>
-        <tr>
-            <td><strong>Index</strong></td>
-            <td><strong>Description</strong></td>
-            </tr>
-        <tr>
-            <td>``0``</td>
-            <td>Ground velocity in [m] / [s].</td>
-        </tr>
-    </table>
+    The reward function is defined in @ref envs.standing_reward.StandingReward
+    "StandingReward". See also @ref envs.upkie_base_env.UpkieBaseEnv
+    "UpkieBaseEnv" for notes on using this environment.
 
-    The environment has the following attributes:
+    ### Attributes
+
+    The environment class defines the following attributes:
 
     - ``fall_pitch``: Fall pitch angle, in radians.
     - ``max_ground_velocity``: Maximum commanded ground velocity in m/s.
     - ``version``: Environment version number.
     - ``wheel_radius``: Wheel radius in [m].
 
-    The reward function is defined in @ref envs.standing_reward.StandingReward
-    "StandingReward". See also @ref envs.upkie_base_env.UpkieBaseEnv
-    "UpkieBaseEnv" for notes on using this environment.
     """
 
     fall_pitch: float

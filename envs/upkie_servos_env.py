@@ -21,6 +21,7 @@ import numpy as np
 import pinocchio as pin
 import upkie_description
 from gymnasium import spaces
+
 from upkie.utils.clamp import clamp_and_warn
 from upkie.utils.pinocchio import (
     box_position_limits,
@@ -37,34 +38,7 @@ class UpkieServosEnv(UpkieBaseEnv):
     """!
     Upkie with full observation and joint position-velocity-torque actions.
 
-    The environment has the following attributes:
-
-    - ``reward``: Reward function.
-    - ``robot``: Pinocchio robot wrapper.
-    - ``state_max``: Maximum values for the action and observation vectors.
-    - ``state_min``: Minimum values for the action and observation vectors.
-    - ``version``: Environment version number.
-
-    Vectorized observations have the following structure:
-
-    <table>
-        <tr>
-            <td><strong>Index</strong></td>
-            <td><strong>Description</strong></td>
-            </tr>
-        <tr>
-            <td>``[0:nq]``</td>
-            <td>Joint positions in [rad].</td>
-        </tr>
-        <tr>
-            <td>``[nq:nq + nv]``</td>
-            <td>Joint velocities in [rad] / [s].</td>
-        </tr>
-        <tr>
-            <td>``[nq + nv:nq + 2 * nv]``</td>
-            <td>Joint torques in [N] * [m].</td>
-        </tr>
-    </table>
+    ### Action space
 
     Vectorized actions have the following structure:
 
@@ -87,8 +61,43 @@ class UpkieServosEnv(UpkieBaseEnv):
         </tr>
     </table>
 
-    The reward function is defined in @ref
-    envs.standing_reward.StandingReward "StandingReward".
+    ### Observation space
+
+    Vectorized observations have the following structure:
+
+    <table>
+        <tr>
+            <td><strong>Index</strong></td>
+            <td><strong>Description</strong></td>
+            </tr>
+        <tr>
+            <td>``[0:nq]``</td>
+            <td>Joint positions in [rad].</td>
+        </tr>
+        <tr>
+            <td>``[nq:nq + nv]``</td>
+            <td>Joint velocities in [rad] / [s].</td>
+        </tr>
+        <tr>
+            <td>``[nq + nv:nq + 2 * nv]``</td>
+            <td>Joint torques in [N] * [m].</td>
+        </tr>
+    </table>
+
+    ### Rewards
+
+    The reward function is defined in @ref envs.standing_reward.StandingReward
+    "StandingReward".
+
+    ### Attributes
+
+    The environment has the following attributes:
+
+    - ``reward``: Reward function.
+    - ``robot``: Pinocchio robot wrapper.
+    - ``state_max``: Maximum values for the action and observation vectors.
+    - ``state_min``: Minimum values for the action and observation vectors.
+    - ``version``: Environment version number.
 
     See also @ref envs.upkie_base_env.UpkieBaseEnv "UpkieBaseEnv" for notes on
     using this environment.
