@@ -32,14 +32,12 @@ All notable changes to this project will be documented in this file.
 
 - deps: Update loop-rate-limiters to 0.5.0
 - envs: Rename ``config`` parameter to a more explicit ``spine_config``
+- envs: Update to the Gymnasium API (thanks to @perrin-isir)
 
 ### Fixed
 
-- PPO balancer: fix time-limit import
-
-### Changed
-
-- envs: Update to the Gymnasium API (thanks to @perrin-isir)
+- PPO balancer: Fix time-limit import
+- envs: Add ``dt`` attribute to the base environment
 
 ## [1.2.1] - 2023/07/18
 
