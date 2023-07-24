@@ -8,6 +8,10 @@ All notable changes to this project will be documented in this file.
 
 - Support macOS operating systems (thanks to @boragokbakan)
 
+### Fixed
+
+- PPO balancer: fix time-limit import
+
 ## [1.2.1] - 2023/07/18
 
 ### Changed
