@@ -142,7 +142,7 @@ class UpkieWheelsEnv(UpkieBaseEnv):
             dtype=np.float32,
         )
 
-        # gym.Env: action_space
+        # gymnasium.Env: action_space
         self.action_space = spaces.Box(
             -np.float32(max_ground_velocity),
             +np.float32(max_ground_velocity),
@@ -150,7 +150,7 @@ class UpkieWheelsEnv(UpkieBaseEnv):
             dtype=np.float32,
         )
 
-        # gym.Env: observation_space
+        # gymnasium.Env: observation_space
         self.observation_space = spaces.Box(
             -observation_limit,
             +observation_limit,
@@ -158,7 +158,7 @@ class UpkieWheelsEnv(UpkieBaseEnv):
             dtype=np.float32,
         )
 
-        # gym.Env: reward_range
+        # gymnasium.Env: reward_range
         self.reward_range = StandingReward.get_range()
 
         # Class members

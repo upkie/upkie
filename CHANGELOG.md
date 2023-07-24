@@ -8,6 +8,10 @@ All notable changes to this project will be documented in this file.
 
 - Support macOS operating systems (thanks to @boragokbakan)
 
+### Changed
+
+- envs: Update to the Gymnasium API (thanks to @perrin-isir)
+
 ## [1.2.1] - 2023/07/18
 
 ### Changed
