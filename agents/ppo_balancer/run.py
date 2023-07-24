@@ -12,7 +12,6 @@ import mpacklog
 from loop_rate_limiters import AsyncRateLimiter
 from settings import Settings
 from stable_baselines3 import PPO
-
 from upkie.envs import UpkieWheelsEnv
 
 
