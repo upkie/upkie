@@ -20,6 +20,18 @@ py_binary(
 )
 
 py_binary(
+    name = "mpc_balancing",
+    srcs = ["mpc_balancing.py"],
+    deps = [
+        "//envs",
+        "//observers/base_pitch",
+        "//utils:clamp",
+        "//utils:spdlog",
+        # TODO(scaron): add ltv-mpc
+    ],
+)
+
+py_binary(
     name = "wheeled_balancing",
     srcs = ["wheeled_balancing.py"],
     deps = ["//envs"],
