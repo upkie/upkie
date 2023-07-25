@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 
 - Support macOS operating systems (thanks to @boragokbakan)
 - Top-level configuration submodule for robot-wide configuration
+- Utility function to detect when we run on a Raspberry Pi
 
 ### Changed
 
