@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 - Build and deploy the mock spine to the Raspberry Pi
 - Support macOS operating systems (thanks to @boragokbakan)
 - Top-level configuration submodule for robot-wide configuration
+- Utility function to detect when we run on a Raspberry Pi
 
 ### Changed
 

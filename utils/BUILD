@@ -47,6 +47,11 @@ py_library(
 )
 
 py_library(
+    name = "raspi",
+    srcs = ["raspi.py"],
+)
+
+py_library(
     name = "realtime",
     srcs = ["realtime.py"],
 )
