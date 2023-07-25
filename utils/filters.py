@@ -17,7 +17,7 @@
 
 from typing import Tuple
 
-from utils.clamp import clamp
+from .clamp import clamp
 
 
 def abs_bounded_derivative_filter(
