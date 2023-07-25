@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- deps: Update loop-rate-limiters to 0.5.0
 - envs: Rename ``config`` parameter to a more explicit ``spine_config``
 
 ### Fixed
