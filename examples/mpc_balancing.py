@@ -6,6 +6,8 @@
 """Wheel balancing using model predictive control of an LTV system."""
 
 import asyncio
+import os
+import sys
 import time
 
 import gymnasium as gym
@@ -16,6 +18,7 @@ from ltv_mpc.systems import CartPole
 
 import upkie.envs
 from upkie.utils.clamp import clamp_and_warn
+from upkie.utils.raspi import on_raspi
 from upkie.utils.spdlog import logging
 
 upkie.envs.register()
@@ -62,7 +65,7 @@ async def balance(env: gym.Env, logger: mpacklog.AsyncLogger):
     )
 
     live_plot = None
-    if False:
+    if not on_raspi():
         from ltv_mpc.live_plots import CartPolePlot  # imports matplotlib
 
         live_plot = CartPolePlot(cart_pole, order="velocities")
@@ -141,4 +144,8 @@ async def main():
 
 
 if __name__ == "__main__":
+    if on_raspi() and os.geteuid() != 0:
+        print("Re-running as root so that we can set CPU affinity")
+        args = ["sudo", "-E", sys.executable] + sys.argv + [os.environ]
+        os.execlpe("sudo", *args)
     asyncio.run(main())

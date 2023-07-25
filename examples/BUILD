@@ -26,6 +26,7 @@ py_binary(
         "//envs",
         "//observers/base_pitch",
         "//utils:clamp",
+        "//utils:raspi",
         "//utils:spdlog",
         # TODO(scaron): add ltv-mpc
         requirement("qpsolvers"),
