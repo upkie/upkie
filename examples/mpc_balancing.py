@@ -73,14 +73,8 @@ async def balance(env: gym.Env, logger: mpacklog.AsyncLogger):
     env.reset()  # connects to the spine
     action = np.zeros(env.action_space.shape)
     commanded_velocity = 0.0
-    for step in range(2000):
-        (
-            observation,
-            reward,
-            terminated,
-            truncated,
-            info,
-        ) = await env.async_step(action)
+    while True:
+        observation, _, terminated, truncated, info = await env.async_step(action)
         if terminated or truncated:
             observation, info = env.reset()
 
