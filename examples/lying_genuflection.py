@@ -14,7 +14,7 @@ nb_genuflections = 10
 genuflection_steps = 200
 amplitude = 1.0  # in radians
 
-config = {
+spine_config = {
     "bullet": {
         "orientation_init_base_in_world": [0.707, 0.0, -0.707, 0.0],
         "position_init_base_in_world": [0.0, 0.0, 0.1],
@@ -23,7 +23,9 @@ config = {
 
 if __name__ == "__main__":
     upkie.envs.register()
-    with gym.make("UpkieServosEnv-v2", config=config, frequency=200.0) as env:
+    with gym.make(
+        "UpkieServosEnv-v2", spine_config=spine_config, frequency=200.0
+    ) as env:
         env.reset()  # connects to the spine
         action = np.zeros(env.action_space.shape)
         for step in range(nb_genuflections * genuflection_steps):
