@@ -152,8 +152,13 @@ async def main():
 
 
 if __name__ == "__main__":
+    # TODO(scaron): move to a function in utils.raspi
     if on_raspi() and os.geteuid() != 0:
         print("Re-running as root so that we can set CPU affinity")
         args = ["sudo", "-E", sys.executable] + sys.argv + [os.environ]
         os.execlpe("sudo", *args)
+    if on_raspi():
+        CPUID = 3
+        os.sched_setaffinity(0, {CPUID})
+
     asyncio.run(main())
