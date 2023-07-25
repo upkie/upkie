@@ -18,6 +18,7 @@ from ltv_mpc.systems import CartPole
 
 import upkie.envs
 from upkie.utils.clamp import clamp_and_warn
+from upkie.utils.filters import low_pass_filter
 from upkie.utils.raspi import on_raspi
 from upkie.utils.spdlog import logging
 
@@ -74,9 +75,15 @@ async def balance(env: gym.Env, logger: mpacklog.AsyncLogger):
     action = np.zeros(env.action_space.shape)
     commanded_velocity = 0.0
     while True:
-        observation, _, terminated, truncated, info = await env.async_step(action)
+        action[0] = commanded_velocity
+        observation, _, terminated, truncated, info = await env.async_step(
+            action
+        )
         if terminated or truncated:
             observation, info = env.reset()
+
+        observation_dict = info["observation"]
+        ground_contact = observation_dict["floor_contact"]["contact"]
 
         # Unpack observation into initial MPC state
         (
@@ -101,9 +108,17 @@ async def balance(env: gym.Env, logger: mpacklog.AsyncLogger):
         mpc_problem.update_target_states(target_states[: -CartPole.STATE_DIM])
 
         plan = solve_mpc(mpc_problem, solver="proxqp")
-        if plan.is_empty:
+        if not ground_contact:
+            logging.info("Waiting for ground contact")
+            commanded_velocity = low_pass_filter(
+                prev_output=commanded_velocity,
+                cutoff_period=0.1,
+                new_input=0.0,
+                dt=env.dt,
+            )
+        elif plan.is_empty:
             logging.error("Solver found no solution to the MPC problem")
-            logging.info("Continuing with last action")
+            logging.info("Continuing with previous action")
         else:  # plan was found
             cart_pole.state = initial_state
             if live_plot is not None:
@@ -112,14 +127,13 @@ async def balance(env: gym.Env, logger: mpacklog.AsyncLogger):
             commanded_accel = plan.first_input
             commanded_velocity = clamp_and_warn(
                 commanded_velocity + commanded_accel * env.dt,
-                lower=-10.0,
-                upper=+10.0,
+                lower=-1.0,
+                upper=+1.0,
                 label="commanded_velocity",
             )
-            action[0] = commanded_velocity
         await logger.put(  # log info to be written to file later
             {
-                "action": info["action"],
+                "action": action,
                 "observation": info["observation"],
                 "time": time.time(),
             }
