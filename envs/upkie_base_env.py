@@ -21,10 +21,11 @@ from typing import Dict, Optional, Tuple
 
 import gymnasium
 import numpy as np
-import upkie.config
 from loop_rate_limiters import AsyncRateLimiter, RateLimiter
-from upkie.observers.base_pitch import compute_base_pitch_from_imu
 from vulp.spine import SpineInterface
+
+import upkie.config
+from upkie.observers.base_pitch import compute_base_pitch_from_imu
 
 
 class UpkieBaseEnv(abc.ABC, gymnasium.Env):
@@ -68,11 +69,12 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
             defaults from ``//config:spine.yaml``. The combined configuration
             dictionary is sent to the spine at every :func:`reset`.
         """
-        spine_config = upkie.config.SPINE_CONFIG.copy()
+        merged_spine_config = upkie.config.SPINE_CONFIG.copy()
+        merged_spine_config.update(spine_config)
         self.__frequency = frequency
         self._spine = SpineInterface(shm_name)
-        self.spine_config = spine_config
         self.fall_pitch = fall_pitch
+        self.spine_config = merged_spine_config
 
     @property
     def frequency(self) -> Optional[float]:

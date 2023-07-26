@@ -10,7 +10,12 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- examples: Remove CPU isolation example, now a ``utils.raspi`` function call
 - utils: Remove ``realtime`` submodule in favor of ``raspi``
+
+### Fixed
+
+- envs: Overlay constructor spine configuration on top of default config
 
 ## [1.3.0] - 2023/07/26
 
