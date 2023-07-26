@@ -7,11 +7,7 @@
 [![Vulp](https://img.shields.io/badge/%F0%9F%A6%8A%20vulp-1.3.0-orange)](https://github.com/tasts-robots/vulp)
 [![Chat](https://img.shields.io/badge/matrix-chat-%234eb899)](https://app.element.io/#/room/#tasts-robots:matrix.org)
 
-Build and control **Upkie** wheeled bipeds.
-
-Develop on Linux 🐧 or macOS 🍏, deploy to the robot's Raspberry Pi 🍓.
-
-Questions about building and using an Upkie, or balancing robots in general, are welcome in the [Discussions](https://github.com/tasts-robots/upkie/discussions) forum or on the [Chat](https://app.element.io/#/room/#tasts-robots:matrix.org).
+Build instructions and software for **Upkie** wheeled bipeds. Develop on Linux 🐧 or macOS 🍏, deploy to the robot's Raspberry Pi 🍓. Questions about building and using an Upkie, or balancing robots in general, are welcome in the [Discussions](https://github.com/tasts-robots/upkie/discussions) forum or on the [Chat](https://app.element.io/#/room/#tasts-robots:matrix.org).
 
 ## Quick sim
 
