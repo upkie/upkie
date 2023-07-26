@@ -28,7 +28,7 @@ py_binary(
         "//utils:clamp",
         "//utils:exceptions",
         "//utils:filters",
-        "//utils:realtime",
+        "//utils:raspi",
         "//utils:spdlog",
         "@mpacklog//:python",
         "@vulp//spine:python",

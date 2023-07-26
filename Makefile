@@ -72,7 +72,7 @@ run_pink_balancer:  ### run the pink balancer on the Raspberry Pi
 	$(RASPUNZEL) run -v -s //agents/pink_balancer -- --config $(AGENT_CONFIG)
 
 run_wheel_balancer:  ### run the test balancer on the Raspberry Pi
-	$(RASPUNZEL) run -v -s //agents/wheel_balancer:agent -- --config $(AGENT_CONFIG) --configure-cpu
+	$(RASPUNZEL) run -v -s //agents/wheel_balancer:agent -- --config $(AGENT_CONFIG)
 
 # Upload from host to Raspberry Pi
 # ================================

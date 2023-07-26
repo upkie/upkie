@@ -33,7 +33,7 @@ from loop_rate_limiters import AsyncRateLimiter
 from vulp.spine import SpineInterface
 
 from agents.wheel_balancer.servo_controller import ServoController
-from utils.realtime import configure_cpu
+from utils.raspi import configure_agent_process, on_raspi
 from utils.spdlog import logging
 
 
@@ -52,12 +52,6 @@ def parse_command_line_arguments() -> argparse.Namespace:
         help="Agent configuration to apply",
         type=str,
         required=True,
-    )
-    parser.add_argument(
-        "--configure-cpu",
-        help="Isolate process to CPU core number 3",
-        default=False,
-        action="store_true",
     )
     return parser.parse_args()
 
@@ -150,8 +144,10 @@ if __name__ == "__main__":
     # Spine configuration
     with open(f"{agent_dir}/config/spine.yaml", "r") as fh:
         spine_config = yaml.safe_load(fh)
-    if args.configure_cpu:
-        configure_cpu(cpu=3)
+
+    # On Raspberry Pi, configure the process to run on a separate CPU core
+    if on_raspi():
+        configure_agent_process()
 
     spine = SpineInterface()
     try:

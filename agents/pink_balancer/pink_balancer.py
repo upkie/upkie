@@ -28,12 +28,12 @@ from typing import Any, Dict
 
 import gin
 import mpacklog
-import upkie.config
 from loop_rate_limiters import AsyncRateLimiter
 from vulp.spine import SpineInterface
 
+import upkie.config
 from agents.pink_balancer.whole_body_controller import WholeBodyController
-from utils.realtime import configure_cpu
+from utils.raspi import on_raspi, configure_agent_process
 from utils.spdlog import logging
 
 
@@ -148,8 +148,9 @@ if __name__ == "__main__":
     elif args.config is not None:
         load_gin_configuration(args.config)
 
-    if args.config == "pi3hat":
-        configure_cpu(cpu=3)
+    # On Raspberry Pi, configure the process to run on a separate CPU core
+    if on_raspi():
+        configure_agent_process()
 
     spine = SpineInterface()
     try:

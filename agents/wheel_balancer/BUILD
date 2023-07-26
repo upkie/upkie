@@ -34,7 +34,7 @@ py_binary(
     }),
     deps = [
         "//utils:exceptions",
-        "//utils:realtime",
+        "//utils:raspi",
         "//utils:spdlog",
         ":controllers",
         "@mpacklog//:python",

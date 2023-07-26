@@ -8,6 +8,10 @@ All notable changes to this project will be documented in this file.
 
 - utils: Configure agent process on the Raspberry Pi
 
+### Changed
+
+- utils: Remove ``realtime`` submodule in favor of ``raspi``
+
 ## [1.3.0] - 2023/07/26
 
 ### Added

@@ -55,11 +55,6 @@ py_library(
 )
 
 py_library(
-    name = "realtime",
-    srcs = ["realtime.py"],
-)
-
-py_library(
     name = "rotations",
     srcs = ["rotations.py"],
 )
@@ -76,7 +71,7 @@ py_library(
         ":exceptions",
         ":filters",
         ":pinocchio",
-        ":realtime",
+        ":raspi",
         ":rotations",
         ":spdlog",
     ],
