@@ -49,6 +49,9 @@ py_library(
 py_library(
     name = "raspi",
     srcs = ["raspi.py"],
+    deps = [
+        ":spdlog",
+    ],
 )
 
 py_library(
