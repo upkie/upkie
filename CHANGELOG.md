@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- utils: Configure agent process on the Raspberry Pi
+
 ## [1.3.0] - 2023/07/26
 
 ### Added
