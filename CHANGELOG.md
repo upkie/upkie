@@ -10,7 +10,7 @@ All notable changes to this project will be documented in this file.
 - config: Top-level configuration submodule for robot-wide configuration
 - spines: Build and deploy the mock spine to the Raspberry Pi
 - tools: CPU frequency scaling scripts
-- utils: function to detect when we run on a Raspberry Pi
+- utils: Function to detect when we run on a Raspberry Pi
 
 ### Changed
 
