@@ -11,12 +11,6 @@ load("//tools/lint:lint.bzl", "add_lint_tests")
 load("@pip_upkie//:requirements.bzl", "requirement")
 
 py_binary(
-    name = "cpu_isolation",
-    srcs = ["cpu_isolation.py"],
-    deps = ["//envs"],
-)
-
-py_binary(
     name = "lying_genuflection",
     srcs = ["lying_genuflection.py"],
     deps = [
