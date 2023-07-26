@@ -70,7 +70,8 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
             dictionary is sent to the spine at every :func:`reset`.
         """
         merged_spine_config = upkie.config.SPINE_CONFIG.copy()
-        merged_spine_config.update(spine_config)
+        if spine_config is not None:
+            merged_spine_config.update(spine_config)
         self.__frequency = frequency
         self._spine = SpineInterface(shm_name)
         self.fall_pitch = fall_pitch
