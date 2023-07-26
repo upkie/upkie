@@ -56,8 +56,8 @@ async def balance(env: gym.Env, logger: mpacklog.AsyncLogger):
     cart_pole = CartPole(
         length=0.4,
         max_ground_accel=10.0,
-        nb_timesteps=5,
-        sampling_period=0.05,
+        nb_timesteps=12,
+        sampling_period=env.dt,
     )
     mpc_problem = cart_pole.build_mpc_problem(
         terminal_cost_weight=10.0,
