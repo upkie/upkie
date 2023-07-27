@@ -16,6 +16,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - envs: Overlay constructor spine configuration on top of default config
+- tools: CPU scaling scripts don't need to be run as root any more
 
 ## [1.3.0] - 2023/07/26
 
