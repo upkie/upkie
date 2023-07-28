@@ -45,6 +45,8 @@ Changelog = "https://github.com/tasts-robots/upkie/blob/main/CHANGELOG.md"
 
 [tool.flit.sdist]
 include = [
+    "upkie/config/*.py",
+    "upkie/config/*.yaml",
     "upkie/envs/*.py",
     "upkie/observers/base_pitch/*.py",
     "upkie/utils/*.py",
