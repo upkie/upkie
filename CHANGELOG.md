@@ -17,9 +17,15 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
-- config: Add missing ``config`` submodule to PyPI
 - envs: Overlay constructor spine configuration on top of default config
 - tools: CPU scaling scripts don't need to be run as root any more
+
+## [1.3.1] - 2023/07/28
+
+### Fixed
+
+- config: Add missing ``config`` submodule to PyPI
+- Fix source code distribution of PyPI package
 
 ## [1.3.0] - 2023/07/26
 

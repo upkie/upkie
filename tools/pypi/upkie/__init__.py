@@ -17,4 +17,4 @@
 
 """Python module to control Upkie wheeled bipeds."""
 
-__version__ = "1.3.0"
+__version__ = "1.3.1"
