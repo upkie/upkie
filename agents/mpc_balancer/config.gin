@@ -1,0 +1,14 @@
+ProxQPWorkspace.update_preconditioner = True
+ProxQPWorkspace.verbose = False
+
+UpkieCartPole.length = 0.3
+UpkieCartPole.max_ground_accel = 10.0
+UpkieCartPole.nb_timesteps = 50
+UpkieCartPole.sampling_period = 0.02
+
+balance.nb_env_steps = 1000
+balance.rebuild_qp_every_time = False
+balance.stage_input_cost_weight = 1e-3
+balance.stage_state_cost_weight = 1e-3
+balance.terminal_cost_weight = 1.0
+balance.warm_start = True
