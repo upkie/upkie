@@ -32,8 +32,8 @@ py_binary(
         "@upkie//utils:filters",
         "@upkie//utils:raspi",
         "@upkie//utils:spdlog",
-        # TODO(scaron): add ltv-mpc
         requirement("gin-config"),
+        requirement("ltv-mpc"),
         requirement("qpsolvers"),
     ],
 )
