@@ -24,6 +24,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Bump scipy dependency from 1.8.0 to 1.10.0
 - envs: Skip environment registration upon missing dependency
 
 ## [1.3.2] - 2023/08/07
