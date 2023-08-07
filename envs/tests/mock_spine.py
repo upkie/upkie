@@ -17,6 +17,7 @@
 
 import numpy as np
 
+
 class MockSpine:
     def __init__(self):
         self.observation = {
