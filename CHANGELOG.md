@@ -18,6 +18,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- PyPI: add PyYAML to dependencies as it is needed by ``upkie.config``
 - envs: Overlay constructor spine configuration on top of default config
 - tools: CPU scaling scripts don't need to be run as root any more
 
@@ -25,7 +26,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
-- Bump scipy dependency from 1.8.0 to 1.10.0
+- PyPI: Bump scipy dependency from 1.8.0 to 1.10.0
 - envs: Skip environment registration upon missing dependency
 
 ## [1.3.2] - 2023/08/07
