@@ -18,10 +18,17 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - envs: Overlay constructor spine configuration on top of default config
-- envs: Skip environment registration upon missing dependency
 - tools: CPU scaling scripts don't need to be run as root any more
 
+## [1.3.3] - 2023/08/07
+
+### Changed
+
+- envs: Skip environment registration upon missing dependency
+
 ## [1.3.2] - 2023/08/07
+
+### Fixed
 
 - config: Distribute missing ``config`` submodule in PyPI package
 
