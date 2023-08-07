@@ -25,6 +25,10 @@ jobs:
               run: |
                   python -m pip install upkie
 
-            - name: "Test module import"
+            - name: "Test module imports"
               run: |
                   python -c "import upkie"
+                  python -c "import upkie.config"
+                  python -c "import upkie.envs"
+                  python -c "import upkie.observers"
+                  python -c "import upkie.utils"
