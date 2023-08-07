@@ -57,6 +57,7 @@ check-robot:
 
 .PHONY: build
 build: clean_broken_links  ## build Raspberry Pi targets
+	$(BAZEL) build --config=pi64 //agents/mpc_balancer
 	$(BAZEL) build --config=pi64 //agents/pink_balancer
 	$(BAZEL) build --config=pi64 //agents/wheel_balancer:agent
 	$(BAZEL) build --config=pi64 //spines:mock
@@ -67,6 +68,9 @@ run_mock_spine:  ### run the mock spine on the Raspberry Pi
 
 run_pi3hat_spine:  ### run the pi3hat spine on the Raspberry Pi
 	$(RASPUNZEL) run -s //spines:pi3hat
+
+run_mpc_balancer:  ### run the MPC balancer on the Raspberry Pi
+	$(RASPUNZEL) run -v -s //agents/mpc_balancer
 
 run_pink_balancer:  ### run the pink balancer on the Raspberry Pi
 	$(RASPUNZEL) run -v -s //agents/pink_balancer -- --config $(AGENT_CONFIG)
