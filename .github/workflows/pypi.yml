@@ -8,7 +8,7 @@ on:
 
 jobs:
     pypi:
-        name: "Install and import"
+        name: "Install from PyPI"
         runs-on: ubuntu-latest
         steps:
             - name: "Checkout sources"
@@ -19,8 +19,33 @@ jobs:
                   python -m pip install --upgrade pip
                   python -m pip install upkie
 
-            - name: "Install PyPI package"
+            - name: "Install package"
               run: python -m pip install upkie
+
+            - name: "Test module import"
+              run: python -c "import upkie"
+
+            - name: "Test submodule imports"
+              run: |
+                  python -c "import upkie.config"
+                  python -c "import upkie.envs"
+                  python -c "import upkie.observers"
+                  python -c "import upkie.utils"
+
+    testpypi:
+        name: "Install from TestPyPI"
+        runs-on: ubuntu-latest
+        steps:
+            - name: "Checkout sources"
+              uses: actions/checkout@v2
+
+            - name: "Install dependencies"
+              run: |
+                  python -m pip install --upgrade pip
+                  python -m pip install upkie
+
+            - name: "Install package"
+              run: python -m pip install -i https://test.pypi.org/simple/ upkie
 
             - name: "Test module import"
               run: python -c "import upkie"
