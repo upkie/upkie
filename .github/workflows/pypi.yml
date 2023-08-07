@@ -27,4 +27,4 @@ jobs:
 
             - name: "Test module import"
               run: |
-                  python -c "import upkiekjfowe"
+                  python -c "import upkie"
