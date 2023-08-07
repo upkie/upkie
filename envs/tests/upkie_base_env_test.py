@@ -23,39 +23,7 @@ import numpy as np
 import posix_ipc
 
 from envs import UpkieBaseEnv
-
-
-class MockSpine:
-    def __init__(self):
-        self.observation = {
-            "number": 0,
-            "servo": {
-                f"{side}_{joint}": {"position": 0.0}
-                for side in ("left", "right")
-                for joint in ("hip", "knee", "wheel")
-            },
-            "imu": {
-                "orientation": np.array([1.0, 0.0, 0.0, 0.0]),
-                "angular_velocity": np.zeros(3),
-            },
-            "wheel_odometry": {
-                "position": 0.0,
-                "velocity": 0.0,
-            },
-        }
-
-    def start(self, config: dict) -> None:
-        pass
-
-    def stop(self) -> None:
-        pass
-
-    def set_action(self, action) -> None:
-        self.action = action
-
-    def get_observation(self) -> dict:
-        self.observation["number"] += 1
-        return self.observation
+from envs.tests.mock_spine import MockSpine
 
 
 class UpkieBaseChild(UpkieBaseEnv):

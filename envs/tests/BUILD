@@ -7,22 +7,45 @@ load("@pip_upkie//:requirements.bzl", "requirement")
 
 package(default_visibility = ["//visibility:public"])
 
+py_library(
+    name = "mock_spine",
+    srcs = ["mock_spine.py"],
+)
+
 py_test(
     name = "upkie_base_env_test",
     srcs = ["upkie_base_env_test.py"],
-    deps = ["//envs"],
+    deps = [
+        "//envs",
+        ":mock_spine",
+    ],
+)
+
+py_test(
+    name = "upkie_envs_test",
+    srcs = ["upkie_envs_test.py"],
+    deps = [
+        "//envs",
+        ":mock_spine",
+    ],
 )
 
 py_test(
     name = "upkie_servos_env_test",
     srcs = ["upkie_servos_env_test.py"],
-    deps = ["//envs"],
+    deps = [
+        "//envs",
+        ":mock_spine",
+    ],
 )
 
 py_test(
     name = "upkie_wheels_env_test",
     srcs = ["upkie_wheels_env_test.py"],
-    deps = ["//envs"],
+    deps = [
+        "//envs",
+        ":mock_spine",
+    ],
 )
 
 add_lint_tests()
