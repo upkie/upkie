@@ -53,6 +53,7 @@ py_library(
         ":upkie_base_env",
         ":upkie_servos_env",
         ":upkie_wheels_env",
+        requirement("gymnasium"),
     ],
 )
 

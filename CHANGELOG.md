@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- envs: Refactor environment registration function
 - examples: Remove CPU isolation example, now a ``utils.raspi`` function call
 - utils: Remove ``realtime`` submodule in favor of ``raspi``
 

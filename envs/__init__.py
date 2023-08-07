@@ -22,43 +22,45 @@ import gymnasium as gym
 from .upkie_base_env import UpkieBaseEnv
 
 __all__ = ["UpkieBaseEnv"]
+__envs__ = {}
 
 try:
     from .upkie_servos_env import UpkieServosEnv
 
-    gym.envs.registration.register(
-        id=f"UpkieServosEnv-v{UpkieServosEnv.version}",
-        entry_point="upkie.envs:UpkieServosEnv",
-        max_episode_steps=1_000_000_000,
-    )
-
     __all__.append("UpkieServosEnv")
+    __envs__["UpkieServosEnv"] = UpkieServosEnv
 except ImportError as import_error:
-    logging.warning(
-        "Cannot register UpkieServosEnv "
-        f"due to missing dependency: {str(import_error)}"
-    )
-    logging.info(
-        "To install optional dependencies: "
-        "``pip install upkie[the_full_monty]``"
-    )
+    __envs__["UpkieServosEnv"] = import_error
 
 try:
     from .upkie_wheels_env import UpkieWheelsEnv
 
-    gym.envs.registration.register(
-        id=f"UpkieWheelsEnv-v{UpkieWheelsEnv.version}",
-        entry_point="upkie.envs:UpkieWheelsEnv",
-        max_episode_steps=1_000_000_000,
-    )
-
     __all__.append("UpkieWheelsEnv")
+    __envs__["UpkieWheelsEnv"] = UpkieWheelsEnv
 except ImportError as import_error:
-    logging.warning(
-        "Cannot register UpkieWheelsEnv "
-        f"due to missing dependency: {str(import_error)}"
-    )
-    logging.info(
-        "To install optional dependencies: "
-        "``pip install upkie[the_full_monty]``"
-    )
+    __envs__["UpkieWheelsEnv"] = import_error
+
+
+def register(max_episode_steps: int = 1_000_000_000) -> None:
+    """!
+    Register Upkie environments with Gymnasium.
+
+    @param max_episode_steps Maximum number of steps per episode.
+    """
+    for env_name, Env in __envs__.items():
+        if isinstance(Env, ModuleNotFoundError):
+            import_error = str(Env)
+            logging.warning(
+                f"Cannot register {env_name} "
+                f"due to missing dependency: {import_error}"
+            )
+            logging.info(
+                "To install optional dependencies: "
+                "``pip install upkie[the_full_monty]``"
+            )
+        else:  # valid gym.Env subclass
+            gym.envs.registration.register(
+                id=f"{env_name}-v{Env.version}",
+                entry_point=f"upkie.envs:{env_name}",
+                max_episode_steps=max_episode_steps,
+            )
