@@ -10,6 +10,8 @@
 #     License: BSD-3-Clause (see licenses/LICENSE-drake)
 
 import os
+import platform
+import shutil
 import subprocess
 import sys
 
@@ -24,18 +26,53 @@ def _is_cxx(filename):
         return False
 
     # Per https://bazel.build/versions/master/docs/be/c-cpp.html#cc_library
-    return ext in [".c", ".cc", ".cpp", ".cxx", ".c++", ".C",
-                   ".h", ".hh", ".hpp", ".hxx", ".inc"]
+    return ext in [
+        ".c",
+        ".cc",
+        ".cpp",
+        ".cxx",
+        ".c++",
+        ".C",
+        ".h",
+        ".hh",
+        ".hpp",
+        ".hxx",
+        ".inc",
+    ]
+
+
+def get_clang_format_path():
+    """Get path to clang-format."""
+    if platform.system() == "Darwin":
+        candidates = glob.glob(
+            "/opt/homebrew/*/clang-format/**/bin/clang-format",
+            recursive=True,
+        ) + ["/usr/local/opt/clang-format/bin/clang-format"]
+        if len(candidates) < 1:
+            raise RuntimeError("clang-format not found in homebrew paths")
+        elif len(candidates) > 1:
+            print(
+                f"WARNING: multiple versions of clang-format: {candidates},"
+                f"selecting {candidates[0]}"
+            )
+        path = candidates[0]
+    else:  # platform.system() == "Linux"
+        path = shutil.which("clang-format")
+    if os.path.isfile(path):
+        return path
+    raise RuntimeError(f"clang-format not found at {path}")
 
 
 def _check_clang_format_idempotence(filename):
-    clang_format = "/usr/bin/clang-format"
+    clang_format = get_clang_format_path()
     formatter = subprocess.Popen(
-        [clang_format, "-style=file", filename],
-        stdout=subprocess.PIPE)
+        [clang_format, "-style=file", filename], stdout=subprocess.PIPE
+    )
     differ = subprocess.Popen(
         ["/usr/bin/diff", "-u", "-", filename],
-        stdin=formatter.stdout, stdout=subprocess.PIPE)
+        stdin=formatter.stdout,
+        stdout=subprocess.PIPE,
+    )
     changes = differ.communicate()[0]
     if not changes:
         return 0
