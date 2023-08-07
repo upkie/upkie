@@ -33,8 +33,8 @@ py_binary(
         "@upkie//utils:raspi",
         "@upkie//utils:spdlog",
         requirement("gin-config"),
-        requirement("ltv-mpc"),
-        requirement("qpsolvers"),
+        # requirement("ltv-mpc"),    # local, see issue #1
+        # requirement("qpsolvers"),  # local, see issue #1
     ],
 )
 
