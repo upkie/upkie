@@ -43,7 +43,7 @@ jobs:
                   python -m pip install --upgrade pip
 
             - name: "Install package"
-              run: python -m pip install -i https://test.pypi.org/simple/ upkie
+              run: python -m pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ upkie
 
             - name: "Test module import"
               run: python -c "import upkie"
