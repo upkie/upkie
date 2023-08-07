@@ -35,7 +35,7 @@ echo "[debug] COMMAND=${COMMAND}"
 echo "[debug] SRCDIR=${SRCDIR}"
 echo "[debug] TMPDIR=${TMPDIR}"
 
-for folder in envs observers/base_pitch utils; do
+for folder in config envs observers/base_pitch utils; do
     mkdir -p ${TMPDIR}/upkie/$(dirname ${folder})
     cp -r ${SRCDIR}/${folder} ${TMPDIR}/upkie/${folder}
 done

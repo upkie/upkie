@@ -20,6 +20,10 @@ All notable changes to this project will be documented in this file.
 - envs: Overlay constructor spine configuration on top of default config
 - tools: CPU scaling scripts don't need to be run as root any more
 
+## [1.3.2] - 2023/08/07
+
+- config: Distribute missing ``config`` submodule in PyPI package
+
 ## [1.3.1] - 2023/07/28
 
 ### Fixed
