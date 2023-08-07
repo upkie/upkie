@@ -38,6 +38,10 @@ except ImportError as import_error:
         "Cannot register UpkieServosEnv "
         f"due to missing dependency: {str(import_error)}"
     )
+    logging.info(
+        "To install optional dependencies: "
+        "``pip install upkie[the_full_monty]``"
+    )
 
 try:
     from .upkie_wheels_env import UpkieWheelsEnv
@@ -53,4 +57,8 @@ except ImportError as import_error:
     logging.warning(
         "Cannot register UpkieWheelsEnv "
         f"due to missing dependency: {str(import_error)}"
+    )
+    logging.info(
+        "To install optional dependencies: "
+        "``pip install upkie[the_full_monty]``"
     )

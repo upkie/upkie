@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - agents: Closed-loop model predictive control
+- envs: Inform user on installing all optional dependencies
 - examples: Closed-loop model predictive control
 - utils: Configure agent process on the Raspberry Pi
 
