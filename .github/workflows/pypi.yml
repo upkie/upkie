@@ -8,7 +8,7 @@ on:
 
 jobs:
     pypi:
-        name: "Install from PyPI"
+        name: "Install and import"
         runs-on: ubuntu-latest
         steps:
             - name: "Checkout sources"
