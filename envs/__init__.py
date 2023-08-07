@@ -15,29 +15,42 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import logging
+
 import gymnasium as gym
 
 from .upkie_base_env import UpkieBaseEnv
-from .upkie_servos_env import UpkieServosEnv
-from .upkie_wheels_env import UpkieWheelsEnv
 
+__all__ = ["UpkieBaseEnv"]
 
-def register():
+try:
+    from .upkie_servos_env import UpkieServosEnv
+
     gym.envs.registration.register(
         id=f"UpkieServosEnv-v{UpkieServosEnv.version}",
         entry_point="upkie.envs:UpkieServosEnv",
         max_episode_steps=1_000_000_000,
     )
+
+    __all__.append("UpkieServosEnv")
+except ImportError as import_error:
+    logging.warning(
+        "Cannot register UpkieServosEnv "
+        f"due to missing dependency: {str(import_error)}"
+    )
+
+try:
+    from .upkie_wheels_env import UpkieWheelsEnv
+
     gym.envs.registration.register(
         id=f"UpkieWheelsEnv-v{UpkieWheelsEnv.version}",
         entry_point="upkie.envs:UpkieWheelsEnv",
         max_episode_steps=1_000_000_000,
     )
 
-
-__all__ = [
-    "UpkieBaseEnv",
-    "UpkieServosEnv",
-    "UpkieWheelsEnv",
-    "register",
-]
+    __all__.append("UpkieWheelsEnv")
+except ImportError as import_error:
+    logging.warning(
+        "Cannot register UpkieWheelsEnv "
+        f"due to missing dependency: {str(import_error)}"
+    )
