@@ -10,8 +10,6 @@ jobs:
     pypi:
         name: "PyPI install"
         runs-on: ubuntu-latest
-        strategy:
-            fail-fast: false
         steps:
             - name: "Checkout sources"
               uses: actions/checkout@v2

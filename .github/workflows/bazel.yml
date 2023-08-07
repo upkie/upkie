@@ -10,8 +10,6 @@ jobs:
     build:
         name: "Build"
         runs-on: ubuntu-latest
-        strategy:
-            fail-fast: false
         steps:
             - name: "Checkout sources"
               uses: actions/checkout@v2
@@ -30,8 +28,6 @@ jobs:
     coverage:
         name: "Coverage"
         runs-on: ubuntu-latest
-        strategy:
-            fail-fast: false
         steps:
             - name: "Checkout sources"
               uses: actions/checkout@v2
@@ -54,8 +50,6 @@ jobs:
     lint:
         name: "Lint"
         runs-on: ubuntu-latest
-        strategy:
-            fail-fast: false
         steps:
             - name: "Checkout sources"
               uses: actions/checkout@v2
@@ -69,8 +63,6 @@ jobs:
     test:
         name: "Test"
         runs-on: ubuntu-latest
-        strategy:
-            fail-fast: false
         steps:
             - name: "Checkout sources"
               uses: actions/checkout@v3
