@@ -17,13 +17,13 @@
 
 import argparse
 import json
-import gin
 import os
 import random
 import signal
 import time
 from typing import List
 
+import gin
 import gymnasium as gym
 import stable_baselines3
 from gymnasium.wrappers.time_limit import TimeLimit
@@ -43,11 +43,11 @@ upkie.envs.register()
 class SummaryWriterCallback(BaseCallback):
     def __init__(self, env: UpkieWheelsEnv):
         super().__init__()
-        self.config = env.config
         self.env = env
 
     def _on_training_start(self):
         output_formats = self.logger.output_formats
+        spine_config = self.env.spine_config
         self.tb_formatter = next(
             formatter
             for formatter in output_formats
@@ -60,7 +60,7 @@ class SummaryWriterCallback(BaseCallback):
         )
         self.tb_formatter.writer.add_text(
             "spine_config",
-            f"```json\n{json.dumps(self.config, indent=4)}\n```",
+            f"```json\n{json.dumps(spine_config, indent=4)}\n```",
             global_step=None,
         )
 
