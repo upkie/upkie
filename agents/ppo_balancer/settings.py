@@ -6,26 +6,29 @@
 from dataclasses import dataclass
 from typing import Optional
 
+import gin
+
 
 @dataclass
+@gin.configurable
 class Settings:
     """Hyperparameters logged to TensorBoard."""
 
-    agent_frequency: int = 200
-    batch_size: int = 64
-    clip_range: float = 0.2
-    clip_range_vf: Optional[float] = None
-    effective_time_horizon: float = 0.5  # [s]
-    ent_coef: float = 0.0
-    gae_lambda: float = 0.95
-    learning_rate: float = 3e-4
-    max_episode_duration: float = 10.0  # [s]
-    max_grad_norm: float = 0.5
-    n_epochs: int = 10
-    n_steps: int = 2048
-    sde_sample_freq: int = -1
-    spine_frequency: int = 1000
-    target_kl: Optional[float] = None
-    total_timesteps: int = 5e5
-    use_sde: bool = False
-    vf_coef : float = 0.5
+    agent_frequency: int
+    batch_size: int
+    clip_range: float
+    clip_range_vf: Optional[float]
+    effective_time_horizon: float
+    ent_coef: float
+    gae_lambda: float
+    learning_rate: float
+    max_episode_duration: float
+    max_grad_norm: float
+    n_epochs: int
+    n_steps: int
+    sde_sample_freq: int
+    spine_frequency: int
+    target_kl: Optional[float]
+    total_timesteps: int
+    use_sde: bool
+    vf_coef: float

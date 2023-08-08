@@ -17,6 +17,7 @@
 
 import argparse
 import json
+import gin
 import os
 import random
 import signal
@@ -188,6 +189,9 @@ def get_bullet_argv(agent_name: str, show: bool) -> List[str]:
 
 
 if __name__ == "__main__":
+    agent_dir = os.path.dirname(__file__)
+    gin.parse_config_file(f"{agent_dir}/config.gin")
+
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--show",
