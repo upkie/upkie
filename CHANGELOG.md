@@ -20,6 +20,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- PPO balancer: Disable rate limiter during training
 - PyPI: add PyYAML to dependencies as it is needed by ``upkie.config``
 - envs: Overlay constructor spine configuration on top of default config
 - tools: CPU scaling scripts don't need to be run as root any more
