@@ -33,7 +33,7 @@ from vulp.spine import SpineInterface
 
 import upkie.config
 from agents.pink_balancer.whole_body_controller import WholeBodyController
-from utils.raspi import on_raspi, configure_agent_process
+from utils.raspi import configure_agent_process, on_raspi
 from utils.spdlog import logging
 
 
@@ -67,7 +67,7 @@ async def run(
     spine: SpineInterface,
     spine_config: Dict[str, Any],
     controller: WholeBodyController,
-    logger: mpacklog.Logger,
+    logger: mpacklog.AsyncLogger,
     frequency: float = 200.0,
 ) -> None:
     """
@@ -113,7 +113,7 @@ async def main(spine, args: argparse.Namespace):
     wheel_odometry_config = spine_config["wheel_odometry"]
     wheel_odometry_config["signed_radius"]["left_wheel"] = +wheel_radius
     wheel_odometry_config["signed_radius"]["right_wheel"] = -wheel_radius
-    logger = mpacklog.Logger("/dev/shm/brain.mpack")
+    logger = mpacklog.AsyncLogger("/dev/shm/brain.mpack")
     await logger.put(
         {
             "config": spine_config,
