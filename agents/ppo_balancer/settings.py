@@ -9,8 +9,8 @@ from typing import Optional
 import gin
 
 
-@dataclass
 @gin.configurable
+@dataclass
 class Settings:
     """Hyperparameters logged to TensorBoard."""
 
