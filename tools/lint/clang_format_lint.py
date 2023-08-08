@@ -9,6 +9,7 @@
 #     Copyright 2012-2016 Robot Locomotion Group @ CSAIL
 #     License: BSD-3-Clause (see licenses/LICENSE-drake)
 
+import glob
 import os
 import platform
 import shutil
