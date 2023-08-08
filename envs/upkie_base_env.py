@@ -136,11 +136,12 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         self.__rate = None
         if self.__frequency is None:  # no rate
             return
+        name = f"{self.__class__.__name__} rate limiter"
         try:
             asyncio.get_running_loop()
-            self.__async_rate = AsyncRateLimiter(self.__frequency)
+            self.__async_rate = AsyncRateLimiter(self.__frequency, name=name)
         except RuntimeError:  # not asyncio
-            self.__rate = RateLimiter(self.__frequency)
+            self.__rate = RateLimiter(self.__frequency, name=name)
 
     def step(
         self,
