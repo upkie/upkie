@@ -7,10 +7,20 @@ load("@pip_upkie//:requirements.bzl", "requirement")
 
 package(default_visibility = ["//visibility:public"])
 
+filegroup(
+    name = "config",
+    srcs = glob([
+        "*.gin",
+    ]),
+)
+
 py_library(
     name = "settings",
     srcs = [
         "settings.py",
+    ],
+    data = [
+        ":config",
     ],
     deps = [
         requirement("gin-config"),
