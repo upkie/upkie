@@ -21,7 +21,7 @@ import gymnasium as gym
 
 from .upkie_base_env import UpkieBaseEnv
 
-__all__ = ["UpkieBaseEnv"]
+__all__ = ["UpkieBaseEnv", "register"]
 __envs__ = {}
 
 try:
