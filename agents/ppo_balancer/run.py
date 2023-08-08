@@ -8,10 +8,12 @@ import asyncio
 import os
 import time
 
+import gin
 import mpacklog
 from loop_rate_limiters import AsyncRateLimiter
 from settings import Settings
 from stable_baselines3 import PPO
+
 from upkie.envs import UpkieWheelsEnv
 
 
@@ -56,6 +58,8 @@ async def main(args: argparse.Namespace):
 
 
 if __name__ == "__main__":
+    agent_dir = os.path.dirname(__file__)
+    gin.parse_config_file(f"{agent_dir}/config.gin")
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("name", help="name of the policy to load")
     args = parser.parse_args()

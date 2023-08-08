@@ -12,6 +12,9 @@ py_library(
     srcs = [
         "settings.py",
     ],
+    deps = [
+        requirement("gin-config"),
+    ],
 )
 
 py_binary(
@@ -24,6 +27,7 @@ py_binary(
         "//envs",
         ":settings",
         "@mpacklog//:python",
+        requirement("gin-config"),
         requirement("loop_rate_limiters"),
     ],
 )
@@ -42,6 +46,7 @@ py_binary(
         ":settings",
         "@mpacklog//:python",
         "@rules_python//python/runfiles",
+        requirement("gin-config"),
         requirement("numpy"),
         requirement("stable_baselines3"),
         requirement("torch"),
