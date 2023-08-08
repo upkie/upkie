@@ -59,7 +59,7 @@ def parse_command_line_arguments() -> argparse.Namespace:
 async def run(
     spine: SpineInterface,
     spine_config: Dict[str, Any],
-    logger: mpacklog.Logger,
+    logger: mpacklog.AsyncLogger,
     frequency: float = 200.0,
 ) -> None:
     """
@@ -106,7 +106,7 @@ async def run(
 
 
 async def main(spine, spine_config: Dict[str, Any]):
-    logger = mpacklog.Logger("/dev/shm/brain.mpack")
+    logger = mpacklog.AsyncLogger("/dev/shm/brain.mpack")
     await logger.put(
         {
             "config": spine_config,
