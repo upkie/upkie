@@ -16,7 +16,6 @@
 # limitations under the License.
 
 import argparse
-import json
 import os
 import random
 import signal
@@ -26,6 +25,7 @@ from typing import List
 import gin
 import gymnasium as gym
 import stable_baselines3
+import yaml
 from gymnasium.wrappers.time_limit import TimeLimit
 from rules_python.python.runfiles import runfiles
 from settings import Settings
@@ -47,39 +47,28 @@ class SummaryWriterCallback(BaseCallback):
 
     def _on_training_start(self):
         output_formats = self.logger.output_formats
-        spine_config = self.env.spine_config
         self.tb_formatter = next(
             formatter
             for formatter in output_formats
             if isinstance(formatter, TensorBoardOutputFormat)
         )
-        self.tb_formatter.writer.add_text(
-            "env_id",
-            f"UpkieWheelsEnv-v{UpkieWheelsEnv.version}",
-            global_step=None,
-        )
-        self.tb_formatter.writer.add_text(
-            "spine_config",
-            f"```json\n{json.dumps(spine_config, indent=4)}\n```",
-            global_step=None,
-        )
 
     def _on_step(self) -> bool:
-        if self.n_calls == 1:
-            # Wait for first call to log operative config so that parameters
-            # for functions called by the environment are logged as well.
-            settings = Settings()
-            reward = self.env.reward
-            self.tb_formatter.writer.add_text(
-                "settings",
-                f"```json\n{json.dumps(settings.__dict__, indent=4)}\n```",
-                global_step=None,
-            )
-            self.tb_formatter.writer.add_text(
-                "reward",
-                f"```json\n{json.dumps(reward.__dict__, indent=4)}\n```",
-                global_step=None,
-            )
+        # We wait for the first call to log operative config so that parameters
+        # for functions called by the environment are logged as well.
+        if self.n_calls != 1:
+            return
+        config = {
+            "env": f"UpkieWheelsEnv-v{UpkieWheelsEnv.version}",
+            "reward": self.env.reward.__dict__,
+            "settings": Settings().__dict__,
+            "spine_config": self.env.spine_config,
+        }
+        self.tb_formatter.writer.add_text(
+            "config",
+            f"```yaml\n{yaml.dump(config, indent=4)}\n```",
+            global_step=None,
+        )
 
 
 def train_policy(agent_name: str, training_dir: str) -> None:
