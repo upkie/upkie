@@ -29,6 +29,7 @@ py_binary(
         "@mpacklog//:python",
         requirement("gin-config"),
         requirement("loop_rate_limiters"),
+        requirement("stable_baselines3"),
     ],
 )
 
