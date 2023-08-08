@@ -64,7 +64,6 @@ There are two ways we can develop and run agents: using the [PyPI](#pypi) distri
 
 ### PyPI
 
-
 The PyPI distribution is the recommended way to control Upkie in Python. It is already [fast enough](https://github.com/tasts-robots/vulp#performance) for real-time control.
 
 #### Installation
