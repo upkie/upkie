@@ -2,9 +2,13 @@
 
 ## Training a new policy
 
+First, check that training progresses one rollout at a time:
+
 ```
-./tools/bazelisk run //agents/ppo_balancer:train [-- --show]
+./tools/bazelisk run //agents/ppo_balancer:train -- --show
 ```
+
+Once this works you can remove the ``--show`` GUI toggle.
 
 ## Running a trained policy
 
