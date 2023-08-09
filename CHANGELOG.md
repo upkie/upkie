@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Makefile: Add target for local coverage checks
 - agents: Closed-loop model predictive control
 - examples: Closed-loop model predictive control
 - utils: Configure agent process on the Raspberry Pi
