@@ -89,10 +89,10 @@ void FloorContact::update_upper_leg_torque(const Dictionary& observation) {
     const double torque = servo(joint)("torque");
     squared_torques += torque * torque;
   }
-  constexpr double kTimeConstant = 0.01;  // [s]
+  constexpr double kTorqueCutoffPeriod = 0.01;  // [s]
   const double new_torque = std::sqrt(squared_torques);
-  upper_leg_torque_ =
-      low_pass_filter(upper_leg_torque_, kTimeConstant, new_torque, params_.dt);
+  upper_leg_torque_ = low_pass_filter(upper_leg_torque_, kTorqueCutoffPeriod,
+                                      new_torque, params_.dt);
 }
 
 void FloorContact::write(Dictionary& observation) {
