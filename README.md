@@ -25,7 +25,7 @@ Connect a USB controller to move the robot around 🎮
 
 ## Running a spine
 
-The code of Upkie is organized into *spines*, which communicate with the simulation or mjbots actuators, and *agents*, the programs that implement robot behaviors. Check out [this introduction](https://github.com/tasts-robots/vulp#readme) for more details.
+The code of Upkie is organized into *spines*, which communicate with the simulation or mjbots actuators, and *agents*, the programs that implement robot behaviors. We use [Bazel](https://bazel.build/) to build C++ spines, both for simulation on your development computer or for running on the robot's Raspberry Pi. Bazel builds everything locally, does not install anything on your system, and makes sure that all versions of all dependencies are correct. Check out [this introduction](https://github.com/tasts-robots/vulp#readme) for more details.
 
 ### Simulation spine
 
@@ -34,6 +34,14 @@ In the example above we ran an agent called "wheel balancer". We could also star
 ```console
 ./start_simulation.sh
 ```
+
+This script is just an alias for a Bazel ``run`` command:
+
+```console
+./tools/bazelisk run -c opt //spines:bullet -- --show
+```
+
+The ``-c opt`` flag selects the optimized compilation mode. It is actually the default in this project, we just show it here for example.
 
 ### Robot spine
 
@@ -47,24 +55,20 @@ make upload ROBOT=your_upkie
 Next, log into the Pi and run a pi3hat spine:
 
 ```console
-$ ssh user@your_upkie
-user@your_upkie:~$ cd upkie
-user@your_upkie:upkie$ make run_pi3hat_spine
+$ ssh foo@robot
+foo@robot:~$ cd upkie
+foo@robot:upkie$ make run_pi3hat_spine
 ```
 
 Once the spine is running, you can run any agent in a separate shell on the robot, for example the wheel balancer:
 
 ```console
-user@robot:upkie$ make run_wheel_balancer
+foo@robot:upkie$ make run_wheel_balancer
 ```
 
-## Running an agent
+## Running a Python agent
 
-There are two ways we can develop and run agents: using the [PyPI](#pypi) distribution, or [Bazel](#bazel). PyPI is better to get started and prototype everything in Python, while Bazel is better to recompile things from source.
-
-### PyPI
-
-The PyPI distribution is the recommended way to control Upkie in Python. It is already [fast enough](https://github.com/tasts-robots/vulp#performance) for real-time control.
+We run Python agents using the ``upkie`` interface distributed on PyPI. This interface is already [fast enough](https://github.com/tasts-robots/vulp#performance) for real-time control.
 
 #### Installation
 
@@ -96,18 +100,6 @@ with gym.make("UpkieWheelsEnv-v4", frequency=200.0) as env:
 With a simulation spine, this code will reset the robot's state and execute the policy continuously. In a pi3hat spine, this code will control the robot directly.
 
 Check out the ``examples/`` directory for other examples.
-
-### Bazel
-
-We use [Bazel](https://bazel.build/) to build C++ spines that can run on both your host computer and the Raspberry Pi. Everything you see in the ``agents/`` and ``spines/`` directories is built with Bazel, including for instance the wheel balancer and the PPO balancer. Bazel builds everything locally, does not install anything on your system, and makes sure that all versions of all dependencies are correct. It is therefore better for sharing code with other Upkie's (no need to worry about what each user did or did not ``pip install`).
-
-Use the following syntax to run an agent with Bazel:
-
-```console
-./tools/bazelisk run -c opt //agents/wheel_balancer:agent
-```
-
-Here we added the ``-c opt`` to include optimization flags during compilation.
 
 ## Code overview
 
