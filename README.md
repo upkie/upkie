@@ -86,7 +86,7 @@ For instance, to run the PPO balancer on the ``foobar`` policy:
 python agents/ppo_balancer/main.py foobar
 ```
 
-## Developing your own agent
+## Example of a custom agent
 
 You can develop your own agent using the [environments](#environments) distributed in ``upkie.envs``. For example, [run a spine](#running-a-spine) and try executing the following code in a Python interpreter:
 

@@ -19,7 +19,7 @@
 
 import unittest
 
-from agents.pink_balancer.pink_balancer import parse_command_line_arguments
+from agents.pink_balancer.main import parse_command_line_arguments
 
 
 class TestPinkBalancer(unittest.TestCase):

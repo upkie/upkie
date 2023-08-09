@@ -14,6 +14,8 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Makefile: Remove agent targets to promote running their ``main.py``
+- README: Recommended way to run agents is now via Python
 - envs: Refactor environment registration function
 - examples: Remove CPU isolation example, now a ``utils.raspi`` function call
 - utils: Remove ``realtime`` submodule in favor of ``raspi``
