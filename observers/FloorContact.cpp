@@ -45,6 +45,10 @@ void FloorContact::reset(const Dictionary& config) {
 }
 
 void FloorContact::read(const Dictionary& observation) {
+  if (params_.incomplete()) {
+    spdlog::warn("[FloorContact] Observer is not configured");
+    return;
+  }
   if (!observation.has("servo")) {
     return;
   }

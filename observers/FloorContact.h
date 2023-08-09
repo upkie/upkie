@@ -80,6 +80,12 @@ class FloorContact : public Observer {
           config("floor_contact")("upper_leg_torque_threshold");
     }
 
+    /*! Check whether parameters are incomplete.
+     *
+     * \returns True if some parameters are uninitialized.
+     */
+    bool incomplete() { return (dt != dt); }
+
     //! Spine timestep, in [s]
     double dt = std::numeric_limits<double>::quiet_NaN();
 
