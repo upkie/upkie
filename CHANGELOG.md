@@ -21,6 +21,7 @@ All notable changes to this project will be documented in this file.
 
 - PPO balancer: Disable rate limiter during training
 - tools: CPU scaling scripts don't need to be run as root any more
+- tools: Fix permissions of `vcgencheck`
 
 ## [1.3.4] - 2023/08/09
 
