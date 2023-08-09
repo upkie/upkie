@@ -34,6 +34,7 @@ py_binary(
         "@vulp//spine:python",
         requirement("gin-config"),
         requirement("loop_rate_limiters"),
+        requirement("numpy"),
         requirement("packaging"),
         requirement("upkie_description"),
     ],

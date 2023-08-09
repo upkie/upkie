@@ -53,7 +53,6 @@ py_binary(
         "@mpacklog//:python",
         "@rules_python//python/runfiles",
         requirement("gin-config"),
-        requirement("numpy"),
         requirement("stable_baselines3"),
         requirement("torch"),
     ],

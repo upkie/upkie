@@ -18,6 +18,7 @@ py_library(
         "//utils:clamp",
         "//utils:filters",
         requirement("gin-config"),
+        requirement("numpy"),
     ],
 )
 
