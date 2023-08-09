@@ -22,9 +22,27 @@ py_library(
 )
 
 py_binary(
-    name = "agent",
-    srcs = ["agent.py"],
-    main = "agent.py",
+    name = "bullet",
+    srcs = ["bullet.py"],
+    main = "bullet.py",
+    data = [
+        ":config",
+        "//spines:bullet",
+    ],
+    deps = [
+        "//utils:exceptions",
+        ":controllers",
+        "@rules_python//python/runfiles",
+        "@vulp//spine:python",
+        requirement("loop_rate_limiters"),
+        requirement("pyyaml"),
+    ],
+)
+
+py_binary(
+    name = "wheel_balancer",
+    srcs = ["main.py"],
+    main = "main.py",
     data = [
         "//agents/wheel_balancer/config",
     ] + select({
@@ -38,24 +56,6 @@ py_binary(
         "//utils:spdlog",
         ":controllers",
         "@mpacklog//:python",
-        "@vulp//spine:python",
-        requirement("loop_rate_limiters"),
-        requirement("pyyaml"),
-    ],
-)
-
-py_binary(
-    name = "bullet",
-    srcs = ["bullet.py"],
-    main = "bullet.py",
-    data = [
-        ":config",
-        "//spines:bullet",
-    ],
-    deps = [
-        "//utils:exceptions",
-        ":controllers",
-        "@rules_python//python/runfiles",
         "@vulp//spine:python",
         requirement("loop_rate_limiters"),
         requirement("pyyaml"),

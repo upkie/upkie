@@ -9,16 +9,12 @@ package(default_visibility = ["//visibility:public"])
 
 filegroup(
     name = "config",
-    srcs = glob([
-        "*.gin",
-    ]),
+    srcs = glob(["*.gin"]),
 )
 
 py_library(
     name = "settings",
-    srcs = [
-        "settings.py",
-    ],
+    srcs = ["settings.py"],
     data = [
         ":config",
     ],
@@ -28,8 +24,9 @@ py_library(
 )
 
 py_binary(
-    name = "run",
-    srcs = ["run.py"],
+    name = "ppo_balancer",
+    srcs = ["main.py"],
+    main = "main.py",
     data = glob([
         "policies/*.zip",
     ]),
@@ -45,9 +42,7 @@ py_binary(
 
 py_binary(
     name = "train",
-    srcs = [
-        "train.py",
-    ],
+    srcs = ["train.py"],
     data = [
         "//spines:bullet",
     ],

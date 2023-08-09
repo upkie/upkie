@@ -9,9 +9,7 @@ package(default_visibility = ["//visibility:public"])
 
 filegroup(
     name = "config",
-    srcs = glob([
-        "*.gin",
-    ]),
+    srcs = glob(["*.gin"]),
 )
 
 py_binary(
