@@ -27,6 +27,7 @@ REMOTE = ${ROBOT}
 PROJECT_NAME = upkie
 
 BAZEL = $(CURDIR)/tools/bazelisk
+COVERAGE_DIR = $(CURDIR)/bazel-out/_coverage
 CURDATE = $(shell date --iso=seconds)
 CURDIR_NAME = $(shell basename $(CURDIR))
 RASPUNZEL = $(CURDIR)/tools/raspunzel
@@ -52,12 +53,11 @@ build: clean_broken_links  ## build Raspberry Pi targets
 
 clean:  ## clean all local build and intermediate files
 	$(BAZEL) clean --expunge
-	rm -rf $(CURDIR)/coverage
 
 coverage:  ## check unit test coverage and open an HTML report in Firefox
 	$(BAZEL) coverage --combined_report=lcov --compilation_mode=fastbuild --instrument_test_targets //...
-	genhtml -o $(CURDIR)/coverage $(CURDIR)/bazel-out/_coverage/_coverage_report.dat
-	firefox $(CURDIR)/coverage/index.html
+	genhtml $(COVERAGE_DIR)/_coverage_report.dat -o $(COVERAGE_DIR)
+	firefox $(COVERAGE_DIR)/index.html
 
 .PHONY: check_robot
 check_robot:
