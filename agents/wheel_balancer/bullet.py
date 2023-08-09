@@ -104,7 +104,7 @@ if __name__ == "__main__":
             traceback.print_exc()
             print("")
         finally:
-            if spine: 
+            if spine:
                 spine.stop()
             os.kill(pid, signal.SIGINT)  # interrupt spine child process
             os.waitpid(pid, 0)  # wait for spine to terminate
