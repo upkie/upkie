@@ -7,8 +7,6 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - agents: Closed-loop model predictive control
-- envs: Inform user on installing all optional dependencies
-- envs: Name environment rate limiters for more readable logging
 - examples: Closed-loop model predictive control
 - utils: Configure agent process on the Raspberry Pi
 
@@ -16,17 +14,30 @@ All notable changes to this project will be documented in this file.
 
 - Makefile: Remove agent targets to promote running their ``main.py``
 - README: Recommended way to run agents is now via Python
-- envs: Refactor environment registration function
 - examples: Remove CPU isolation example, now a ``utils.raspi`` function call
 - utils: Remove ``realtime`` submodule in favor of ``raspi``
 
 ### Fixed
 
 - PPO balancer: Disable rate limiter during training
+- tools: CPU scaling scripts don't need to be run as root any more
+
+## [1.3.4] - 2023/08/09
+
+### Added
+
+- envs: Inform user on installing all optional dependencies
+- envs: Name environment rate limiters for more readable logging
+
+### Changed
+
+- envs: Refactor environment registration function
+
+### Fixed
+
 - PyPI: add PyYAML to dependencies as it is needed by ``upkie.config``
 - envs: Export ``register`` from submodule
 - envs: Overlay constructor spine configuration on top of default config
-- tools: CPU scaling scripts don't need to be run as root any more
 
 ## [1.3.3] - 2023/08/07
 
