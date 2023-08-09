@@ -1,6 +1,5 @@
 __pycache__
 bazel-*
-coverage/
 doc/html/
 tools/bazel
 upkie.wiki/
