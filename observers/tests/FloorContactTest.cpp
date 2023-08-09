@@ -42,7 +42,7 @@ class FloorContactTest : public ::testing::Test {
 
     FloorContact::Parameters params;
     params.dt = dt_;
-    params.upper_leg_joints = {"hip", "knee"};
+    params.upper_leg_joints = {"hip"};
     params.wheels = {"big_wheel", "small_wheel"};
 
     floor_contact_ = std::make_unique<FloorContact>(params);
@@ -61,14 +61,18 @@ class FloorContactTest : public ::testing::Test {
 TEST_F(FloorContactTest, WriteEvenAfterEmptyRead) {
   // Writing after an empty read is the current spec, though not ideal
   Dictionary observation;
-  ASSERT_NO_THROW(floor_contact_->read(observation));
-  ASSERT_NO_THROW(floor_contact_->write(observation));
+  floor_contact_->read(observation);
+  floor_contact_->write(observation);
   ASSERT_FALSE(observation.is_empty());
 }
 
 TEST_F(FloorContactTest, UnconfiguredDoesNotThrow) {
   FloorContact::Parameters params;
   FloorContact observer(params);
+
+  Dictionary empty_config;
+  observer.reset(empty_config);
+
   Dictionary observation;
   ASSERT_NO_THROW(observer.read(observation));
 }
@@ -88,12 +92,12 @@ TEST_F(FloorContactTest, NoTorqueNoContact) {
   observation("servo")("small_wheel")("velocity") = 0.1;
   observation("servo")("small_wheel")("torque") = 0.0;
 
-  ASSERT_NO_THROW(floor_contact_->read(observation));
-  ASSERT_NO_THROW(floor_contact_->write(observation));
+  floor_contact_->read(observation);
+  floor_contact_->write(observation);
   ASSERT_FALSE(observation("floor_contact").get<bool>("contact"));
 }
 
-TEST_F(FloorContactTest, BigTorqueMeansContact) {
+TEST_F(FloorContactTest, BigWheelAccelTorqueMeansContact) {
   floor_contact_->reset(config_);
 
   Dictionary observation;
@@ -111,7 +115,46 @@ TEST_F(FloorContactTest, BigTorqueMeansContact) {
   observation("servo")("small_wheel")("velocity") = new_vel;
   floor_contact_->read(observation);
 
-  ASSERT_NO_THROW(floor_contact_->write(observation));
+  floor_contact_->write(observation);
+  ASSERT_TRUE(observation("floor_contact").get<bool>("contact"));
+
+  // Extra test: joystick button resets wheel observers
+  observation("joystick")("cross_button") = true;
+  floor_contact_->read(observation);
+  floor_contact_->write(observation);
+  // The following observation would be true without a reset
+  ASSERT_FALSE(observation("floor_contact").get<bool>("contact"));
+}
+
+TEST_F(FloorContactTest, SmallLegTorqueNoContact) {
+  floor_contact_->reset(config_);
+
+  Dictionary observation;
+  observation("servo")("big_wheel")("velocity") = 0.0;
+  observation("servo")("big_wheel")("torque") = 0.0;
+  observation("servo")("small_wheel")("velocity") = 0.0;
+  observation("servo")("small_wheel")("torque") = 0.0;
+  observation("servo")("hip")("velocity") = 0.0;
+  observation("servo")("hip")("torque") = 1.0;
+
+  floor_contact_->read(observation);
+  floor_contact_->write(observation);
+  ASSERT_FALSE(observation("floor_contact").get<bool>("contact"));
+}
+
+TEST_F(FloorContactTest, BigLegTorqueMeansContact) {
+  floor_contact_->reset(config_);
+
+  Dictionary observation;
+  observation("servo")("big_wheel")("velocity") = 0.0;
+  observation("servo")("big_wheel")("torque") = 0.0;
+  observation("servo")("small_wheel")("velocity") = 0.0;
+  observation("servo")("small_wheel")("torque") = 0.0;
+  observation("servo")("hip")("velocity") = 0.0;
+  observation("servo")("hip")("torque") = 100.0;
+
+  floor_contact_->read(observation);
+  floor_contact_->write(observation);
   ASSERT_TRUE(observation("floor_contact").get<bool>("contact"));
 }
 
