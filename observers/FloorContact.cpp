@@ -86,8 +86,13 @@ void FloorContact::update_upper_leg_torque(const Dictionary& observation) {
   const auto& servo = observation("servo");
   double squared_torques = 0.0;
   for (const auto& joint : params_.upper_leg_joints) {
-    const double torque = servo(joint)("torque");
-    squared_torques += torque * torque;
+    try {
+      const double torque = servo(joint)("torque");
+      squared_torques += torque * torque;
+    } catch (const KeyError& e) {
+      spdlog::warn("[FloorContact] No observation for {} yet", joint);
+      continue;
+    }
   }
   constexpr double kTorqueCutoffPeriod = 0.01;  // [s]
   const double new_torque = std::sqrt(squared_torques);
