@@ -91,9 +91,10 @@ if __name__ == "__main__":
         spine_argv = ["--spine-frequency", "1000.0", "--show"]
         os.execvp(spine_path, ["bullet"] + spine_argv)
     else:
-        time.sleep(1.5)  # wait for Bullet to start
-        spine = SpineInterface()
+        time.sleep(2)  # wait for Bullet to start
+        spine = None
         try:
+            spine = SpineInterface()
             asyncio.run(run(spine, config))
         except KeyboardInterrupt:
             logging.info("Caught a keyboard interrupt")
@@ -103,6 +104,7 @@ if __name__ == "__main__":
             traceback.print_exc()
             print("")
         finally:
-            spine.stop()
+            if spine: 
+                spine.stop()
             os.kill(pid, signal.SIGINT)  # interrupt spine child process
             os.waitpid(pid, 0)  # wait for spine to terminate
