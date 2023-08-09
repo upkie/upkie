@@ -68,17 +68,27 @@ foo@robot:upkie$ make run_wheel_balancer
 
 ## Running a Python agent
 
-We run Python agents using the ``upkie`` interface distributed on PyPI. This interface is already [fast enough](https://github.com/tasts-robots/vulp#performance) for real-time control.
-
-#### Installation
+We develop Python agents using the ``upkie`` interface distributed on PyPI. This interface is already [fast enough](https://github.com/tasts-robots/vulp#performance) for real-time control. To install it:
 
 ```console
 pip install upkie
 ```
 
-#### Example
+The repository ships a number of [agents](#agents) that have been tested on several Upkie's. You will find them in the [`agents/`](https://github.com/tasts-robots/upkie/tree/main/agents) directory. To run an agent, call its main Python script:
 
-While [running a spine](#running-a-spine), you can execute the following code in a Python interpreter or as a standalone Python script:
+```console
+python agents/<agent_name>/main.py <args>
+```
+
+For instance, to run the PPO balancer on the ``foobar`` policy:
+
+```console
+python agents/ppo_balancer/main.py foobar
+```
+
+## Developing your own agent
+
+You can develop your own agent using the [environments](#environments) distributed in ``upkie.envs``. For example, [run a spine](#running-a-spine) and try executing the following code in a Python interpreter:
 
 ```python
 import gymnasium as gym
@@ -97,9 +107,7 @@ with gym.make("UpkieWheelsEnv-v4", frequency=200.0) as env:
         action[0] = 10.0 * pitch
 ```
 
-With a simulation spine, this code will reset the robot's state and execute the policy continuously. In a pi3hat spine, this code will control the robot directly.
-
-Check out the ``examples/`` directory for other examples.
+With a simulation spine, this code will reset the robot's state and execute the policy continuously. In a pi3hat spine, this code will control the robot directly. You can check out the [`examples/`](https://github.com/tasts-robots/upkie/tree/main/examples) directory for more examples.
 
 ## Code overview
 
