@@ -50,6 +50,10 @@ build: clean_broken_links  ## build Raspberry Pi targets
 	$(BAZEL) build --config=pi64 //spines:mock
 	$(BAZEL) build --config=pi64 //spines:pi3hat
 
+clean:  ## clean all local build and intermediate files
+	$(BAZEL) clean --expunge
+	rm -rf $(CURDIR)/coverage
+
 coverage:  ## check unit test coverage and open an HTML report in Firefox
 	$(BAZEL) coverage --combined_report=lcov --compilation_mode=fastbuild --instrument_test_targets //...
 	genhtml -o $(CURDIR)/coverage $(CURDIR)/bazel-out/_coverage/_coverage_report.dat
