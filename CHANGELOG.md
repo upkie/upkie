@@ -20,6 +20,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - PPO balancer: Disable rate limiter during training
+- Wheel balancer: Handle SpineInterface failures when forking a Bullet simulation (thanks to @boragokbakan)
 - tools: CPU scaling scripts don't need to be run as root any more
 - tools: Fix permissions of `vcgencheck`
 
