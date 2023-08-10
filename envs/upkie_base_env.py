@@ -68,6 +68,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         """!
         Initialize environment.
 
+        @param reward Reward function.
         @param fall_pitch Fall pitch angle, in radians.
         @param frequency Regulated frequency of the control loop, in Hz. Set to
             ``None`` to disable loop frequency regulation.

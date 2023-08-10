@@ -27,7 +27,8 @@ from upkie.observers.base_pitch import (
     compute_base_pitch_from_imu,
 )
 
-from .standing_reward import StandingReward
+from .survival_reward import SurvivalReward
+from .reward import Reward
 from .upkie_base_env import UpkieBaseEnv
 
 MAX_BASE_PITCH: float = np.pi
@@ -87,12 +88,6 @@ class UpkieWheelsEnv(UpkieBaseEnv):
         </tr>
     </table>
 
-    ### Rewards
-
-    The reward function is defined in @ref envs.standing_reward.StandingReward
-    "StandingReward". See also @ref envs.upkie_base_env.UpkieBaseEnv
-    "UpkieBaseEnv" for notes on using this environment.
-
     ### Attributes
 
     The environment class defines the following attributes:
@@ -117,6 +112,7 @@ class UpkieWheelsEnv(UpkieBaseEnv):
 
     def __init__(
         self,
+        reward: Optional[Reward] = None,
         fall_pitch: float = 1.0,
         frequency: float = 200.0,
         max_ground_velocity: float = 1.0,
@@ -127,6 +123,7 @@ class UpkieWheelsEnv(UpkieBaseEnv):
         """!
         Initialize environment.
 
+        @param reward Reward function.
         @param fall_pitch Fall pitch angle, in radians.
         @param frequency Regulated frequency of the control loop, in Hz.
         @param max_ground_velocity Maximum commanded ground velocity in m/s.
@@ -136,9 +133,8 @@ class UpkieWheelsEnv(UpkieBaseEnv):
             dictionary is sent to the spine at every :func:`reset`.
         @param wheel_radius Wheel radius in [m].
         """
-        reward = StandingReward()
         super().__init__(
-            reward=reward,
+            reward=reward if reward is not None else SurvivalReward(),
             fall_pitch=fall_pitch,
             frequency=frequency,
             shm_name=shm_name,

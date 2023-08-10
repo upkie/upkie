@@ -8,10 +8,11 @@ load("@pip_upkie//:requirements.bzl", "requirement")
 package(default_visibility = ["//visibility:public"])
 
 py_library(
-    name = "reward",
+    name = "rewards",
     srcs = [
         "reward.py",
         "standing_reward.py",
+        "survival_reward.py",
     ],
     deps = [
         requirement("numpy"),
@@ -25,7 +26,7 @@ py_library(
         "upkie_base_env.py",
     ],
     deps = [
-        ":reward",
+        ":rewards",
         "//config",
         "@upkie//observers/base_pitch",
         "@vulp//spine:python",
@@ -62,7 +63,7 @@ py_library(
         "__init__.py",
     ],
     deps = [
-        ":reward",
+        ":rewards",
         ":upkie_base_env",
         ":upkie_servos_env",
         ":upkie_wheels_env",
