@@ -13,6 +13,15 @@ filegroup(
 )
 
 py_library(
+    name = "reward",
+    srcs = ["reward.py"],
+    deps = [
+        "//envs",
+        requirement("numpy"),
+    ],
+)
+
+py_library(
     name = "settings",
     srcs = ["settings.py"],
     data = [
