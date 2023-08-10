@@ -136,7 +136,9 @@ class UpkieWheelsEnv(UpkieBaseEnv):
             dictionary is sent to the spine at every :func:`reset`.
         @param wheel_radius Wheel radius in [m].
         """
+        reward = StandingReward()
         super().__init__(
+            reward=reward,
             fall_pitch=fall_pitch,
             frequency=frequency,
             shm_name=shm_name,
@@ -169,14 +171,10 @@ class UpkieWheelsEnv(UpkieBaseEnv):
             dtype=np.float32,
         )
 
-        # gymnasium.Env: reward_range
-        self.reward_range = StandingReward.get_range()
-
         # Class members
         self.fall_pitch = fall_pitch
         self.init_position = {}
         self.max_ground_velocity = max_ground_velocity
-        self.reward = StandingReward()
         self.wheel_radius = wheel_radius
 
     def parse_first_observation(self, observation_dict: dict) -> None:

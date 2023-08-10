@@ -27,16 +27,21 @@ from vulp.spine import SpineInterface
 import upkie.config
 from upkie.observers.base_pitch import compute_base_pitch_from_imu
 
+from .reward import Reward
+
 
 class UpkieBaseEnv(abc.ABC, gymnasium.Env):
 
     """!
     Base class for Upkie environments.
 
-    This class has the following attributes:
+    ### Attributes
+
+    This base environment has the following attributes:
 
     - ``config``: Configuration dictionary sent to the spine.
     - ``fall_pitch``: Fall pitch angle, in radians.
+    - ``reward``: Reward function.
 
     @note This environment is made to run on a single CPU thread rather than on
     GPU/TPU. The downside for reinforcement learning is that computations are
@@ -50,9 +55,11 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
     _spine: SpineInterface
     fall_pitch: float
     spine_config: dict
+    reward: Reward
 
     def __init__(
         self,
+        reward: Reward,
         fall_pitch: float,
         frequency: Optional[float],
         shm_name: str,
@@ -72,9 +79,14 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         merged_spine_config = upkie.config.SPINE_CONFIG.copy()
         if spine_config is not None:
             merged_spine_config.update(spine_config)
+
+        # gymnasium.Env: reward_range
+        self.reward_range = reward.get_range()
+
         self.__frequency = frequency
         self._spine = SpineInterface(shm_name)
         self.fall_pitch = fall_pitch
+        self.reward = reward
         self.spine_config = merged_spine_config
 
     @property

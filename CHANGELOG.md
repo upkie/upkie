@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 - Makefile: Add clean rule to remove all intermediate files
 - Makefile: Add coverage rule to check a local HTML report
 - agents: Closed-loop model predictive control
+- envs: Base `Reward` class for rewards
 - examples: Closed-loop model predictive control
 - utils: Configure agent process on the Raspberry Pi
 

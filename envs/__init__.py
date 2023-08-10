@@ -19,9 +19,15 @@ import logging
 
 import gymnasium as gym
 
+from .reward import Reward
 from .upkie_base_env import UpkieBaseEnv
 
-__all__ = ["UpkieBaseEnv", "register"]
+__all__ = [
+    "Reward",
+    "UpkieBaseEnv",
+    "register",
+]
+
 __envs__ = {}
 
 try:
