@@ -18,10 +18,11 @@ import mpacklog
 import numpy as np
 import proxsuite
 import qpsolvers
-import upkie.envs
 from ltv_mpc import MPCQP, Plan, solve_mpc
 from ltv_mpc.systems import CartPole
 from qpsolvers import solve_problem
+
+import upkie.envs
 from upkie.utils.clamp import clamp_and_warn
 from upkie.utils.filters import low_pass_filter
 from upkie.utils.raspi import configure_agent_process, on_raspi
@@ -141,8 +142,9 @@ async def balance(
         live_plot = CartPolePlot(cart_pole, order="velocities")
 
     env.reset()  # connects to the spine
-    action = np.zeros(env.action_space.shape)
     commanded_velocity = 0.0
+    action = np.zeros(env.action_space.shape)
+
     planning_times = np.empty((nb_env_steps,)) if nb_env_steps > 0 else None
     base_pitches = np.empty((nb_env_steps,)) if nb_env_steps > 0 else None
     step = 0
