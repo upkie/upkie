@@ -5,13 +5,10 @@
 
 """Wheel balancing using model predictive control of an LTV system."""
 
-import asyncio
 import os
 import sys
-import time
 
 import gymnasium as gym
-import mpacklog
 import numpy as np
 from ltv_mpc import solve_mpc
 from ltv_mpc.systems import CartPole
@@ -46,41 +43,33 @@ def get_target_states(
     return target_states
 
 
-async def balance(env: gym.Env, logger: mpacklog.AsyncLogger):
+def balance(env: gym.Env):
     """!
-    Run proportional balancer in gym environment with logging.
+    Balancer Upkie by closed-loop MPC on its gym environment.
 
     @param env Gym environment to Upkie.
-    @param logger Additional logger.
     """
     cart_pole = CartPole(
         length=0.4,
         max_ground_accel=10.0,
-        nb_timesteps=12,
+        nb_timesteps=50,
         sampling_period=env.dt,
     )
     mpc_problem = cart_pole.build_mpc_problem(
-        terminal_cost_weight=10.0,
-        stage_state_cost_weight=1.0,
+        terminal_cost_weight=1.0,
+        stage_state_cost_weight=1e-3,
         stage_input_cost_weight=1e-3,
     )
 
-    live_plot = None
-    if not on_raspi():
-        from ltv_mpc.live_plots import CartPolePlot  # imports matplotlib
-
-        live_plot = CartPolePlot(cart_pole, order="velocities")
-
     env.reset()  # connects to the spine
-    action = np.zeros(env.action_space.shape)
     commanded_velocity = 0.0
+    action = np.zeros(env.action_space.shape)
     while True:
         action[0] = commanded_velocity
-        observation, _, terminated, truncated, info = await env.async_step(
-            action
-        )
+        observation, _, terminated, truncated, info = env.step(action)
         if terminated or truncated:
             observation, info = env.reset()
+            commanded_velocity = 0.0
 
         observation_dict = info["observation"]
         ground_contact = observation_dict["floor_contact"]["contact"]
@@ -121,34 +110,13 @@ async def balance(env: gym.Env, logger: mpacklog.AsyncLogger):
             logging.info("Continuing with previous action")
         else:  # plan was found
             cart_pole.state = initial_state
-            if live_plot is not None:
-                t = time.time()
-                live_plot.update(plan, t, initial_state, t)
             commanded_accel = plan.first_input
             commanded_velocity = clamp_and_warn(
-                commanded_velocity + commanded_accel * env.dt,
+                commanded_velocity + commanded_accel * env.dt / 2.0,
                 lower=-1.0,
                 upper=+1.0,
                 label="commanded_velocity",
             )
-        await logger.put(  # log info to be written to file later
-            {
-                "action": action,
-                "observation": info["observation"],
-                "time": time.time(),
-            }
-        )
-    await logger.stop()
-
-
-async def main():
-    """Main function of our asyncio program."""
-    logger = mpacklog.AsyncLogger("mpc_balancing.mpack")
-    with gym.make("UpkieWheelsEnv-v4", frequency=200.0) as env:
-        await asyncio.gather(
-            balance(env, logger),
-            logger.write(),  # write logs to file when there is time
-        )
 
 
 if __name__ == "__main__":
@@ -161,4 +129,5 @@ if __name__ == "__main__":
         CPUID = 3
         os.sched_setaffinity(0, {CPUID})
 
-    asyncio.run(main())
+    with gym.make("UpkieWheelsEnv-v4", frequency=200.0) as env:
+        balance(env),
