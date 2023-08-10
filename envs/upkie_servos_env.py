@@ -29,7 +29,8 @@ from upkie.utils.pinocchio import (
     box_velocity_limits,
 )
 
-from .standing_reward import StandingReward
+from .reward import Reward
+from .survival_reward import SurvivalReward
 from .upkie_base_env import UpkieBaseEnv
 
 
@@ -84,11 +85,6 @@ class UpkieServosEnv(UpkieBaseEnv):
         </tr>
     </table>
 
-    ### Rewards
-
-    The reward function is defined in @ref envs.standing_reward.StandingReward
-    "StandingReward".
-
     ### Attributes
 
     The environment has the following attributes:
@@ -107,6 +103,7 @@ class UpkieServosEnv(UpkieBaseEnv):
 
     def __init__(
         self,
+        reward: Optional[Reward] = None,
         fall_pitch: float = 1.0,
         frequency: float = 200.0,
         shm_name: str = "/vulp",
@@ -115,6 +112,7 @@ class UpkieServosEnv(UpkieBaseEnv):
         """!
         Initialize environment.
 
+        @param reward Reward function.
         @param fall_pitch Fall pitch angle, in radians.
         @param frequency Regulated frequency of the control loop, in Hz.
         @param shm_name Name of shared-memory file.
@@ -122,9 +120,8 @@ class UpkieServosEnv(UpkieBaseEnv):
             defaults from ``//config:spine.yaml``. The combined configuration
             dictionary is sent to the spine at every :func:`reset`.
         """
-        reward = StandingReward()
         super().__init__(
-            reward=reward,
+            reward=reward if reward is not None else SurvivalReward(),
             fall_pitch=fall_pitch,
             frequency=frequency,
             shm_name=shm_name,
