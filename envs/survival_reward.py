@@ -15,8 +15,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Tuple
 import abc
+from typing import Tuple
 
 import numpy as np
 
@@ -33,7 +33,7 @@ class SurvivalReward:
 
         This is part of the Gym API.
         """
-        return (0., 2.)
+        return (0.0, 2.0)
 
     @abc.abstractmethod
     def get(self, observation: np.ndarray) -> float:

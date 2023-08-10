@@ -19,6 +19,7 @@ from typing import Tuple
 
 import gin
 import numpy as np
+
 import upkie.envs
 
 
