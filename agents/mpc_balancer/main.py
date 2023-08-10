@@ -153,6 +153,7 @@ async def balance(
         )
         if terminated or truncated:
             observation, info = env.reset()
+            commanded_velocity = 0.0
 
         observation_dict = info["observation"]
         ground_contact = observation_dict["floor_contact"]["contact"]
