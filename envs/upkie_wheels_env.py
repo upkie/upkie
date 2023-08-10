@@ -27,8 +27,8 @@ from upkie.observers.base_pitch import (
     compute_base_pitch_from_imu,
 )
 
-from .survival_reward import SurvivalReward
 from .reward import Reward
+from .survival_reward import SurvivalReward
 from .upkie_base_env import UpkieBaseEnv
 
 MAX_BASE_PITCH: float = np.pi

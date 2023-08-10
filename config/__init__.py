@@ -16,6 +16,7 @@
 # limitations under the License.
 
 import os
+
 import yaml
 
 PATH = os.path.abspath(os.path.dirname(__file__))
