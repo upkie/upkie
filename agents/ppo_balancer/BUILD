@@ -13,8 +13,10 @@ filegroup(
 )
 
 py_library(
-    name = "reward",
-    srcs = ["reward.py"],
+    name = "rewards",
+    srcs = [
+        "standing_reward.py",
+    ],
     deps = [
         "//envs",
         requirement("numpy"),
@@ -63,6 +65,7 @@ py_binary(
     deps = [
         "//envs",
         "//utils:spdlog",
+        ":rewards",
         ":settings",
         ":utils",
         "@mpacklog//:python",
