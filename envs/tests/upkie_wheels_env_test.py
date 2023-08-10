@@ -19,10 +19,10 @@
 
 import unittest
 
+import numpy as np
 import posix_ipc
 
 from envs import UpkieWheelsEnv
-
 from envs.tests.mock_spine import MockSpine
 
 
@@ -47,6 +47,12 @@ class TestUpkieWheelsEnv(unittest.TestCase):
             observation[1], observation_dict["wheel_odometry"]["position"]
         )
         self.assertGreaterEqual(observation_dict["number"], 1)
+
+    def test_reward(self):
+        observation, info = self.env.reset()
+        action = np.zeros(self.env.action_space.shape)
+        observation, reward, terminated, truncated, _ = self.env.step(action)
+        self.assertAlmostEqual(reward, 1.0)  # survival reward
 
 
 if __name__ == "__main__":
