@@ -32,3 +32,9 @@ Settings.target_kl = None
 Settings.total_timesteps = 5e5
 Settings.use_sde = False
 Settings.vf_coef  = 0.5
+
+StandingReward.lookahead_duration = 0.2
+StandingReward.max_pitch = 1.5707963267948966
+StandingReward.max_position = 0.5
+StandingReward.pitch_weight = 1.0
+StandingReward.position_weight = 1.0
