@@ -17,12 +17,13 @@
 
 from typing import Tuple
 
+import gin
 import numpy as np
-
 import upkie.envs
 
 
-class Reward(upkie.envs.Reward):
+@gin.configurable
+class StandingReward(upkie.envs.Reward):
 
     """!
     Reward function for balancing in place.
@@ -54,11 +55,11 @@ class Reward(upkie.envs.Reward):
 
     def __init__(
         self,
-        lookahead_duration: float = 0.2,
-        max_pitch: float = 1.5707963267948966,
-        max_position: float = 0.5,
-        pitch_weight: float = 1.0,
-        position_weight: float = 1.0,
+        lookahead_duration: float,
+        max_pitch: float,
+        max_position: float,
+        pitch_weight: float,
+        position_weight: float,
     ):
         """!
         Initialize reward.

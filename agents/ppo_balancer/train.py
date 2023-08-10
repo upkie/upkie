@@ -25,18 +25,19 @@ from typing import List
 import gin
 import gymnasium as gym
 import stable_baselines3
+import upkie.envs
 import yaml
 from gymnasium.wrappers.time_limit import TimeLimit
-from reward import Reward
 from rules_python.python.runfiles import runfiles
-from settings import Settings
 from stable_baselines3.common.callbacks import BaseCallback, CheckpointCallback
 from stable_baselines3.common.logger import TensorBoardOutputFormat
 from torch import nn
-
-import upkie.envs
 from upkie.envs import UpkieWheelsEnv
 from upkie.utils.spdlog import logging
+
+from settings import Settings
+from standing_reward import StandingReward
+from utils import gin_operative_config_dict
 
 upkie.envs.register()
 
@@ -61,6 +62,7 @@ class SummaryWriterCallback(BaseCallback):
             return
         config = {
             "env": f"UpkieWheelsEnv-v{UpkieWheelsEnv.version}",
+            "gin": gin_operative_config_dict(gin.config._OPERATIVE_CONFIG),
             "reward": self.env.reward.__dict__,
             "settings": Settings().__dict__,
             "spine_config": self.env.spine_config,
@@ -68,6 +70,11 @@ class SummaryWriterCallback(BaseCallback):
         self.tb_formatter.writer.add_text(
             "config",
             f"```yaml\n{yaml.dump(config, indent=4)}\n```",
+            global_step=None,
+        )
+        self.tb_formatter.writer.add_text(
+            "gin_config",
+            f"    {gin.operative_config_str()}".replace("\n", "\n    "),
             global_step=None,
         )
 
@@ -90,7 +97,7 @@ def train_policy(agent_name: str, training_dir: str) -> None:
     env = TimeLimit(
         gym.make(
             "UpkieWheelsEnv-v4",
-            reward=Reward(),
+            reward=StandingReward(),
             frequency=None,
             shm_name=f"/{agent_name}",
         ),

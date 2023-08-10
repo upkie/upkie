@@ -32,6 +32,11 @@ py_library(
     ],
 )
 
+py_library(
+    name = "utils",
+    srcs = ["utils.py"],
+)
+
 py_binary(
     name = "ppo_balancer",
     srcs = ["main.py"],
@@ -59,6 +64,7 @@ py_binary(
         "//envs",
         "//utils:spdlog",
         ":settings",
+        ":utils",
         "@mpacklog//:python",
         "@rules_python//python/runfiles",
         requirement("gin-config"),
