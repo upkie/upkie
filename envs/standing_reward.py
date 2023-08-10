@@ -7,8 +7,9 @@ from typing import Tuple
 
 import numpy as np
 
+from .reward import Reward
 
-class StandingReward:
+class StandingReward(Reward):
 
     """!
     Reward function for balancing in place.

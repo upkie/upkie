@@ -93,7 +93,6 @@ class UpkieServosEnv(UpkieBaseEnv):
 
     The environment has the following attributes:
 
-    - ``reward``: Reward function.
     - ``robot``: Pinocchio robot wrapper.
     - ``state_max``: Maximum values for the action and observation vectors.
     - ``state_min``: Minimum values for the action and observation vectors.
@@ -103,7 +102,6 @@ class UpkieServosEnv(UpkieBaseEnv):
     using this environment.
     """
 
-    reward: StandingReward
     robot: pin.RobotWrapper
     version: int = 2
 
@@ -124,7 +122,9 @@ class UpkieServosEnv(UpkieBaseEnv):
             defaults from ``//config:spine.yaml``. The combined configuration
             dictionary is sent to the spine at every :func:`reset`.
         """
+        reward = StandingReward()
         super().__init__(
+            reward=reward,
             fall_pitch=fall_pitch,
             frequency=frequency,
             shm_name=shm_name,
@@ -159,15 +159,11 @@ class UpkieServosEnv(UpkieBaseEnv):
             dtype=np.float32,
         )
 
-        # gymnasium.Env: reward_range
-        self.reward_range = StandingReward.get_range()
-
         # Class members
         self.__joints = list(robot.model.names)[1:]
         self.__last_positions = {}
         self.q_max = q_max
         self.q_min = q_min
-        self.reward = StandingReward()
         self.robot = robot
         self.tau_max = tau_max
         self.v_max = v_max
