@@ -19,6 +19,7 @@ All notable changes to this project will be documented in this file.
 - Makefile: Remove agent targets to promote running their ``main.py``
 - README: Recommended way to run agents is now via Python
 - envs: Default reward for all environments is now the survival reward
+- envs: Move `StandingReward` to the PPO balancer
 - examples: Remove CPU isolation example, now a ``utils.raspi`` function call
 - utils: Remove ``realtime`` submodule in favor of ``raspi``
 

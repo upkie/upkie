@@ -11,7 +11,6 @@ py_library(
     name = "rewards",
     srcs = [
         "reward.py",
-        "standing_reward.py",
         "survival_reward.py",
     ],
     deps = [

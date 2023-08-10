@@ -27,6 +27,7 @@ import gymnasium as gym
 import stable_baselines3
 import yaml
 from gymnasium.wrappers.time_limit import TimeLimit
+from reward import Reward
 from rules_python.python.runfiles import runfiles
 from settings import Settings
 from stable_baselines3.common.callbacks import BaseCallback, CheckpointCallback
@@ -89,6 +90,7 @@ def train_policy(agent_name: str, training_dir: str) -> None:
     env = TimeLimit(
         gym.make(
             "UpkieWheelsEnv-v4",
+            reward=Reward(),
             frequency=None,
             shm_name=f"/{agent_name}",
         ),
