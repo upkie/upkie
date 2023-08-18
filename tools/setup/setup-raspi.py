@@ -85,6 +85,7 @@ def install_packages():
     run("apt-get install --yes python3-pip")  # for moteus-pi3hat
     run("apt-get install --yes screen vim")  # convenient later on
     run("pip install moteus-pi3hat")
+    run("pip install upkie")
 
 
 @log_method
