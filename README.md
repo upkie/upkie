@@ -7,11 +7,11 @@
 [![PyPI version](https://img.shields.io/pypi/v/upkie)](https://pypi.org/project/upkie/)
 [![Chat](https://img.shields.io/badge/matrix-chat-%234eb899)](https://app.element.io/#/room/#tasts-robots:matrix.org)
 
-Build instructions and software for **Upkie** wheeled bipeds. Develop on Linux 🐧 or macOS 🍏, deploy to the robot's Raspberry Pi 🍓. Questions about building and using an Upkie, or balancing robots in general, are welcome in the [Discussions](https://github.com/tasts-robots/upkie/discussions) forum or on the [Chat](https://app.element.io/#/room/#tasts-robots:matrix.org).
+Build instructions and software for **Upkie** wheeled bipeds. Develop on Linux 🐧 or macOS 🍏, deploy to the robot's Raspberry Pi 🍓. Questions are welcome in the [Discussions](https://github.com/tasts-robots/upkie/discussions) forum or on the [Chat](https://app.element.io/#/room/#tasts-robots:matrix.org).
 
 ## Quick sim
 
-If you have Python and a C++ compiler (setup one-liners: [Fedora](https://github.com/tasts-robots/upkie/discussions/100), [Ubuntu](https://github.com/tasts-robots/upkie/discussions/101)), you can run an Upkie simulation right from the command line. It won't install anything on your machine, everything will run locally from the repository:
+If you have Python and a C++ compiler (setup one-liners: [Fedora](https://github.com/tasts-robots/upkie/discussions/100), [Ubuntu](https://github.com/tasts-robots/upkie/discussions/101)), you can run an Upkie simulation right from the command line. It won't install anything on your machine, as everything will run locally from the repository:
 
 <img src="https://user-images.githubusercontent.com/1189580/170496331-e1293dd3-b50c-40ee-9c2e-f75f3096ebd8.png" height="100" align="right" />
 
@@ -21,11 +21,11 @@ cd upkie
 ./start_wheel_balancer.sh
 ```
 
-Connect a USB controller to move the robot around 🎮
+Click on the robot in the simulator window to apply external forces 😉
 
 ## Running a spine
 
-The code of Upkie is organized into *spines*, which communicate with the simulation or mjbots actuators, and *agents*, the programs that implement robot behaviors. We use [Bazel](https://bazel.build/) to build C++ spines, both for simulation on your development computer or for running on the robot's Raspberry Pi. Bazel builds everything locally, does not install anything on your system, and makes sure that all versions of all dependencies are correct. Check out [this introduction](https://github.com/tasts-robots/vulp#readme) for more details.
+Upkie's code is organized into *spines*, which communicate with the simulation or mjbots actuators, and *agents*, the programs that implement robot behaviors. We use [Bazel](https://bazel.build/) to build C++ spines, both for simulation on your development computer or for running on the robot's Raspberry Pi. Bazel builds everything locally, does not install anything on your system, and makes sure that all versions of all dependencies are correct. Check out [this introduction](https://github.com/tasts-robots/vulp#readme) for more details.
 
 ### Simulation spine
 
