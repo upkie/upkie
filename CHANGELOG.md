@@ -16,7 +16,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
-- Makefile: Remove agent targets to promote running their ``main.py``
+- Makefile: Remove most agent targets to promote running their ``main.py``
 - README: Recommended way to run agents is now via Python
 - envs: Default reward for all environments is now the survival reward
 - envs: Move `StandingReward` to the PPO balancer
