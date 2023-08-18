@@ -85,7 +85,9 @@ run_mock_spine:  ### run the mock spine on the Raspberry Pi
 	$(RASPUNZEL) run -s //spines:mock
 
 run_pi3hat_spine:  ### run the pi3hat spine on the Raspberry Pi
+	# NB: used in build instructions
 	$(RASPUNZEL) run -s //spines:pi3hat
 
 run_wheel_balancer:  ### run the test balancer on the Raspberry Pi
+	# NB: used in build instructions
 	$(RASPUNZEL) run -v -s //agents/wheel_balancer:agent -- --config $(AGENT_CONFIG)
