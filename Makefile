@@ -88,6 +88,12 @@ run_mock_spine:  ### run the mock spine on the Raspberry Pi
 run_pi3hat_spine:  ### run the pi3hat spine on the Raspberry Pi
 	$(RASPUNZEL) run -s //spines:pi3hat
 
+# A specific gain config file can be loaded with the CONFIG variable
+# Example: ``make run_wheel_balancer CONFIG=michel-strogoff``
+# where michel-strogoff.gin is a file in agents/wheel_balancer/config/
+# By default we load the gains from Upkie Zero.
+WHEEL_BALANCER_CONFIG = $(or ${CONFIG}, upkie-zero)
+
 # NB: used in build instructions
 run_wheel_balancer:  ### run the test balancer on the Raspberry Pi
-	$(RASPUNZEL) run -v -s //agents/wheel_balancer:wheel_balancer -- --config $(AGENT_CONFIG)
+	$(RASPUNZEL) run -v -s //agents/wheel_balancer:wheel_balancer -- --config $(WHEEL_BALANCER_CONFIG)
