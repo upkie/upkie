@@ -20,6 +20,7 @@ All notable changes to this project will be documented in this file.
 - Makefile: Remove most agent targets to promote running their ``main.py``
 - PPO balancer: Can now be run both via Bazel or Python
 - Pink balancer: Can now be run both via Bazel or Python
+- Pink balancer: Remove unit tests
 - README: Recommended way to run agents is now via Python
 - Wheel balancer: Can now be run both via Bazel or Python
 - envs: Default reward for all environments is now the survival reward
