@@ -10,7 +10,7 @@ py_test(
     name = "base_pitch_test",
     srcs = ["base_pitch_test.py"],
     deps = [
-        "//observers/base_pitch",
+        "//upkie/observers/base_pitch",
     ],
 )
 

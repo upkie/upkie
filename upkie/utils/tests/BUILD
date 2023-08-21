@@ -14,7 +14,7 @@ cc_test(
         "*.h",
     ]),
     deps = [
-        "//utils:cpp",
+        "//upkie/utils:datetime_now_string",
         "@eigen",
         "@googletest//:main",
     ],
@@ -24,7 +24,7 @@ py_test(
     name = "clamp_test",
     srcs = ["clamp_test.py"],
     deps = [
-        "//utils:clamp",
+        "//upkie/utils:clamp",
     ],
 )
 
@@ -32,7 +32,7 @@ py_test(
     name = "pinocchio_test",
     srcs = ["pinocchio_test.py"],
     deps = [
-        "//utils:pinocchio",
+        "//upkie/utils:pinocchio",
     ],
 )
 

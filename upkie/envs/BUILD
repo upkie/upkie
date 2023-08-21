@@ -25,9 +25,9 @@ py_library(
         "upkie_base_env.py",
     ],
     deps = [
+        "//upkie/config",
+        "//upkie/observers/base_pitch",
         ":rewards",
-        "//config",
-        "@upkie//observers/base_pitch",
         "@vulp//spine:python",
         requirement("gymnasium"),
         requirement("loop_rate_limiters"),
@@ -42,7 +42,7 @@ py_library(
     ],
     deps = [
         ":upkie_base_env",
-        "//utils:pinocchio",
+        "//upkie/utils:pinocchio",
     ],
 )
 

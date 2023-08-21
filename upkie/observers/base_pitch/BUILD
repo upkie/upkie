@@ -13,8 +13,8 @@ py_library(
         "base_pitch.py",
     ],
     deps = [
-        "//utils:clamp",
-        "//utils:rotations",
+        "//upkie/utils:clamp",
+        "//upkie/utils:rotations",
     ],
 )
 

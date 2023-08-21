@@ -13,7 +13,7 @@ cc_test(
         "*.h",
     ]),
     deps = [
-        "//observers",
+        "//upkie/observers",
         "@eigen",
         "@palimpsest",
         "@googletest//:main",
