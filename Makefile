@@ -96,4 +96,4 @@ WHEEL_BALANCER_CONFIG = $(or ${CONFIG}, upkie-zero)
 
 # NB: used in build instructions
 run_wheel_balancer:  ### run the test balancer on the Raspberry Pi
-	$(RASPUNZEL) run -v -s //agents/wheel_balancer:wheel_balancer -- --config $(WHEEL_BALANCER_CONFIG)
+	$(RASPUNZEL) run -s //agents/wheel_balancer:wheel_balancer -- --config $(WHEEL_BALANCER_CONFIG)
