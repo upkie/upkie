@@ -1,5 +1,6 @@
 __pycache__
 bazel-*
+dist/
 doc/html/
 tools/bazel
 upkie.wiki/
