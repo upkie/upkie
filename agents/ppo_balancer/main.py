@@ -51,16 +51,18 @@ async def main(args: argparse.Namespace):
     agent_dir = os.path.abspath(os.path.dirname(__file__))
     env = UpkieWheelsEnv(shm_name="/vulp")
     policy = PPO("MlpPolicy", env, verbose=1)
-    policy.set_parameters(f"{agent_dir}/policies/{args.name}")
+    policy.set_parameters(f"{agent_dir}/policies/{args.policy}")
     logger = mpacklog.AsyncLogger("/dev/shm/rollout.mpack")
     await asyncio.gather(run_policy(policy, logger), logger.write())
     policy.env.close()
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("policy", help="name of the policy to load")
+    args = parser.parse_args()
+
     agent_dir = os.path.dirname(__file__)
     gin.parse_config_file(f"{agent_dir}/config.gin")
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("name", help="name of the policy to load")
-    args = parser.parse_args()
+
     asyncio.run(main(args))

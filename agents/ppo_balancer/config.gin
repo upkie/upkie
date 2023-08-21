@@ -14,6 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import settings
+import standing_reward
+
 Settings.agent_frequency = 200
 Settings.batch_size = 64
 Settings.clip_range = 0.2
