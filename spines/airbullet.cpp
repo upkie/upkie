@@ -27,7 +27,7 @@
 #include <string>
 #include <vector>
 
-#include "upkie/spines/upkie_layout.h"
+#include "upkie/config/layout.h"
 #include "upkie/utils/datetime_now_string.h"
 
 namespace upkie::spines::airbullet {
@@ -121,7 +121,7 @@ class CommandLineArguments {
 };
 
 int main(const char* argv0, const CommandLineArguments& args) {
-  const auto servo_layout = upkie_layout::servo_layout();
+  const auto servo_layout = upkie::config::servo_layout();
   BulletInterface::Parameters bullet_params(Dictionary{});
   bullet_params.argv0 = argv0;
   bullet_params.dt = 1.0 / args.spine_frequency;

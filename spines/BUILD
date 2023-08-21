@@ -6,17 +6,6 @@ load("//tools/lint:lint.bzl", "add_lint_tests")
 
 package(default_visibility = ["//visibility:public"])
 
-cc_library(
-    name = "upkie_layout",
-    hdrs = [
-        "upkie_layout.h",
-    ],
-    deps = [
-        "@vulp//actuation:servo_layout",
-    ],
-    include_prefix = "upkie/spines",
-)
-
 cc_binary(
     name = "airbullet",
     srcs = [
@@ -26,9 +15,9 @@ cc_binary(
         "@upkie_description",
     ],
     deps = [
-        "//observers",
-        "//utils:datetime_now_string",
-        ":upkie_layout",
+        "//upkie/config:layout",
+        "//upkie/observers",
+        "//upkie/utils:datetime_now_string",
         "@mpacklog",
         "@vulp//actuation:bullet_interface",
         "@vulp//observation",
@@ -46,9 +35,9 @@ cc_binary(
         "@upkie_description",
     ],
     deps = [
-        "//observers",
-        "//utils:datetime_now_string",
-        ":upkie_layout",
+        "//upkie/config:layout",
+        "//upkie/observers",
+        "//upkie/utils:datetime_now_string",
         "@mpacklog",
         "@vulp//actuation:bullet_interface",
         "@vulp//observation",
@@ -63,8 +52,8 @@ cc_binary(
         "mock.cpp",
     ],
     deps = [
-        "//observers",
-        ":upkie_layout",
+        "//upkie/config:layout",
+        "//upkie/observers",
         "@vulp//actuation:mock_interface",
         "@vulp//observation",
         "@vulp//observation/sources",
@@ -86,9 +75,9 @@ cc_binary(
     name = "pi3hat",
     srcs = ["pi3hat.cpp"],
     deps = [
-        "//observers",
-        "//utils:datetime_now_string",
-        ":upkie_layout",
+        "//upkie/config:layout",
+        "//upkie/observers",
+        "//upkie/utils:datetime_now_string",
         "@vulp//observation",
         "@vulp//observation/sources",
         "@vulp//spine",

@@ -17,3 +17,13 @@ py_library(
         requirement("pyyaml"),
     ],
 )
+
+cc_library(
+    name = "layout",
+    hdrs = [
+        "layout.h",
+    ],
+    deps = [
+        "@vulp//actuation:servo_layout",
+    ],
+)
