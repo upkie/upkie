@@ -16,6 +16,8 @@
 
 import agents.wheel_balancer.wheel_controller
 
+WheelController.wheel_radius = 0.06  # [m]
+
 Gains.pitch_damping = 10.0
 Gains.pitch_stiffness = 20.0
 Gains.position_damping = 5.0

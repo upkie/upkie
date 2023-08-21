@@ -17,7 +17,7 @@
 import agents.wheel_balancer.servo_controller
 import agents.wheel_balancer.wheel_controller
 
-WheelController.wheel_radius = 0.055                # [m]
+WheelController.wheel_radius = 0.055  # [m]
 
 Gains.pitch_damping = 1.8
 Gains.pitch_stiffness = 20.0
