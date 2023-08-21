@@ -273,6 +273,7 @@ async def main(args):
 if __name__ == "__main__":
     if on_raspi():
         configure_agent_process()
+
     agent_dir = os.path.dirname(__file__)
     gin.parse_config_file(f"{agent_dir}/config.gin")
     args = parse_command_line_arguments()

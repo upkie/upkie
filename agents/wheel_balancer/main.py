@@ -120,34 +120,33 @@ async def main(spine, spine_config: Dict[str, Any]):
     )
 
 
-def load_gin_configuration(name: str) -> None:
-    logging.info(f"Loading configuration '{name}.gin'")
+def load_gin_configuration(base_dir: str, path: str) -> None:
+    logging.info(f"Loading configuration '{path}'")
     try:
-        gin.parse_config_file(f"{agent_dir}/config/{name}.gin")
+        gin.parse_config_file(f"{base_dir}/{path}")
     except OSError as e:
-        raise FileNotFoundError(f"Configuration '{name}.gin' not found") from e
+        raise FileNotFoundError(f"Configuration '{path}' not found") from e
 
 
 if __name__ == "__main__":
+    if on_raspi():
+        configure_agent_process()
+
     args = parse_command_line_arguments()
     agent_dir = path.dirname(__file__)
 
-    # Agent configuration
-    load_gin_configuration("common")
+    # Load gin configuration files
+    load_gin_configuration(agent_dir, "config/common.gin")
     if args.config == "hostname":
         hostname = socket.gethostname().lower()
         logging.info(f"Loading configuration from hostname '{hostname}'")
-        load_gin_configuration(hostname)
+        load_gin_configuration(agent_dir, f"config/{hostname}.gin")
     elif args.config is not None:
-        load_gin_configuration(args.config)
+        load_gin_configuration(agent_dir, f"config/{args.config}.gin")
 
     # Spine configuration
     with open(f"{agent_dir}/config/spine.yaml", "r") as fh:
         spine_config = yaml.safe_load(fh)
-
-    # On Raspberry Pi, configure the process to run on a separate CPU core
-    if on_raspi():
-        configure_agent_process()
 
     spine = SpineInterface()
     try:
