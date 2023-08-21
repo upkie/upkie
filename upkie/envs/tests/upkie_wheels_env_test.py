@@ -22,8 +22,8 @@ import unittest
 import numpy as np
 import posix_ipc
 
-from envs import UpkieWheelsEnv
-from envs.tests.mock_spine import MockSpine
+from upkie.envs import UpkieWheelsEnv
+from upkie.envs.tests.mock_spine import MockSpine
 
 
 class TestUpkieWheelsEnv(unittest.TestCase):

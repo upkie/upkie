@@ -22,8 +22,8 @@ import unittest
 import numpy as np
 import posix_ipc
 
-from envs import UpkieBaseEnv, Reward
-from envs.tests.mock_spine import MockSpine
+from upkie.envs import UpkieBaseEnv, Reward
+from upkie.envs.tests.mock_spine import MockSpine
 
 
 class UpkieBaseChild(UpkieBaseEnv):

@@ -22,7 +22,7 @@ import unittest
 import gymnasium as gym
 import posix_ipc
 
-from envs import register
+from upkie.envs import register
 
 
 class TestUpkieEnvs(unittest.TestCase):
