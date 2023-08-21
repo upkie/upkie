@@ -14,8 +14,8 @@ py_binary(
     name = "lying_genuflection",
     srcs = ["lying_genuflection.py"],
     deps = [
-        "//envs",
-        "//observers/base_pitch",
+        "//upkie/envs",
+        "//upkie/observers/base_pitch",
     ],
 )
 
@@ -23,12 +23,12 @@ py_binary(
     name = "mpc_balancing",
     srcs = ["mpc_balancing.py"],
     deps = [
-        "//envs",
-        "//observers/base_pitch",
-        "//utils:clamp",
-        "//utils:filters",
-        "//utils:raspi",
-        "//utils:spdlog",
+        "//upkie/envs",
+        "//upkie/observers/base_pitch",
+        "//upkie/utils:clamp",
+        "//upkie/utils:filters",
+        "//upkie/utils:raspi",
+        "//upkie/utils:spdlog",
         # TODO(scaron): add ltv-mpc
         requirement("qpsolvers"),
     ],
@@ -37,13 +37,17 @@ py_binary(
 py_binary(
     name = "wheeled_balancing",
     srcs = ["wheeled_balancing.py"],
-    deps = ["//envs"],
+    deps = [
+        "//upkie/envs",
+    ],
 )
 
 py_binary(
     name = "wheeled_balancing_async",
     srcs = ["wheeled_balancing_async.py"],
-    deps = ["//envs"],
+    deps = [
+        "//upkie/envs",
+    ],
 )
 
 add_lint_tests()

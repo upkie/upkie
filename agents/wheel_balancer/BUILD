@@ -14,9 +14,9 @@ py_library(
         "wheel_controller.py",
     ],
     deps = [
-        "//observers/base_pitch",
-        "//utils:clamp",
-        "//utils:filters",
+        "//upkie/observers/base_pitch",
+        "//upkie/utils:clamp",
+        "//upkie/utils:filters",
         requirement("gin-config"),
     ],
 )
@@ -30,7 +30,7 @@ py_binary(
         "//spines:bullet",
     ],
     deps = [
-        "//utils:exceptions",
+        "//upkie/utils:exceptions",
         ":controllers",
         "@rules_python//python/runfiles",
         "@vulp//spine:python",
@@ -51,9 +51,9 @@ py_binary(
         "//conditions:default": [],
     }),
     deps = [
-        "//utils:exceptions",
-        "//utils:raspi",
-        "//utils:spdlog",
+        "//upkie/utils:exceptions",
+        "//upkie/utils:raspi",
+        "//upkie/utils:spdlog",
         ":controllers",
         "@mpacklog//:python",
         "@vulp//spine:python",

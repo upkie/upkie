@@ -18,7 +18,7 @@ py_library(
         "standing_reward.py",
     ],
     deps = [
-        "//envs",
+        "//upkie/envs",
         requirement("numpy"),
     ],
 )
@@ -47,7 +47,7 @@ py_binary(
         "policies/*.zip",
     ]),
     deps = [
-        "//envs",
+        "//upkie/envs",
         ":rewards",  # needed by gin config
         ":settings",
         "@mpacklog//:python",
@@ -64,8 +64,8 @@ py_binary(
         "//spines:bullet",
     ],
     deps = [
-        "//envs",
-        "//utils:spdlog",
+        "//upkie/envs",
+        "//upkie/utils:spdlog",
         ":rewards",
         ":settings",
         ":utils",

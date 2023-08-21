@@ -28,9 +28,8 @@ import gin
 import yaml
 from loop_rate_limiters import AsyncRateLimiter
 from rules_python.python.runfiles import runfiles
+from servo_controller import ServoController
 from vulp.spine import SpineInterface
-
-from agents.wheel_balancer.servo_controller import ServoController
 
 
 class CompilationModeError(Exception):
