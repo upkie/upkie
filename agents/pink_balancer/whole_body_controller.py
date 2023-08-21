@@ -27,10 +27,9 @@ from pink import solve_ik
 from pink.tasks import FrameTask, PostureTask
 from pink.utils import custom_configuration_vector
 from pink.visualization import start_meshcat_visualizer
+from wheel_balancer import WheelBalancer
 
-from utils.clamp import clamp
-
-from .wheel_balancer import WheelBalancer
+from upkie.utils.clamp import clamp
 
 # Runtime version check for Pink for now
 # See https://github.com/stephane-caron/bazel_pinocchio/issues/1 for context

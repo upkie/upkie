@@ -30,11 +30,11 @@ import gin
 import mpacklog
 from loop_rate_limiters import AsyncRateLimiter
 from vulp.spine import SpineInterface
+from whole_body_controller import WholeBodyController
 
 import upkie.config
-from agents.pink_balancer.whole_body_controller import WholeBodyController
-from utils.raspi import configure_agent_process, on_raspi
-from utils.spdlog import logging
+from upkie.utils.raspi import configure_agent_process, on_raspi
+from upkie.utils.spdlog import logging
 
 
 def parse_command_line_arguments() -> argparse.Namespace:

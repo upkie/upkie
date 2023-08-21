@@ -14,8 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import agents.pink_balancer.wheel_balancer
-import agents.pink_balancer.whole_body_controller
+import wheel_balancer
+import whole_body_controller
 
 WheelBalancer.air_return_period = 1.0             # [s]
 WheelBalancer.fall_pitch = 1.0                    # [rad]
