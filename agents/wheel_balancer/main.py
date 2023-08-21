@@ -30,11 +30,11 @@ import gin
 import mpacklog
 import yaml
 from loop_rate_limiters import AsyncRateLimiter
+from servo_controller import ServoController
 from vulp.spine import SpineInterface
 
-from agents.wheel_balancer.servo_controller import ServoController
-from utils.raspi import configure_agent_process, on_raspi
-from utils.spdlog import logging
+from upkie.utils.raspi import configure_agent_process, on_raspi
+from upkie.utils.spdlog import logging
 
 
 def parse_command_line_arguments() -> argparse.Namespace:

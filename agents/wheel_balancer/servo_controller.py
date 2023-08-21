@@ -19,9 +19,9 @@ from typing import Any, Dict
 
 import gin
 import numpy as np
+from wheel_controller import WheelController
 
-from agents.wheel_balancer.wheel_controller import WheelController
-from utils.clamp import clamp
+from upkie.utils.clamp import clamp
 
 
 @gin.configurable
