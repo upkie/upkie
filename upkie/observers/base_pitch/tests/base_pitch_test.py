@@ -23,7 +23,7 @@ import unittest
 
 import numpy as np
 
-from observers.base_pitch import (
+from upkie.observers.base_pitch import (
     compute_base_pitch_from_imu,
     compute_pitch_frame_in_parent,
 )
