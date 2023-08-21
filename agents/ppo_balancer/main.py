@@ -15,6 +15,7 @@ from settings import Settings
 from stable_baselines3 import PPO
 
 from upkie.envs import UpkieWheelsEnv
+from upkie.utils.raspi import configure_agent_process, on_raspi
 
 
 async def run_policy(policy, logger: mpacklog.AsyncLogger):
@@ -58,6 +59,9 @@ async def main(args: argparse.Namespace):
 
 
 if __name__ == "__main__":
+    if on_raspi():
+        configure_agent_process()
+
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("policy", help="name of the policy to load")
     args = parser.parse_args()
