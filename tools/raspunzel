@@ -125,7 +125,7 @@ def log_run(target_name: str, arch: str) -> None:
     YELLOW: str = "\033[33m"
     RESET: str = "\033[0m"
 
-    target_message = f"Found target {YELLOW}{target_name}{RESET}"
+    target_message = f"Found target {YELLOW}{target_name}{RESET} "
     target_message += "for build configuration "
     color = RED
     if "opt" in arch:
@@ -164,7 +164,7 @@ def run(workspace: Workspace, target: str, subargs: List[str]) -> None:
     try:
         arch = read_arch(workspace.bazel_bin, target_dir, target_name)
     except FileNotFoundError:
-        logging.warning(
+        logging.info(
             "Couldn't read arch from "
             f"'{workspace.bazel_bin}/{target_dir}/{target_name}-2.params', "
             "maybe the target is not a Python script?"
