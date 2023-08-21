@@ -48,6 +48,7 @@ py_binary(
     ]),
     deps = [
         "//envs",
+        ":rewards",  # needed by gin config
         ":settings",
         "@mpacklog//:python",
         requirement("gin-config"),
