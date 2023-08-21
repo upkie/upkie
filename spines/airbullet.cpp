@@ -30,7 +30,7 @@
 #include "upkie/config/layout.h"
 #include "upkie/utils/datetime_now_string.h"
 
-namespace upkie::spines::airbullet {
+namespace spines::airbullet {
 
 using palimpsest::Dictionary;
 using vulp::actuation::BulletInterface;
@@ -150,15 +150,15 @@ int main(const char* argv0, const CommandLineArguments& args) {
   return EXIT_SUCCESS;
 }
 
-}  // namespace upkie::spines::airbullet
+}  // namespace spines::airbullet
 
 int main(int argc, char** argv) {
-  upkie::spines::airbullet::CommandLineArguments args({argv + 1, argv + argc});
+  spines::airbullet::CommandLineArguments args({argv + 1, argv + argc});
   if (args.error) {
     return EXIT_FAILURE;
   } else if (args.help) {
     args.print_usage(argv[0]);
     return EXIT_SUCCESS;
   }
-  return upkie::spines::airbullet::main(argv[0], args);
+  return spines::airbullet::main(argv[0], args);
 }

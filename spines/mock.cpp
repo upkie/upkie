@@ -34,7 +34,7 @@
 #include "upkie/observers/FloorContact.h"
 #include "upkie/observers/WheelOdometry.h"
 
-namespace upkie::spines::mock {
+namespace spines::mock {
 
 using palimpsest::Dictionary;
 using upkie::observers::FloorContact;
@@ -151,15 +151,15 @@ int main(const CommandLineArguments& args) {
   return EXIT_SUCCESS;
 }
 
-}  // namespace upkie::spines::mock
+}  // namespace spines::mock
 
 int main(int argc, char** argv) {
-  upkie::spines::mock::CommandLineArguments args({argv + 1, argv + argc});
+  spines::mock::CommandLineArguments args({argv + 1, argv + argc});
   if (args.error) {
     return EXIT_FAILURE;
   } else if (args.help) {
     args.print_usage(argv[0]);
     return EXIT_SUCCESS;
   }
-  return upkie::spines::mock::main(args);
+  return spines::mock::main(args);
 }

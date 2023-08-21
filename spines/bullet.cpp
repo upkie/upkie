@@ -39,7 +39,7 @@
 #include "upkie/observers/WheelOdometry.h"
 #include "upkie/utils/datetime_now_string.h"
 
-namespace upkie::spines::bullet {
+namespace spines::bullet {
 
 using palimpsest::Dictionary;
 using upkie::observers::FloorContact;
@@ -201,15 +201,15 @@ int main(const char* argv0, const CommandLineArguments& args) {
   return EXIT_SUCCESS;
 }
 
-}  // namespace upkie::spines::bullet
+}  // namespace spines::bullet
 
 int main(int argc, char** argv) {
-  upkie::spines::bullet::CommandLineArguments args({argv + 1, argv + argc});
+  spines::bullet::CommandLineArguments args({argv + 1, argv + argc});
   if (args.error) {
     return EXIT_FAILURE;
   } else if (args.help) {
     args.print_usage(argv[0]);
     return EXIT_SUCCESS;
   }
-  return upkie::spines::bullet::main(argv[0], args);
+  return spines::bullet::main(argv[0], args);
 }

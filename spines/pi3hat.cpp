@@ -37,7 +37,7 @@
 #include "upkie/observers/WheelOdometry.h"
 #include "upkie/utils/datetime_now_string.h"
 
-namespace upkie::spines::pi3hat {
+namespace spines::pi3hat {
 
 using Pi3Hat = ::mjbots::pi3hat::Pi3Hat;
 using palimpsest::Dictionary;
@@ -218,15 +218,15 @@ int main(const CommandLineArguments& args) {
   return EXIT_SUCCESS;
 }
 
-}  // namespace upkie::spines::pi3hat
+}  // namespace spines::pi3hat
 
 int main(int argc, char** argv) {
-  upkie::spines::pi3hat::CommandLineArguments args({argv + 1, argv + argc});
+  spines::pi3hat::CommandLineArguments args({argv + 1, argv + argc});
   if (args.error) {
     return EXIT_FAILURE;
   } else if (args.help) {
     args.print_usage(argv[0]);
     return EXIT_SUCCESS;
   }
-  return upkie::spines::pi3hat::main(args);
+  return spines::pi3hat::main(args);
 }
