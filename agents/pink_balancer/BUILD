@@ -34,10 +34,19 @@ py_binary(
         "@vulp//spine:python",
         requirement("gin-config"),
         requirement("loop_rate_limiters"),
-        requirement("numpy"),
         requirement("packaging"),
         requirement("upkie_description"),
-    ],
+    ] + select({
+        # Selecting the right CPU architecture for the Raspberry Pi is
+        # currently a tough nut to crack for Bazel. We only enable compiled
+        # dependencies on the host side for now.
+        # Followed in: https://github.com/tasts-robots/upkie/issues/1
+        "//:pi32_config": [],
+        "//:pi64_config": [],
+        "//conditions:default": [
+            requirement("numpy"),
+        ],
+    }),
 )
 
 add_lint_tests()
