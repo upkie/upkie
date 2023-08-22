@@ -19,10 +19,10 @@ cc_binary(
         "//upkie/observers",
         "//upkie/utils:datetime_now_string",
         "@mpacklog",
-        "@vulp//actuation:bullet_interface",
-        "@vulp//observation",
-        "@vulp//observation/sources",
-        "@vulp//spine",
+        "@vulp//vulp/actuation:bullet_interface",
+        "@vulp//vulp/observation",
+        "@vulp//vulp/observation/sources",
+        "@vulp//vulp/spine",
     ],
 )
 
@@ -39,10 +39,10 @@ cc_binary(
         "//upkie/observers",
         "//upkie/utils:datetime_now_string",
         "@mpacklog",
-        "@vulp//actuation:bullet_interface",
-        "@vulp//observation",
-        "@vulp//observation/sources",
-        "@vulp//spine",
+        "@vulp//vulp/actuation:bullet_interface",
+        "@vulp//vulp/observation",
+        "@vulp//vulp/observation/sources",
+        "@vulp//vulp/spine",
     ],
 )
 
@@ -54,10 +54,10 @@ cc_binary(
     deps = [
         "//upkie/config:layout",
         "//upkie/observers",
-        "@vulp//actuation:mock_interface",
-        "@vulp//observation",
-        "@vulp//observation/sources",
-        "@vulp//spine",
+        "@vulp//vulp/actuation:mock_interface",
+        "@vulp//vulp/observation",
+        "@vulp//vulp/observation/sources",
+        "@vulp//vulp/spine",
     ] + select({
         "//:pi32_config": [
             "@org_llvm_libcxx//:libcxx",
@@ -78,12 +78,12 @@ cc_binary(
         "//upkie/config:layout",
         "//upkie/observers",
         "//upkie/utils:datetime_now_string",
-        "@vulp//observation",
-        "@vulp//observation/sources",
-        "@vulp//spine",
+        "@vulp//vulp/observation",
+        "@vulp//vulp/observation/sources",
+        "@vulp//vulp/spine",
     ] + select({
-        "//:pi32_config": ["@vulp//actuation:pi3hat_interface"],
-        "//:pi64_config": ["@vulp//actuation:pi3hat_interface"],
+        "//:pi32_config": ["@vulp//vulp/actuation:pi3hat_interface"],
+        "//:pi64_config": ["@vulp//vulp/actuation:pi3hat_interface"],
         "//conditions:default": [],
     }),
     target_compatible_with = select({
