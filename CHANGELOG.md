@@ -31,6 +31,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- PPO balancer: Configure main script process on the Raspberry Pi
 - PPO balancer: Disable rate limiter during training
 - Wheel balancer: Handle SpineInterface failures when forking a Bullet simulation (thanks to @boragokbakan)
 - observers: Check whether floor contact observer is initialized properly
