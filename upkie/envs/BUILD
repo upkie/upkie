@@ -36,7 +36,7 @@ py_library(
         "//upkie/config",
         "//upkie/observers/base_pitch",
         ":rewards",
-        "@vulp//spine:python",
+        "@vulp//vulp/spine:python",
         requirement("gymnasium"),
         requirement("loop_rate_limiters"),
         requirement("upkie_description"),

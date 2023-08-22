@@ -31,7 +31,7 @@ py_binary(
         "//upkie/utils:raspi",
         "//upkie/utils:spdlog",
         "@mpacklog//:python",
-        "@vulp//spine:python",
+        "@vulp//vulp/spine:python",
         requirement("gin-config"),
         requirement("loop_rate_limiters"),
         requirement("packaging"),

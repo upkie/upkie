@@ -15,8 +15,8 @@ cc_library(
         "WheelContact.cpp",
     ],
     deps = [
-        "@vulp//observation:observer",
-        "@vulp//utils:low_pass_filter",
+        "@vulp//vulp/observation:observer",
+        "@vulp//vulp/utils:low_pass_filter",
     ],
 )
 
@@ -29,7 +29,7 @@ cc_library(
         "FloorContact.cpp",
     ],
     deps = [
-        "@vulp//observation:observer",
+        "@vulp//vulp/observation:observer",
         ":wheel_contact",
     ],
 )
@@ -43,7 +43,7 @@ cc_library(
         "WheelOdometry.cpp",
     ],
     deps = [
-        "@vulp//observation:observer",
+        "@vulp//vulp/observation:observer",
     ],
 )
 
