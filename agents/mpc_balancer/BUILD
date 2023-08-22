@@ -30,7 +30,6 @@ py_binary(
         "//upkie/utils:filters",
         "//upkie/utils:raspi",
         "//upkie/utils:spdlog",
-        "//vulp/utils:serialize",
         requirement("gin-config"),
     ] + select({
         # Selecting the right CPU architecture for the Raspberry Pi is
