@@ -6,13 +6,18 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- agents: Closed-loop model predictive control
+- examples: Closed-loop model predictive control
+
+## [1.4.0] - 2023/08/24
+
+### Added
+
 - Makefile: Add clean rule to remove all intermediate files
 - Makefile: Add coverage rule to check a local HTML report
 - agents: Add `--show` CLI argument to the wheel balancer's Bullet target
-- agents: Closed-loop model predictive control
 - envs: Base `Reward` class for rewards
 - envs: Survival reward, which is simply always one
-- examples: Closed-loop model predictive control
 - utils: Configure agent process on the Raspberry Pi
 
 ### Changed
