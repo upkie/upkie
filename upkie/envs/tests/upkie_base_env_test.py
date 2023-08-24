@@ -22,7 +22,7 @@ import unittest
 import numpy as np
 import posix_ipc
 
-from upkie.envs import UpkieBaseEnv, Reward
+from upkie.envs import Reward, UpkieBaseEnv
 from upkie.envs.tests.mock_spine import MockSpine
 
 
