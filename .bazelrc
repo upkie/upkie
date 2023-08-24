@@ -15,6 +15,7 @@ coverage --instrument_test_targets
 test --compilation_mode=opt
 test --copt="-Werror=return-type"
 test --cxxopt=-std=c++17
+test --incompatible_default_to_explicit_init_py  # needed for vulp imports
 test --test_output=errors
 test --test_tag_filters=-lint
 
