@@ -15,6 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import argparse
 import asyncio
 import logging
 import os
@@ -34,6 +35,23 @@ from vulp.spine import SpineInterface
 
 class CompilationModeError(Exception):
     """Raised when the example is called with unexpected parameters."""
+
+
+def parse_command_line_arguments() -> argparse.Namespace:
+    """
+    Parse command line arguments.
+
+    Returns:
+        Command-line arguments.
+    """
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--show",
+        default=False,
+        action="store_true",
+        help="show simulator while running the controller",
+    )
+    return parser.parse_args()
 
 
 async def run(
@@ -87,7 +105,10 @@ if __name__ == "__main__":
 
     pid = os.fork()
     if pid == 0:  # child process: spine
-        spine_argv = ["--spine-frequency", "1000.0", "--show"]
+        spine_argv = ["--spine-frequency", "1000.0"]
+        args = parse_command_line_arguments()
+        if args.show:
+            spine_argv.append("--show")
         os.execvp(spine_path, ["bullet"] + spine_argv)
     else:
         time.sleep(1.5)  # wait for Bullet to start

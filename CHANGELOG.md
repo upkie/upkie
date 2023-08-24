@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 
 - Makefile: Add clean rule to remove all intermediate files
 - Makefile: Add coverage rule to check a local HTML report
+- agents: Add `--show` CLI argument to the wheel balancer's Bullet target
 - agents: Closed-loop model predictive control
 - envs: Base `Reward` class for rewards
 - envs: Survival reward, which is simply always one
