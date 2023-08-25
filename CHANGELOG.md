@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Bazel: Python library target for upkie module
 - agents: Closed-loop model predictive control
 - examples: Closed-loop model predictive control
 
