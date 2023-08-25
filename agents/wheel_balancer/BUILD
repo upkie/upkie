@@ -29,6 +29,7 @@ py_binary(
         ":config",
         "//spines:bullet",
     ],
+    imports = ["."],
     deps = [
         "//upkie/utils:exceptions",
         ":controllers",
