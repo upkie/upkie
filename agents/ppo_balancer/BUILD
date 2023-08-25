@@ -52,6 +52,11 @@ py_binary(
     name = "ppo_balancer",
     srcs = ["main.py"],
     main = "main.py",
+
+    # Enable `from X import y` rather than `from agents.agent_name.X import y`
+    # so that the agent can be run indifferently via Python or Bazel.
+    imports = ["."],
+
     data = glob([
         "policies/*.zip",
     ]),
@@ -69,6 +74,12 @@ py_binary(
 py_binary(
     name = "train",
     srcs = ["train.py"],
+    main = "train.py",
+
+    # Enable `from X import y` rather than `from agents.agent_name.X import y`
+    # so that the agent can be run indifferently via Python or Bazel.
+    imports = ["."],
+
     data = [
         "//spines:bullet",
     ],
