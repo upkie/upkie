@@ -25,11 +25,15 @@ py_binary(
     name = "bullet",
     srcs = ["bullet.py"],
     main = "bullet.py",
+
+    # Enable `from X import y` rather than `from agents.agent_name.X import y`
+    # so that the agent can be run indifferently via Python or Bazel.
+    imports = ["."],
+
     data = [
         ":config",
         "//spines:bullet",
     ],
-    imports = ["."],
     deps = [
         "//upkie/utils:exceptions",
         ":controllers",
@@ -44,6 +48,11 @@ py_binary(
     name = "wheel_balancer",
     srcs = ["main.py"],
     main = "main.py",
+
+    # Enable `from X import y` rather than `from agents.agent_name.X import y`
+    # so that the agent can be run indifferently via Python or Bazel.
+    imports = ["."],
+
     data = [
         "//agents/wheel_balancer/config",
     ] + select({

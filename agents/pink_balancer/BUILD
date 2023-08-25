@@ -15,6 +15,11 @@ py_binary(
         "whole_body_controller.py",
     ],
     main = "main.py",
+
+    # Enable `from X import y` rather than `from agents.agent_name.X import y`
+    # so that the agent can be run indifferently via Python or Bazel.
+    imports = ["."],
+
     data = [
         ":config",
     ] + select({

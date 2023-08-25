@@ -25,18 +25,18 @@ from typing import List
 import gin
 import gymnasium as gym
 import stable_baselines3
-import upkie.envs
 import yaml
 from gymnasium.wrappers.time_limit import TimeLimit
 from rules_python.python.runfiles import runfiles
+from settings import Settings
 from stable_baselines3.common.callbacks import BaseCallback, CheckpointCallback
 from stable_baselines3.common.logger import TensorBoardOutputFormat
+from standing_reward import StandingReward
 from torch import nn
+
+import upkie.envs
 from upkie.envs import UpkieWheelsEnv
 from upkie.utils.spdlog import logging
-
-from settings import Settings
-from standing_reward import StandingReward
 from utils import gin_operative_config_dict
 
 upkie.envs.register()
