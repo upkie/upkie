@@ -18,10 +18,9 @@
 # NB: this Makefile is for Raspberry Pi targets only. Use Bazel or Bazelisk to
 # build targets on your computer.
 
-# Hostname or IP address of the Raspberry Pi
-# Uses the value from the ROBOT environment variable, if defined.
-# Valid usage: ``make upload ROBOT=foobar``
-REMOTE = ${ROBOT}
+# Hostname or IP address of the Raspberry Pi Uses the value from the UPKIE_NAME
+# environment variable, if defined. Valid usage: ``make upload UPKIE_NAME=foo``
+REMOTE = ${UPKIE_NAME}
 
 # Project name needs to match the one in WORKSPACE
 PROJECT_NAME = upkie
@@ -67,13 +66,13 @@ coverage:  ## check unit test coverage and open an HTML report in Firefox
 
 .PHONY: check_robot
 check_robot:
-	@ if [ -z "${ROBOT}" ]; then \
-		echo "ERROR: Environment variable ROBOT is not set.\n"; \
-		echo "This variable should contain the robot's hostname or IP address for SSH. You"; \
-		echo "can define it inline for a one-time use:\n"; \
-		echo "    make some_target ROBOT=your_robot_hostname\n"; \
+	@ if [ -z "${UPKIE_NAME}" ]; then \
+		echo "ERROR: Environment variable UPKIE_NAME is not set.\n"; \
+		echo "This variable should contain the robot's hostname or IP address for SSH. "; \
+		echo "You can define it inline for a one-time use:\n"; \
+		echo "    make some_target UPKIE_NAME=your_robot_hostname\n"; \
 		echo "Or add the following line to your shell configuration:\n"; \
-		echo "    export ROBOT=your_robot_hostname\n"; \
+		echo "    export UPKIE_NAME=your_robot_hostname\n"; \
 		exit 1; \
 	fi
 

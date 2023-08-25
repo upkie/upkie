@@ -49,7 +49,7 @@ To run a spine on the robot, we first build it locally and upload it to the onbo
 
 ```console
 make build
-make upload ROBOT=your_upkie
+make upload UPKIE_NAME=your_upkie
 ```
 
 Next, log into the Pi and run a pi3hat spine:
