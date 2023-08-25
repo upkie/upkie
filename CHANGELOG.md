@@ -9,6 +9,10 @@ All notable changes to this project will be documented in this file.
 - agents: Closed-loop model predictive control
 - examples: Closed-loop model predictive control
 
+### Changed
+
+- Makefile: Rename ``ROBOT`` environment variable to ``UPKIE_NAME``
+
 ## [1.4.0] - 2023/08/24
 
 ### Added
