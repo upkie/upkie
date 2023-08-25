@@ -56,7 +56,7 @@ def parse_command_line_arguments() -> argparse.Namespace:
 
 async def run(
     spine: SpineInterface,
-    config: Dict[str, Any],
+    spine_config: Dict[str, Any],
     frequency: float = 200.0,
 ) -> None:
     """
@@ -64,13 +64,22 @@ async def run(
 
     Args:
         spine: Interface to the spine.
-        config: Configuration dictionary.
+        spine_config: Spine configuration dictionary.
         frequency: Control frequency in Hz.
     """
     controller = ServoController()
     dt = 1.0 / frequency
     rate = AsyncRateLimiter(frequency, "controller")
-    spine.start(config)
+
+    wheel_radius = controller.wheel_balancer.wheel_radius
+    spine_config["wheel_odometry"] = {
+        "signed_radius": {
+            "left_wheel": +wheel_radius,
+            "right_wheel": -wheel_radius,
+        }
+    }
+
+    spine.start(spine_config)
     observation = spine.get_observation()  # pre-reset observation
     while True:
         observation = spine.get_observation()
