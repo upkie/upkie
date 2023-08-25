@@ -67,7 +67,7 @@ async def run(
 
     Args:
         spine: Interface to the spine.
-        spine_config: Configuration dictionary.
+        spine_config: Spine configuration dictionary.
         frequency: Control frequency in Hz.
     """
     controller = ServoController()
