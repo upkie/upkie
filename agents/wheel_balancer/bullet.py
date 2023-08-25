@@ -120,10 +120,9 @@ if __name__ == "__main__":
             spine_argv.append("--show")
         os.execvp(spine_path, ["bullet"] + spine_argv)
     else:
-        time.sleep(1.5)  # wait for Bullet to start
         spine = None
         try:
-            spine = SpineInterface()
+            spine = SpineInterface(retries=10)
             asyncio.run(run(spine, config))
         except KeyboardInterrupt:
             logging.info("Caught a keyboard interrupt")
