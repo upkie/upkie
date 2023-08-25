@@ -14,6 +14,11 @@ All notable changes to this project will be documented in this file.
 
 - Makefile: Rename ``ROBOT`` environment variable to ``UPKIE_NAME``
 
+### Fixed
+
+- Wheel balancer: Configure spine properly
+- Wheel odometry: Check that observer is configured properly
+
 ## [1.4.0] - 2023/08/24
 
 ### Added
@@ -27,7 +32,6 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
-- MPC balancer: Can now be run both via Bazel or Python
 - Makefile: Remove most agent targets to promote running their ``main.py``
 - PPO balancer: Can now be run both via Bazel or Python
 - Pink balancer: Can now be run both via Bazel or Python
