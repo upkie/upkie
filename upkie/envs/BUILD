@@ -30,7 +30,6 @@ py_library(
 py_library(
     name = "upkie_base_env",
     srcs = [
-        "reward.py",
         "upkie_base_env.py",
     ],
     deps = [

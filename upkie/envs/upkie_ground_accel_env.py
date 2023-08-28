@@ -17,15 +17,12 @@
 # limitations under the License.
 
 import math
-from typing import Optional
 
 import numpy as np
 from gymnasium import spaces
 
 from upkie.utils.clamp import clamp_and_warn
 
-from .reward import Reward
-from .survival_reward import SurvivalReward
 from .upkie_pendulum_env import UpkiePendulumEnv
 
 
@@ -104,14 +101,10 @@ class UpkieGroundAccelEnv(UpkiePendulumEnv):
 
     def __init__(
         self,
-        reward: Optional[Reward] = None,
-        fall_pitch: float = 1.0,
-        frequency: float = 200.0,
         max_ground_accel: float = 1.0,
         max_ground_velocity: float = 1.0,
-        shm_name: str = "/vulp",
-        spine_config: Optional[dict] = None,
         wheel_radius: float = 0.06,
+        **kwargs,
     ):
         """!
         Initialize environment.
@@ -128,11 +121,7 @@ class UpkieGroundAccelEnv(UpkiePendulumEnv):
         @param wheel_radius Wheel radius in [m].
         """
         super().__init__(
-            reward=reward if reward is not None else SurvivalReward(),
-            fall_pitch=fall_pitch,
-            frequency=frequency,
-            shm_name=shm_name,
-            spine_config=spine_config,
+            **kwargs,
         )
 
         # gymnasium.Env: action_space

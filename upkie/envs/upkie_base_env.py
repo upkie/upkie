@@ -28,6 +28,7 @@ import upkie.config
 from upkie.observers.base_pitch import compute_base_pitch_from_imu
 
 from .reward import Reward
+from .survival_reward import SurvivalReward
 
 
 class UpkieBaseEnv(abc.ABC, gymnasium.Env):
@@ -52,6 +53,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
     __async_rate: Optional[AsyncRateLimiter]
     __frequency: Optional[float]
     __rate: Optional[RateLimiter]
+    __regulate_frequency: bool
     _spine: SpineInterface
     fall_pitch: float
     spine_config: dict
@@ -59,11 +61,12 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
 
     def __init__(
         self,
-        reward: Reward,
-        fall_pitch: float,
-        frequency: Optional[float],
-        shm_name: str,
-        spine_config: Optional[dict],
+        reward: Optional[Reward] = None,
+        fall_pitch: float = 1.0,
+        frequency: Optional[float] = 200.0,
+        regulate_frequency: bool = True,
+        shm_name: str = "/vulp",
+        spine_config: Optional[dict] = None,
         spine_retries: int = 10,
     ) -> None:
         """!
@@ -88,9 +91,10 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         self.reward_range = reward.get_range()
 
         self.__frequency = frequency
+        self.__regulate_frequency = regulate_frequency
         self._spine = SpineInterface(shm_name, retries=spine_retries)
         self.fall_pitch = fall_pitch
-        self.reward = reward
+        self.reward = reward if reward is not None else SurvivalReward()
         self.spine_config = merged_spine_config
 
     @property
@@ -150,7 +154,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
     def __reset_rates(self):
         self.__async_rate = None
         self.__rate = None
-        if self.__frequency is None:  # no rate
+        if not self.__regulate_frequency:
             return
         name = f"{self.__class__.__name__} rate limiter"
         try:
