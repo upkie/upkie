@@ -35,14 +35,14 @@ from torch import nn
 from utils import gin_operative_config_dict
 
 import upkie.envs
-from upkie.envs import UpkieGroundVelocityEnv
+from upkie.envs import UpkieGroundAccelEnv
 from upkie.utils.spdlog import logging
 
 upkie.envs.register()
 
 
 class SummaryWriterCallback(BaseCallback):
-    def __init__(self, env: UpkieGroundVelocityEnv):
+    def __init__(self, env: UpkieGroundAccelEnv):
         super().__init__()
         self.env = env
 
@@ -60,7 +60,7 @@ class SummaryWriterCallback(BaseCallback):
         if self.n_calls != 1:
             return
         config = {
-            "env": f"UpkieGroundVelocityEnv-v{UpkieGroundVelocityEnv.version}",
+            "env": f"UpkieGroundAccelEnv-v{UpkieGroundAccelEnv.version}",
             "gin": gin_operative_config_dict(gin.config._OPERATIVE_CONFIG),
             "reward": self.env.reward.__dict__,
             "settings": Settings().__dict__,
@@ -95,18 +95,13 @@ def train_policy(agent_name: str, training_dir: str) -> None:
     }
     env = TimeLimit(
         gym.make(
-            "UpkieGroundVelocityEnv-v1",
+            "UpkieGroundAccelEnv-v1",
             reward=StandingReward(),
             frequency=None,
             shm_name=f"/{agent_name}",
         ),
         max_episode_steps=int(max_episode_duration * agent_frequency),
     )
-
-    # Open threads:
-    #
-    # - policy initialization
-    # - cost function: penalize velocity, distance to target
 
     dt = 1.0 / agent_frequency
     gamma = 1.0 - dt / settings.effective_time_horizon
