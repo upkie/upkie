@@ -132,6 +132,11 @@ class UpkieGroundAccelEnv(UpkiePendulumEnv):
             dtype=np.float32,
         )
 
+        if self.dt is None:
+            raise ValueError(
+                "this environment needs to know the control loop frequency"
+            )
+
         self._commanded_velocity = 0.0
         self.max_ground_accel = max_ground_accel
         self.max_ground_velocity = max_ground_velocity
