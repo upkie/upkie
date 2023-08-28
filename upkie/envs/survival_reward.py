@@ -36,7 +36,7 @@ class SurvivalReward:
         return (0.0, 2.0)
 
     @abc.abstractmethod
-    def get(self, observation: np.ndarray) -> float:
+    def get(self, observation: np.ndarray, action: np.ndarray) -> float:
         """!
         Get reward corresponding to an observation.
 
