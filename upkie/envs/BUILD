@@ -93,8 +93,9 @@ py_library(
     deps = [
         ":rewards",
         ":upkie_base_env",
-        ":upkie_servos_env",
+        ":upkie_ground_accel_env",
         ":upkie_ground_velocity_env",
+        ":upkie_servos_env",
         requirement("gymnasium"),
     ],
 )
