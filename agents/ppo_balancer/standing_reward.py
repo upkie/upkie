@@ -33,6 +33,7 @@ class StandingReward(upkie.envs.Reward):
 
     - ``lookahead_duration``: Length of the receding horizon, used to compute
       an internal divergent component of motion.
+    - ``max_ground_accel``: Maximum ground acceleration in m/s^2.
     - ``max_pitch``: Maximum pitch angle we expect to observe, in [rad].
     - ``max_position``: Maximum ground position we expect to observe, in [m].
     - ``pitch_weight``: Weight of the pitch objective in the reward.
@@ -40,6 +41,7 @@ class StandingReward(upkie.envs.Reward):
     """
 
     lookahead_duration: float
+    max_ground_accel: float
     max_pitch: float
     max_position: float
     pitch_weight: float
@@ -56,7 +58,9 @@ class StandingReward(upkie.envs.Reward):
 
     def __init__(
         self,
+        accel_weight: float,
         lookahead_duration: float,
+        max_ground_accel: float,
         max_pitch: float,
         max_position: float,
         pitch_weight: float,

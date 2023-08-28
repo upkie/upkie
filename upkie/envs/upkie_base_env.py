@@ -188,10 +188,9 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
               us this will be the full observation dictionary coming sent by
               the spine.
         """
-        action_dict = self.dictionarize_action(action)
         if self.__rate is not None:
             self.__rate.sleep()  # wait until clock tick to send the action
-        return self.__step(action_dict)
+        return self.__step(action)
 
     async def async_step(
         self, action: np.ndarray

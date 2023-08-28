@@ -17,25 +17,29 @@
 import settings
 import standing_reward
 
-Settings.agent_frequency = 200
-Settings.batch_size = 64
-Settings.clip_range = 0.2
-Settings.clip_range_vf = None
-Settings.effective_time_horizon = 0.5
-Settings.ent_coef = 0.0
-Settings.gae_lambda = 0.95
-Settings.learning_rate = 3e-4
-Settings.max_episode_duration = 10.0
-Settings.max_grad_norm = 0.5
-Settings.n_epochs = 10
-Settings.n_steps = 2048
-Settings.sde_sample_freq = -1
-Settings.spine_frequency = 1000
-Settings.target_kl = None
-Settings.total_timesteps = 5e5
-Settings.use_sde = False
-Settings.vf_coef  = 0.5
+PPOSettings.batch_size = 64
+PPOSettings.clip_range = 0.2
+PPOSettings.clip_range_vf = None
+PPOSettings.ent_coef = 0.0
+PPOSettings.gae_lambda = 0.95
+PPOSettings.learning_rate = 3e-4
+PPOSettings.max_grad_norm = 0.5
+PPOSettings.n_epochs = 10
+PPOSettings.n_steps = 2048
+PPOSettings.sde_sample_freq = -1
+PPOSettings.target_kl = None
+PPOSettings.use_sde = False
+PPOSettings.vf_coef  = 0.5
 
+Settings.agent_frequency = 200
+Settings.effective_time_horizon = 0.5
+Settings.max_episode_duration = 10.0
+Settings.max_ground_accel = 10.0
+Settings.max_ground_velocity = 10.0
+Settings.spine_frequency = 1000
+Settings.total_timesteps = 5e5
+
+StandingReward.accel_weight = 0.1
 StandingReward.lookahead_duration = 0.2
 StandingReward.max_pitch = 1.5707963267948966
 StandingReward.max_position = 0.5
