@@ -27,7 +27,7 @@ import stable_baselines3
 import yaml
 from gymnasium.wrappers.time_limit import TimeLimit
 from rules_python.python.runfiles import runfiles
-from settings import Settings
+from settings import PPOSettings, Settings
 from stable_baselines3.common.callbacks import BaseCallback, CheckpointCallback
 from stable_baselines3.common.logger import TensorBoardOutputFormat
 from standing_reward import StandingReward
@@ -98,7 +98,7 @@ def train_policy(agent_name: str, training_dir: str) -> None:
             "UpkieGroundAccelEnv-v1",
             frequency=agent_frequency,
             regulate_frequency=False,
-            reward=StandingReward(),
+            reward=StandingReward(max_ground_accel=settings.max_ground_accel),
             shm_name=f"/{agent_name}",
         ),
         max_episode_steps=int(max_episode_duration * agent_frequency),
@@ -106,24 +106,25 @@ def train_policy(agent_name: str, training_dir: str) -> None:
 
     dt = 1.0 / agent_frequency
     gamma = 1.0 - dt / settings.effective_time_horizon
+    ppo_settings = PPOSettings()
     policy = stable_baselines3.PPO(
         "MlpPolicy",
         env,
-        learning_rate=settings.learning_rate,
-        n_steps=settings.n_steps,
-        batch_size=settings.batch_size,
-        n_epochs=settings.n_epochs,
+        learning_rate=ppo_settings.learning_rate,
+        n_steps=ppo_settings.n_steps,
+        batch_size=ppo_settings.batch_size,
+        n_epochs=ppo_settings.n_epochs,
         gamma=gamma,
-        gae_lambda=settings.gae_lambda,
-        clip_range=settings.clip_range,
-        clip_range_vf=settings.clip_range_vf,
+        gae_lambda=ppo_settings.gae_lambda,
+        clip_range=ppo_settings.clip_range,
+        clip_range_vf=ppo_settings.clip_range_vf,
         normalize_advantage=True,
-        ent_coef=settings.ent_coef,
-        vf_coef=settings.vf_coef,
-        max_grad_norm=settings.max_grad_norm,
-        use_sde=settings.use_sde,
-        sde_sample_freq=settings.sde_sample_freq,
-        target_kl=settings.target_kl,
+        ent_coef=ppo_settings.ent_coef,
+        vf_coef=ppo_settings.vf_coef,
+        max_grad_norm=ppo_settings.max_grad_norm,
+        use_sde=ppo_settings.use_sde,
+        sde_sample_freq=ppo_settings.sde_sample_freq,
+        target_kl=ppo_settings.target_kl,
         tensorboard_log=training_dir,
         policy_kwargs=policy_kwargs,
         verbose=1,
