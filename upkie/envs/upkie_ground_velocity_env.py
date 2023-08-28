@@ -22,26 +22,21 @@ from typing import Optional
 import numpy as np
 from gymnasium import spaces
 
-from upkie.observers.base_pitch import (
-    compute_base_angular_velocity_from_imu,
-    compute_base_pitch_from_imu,
-)
-
 from .reward import Reward
 from .survival_reward import SurvivalReward
-from .upkie_base_env import UpkieBaseEnv
+from .upkie_pendulum_env import UpkiePendulumEnv
 
 MAX_BASE_PITCH: float = np.pi
 MAX_GROUND_POSITION: float = float("inf")
 MAX_BASE_ANGULAR_VELOCITY: float = 1000.0  # rad/s
 
 
-class UpkieWheelsEnv(UpkieBaseEnv):
+class UpkieGroundVelocityEnv(UpkiePendulumEnv):
 
     """!
-    Upkie with ground velocity actions.
+    Environment where Upkie balances by ground velocity control.
 
-    The environment id is ``UpkieWheelsEnv-v4``.
+    The environment id is ``UpkieGroundVelocityEnv-v1``.
 
     ### Action space
 
@@ -101,7 +96,7 @@ class UpkieWheelsEnv(UpkieBaseEnv):
 
     fall_pitch: float
     max_ground_velocity: float
-    version: int = 4
+    version: int = 1
     wheel_radius: float
 
     LEG_JOINTS = [
@@ -141,16 +136,6 @@ class UpkieWheelsEnv(UpkieBaseEnv):
             spine_config=spine_config,
         )
 
-        observation_limit = np.array(
-            [
-                MAX_BASE_PITCH,
-                MAX_GROUND_POSITION,
-                MAX_BASE_ANGULAR_VELOCITY,
-                max_ground_velocity,
-            ],
-            dtype=np.float32,
-        )
-
         # gymnasium.Env: action_space
         self.action_space = spaces.Box(
             -np.float32(max_ground_velocity),
@@ -159,52 +144,7 @@ class UpkieWheelsEnv(UpkieBaseEnv):
             dtype=np.float32,
         )
 
-        # gymnasium.Env: observation_space
-        self.observation_space = spaces.Box(
-            -observation_limit,
-            +observation_limit,
-            shape=(4,),
-            dtype=np.float32,
-        )
-
-        # Class members
-        self.fall_pitch = fall_pitch
-        self.init_position = {}
-        self.max_ground_velocity = max_ground_velocity
         self.wheel_radius = wheel_radius
-
-    def parse_first_observation(self, observation_dict: dict) -> None:
-        """!
-        Parse first observation after the spine interface is initialize.
-
-        @param observation_dict First observation.
-        """
-        self.init_position = {
-            joint: observation_dict["servo"][joint]["position"]
-            for joint in self.LEG_JOINTS
-        }
-
-    def vectorize_observation(self, observation_dict: dict) -> np.ndarray:
-        """!
-        Extract observation vector from a full observation dictionary.
-
-        @param observation_dict Full observation dictionary from the spine.
-        @returns Observation vector.
-        """
-        imu = observation_dict["imu"]
-        pitch_base_in_world = compute_base_pitch_from_imu(imu["orientation"])
-        angular_velocity_base_in_base = compute_base_angular_velocity_from_imu(
-            observation_dict["imu"]["angular_velocity"]
-        )
-        ground_position = observation_dict["wheel_odometry"]["position"]
-        ground_velocity = observation_dict["wheel_odometry"]["velocity"]
-
-        obs = np.empty(4, dtype=np.float32)
-        obs[0] = pitch_base_in_world
-        obs[1] = ground_position
-        obs[2] = angular_velocity_base_in_base[1]
-        obs[3] = ground_velocity
-        return obs
 
     def dictionarize_action(self, action: np.ndarray) -> dict:
         """!
