@@ -19,7 +19,6 @@ import argparse
 import os
 import random
 import signal
-import time
 from typing import List
 
 import gin
@@ -33,11 +32,11 @@ from stable_baselines3.common.callbacks import BaseCallback, CheckpointCallback
 from stable_baselines3.common.logger import TensorBoardOutputFormat
 from standing_reward import StandingReward
 from torch import nn
+from utils import gin_operative_config_dict
 
 import upkie.envs
 from upkie.envs import UpkieWheelsEnv
 from upkie.utils.spdlog import logging
-from utils import gin_operative_config_dict
 
 upkie.envs.register()
 
@@ -201,12 +200,6 @@ if __name__ == "__main__":
         action="store_true",
         help="show simulator during trajectory rollouts",
     )
-    parser.add_argument(
-        "--wait",
-        help="duration to wait for the spine to start",
-        type=float,
-        default=2.0,
-    )
     args = parser.parse_args()
 
     agent_dir = os.path.dirname(__file__)
@@ -222,10 +215,6 @@ if __name__ == "__main__":
         argv = get_bullet_argv(agent_name, show=args.show)
         os.execvp(spine_path, ["bullet"] + argv)
     else:  # parent process: trainer
-        wait_duration = args.wait  # [s]
-        logging.info("Waiting %s s for simulator to spawn...", wait_duration)
-        logging.info("You can adapt this duration to your machine with --wait")
-        time.sleep(wait_duration)
         try:
             training_dir = f"{agent_dir}/policies"
             logging.info("Logging to %s", training_dir)
