@@ -76,31 +76,37 @@ class StandingReward(upkie.envs.Reward):
         @param pitch_weight Weight of the pitch objective in the reward.
         @param position_weight Weight of the position objective in the reward.
         """
+        self.accel_weight = accel_weight
         self.lookahead_duration = lookahead_duration
+        self.max_ground_accel = max_ground_accel
         self.max_pitch = max_pitch
         self.max_position = max_position
         self.pitch_weight = pitch_weight
         self.position_weight = position_weight
 
-    def get(self, observation: np.ndarray) -> float:
+    def get(self, observation: np.ndarray, action: np.ndarray) -> float:
         """!
         Get reward corresponding to an observation.
 
-        @param observation Observation to compute reward from.
-        @returns Reward.
+        @param observation Observation to base the reward on.
+        @param action Action to base the reward on.
+        @returns Reward earned from executing the action from the observation.
         """
         pitch = observation[0]
         ground_position = observation[1]
         ground_velocity = observation[2]
         angular_velocity = observation[3]
+        ground_accel = action[0]
 
         T = self.lookahead_duration
         lookahead_pitch = pitch + T * angular_velocity
         lookahead_position = ground_position + T * ground_velocity
         normalized_lookahead_pitch = lookahead_pitch / self.max_pitch
         normalized_lookahead_position = lookahead_position / self.max_position
+        normalized_accel = ground_accel / self.max_ground_accel
         return (
             1.0
             - self.pitch_weight * abs(normalized_lookahead_pitch)
             - self.position_weight * abs(normalized_lookahead_position)
+            - self.accel_weight * abs(normalized_accel)
         )
