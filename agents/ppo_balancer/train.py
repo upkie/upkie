@@ -96,8 +96,9 @@ def train_policy(agent_name: str, training_dir: str) -> None:
     env = TimeLimit(
         gym.make(
             "UpkieGroundAccelEnv-v1",
+            frequency=agent_frequency,
+            regulate_frequency=False,
             reward=StandingReward(),
-            frequency=None,
             shm_name=f"/{agent_name}",
         ),
         max_episode_steps=int(max_episode_duration * agent_frequency),

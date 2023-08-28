@@ -16,8 +16,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Optional
-
 import numpy as np
 from gymnasium import spaces
 
@@ -26,8 +24,6 @@ from upkie.observers.base_pitch import (
     compute_base_pitch_from_imu,
 )
 
-from .reward import Reward
-from .survival_reward import SurvivalReward
 from .upkie_base_env import UpkieBaseEnv
 
 
@@ -101,32 +97,11 @@ class UpkiePendulumEnv(UpkieBaseEnv):
         for joint in ("hip", "knee")
     ]
 
-    def __init__(
-        self,
-        reward: Optional[Reward] = None,
-        fall_pitch: float = 1.0,
-        frequency: float = 200.0,
-        shm_name: str = "/vulp",
-        spine_config: Optional[dict] = None,
-    ):
+    def __init__(self, **kwargs):
         """!
         Initialize environment.
-
-        @param reward Reward function.
-        @param fall_pitch Fall pitch angle, in radians.
-        @param frequency Regulated frequency of the control loop, in Hz.
-        @param shm_name Name of shared-memory file.
-        @param spine_config Additional spine configuration overriding the
-            defaults from ``//config:spine.yaml``. The combined configuration
-            dictionary is sent to the spine at every :func:`reset`.
         """
-        super().__init__(
-            reward=reward if reward is not None else SurvivalReward(),
-            fall_pitch=fall_pitch,
-            frequency=frequency,
-            shm_name=shm_name,
-            spine_config=spine_config,
-        )
+        super().__init__(**kwargs)
 
         MAX_BASE_PITCH: float = np.pi
         MAX_GROUND_POSITION: float = float("inf")
@@ -151,7 +126,6 @@ class UpkiePendulumEnv(UpkieBaseEnv):
         )
 
         # Class members
-        self.fall_pitch = fall_pitch
         self.init_position = {}
 
     def parse_first_observation(self, observation_dict: dict) -> None:
