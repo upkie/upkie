@@ -22,17 +22,17 @@ from typing import Optional
 import numpy as np
 from gymnasium import spaces
 
+from upkie.utils.clamp import clamp_and_warn
+
 from .reward import Reward
 from .survival_reward import SurvivalReward
 from .upkie_pendulum_env import UpkiePendulumEnv
 
 
-class UpkieGroundVelocityEnv(UpkiePendulumEnv):
+class UpkieGroundAccelEnv(UpkiePendulumEnv):
 
     """!
     Environment where Upkie balances by ground velocity control.
-
-    The environment id is ``UpkieGroundVelocityEnv-v1``.
 
     ### Action space
 
@@ -45,7 +45,7 @@ class UpkieGroundVelocityEnv(UpkiePendulumEnv):
             </tr>
         <tr>
             <td>``0``</td>
-            <td>Ground velocity in [m] / [s].</td>
+            <td>Ground acceleration in [m] / [s]^2.</td>
         </tr>
     </table>
 
@@ -84,13 +84,14 @@ class UpkieGroundVelocityEnv(UpkiePendulumEnv):
     The environment class defines the following attributes:
 
     - ``fall_pitch``: Fall pitch angle, in radians.
+    - ``max_ground_accel``: Maximum commanded ground acceleration in m/s^2.
     - ``max_ground_velocity``: Maximum commanded ground velocity in m/s.
-    - ``version``: Environment version number.
     - ``wheel_radius``: Wheel radius in [m].
 
     """
 
     fall_pitch: float
+    max_ground_accel: float
     max_ground_velocity: float
     version: int = 1
     wheel_radius: float
@@ -106,6 +107,7 @@ class UpkieGroundVelocityEnv(UpkiePendulumEnv):
         reward: Optional[Reward] = None,
         fall_pitch: float = 1.0,
         frequency: float = 200.0,
+        max_ground_accel: float = 1.0,
         max_ground_velocity: float = 1.0,
         shm_name: str = "/vulp",
         spine_config: Optional[dict] = None,
@@ -117,6 +119,7 @@ class UpkieGroundVelocityEnv(UpkiePendulumEnv):
         @param reward Reward function.
         @param fall_pitch Fall pitch angle, in radians.
         @param frequency Regulated frequency of the control loop, in Hz.
+        @param max_ground_accel Maximum commanded ground acceleration in m/s^2.
         @param max_ground_velocity Maximum commanded ground velocity in m/s.
         @param shm_name Name of shared-memory file.
         @param spine_config Additional spine configuration overriding the
@@ -134,12 +137,15 @@ class UpkieGroundVelocityEnv(UpkiePendulumEnv):
 
         # gymnasium.Env: action_space
         self.action_space = spaces.Box(
-            -np.float32(max_ground_velocity),
-            +np.float32(max_ground_velocity),
+            -np.float32(max_ground_accel),
+            +np.float32(max_ground_accel),
             shape=(1,),
             dtype=np.float32,
         )
 
+        self._commanded_velocity = 0.0
+        self.max_ground_accel = max_ground_accel
+        self.max_ground_velocity = max_ground_velocity
         self.wheel_radius = wheel_radius
 
     def dictionarize_action(self, action: np.ndarray) -> dict:
@@ -149,22 +155,38 @@ class UpkieGroundVelocityEnv(UpkiePendulumEnv):
         @param action Action vector.
         @returns Action dictionary.
         """
-        commanded_velocity: float = action[0]
+        commanded_accel: float = clamp_and_warn(
+            action[0],
+            lower=-self.max_ground_accel,
+            upper=+self.max_ground_accel,
+            label="commanded_accel",
+        )
+        self._commanded_velocity = clamp_and_warn(
+            self._commanded_velocity + commanded_accel * self.dt / 2.0,
+            lower=-1.0,
+            upper=+1.0,
+            label="commanded_velocity",
+        )
+        wheel_velocity = self._commanded_velocity / self.wheel_radius
         action_dict = {
-            "servo": {
-                joint: {
-                    "position": self.init_position[joint],
-                    "velocity": 0.0,
+            "servo": (
+                {
+                    joint: {
+                        "position": self.init_position[joint],
+                        "velocity": 0.0,
+                    }
+                    for joint in self.LEG_JOINTS
                 }
-                for joint in self.LEG_JOINTS
-            }
-        }
-        action_dict["servo"]["left_wheel"] = {
-            "position": math.nan,
-            "velocity": +commanded_velocity / self.wheel_radius,
-        }
-        action_dict["servo"]["right_wheel"] = {
-            "position": math.nan,
-            "velocity": -commanded_velocity / self.wheel_radius,
+                | {
+                    "left_wheel": {
+                        "position": math.nan,
+                        "velocity": +wheel_velocity,
+                    },
+                    "right_wheel": {
+                        "position": math.nan,
+                        "velocity": -wheel_velocity,
+                    },
+                }
+            )
         }
         return action_dict
