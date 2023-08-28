@@ -13,6 +13,8 @@ All notable changes to this project will be documented in this file.
 ### Changed
 
 - Makefile: Rename ``ROBOT`` environment variable to ``UPKIE_NAME``
+- agents: Retry connecting to the spine interface at startup
+- envs: Retry connecting to the spine interface at startup
 
 ### Fixed
 

@@ -64,6 +64,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         frequency: Optional[float],
         shm_name: str,
         spine_config: Optional[dict],
+        spine_retries: int = 10,
     ) -> None:
         """!
         Initialize environment.
@@ -76,6 +77,8 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         @param spine_config Additional spine configuration overriding the
             defaults from ``//config:spine.yaml``. The combined configuration
             dictionary is sent to the spine at every :func:`reset`.
+        @param spine_retries Number of times to try opening the shared-memory
+            file to communicate with the spine.
         """
         merged_spine_config = upkie.config.SPINE_CONFIG.copy()
         if spine_config is not None:
@@ -85,7 +88,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         self.reward_range = reward.get_range()
 
         self.__frequency = frequency
-        self._spine = SpineInterface(shm_name)
+        self._spine = SpineInterface(shm_name, retries=spine_retries)
         self.fall_pitch = fall_pitch
         self.reward = reward
         self.spine_config = merged_spine_config
