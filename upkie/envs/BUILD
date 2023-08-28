@@ -1,6 +1,7 @@
 # -*- python -*-
 #
 # Copyright 2022 Stéphane Caron
+# Copyright 2023 Inria
 
 load("//tools/lint:lint.bzl", "add_lint_tests")
 load("@pip_upkie//:requirements.bzl", "requirement")
@@ -61,6 +62,16 @@ py_library(
     ],
     deps = [
         ":upkie_base_env",
+    ],
+)
+
+py_library(
+    name = "upkie_ground_accel_env",
+    srcs = [
+        "upkie_ground_accel_env.py",
+    ],
+    deps = [
+        ":upkie_pendulum_env",
     ],
 )
 
