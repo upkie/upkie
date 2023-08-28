@@ -31,6 +31,14 @@ __all__ = [
 __envs__ = {}
 
 try:
+    from .upkie_ground_accel_env import UpkieGroundAccelEnv
+
+    __all__.append("UpkieGroundAccelEnv")
+    __envs__["UpkieGroundAccelEnv"] = UpkieGroundAccelEnv
+except ImportError as import_error:
+    __envs__["UpkieGroundAccelEnv"] = import_error
+
+try:
     from .upkie_ground_velocity_env import UpkieGroundVelocityEnv
 
     __all__.append("UpkieGroundVelocityEnv")
