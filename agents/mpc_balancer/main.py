@@ -263,7 +263,7 @@ def report(mpc_problem, mpc_qp, planning_times: Optional[np.ndarray]):
 async def main(args):
     """Main function of our asyncio program."""
     logger = mpacklog.AsyncLogger("mpc_balancing.mpack")
-    with gym.make("UpkieWheelsEnv-v4", frequency=200.0) as env:
+    with gym.make("UpkieGroundVelocityEnv-v1", frequency=200.0) as env:
         await asyncio.gather(
             balance(env, logger, show_live_plot=args.live_plot),
             logger.write(),  # write logs to file when there is time

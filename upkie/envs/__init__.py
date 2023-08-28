@@ -31,20 +31,20 @@ __all__ = [
 __envs__ = {}
 
 try:
+    from .upkie_ground_velocity_env import UpkieGroundVelocityEnv
+
+    __all__.append("UpkieGroundVelocityEnv")
+    __envs__["UpkieGroundVelocityEnv"] = UpkieGroundVelocityEnv
+except ImportError as import_error:
+    __envs__["UpkieGroundVelocityEnv"] = import_error
+
+try:
     from .upkie_servos_env import UpkieServosEnv
 
     __all__.append("UpkieServosEnv")
     __envs__["UpkieServosEnv"] = UpkieServosEnv
 except ImportError as import_error:
     __envs__["UpkieServosEnv"] = import_error
-
-try:
-    from .upkie_wheels_env import UpkieWheelsEnv
-
-    __all__.append("UpkieWheelsEnv")
-    __envs__["UpkieWheelsEnv"] = UpkieWheelsEnv
-except ImportError as import_error:
-    __envs__["UpkieWheelsEnv"] = import_error
 
 
 def register(max_episode_steps: int = 1_000_000_000) -> None:

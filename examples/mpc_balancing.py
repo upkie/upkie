@@ -96,5 +96,5 @@ def balance(env: gym.Env, nb_env_steps: int = 10_000) -> None:
 
 
 if __name__ == "__main__":
-    with gym.make("UpkieWheelsEnv-v4", frequency=200.0) as env:
+    with gym.make("UpkieGroundVelocityEnv-v1", frequency=200.0) as env:
         balance(env),

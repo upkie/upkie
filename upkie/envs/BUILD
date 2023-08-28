@@ -55,12 +55,22 @@ py_library(
 )
 
 py_library(
-    name = "upkie_wheels_env",
+    name = "upkie_pendulum_env",
     srcs = [
-        "upkie_wheels_env.py",
+        "upkie_pendulum_env.py",
     ],
     deps = [
         ":upkie_base_env",
+    ],
+)
+
+py_library(
+    name = "upkie_ground_velocity_env",
+    srcs = [
+        "upkie_ground_velocity_env.py",
+    ],
+    deps = [
+        ":upkie_pendulum_env",
     ],
 )
 
@@ -73,7 +83,7 @@ py_library(
         ":rewards",
         ":upkie_base_env",
         ":upkie_servos_env",
-        ":upkie_wheels_env",
+        ":upkie_ground_velocity_env",
         requirement("gymnasium"),
     ],
 )

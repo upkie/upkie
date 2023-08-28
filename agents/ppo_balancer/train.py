@@ -35,14 +35,14 @@ from torch import nn
 from utils import gin_operative_config_dict
 
 import upkie.envs
-from upkie.envs import UpkieWheelsEnv
+from upkie.envs import UpkieGroundVelocityEnv
 from upkie.utils.spdlog import logging
 
 upkie.envs.register()
 
 
 class SummaryWriterCallback(BaseCallback):
-    def __init__(self, env: UpkieWheelsEnv):
+    def __init__(self, env: UpkieGroundVelocityEnv):
         super().__init__()
         self.env = env
 
@@ -60,7 +60,7 @@ class SummaryWriterCallback(BaseCallback):
         if self.n_calls != 1:
             return
         config = {
-            "env": f"UpkieWheelsEnv-v{UpkieWheelsEnv.version}",
+            "env": f"UpkieGroundVelocityEnv-v{UpkieGroundVelocityEnv.version}",
             "gin": gin_operative_config_dict(gin.config._OPERATIVE_CONFIG),
             "reward": self.env.reward.__dict__,
             "settings": Settings().__dict__,
@@ -95,7 +95,7 @@ def train_policy(agent_name: str, training_dir: str) -> None:
     }
     env = TimeLimit(
         gym.make(
-            "UpkieWheelsEnv-v4",
+            "UpkieGroundVelocityEnv-v1",
             reward=StandingReward(),
             frequency=None,
             shm_name=f"/{agent_name}",
