@@ -30,9 +30,12 @@ from .upkie_base_env import UpkieBaseEnv
 class UpkiePendulumEnv(UpkieBaseEnv):
 
     """!
-    Environment where Upkie is used in wheeled inverted pendulum mode.
+    Environment where Upkie is used as a wheeled inverted pendulum.
 
-    The environment id is ``UpkiePendulumEnv-v4``.
+    The environment id is ``UpkiePendulumEnv-v1``.
+
+    See for instance this note on the [wheeled inverted pendulum
+    model](https://scaron.info/robotics/wheeled-inverted-pendulum-model.html).
 
     ### Action space
 

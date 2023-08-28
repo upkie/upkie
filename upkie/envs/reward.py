@@ -37,10 +37,11 @@ class Reward:
         """
 
     @abc.abstractmethod
-    def get(self, observation: np.ndarray) -> float:
+    def get(self, observation: np.ndarray, action: np.ndarray) -> float:
         """!
         Get reward corresponding to an observation.
 
-        @param observation Observation to compute reward from.
-        @returns Reward.
+        @param observation Observation to base the reward on.
+        @param action Action to base the reward on.
+        @returns Reward earned from executing the action from the observation.
         """

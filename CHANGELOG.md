@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file.
 - agents: Retry connecting to the spine several times at startup
 - envs: Rename ``UpkieWheelsEnv`` to ``UpkieGroundVelocityEnv``
 - envs: Retry connecting to the spine several times at startup
+- envs: Rewards depend on both observation and action
 
 ### Fixed
 

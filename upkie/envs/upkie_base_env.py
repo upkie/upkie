@@ -217,18 +217,18 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
               us this will be the full observation dictionary coming sent by
               the spine.
         """
-        action_dict = self.dictionarize_action(action)
         if self.__async_rate is not None:
             await self.__async_rate.sleep()  # send action at next clock tick
-        return self.__step(action_dict)
+        return self.__step(action)
 
     def __step(
-        self, action_dict: dict
+        self, action: np.ndarray
     ) -> Tuple[np.ndarray, float, bool, bool, dict]:
+        action_dict = self.dictionarize_action(action)
         self._spine.set_action(action_dict)
         observation_dict = self._spine.get_observation()
         observation = self.vectorize_observation(observation_dict)
-        reward = self.reward.get(observation)
+        reward = self.reward.get(observation, action)
         terminated = self.detect_fall(observation_dict)
         truncated = False
         info = {
