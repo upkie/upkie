@@ -21,7 +21,7 @@ jobs:
 
             - name: "Build documentation"
               run: |
-                  cd docs
+                  cd ${{ github.workspace }}/docs/
                   make html
 
             - name: "Deploy to GitHub Pages"
