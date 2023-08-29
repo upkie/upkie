@@ -8,6 +8,7 @@ on:
 
 jobs:
     docs:
+        name: "Update documentation"
         runs-on: ubuntu-latest
         permissions:
             contents: write
@@ -18,6 +19,11 @@ jobs:
             - name: "Install dependencies"
               run: |
                   sudo apt install doxygen inkscape
+
+            - name: "Make figures"
+              run: |
+                  cd ${{ github.workspace }}/docs/
+                  make figures
 
             - name: "Build documentation"
               run: |
