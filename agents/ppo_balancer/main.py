@@ -14,7 +14,7 @@ from loop_rate_limiters import AsyncRateLimiter
 from settings import Settings
 from stable_baselines3 import PPO
 
-from upkie.envs import UpkieWheelsEnv
+from upkie.envs import UpkieGroundVelocityEnv
 from upkie.utils.raspi import configure_agent_process, on_raspi
 
 
@@ -50,7 +50,7 @@ async def run_policy(policy, logger: mpacklog.AsyncLogger):
 
 async def main(args: argparse.Namespace):
     agent_dir = os.path.abspath(os.path.dirname(__file__))
-    env = UpkieWheelsEnv(shm_name="/vulp")
+    env = UpkieGroundVelocityEnv(shm_name="/vulp")
     policy = PPO("MlpPolicy", env, verbose=1)
     policy.set_parameters(f"{agent_dir}/policies/{args.policy}")
     logger = mpacklog.AsyncLogger("/dev/shm/rollout.mpack")
