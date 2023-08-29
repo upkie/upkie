@@ -23,7 +23,9 @@ import numpy as np
 
 class Reward:
 
-    """!Reward function."""
+    """!
+    Reward function \f$R(s, a)\f$.
+    """
 
     @staticmethod
     @abc.abstractmethod
