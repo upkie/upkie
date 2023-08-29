@@ -62,6 +62,7 @@ py_binary(
     ]),
     deps = [
         "//upkie/envs",
+        "//upkie/utils:raspi",
         ":rewards",  # needed by gin config
         ":settings",
         "@mpacklog//:python",
