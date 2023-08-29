@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/tasts-robots/upkie/actions/workflows/bazel.yml/badge.svg)](https://github.com/tasts-robots/upkie/actions/workflows/bazel.yml)
 [![Build instructions](https://img.shields.io/badge/build-instructions-brightgreen?logo=read-the-docs&style=flat)](https://github.com/tasts-robots/upkie/wiki)
-[![Documentation](https://img.shields.io/badge/docs-online-brightgreen?style=flat)](https://tasts-robots.org/doc/upkie/)
+[![Documentation](https://img.shields.io/badge/docs-online-brightgreen?style=flat)](https://tasts-robots.github.io/upkie/)
 [![Coverage](https://coveralls.io/repos/github/tasts-robots/upkie/badge.svg?branch=main)](https://coveralls.io/github/tasts-robots/upkie?branch=main)
 [![PyPI version](https://img.shields.io/pypi/v/upkie)](https://pypi.org/project/upkie/)
 [![Chat](https://img.shields.io/badge/matrix-chat-%234eb899)](https://app.element.io/#/room/#tasts-robots:matrix.org)
@@ -121,7 +121,7 @@ With a simulation spine, this code will reset the robot's state and execute the 
   <dd>A more capable agent that combines wheeled balancing with inverse kinematics computed by <a href="https://github.com/tasts-robots/pink">Pink</a>. This is the controller that runs in the <a href="https://www.youtube.com/shorts/8b36XcCgh7s">first</a> <a href="https://www.youtube.com/watch?v=NO_TkHGS0wQ">two</a> videos of Upkie.</dd>
 
   <dt>PPO balancer</dt>
-  <dd>An agent trained by reinforcement learning to balance with straight legs. Training uses the <code><a href="https://tasts-robots.org/doc/upkie/classupkie_1_1envs_1_1upkie__wheels__env_1_1UpkieWheelsEnv.html#details">UpkieWheelsEnv</a></code> gym environment and the PPO implementation from <a href="https://github.com/DLR-RM/stable-baselines3/">Stable Baselines3</a>.</dd>
+  <dd>An agent trained by reinforcement learning to balance with straight legs. Training uses the <code><a href="https://tasts-robots.github.io/upkie/classupkie_1_1envs_1_1upkie__wheels__env_1_1UpkieWheelsEnv.html#details">UpkieWheelsEnv</a></code> gym environment and the PPO implementation from <a href="https://github.com/DLR-RM/stable-baselines3/">Stable Baselines3</a>.</dd>
 
   <dt>Wheel balancer</dt>
   <dd>A baseline agent designed to check out Upkie's physical capabilities. The robot balances with its wheels only, following PD feedback from the head pitch and wheel odometry to wheel velocities, plus a feedforward <a href="https://github.com/tasts-robots/upkie/blob/662d76180e03a855e8810d60eeb5b229c95b68fb/agents/wheel_balancer/wheel_balancer.py#L378-L400">non-minimum phase trick</a> for smoother transitions from standing to rolling.</dd>
@@ -130,9 +130,9 @@ With a simulation spine, this code will reset the robot's state and execute the 
 ### Environments
 
 <dl>
-  <dt><code><a href="https://tasts-robots.org/doc/upkie/classupkie_1_1envs_1_1upkie__servos__env_1_1UpkieServosEnv.html#details">UpkieServosEnv</a></code></dt>
+  <dt><code><a href="https://tasts-robots.github.io/upkie/classupkie_1_1envs_1_1upkie__servos__env_1_1UpkieServosEnv.html#details">UpkieServosEnv</a></code></dt>
   <dd>Upkie with full observation and joint position-velocity-torque actions.</dd>
-  <dt><code><a href="https://tasts-robots.org/doc/upkie/classupkie_1_1envs_1_1upkie__wheels__env_1_1UpkieWheelsEnv.html#details">UpkieWheelsEnv</a></code></dt>
+  <dt><code><a href="https://tasts-robots.github.io/upkie/classupkie_1_1envs_1_1upkie__wheels__env_1_1UpkieWheelsEnv.html#details">UpkieWheelsEnv</a></code></dt>
   <dd>Upkie with full observation but only wheel velocity actions.</dd>
 </dl>
 
@@ -140,16 +140,16 @@ Environments are single-threaded rather than vectorized. In return, they run as-
 
 ### Observers
 
-<img src="https://tasts-robots.org/doc/upkie/observers.png" align="right">
+<img src="https://tasts-robots.github.io/upkie/observers.png" align="right">
 
 <dl>
-  <dt><a href="https://tasts-robots.org/doc/upkie/classupkie_1_1observers_1_1FloorContact.html#details">Floor contact</a></dt>
+  <dt><a href="https://tasts-robots.github.io/upkie/classupkie_1_1observers_1_1FloorContact.html#details">Floor contact</a></dt>
   <dd>Detect contact between the wheels and the floor. The pink and wheel balancers use contact as a reset flag for their integrators, to avoid over-spinning the wheels while the robot is in the air.</dd>
 
-  <dt><a href="https://tasts-robots.org/doc/upkie/classupkie_1_1observers_1_1WheelContact.html#details">Wheel contact</a></dt>
+  <dt><a href="https://tasts-robots.github.io/upkie/classupkie_1_1observers_1_1WheelContact.html#details">Wheel contact</a></dt>
   <dd>Detect contact between a given wheel and the floor.</dd>
 
-  <dt><a href="https://tasts-robots.org/doc/upkie/classupkie_1_1observers_1_1WheelOdometry.html#details">Wheel odometry</a></dt>
+  <dt><a href="https://tasts-robots.github.io/upkie/classupkie_1_1observers_1_1WheelOdometry.html#details">Wheel odometry</a></dt>
   <dd>Measure the relative motion of the floating base with respect to the floor. Wheel odometry is part of their secondary task (after keeping the head straight), which is to stay around the same spot on the floor.</dd>
 </dl>
 

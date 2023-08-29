@@ -45,7 +45,7 @@ the_full_monty = [
 ]
 
 [project.urls]
-Documentation = "https://tasts-robots.org/doc/upkie/"
+Documentation = "https://tasts-robots.github.io/upkie/"
 Source = "https://github.com/tasts-robots/upkie"
 Tracker = "https://github.com/tasts-robots/upkie/issues"
 Changelog = "https://github.com/tasts-robots/upkie/blob/main/CHANGELOG.md"
