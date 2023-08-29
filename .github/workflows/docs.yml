@@ -27,8 +27,8 @@ jobs:
 
             - name: "Build documentation"
               run: |
-                  cd ${{ github.workspace }}/docs/
-                  make html
+                  cd ${{ github.workspace }}
+                  doxygen docs/Doxyfile
 
             - name: "Deploy to GitHub Pages"
               uses: peaceiris/actions-gh-pages@v3
