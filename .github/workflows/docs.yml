@@ -8,7 +8,7 @@ on:
 
 jobs:
     docs:
-        name: "Update documentation"
+        name: "Rebuild"
         runs-on: ubuntu-latest
         permissions:
             contents: write
@@ -18,7 +18,7 @@ jobs:
 
             - name: "Install dependencies"
               run: |
-                  sudo apt install doxygen inkscape
+                  sudo apt install doxygen graphviz inkscape
 
             - name: "Make figures"
               run: |
