@@ -26,7 +26,7 @@ from upkie.utils.clamp import clamp_and_warn
 from .upkie_pendulum_env import UpkiePendulumEnv
 
 
-class UpkieGroundAccelEnv(UpkiePendulumEnv):
+class UpkieGroundAccel(UpkiePendulumEnv):
 
     """!
     Environment where Upkie balances by ground velocity control.
