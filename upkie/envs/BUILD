@@ -70,6 +70,7 @@ py_library(
         "upkie_ground_accel.py",
     ],
     deps = [
+        "//upkie/utils:clamp",
         ":upkie_wheeled_pendulum",
     ],
 )
@@ -80,6 +81,7 @@ py_library(
         "upkie_ground_velocity.py",
     ],
     deps = [
+        "//upkie/utils:filters",
         ":upkie_wheeled_pendulum",
     ],
 )
