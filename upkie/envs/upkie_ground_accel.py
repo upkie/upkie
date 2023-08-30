@@ -21,7 +21,7 @@ import math
 import numpy as np
 from gymnasium import spaces
 
-from upkie.utils.clamp import clamp_and_warn
+from upkie.utils.clamp import clamp_abs
 
 from .upkie_wheeled_pendulum import UpkieWheeledPendulum
 
@@ -145,17 +145,13 @@ class UpkieGroundAccel(UpkieWheeledPendulum):
         @param action Action vector.
         @returns Action dictionary.
         """
-        commanded_accel: float = clamp_and_warn(
+        commanded_accel: float = clamp_abs(
             action[0],
-            lower=-self.max_ground_accel,
-            upper=+self.max_ground_accel,
-            label="commanded_accel",
+            self.max_ground_accel,
         )
-        self._commanded_velocity = clamp_and_warn(
+        self._commanded_velocity = clamp_abs(
             self._commanded_velocity + commanded_accel * self.dt / 2.0,
-            lower=-self.max_ground_velocity,
-            upper=+self.max_ground_velocity,
-            label="commanded_velocity",
+            self.max_ground_velocity,
         )
         wheel_velocity = self._commanded_velocity / self.wheel_radius
         action_dict = {
