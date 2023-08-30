@@ -27,19 +27,16 @@ def abs_bounded_derivative_filter(
     max_output: float,
     max_derivative: float,
 ) -> float:
-    """
+    """!
     Filter signal so that the absolute values of its output and output
     derivative stay within bounds.
 
-    Args:
-        prev_output: Previous filter output, or initial value.
-        new_input: New filter input.
-        dt: Sampling period in [s].
-        max_output: Maximum absolute value of the output.
-        max_derivative: Maximum absolute value of the output derivative.
-
-    Returns:
-        New filter output.
+    @param prev_output Previous filter output, or initial value.
+    @param new_input New filter input.
+    @param dt Sampling period in [s].
+    @param max_output Maximum absolute value of the output.
+    @param max_derivative Maximum absolute value of the output derivative.
+    @returns New filter output.
     """
     return bounded_derivative_filter(
         prev_output,
@@ -57,18 +54,15 @@ def bounded_derivative_filter(
     output_bounds: Tuple[float, float],
     derivative_bounds: Tuple[float, float],
 ) -> float:
-    """
+    """!
     Filter signal so that its output and output derivative stay within bounds.
 
-    Args:
-        prev_output: Previous filter output, or initial value.
-        new_input: New filter input.
-        dt: Sampling period in [s].
-        output_bounds: Minimum and maximum value for the output.
-        derivative_bounds: Minimum and maximum value for the output derivative.
-
-    Returns:
-        New filter output.
+    @param prev_output Previous filter output, or initial value.
+    @param new_input New filter input.
+    @param dt Sampling period in [s].
+    @param output_bounds Min and max value for the output.
+    @param derivative_bounds Min and max value for the output derivative.
+    @returns New filter output.
     """
     derivative = (new_input - prev_output) / dt
     derivative = clamp(derivative, *derivative_bounds)
@@ -82,17 +76,14 @@ def low_pass_filter(
     new_input: float,
     dt: float,
 ) -> float:
-    """
+    """!
     Low-pass filter.
 
-    Args:
-        prev_output: Previous filter output, or initial value.
-        cutoff_period: Time constant of the filter in [s].
-        new_input: New filter input.
-        dt: Sampling period in [s].
-
-    Returns:
-        New filter output.
+    @param prev_output Previous filter output, or initial value.
+    @param cutoff_period Time constant of the filter in [s].
+    @param new_input New filter input.
+    @param dt Sampling period in [s].
+    @returns New filter output.
     """
     alpha = dt / cutoff_period
     assert alpha < 0.5  # Nyquist-Shannon sampling theorem
