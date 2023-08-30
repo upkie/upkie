@@ -58,6 +58,7 @@ class StandingReward(upkie.envs.Reward):
 
     def __init__(
         self,
+        env: UpkiePendulumEnv,
         accel_weight: float,
         lookahead_duration: float,
         max_ground_accel: float,
