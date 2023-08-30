@@ -22,6 +22,7 @@ import numpy as np
 from gymnasium import spaces
 
 from upkie.utils.filters import abs_bounded_derivative_filter
+
 from .upkie_wheeled_pendulum import UpkieWheeledPendulum
 
 
@@ -88,6 +89,7 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
 
     """
 
+    _commanded_velocity: float
     fall_pitch: float
     max_ground_accel: float
     max_ground_velocity: float
@@ -129,6 +131,7 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
             dtype=np.float32,
         )
 
+        self._commanded_velocity = 0.0
         self.max_ground_accel = max_ground_accel
         self.max_ground_velocity = max_ground_velocity
         self.wheel_radius = wheel_radius
@@ -140,28 +143,33 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
         @param action Action vector.
         @returns Action dictionary.
         """
-        commanded_velocity: float = abs_bounded_derivative_filter(
+        self._commanded_velocity = abs_bounded_derivative_filter(
             self._commanded_velocity,
             action[0],
             self.dt,
             self.max_ground_velocity,
             self.max_ground_accel,
         )
+        wheel_velocity = self._commanded_velocity / self.wheel_radius
         action_dict = {
-            "servo": {
-                joint: {
-                    "position": self.init_position[joint],
-                    "velocity": 0.0,
+            "servo": (
+                {
+                    joint: {
+                        "position": self.init_position[joint],
+                        "velocity": 0.0,
+                    }
+                    for joint in self.LEG_JOINTS
                 }
-                for joint in self.LEG_JOINTS
-            }
-        }
-        action_dict["servo"]["left_wheel"] = {
-            "position": math.nan,
-            "velocity": +commanded_velocity / self.wheel_radius,
-        }
-        action_dict["servo"]["right_wheel"] = {
-            "position": math.nan,
-            "velocity": -commanded_velocity / self.wheel_radius,
+                | {
+                    "left_wheel": {
+                        "position": math.nan,
+                        "velocity": +wheel_velocity,
+                    },
+                    "right_wheel": {
+                        "position": math.nan,
+                        "velocity": -wheel_velocity,
+                    },
+                }
+            )
         }
         return action_dict

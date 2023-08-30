@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 
 - Bazel: Python library target for upkie module
 - agents: Closed-loop model predictive control
+- envs: `UpkieGroundAccel` wheeled-pendulum env with a different action
 - examples: Closed-loop model predictive control
 
 ### Changed
@@ -16,6 +17,7 @@ All notable changes to this project will be documented in this file.
 - Makefile: Rename ``ROBOT`` environment variable to ``UPKIE_NAME``
 - PPO balancer: Refactor agent settings
 - agents: Retry connecting to the spine several times at startup
+- envs: Bound ground velocity and acceleration in wheeled pendulum envs
 - envs: Rename ``UpkieWheelsEnv`` to ``UpkieGroundVelocity``
 - envs: Retry connecting to the spine several times at startup
 - envs: Rewards depend on both observation and action
