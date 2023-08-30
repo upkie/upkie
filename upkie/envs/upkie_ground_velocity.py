@@ -17,13 +17,10 @@
 # limitations under the License.
 
 import math
-from typing import Optional
 
 import numpy as np
 from gymnasium import spaces
 
-from .reward import Reward
-from .survival_reward import SurvivalReward
 from .upkie_pendulum_env import UpkiePendulum
 
 
@@ -91,6 +88,7 @@ class UpkieGroundVelocity(UpkiePendulum):
     """
 
     fall_pitch: float
+    max_ground_accel: float
     max_ground_velocity: float
     version: int = 1
     wheel_radius: float
@@ -103,34 +101,24 @@ class UpkieGroundVelocity(UpkiePendulum):
 
     def __init__(
         self,
-        reward: Optional[Reward] = None,
-        fall_pitch: float = 1.0,
-        frequency: float = 200.0,
+        max_ground_accel: float = 10.0,
         max_ground_velocity: float = 1.0,
-        shm_name: str = "/vulp",
-        spine_config: Optional[dict] = None,
         wheel_radius: float = 0.06,
+        **kwargs,
     ):
         """!
         Initialize environment.
 
-        @param reward Reward function.
-        @param fall_pitch Fall pitch angle, in radians.
-        @param frequency Regulated frequency of the control loop, in Hz.
+        @param max_ground_accel Maximum commanded ground acceleration in m/s^2.
         @param max_ground_velocity Maximum commanded ground velocity in m/s.
-        @param shm_name Name of shared-memory file.
-        @param spine_config Additional spine configuration overriding the
-            defaults from ``//config:spine.yaml``. The combined configuration
-            dictionary is sent to the spine at every :func:`reset`.
         @param wheel_radius Wheel radius in [m].
+
+        Other keyword arguments are forwarded as-is to parent class
+        constructors. Follow the chain up from @ref
+        envs.upkie_wheeled_pendulum.UpkieWheeledPendulum "UpkieWheeledPendulum"
+        for their documentation.
         """
-        super().__init__(
-            reward=reward if reward is not None else SurvivalReward(),
-            fall_pitch=fall_pitch,
-            frequency=frequency,
-            shm_name=shm_name,
-            spine_config=spine_config,
-        )
+        super().__init__(**kwargs)
 
         # gymnasium.Env: action_space
         self.action_space = spaces.Box(
@@ -140,6 +128,8 @@ class UpkieGroundVelocity(UpkiePendulum):
             dtype=np.float32,
         )
 
+        self.max_ground_accel = max_ground_accel
+        self.max_ground_velocity = max_ground_velocity
         self.wheel_radius = wheel_radius
 
     def dictionarize_action(self, action: np.ndarray) -> dict:
