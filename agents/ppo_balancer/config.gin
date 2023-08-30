@@ -39,7 +39,7 @@ Settings.max_ground_velocity = 10.0
 Settings.spine_frequency = 1000
 Settings.total_timesteps = 5e5
 
-StandingReward.accel_weight = 0.1
+StandingReward.action_weight = 0.0
 StandingReward.lookahead_duration = 0.2
 StandingReward.max_pitch = 1.5707963267948966
 StandingReward.max_position = 0.5
