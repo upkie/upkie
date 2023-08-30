@@ -103,6 +103,10 @@ class UpkiePendulum(UpkieBaseEnv):
     def __init__(self, **kwargs):
         """!
         Initialize environment.
+
+        Keyword arguments are forwarded as-is to parent class constructors.
+        Check out @ref envs.upkie_base_env.UpkieBaseEnv "UpkieBaseEnv" for
+        their documentation.
         """
         super().__init__(**kwargs)
 
