@@ -109,20 +109,16 @@ class UpkieGroundAccel(UpkiePendulum):
         """!
         Initialize environment.
 
-        @param reward Reward function.
-        @param fall_pitch Fall pitch angle, in radians.
-        @param frequency Regulated frequency of the control loop, in Hz.
         @param max_ground_accel Maximum commanded ground acceleration in m/s^2.
         @param max_ground_velocity Maximum commanded ground velocity in m/s.
-        @param shm_name Name of shared-memory file.
-        @param spine_config Additional spine configuration overriding the
-            defaults from ``//config:spine.yaml``. The combined configuration
-            dictionary is sent to the spine at every :func:`reset`.
         @param wheel_radius Wheel radius in [m].
+
+        Other keyword arguments are forwarded as-is to parent class
+        constructors. Follow the chain up from @ref
+        envs.upkie_wheeled_pendulum.UpkieWheeledPendulum "UpkieWheeledPendulum"
+        for their documentation.
         """
-        super().__init__(
-            **kwargs,
-        )
+        super().__init__(**kwargs)
 
         # gymnasium.Env: action_space
         self.action_space = spaces.Box(
@@ -157,8 +153,8 @@ class UpkieGroundAccel(UpkiePendulum):
         )
         self._commanded_velocity = clamp_and_warn(
             self._commanded_velocity + commanded_accel * self.dt / 2.0,
-            lower=-1.0,
-            upper=+1.0,
+            lower=-self.max_ground_velocity,
+            upper=+self.max_ground_velocity,
             label="commanded_velocity",
         )
         wheel_velocity = self._commanded_velocity / self.wheel_radius
