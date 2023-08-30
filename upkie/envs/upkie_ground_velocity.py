@@ -21,6 +21,7 @@ import math
 import numpy as np
 from gymnasium import spaces
 
+from upkie.utils.filters import abs_bounded_derivative_filter
 from .upkie_wheeled_pendulum import UpkieWheeledPendulum
 
 
@@ -139,7 +140,13 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
         @param action Action vector.
         @returns Action dictionary.
         """
-        commanded_velocity: float = action[0]
+        commanded_velocity: float = abs_bounded_derivative_filter(
+            self._commanded_velocity,
+            action[0],
+            self.dt,
+            self.max_ground_velocity,
+            self.max_ground_accel,
+        )
         action_dict = {
             "servo": {
                 joint: {
