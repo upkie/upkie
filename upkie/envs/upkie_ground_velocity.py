@@ -27,12 +27,12 @@ from .survival_reward import SurvivalReward
 from .upkie_pendulum_env import UpkiePendulum
 
 
-class UpkieGroundVelocityEnv(UpkiePendulum):
+class UpkieGroundVelocity(UpkiePendulum):
 
     """!
     Environment where Upkie balances by ground velocity control.
 
-    The environment id is ``UpkieGroundVelocityEnv-v1``.
+    The environment id is ``UpkieGroundVelocity-v1``.
 
     ### Action space
 

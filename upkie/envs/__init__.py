@@ -39,12 +39,12 @@ except ImportError as import_error:
     __envs__["UpkieGroundAccel"] = import_error
 
 try:
-    from .upkie_ground_velocity_env import UpkieGroundVelocityEnv
+    from .upkie_ground_velocity_env import UpkieGroundVelocity
 
-    __all__.append("UpkieGroundVelocityEnv")
-    __envs__["UpkieGroundVelocityEnv"] = UpkieGroundVelocityEnv
+    __all__.append("UpkieGroundVelocity")
+    __envs__["UpkieGroundVelocity"] = UpkieGroundVelocity
 except ImportError as import_error:
-    __envs__["UpkieGroundVelocityEnv"] = import_error
+    __envs__["UpkieGroundVelocity"] = import_error
 
 try:
     from .upkie_servos_env import UpkieServosEnv
