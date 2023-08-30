@@ -16,7 +16,7 @@ All notable changes to this project will be documented in this file.
 - Makefile: Rename ``ROBOT`` environment variable to ``UPKIE_NAME``
 - PPO balancer: Refactor agent settings
 - agents: Retry connecting to the spine several times at startup
-- envs: Rename ``UpkieWheelsEnv`` to ``UpkieGroundVelocityEnv``
+- envs: Rename ``UpkieWheelsEnv`` to ``UpkieGroundVelocity``
 - envs: Retry connecting to the spine several times at startup
 - envs: Rewards depend on both observation and action
 

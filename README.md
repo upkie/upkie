@@ -96,7 +96,7 @@ import upkie.envs
 
 upkie.envs.register()
 
-with gym.make("UpkieGroundVelocityEnv-v1", frequency=200.0) as env:
+with gym.make("UpkieGroundVelocity-v1", frequency=200.0) as env:
     observation = env.reset()
     action = 0.0 * env.action_space.sample()
     for step in range(1_000_000):

@@ -15,24 +15,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Test UpkieGroundVelocityEnv."""
+"""Test UpkieGroundVelocity."""
 
 import unittest
 
 import numpy as np
 import posix_ipc
 
-from upkie.envs import UpkieGroundVelocityEnv
+from upkie.envs import UpkieGroundVelocity
 from upkie.envs.tests.mock_spine import MockSpine
 
 
-class TestUpkieGroundVelocityEnv(unittest.TestCase):
+class TestUpkieGroundVelocity(unittest.TestCase):
     def setUp(self):
         shm_name = "/vroum"
         shared_memory = posix_ipc.SharedMemory(
             shm_name, posix_ipc.O_RDWR | posix_ipc.O_CREAT, size=42
         )
-        self.env = UpkieGroundVelocityEnv(
+        self.env = UpkieGroundVelocity(
             fall_pitch=1.0,
             frequency=100.0,
             shm_name=shm_name,
