@@ -101,7 +101,7 @@ class UpkieGroundAccel(UpkiePendulum):
 
     def __init__(
         self,
-        max_ground_accel: float = 1.0,
+        max_ground_accel: float = 10.0,
         max_ground_velocity: float = 1.0,
         wheel_radius: float = 0.06,
         **kwargs,
