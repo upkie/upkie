@@ -82,15 +82,14 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
 
     The environment class defines the following attributes:
 
-    - ``fall_pitch``: Fall pitch angle, in radians.
+    - ``max_ground_accel``: Maximum commanded ground acceleration in m/s².
     - ``max_ground_velocity``: Maximum commanded ground velocity in m/s.
     - ``version``: Environment version number.
     - ``wheel_radius``: Wheel radius in [m].
 
     """
 
-    _commanded_velocity: float
-    fall_pitch: float
+    _ground_velocity: float
     max_ground_accel: float
     max_ground_velocity: float
     version: int = 1
@@ -131,7 +130,7 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
             dtype=np.float32,
         )
 
-        self._commanded_velocity = 0.0
+        self._ground_velocity = 0.0
         self.max_ground_accel = max_ground_accel
         self.max_ground_velocity = max_ground_velocity
         self.wheel_radius = wheel_radius
@@ -143,33 +142,33 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
         @param action Action vector.
         @returns Action dictionary.
         """
-        self._commanded_velocity = abs_bounded_derivative_filter(
-            self._commanded_velocity,
+        self._ground_velocity = abs_bounded_derivative_filter(
+            self._ground_velocity,
             action[0],
             self.dt,
             self.max_ground_velocity,
             self.max_ground_accel,
         )
-        wheel_velocity = self._commanded_velocity / self.wheel_radius
+        wheel_velocity = self._ground_velocity / self.wheel_radius
         action_dict = {
-            "servo": (
-                {
-                    joint: {
-                        "position": self.init_position[joint],
-                        "velocity": 0.0,
-                    }
-                    for joint in self.LEG_JOINTS
+            "servo": {
+                joint: {
+                    "position": self.init_position[joint],
+                    "velocity": 0.0,
                 }
-                | {
-                    "left_wheel": {
-                        "position": math.nan,
-                        "velocity": +wheel_velocity,
-                    },
-                    "right_wheel": {
-                        "position": math.nan,
-                        "velocity": -wheel_velocity,
-                    },
-                }
-            )
+                for joint in self.LEG_JOINTS
+            }
         }
+        action_dict["servo"].update(
+            {
+                "left_wheel": {
+                    "position": math.nan,
+                    "velocity": +wheel_velocity,
+                },
+                "right_wheel": {
+                    "position": math.nan,
+                    "velocity": -wheel_velocity,
+                },
+            }
+        )
         return action_dict
