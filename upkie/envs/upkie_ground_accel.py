@@ -93,12 +93,6 @@ class UpkieGroundAccel(UpkieWheeledPendulum):
     version: int = 1
     wheel_radius: float
 
-    LEG_JOINTS = [
-        f"{side}_{joint}"
-        for side in ("left", "right")
-        for joint in ("hip", "knee")
-    ]
-
     def __init__(
         self,
         max_ground_accel: float = 10.0,
@@ -154,17 +148,8 @@ class UpkieGroundAccel(UpkieWheeledPendulum):
             self.max_ground_velocity,
         )
         wheel_velocity = self._commanded_velocity / self.wheel_radius
-        action_dict = {
-            "servo":
-                {
-                    joint: {
-                        "position": self.init_position[joint],
-                        "velocity": 0.0,
-                    }
-                    for joint in self.LEG_JOINTS
-                }
-        }
-        action_dict.update({
+        servo_dict = self.get_leg_servo_action()
+        servo_dict.update({
                     "left_wheel": {
                         "position": math.nan,
                         "velocity": +wheel_velocity,
@@ -175,4 +160,5 @@ class UpkieGroundAccel(UpkieWheeledPendulum):
                     },
                 }
             )
+        action_dict = {"servo": servo_dict}
         return action_dict

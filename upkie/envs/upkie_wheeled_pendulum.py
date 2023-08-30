@@ -18,6 +18,7 @@
 
 import numpy as np
 from gymnasium import spaces
+from typing import Dict
 
 from upkie.observers.base_pitch import (
     compute_base_angular_velocity_from_imu,
@@ -133,7 +134,7 @@ class UpkieWheeledPendulum(UpkieBaseEnv):
         )
 
         # Class members
-        self.init_position = {}
+        self.leg_positions = {}
 
     def parse_first_observation(self, observation_dict: dict) -> None:
         """!
@@ -141,8 +142,22 @@ class UpkieWheeledPendulum(UpkieBaseEnv):
 
         @param observation_dict First observation.
         """
-        self.init_position = {
+        self.leg_positions = {
             joint: observation_dict["servo"][joint]["position"]
+            for joint in self.LEG_JOINTS
+        }
+
+    def get_leg_servo_action(self) -> Dict[str, Dict[str, float]]:
+        """!
+        Get servo actions for each hip and knee joint.
+
+        @returns Servo action dictionary.
+        """
+        return {
+            joint: {
+                "position": self.leg_positions[joint],
+                "velocity": 0.0,
+            }
             for joint in self.LEG_JOINTS
         }
 
