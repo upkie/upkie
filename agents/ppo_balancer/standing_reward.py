@@ -58,9 +58,9 @@ class StandingReward(upkie.envs.Reward):
 
     def __init__(
         self,
-        accel_weight: float,
+        action_weight: float,
         lookahead_duration: float,
-        max_ground_accel: float,
+        max_action: float,
         max_pitch: float,
         max_position: float,
         pitch_weight: float,
@@ -76,9 +76,9 @@ class StandingReward(upkie.envs.Reward):
         @param pitch_weight Weight of the pitch objective in the reward.
         @param position_weight Weight of the position objective in the reward.
         """
-        self.accel_weight = accel_weight
+        self.action_weight = action_weight
         self.lookahead_duration = lookahead_duration
-        self.max_ground_accel = max_ground_accel
+        self.max_action = max_action
         self.max_pitch = max_pitch
         self.max_position = max_position
         self.pitch_weight = pitch_weight
@@ -96,17 +96,16 @@ class StandingReward(upkie.envs.Reward):
         ground_position = observation[1]
         ground_velocity = observation[2]
         angular_velocity = observation[3]
-        ground_accel = action[0]
 
         T = self.lookahead_duration
         lookahead_pitch = pitch + T * angular_velocity
         lookahead_position = ground_position + T * ground_velocity
         normalized_lookahead_pitch = lookahead_pitch / self.max_pitch
         normalized_lookahead_position = lookahead_position / self.max_position
-        normalized_accel = ground_accel / self.max_ground_accel
+        normalized_action = action[0] / self.max_action
         return (
             1.0
             - self.pitch_weight * abs(normalized_lookahead_pitch)
             - self.position_weight * abs(normalized_lookahead_position)
-            - self.accel_weight * abs(normalized_accel)
+            - self.action_weight * normalized_action
         )
