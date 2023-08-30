@@ -27,12 +27,12 @@ from upkie.observers.base_pitch import (
 from .upkie_base_env import UpkieBaseEnv
 
 
-class UpkiePendulum(UpkieBaseEnv):
+class UpkieWheeledPendulum(UpkieBaseEnv):
 
     """!
     Environment where Upkie is used as a wheeled inverted pendulum.
 
-    The environment id is ``UpkiePendulum-v1``.
+    The environment id is ``UpkieWheeledPendulum-v1``.
 
     See for instance this note on the [wheeled inverted pendulum
     model](https://scaron.info/robotics/wheeled-inverted-pendulum-model.html).
