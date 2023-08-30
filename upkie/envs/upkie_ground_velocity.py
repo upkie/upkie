@@ -21,10 +21,10 @@ import math
 import numpy as np
 from gymnasium import spaces
 
-from .upkie_pendulum_env import UpkiePendulum
+from .upkie_wheeled_pendulum import UpkieWheeledPendulum
 
 
-class UpkieGroundVelocity(UpkiePendulum):
+class UpkieGroundVelocity(UpkieWheeledPendulum):
 
     """!
     Environment where Upkie balances by ground velocity control.
