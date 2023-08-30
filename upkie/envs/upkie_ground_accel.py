@@ -155,7 +155,7 @@ class UpkieGroundAccel(UpkieWheeledPendulum):
         )
         wheel_velocity = self._commanded_velocity / self.wheel_radius
         action_dict = {
-            "servo": (
+            "servo":
                 {
                     joint: {
                         "position": self.init_position[joint],
@@ -163,7 +163,8 @@ class UpkieGroundAccel(UpkieWheeledPendulum):
                     }
                     for joint in self.LEG_JOINTS
                 }
-                | {
+        }
+        action_dict.update({
                     "left_wheel": {
                         "position": math.nan,
                         "velocity": +wheel_velocity,
@@ -174,5 +175,4 @@ class UpkieGroundAccel(UpkieWheeledPendulum):
                     },
                 }
             )
-        }
         return action_dict
