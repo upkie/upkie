@@ -23,10 +23,10 @@ from gymnasium import spaces
 
 from upkie.utils.clamp import clamp_and_warn
 
-from .upkie_pendulum_env import UpkiePendulumEnv
+from .upkie_pendulum_env import UpkiePendulum
 
 
-class UpkieGroundAccel(UpkiePendulumEnv):
+class UpkieGroundAccel(UpkiePendulum):
 
     """!
     Environment where Upkie balances by ground velocity control.

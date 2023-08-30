@@ -24,10 +24,10 @@ from gymnasium import spaces
 
 from .reward import Reward
 from .survival_reward import SurvivalReward
-from .upkie_pendulum_env import UpkiePendulumEnv
+from .upkie_pendulum_env import UpkiePendulum
 
 
-class UpkieGroundVelocityEnv(UpkiePendulumEnv):
+class UpkieGroundVelocityEnv(UpkiePendulum):
 
     """!
     Environment where Upkie balances by ground velocity control.
