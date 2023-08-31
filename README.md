@@ -80,10 +80,10 @@ We develop Python agents using the ``upkie`` interface distributed on PyPI. This
 pip install upkie
 ```
 
-The repository ships a number of [agents](#agents) that have been tested on several Upkie's. You will find them in the [`agents/`](https://github.com/tasts-robots/upkie/tree/main/agents) directory. To run an agent, call its main Python script. For instance, to run the PPO balancer with the ``foobar`` trained policy:
+The repository ships a number of [agents](#agents) that have been tested on several Upkie's. You will find them in the [`agents/`](https://github.com/tasts-robots/upkie/tree/main/agents) directory. To run an agent, call its main Python script. For instance, to run the PPO balancer:
 
 ```console
-python agents/ppo_balancer/main.py foobar
+python agents/ppo_balancer/main.py
 ```
 
 ## Example of a custom agent

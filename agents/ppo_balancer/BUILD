@@ -58,7 +58,7 @@ py_binary(
     imports = ["."],
 
     data = [
-        "policy.zip",
+        "policy/params.zip",
     ],
     deps = [
         "//upkie/envs",

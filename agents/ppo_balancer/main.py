@@ -67,7 +67,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--policy",
         help="path to the policy parameters file",
-        default=f"{agent_dir}/policy.zip",
+        default=f"{agent_dir}/policy/params.zip",
     )
     args = parser.parse_args()
     gin.parse_config_file(f"{agent_dir}/config.gin")
