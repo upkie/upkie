@@ -48,11 +48,12 @@ async def run_policy(policy, logger: mpacklog.AsyncLogger):
     await logger.stop()
 
 
-async def main(args: argparse.Namespace):
-    agent_dir = os.path.abspath(os.path.dirname(__file__))
+async def main(policy_path: str):
     env = UpkieGroundVelocity(shm_name="/vulp")
     policy = PPO("MlpPolicy", env, verbose=1)
-    policy.set_parameters(f"{agent_dir}/policies/{args.policy}")
+    if policy_path.endswith(".zip"):
+        policy_path = policy_path[:-4]
+    policy.set_parameters(policy_path)
     logger = mpacklog.AsyncLogger("/dev/shm/rollout.mpack")
     await asyncio.gather(run_policy(policy, logger), logger.write())
     policy.env.close()
@@ -61,12 +62,13 @@ async def main(args: argparse.Namespace):
 if __name__ == "__main__":
     if on_raspi():
         configure_agent_process()
-
+    agent_dir = os.path.abspath(os.path.dirname(__file__))
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("policy", help="name of the policy to load")
+    parser.add_argument(
+        "--policy",
+        help="path to the policy parameters file",
+        default=f"{agent_dir}/policy.zip",
+    )
     args = parser.parse_args()
-
-    agent_dir = os.path.dirname(__file__)
     gin.parse_config_file(f"{agent_dir}/config.gin")
-
-    asyncio.run(main(args))
+    asyncio.run(main(policy_path=args.policy))

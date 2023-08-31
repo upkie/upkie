@@ -57,9 +57,9 @@ py_binary(
     # so that the agent can be run indifferently via Python or Bazel.
     imports = ["."],
 
-    data = glob([
-        "policies/*.zip",
-    ]),
+    data = [
+        "policy.zip",
+    ],
     deps = [
         "//upkie/envs",
         "//upkie/utils:raspi",
