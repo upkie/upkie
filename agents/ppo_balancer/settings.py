@@ -21,24 +21,26 @@ from typing import Optional
 import gin
 
 
+
 @gin.configurable
 @dataclass
-class Settings:
-    """Hyperparameters logged to TensorBoard."""
+class EnvSettings:
+    """Environment settings."""
 
     agent_frequency: int
     effective_time_horizon: float
-    env: str
+    env_id: str
     max_episode_duration: float
     max_ground_accel: float
     max_ground_velocity: float
     spine_frequency: int
     total_timesteps: int
 
-
 @gin.configurable
 @dataclass
 class PPOSettings:
+    """PPO algorithm settings."""
+
     batch_size: int
     clip_range: float
     clip_range_vf: Optional[float]
