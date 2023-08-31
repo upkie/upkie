@@ -5,7 +5,9 @@
 
 import argparse
 import asyncio
+import logging
 import os
+import shutil
 import time
 
 import gin
@@ -15,6 +17,7 @@ from settings import Settings
 from stable_baselines3 import PPO
 
 from upkie.envs import UpkieGroundVelocity
+from upkie.utils.log_path import get_log_filename
 from upkie.utils.raspi import configure_agent_process, on_raspi
 
 
