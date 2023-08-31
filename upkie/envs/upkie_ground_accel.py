@@ -139,26 +139,31 @@ class UpkieGroundAccel(UpkieWheeledPendulum):
         @param action Action vector.
         @returns Action dictionary.
         """
-        commanded_accel: float = clamp_abs(
-            action[0],
-            self.max_ground_accel,
-        )
+        commanded_accel: float = clamp_abs(action[0], self.max_ground_accel)
         self._commanded_velocity = clamp_abs(
+            # The dt/2 in the integrator comes from the fact that we integrate
+            # accelerations into velocity commands, thus we can't get both the
+            # next position and next velocity that a constant acceleration
+            # would bring. With dt we would get the velocity but overshoot
+            # position. With dt/2 we get the position and undershoot velocity.
+            # This current limitation can be overcome by integrating
+            # accelerations at the spine rather than at the agent level.
             self._commanded_velocity + commanded_accel * self.dt / 2.0,
             self.max_ground_velocity,
         )
         wheel_velocity = self._commanded_velocity / self.wheel_radius
         servo_dict = self.get_leg_servo_action()
-        servo_dict.update({
-                    "left_wheel": {
-                        "position": math.nan,
-                        "velocity": +wheel_velocity,
-                    },
-                    "right_wheel": {
-                        "position": math.nan,
-                        "velocity": -wheel_velocity,
-                    },
-                }
-            )
+        servo_dict.update(
+            {
+                "left_wheel": {
+                    "position": math.nan,
+                    "velocity": +wheel_velocity,
+                },
+                "right_wheel": {
+                    "position": math.nan,
+                    "velocity": -wheel_velocity,
+                },
+            }
+        )
         action_dict = {"servo": servo_dict}
         return action_dict
