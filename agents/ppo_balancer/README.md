@@ -14,10 +14,10 @@ Once this works you can remove the ``--show`` GUI toggle.
 
 Testing a policy assumes the spine is already up and running, for instance via ``start_simulation.sh`` on your dev machine, or by starting a pi3hat spine on the robot.
 
-Pick a trained policy from the [policies](policies/) folder and pass its name as argument. For instance, if the saved policy is `foobar.zip`, run:
+You can specify the path to policy parameters to the agent. For instance, if the policy parameters are saved in `foobar.zip`, run:
 
-- Python: `` python ./agents/ppo_balancer/run.py foobar``
-- Bazel: ``./tools/bazelisk run //agents/ppo_balancer:run -- foobar``
+- Python: `` python ./agents/ppo_balancer/run.py /path/to/foobar.zip``
+- Bazel: ``./tools/bazelisk run //agents/ppo_balancer:run -- /path/to/foobar.zip``
 
 ## Troubleshooting
 
