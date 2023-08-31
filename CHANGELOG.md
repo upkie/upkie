@@ -16,6 +16,7 @@ All notable changes to this project will be documented in this file.
 
 - Makefile: Default wheel balancer config to the output of `hostname`
 - Makefile: Rename ``ROBOT`` environment variable to ``UPKIE_NAME``
+- PPO balancer: Change training directory to `/tmp/ppo_balancer`
 - PPO balancer: Refactor agent settings
 - agents: Retry connecting to the spine several times at startup
 - envs: Bound ground velocity and acceleration in wheeled pendulum envs
