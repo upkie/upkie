@@ -42,6 +42,31 @@ from upkie.utils.spdlog import logging
 
 upkie.envs.register()
 
+running_spines = []
+
+
+def parse_command_line_arguments() -> argparse.Namespace:
+    """
+    Parse command line arguments.
+
+    Returns:
+        Command-line arguments.
+    """
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--nb-cpus",
+        default=1,
+        type=int,
+        help="number of parallel simulation processes to run",
+    )
+    parser.add_argument(
+        "--show",
+        default=False,
+        action="store_true",
+        help="show simulator during trajectory rollouts",
+    )
+    return parser.parse_args()
+
 
 class SummaryWriterCallback(BaseCallback):
     def __init__(self, vec_env: DummyVecEnv):
@@ -80,14 +105,53 @@ class SummaryWriterCallback(BaseCallback):
         )
 
 
-def train_policy(agent_name: str, training_dir: str) -> None:
+def get_random_word():
+    with open("/usr/share/dict/words") as fh:
+        words = fh.read().splitlines()
+    word_index = random.randint(0, len(words))
+    while not words[word_index].isalnum():
+        word_index = (word_index + 1) % len(words)
+    return words[word_index]
+
+
+def get_bullet_argv(shm_name: str, show: bool) -> List[str]:
+    """!
+    Get command-line arguments for the Bullet spine.
+
+    @param shm_name Name of the shared-memory file.
+    @param show If true, show simulator GUI.
+    @returns Command-line arguments.
     """
+    settings = EnvSettings()
+    agent_frequency = settings.agent_frequency
+    spine_frequency = settings.spine_frequency
+    assert spine_frequency % agent_frequency == 0
+    nb_substeps = spine_frequency / agent_frequency
+    bullet_argv = []
+    bullet_argv.extend(["--shm-name", shm_name])
+    bullet_argv.extend(["--nb-substeps", str(nb_substeps)])
+    bullet_argv.extend(["--spine-frequency", str(spine_frequency)])
+    if show:
+        bullet_argv.append("--show")
+    return bullet_argv
+
+
+def train_policy(
+    spine_path: str,
+    training_dir: str,
+    nb_cpus: int,
+    show: bool,
+) -> None:
+    """!
     Train a new policy and save it to a directory.
 
-    Args:
-        agent_name: Agent name.
-        training_dir: Directory for logging and saving policies.
+    @param spine_path Path to the spine binary.
+    @param training_dir Directory for logging and saving policies.
+    @param show Whether to show the simulation GUI.
     """
+    agent_name = get_random_word()
+    logging.info('New agent name is "%s"', agent_name)
+
     settings = EnvSettings()
     agent_frequency = settings.agent_frequency
     max_episode_duration = settings.max_episode_duration
@@ -97,6 +161,15 @@ def train_policy(agent_name: str, training_dir: str) -> None:
     }
 
     def make_env():
+        shm_name = f"/{get_random_word()}"
+        pid = os.fork()
+        running_spines.append((shm_name, pid))
+        if pid == 0:  # child process: spine
+            argv = get_bullet_argv(shm_name, show=show)
+            os.execvp(spine_path, ["bullet"] + argv)
+            return
+
+        # parent process: trainer
         env = gym.make(
             settings.env_id,
             frequency=agent_frequency,
@@ -104,8 +177,9 @@ def train_policy(agent_name: str, training_dir: str) -> None:
             max_ground_velocity=settings.max_ground_velocity,
             regulate_frequency=False,
             reward=SurvivalReward(),
-            shm_name=f"/{agent_name}",
+            shm_name=shm_name,
         )
+
         return Monitor(  # monitor in TensorBoard
             TimeLimit(  # limit rollout durations
                 env,
@@ -113,7 +187,7 @@ def train_policy(agent_name: str, training_dir: str) -> None:
             )
         )
 
-    vec_env = VecNormalize(DummyVecEnv([make_env]))
+    vec_env = VecNormalize(DummyVecEnv([make_env for _ in range(nb_cpus)]))
 
     dt = 1.0 / agent_frequency
     gamma = 1.0 - dt / settings.effective_time_horizon
@@ -162,74 +236,29 @@ def train_policy(agent_name: str, training_dir: str) -> None:
     policy.env.close()
 
 
-def generate_agent_name():
-    with open("/usr/share/dict/words") as fh:
-        words = fh.read().splitlines()
-    word_index = random.randint(0, len(words))
-    while not words[word_index].isalnum():
-        word_index = (word_index + 1) % len(words)
-    return words[word_index]
-
-
-def get_bullet_argv(agent_name: str, show: bool) -> List[str]:
-    """
-    Get command-line arguments for the Bullet spine.
-
-    Args:
-        agent_name: Agent name.
-        show: If true, show simulator GUI.
-
-    Returns:
-        Command-line arguments.
-    """
-    settings = EnvSettings()
-    agent_frequency = settings.agent_frequency
-    spine_frequency = settings.spine_frequency
-    assert spine_frequency % agent_frequency == 0
-    nb_substeps = spine_frequency / agent_frequency
-    bullet_argv = []
-    bullet_argv.extend(["--shm-name", f"/{agent_name}"])
-    bullet_argv.extend(["--nb-substeps", str(nb_substeps)])
-    bullet_argv.extend(["--spine-frequency", str(spine_frequency)])
-    if show:
-        bullet_argv.append("--show")
-    return bullet_argv
-
-
 if __name__ == "__main__":
+    args = parse_command_line_arguments()
     agent_dir = os.path.dirname(__file__)
     gin.parse_config_file(f"{agent_dir}/config.gin")
 
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument(
-        "--show",
-        default=False,
-        action="store_true",
-        help="show simulator during trajectory rollouts",
+    deez_runfiles = runfiles.Create()
+    spine_path = os.path.join(
+        agent_dir,
+        deez_runfiles.Rlocation("upkie/spines/bullet"),
     )
-    args = parser.parse_args()
 
-    agent_dir = os.path.dirname(__file__)
-    agent_name = generate_agent_name()
-    logging.info('New agent name is "%s"', agent_name)
-    pid = os.fork()
-    if pid == 0:  # child process: spine
-        deez_runfiles = runfiles.Create()
-        spine_path = os.path.join(
-            agent_dir,
-            deez_runfiles.Rlocation("upkie/spines/bullet"),
+    try:
+        training_dir = f"{tempfile.gettempdir()}/ppo_balancer"
+        logging.info("Logging to %s", training_dir)
+        logging.info(
+            "To track in TensorBoard, run "
+            f"`tensorboard --logdir {training_dir}`"
         )
-        argv = get_bullet_argv(agent_name, show=args.show)
-        os.execvp(spine_path, ["bullet"] + argv)
-    else:  # parent process: trainer
-        try:
-            training_dir = f"{tempfile.gettempdir()}/ppo_balancer"
-            logging.info("Logging to %s", training_dir)
-            logging.info(
-                "To track in TensorBoard, run "
-                f"`tensorboard --logdir {training_dir}`"
-            )
-            train_policy(agent_name, training_dir)
-        finally:
+        train_policy(
+            spine_path, training_dir, nb_cpus=args.nb_cpus, show=args.show
+        )
+    finally:
+        for shm_name, pid in running_spines:
+            logging.info(f"Terminating spine {shm_name} with {pid=}...")
             os.kill(pid, signal.SIGINT)  # interrupt spine child process
             os.waitpid(pid, 0)  # wait for spine to terminate
