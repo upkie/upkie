@@ -39,7 +39,8 @@ class SurvivalReward(Reward):
         """!
         Get reward corresponding to an observation.
 
-        @param observation Observation to compute reward from.
-        @returns Reward.
+        @param observation Observation to base the reward on.
+        @param action Action to base the reward on.
+        @returns Reward earned from executing the action from the observation.
         """
         return 1.0
