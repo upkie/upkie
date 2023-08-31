@@ -20,6 +20,7 @@ import os
 import random
 import signal
 import tempfile
+import time
 from typing import List
 
 import gin
@@ -215,6 +216,7 @@ def train_policy(
         verbose=1,
     )
 
+    start_time = time.time()
     try:
         policy.learn(
             total_timesteps=settings.total_timesteps,
@@ -230,6 +232,11 @@ def train_policy(
         )
     except KeyboardInterrupt:
         logging.info("Training interrupted.")
+    finally:
+        duration = time.time() - start_time
+        fps = settings.total_timesteps / duration
+        logging.info(f"Training duration: {duration} s")
+        logging.info(f"Average steps per second: {fps}")
 
     # Save policy no matter what!
     policy.save(f"{training_dir}/{agent_name}")
