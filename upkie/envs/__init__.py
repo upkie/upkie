@@ -20,6 +20,7 @@ import logging
 import gymnasium as gym
 
 from .reward import Reward
+from .survival_reward import SurvivalReward
 from .upkie_base_env import UpkieBaseEnv
 from .upkie_wheeled_pendulum import UpkieWheeledPendulum
 

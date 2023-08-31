@@ -15,18 +15,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import abc
 from typing import Tuple
 
 import numpy as np
 
+from .reward import Reward
 
-class SurvivalReward:
+
+class SurvivalReward(Reward):
 
     """!Reward function for staying alive as long as possible."""
 
     @staticmethod
-    @abc.abstractmethod
     def get_range() -> Tuple[float, float]:
         """!
         Get range of the reward.
@@ -35,7 +35,6 @@ class SurvivalReward:
         """
         return (0.0, 2.0)
 
-    @abc.abstractmethod
     def get(self, observation: np.ndarray, action: np.ndarray) -> float:
         """!
         Get reward corresponding to an observation.
