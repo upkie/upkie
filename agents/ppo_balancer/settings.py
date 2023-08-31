@@ -21,7 +21,6 @@ from typing import Optional
 import gin
 
 
-
 @gin.configurable
 @dataclass
 class EnvSettings:
@@ -35,6 +34,7 @@ class EnvSettings:
     max_ground_velocity: float
     spine_frequency: int
     total_timesteps: int
+
 
 @gin.configurable
 @dataclass

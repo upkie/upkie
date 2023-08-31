@@ -27,25 +27,26 @@ import gymnasium as gym
 import stable_baselines3
 import yaml
 from gymnasium.wrappers.time_limit import TimeLimit
-from reward import Reward
 from rules_python.python.runfiles import runfiles
 from settings import EnvSettings, PPOSettings
 from stable_baselines3.common.callbacks import BaseCallback, CheckpointCallback
 from stable_baselines3.common.logger import TensorBoardOutputFormat
+from stable_baselines3.common.monitor import Monitor
+from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
 from torch import nn
 from utils import gin_operative_config_dict
 
 import upkie.envs
-from upkie.envs import UpkieWheeledPendulum
+from upkie.envs import SurvivalReward
 from upkie.utils.spdlog import logging
 
 upkie.envs.register()
 
 
 class SummaryWriterCallback(BaseCallback):
-    def __init__(self, env: UpkieWheeledPendulum):
+    def __init__(self, vec_env: DummyVecEnv):
         super().__init__()
-        self.env = env
+        self.env = vec_env.envs[0]
 
     def _on_training_start(self):
         output_formats = self.logger.output_formats
@@ -94,25 +95,32 @@ def train_policy(agent_name: str, training_dir: str) -> None:
         "activation_fn": nn.Tanh,
         "net_arch": [dict(pi=[64, 64], vf=[64, 64])],
     }
-    env = TimeLimit(
-        gym.make(
+
+    def make_env():
+        env = gym.make(
             settings.env_id,
             frequency=agent_frequency,
             max_ground_accel=settings.max_ground_accel,
             max_ground_velocity=settings.max_ground_velocity,
             regulate_frequency=False,
-            reward=Reward(),
+            reward=SurvivalReward(),
             shm_name=f"/{agent_name}",
-        ),
-        max_episode_steps=int(max_episode_duration * agent_frequency),
-    )
+        )
+        return Monitor(  # monitor in TensorBoard
+            TimeLimit(  # limit rollout durations
+                env,
+                max_episode_steps=int(max_episode_duration * agent_frequency),
+            )
+        )
+
+    vec_env = VecNormalize(DummyVecEnv([make_env]))
 
     dt = 1.0 / agent_frequency
     gamma = 1.0 - dt / settings.effective_time_horizon
     ppo_settings = PPOSettings()
     policy = stable_baselines3.PPO(
         "MlpPolicy",
-        env,
+        vec_env,
         learning_rate=ppo_settings.learning_rate,
         n_steps=ppo_settings.n_steps,
         batch_size=ppo_settings.batch_size,
@@ -133,19 +141,18 @@ def train_policy(agent_name: str, training_dir: str) -> None:
         verbose=1,
     )
 
-    tb_log_name = f"{agent_name}_env-v{env.version}"
     try:
         policy.learn(
             total_timesteps=settings.total_timesteps,
             callback=[
                 CheckpointCallback(
                     save_freq=int(1e5),
-                    save_path=f"{training_dir}/{tb_log_name}_1",
+                    save_path=f"{training_dir}/{agent_name}_1",
                     name_prefix="checkpoint",
                 ),
-                SummaryWriterCallback(env),
+                SummaryWriterCallback(vec_env),
             ],
-            tb_log_name=tb_log_name,
+            tb_log_name=agent_name,
         )
     except KeyboardInterrupt:
         logging.info("Training interrupted.")
