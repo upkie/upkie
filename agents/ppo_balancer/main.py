@@ -86,7 +86,7 @@ if __name__ == "__main__":
         policy_path = f"{training_dir}/{policy_path}"
     print(f"{policy_path=}")
 
-    asyncio.run(main(policy_path=args.policy))
+    asyncio.run(main(policy_path))
 
     save_path = get_log_filename("ppo_balancer")
     shutil.copy("/dev/shm/rollout.mpack", save_path)
