@@ -34,6 +34,11 @@ py_library(
 )
 
 py_library(
+    name = "log_path",
+    srcs = ["log_path.py"],
+)
+
+py_library(
     name = "pinocchio",
     srcs = ["pinocchio.py"],
 )
@@ -62,6 +67,7 @@ py_library(
         ":clamp",
         ":exceptions",
         ":filters",
+        ":log_path",
         ":pinocchio",
         ":raspi",
         ":rotations",

@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 - agents: Closed-loop model predictive control
 - envs: `UpkieGroundAccel` wheeled-pendulum env with a different action
 - examples: Closed-loop model predictive control
+- utils: Log path utility functions
 
 ### Changed
 
