@@ -15,7 +15,7 @@ import time
 import gin
 import mpacklog
 from loop_rate_limiters import AsyncRateLimiter
-from settings import Settings
+from settings import EnvSettings
 from stable_baselines3 import PPO
 
 from upkie.envs import UpkieGroundVelocity
@@ -32,7 +32,7 @@ async def run_policy(policy, logger: mpacklog.AsyncLogger):
         logger: Logger to write actions and observations to.
     """
     observation = policy.env.reset()
-    agent_frequency = Settings().agent_frequency
+    agent_frequency = EnvSettings().agent_frequency
     rate = AsyncRateLimiter(agent_frequency, "controller")
     for _ in range(1_000_000):
         await rate.sleep()

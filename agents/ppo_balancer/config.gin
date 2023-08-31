@@ -17,6 +17,15 @@
 import settings
 import reward
 
+EnvSettings.agent_frequency = 200
+EnvSettings.effective_time_horizon = 0.5
+EnvSettings.env_id = "UpkieGroundVelocity-v1"
+EnvSettings.max_episode_duration = 10.0
+EnvSettings.max_ground_accel = 1000.0
+EnvSettings.max_ground_velocity = 1000.0
+EnvSettings.spine_frequency = 1000
+EnvSettings.total_timesteps = 5e5
+
 PPOSettings.batch_size = 64
 PPOSettings.clip_range = 0.2
 PPOSettings.clip_range_vf = None
@@ -38,12 +47,3 @@ Reward.max_pitch = 1.5707963267948966
 Reward.max_position = 0.5
 Reward.pitch_weight = 1.0
 Reward.position_weight = 1.0
-
-Settings.agent_frequency = 200
-Settings.effective_time_horizon = 0.5
-Settings.env = "UpkieGroundVelocity-v1"
-Settings.max_episode_duration = 10.0
-Settings.max_ground_accel = 10.0
-Settings.max_ground_velocity = 10.0
-Settings.spine_frequency = 1000
-Settings.total_timesteps = 5e5

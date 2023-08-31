@@ -27,11 +27,11 @@ import gymnasium as gym
 import stable_baselines3
 import yaml
 from gymnasium.wrappers.time_limit import TimeLimit
+from reward import Reward
 from rules_python.python.runfiles import runfiles
-from settings import PPOSettings, Settings
+from settings import EnvSettings, PPOSettings
 from stable_baselines3.common.callbacks import BaseCallback, CheckpointCallback
 from stable_baselines3.common.logger import TensorBoardOutputFormat
-from reward import Reward
 from torch import nn
 from utils import gin_operative_config_dict
 
@@ -61,10 +61,10 @@ class SummaryWriterCallback(BaseCallback):
         if self.n_calls != 1:
             return
         config = {
-            "env": Settings().env,
+            "env": EnvSettings().env_id,
             "gin": gin_operative_config_dict(gin.config._OPERATIVE_CONFIG),
             "reward": self.env.reward.__dict__,
-            "settings": Settings().__dict__,
+            "settings": EnvSettings().__dict__,
             "spine_config": self.env.spine_config,
         }
         self.tb_formatter.writer.add_text(
@@ -87,7 +87,7 @@ def train_policy(agent_name: str, training_dir: str) -> None:
         agent_name: Agent name.
         training_dir: Directory for logging and saving policies.
     """
-    settings = Settings()
+    settings = EnvSettings()
     agent_frequency = settings.agent_frequency
     max_episode_duration = settings.max_episode_duration
     policy_kwargs = {
@@ -96,7 +96,7 @@ def train_policy(agent_name: str, training_dir: str) -> None:
     }
     env = TimeLimit(
         gym.make(
-            settings.env,
+            settings.env_id,
             frequency=agent_frequency,
             max_ground_accel=settings.max_ground_accel,
             max_ground_velocity=settings.max_ground_velocity,
@@ -175,7 +175,7 @@ def get_bullet_argv(agent_name: str, show: bool) -> List[str]:
     Returns:
         Command-line arguments.
     """
-    settings = Settings()
+    settings = EnvSettings()
     agent_frequency = settings.agent_frequency
     spine_frequency = settings.spine_frequency
     assert spine_frequency % agent_frequency == 0
@@ -219,9 +219,8 @@ if __name__ == "__main__":
             training_dir = f"{tempfile.gettempdir()}/ppo_balancer"
             logging.info("Logging to %s", training_dir)
             logging.info(
-                "To track in TensorBoard:\n\n\t"
-                f"tensorboard --logdir {training_dir}"
-                "\n\n"
+                "To track in TensorBoard, run "
+                f"`tensorboard --logdir {training_dir}`"
             )
             train_policy(agent_name, training_dir)
         finally:
