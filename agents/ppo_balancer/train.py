@@ -188,7 +188,9 @@ def train_policy(
             )
         )
 
-    vec_env = VecNormalize(DummyVecEnv([make_env for _ in range(nb_cpus)]))
+    vec_env = DummyVecEnv([make_env for _ in range(nb_cpus)])
+    if False:  # does not always improve returns during training
+        vec_env = VecNormalize(vec_env)
 
     dt = 1.0 / agent_frequency
     gamma = 1.0 - dt / settings.effective_time_horizon
