@@ -91,8 +91,8 @@ upload: check_robot build  ## upload built targets to the Raspberry Pi
 # A specific gain config file can be loaded with the CONFIG variable
 # Example: ``make run_wheel_balancer CONFIG=michel-strogoff``
 # where michel-strogoff.gin is a file in agents/wheel_balancer/config/
-# By default we load the gains from Upkie Zero.
-WHEEL_BALANCER_CONFIG = $(or ${CONFIG}, upkie-zero)
+# By default we detect the config file to load by running `hostname`.
+WHEEL_BALANCER_CONFIG = $(or ${CONFIG}, hostname)
 
 run_mock_spine:  ### run the mock spine on the Raspberry Pi
 	$(RASPUNZEL) run -s //spines:mock

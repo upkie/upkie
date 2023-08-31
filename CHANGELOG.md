@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- Makefile: Default wheel balancer config to the output of `hostname`
 - Makefile: Rename ``ROBOT`` environment variable to ``UPKIE_NAME``
 - agents: Retry connecting to the spine several times at startup
 - envs: Retry connecting to the spine several times at startup
