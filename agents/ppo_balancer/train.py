@@ -157,7 +157,7 @@ def train_policy(
     max_episode_duration = settings.max_episode_duration
     policy_kwargs = {
         "activation_fn": nn.Tanh,
-        "net_arch": [dict(pi=[64, 64], vf=[64, 64])],
+        "net_arch": dict(pi=[64, 64], vf=[64, 64]),
     }
 
     def make_env():
