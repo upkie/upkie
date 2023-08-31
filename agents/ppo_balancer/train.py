@@ -19,6 +19,7 @@ import argparse
 import os
 import random
 import signal
+import tempfile
 from typing import List
 
 import gin
@@ -215,7 +216,7 @@ if __name__ == "__main__":
         os.execvp(spine_path, ["bullet"] + argv)
     else:  # parent process: trainer
         try:
-            training_dir = f"{agent_dir}/policies"
+            training_dir = f"{tempfile.gettempdir()}/ppo_balancer"
             logging.info("Logging to %s", training_dir)
             logging.info(
                 "To track in TensorBoard:\n\n\t"

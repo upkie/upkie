@@ -2,12 +2,14 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright 2022 Stéphane Caron
+# Copyright 2023 Inria
 
 import argparse
 import asyncio
 import logging
 import os
 import shutil
+import tempfile
 import time
 
 import gin
@@ -54,8 +56,6 @@ async def run_policy(policy, logger: mpacklog.AsyncLogger):
 async def main(policy_path: str):
     env = UpkieGroundVelocity(shm_name="/vulp")
     policy = PPO("MlpPolicy", env, verbose=1)
-    if policy_path.endswith(".zip"):
-        policy_path = policy_path[:-4]
     policy.set_parameters(policy_path)
     logger = mpacklog.AsyncLogger("/dev/shm/rollout.mpack")
     await asyncio.gather(run_policy(policy, logger), logger.write())
@@ -74,4 +74,20 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
     gin.parse_config_file(f"{agent_dir}/config.gin")
+
+    policy_path = args.policy
+    training_dir = f"{tempfile.gettempdir()}/ppo_balancer"
+    print(f"{policy_path=}")
+    if policy_path.endswith(".zip"):
+        policy_path = policy_path[:-4]
+    print(f"{policy_path=}")
+    print(f"kron {training_dir}/{policy_path}.zip")
+    if os.path.exists(f"{training_dir}/{policy_path}.zip"):
+        policy_path = f"{training_dir}/{policy_path}"
+    print(f"{policy_path=}")
+
     asyncio.run(main(policy_path=args.policy))
+
+    save_path = get_log_filename("ppo_balancer")
+    shutil.copy("/dev/shm/rollout.mpack", save_path)
+    logging.info(f"Log saved to {save_path}")
