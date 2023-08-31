@@ -32,17 +32,17 @@ from stable_baselines3.common.callbacks import BaseCallback, CheckpointCallback
 from stable_baselines3.common.logger import TensorBoardOutputFormat
 from standing_reward import StandingReward
 from torch import nn
+from utils import gin_operative_config_dict
 
 import upkie.envs
-from upkie.envs import UpkieGroundVelocity
+from upkie.envs import UpkieWheeledPendulum
 from upkie.utils.spdlog import logging
-from utils import gin_operative_config_dict
 
 upkie.envs.register()
 
 
 class SummaryWriterCallback(BaseCallback):
-    def __init__(self, env: UpkieGroundVelocity):
+    def __init__(self, env: UpkieWheeledPendulum):
         super().__init__()
         self.env = env
 
@@ -60,7 +60,7 @@ class SummaryWriterCallback(BaseCallback):
         if self.n_calls != 1:
             return
         config = {
-            "env": f"UpkieGroundVelocity-v{UpkieGroundVelocity.version}",
+            "env": Settings().env,
             "gin": gin_operative_config_dict(gin.config._OPERATIVE_CONFIG),
             "reward": self.env.reward.__dict__,
             "settings": Settings().__dict__,
@@ -95,7 +95,7 @@ def train_policy(agent_name: str, training_dir: str) -> None:
     }
     env = TimeLimit(
         gym.make(
-            "UpkieGroundVelocity-v1",
+            settings.env,
             frequency=agent_frequency,
             regulate_frequency=False,
             reward=StandingReward(),

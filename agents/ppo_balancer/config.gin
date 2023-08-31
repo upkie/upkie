@@ -33,6 +33,7 @@ PPOSettings.vf_coef  = 0.5
 
 Settings.agent_frequency = 200
 Settings.effective_time_horizon = 0.5
+Settings.env = "UpkieGroundVelocity-v1"
 Settings.max_episode_duration = 10.0
 Settings.max_ground_accel = 10.0
 Settings.max_ground_velocity = 10.0

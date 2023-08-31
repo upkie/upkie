@@ -28,6 +28,7 @@ class Settings:
 
     agent_frequency: int
     effective_time_horizon: float
+    env: str
     max_episode_duration: float
     max_ground_accel: float
     max_ground_velocity: float
