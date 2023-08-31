@@ -24,7 +24,7 @@ import upkie.envs
 
 
 @gin.configurable
-class StandingReward(upkie.envs.Reward):
+class Reward(upkie.envs.Reward):
 
     """!
     Reward function for balancing in place.
