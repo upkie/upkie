@@ -97,6 +97,8 @@ def train_policy(agent_name: str, training_dir: str) -> None:
         gym.make(
             settings.env,
             frequency=agent_frequency,
+            max_ground_accel=settings.max_ground_accel,
+            max_ground_velocity=settings.max_ground_velocity,
             regulate_frequency=False,
             reward=StandingReward(),
             shm_name=f"/{agent_name}",
