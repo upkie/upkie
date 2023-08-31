@@ -87,6 +87,9 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         if spine_config is not None:
             merged_spine_config.update(spine_config)
 
+        if reward is None:
+            reward = SurvivalReward()
+
         # gymnasium.Env: reward_range
         self.reward_range = reward.get_range()
 
@@ -94,7 +97,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         self.__regulate_frequency = regulate_frequency
         self._spine = SpineInterface(shm_name, retries=spine_retries)
         self.fall_pitch = fall_pitch
-        self.reward = reward if reward is not None else SurvivalReward()
+        self.reward = reward
         self.spine_config = merged_spine_config
 
     @property
@@ -250,7 +253,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
     @abc.abstractmethod
     def parse_first_observation(self, observation_dict: dict) -> None:
         """!
-        Parse first observation after the spine interface is initialize.
+        Parse first observation after the spine interface is initialized.
 
         @param observation_dict First observation.
         """
