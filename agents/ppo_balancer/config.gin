@@ -15,7 +15,7 @@
 # limitations under the License.
 
 import settings
-import standing_reward
+import reward
 
 PPOSettings.batch_size = 64
 PPOSettings.clip_range = 0.2
@@ -31,6 +31,14 @@ PPOSettings.target_kl = None
 PPOSettings.use_sde = False
 PPOSettings.vf_coef  = 0.5
 
+Reward.action_weight = 0.0
+Reward.lookahead_duration = 0.2
+Reward.max_action = 10.0
+Reward.max_pitch = 1.5707963267948966
+Reward.max_position = 0.5
+Reward.pitch_weight = 1.0
+Reward.position_weight = 1.0
+
 Settings.agent_frequency = 200
 Settings.effective_time_horizon = 0.5
 Settings.env = "UpkieGroundVelocity-v1"
@@ -39,11 +47,3 @@ Settings.max_ground_accel = 10.0
 Settings.max_ground_velocity = 10.0
 Settings.spine_frequency = 1000
 Settings.total_timesteps = 5e5
-
-StandingReward.action_weight = 0.0
-StandingReward.lookahead_duration = 0.2
-StandingReward.max_action = 10.0
-StandingReward.max_pitch = 1.5707963267948966
-StandingReward.max_position = 0.5
-StandingReward.pitch_weight = 1.0
-StandingReward.position_weight = 1.0

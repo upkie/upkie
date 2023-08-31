@@ -13,9 +13,9 @@ filegroup(
 )
 
 py_library(
-    name = "rewards",
+    name = "reward",
     srcs = [
-        "standing_reward.py",
+        "reward.py",
     ],
     deps = [
         "//upkie/envs",
@@ -64,7 +64,7 @@ py_binary(
         "//upkie/envs",
         "//upkie/utils:log_path",
         "//upkie/utils:raspi",
-        ":rewards",  # needed by gin config
+        ":reward",  # needed by gin config
         ":settings",
         "@mpacklog//:python",
         requirement("gin-config"),
@@ -88,7 +88,7 @@ py_binary(
     deps = [
         "//upkie/envs",
         "//upkie/utils:spdlog",
-        ":rewards",
+        ":reward",
         ":settings",
         ":utils",
         "@mpacklog//:python",

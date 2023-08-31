@@ -31,7 +31,7 @@ from rules_python.python.runfiles import runfiles
 from settings import PPOSettings, Settings
 from stable_baselines3.common.callbacks import BaseCallback, CheckpointCallback
 from stable_baselines3.common.logger import TensorBoardOutputFormat
-from standing_reward import StandingReward
+from reward import Reward
 from torch import nn
 from utils import gin_operative_config_dict
 
@@ -101,7 +101,7 @@ def train_policy(agent_name: str, training_dir: str) -> None:
             max_ground_accel=settings.max_ground_accel,
             max_ground_velocity=settings.max_ground_velocity,
             regulate_frequency=False,
-            reward=StandingReward(),
+            reward=Reward(),
             shm_name=f"/{agent_name}",
         ),
         max_episode_steps=int(max_episode_duration * agent_frequency),
