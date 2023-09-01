@@ -20,7 +20,6 @@ import os
 import random
 import signal
 import tempfile
-import time
 from typing import List
 
 import gin
@@ -55,6 +54,12 @@ def parse_command_line_arguments() -> argparse.Namespace:
         Command-line arguments.
     """
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--name",
+        default="",
+        type=str,
+        help="name of the new policy to train",
+    )
     parser.add_argument(
         "--nb-cpus",
         default=1,
@@ -139,6 +144,7 @@ def get_bullet_argv(shm_name: str, show: bool) -> List[str]:
 
 
 def train_policy(
+    policy_name: str,
     spine_path: str,
     training_dir: str,
     nb_cpus: int,
@@ -151,8 +157,9 @@ def train_policy(
     @param training_dir Directory for logging and saving policies.
     @param show Whether to show the simulation GUI.
     """
-    agent_name = get_random_word()
-    logging.info('New agent name is "%s"', agent_name)
+    if policy_name == "":
+        policy_name = get_random_word()
+    logging.info('New policy name is "%s"', policy_name)
 
     settings = EnvSettings()
     agent_frequency = settings.agent_frequency
@@ -220,30 +227,24 @@ def train_policy(
         verbose=1,
     )
 
-    start_time = time.time()
     try:
         policy.learn(
             total_timesteps=settings.total_timesteps,
             callback=[
                 CheckpointCallback(
                     save_freq=int(1e5),
-                    save_path=f"{training_dir}/{agent_name}_1",
+                    save_path=f"{training_dir}/{policy_name}_1",
                     name_prefix="checkpoint",
                 ),
                 SummaryWriterCallback(vec_env),
             ],
-            tb_log_name=agent_name,
+            tb_log_name=policy_name,
         )
     except KeyboardInterrupt:
         logging.info("Training interrupted.")
-    finally:
-        duration = time.time() - start_time
-        fps = settings.total_timesteps / duration
-        logging.info(f"Training duration: {duration:.0} s")
-        logging.info(f"Average steps per second: {fps:.0}")
 
     # Save policy no matter what!
-    policy.save(f"{training_dir}/{agent_name}")
+    policy.save(f"{training_dir}/{policy_name}")
     policy.env.close()
 
 
@@ -266,7 +267,11 @@ if __name__ == "__main__":
             f"`tensorboard --logdir {training_dir}`"
         )
         train_policy(
-            spine_path, training_dir, nb_cpus=args.nb_cpus, show=args.show
+            args.name,
+            spine_path,
+            training_dir,
+            nb_cpus=args.nb_cpus,
+            show=args.show,
         )
     finally:
         for shm_name, pid in running_spines:
