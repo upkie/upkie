@@ -31,7 +31,7 @@ from loop_rate_limiters import AsyncRateLimiter
 from servo_controller import ServoController
 from vulp.spine import SpineInterface
 
-from upkie.utils.log_path import get_log_filename
+from upkie.utils.log_path import new_log_filename
 from upkie.utils.raspi import configure_agent_process, on_raspi
 from upkie.utils.spdlog import logging
 
@@ -167,6 +167,6 @@ if __name__ == "__main__":
         traceback.print_exc()
         print("")
 
-    save_path = get_log_filename("wheel_balancer")
+    save_path = new_log_filename("wheel_balancer")
     shutil.copy("/dev/shm/brain.mpack", save_path)
     logging.info(f"Log saved to {save_path}")

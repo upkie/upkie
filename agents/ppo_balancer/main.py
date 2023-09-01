@@ -19,7 +19,7 @@ from settings import EnvSettings
 from stable_baselines3 import PPO
 
 from upkie.envs import UpkieGroundVelocity
-from upkie.utils.log_path import get_log_filename
+from upkie.utils.log_path import new_log_filename
 from upkie.utils.raspi import configure_agent_process, on_raspi
 
 
@@ -84,6 +84,6 @@ if __name__ == "__main__":
 
     asyncio.run(main(policy_path))
 
-    save_path = get_log_filename("ppo_balancer")
+    save_path = new_log_filename("ppo_balancer")
     shutil.copy("/dev/shm/rollout.mpack", save_path)
     logging.info(f"Log saved to {save_path}")
