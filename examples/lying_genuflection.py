@@ -24,7 +24,7 @@ spine_config = {
 if __name__ == "__main__":
     upkie.envs.register()
     with gym.make(
-        "UpkieServosEnv-v2", spine_config=spine_config, frequency=200.0
+        "UpkieServos-v2", spine_config=spine_config, frequency=200.0
     ) as env:
         env.reset()  # connects to the spine
         action = np.zeros(env.action_space.shape)

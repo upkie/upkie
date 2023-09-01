@@ -44,9 +44,9 @@ py_library(
 )
 
 py_library(
-    name = "upkie_servos_env",
+    name = "upkie_servos",
     srcs = [
-        "upkie_servos_env.py",
+        "upkie_servos.py",
     ],
     deps = [
         ":upkie_base_env",
@@ -84,7 +84,7 @@ py_library(
         ":rewards",
         ":upkie_base_env",
         ":upkie_ground_velocity",
-        ":upkie_servos_env",
+        ":upkie_servos",
         requirement("gymnasium"),
     ],
 )

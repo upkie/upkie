@@ -43,12 +43,12 @@ except ImportError as import_error:
     __envs__["UpkieGroundVelocity"] = import_error
 
 try:
-    from .upkie_servos_env import UpkieServosEnv
+    from .upkie_servos import UpkieServos
 
-    __all__.append("UpkieServosEnv")
-    __envs__["UpkieServosEnv"] = UpkieServosEnv
+    __all__.append("UpkieServos")
+    __envs__["UpkieServos"] = UpkieServos
 except ImportError as import_error:
-    __envs__["UpkieServosEnv"] = import_error
+    __envs__["UpkieServos"] = import_error
 
 
 def register(max_episode_steps: int = 1_000_000_000) -> None:
