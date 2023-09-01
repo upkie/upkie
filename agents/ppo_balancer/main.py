@@ -82,7 +82,11 @@ if __name__ == "__main__":
         policy_path = policy_path[:-4]
     if os.path.exists(f"{training_dir}/{policy_path}.zip"):
         policy_path = f"{training_dir}/{policy_path}"
-    asyncio.run(main(policy_path))
+
+    try:
+        asyncio.run(main(policy_path))
+    except KeyboardInterrupt:
+        logging.info("Caught a keyboard interrupt")
 
     save_path = new_log_filename("ppo_balancer")
     shutil.copy("/dev/shm/ppo_balancer.mpack", save_path)
