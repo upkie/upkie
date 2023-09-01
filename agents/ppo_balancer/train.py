@@ -239,8 +239,8 @@ def train_policy(
     finally:
         duration = time.time() - start_time
         fps = settings.total_timesteps / duration
-        logging.info(f"Training duration: {duration} s")
-        logging.info(f"Average steps per second: {fps}")
+        logging.info(f"Training duration: {duration:.0} s")
+        logging.info(f"Average steps per second: {fps:.0}")
 
     # Save policy no matter what!
     policy.save(f"{training_dir}/{agent_name}")
