@@ -16,10 +16,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import abc
+from typing import Dict
+
 import numpy as np
 from gymnasium import spaces
-from typing import Dict
 
 from upkie.observers.base_pitch import (
     compute_base_angular_velocity_from_imu,
@@ -29,7 +29,7 @@ from upkie.observers.base_pitch import (
 from .upkie_base_env import UpkieBaseEnv
 
 
-class UpkieWheeledPendulum(abc.ABC, UpkieBaseEnv):
+class UpkieWheeledPendulum(UpkieBaseEnv):
 
     """!
     Environment where Upkie is used as a wheeled inverted pendulum.
