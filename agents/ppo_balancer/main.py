@@ -57,7 +57,7 @@ async def main(policy_path: str):
     env = UpkieGroundVelocity(shm_name="/vulp")
     policy = PPO("MlpPolicy", env, verbose=1)
     policy.set_parameters(policy_path)
-    logger = mpacklog.AsyncLogger("/dev/shm/rollout.mpack")
+    logger = mpacklog.AsyncLogger("/dev/shm/ppo_balancer.mpack")
     await asyncio.gather(run_policy(policy, logger), logger.write())
     policy.env.close()
 
@@ -65,6 +65,7 @@ async def main(policy_path: str):
 if __name__ == "__main__":
     if on_raspi():
         configure_agent_process()
+
     agent_dir = os.path.abspath(os.path.dirname(__file__))
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -81,9 +82,8 @@ if __name__ == "__main__":
         policy_path = policy_path[:-4]
     if os.path.exists(f"{training_dir}/{policy_path}.zip"):
         policy_path = f"{training_dir}/{policy_path}"
-
     asyncio.run(main(policy_path))
 
     save_path = new_log_filename("ppo_balancer")
-    shutil.copy("/dev/shm/rollout.mpack", save_path)
+    shutil.copy("/dev/shm/ppo_balancer.mpack", save_path)
     logging.info(f"Log saved to {save_path}")

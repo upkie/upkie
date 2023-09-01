@@ -113,7 +113,7 @@ async def main(spine, args: argparse.Namespace):
     wheel_odometry_config = spine_config["wheel_odometry"]
     wheel_odometry_config["signed_radius"]["left_wheel"] = +wheel_radius
     wheel_odometry_config["signed_radius"]["right_wheel"] = -wheel_radius
-    logger = mpacklog.AsyncLogger("/dev/shm/brain.mpack")
+    logger = mpacklog.AsyncLogger("/dev/shm/pink_balancer.mpack")
     await logger.put(
         {
             "config": spine_config,
@@ -176,5 +176,5 @@ if __name__ == "__main__":
     stamp = now.strftime("%Y-%m-%d_%H%M%S")
     log_dir = os.environ.get("UPKIE_LOG_PATH", "~")
     save_path = os.path.expanduser(f"{log_dir}/{stamp}_pink_balancer.mpack")
-    shutil.copy("/dev/shm/brain.mpack", save_path)
+    shutil.copy("/dev/shm/pink_balancer.mpack", save_path)
     logging.info(f"Log saved to {save_path}")
