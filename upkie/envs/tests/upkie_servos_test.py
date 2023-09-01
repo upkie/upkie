@@ -15,24 +15,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Tests for UpkieServosEnv."""
+"""Tests for UpkieServos environment."""
 
 import unittest
+
 import numpy as np
-
 import posix_ipc
-
-from upkie.envs import UpkieServosEnv
+from upkie.envs import UpkieServos
 from upkie.envs.tests.mock_spine import MockSpine
 
 
-class TestUpkieServosEnv(unittest.TestCase):
+class TestUpkieServos(unittest.TestCase):
     def setUp(self):
         shm_name = "/vroum"
         shared_memory = posix_ipc.SharedMemory(
             shm_name, posix_ipc.O_RDWR | posix_ipc.O_CREAT, size=42
         )
-        self.env = UpkieServosEnv(
+        self.env = UpkieServos(
             fall_pitch=1.0,
             frequency=100.0,
             shm_name=shm_name,

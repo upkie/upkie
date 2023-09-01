@@ -34,7 +34,7 @@ from .survival_reward import SurvivalReward
 from .upkie_base_env import UpkieBaseEnv
 
 
-class UpkieServosEnv(UpkieBaseEnv):
+class UpkieServos(UpkieBaseEnv):
 
     """!
     Upkie with full observation and joint position-velocity-torque actions.
