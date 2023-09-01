@@ -158,7 +158,7 @@ async def balance(
             commanded_velocity = 0.0
 
         observation_dict = info["observation"]
-        ground_contact = observation_dict["floor_contact"]["contact"]
+        floor_contact = observation_dict["floor_contact"]["contact"]
 
         # Unpack observation into initial MPC state
         (
@@ -196,7 +196,7 @@ async def balance(
             base_pitches[step] = base_pitch
             planning_times[step] = perf_counter() - t0
 
-        if not ground_contact:
+        if not floor_contact:
             commanded_velocity = low_pass_filter(
                 prev_output=commanded_velocity,
                 cutoff_period=0.1,
