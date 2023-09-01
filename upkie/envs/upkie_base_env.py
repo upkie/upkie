@@ -73,11 +73,13 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         """!
         Initialize environment.
 
-        @param reward Reward function.
         @param fall_pitch Fall pitch angle, in radians.
-        @param frequency Regulated frequency of the control loop, in Hz. Set to
-            ``None`` to disable loop frequency regulation.
-        @param shm_name Name of shared-memory file.
+        @param frequency Regulated frequency of the control loop, in Hz. Can be
+            set even when `regulate_frequency` is false, as some environments
+            make use of e.g. `self.dt` internally.
+        @param regulate_frequency Enables loop frequency regulation.
+        @param reward Reward function.
+        @param shm_name Name of shared-memory file to exchange with the spine.
         @param spine_config Additional spine configuration overriding the
             defaults from ``//config:spine.yaml``. The combined configuration
             dictionary is sent to the spine at every :func:`reset`.

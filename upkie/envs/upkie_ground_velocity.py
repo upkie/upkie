@@ -109,11 +109,10 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
         @param max_ground_accel Maximum commanded ground acceleration in m/s^2.
         @param max_ground_velocity Maximum commanded ground velocity in m/s.
         @param wheel_radius Wheel radius in [m].
-
-        Other keyword arguments are forwarded as-is to parent class
-        constructors. Follow the chain up from @ref
-        envs.upkie_wheeled_pendulum.UpkieWheeledPendulum "UpkieWheeledPendulum"
-        for their documentation.
+        @param kwargs Other keyword arguments are forwarded as-is to parent
+            class constructors. Follow the chain up from @ref
+            envs.upkie_wheeled_pendulum.UpkieWheeledPendulum
+            "UpkieWheeledPendulum" for their documentation.
         """
         super().__init__(**kwargs)
 
