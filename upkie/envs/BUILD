@@ -38,10 +38,19 @@ py_library(
         "//upkie/utils:exceptions",
         ":rewards",
         "@vulp//:python",
-        requirement("gymnasium"),
-        requirement("loop_rate_limiters"),
+        requirement("loop-rate-limiters"),
         requirement("upkie_description"),
-    ],
+    ] + select({
+        # Selecting the right CPU architecture for the Raspberry Pi is
+        # currently a tough nut to crack for Bazel. We only enable compiled
+        # dependencies on the host side for now.
+        # Followed in: https://github.com/tasts-robots/upkie/issues/1
+        "//:pi32_config": [],
+        "//:pi64_config": [],
+        "//conditions:default": [
+            requirement("gymnasium"),
+        ],
+    }),
 )
 
 py_library(
@@ -87,8 +96,17 @@ py_library(
         ":upkie_base_env",
         ":upkie_ground_velocity",
         ":upkie_servos",
-        requirement("gymnasium"),
-    ],
+    ] + select({
+        # Selecting the right CPU architecture for the Raspberry Pi is
+        # currently a tough nut to crack for Bazel. We only enable compiled
+        # dependencies on the host side for now.
+        # Followed in: https://github.com/tasts-robots/upkie/issues/1
+        "//:pi32_config": [],
+        "//:pi64_config": [],
+        "//conditions:default": [
+            requirement("gymnasium"),
+        ],
+    }),
 )
 
 add_lint_tests()
