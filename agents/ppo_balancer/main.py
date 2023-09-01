@@ -49,31 +49,31 @@ async def run_policy(policy, logger: mpacklog.AsyncLogger):
     rate = AsyncRateLimiter(EnvSettings().agent_frequency, "controller")
     assert_almost_equal(rate.dt, policy.env.get_attr("dt")[0])
 
-    action = np.zeros((1, 1))
-    observation = policy.env.reset()
+    actions = np.zeros((1, 1))
+    observations = policy.env.reset()
     floor_contact = False
     while True:
         await rate.sleep()
 
-        action, _ = (
-            policy.predict(observation)
+        actions, _ = (
+            policy.predict(observations)
             if floor_contact
-            else no_contact_policy(action, rate.dt)
+            else no_contact_policy(actions, rate.dt)
         )
         action_time = time.time()
-        observation, reward, dones, info = policy.env.step(action)
-        floor_contact = info[0]["observation"]["floor_contact"]["contact"]
+        observations, _, dones, infos = policy.env.step(actions)
+        floor_contact = infos[0]["observation"]["floor_contact"]["contact"]
         if dones[0]:
-            observation = policy.env.reset()
+            observations = policy.env.reset()
             floor_contact = False
 
         await logger.put(
             {
-                "action": info[0]["action"],
-                "observation": info[0]["observation"],
+                "action": infos[0]["action"],
+                "observation": infos[0]["observation"],
                 "policy": {
-                    "action": action[0],
-                    "observation": observation[0],
+                    "action": actions[0],
+                    "observation": observations[0],
                 },
                 "time": action_time,
             }
