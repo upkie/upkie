@@ -26,20 +26,13 @@ from .upkie_wheeled_pendulum import UpkieWheeledPendulum
 
 __all__ = [
     "Reward",
+    "SurvivalReward",
     "UpkieBaseEnv",
     "UpkieWheeledPendulum",
     "register",
 ]
 
 __envs__ = {}
-
-try:
-    from .upkie_ground_accel import UpkieGroundAccel
-
-    __all__.append("UpkieGroundAccel")
-    __envs__["UpkieGroundAccel"] = UpkieGroundAccel
-except ImportError as import_error:
-    __envs__["UpkieGroundAccel"] = import_error
 
 try:
     from .upkie_ground_velocity import UpkieGroundVelocity
