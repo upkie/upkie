@@ -16,6 +16,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import abc
 import numpy as np
 from gymnasium import spaces
 from typing import Dict
@@ -28,7 +29,7 @@ from upkie.observers.base_pitch import (
 from .upkie_base_env import UpkieBaseEnv
 
 
-class UpkieWheeledPendulum(UpkieBaseEnv):
+class UpkieWheeledPendulum(abc.ABC, UpkieBaseEnv):
 
     """!
     Environment where Upkie is used as a wheeled inverted pendulum.
