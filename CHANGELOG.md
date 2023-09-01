@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 - PPO balancer: Save policy configuration to a YAML file as well as TB
 - PPO balancer: Train with multiprocessing
 - agents: Closed-loop model predictive control
+- envs: Accessor to `env.rate` for logging purposes
 - envs: `UpkieGroundVelocity` can limit ground acceleration as well
 - examples: Closed-loop model predictive control
 - utils: Log path utility functions
