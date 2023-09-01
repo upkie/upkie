@@ -5,8 +5,8 @@ gin:
         effective_time_horizon: 0.5
         env_id: UpkieGroundVelocity-v1
         max_episode_duration: 10.0
-        max_ground_accel: 20.0
-        max_ground_velocity: 2.0
+        max_ground_accel: 10.0
+        max_ground_velocity: 1.0
         spine_frequency: 1000
         total_timesteps: 500000.0
     PPOSettings:
@@ -29,8 +29,8 @@ settings:
     effective_time_horizon: 0.5
     env_id: UpkieGroundVelocity-v1
     max_episode_duration: 10.0
-    max_ground_accel: 20.0
-    max_ground_velocity: 2.0
+    max_ground_accel: 10.0
+    max_ground_velocity: 1.0
     spine_frequency: 1000
     total_timesteps: 500000.0
 spine_config:
