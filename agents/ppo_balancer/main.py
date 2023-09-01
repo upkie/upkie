@@ -34,7 +34,7 @@ async def run_policy(policy, logger: mpacklog.AsyncLogger):
     observation = policy.env.reset()
     agent_frequency = EnvSettings().agent_frequency
     rate = AsyncRateLimiter(agent_frequency, "controller")
-    for _ in range(1_000_000):
+    while True:
         await rate.sleep()
         action, _ = policy.predict(observation)
         action_time = time.time()
