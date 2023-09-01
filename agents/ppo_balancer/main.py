@@ -77,14 +77,10 @@ if __name__ == "__main__":
 
     policy_path = args.policy
     training_dir = f"{tempfile.gettempdir()}/ppo_balancer"
-    print(f"{policy_path=}")
     if policy_path.endswith(".zip"):
         policy_path = policy_path[:-4]
-    print(f"{policy_path=}")
-    print(f"kron {training_dir}/{policy_path}.zip")
     if os.path.exists(f"{training_dir}/{policy_path}.zip"):
         policy_path = f"{training_dir}/{policy_path}"
-    print(f"{policy_path=}")
 
     asyncio.run(main(policy_path))
 
