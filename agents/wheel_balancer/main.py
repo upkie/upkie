@@ -105,7 +105,7 @@ async def run(
 
 
 async def main(spine, spine_config: Dict[str, Any]):
-    logger = mpacklog.AsyncLogger("/dev/shm/brain.mpack")
+    logger = mpacklog.AsyncLogger("/dev/shm/wheel_balancer.mpack")
     await logger.put(
         {
             "config": spine_config,
@@ -168,5 +168,5 @@ if __name__ == "__main__":
         print("")
 
     save_path = new_log_filename("wheel_balancer")
-    shutil.copy("/dev/shm/brain.mpack", save_path)
+    shutil.copy("/dev/shm/wheel_balancer.mpack", save_path)
     logging.info(f"Log saved to {save_path}")
