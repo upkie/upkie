@@ -32,7 +32,7 @@ def new_log_filename(label: str):
     """!
     Get path to a new log, in the log path, with a given label.
 
-    @params label Suffix of the new filename. (Prefix will be the date.)
+    @param label Suffix of the new filename. (Prefix will be the date.)
     @returns Path to the new log file.
     """
     now = datetime.datetime.now()
