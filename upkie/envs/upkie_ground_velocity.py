@@ -21,6 +21,7 @@ import math
 import numpy as np
 from gymnasium import spaces
 
+from upkie.utils.exceptions import UpkieException
 from upkie.utils.filters import abs_bounded_derivative_filter
 
 from .upkie_wheeled_pendulum import UpkieWheeledPendulum
@@ -115,6 +116,9 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
         for their documentation.
         """
         super().__init__(**kwargs)
+
+        if self.dt is None:
+            raise UpkieException("This environment needs a loop frequency")
 
         # gymnasium.Env: action_space
         self.action_space = spaces.Box(

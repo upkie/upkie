@@ -35,6 +35,7 @@ py_library(
     deps = [
         "//upkie/config",
         "//upkie/observers/base_pitch",
+        "//upkie/utils:exceptions",
         ":rewards",
         "@vulp//:python",
         requirement("gymnasium"),
@@ -70,6 +71,7 @@ py_library(
         "upkie_ground_velocity.py",
     ],
     deps = [
+        "//upkie/utils:exceptions",
         "//upkie/utils:filters",
         ":upkie_wheeled_pendulum",
     ],

@@ -26,6 +26,7 @@ from vulp.spine import SpineInterface
 
 import upkie.config
 from upkie.observers.base_pitch import compute_base_pitch_from_imu
+from upkie.utils.exceptions import UpkieException
 
 from .reward import Reward
 from .survival_reward import SurvivalReward
@@ -61,10 +62,10 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
 
     def __init__(
         self,
-        reward: Optional[Reward] = None,
         fall_pitch: float = 1.0,
         frequency: Optional[float] = 200.0,
         regulate_frequency: bool = True,
+        reward: Optional[Reward] = None,
         shm_name: str = "/vulp",
         spine_config: Optional[dict] = None,
         spine_retries: int = 10,
@@ -86,7 +87,8 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         merged_spine_config = upkie.config.SPINE_CONFIG.copy()
         if spine_config is not None:
             merged_spine_config.update(spine_config)
-
+        if regulate_frequency and frequency is None:
+            raise UpkieException(f"{regulate_frequency=} but {frequency=}")
         if reward is None:
             reward = SurvivalReward()
 
