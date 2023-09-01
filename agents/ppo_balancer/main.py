@@ -73,7 +73,7 @@ if __name__ == "__main__":
         default=f"{agent_dir}/policy/params.zip",
     )
     args = parser.parse_args()
-    gin.parse_config_file(f"{agent_dir}/config.gin")
+    gin.parse_config_file(f"{agent_dir}/settings.gin")
 
     policy_path = args.policy
     training_dir = f"{tempfile.gettempdir()}/ppo_balancer"
