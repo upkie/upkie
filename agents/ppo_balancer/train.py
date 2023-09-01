@@ -32,7 +32,11 @@ from settings import EnvSettings, PPOSettings
 from stable_baselines3.common.callbacks import BaseCallback, CheckpointCallback
 from stable_baselines3.common.logger import TensorBoardOutputFormat
 from stable_baselines3.common.monitor import Monitor
-from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
+from stable_baselines3.common.vec_env import (
+    DummyVecEnv,
+    SubprocVecEnv,
+    VecNormalize,
+)
 from stable_baselines3.common.vec_env.base_vec_env import VecEnv
 from torch import nn
 from utils import gin_operative_config_dict
@@ -78,7 +82,7 @@ def parse_command_line_arguments() -> argparse.Namespace:
 class SummaryWriterCallback(BaseCallback):
     def __init__(self, vec_env: VecEnv):
         super().__init__()
-        self.env = vec_env.envs[0]
+        self.vec_env = vec_env
 
     def _on_training_start(self):
         output_formats = self.logger.output_formats
@@ -93,12 +97,14 @@ class SummaryWriterCallback(BaseCallback):
         # for functions called by the environment are logged as well.
         if self.n_calls != 1:
             return
+        reward = self.vec_env.get_attr("reward")[0]
+        spine_config = self.vec_env.get_attr("spine_config")[0]
         config = {
             "env": EnvSettings().env_id,
             "gin": gin_operative_config_dict(gin.config._OPERATIVE_CONFIG),
-            "reward": self.env.reward.__dict__,
+            "reward": reward.__dict__,
             "settings": EnvSettings().__dict__,
-            "spine_config": self.env.spine_config,
+            "spine_config": spine_config,
         }
         self.tb_formatter.writer.add_text(
             "config",
@@ -196,8 +202,11 @@ def train_policy(
             )
         )
 
-    # TODO(scaron): try SubprocVecEnv
-    vec_env = DummyVecEnv([make_env for _ in range(nb_cpus)])
+    vec_env = (
+        SubprocVecEnv([make_env for _ in range(nb_cpus)], start_method="fork")
+        if nb_cpus > 1
+        else DummyVecEnv([make_env])
+    )
     if False:  # does not always improve returns during training
         vec_env = VecNormalize(vec_env)
 
