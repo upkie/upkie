@@ -65,17 +65,6 @@ py_library(
 )
 
 py_library(
-    name = "upkie_ground_accel",
-    srcs = [
-        "upkie_ground_accel.py",
-    ],
-    deps = [
-        "//upkie/utils:clamp",
-        ":upkie_wheeled_pendulum",
-    ],
-)
-
-py_library(
     name = "upkie_ground_velocity",
     srcs = [
         "upkie_ground_velocity.py",
@@ -94,7 +83,6 @@ py_library(
     deps = [
         ":rewards",
         ":upkie_base_env",
-        ":upkie_ground_accel",
         ":upkie_ground_velocity",
         ":upkie_servos_env",
         requirement("gymnasium"),
