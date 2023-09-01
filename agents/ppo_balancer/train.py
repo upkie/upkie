@@ -80,8 +80,10 @@ def parse_command_line_arguments() -> argparse.Namespace:
 
 
 class SummaryWriterCallback(BaseCallback):
-    def __init__(self, vec_env: VecEnv):
+    def __init__(self, vec_env: VecEnv, policy_name: str, training_dir: str):
         super().__init__()
+        self.policy_name = policy_name
+        self.training_dir = training_dir
         self.vec_env = vec_env
 
     def _on_training_start(self):
@@ -111,11 +113,10 @@ class SummaryWriterCallback(BaseCallback):
             f"```yaml\n{yaml.dump(config, indent=4)}\n```",
             global_step=None,
         )
-        self.tb_formatter.writer.add_text(
-            "gin_config",
-            f"    {gin.operative_config_str()}".replace("\n", "\n    "),
-            global_step=None,
-        )
+        save_path = f"{self.training_dir}/{self.policy_name}.yaml"
+        with open(save_path, "w") as fh:
+            yaml.dump(config, fh, indent=4)
+        logging.info(f"Saved configuration to {save_path}")
 
 
 def get_random_word():
@@ -245,7 +246,7 @@ def train_policy(
                     save_path=f"{training_dir}/{policy_name}_1",
                     name_prefix="checkpoint",
                 ),
-                SummaryWriterCallback(vec_env),
+                SummaryWriterCallback(vec_env, policy_name, training_dir),
             ],
             tb_log_name=policy_name,
         )
