@@ -26,7 +26,7 @@ from upkie.envs import register
 
 
 class TestUpkieEnvs(unittest.TestCase):
-    def test_register(self, env_name: str = "UpkieWheeledPendulum"):
+    def test_register(self, env_name: str = "UpkieServos"):
         with self.assertRaises(gym.error.NameNotFound):
             # runs in the same test so that we make sure this is executed
             # before the call to ``register()``
