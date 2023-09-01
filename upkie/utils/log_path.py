@@ -17,15 +17,7 @@
 
 import datetime
 import os
-
-
-def get_log_path() -> str:
-    """!
-    Get `UPKIE_LOG_PATH` environment variable.
-
-    @returns Log path.
-    """
-    return os.environ.get("UPKIE_LOG_PATH", "/tmp")
+import tempfile
 
 
 def new_log_filename(label: str):
@@ -37,5 +29,5 @@ def new_log_filename(label: str):
     """
     now = datetime.datetime.now()
     stamp = now.strftime("%Y-%m-%d_%H%M%S")
-    log_path = get_log_path()
+    log_path = os.environ.get("UPKIE_LOG_PATH", tempfile.gettempdir())
     return os.path.expanduser(f"{log_path}/{stamp}_{label}.mpack")
