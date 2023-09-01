@@ -69,9 +69,18 @@ py_binary(
         ":settings",
         "@mpacklog//:python",
         requirement("gin-config"),
-        requirement("loop_rate_limiters"),
-        requirement("stable_baselines3"),
-    ],
+        requirement("loop-rate-limiters"),
+    ] + select({
+        # Selecting the right CPU architecture for the Raspberry Pi is
+        # currently a tough nut to crack for Bazel. We only enable compiled
+        # dependencies on the host side for now.
+        # Followed in: https://github.com/tasts-robots/upkie/issues/1
+        "//:pi32_config": [],
+        "//:pi64_config": [],
+        "//conditions:default": [
+            requirement("stable_baselines3"),
+        ],
+    }),
 )
 
 py_binary(
@@ -92,12 +101,20 @@ py_binary(
         ":reward",
         ":settings",
         ":utils",
-        "@mpacklog//:python",
         "@rules_python//python/runfiles",
         requirement("gin-config"),
-        requirement("stable_baselines3"),
-        requirement("torch"),
-    ],
+    ] + select({
+        # Selecting the right CPU architecture for the Raspberry Pi is
+        # currently a tough nut to crack for Bazel. We only enable compiled
+        # dependencies on the host side for now.
+        # Followed in: https://github.com/tasts-robots/upkie/issues/1
+        "//:pi32_config": [],
+        "//:pi64_config": [],
+        "//conditions:default": [
+            requirement("stable_baselines3"),
+            requirement("torch"),
+        ],
+    }),
 )
 
 add_lint_tests()
