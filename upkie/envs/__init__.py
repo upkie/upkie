@@ -26,9 +26,9 @@ from .upkie_wheeled_pendulum import UpkieWheeledPendulum
 
 __all__ = [
     "Reward",
-    "SurvivalReward",
     "UpkieBaseEnv",
     "UpkieWheeledPendulum",
+    "SurvivalReward",
     "register",
 ]
 
