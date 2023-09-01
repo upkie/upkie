@@ -72,6 +72,11 @@ async def run_policy(
             {
                 "action": info["action"],
                 "observation": info["observation"],
+                "env": {
+                    "rate": {
+                        "slack": env.rate.slack,
+                    }
+                },
                 "policy": {
                     "action": action,
                     "observation": observation,

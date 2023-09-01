@@ -17,7 +17,7 @@
 
 import abc
 import asyncio
-from typing import Dict, Optional, Tuple
+from typing import Dict, Optional, Tuple, Union
 
 import gymnasium
 import numpy as np
@@ -169,6 +169,19 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
             self.__async_rate = AsyncRateLimiter(self.__frequency, name=name)
         except RuntimeError:  # not asyncio
             self.__rate = RateLimiter(self.__frequency, name=name)
+
+    @property
+    def rate(self) -> Union[AsyncRateLimiter, RateLimiter, None]:
+        """!
+        Get the internal rate used for loop frequency regulation.
+
+        @returns Internal rate.
+        """
+        if self.__async_rate is not None:
+            return self.__async_rate
+        elif self.__rate is not None:
+            return self.__rate
+        return None
 
     def step(
         self,
