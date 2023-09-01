@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - Bazel: Python library target for upkie module
+- PPO balancer: Save policy configuration to a YAML file as well as TB
 - PPO balancer: Train with multiprocessing
 - agents: Closed-loop model predictive control
 - envs: `UpkieGroundVelocity` can limit ground acceleration as well
