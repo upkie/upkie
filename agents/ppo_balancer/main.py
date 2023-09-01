@@ -14,13 +14,28 @@ import time
 
 import gin
 import mpacklog
+import numpy as np
 from loop_rate_limiters import AsyncRateLimiter
+from numpy.testing import assert_almost_equal
 from settings import EnvSettings
 from stable_baselines3 import PPO
 
 from upkie.envs import UpkieGroundVelocity
+from upkie.utils.filters import low_pass_filter
 from upkie.utils.log_path import new_log_filename
 from upkie.utils.raspi import configure_agent_process, on_raspi
+
+
+def no_contact_policy(prev_action: np.ndarray, dt: float) -> np.ndarray:
+    return (
+        low_pass_filter(
+            prev_action,
+            cutoff_period=1.0,
+            new_input=np.zeros(prev_action.shape),
+            dt=dt,
+        ),
+        None,
+    )
 
 
 async def run_policy(policy, logger: mpacklog.AsyncLogger):
@@ -31,14 +46,27 @@ async def run_policy(policy, logger: mpacklog.AsyncLogger):
         policy: Policy to run.
         logger: Logger to write actions and observations to.
     """
+    rate = AsyncRateLimiter(EnvSettings().agent_frequency, "controller")
+    assert_almost_equal(rate.dt, policy.env.get_attr("dt")[0])
+
+    action = np.zeros((1, 1))
     observation = policy.env.reset()
-    agent_frequency = EnvSettings().agent_frequency
-    rate = AsyncRateLimiter(agent_frequency, "controller")
+    floor_contact = False
     while True:
         await rate.sleep()
-        action, _ = policy.predict(observation)
+
+        action, _ = (
+            policy.predict(observation)
+            if floor_contact
+            else no_contact_policy(action, rate.dt)
+        )
         action_time = time.time()
-        observation, reward, done, info = policy.env.step(action)
+        observation, reward, dones, info = policy.env.step(action)
+        floor_contact = info[0]["observation"]["floor_contact"]["contact"]
+        if dones[0]:
+            observation = policy.env.reset()
+            floor_contact = False
+
         await logger.put(
             {
                 "action": info[0]["action"],
