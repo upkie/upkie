@@ -18,6 +18,7 @@ All notable changes to this project will be documented in this file.
 - **Breaking:** Environment rewards depend on both observation and action
 - **Breaking:** Rename `UpkieServosEnv` to `UpkieServos`
 - **Breaking:** Rename ``UpkieWheelsEnv`` to ``UpkieGroundVelocity``
+- **Breaking:** Use `regulate_frequency` env kwarg instead of `frequency=None`
 - Makefile: Default wheel balancer config to the output of `hostname`
 - Makefile: Rename ``ROBOT`` environment variable to ``UPKIE_NAME``
 - PPO balancer: Change training directory to `/tmp/ppo_balancer`
