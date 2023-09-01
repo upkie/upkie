@@ -28,7 +28,7 @@ def get_log_path() -> str:
     return os.environ.get("UPKIE_LOG_PATH", "/tmp")
 
 
-def get_log_filename(label: str):
+def new_log_filename(label: str):
     """!
     Get path to a new log, in the log path, with a given label.
 
