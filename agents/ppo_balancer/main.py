@@ -13,17 +13,19 @@ import tempfile
 import time
 
 import gin
+import gymnasium as gym
 import mpacklog
 import numpy as np
-from loop_rate_limiters import AsyncRateLimiter
-from numpy.testing import assert_almost_equal
 from settings import EnvSettings
 from stable_baselines3 import PPO
 
+import upkie.envs
 from upkie.envs import UpkieGroundVelocity
 from upkie.utils.filters import low_pass_filter
 from upkie.utils.log_path import new_log_filename
 from upkie.utils.raspi import configure_agent_process, on_raspi
+
+upkie.envs.register()
 
 
 def no_contact_policy(prev_action: np.ndarray, dt: float) -> np.ndarray:
@@ -38,7 +40,9 @@ def no_contact_policy(prev_action: np.ndarray, dt: float) -> np.ndarray:
     )
 
 
-async def run_policy(policy, logger: mpacklog.AsyncLogger):
+async def run_policy(
+    env: UpkieGroundVelocity, policy, logger: mpacklog.AsyncLogger
+) -> None:
     """
     Run policy, logging its actions and observations.
 
@@ -46,34 +50,31 @@ async def run_policy(policy, logger: mpacklog.AsyncLogger):
         policy: Policy to run.
         logger: Logger to write actions and observations to.
     """
-    rate = AsyncRateLimiter(EnvSettings().agent_frequency, "controller")
-    assert_almost_equal(rate.dt, policy.env.get_attr("dt")[0])
-
-    actions = np.zeros((1, 1))
-    observations = policy.env.reset()
+    action = np.zeros(env.action_space.shape)
+    observation, info = env.reset()
     floor_contact = False
     while True:
-        await rate.sleep()
-
-        actions, _ = (
-            policy.predict(observations)
+        action, _ = (
+            policy.predict(observation)
             if floor_contact
-            else no_contact_policy(actions, rate.dt)
+            else no_contact_policy(action, env.dt)
         )
         action_time = time.time()
-        observations, _, dones, infos = policy.env.step(actions)
-        floor_contact = infos[0]["observation"]["floor_contact"]["contact"]
-        if dones[0]:
-            observations = policy.env.reset()
+        observation, _, terminated, truncated, info = await env.async_step(
+            action
+        )
+        floor_contact = info["observation"]["floor_contact"]["contact"]
+        if terminated or truncated:
+            observation, info = env.reset()
             floor_contact = False
 
         await logger.put(
             {
-                "action": infos[0]["action"],
-                "observation": infos[0]["observation"],
+                "action": info["action"],
+                "observation": info["observation"],
                 "policy": {
-                    "action": actions[0],
-                    "observation": observations[0],
+                    "action": action,
+                    "observation": observation,
                 },
                 "time": action_time,
             }
@@ -82,12 +83,19 @@ async def run_policy(policy, logger: mpacklog.AsyncLogger):
 
 
 async def main(policy_path: str):
-    env = UpkieGroundVelocity(shm_name="/vulp")
-    policy = PPO("MlpPolicy", env, verbose=1)
-    policy.set_parameters(policy_path)
-    logger = mpacklog.AsyncLogger("/dev/shm/ppo_balancer.mpack")
-    await asyncio.gather(run_policy(policy, logger), logger.write())
-    policy.env.close()
+    agent_frequency = EnvSettings().agent_frequency
+    with gym.make(
+        "UpkieGroundVelocity-v1",
+        frequency=agent_frequency,
+        regulate_frequency=True,
+    ) as env:
+        policy = PPO("MlpPolicy", env, verbose=1)
+        policy.set_parameters(policy_path)
+        logger = mpacklog.AsyncLogger("/dev/shm/ppo_balancer.mpack")
+        await asyncio.gather(
+            run_policy(env, policy, logger),
+            logger.write(),
+        )
 
 
 if __name__ == "__main__":
