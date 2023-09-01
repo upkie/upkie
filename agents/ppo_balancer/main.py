@@ -83,10 +83,12 @@ async def run_policy(
 
 
 async def main(policy_path: str):
-    agent_frequency = EnvSettings().agent_frequency
+    settings = EnvSettings()
     with gym.make(
         "UpkieGroundVelocity-v1",
-        frequency=agent_frequency,
+        frequency=settings.agent_frequency,
+        max_ground_accel=settings.max_ground_accel,
+        max_ground_velocity=settings.max_ground_velocity,
         regulate_frequency=True,
     ) as env:
         policy = PPO("MlpPolicy", env, verbose=1)
