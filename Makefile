@@ -54,6 +54,7 @@ clean: clean_broken_links  ## clean all local build and intermediate files
 
 .PHONY: build
 build: clean_broken_links  ## build Raspberry Pi targets
+	$(BAZEL) build --config=pi64 //agents/ppo_balancer
 	$(BAZEL) build --config=pi64 //agents/wheel_balancer
 	$(BAZEL) build --config=pi64 //spines:mock
 	$(BAZEL) build --config=pi64 //spines:pi3hat
@@ -88,18 +89,21 @@ upload: check_robot build  ## upload built targets to the Raspberry Pi
 # REMOTE TARGETS
 # ==============
 
-# A specific gain config file can be loaded with the CONFIG variable
-# Example: ``make run_wheel_balancer CONFIG=michel-strogoff``
-# where michel-strogoff.gin is a file in agents/wheel_balancer/config/
-# By default we detect the config file to load by running `hostname`.
-WHEEL_BALANCER_CONFIG = $(or ${CONFIG}, hostname)
-
 run_mock_spine:  ### run the mock spine on the Raspberry Pi
 	$(RASPUNZEL) run -s //spines:mock
 
 # NB: run_pi3hat_spine is used in build instructions
 run_pi3hat_spine:  ### run the pi3hat spine on the Raspberry Pi
 	$(RASPUNZEL) run -s //spines:pi3hat
+
+run_ppo_balancer:  ### run the test balancer on the Raspberry Pi
+	$(RASPUNZEL) run -s //agents/ppo_balancer:ppo_balancer
+
+# A specific gain config file can be loaded with the CONFIG variable
+# Example: ``make run_wheel_balancer CONFIG=michel-strogoff``
+# where michel-strogoff.gin is a file in agents/wheel_balancer/config/
+# By default we detect the config file to load by running `hostname`.
+WHEEL_BALANCER_CONFIG = $(or ${CONFIG}, hostname)
 
 # NB: run_wheel_balancer is used in build instructions
 run_wheel_balancer:  ### run the test balancer on the Raspberry Pi
