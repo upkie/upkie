@@ -17,11 +17,13 @@
 
 import abc
 import asyncio
+from dataclasses import dataclass
 from typing import Dict, Optional, Tuple, Union
 
 import gymnasium
 import numpy as np
 from loop_rate_limiters import AsyncRateLimiter, RateLimiter
+from scipy.spatial.transform import Rotation as ScipyRotation
 from vulp.spine import SpineInterface
 
 import upkie.config
@@ -30,6 +32,20 @@ from upkie.utils.exceptions import UpkieException
 
 from .reward import Reward
 from .survival_reward import SurvivalReward
+
+
+@dataclass
+class ResetRandomization:
+    roll: float = 0.0
+    pitch: float = 0.0
+    x: float = 0.0
+    z: float = 0.0
+
+    def update(self, roll: float = 0., pitch: float = 0., x: float = 0., z: float = 0.) -> None:
+        self.roll = roll
+        self.pitch = pitch
+        self.x = x
+        self.z = z
 
 
 class UpkieBaseEnv(abc.ABC, gymnasium.Env):
@@ -59,12 +75,14 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
     fall_pitch: float
     spine_config: dict
     reward: Reward
+    reset_rand: ResetRandomization
 
     def __init__(
         self,
         fall_pitch: float = 1.0,
         frequency: Optional[float] = 200.0,
         regulate_frequency: bool = True,
+        reset_rand: Optional[ResetRandomization] = None,
         reward: Optional[Reward] = None,
         shm_name: str = "/vulp",
         spine_config: Optional[dict] = None,
@@ -78,6 +96,8 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
             set even when `regulate_frequency` is false, as some environments
             make use of e.g. `self.dt` internally.
         @param regulate_frequency Enables loop frequency regulation.
+        @param reset_rand Magnitude of the random disturbance added to the
+            default initial state when the environment is reset.
         @param reward Reward function.
         @param shm_name Name of shared-memory file to exchange with the spine.
         @param spine_config Additional spine configuration overriding the
@@ -91,16 +111,16 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
             merged_spine_config.update(spine_config)
         if regulate_frequency and frequency is None:
             raise UpkieException(f"{regulate_frequency=} but {frequency=}")
+        if reset_rand is None:
+            reset_rand = ResetRandomization()
         if reward is None:
             reward = SurvivalReward()
-
-        # gymnasium.Env: reward_range
-        self.reward_range = reward.get_range()
 
         self.__frequency = frequency
         self.__regulate_frequency = regulate_frequency
         self._spine = SpineInterface(shm_name, retries=spine_retries)
         self.fall_pitch = fall_pitch
+        self.reset_rand = reset_rand
         self.reward = reward
         self.spine_config = merged_spine_config
 
@@ -135,25 +155,26 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         """!
         Resets the spine and get an initial observation.
 
-        @param seed It is not used yet but should be. TODO(perrin-isir)
+        @param seed Number used to initialize the environment’s internal random
+            number generator.
         @param options Currently unused.
         @returns
             - ``observation``: Initial vectorized observation, i.e. an element
               of the environment's ``observation_space``.
             - ``info``: Dictionary with auxiliary diagnostic information. For
-              us this will be the full observation dictionary coming sent by
-              the spine.
+              Upkie this is the full observation dictionary sent by the spine.
         """
         super().reset(seed=seed)
-        self.__reset_rates()
         self._spine.stop()
+        self.__reset_rates()
+        self.__reset_initial_robot_state()
         self._spine.start(self.spine_config)
         self._spine.get_observation()  # might be a pre-reset observation
         observation_dict = self._spine.get_observation()
         self.parse_first_observation(observation_dict)
         observation = self.vectorize_observation(observation_dict)
         info = {
-            "action": None,
+            "action": {},
             "observation": observation_dict,
         }
         return observation, info
@@ -169,6 +190,28 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
             self.__async_rate = AsyncRateLimiter(self.__frequency, name=name)
         except RuntimeError:  # not asyncio
             self.__rate = RateLimiter(self.__frequency, name=name)
+
+    def __reset_initial_robot_state(self):
+        rand = np.array([0.0, self.reset_rand.pitch, self.reset_rand.roll])
+        yaw_pitch_roll = self.np_random.uniform(
+            low=-rand,
+            high=+rand,
+            size=3,
+        )
+        orientation_matrix = ScipyRotation.from_euler("ZYX", yaw_pitch_roll)
+        qx, qy, qz, qw = orientation_matrix.as_quat()
+        orientation = np.array([qw, qx, qy, qz])
+
+        default_position = np.array([0.0, 0.0, 0.6])
+        position = default_position + self.np_random.uniform(
+            low=np.array([-self.reset_rand.x, 0.0, 0.0]),
+            high=np.array([+self.reset_rand.x, 0.0, self.reset_rand.z]),
+            size=3,
+        )
+
+        bullet_config = self.spine_config["bullet"]
+        bullet_config["orientation_init_base_in_world"] = orientation
+        bullet_config["position_init_base_in_world"] = position
 
     @property
     def rate(self) -> Union[AsyncRateLimiter, RateLimiter, None]:
