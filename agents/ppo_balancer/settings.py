@@ -36,7 +36,7 @@ class EnvSettings:
     max_ground_velocity: float
     randomize_velocity_lpf: Tuple[float, float]
     reset_pitch: float
-    reset_seed: Optional[int]
+    seed: Optional[int]
     spine_frequency: int
     total_timesteps: int
 

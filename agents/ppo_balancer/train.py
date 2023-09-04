@@ -154,8 +154,8 @@ def make_env(
 ):
     settings = EnvSettings()
     seed = (
-        settings.reset_seed + subproc_index
-        if settings.reset_seed is not None
+        settings.seed + subproc_index
+        if settings.seed is not None
         else random.randint(0, 1_000_000)
     )
 
