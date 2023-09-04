@@ -58,11 +58,19 @@ class TestUpkieGroundVelocity(unittest.TestCase):
 
     def test_disabled_velocity_filter(self):
         observation, info = self.env.reset()
-        action = np.ones(self.env.action_space.shape)
-        self.env.step(action)
+        self.env.step(np.array([1.0]))
         self.assertAlmostEqual(
             self.env._ground_velocity,
             self.env._filtered_ground_velocity,
+        )
+
+    def test_enabled_velocity_filter(self):
+        observation, info = self.env.reset()
+        self.env.velocity_lpf = 0.1  # [s]
+        self.env.step(np.array([1.0]))
+        self.assertLess(
+            self.env._filtered_ground_velocity,
+            self.env._ground_velocity,
         )
 
 
