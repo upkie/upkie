@@ -105,7 +105,6 @@ class SummaryWriterCallback(BaseCallback):
             "env": EnvSettings().env_id,
             "gin": gin_operative_config_dict(gin.config._OPERATIVE_CONFIG),
             "reward": reward.__dict__,
-            "settings": EnvSettings().__dict__,
             "spine_config": spine_config,
         }
         self.tb_formatter.writer.add_text(
