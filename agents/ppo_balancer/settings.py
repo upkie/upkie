@@ -34,8 +34,8 @@ class EnvSettings:
     max_episode_duration: float
     max_ground_accel: float
     max_ground_velocity: float
-    reset_rand: dict
-    reset_seed: int
+    reset_pitch: float
+    reset_seed: Optional[int]
     spine_frequency: int
     total_timesteps: int
 
