@@ -23,15 +23,15 @@ import tempfile
 from typing import List
 
 import gin
-import gymnasium as gym
+import gymnasium
 import stable_baselines3
 import yaml
-from gymnasium.wrappers.time_limit import TimeLimit
 from rules_python.python.runfiles import runfiles
 from settings import EnvSettings, PPOSettings
 from stable_baselines3.common.callbacks import BaseCallback, CheckpointCallback
 from stable_baselines3.common.logger import TensorBoardOutputFormat
 from stable_baselines3.common.monitor import Monitor
+from stable_baselines3.common.utils import set_random_seed
 from stable_baselines3.common.vec_env import (
     DummyVecEnv,
     SubprocVecEnv,
@@ -39,15 +39,13 @@ from stable_baselines3.common.vec_env import (
 )
 from stable_baselines3.common.vec_env.base_vec_env import VecEnv
 from torch import nn
-from utils import gin_operative_config_dict
 
 import upkie.envs
 from upkie.envs import SurvivalReward
 from upkie.utils.spdlog import logging
+from utils import gin_operative_config_dict
 
 upkie.envs.register()
-
-running_spines = []
 
 
 def parse_command_line_arguments() -> argparse.Namespace:
@@ -149,44 +147,28 @@ def get_bullet_argv(shm_name: str, show: bool) -> List[str]:
     return bullet_argv
 
 
-def train_policy(
-    policy_name: str,
+def make_env(
     spine_path: str,
-    training_dir: str,
-    nb_cpus: int,
     show: bool,
-) -> None:
-    """!
-    Train a new policy and save it to a directory.
-
-    @param spine_path Path to the spine binary.
-    @param training_dir Directory for logging and saving policies.
-    @param show Whether to show the simulation GUI.
-    """
-    if policy_name == "":
-        policy_name = get_random_word()
-    logging.info('New policy name is "%s"', policy_name)
-
+    subproc_index: int,
+):
     settings = EnvSettings()
-    agent_frequency = settings.agent_frequency
-    max_episode_duration = settings.max_episode_duration
-    policy_kwargs = {
-        "activation_fn": nn.Tanh,
-        "net_arch": dict(pi=[64, 64], vf=[64, 64]),
-    }
 
-    def make_env():
+    def _init():
         shm_name = f"/{get_random_word()}"
         pid = os.fork()
-        running_spines.append((shm_name, pid))
         if pid == 0:  # child process: spine
             argv = get_bullet_argv(shm_name, show=show)
             os.execvp(spine_path, ["bullet"] + argv)
             return
 
         # parent process: trainer
-        env = gym.make(
+        agent_frequency = settings.agent_frequency
+        max_episode_duration = settings.max_episode_duration
+        env = gymnasium.make(
             settings.env_id,
+            max_episode_steps=int(max_episode_duration * agent_frequency),
+            # upkie.envs.UpkieBaseEnv
             frequency=agent_frequency,
             max_ground_accel=settings.max_ground_accel,
             max_ground_velocity=settings.max_ground_velocity,
@@ -194,22 +176,61 @@ def train_policy(
             reward=SurvivalReward(),
             shm_name=shm_name,
         )
+        env.reset_rand.update(**settings.reset_rand)
+        env.reset(seed=settings.reset_seed + subproc_index)
+        env._prepatch_close = env.close
 
-        return Monitor(  # monitor in TensorBoard
-            TimeLimit(  # limit rollout durations
-                env,
-                max_episode_steps=int(max_episode_duration * agent_frequency),
-            )
-        )
+        def close_monkeypatch():
+            logging.info(f"Terminating spine {shm_name} with {pid=}...")
+            os.kill(pid, signal.SIGINT)  # interrupt spine child process
+            os.waitpid(pid, 0)  # wait for spine to terminate
+            env._prepatch_close()
+
+        env.close = close_monkeypatch
+        return Monitor(env)
+
+    set_random_seed(settings.reset_seed)
+    return _init
+
+
+def train_policy(
+    policy_name: str,
+    training_dir: str,
+    nb_cpus: int,
+    show: bool,
+) -> None:
+    """!
+    Train a new policy and save it to a directory.
+
+    @param training_dir Directory for logging and saving policies.
+    @param show Whether to show the simulation GUI.
+    """
+    if policy_name == "":
+        policy_name = get_random_word()
+    logging.info('New policy name is "%s"', policy_name)
+
+    deez_runfiles = runfiles.Create()
+    spine_path = os.path.join(
+        agent_dir,
+        deez_runfiles.Rlocation("upkie/spines/bullet"),
+    )
 
     vec_env = (
-        SubprocVecEnv([make_env for _ in range(nb_cpus)], start_method="fork")
+        SubprocVecEnv(
+            [
+                make_env(spine_path, show, subproc_index=i)
+                for i in range(nb_cpus)
+            ],
+            start_method="fork",
+        )
         if nb_cpus > 1
-        else DummyVecEnv([make_env])
+        else DummyVecEnv([make_env(spine_path, show, subproc_index=0)])
     )
     if False:  # does not always improve returns during training
         vec_env = VecNormalize(vec_env)
 
+    settings = EnvSettings()
+    agent_frequency = settings.agent_frequency
     dt = 1.0 / agent_frequency
     gamma = 1.0 - dt / settings.cumulative_reward_horizon
 
@@ -266,28 +287,15 @@ if __name__ == "__main__":
     agent_dir = os.path.dirname(__file__)
     gin.parse_config_file(f"{agent_dir}/settings.gin")
 
-    deez_runfiles = runfiles.Create()
-    spine_path = os.path.join(
-        agent_dir,
-        deez_runfiles.Rlocation("upkie/spines/bullet"),
+    training_dir = f"{tempfile.gettempdir()}/ppo_balancer"
+    logging.info("Logging training data to %s", training_dir)
+    logging.info(
+        "To track in TensorBoard, run "
+        f"`tensorboard --logdir {training_dir}`"
     )
-
-    try:
-        training_dir = f"{tempfile.gettempdir()}/ppo_balancer"
-        logging.info("Logging to %s", training_dir)
-        logging.info(
-            "To track in TensorBoard, run "
-            f"`tensorboard --logdir {training_dir}`"
-        )
-        train_policy(
-            args.name,
-            spine_path,
-            training_dir,
-            nb_cpus=args.nb_cpus,
-            show=args.show,
-        )
-    finally:
-        for shm_name, pid in running_spines:
-            logging.info(f"Terminating spine {shm_name} with {pid=}...")
-            os.kill(pid, signal.SIGINT)  # interrupt spine child process
-            os.waitpid(pid, 0)  # wait for spine to terminate
+    train_policy(
+        args.name,
+        training_dir,
+        nb_cpus=args.nb_cpus,
+        show=args.show,
+    )
