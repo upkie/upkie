@@ -112,7 +112,7 @@ class SummaryWriterCallback(BaseCallback):
             f"```yaml\n{yaml.dump(config, indent=4)}\n```",
             global_step=None,
         )
-        save_path = f"{self.training_dir}/{self.policy_name}.yaml"
+        save_path = f"{self.training_dir}/{self.policy_name}_1/config.yaml"
         with open(save_path, "w") as fh:
             yaml.dump(config, fh, indent=4)
         logging.info(f"Saved configuration to {save_path}")
@@ -233,7 +233,10 @@ def train_policy(
         sde_sample_freq=ppo_settings.sde_sample_freq,
         target_kl=ppo_settings.target_kl,
         tensorboard_log=training_dir,
-        policy_kwargs=policy_kwargs,
+        policy_kwargs={
+            "activation_fn": nn.Tanh,
+            "net_arch": dict(pi=[64, 64], vf=[64, 64]),
+        },
         verbose=1,
     )
 
@@ -254,7 +257,7 @@ def train_policy(
         logging.info("Training interrupted.")
 
     # Save policy no matter what!
-    policy.save(f"{training_dir}/{policy_name}")
+    policy.save(f"{training_dir}/{policy_name}_1/final.zip")
     policy.env.close()
 
 
