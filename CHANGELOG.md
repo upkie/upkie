@@ -13,7 +13,9 @@ All notable changes to this project will be documented in this file.
 - envs: Accessor to `env.rate` for logging purposes
 - envs: Randomize base orientation and position on resets
 - envs: `Randomization` dataclass to describe reset randomization
+- envs: `UpkieGroundVelocity` can include a velocity low-pass filter
 - envs: `UpkieGroundVelocity` can limit ground acceleration as well
+- envs: `UpkieGroundVelocity` low-pass filter can also be randomized
 - examples: Closed-loop model predictive control
 - utils: Log path utility functions
 
