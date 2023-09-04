@@ -7,7 +7,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - Bazel: Python library target for upkie module
-- PPO balancer: Save policy configuration to a YAML file as well as TB
+- PPO balancer: Save policy configuration to a YAML file
 - PPO balancer: Train with multiprocessing
 - agents: Closed-loop model predictive control
 - envs: Accessor to `env.rate` for logging purposes
@@ -24,6 +24,7 @@ All notable changes to this project will be documented in this file.
 - Makefile: Default wheel balancer config to the output of `hostname`
 - Makefile: Rename ``ROBOT`` environment variable to ``UPKIE_NAME``
 - PPO balancer: Change training directory to `/tmp/ppo_balancer`
+- PPO balancer: Policy CLI argument becomes positional and optional
 - PPO balancer: Refactor agent settings
 - agents: Retry connecting to the spine several times at startup
 - envs: Retry connecting to the spine several times at startup
