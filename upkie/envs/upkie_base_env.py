@@ -17,7 +17,6 @@
 
 import abc
 import asyncio
-from dataclasses import dataclass
 from typing import Dict, Optional, Tuple, Union
 
 import gymnasium
@@ -30,22 +29,9 @@ import upkie.config
 from upkie.observers.base_pitch import compute_base_pitch_from_imu
 from upkie.utils.exceptions import UpkieException
 
+from .randomization import Randomization
 from .reward import Reward
 from .survival_reward import SurvivalReward
-
-
-@dataclass
-class ResetRandomization:
-    roll: float = 0.0
-    pitch: float = 0.0
-    x: float = 0.0
-    z: float = 0.0
-
-    def update(self, roll: float = 0., pitch: float = 0., x: float = 0., z: float = 0.) -> None:
-        self.roll = roll
-        self.pitch = pitch
-        self.x = x
-        self.z = z
 
 
 class UpkieBaseEnv(abc.ABC, gymnasium.Env):
@@ -75,14 +61,14 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
     fall_pitch: float
     spine_config: dict
     reward: Reward
-    reset_rand: ResetRandomization
+    randomization: Randomization
 
     def __init__(
         self,
         fall_pitch: float = 1.0,
         frequency: Optional[float] = 200.0,
         regulate_frequency: bool = True,
-        reset_rand: Optional[ResetRandomization] = None,
+        randomization: Optional[Randomization] = None,
         reward: Optional[Reward] = None,
         shm_name: str = "/vulp",
         spine_config: Optional[dict] = None,
@@ -96,7 +82,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
             set even when `regulate_frequency` is false, as some environments
             make use of e.g. `self.dt` internally.
         @param regulate_frequency Enables loop frequency regulation.
-        @param reset_rand Magnitude of the random disturbance added to the
+        @param randomization Magnitude of the random disturbance added to the
             default initial state when the environment is reset.
         @param reward Reward function.
         @param shm_name Name of shared-memory file to exchange with the spine.
@@ -111,8 +97,8 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
             merged_spine_config.update(spine_config)
         if regulate_frequency and frequency is None:
             raise UpkieException(f"{regulate_frequency=} but {frequency=}")
-        if reset_rand is None:
-            reset_rand = ResetRandomization()
+        if randomization is None:
+            randomization = Randomization()
         if reward is None:
             reward = SurvivalReward()
 
@@ -120,7 +106,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         self.__regulate_frequency = regulate_frequency
         self._spine = SpineInterface(shm_name, retries=spine_retries)
         self.fall_pitch = fall_pitch
-        self.reset_rand = reset_rand
+        self.randomization = randomization
         self.reward = reward
         self.spine_config = merged_spine_config
 
@@ -192,10 +178,16 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
             self.__rate = RateLimiter(self.__frequency, name=name)
 
     def __reset_initial_robot_state(self):
-        rand = np.array([0.0, self.reset_rand.pitch, self.reset_rand.roll])
+        yaw_pitch_roll_bounds = np.array(
+            [
+                0.0,
+                self.randomization.reset_pitch,
+                self.randomization.reset_roll,
+            ]
+        )
         yaw_pitch_roll = self.np_random.uniform(
-            low=-rand,
-            high=+rand,
+            low=-yaw_pitch_roll_bounds,
+            high=+yaw_pitch_roll_bounds,
             size=3,
         )
         orientation_matrix = ScipyRotation.from_euler("ZYX", yaw_pitch_roll)
@@ -204,8 +196,8 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
 
         default_position = np.array([0.0, 0.0, 0.6])
         position = default_position + self.np_random.uniform(
-            low=np.array([-self.reset_rand.x, 0.0, 0.0]),
-            high=np.array([+self.reset_rand.x, 0.0, self.reset_rand.z]),
+            low=np.array([-self.randomization.reset_x, 0.0, 0.0]),
+            high=np.array([+self.randomization.reset_x, 0.0, self.randomization.reset_z]),
             size=3,
         )
 

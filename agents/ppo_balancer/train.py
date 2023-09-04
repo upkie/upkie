@@ -39,11 +39,11 @@ from stable_baselines3.common.vec_env import (
 )
 from stable_baselines3.common.vec_env.base_vec_env import VecEnv
 from torch import nn
+from utils import gin_operative_config_dict
 
 import upkie.envs
-from upkie.envs import SurvivalReward
+from upkie.envs import Randomization, SurvivalReward
 from upkie.utils.spdlog import logging
-from utils import gin_operative_config_dict
 
 upkie.envs.register()
 
@@ -153,6 +153,11 @@ def make_env(
     subproc_index: int,
 ):
     settings = EnvSettings()
+    seed = (
+        settings.reset_seed + subproc_index
+        if settings.reset_seed is not None
+        else random.randint(0, 1_000_000)
+    )
 
     def _init():
         shm_name = f"/{get_random_word()}"
@@ -172,12 +177,12 @@ def make_env(
             frequency=agent_frequency,
             max_ground_accel=settings.max_ground_accel,
             max_ground_velocity=settings.max_ground_velocity,
+            randomization=Randomization(reset_pitch=settings.reset_pitch),
             regulate_frequency=False,
             reward=SurvivalReward(),
             shm_name=shm_name,
         )
-        env.reset_rand.update(**settings.reset_rand)
-        env.reset(seed=settings.reset_seed + subproc_index)
+        env.reset(seed=seed)
         env._prepatch_close = env.close
 
         def close_monkeypatch():
@@ -189,7 +194,7 @@ def make_env(
         env.close = close_monkeypatch
         return Monitor(env)
 
-    set_random_seed(settings.reset_seed)
+    set_random_seed(seed)
     return _init
 
 
