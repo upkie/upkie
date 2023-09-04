@@ -73,6 +73,15 @@ class TestUpkieGroundVelocity(unittest.TestCase):
             self.env._ground_velocity,
         )
 
+    def test_velocity_filter_randomization(self):
+        low, high = 12.0, 42.0
+        self.env.randomize_velocity_lpf = (low, high)
+        self.assertIsNone(self.env.velocity_lpf)
+        self.env.reset()
+        self.assertIsNotNone(self.env.velocity_lpf)
+        self.assertGreaterEqual(self.env.velocity_lpf, low)
+        self.assertLessEqual(self.env.velocity_lpf, high)
+
 
 if __name__ == "__main__":
     unittest.main()
