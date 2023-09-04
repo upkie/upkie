@@ -35,6 +35,8 @@ class TestUpkieGroundVelocity(unittest.TestCase):
         self.env = UpkieGroundVelocity(
             fall_pitch=1.0,
             frequency=100.0,
+            max_ground_accel=10.0,
+            max_ground_velocity=1.0,
             shm_name=shm_name,
         )
         shared_memory.close_fd()
@@ -53,6 +55,15 @@ class TestUpkieGroundVelocity(unittest.TestCase):
         action = np.zeros(self.env.action_space.shape)
         observation, reward, terminated, truncated, _ = self.env.step(action)
         self.assertAlmostEqual(reward, 1.0)  # survival reward
+
+    def test_disabled_velocity_filter(self):
+        observation, info = self.env.reset()
+        action = np.ones(self.env.action_space.shape)
+        self.env.step(action)
+        self.assertAlmostEqual(
+            self.env._ground_velocity,
+            self.env._filtered_ground_velocity,
+        )
 
 
 if __name__ == "__main__":
