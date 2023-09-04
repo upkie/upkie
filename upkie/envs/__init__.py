@@ -51,11 +51,9 @@ except ImportError as import_error:
     __envs__["UpkieServos"] = import_error
 
 
-def register(max_episode_steps: int = 1_000_000_000) -> None:
+def register() -> None:
     """!
     Register Upkie environments with Gymnasium.
-
-    @param max_episode_steps Maximum number of steps per episode.
     """
     for env_name, Env in __envs__.items():
         if isinstance(Env, ModuleNotFoundError):
@@ -72,5 +70,4 @@ def register(max_episode_steps: int = 1_000_000_000) -> None:
             gym.envs.registration.register(
                 id=f"{env_name}-v{Env.version}",
                 entry_point=f"upkie.envs:{env_name}",
-                max_episode_steps=max_episode_steps,
             )
