@@ -23,11 +23,12 @@ EnvSettings.env_id = "UpkieGroundVelocity-v1"
 EnvSettings.max_episode_duration = 10.0
 EnvSettings.max_ground_accel = 10.0
 EnvSettings.max_ground_velocity = 1.0
-EnvSettings.randomize_velocity_lpf = (0.05, 0.09)
+EnvSettings.randomize_velocity_lpf = None
 EnvSettings.reset_pitch = 0.0
 EnvSettings.seed = None
 EnvSettings.spine_frequency = 1000
-EnvSettings.total_timesteps = 1e6
+EnvSettings.total_timesteps = 6e5
+EnvSettings.velocity_lpf = 0.04
 
 PPOSettings.batch_size = 64
 PPOSettings.clip_range = 0.2

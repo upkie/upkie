@@ -34,11 +34,12 @@ class EnvSettings:
     max_episode_duration: float
     max_ground_accel: float
     max_ground_velocity: float
-    randomize_velocity_lpf: Tuple[float, float]
+    randomize_velocity_lpf: Optional[Tuple[float, float]]
     reset_pitch: float
     seed: Optional[int]
     spine_frequency: int
     total_timesteps: int
+    velocity_lpf: Optional[float]
 
 
 @gin.configurable
