@@ -178,6 +178,7 @@ def make_env(
             max_ground_accel=settings.max_ground_accel,
             max_ground_velocity=settings.max_ground_velocity,
             randomization=Randomization(reset_pitch=settings.reset_pitch),
+            randomize_velocity_lpf=settings.randomize_velocity_lpf,
             regulate_frequency=False,
             reward=SurvivalReward(),
             shm_name=shm_name,

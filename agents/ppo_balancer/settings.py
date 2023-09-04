@@ -16,7 +16,7 @@
 # limitations under the License.
 
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, Tuple
 
 import gin
 
@@ -34,6 +34,7 @@ class EnvSettings:
     max_episode_duration: float
     max_ground_accel: float
     max_ground_velocity: float
+    randomize_velocity_lpf: Tuple[float, float]
     reset_pitch: float
     reset_seed: Optional[int]
     spine_frequency: int
