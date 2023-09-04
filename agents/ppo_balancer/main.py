@@ -99,6 +99,7 @@ async def main(policy_path: str):
         max_ground_accel=settings.max_ground_accel,
         max_ground_velocity=settings.max_ground_velocity,
         regulate_frequency=True,
+        velocity_lpf=None,
     ) as env:
         policy = PPO("MlpPolicy", env, verbose=1)
         policy.set_parameters(policy_path)
