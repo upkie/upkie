@@ -40,8 +40,8 @@ py_test(
 )
 
 py_test(
-    name = "upkie_ground_velocity_env",
-    srcs = ["upkie_ground_velocity_env.py"],
+    name = "upkie_ground_velocity_test",
+    srcs = ["upkie_ground_velocity_test.py"],
     deps = [
         "//upkie/envs",
         ":mock_spine",
