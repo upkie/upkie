@@ -15,8 +15,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Tuple
-
 import gin
 import numpy as np
 
@@ -46,15 +44,6 @@ class Reward(upkie.envs.Reward):
     max_position: float
     pitch_weight: float
     position_weight: float
-
-    @staticmethod
-    def get_range() -> Tuple[float, float]:
-        """!
-        Get range of the reward.
-
-        This is part of the Gym API.
-        """
-        return (-float("inf"), 1.0)
 
     def __init__(
         self,

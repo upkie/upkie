@@ -16,7 +16,6 @@
 # limitations under the License.
 
 import abc
-from typing import Tuple
 
 import numpy as np
 
@@ -26,15 +25,6 @@ class Reward:
     """!
     Reward function \f$R(s, a)\f$.
     """
-
-    @staticmethod
-    @abc.abstractmethod
-    def get_range() -> Tuple[float, float]:
-        """!
-        Get range of the reward.
-
-        This is part of the Gym API.
-        """
 
     @abc.abstractmethod
     def get(self, observation: np.ndarray, action: np.ndarray) -> float:
