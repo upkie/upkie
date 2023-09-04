@@ -17,12 +17,13 @@
 # limitations under the License.
 
 import math
+from typing import Optional
 
 import numpy as np
 from gymnasium import spaces
 
 from upkie.utils.exceptions import UpkieException
-from upkie.utils.filters import abs_bounded_derivative_filter
+from upkie.utils.filters import abs_bounded_derivative_filter, low_pass_filter
 
 from .upkie_wheeled_pendulum import UpkieWheeledPendulum
 
@@ -90,6 +91,7 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
 
     """
 
+    _filtered_ground_velocity: float
     _ground_velocity: float
     max_ground_accel: float
     max_ground_velocity: float
@@ -100,6 +102,7 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
         self,
         max_ground_accel: float = 10.0,
         max_ground_velocity: float = 1.0,
+        velocity_lpf: Optional[float] = None,
         wheel_radius: float = 0.06,
         **kwargs,
     ):
@@ -108,6 +111,8 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
 
         @param max_ground_accel Maximum commanded ground acceleration in m/s^2.
         @param max_ground_velocity Maximum commanded ground velocity in m/s.
+        @param velocity_lpf If set, cutoff period in seconds of a low-pass
+            filter applied to commanded velocities.
         @param wheel_radius Wheel radius in [m].
         @param kwargs Other keyword arguments are forwarded as-is to parent
             class constructors. Follow the chain up from @ref
@@ -127,9 +132,11 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
             dtype=np.float32,
         )
 
+        self._filtered_ground_velocity = 0.0
         self._ground_velocity = 0.0
         self.max_ground_accel = max_ground_accel
         self.max_ground_velocity = max_ground_velocity
+        self.velocity_lpf = velocity_lpf
         self.wheel_radius = wheel_radius
 
     def dictionarize_action(self, action: np.ndarray) -> dict:
@@ -146,7 +153,18 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
             self.max_ground_velocity,
             self.max_ground_accel,
         )
-        wheel_velocity = self._ground_velocity / self.wheel_radius
+
+        if self.velocity_lpf is not None:
+            self._filtered_ground_velocity = low_pass_filter(
+                self._filtered_ground_velocity,
+                self.velocity_lpf,
+                self._ground_velocity,
+                self.dt,
+            )
+        else:  # self.velocity_lpf is None
+            self._filtered_ground_velocity = self._ground_velocity
+
+        wheel_velocity = self._filtered_ground_velocity / self.wheel_radius
         servo_dict = self.get_leg_servo_action()
         servo_dict.update(
             {
