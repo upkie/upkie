@@ -17,7 +17,7 @@
 # limitations under the License.
 
 import math
-from typing import Optional
+from typing import Dict, Optional, Tuple
 
 import numpy as np
 from gymnasium import spaces
@@ -96,6 +96,7 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
     max_ground_accel: float
     max_ground_velocity: float
     version: int = 1
+    velocity_lpf: Optional[float]
     wheel_radius: float
 
     def __init__(
@@ -103,6 +104,7 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
         max_ground_accel: float = 10.0,
         max_ground_velocity: float = 1.0,
         velocity_lpf: Optional[float] = None,
+        randomize_velocity_lpf: Optional[Tuple[float, float]] = None,
         wheel_radius: float = 0.06,
         **kwargs,
     ):
@@ -113,6 +115,10 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
         @param max_ground_velocity Maximum commanded ground velocity in m/s.
         @param velocity_lpf If set, cutoff period in seconds of a low-pass
             filter applied to commanded velocities.
+        @param randomize_velocity_lpf If set, couple of lower and upper bounds
+            for the @ref velocity_lpf parameter. At new period is sampled
+            uniformly at random between these bounds at every reset of the
+            environment.
         @param wheel_radius Wheel radius in [m].
         @param kwargs Other keyword arguments are forwarded as-is to parent
             class constructors. Follow the chain up from @ref
@@ -136,8 +142,35 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
         self._ground_velocity = 0.0
         self.max_ground_accel = max_ground_accel
         self.max_ground_velocity = max_ground_velocity
+        self.randomize_velocity_lpf = randomize_velocity_lpf
         self.velocity_lpf = velocity_lpf
         self.wheel_radius = wheel_radius
+
+    def reset(
+        self,
+        *,
+        seed: Optional[int] = None,
+        options: Optional[dict] = None,
+    ) -> Tuple[np.ndarray, Dict]:
+        """!
+        Resets the environment and get an initial observation.
+
+        @param seed Number used to initialize the environment’s internal random
+            number generator.
+        @param options Currently unused.
+        @returns
+            - ``observation``: Initial vectorized observation, i.e. an element
+              of the environment's ``observation_space``.
+            - ``info``: Dictionary with auxiliary diagnostic information. For
+              Upkie this is the full observation dictionary sent by the spine.
+        """
+        observation, info = super().reset(seed=seed)
+
+        if self.randomize_velocity_lpf is not None:
+            low, high = self.randomize_velocity_lpf
+            self.velocity_lpf = self.np_random.uniform(low=low, high=high)
+
+        return observation, info
 
     def dictionarize_action(self, action: np.ndarray) -> dict:
         """!
