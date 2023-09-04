@@ -52,6 +52,7 @@ class PPOSettings:
     max_grad_norm: float
     n_epochs: int
     n_steps: int
+    normalize_advantage: bool
     sde_sample_freq: int
     target_kl: Optional[float]
     use_sde: bool

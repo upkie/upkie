@@ -225,7 +225,7 @@ def train_policy(
         gae_lambda=ppo_settings.gae_lambda,
         clip_range=ppo_settings.clip_range,
         clip_range_vf=ppo_settings.clip_range_vf,
-        normalize_advantage=True,
+        normalize_advantage=ppo_settings.normalize_advantage,
         ent_coef=ppo_settings.ent_coef,
         vf_coef=ppo_settings.vf_coef,
         max_grad_norm=ppo_settings.max_grad_norm,
