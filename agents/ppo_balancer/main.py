@@ -54,7 +54,8 @@ async def run_policy(
     observation, info = env.reset()
     floor_contact = False
     while True:
-        if info["observation"]["joystick"]["cross_button"]:
+        joystick = info["observation"].get("joystick", {})
+        if joystick.get("cross_button", False):
             floor_contact = False
 
         action, _ = (
