@@ -211,7 +211,8 @@ def train_policy(
         vec_env = VecNormalize(vec_env)
 
     dt = 1.0 / agent_frequency
-    gamma = 1.0 - dt / settings.effective_time_horizon
+    gamma = 1.0 - dt / settings.cumulative_reward_horizon
+
     ppo_settings = PPOSettings()
     policy = stable_baselines3.PPO(
         "MlpPolicy",

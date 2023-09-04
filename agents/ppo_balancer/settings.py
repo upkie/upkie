@@ -24,10 +24,12 @@ import gin
 @gin.configurable
 @dataclass
 class EnvSettings:
-    """Environment settings."""
+    """!
+    Environment settings.
+    """
 
     agent_frequency: int
-    effective_time_horizon: float
+    cumulative_reward_horizon: float
     env_id: str
     max_episode_duration: float
     max_ground_accel: float

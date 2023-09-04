@@ -2,7 +2,7 @@ env: UpkieGroundVelocity-v1
 gin:
     EnvSettings:
         agent_frequency: 200
-        effective_time_horizon: 0.5
+        cumulative_reward_horizon: 0.5
         env_id: UpkieGroundVelocity-v1
         max_episode_duration: 10.0
         max_ground_accel: 10.0

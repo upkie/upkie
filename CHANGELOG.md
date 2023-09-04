@@ -26,6 +26,7 @@ All notable changes to this project will be documented in this file.
 - PPO balancer: Change training directory to `/tmp/ppo_balancer`
 - PPO balancer: Policy CLI argument becomes positional and optional
 - PPO balancer: Refactor agent settings
+- PPO balancer: Rename `effective_time_horizon` to `cumulative_reward_horizon`
 - agents: Retry connecting to the spine several times at startup
 - envs: Retry connecting to the spine several times at startup
 
