@@ -40,9 +40,10 @@ from stable_baselines3.common.vec_env import (
 from stable_baselines3.common.vec_env.base_vec_env import VecEnv
 from torch import nn
 from utils import gin_operative_config_dict
+from reward import Reward
 
 import upkie.envs
-from upkie.envs import Randomization, SurvivalReward
+from upkie.envs import Randomization
 from upkie.utils.spdlog import logging
 
 upkie.envs.register()
@@ -180,7 +181,7 @@ def make_env(
             randomization=Randomization(reset_pitch=settings.reset_pitch),
             randomize_velocity_lpf=settings.randomize_velocity_lpf,
             regulate_frequency=False,
-            reward=SurvivalReward(),
+            reward=Reward(),
             shm_name=shm_name,
             velocity_lpf=settings.velocity_lpf,
         )
