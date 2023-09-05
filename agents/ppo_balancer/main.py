@@ -98,8 +98,9 @@ async def main(policy_path: str):
         frequency=settings.agent_frequency,
         max_ground_accel=settings.max_ground_accel,
         max_ground_velocity=settings.max_ground_velocity,
+        randomize_velocity_lpf=settings.randomize_velocity_lpf,
         regulate_frequency=True,
-        velocity_lpf=None,
+        velocity_lpf=settings.velocity_lpf,
     ) as env:
         policy = PPO("MlpPolicy", env, verbose=1)
         policy.set_parameters(policy_path)
