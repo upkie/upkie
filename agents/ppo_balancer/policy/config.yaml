@@ -4,7 +4,7 @@ gin:
         agent_frequency: 200
         cumulative_reward_horizon: 0.5
         env_id: UpkieGroundVelocity-v1
-        init_rand_pitch: 0.0
+        init_pitch_rand: 0.0
         max_episode_duration: 10.0
         max_ground_accel: 10.0
         max_ground_velocity: 1.0

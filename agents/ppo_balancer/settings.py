@@ -31,7 +31,7 @@ class EnvSettings:
     agent_frequency: int
     cumulative_reward_horizon: float
     env_id: str
-    init_rand_pitch: float
+    init_pitch_rand: float
     max_episode_duration: float
     max_ground_accel: float
     max_ground_velocity: float
