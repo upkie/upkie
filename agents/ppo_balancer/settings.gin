@@ -45,4 +45,4 @@ PPOSettings.target_kl = None
 PPOSettings.use_sde = False
 PPOSettings.vf_coef  = 0.5
 
-Reward.low_acceleration_weight = 0.0
+Reward.acceleration_penalty_weight = 1.0

@@ -28,11 +28,11 @@ class Reward(upkie.envs.Reward):
     Reward function for balancing in place.
     """
 
-    def __init__(self, low_acceleration_weight: float):
+    def __init__(self, acceleration_penalty_weight: float):
         """!
         Initialize reward.
         """
-        self.low_acceleration_weight = low_acceleration_weight
+        self.acceleration_penalty_weight = acceleration_penalty_weight
 
     def get(self, observation: np.ndarray, action: np.ndarray) -> float:
         """!
@@ -54,4 +54,4 @@ class Reward(upkie.envs.Reward):
         low_acceleration = np.exp(
             -1.5 * (commanded_velocity - ground_velocity) ** 2
         )
-        return 1.0 + self.low_acceleration_weight * low_acceleration
+        return 1.0 + self.acceleration_penalty_weight * low_acceleration
