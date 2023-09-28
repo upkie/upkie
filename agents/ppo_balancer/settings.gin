@@ -19,15 +19,15 @@ import settings
 EnvSettings.agent_frequency = 200
 EnvSettings.cumulative_reward_horizon = 0.5
 EnvSettings.env_id = "UpkieGroundVelocity-v1"
-EnvSettings.init_pitch_rand = 0.0
+EnvSettings.init_pitch_rand = 0.1
 EnvSettings.max_episode_duration = 10.0
 EnvSettings.max_ground_accel = 10.0
 EnvSettings.max_ground_velocity = 1.0
 EnvSettings.seed = None
 EnvSettings.spine_frequency = 1000
 EnvSettings.total_timesteps = 6e5
-EnvSettings.velocity_lpf = 0.04
-EnvSettings.velocity_lpf_rand = None
+EnvSettings.velocity_lpf = None
+EnvSettings.velocity_lpf_rand = (0.03, 0.05)
 
 PPOSettings.batch_size = 64
 PPOSettings.clip_range = 0.2
