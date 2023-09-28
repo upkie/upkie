@@ -1,34 +1,5 @@
 # -*- python -*-
 
-import settings
 import reward
-
-EnvSettings.agent_frequency = 200
-EnvSettings.cumulative_reward_horizon = 0.5
-EnvSettings.env_id = "UpkieGroundVelocity-v1"
-EnvSettings.max_episode_duration = 10.0
-EnvSettings.max_ground_accel = 10.0
-EnvSettings.max_ground_velocity = 1.0
-EnvSettings.randomize_velocity_lpf = None
-EnvSettings.reset_pitch = 0.0
-EnvSettings.seed = None
-EnvSettings.spine_frequency = 1000
-EnvSettings.total_timesteps = 6e5
-EnvSettings.velocity_lpf = 0.04
-
-PPOSettings.batch_size = 64
-PPOSettings.clip_range = 0.2
-PPOSettings.clip_range_vf = None
-PPOSettings.ent_coef = 0.0
-PPOSettings.gae_lambda = 0.95
-PPOSettings.learning_rate = 3e-4
-PPOSettings.max_grad_norm = 0.5
-PPOSettings.n_epochs = 10
-PPOSettings.n_steps = 2048
-PPOSettings.normalize_advantage = True
-PPOSettings.sde_sample_freq = -1
-PPOSettings.target_kl = None
-PPOSettings.use_sde = False
-PPOSettings.vf_coef  = 0.5
 
 Reward.acceleration_penalty_weight = 1.0

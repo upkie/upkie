@@ -15,7 +15,6 @@
 # limitations under the License.
 
 import settings
-import reward
 
 EnvSettings.agent_frequency = 200
 EnvSettings.cumulative_reward_horizon = 0.5
@@ -44,5 +43,3 @@ PPOSettings.sde_sample_freq = -1
 PPOSettings.target_kl = None
 PPOSettings.use_sde = False
 PPOSettings.vf_coef  = 0.5
-
-Reward.acceleration_penalty_weight = 1.0
