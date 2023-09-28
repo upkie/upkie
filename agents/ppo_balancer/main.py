@@ -5,16 +5,13 @@
 # Copyright 2023 Inria
 
 import argparse
-import asyncio
 import logging
 import os
 import shutil
 import tempfile
-import time
 
 import gin
 import gymnasium as gym
-import mpacklog
 import numpy as np
 from settings import EnvSettings
 from stable_baselines3 import PPO
@@ -40,15 +37,12 @@ def no_contact_policy(prev_action: np.ndarray, dt: float) -> np.ndarray:
     )
 
 
-async def run_policy(
-    env: UpkieGroundVelocity, policy, logger: mpacklog.AsyncLogger
-) -> None:
+def run_policy(env: UpkieGroundVelocity, policy) -> None:
     """
     Run policy, logging its actions and observations.
 
     Args:
         policy: Policy to run.
-        logger: Logger to write actions and observations to.
     """
     action = np.zeros(env.action_space.shape)
     observation, info = env.reset()
@@ -63,35 +57,14 @@ async def run_policy(
             if floor_contact
             else no_contact_policy(action, env.dt)
         )
-        action_time = time.time()
-        observation, _, terminated, truncated, info = await env.async_step(
-            action
-        )
+        observation, _, terminated, truncated, info = env.step(action)
         floor_contact = info["observation"]["floor_contact"]["contact"]
         if terminated or truncated:
             observation, info = env.reset()
             floor_contact = False
 
-        await logger.put(
-            {
-                "action": info["action"],
-                "observation": info["observation"],
-                "env": {
-                    "rate": {
-                        "slack": env.rate.slack,
-                    }
-                },
-                "policy": {
-                    "action": action,
-                    "observation": observation,
-                },
-                "time": action_time,
-            }
-        )
-    await logger.stop()
 
-
-async def main(policy_path: str):
+def main(policy_path: str):
     settings = EnvSettings()
     with gym.make(
         "UpkieGroundVelocity-v1",
@@ -102,11 +75,7 @@ async def main(policy_path: str):
     ) as env:
         policy = PPO("MlpPolicy", env, verbose=1)
         policy.set_parameters(policy_path)
-        logger = mpacklog.AsyncLogger("/dev/shm/ppo_balancer.mpack")
-        await asyncio.gather(
-            run_policy(env, policy, logger),
-            logger.write(),
-        )
+        run_policy(env, policy)
 
 
 if __name__ == "__main__":
@@ -133,7 +102,7 @@ if __name__ == "__main__":
         policy_path = f"{training_dir}/{policy_path}"
 
     try:
-        asyncio.run(main(policy_path))
+        main(policy_path)
     except KeyboardInterrupt:
         logging.info("Caught a keyboard interrupt")
 
