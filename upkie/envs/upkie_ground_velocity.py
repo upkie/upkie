@@ -104,7 +104,7 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
         max_ground_accel: float = 10.0,
         max_ground_velocity: float = 1.0,
         velocity_lpf: Optional[float] = None,
-        randomize_velocity_lpf: Optional[Tuple[float, float]] = None,
+        velocity_lpf_rand: Optional[Tuple[float, float]] = None,
         wheel_radius: float = 0.06,
         **kwargs,
     ):
@@ -115,7 +115,7 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
         @param max_ground_velocity Maximum commanded ground velocity in m/s.
         @param velocity_lpf If set, cutoff period in seconds of a low-pass
             filter applied to commanded velocities.
-        @param randomize_velocity_lpf If set, couple of lower and upper bounds
+        @param velocity_lpf_rand If set, couple of lower and upper bounds
             for the @ref velocity_lpf parameter. At new period is sampled
             uniformly at random between these bounds at every reset of the
             environment.
@@ -142,8 +142,8 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
         self._ground_velocity = 0.0
         self.max_ground_accel = max_ground_accel
         self.max_ground_velocity = max_ground_velocity
-        self.randomize_velocity_lpf = randomize_velocity_lpf
         self.velocity_lpf = velocity_lpf
+        self.velocity_lpf_rand = velocity_lpf_rand
         self.wheel_radius = wheel_radius
 
     def reset(
@@ -166,8 +166,8 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
         """
         observation, info = super().reset(seed=seed)
 
-        if self.randomize_velocity_lpf is not None:
-            low, high = self.randomize_velocity_lpf
+        if self.velocity_lpf_rand is not None:
+            low, high = self.velocity_lpf_rand
             self.velocity_lpf = self.np_random.uniform(low=low, high=high)
 
         return observation, info
