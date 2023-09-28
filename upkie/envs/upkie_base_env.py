@@ -197,7 +197,9 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         default_position = np.array([0.0, 0.0, 0.6])
         position = default_position + self.np_random.uniform(
             low=np.array([-self.randomization.reset_x, 0.0, 0.0]),
-            high=np.array([+self.randomization.reset_x, 0.0, self.randomization.reset_z]),
+            high=np.array(
+                [+self.randomization.reset_x, 0.0, self.randomization.reset_z]
+            ),
             size=3,
         )
 
