@@ -45,10 +45,4 @@ PPOSettings.target_kl = None
 PPOSettings.use_sde = False
 PPOSettings.vf_coef  = 0.5
 
-Reward.action_weight = 0.0
-Reward.lookahead_duration = 0.2
-Reward.max_action = 10.0
-Reward.max_pitch = 1.5707963267948966
-Reward.max_position = 0.5
-Reward.pitch_weight = 1.0
-Reward.position_weight = 1.0
+Reward.low_acceleration_weight = 0.0
