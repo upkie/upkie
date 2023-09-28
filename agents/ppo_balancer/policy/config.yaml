@@ -4,15 +4,15 @@ gin:
         agent_frequency: 200
         cumulative_reward_horizon: 0.5
         env_id: UpkieGroundVelocity-v1
+        init_rand_pitch: 0.0
         max_episode_duration: 10.0
         max_ground_accel: 10.0
         max_ground_velocity: 1.0
-        randomize_velocity_lpf: null
-        reset_pitch: 0.0
         seed: null
         spine_frequency: 1000
         total_timesteps: 600000.0
         velocity_lpf: 0.04
+        velocity_lpf_rand: null
     PPOSettings:
         batch_size: 64
         clip_range: 0.2

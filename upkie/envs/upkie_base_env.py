@@ -29,7 +29,7 @@ import upkie.config
 from upkie.observers.base_pitch import compute_base_pitch_from_imu
 from upkie.utils.exceptions import UpkieException
 
-from .randomization import Randomization
+from .init_randomization import InitRandomization
 from .reward import Reward
 from .survival_reward import SurvivalReward
 
@@ -61,14 +61,14 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
     fall_pitch: float
     spine_config: dict
     reward: Reward
-    randomization: Randomization
+    init_rand: InitRandomization
 
     def __init__(
         self,
         fall_pitch: float = 1.0,
         frequency: Optional[float] = 200.0,
         regulate_frequency: bool = True,
-        randomization: Optional[Randomization] = None,
+        init_rand: Optional[InitRandomization] = None,
         reward: Optional[Reward] = None,
         shm_name: str = "/vulp",
         spine_config: Optional[dict] = None,
@@ -82,7 +82,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
             set even when `regulate_frequency` is false, as some environments
             make use of e.g. `self.dt` internally.
         @param regulate_frequency Enables loop frequency regulation.
-        @param randomization Magnitude of the random disturbance added to the
+        @param init_rand Magnitude of the random disturbance added to the
             default initial state when the environment is reset.
         @param reward Reward function.
         @param shm_name Name of shared-memory file to exchange with the spine.
@@ -97,8 +97,8 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
             merged_spine_config.update(spine_config)
         if regulate_frequency and frequency is None:
             raise UpkieException(f"{regulate_frequency=} but {frequency=}")
-        if randomization is None:
-            randomization = Randomization()
+        if init_rand is None:
+            init_rand = InitRandomization()
         if reward is None:
             reward = SurvivalReward()
 
@@ -106,7 +106,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         self.__regulate_frequency = regulate_frequency
         self._spine = SpineInterface(shm_name, retries=spine_retries)
         self.fall_pitch = fall_pitch
-        self.randomization = randomization
+        self.init_rand = init_rand
         self.reward = reward
         self.spine_config = merged_spine_config
 
@@ -181,8 +181,8 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         yaw_pitch_roll_bounds = np.array(
             [
                 0.0,
-                self.randomization.reset_pitch,
-                self.randomization.reset_roll,
+                self.init_rand.pitch,
+                self.init_rand.roll,
             ]
         )
         yaw_pitch_roll = self.np_random.uniform(
@@ -196,10 +196,8 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
 
         default_position = np.array([0.0, 0.0, 0.6])
         position = default_position + self.np_random.uniform(
-            low=np.array([-self.randomization.reset_x, 0.0, 0.0]),
-            high=np.array(
-                [+self.randomization.reset_x, 0.0, self.randomization.reset_z]
-            ),
+            low=np.array([-self.init_rand.x, 0.0, 0.0]),
+            high=np.array([+self.init_rand.x, 0.0, self.init_rand.z]),
             size=3,
         )
 

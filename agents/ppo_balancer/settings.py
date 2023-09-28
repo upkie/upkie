@@ -31,15 +31,15 @@ class EnvSettings:
     agent_frequency: int
     cumulative_reward_horizon: float
     env_id: str
+    init_rand_pitch: float
     max_episode_duration: float
     max_ground_accel: float
     max_ground_velocity: float
-    randomize_velocity_lpf: Optional[Tuple[float, float]]
-    reset_pitch: float
     seed: Optional[int]
     spine_frequency: int
     total_timesteps: int
     velocity_lpf: Optional[float]
+    velocity_lpf_rand: Optional[Tuple[float, float]]
 
 
 @gin.configurable

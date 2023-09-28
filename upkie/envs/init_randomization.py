@@ -15,6 +15,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""!
+Domain randomization of Upkie environments.
+"""
+
 from dataclasses import dataclass
 
 import gin
@@ -22,20 +26,25 @@ import gin
 
 @gin.configurable
 @dataclass
-class Randomization:
-    reset_roll: float = 0.0
-    reset_pitch: float = 0.0
-    reset_x: float = 0.0
-    reset_z: float = 0.0
+class InitRandomization:
+
+    """!
+    Domain randomization parameters for Upkie's initial state.
+    """
+
+    roll: float = 0.0
+    pitch: float = 0.0
+    x: float = 0.0
+    z: float = 0.0
 
     def update(
         self,
-        reset_roll: float = 0.0,
-        reset_pitch: float = 0.0,
-        reset_x: float = 0.0,
-        reset_z: float = 0.0,
+        roll: float = 0.0,
+        pitch: float = 0.0,
+        x: float = 0.0,
+        z: float = 0.0,
     ) -> None:
-        self.reset_roll = reset_roll
-        self.reset_pitch = reset_pitch
-        self.reset_x = reset_x
-        self.reset_z = reset_z
+        self.roll = roll
+        self.pitch = pitch
+        self.x = x
+        self.z = z
