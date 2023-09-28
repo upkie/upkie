@@ -176,14 +176,14 @@ def make_env(
             max_episode_steps=int(max_episode_duration * agent_frequency),
             # upkie.envs.UpkieBaseEnv
             frequency=agent_frequency,
+            init_rand=InitRandomization(pitch=settings.init_pitch_rand),
             max_ground_accel=settings.max_ground_accel,
             max_ground_velocity=settings.max_ground_velocity,
-            init_rand=InitRandomization(pitch=settings.init_rand_pitch),
-            velocity_lpf_rand=settings.velocity_lpf_rand,
             regulate_frequency=False,
             reward=Reward(),
             shm_name=shm_name,
             velocity_lpf=settings.velocity_lpf,
+            velocity_lpf_rand=settings.velocity_lpf_rand,
         )
         env.reset(seed=seed)
         env._prepatch_close = env.close
