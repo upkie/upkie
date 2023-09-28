@@ -2,6 +2,7 @@ __pycache__
 bazel-*
 dist/
 docs/html/
+logs/
 tools/bazel
 upkie.wiki/
 wiki/
