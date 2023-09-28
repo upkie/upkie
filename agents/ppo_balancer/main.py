@@ -7,7 +7,6 @@
 import argparse
 import logging
 import os
-import shutil
 import tempfile
 
 import gin
@@ -19,7 +18,6 @@ from stable_baselines3 import PPO
 import upkie.envs
 from upkie.envs import UpkieGroundVelocity
 from upkie.utils.filters import low_pass_filter
-from upkie.utils.log_path import new_log_filename
 from upkie.utils.raspi import configure_agent_process, on_raspi
 
 upkie.envs.register()
@@ -39,7 +37,7 @@ def no_contact_policy(prev_action: np.ndarray, dt: float) -> np.ndarray:
 
 def run_policy(env: UpkieGroundVelocity, policy) -> None:
     """
-    Run policy, logging its actions and observations.
+    Run policy in the robot environment.
 
     Args:
         policy: Policy to run.
@@ -51,12 +49,12 @@ def run_policy(env: UpkieGroundVelocity, policy) -> None:
         joystick = info["observation"].get("joystick", {})
         if joystick.get("cross_button", False):
             floor_contact = False
-
         action, _ = (
             policy.predict(observation)
             if floor_contact
             else no_contact_policy(action, env.dt)
         )
+        action[0] = 1.0 * action[0]
         observation, _, terminated, truncated, info = env.step(action)
         floor_contact = info["observation"]["floor_contact"]["contact"]
         if terminated or truncated:
@@ -72,6 +70,7 @@ def main(policy_path: str):
         max_ground_accel=settings.max_ground_accel,
         max_ground_velocity=settings.max_ground_velocity,
         regulate_frequency=True,
+        velocity_lpf=0.02,  # TODO(scaron): noteworthy
     ) as env:
         policy = PPO("MlpPolicy", env, verbose=1)
         policy.set_parameters(policy_path)
@@ -105,7 +104,3 @@ if __name__ == "__main__":
         main(policy_path)
     except KeyboardInterrupt:
         logging.info("Caught a keyboard interrupt")
-
-    save_path = new_log_filename("ppo_balancer")
-    shutil.copy("/dev/shm/ppo_balancer.mpack", save_path)
-    logging.info(f"Log saved to {save_path}")
