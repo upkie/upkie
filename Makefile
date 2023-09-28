@@ -84,7 +84,7 @@ upload: check_robot build  ## upload built targets to the Raspberry Pi
 	ssh $(REMOTE) sudo date -s "$(CURDATE)"
 	ssh $(REMOTE) mkdir -p $(PROJECT_NAME)
 	ssh $(REMOTE) sudo find $(PROJECT_NAME) -type d -name __pycache__ -user root -exec chmod go+wx {} "\;"
-	rsync -Lrtu --delete-after --delete-excluded --exclude bazel-out/ --exclude bazel-testlogs/ --exclude bazel-$(CURDIR_NAME) --exclude bazel-$(PROJECT_NAME)/ --progress $(CURDIR)/ $(REMOTE):$(PROJECT_NAME)/
+	rsync -Lrtu --delete-after --delete-excluded --exclude bazel-out/ --exclude bazel-testlogs/ --exclude bazel-$(CURDIR_NAME) --exclude bazel-$(PROJECT_NAME)/ --exclude logs/ --progress $(CURDIR)/ $(REMOTE):$(PROJECT_NAME)/
 
 # REMOTE TARGETS
 # ==============
