@@ -75,7 +75,7 @@ class TestUpkieGroundVelocity(unittest.TestCase):
 
     def test_velocity_filter_randomization(self):
         low, high = 12.0, 42.0
-        self.env.randomize_velocity_lpf = (low, high)
+        self.env.velocity_lpf_rand = (low, high)
         self.assertIsNone(self.env.velocity_lpf)
         self.env.reset()
         self.assertIsNotNone(self.env.velocity_lpf)
