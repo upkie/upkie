@@ -9,13 +9,6 @@ load("@pip_upkie//:requirements.bzl", "requirement")
 package(default_visibility = ["//visibility:public"])
 
 py_library(
-    name = "randomization",
-    srcs = [
-        "randomization.py",
-    ],
-)
-
-py_library(
     name = "rewards",
     srcs = [
         "reward.py",
@@ -37,13 +30,13 @@ py_library(
 py_library(
     name = "upkie_base_env",
     srcs = [
+        "init_randomization.py",
         "upkie_base_env.py",
     ],
     deps = [
         "//upkie/config",
         "//upkie/observers/base_pitch",
         "//upkie/utils:exceptions",
-        ":randomization",
         ":rewards",
         "@vulp//:python",
         requirement("loop-rate-limiters"),
@@ -100,7 +93,6 @@ py_library(
         "__init__.py",
     ],
     deps = [
-        ":randomization",
         ":rewards",
         ":upkie_base_env",
         ":upkie_ground_velocity",

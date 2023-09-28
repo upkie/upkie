@@ -12,7 +12,7 @@ All notable changes to this project will be documented in this file.
 - agents: Closed-loop model predictive control
 - envs: Accessor to `env.rate` for logging purposes
 - envs: Randomize base orientation and position on resets
-- envs: `Randomization` dataclass to describe reset randomization
+- envs: `InitRandomization` dataclass to describe initial state randomization
 - envs: `UpkieGroundVelocity` can include a velocity low-pass filter
 - envs: `UpkieGroundVelocity` can limit ground acceleration as well
 - envs: `UpkieGroundVelocity` low-pass filter can also be randomized

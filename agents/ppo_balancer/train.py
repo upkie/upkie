@@ -26,6 +26,7 @@ import gin
 import gymnasium
 import stable_baselines3
 import yaml
+from reward import Reward
 from rules_python.python.runfiles import runfiles
 from settings import EnvSettings, PPOSettings
 from stable_baselines3.common.callbacks import BaseCallback, CheckpointCallback
@@ -40,10 +41,9 @@ from stable_baselines3.common.vec_env import (
 from stable_baselines3.common.vec_env.base_vec_env import VecEnv
 from torch import nn
 from utils import gin_operative_config_dict
-from reward import Reward
 
 import upkie.envs
-from upkie.envs import Randomization
+from upkie.envs import InitRandomization
 from upkie.utils.spdlog import logging
 
 upkie.envs.register()
@@ -178,8 +178,8 @@ def make_env(
             frequency=agent_frequency,
             max_ground_accel=settings.max_ground_accel,
             max_ground_velocity=settings.max_ground_velocity,
-            randomization=Randomization(reset_pitch=settings.reset_pitch),
-            randomize_velocity_lpf=settings.randomize_velocity_lpf,
+            init_rand=InitRandomization(pitch=settings.init_rand_pitch),
+            velocity_lpf_rand=settings.velocity_lpf_rand,
             regulate_frequency=False,
             reward=Reward(),
             shm_name=shm_name,
