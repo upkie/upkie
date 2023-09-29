@@ -50,6 +50,9 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
         </tr>
     </table>
 
+    Note that, while this action is not normalized, [-1, 1] m/s is a reasonable
+    range for ground velocities.
+
     ### Observation space
 
     Vectorized observations have the following structure:
