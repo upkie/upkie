@@ -11,8 +11,8 @@ gin:
         seed: null
         spine_frequency: 1000
         total_timesteps: 600000.0
-        velocity_lpf: 0.04
-        velocity_lpf_rand: null
+        velocity_filter: 0.04
+        velocity_filter_rand: null
     PPOSettings:
         batch_size: 64
         clip_range: 0.2
