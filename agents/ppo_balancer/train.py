@@ -111,7 +111,7 @@ class SummaryWriterCallback(BaseCallback):
             f"```yaml\n{yaml.dump(config, indent=4)}\n```",
             global_step=None,
         )
-        save_path = f"{self.training_dir}/{self.policy_name}_1/config.yaml"
+        save_path = f"{self.training_dir}/{self.policy_name}/config.yaml"
         with open(save_path, "w") as fh:
             yaml.dump(config, fh, indent=4)
         logging.info(f"Saved configuration to {save_path}")
@@ -275,7 +275,7 @@ def train_policy(
             callback=[
                 CheckpointCallback(
                     save_freq=int(1e5),
-                    save_path=f"{training_dir}/{policy_name}_1",
+                    save_path=f"{training_dir}/{policy_name}",
                     name_prefix="checkpoint",
                 ),
                 SummaryWriterCallback(vec_env, policy_name, training_dir),
@@ -286,7 +286,7 @@ def train_policy(
         logging.info("Training interrupted.")
 
     # Save policy no matter what!
-    policy.save(f"{training_dir}/{policy_name}_1/final.zip")
+    policy.save(f"{training_dir}/{policy_name}/final.zip")
     policy.env.close()
 
 
