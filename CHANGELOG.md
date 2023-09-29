@@ -30,7 +30,7 @@ All notable changes to this project will be documented in this file.
 - PPO balancer: Change training directory to `/tmp/ppo_balancer`
 - PPO balancer: Policy CLI argument becomes positional and optional
 - PPO balancer: Refactor agent settings
-- PPO balancer: Rename `effective_time_horizon` to `cumulative_reward_horizon`
+- PPO balancer: Rename `effective_time_horizon` to `discounted_horizon_duration`
 - agents: Retry connecting to the spine several times at startup
 - envs: Remove `get_range` from rewards as it is deprecated from Gymnasium
 - envs: Retry connecting to the spine several times at startup

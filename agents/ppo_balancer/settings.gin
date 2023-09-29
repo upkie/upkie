@@ -17,7 +17,7 @@
 import settings
 
 EnvSettings.agent_frequency = 200
-EnvSettings.cumulative_reward_horizon = 0.5
+EnvSettings.discounted_horizon_duration = 0.5
 EnvSettings.env_id = "UpkieGroundVelocity-v1"
 EnvSettings.init_pitch_rand = 0.1
 EnvSettings.max_episode_duration = 10.0
