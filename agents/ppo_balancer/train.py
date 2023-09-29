@@ -182,8 +182,8 @@ def make_env(
             regulate_frequency=False,
             reward=Reward(),
             shm_name=shm_name,
-            velocity_lpf=settings.velocity_lpf,
-            velocity_lpf_rand=settings.velocity_lpf_rand,
+            velocity_filter=settings.velocity_filter,
+            velocity_filter_rand=settings.velocity_filter_rand,
         )
         env.reset(seed=seed)
         env._prepatch_close = env.close
