@@ -38,8 +38,8 @@ class EnvSettings:
     seed: Optional[int]
     spine_frequency: int
     total_timesteps: int
-    velocity_lpf: Optional[float]
-    velocity_lpf_rand: Optional[Tuple[float, float]]
+    velocity_filter: Optional[float]
+    velocity_filter_rand: Optional[Tuple[float, float]]
 
 
 @gin.configurable

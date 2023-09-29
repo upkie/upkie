@@ -66,7 +66,7 @@ class TestUpkieGroundVelocity(unittest.TestCase):
 
     def test_enabled_velocity_filter(self):
         observation, info = self.env.reset()
-        self.env.velocity_lpf = 0.1  # [s]
+        self.env.velocity_filter = 0.1  # [s]
         self.env.step(np.array([1.0]))
         self.assertLess(
             self.env._filtered_ground_velocity,
@@ -75,12 +75,12 @@ class TestUpkieGroundVelocity(unittest.TestCase):
 
     def test_velocity_filter_randomization(self):
         low, high = 12.0, 42.0
-        self.env.velocity_lpf_rand = (low, high)
-        self.assertIsNone(self.env.velocity_lpf)
+        self.env.velocity_filter_rand = (low, high)
+        self.assertIsNone(self.env.velocity_filter)
         self.env.reset()
-        self.assertIsNotNone(self.env.velocity_lpf)
-        self.assertGreaterEqual(self.env.velocity_lpf, low)
-        self.assertLessEqual(self.env.velocity_lpf, high)
+        self.assertIsNotNone(self.env.velocity_filter)
+        self.assertGreaterEqual(self.env.velocity_filter, low)
+        self.assertLessEqual(self.env.velocity_filter, high)
 
 
 if __name__ == "__main__":

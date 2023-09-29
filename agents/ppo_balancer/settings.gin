@@ -26,8 +26,8 @@ EnvSettings.max_ground_velocity = 1.0
 EnvSettings.seed = None
 EnvSettings.spine_frequency = 1000
 EnvSettings.total_timesteps = 1e6
-EnvSettings.velocity_lpf = None
-EnvSettings.velocity_lpf_rand = (0.05, 0.15)
+EnvSettings.velocity_filter = None
+EnvSettings.velocity_filter_rand = (0.05, 0.15)
 
 PPOSettings.batch_size = 64
 PPOSettings.clip_range = 0.2
