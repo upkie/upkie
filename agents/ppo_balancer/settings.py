@@ -29,7 +29,7 @@ class EnvSettings:
     """
 
     agent_frequency: int
-    cumulative_reward_horizon: float
+    discounted_horizon_duration: float
     env_id: str
     init_pitch_rand: float
     max_episode_duration: float

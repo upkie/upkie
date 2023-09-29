@@ -64,7 +64,7 @@ def parse_command_line_arguments() -> argparse.Namespace:
         help="name of the new policy to train",
     )
     parser.add_argument(
-        "--nb-cpus",
+        "--nb-envs",
         default=1,
         type=int,
         help="number of parallel simulation processes to run",
@@ -204,13 +204,15 @@ def make_env(
 def train_policy(
     policy_name: str,
     training_dir: str,
-    nb_cpus: int,
+    nb_envs: int,
     show: bool,
 ) -> None:
     """!
     Train a new policy and save it to a directory.
 
+    @param policy_name Name of the trained policy.
     @param training_dir Directory for logging and saving policies.
+    @param nb_envs Number of environments, each running in a separate process.
     @param show Whether to show the simulation GUI.
     """
     if policy_name == "":
@@ -227,11 +229,11 @@ def train_policy(
         SubprocVecEnv(
             [
                 make_env(spine_path, show, subproc_index=i)
-                for i in range(nb_cpus)
+                for i in range(nb_envs)
             ],
             start_method="fork",
         )
-        if nb_cpus > 1
+        if nb_envs > 1
         else DummyVecEnv([make_env(spine_path, show, subproc_index=0)])
     )
     if False:  # does not always improve returns during training
@@ -240,7 +242,7 @@ def train_policy(
     settings = EnvSettings()
     agent_frequency = settings.agent_frequency
     dt = 1.0 / agent_frequency
-    gamma = 1.0 - dt / settings.cumulative_reward_horizon
+    gamma = 1.0 - dt / settings.discounted_horizon_duration
 
     ppo_settings = PPOSettings()
     policy = stable_baselines3.PPO(
@@ -305,6 +307,6 @@ if __name__ == "__main__":
     train_policy(
         args.name,
         training_dir,
-        nb_cpus=args.nb_cpus,
+        nb_envs=args.nb_envs,
         show=args.show,
     )
