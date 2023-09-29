@@ -21,10 +21,7 @@ Domain randomization of Upkie environments.
 
 from dataclasses import dataclass
 
-import gin
 
-
-@gin.configurable
 @dataclass
 class InitRandomization:
 

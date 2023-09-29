@@ -32,13 +32,16 @@ All notable changes to this project will be documented in this file.
 - PPO balancer: Refactor agent settings
 - PPO balancer: Rename `effective_time_horizon` to `discounted_horizon_duration`
 - agents: Retry connecting to the spine several times at startup
-- envs: Remove `get_range` from rewards as it is deprecated from Gymnasium
 - envs: Retry connecting to the spine several times at startup
 
 ### Fixed
 
 - Wheel balancer: Configure spine properly
 - Wheel odometry: Check that observer is configured properly
+
+### Removed
+
+- envs: Remove `get_range` from rewards as it is deprecated from Gymnasium
 
 ## [1.4.0] - 2023/08/24
 
