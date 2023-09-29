@@ -94,7 +94,7 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
 
     """
 
-    _filtered_ground_velocity: float
+    _filtered_action: float
     _ground_velocity: float
     max_ground_accel: float
     max_ground_velocity: float
@@ -141,7 +141,7 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
             dtype=np.float32,
         )
 
-        self._filtered_ground_velocity = 0.0
+        self._filtered_action = 0.0
         self._ground_velocity = 0.0
         self.max_ground_accel = max_ground_accel
         self.max_ground_velocity = max_ground_velocity
@@ -182,25 +182,25 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
         @param action Action vector.
         @returns Action dictionary.
         """
+        if self.velocity_filter is not None:
+            self._filtered_action = low_pass_filter(
+                self._filtered_action,
+                self.velocity_filter,
+                action[0],
+                self.dt,
+            )
+        else:  # self.velocity_filter is None
+            self._filtered_action = action[0]
+
         self._ground_velocity = abs_bounded_derivative_filter(
             self._ground_velocity,
-            action[0],
+            self._filtered_action,
             self.dt,
             self.max_ground_velocity,
             self.max_ground_accel,
         )
 
-        if self.velocity_filter is not None:
-            self._filtered_ground_velocity = low_pass_filter(
-                self._filtered_ground_velocity,
-                self.velocity_filter,
-                self._ground_velocity,
-                self.dt,
-            )
-        else:  # self.velocity_filter is None
-            self._filtered_ground_velocity = self._ground_velocity
-
-        wheel_velocity = self._filtered_ground_velocity / self.wheel_radius
+        wheel_velocity = self._ground_velocity / self.wheel_radius
         servo_dict = self.get_leg_servo_action()
         servo_dict.update(
             {
