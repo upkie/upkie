@@ -6,17 +6,22 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- agents: Closed-loop model predictive control
+- examples: Closed-loop model predictive control
+
+## [1.5.0] - 2023/09/29
+
+### Added
+
 - Bazel: Python library target for upkie module
 - PPO balancer: Save policy configuration to a YAML file
 - PPO balancer: Train with multiprocessing
-- agents: Closed-loop model predictive control
 - envs: Accessor to `env.rate` for logging purposes
 - envs: Randomize base orientation and position on resets
 - envs: `InitRandomization` dataclass to describe initial state randomization
 - envs: `UpkieGroundVelocity` can include a velocity low-pass filter
 - envs: `UpkieGroundVelocity` can limit ground acceleration as well
 - envs: `UpkieGroundVelocity` low-pass filter can also be randomized
-- examples: Closed-loop model predictive control
 - utils: Log path utility functions
 
 ### Changed
