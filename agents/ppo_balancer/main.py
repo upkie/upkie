@@ -65,7 +65,7 @@ def run_policy(env: UpkieGroundVelocity, policy) -> None:
 def main(policy_path: str):
     settings = EnvSettings()
     with gym.make(
-        "UpkieGroundVelocity-v1",
+        settings.env_id,
         frequency=settings.agent_frequency,
         max_ground_accel=settings.max_ground_accel,
         max_ground_velocity=settings.max_ground_velocity,
