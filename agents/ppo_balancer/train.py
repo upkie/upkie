@@ -171,12 +171,17 @@ def make_env(
         # parent process: trainer
         agent_frequency = settings.agent_frequency
         max_episode_duration = settings.max_episode_duration
+        init_rand = (
+            InitRandomization(pitch=settings.init_pitch_rand)
+            if settings.init_pitch_rand is not None
+            else None
+        )
         env = gymnasium.make(
             settings.env_id,
             max_episode_steps=int(max_episode_duration * agent_frequency),
             # upkie.envs.UpkieBaseEnv
             frequency=agent_frequency,
-            init_rand=InitRandomization(pitch=settings.init_pitch_rand),
+            init_rand=init_rand,
             max_ground_accel=settings.max_ground_accel,
             max_ground_velocity=settings.max_ground_velocity,
             regulate_frequency=False,
