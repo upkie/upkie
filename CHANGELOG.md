@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - envs: Merge default and runtime configuration dictionaries
+- PPO balancer: Run policy deterministically after training
 
 ## [1.5.0] - 2023/09/29
 

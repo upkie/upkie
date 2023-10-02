@@ -50,7 +50,7 @@ def run_policy(env: UpkieGroundVelocity, policy) -> None:
         if joystick.get("cross_button", False):
             floor_contact = False
         action, _ = (
-            policy.predict(observation)
+            policy.predict(observation, deterministic=True)
             if floor_contact
             else no_contact_policy(action, env.dt)
         )
