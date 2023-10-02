@@ -182,6 +182,13 @@ def make_env(
             regulate_frequency=False,
             reward=Reward(),
             shm_name=shm_name,
+            spine_config={
+                "bullet": {
+                    "torque_control": {
+                        "kd": settings.sim_torque_control_kd,
+                    },
+                },
+            },
             velocity_filter=settings.velocity_filter,
             velocity_filter_rand=settings.velocity_filter_rand,
         )

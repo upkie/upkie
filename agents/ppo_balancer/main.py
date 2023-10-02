@@ -70,6 +70,13 @@ def main(policy_path: str):
         max_ground_accel=settings.max_ground_accel,
         max_ground_velocity=settings.max_ground_velocity,
         regulate_frequency=True,
+        spine_config={
+            "bullet": {
+                "torque_control": {
+                    "kd": settings.sim_torque_control_kd,
+                },
+            },
+        },
         # velocity_filter=None,
     ) as env:
         policy = PPO("MlpPolicy", env, verbose=1)
