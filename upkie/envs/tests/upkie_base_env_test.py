@@ -59,6 +59,7 @@ class TestUpkieBaseEnv(unittest.TestCase):
         self.assertGreaterEqual(observation_dict["number"], 1)
 
     def test_spine_config(self):
+        """Check that runtime and default configs are merged properly."""
         shm_name = "/vroum"
         shared_memory = posix_ipc.SharedMemory(
             shm_name, posix_ipc.O_RDWR | posix_ipc.O_CREAT, size=42

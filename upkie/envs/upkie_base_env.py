@@ -95,8 +95,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         """
         merged_spine_config = upkie.config.SPINE_CONFIG.copy()
         if spine_config is not None:
-            # nested_update(merged_spine_config, spine_config)
-            merged_spine_config.update(spine_config)
+            nested_update(merged_spine_config, spine_config)
         if regulate_frequency and frequency is None:
             raise UpkieException(f"{regulate_frequency=} but {frequency=}")
         if init_rand is None:
