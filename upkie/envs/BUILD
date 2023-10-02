@@ -37,6 +37,7 @@ py_library(
         "//upkie/config",
         "//upkie/observers/base_pitch",
         "//upkie/utils:exceptions",
+        "//upkie/utils:nested_update",
         ":rewards",
         "@vulp//:python",
         requirement("loop-rate-limiters"),
