@@ -28,6 +28,7 @@ from vulp.spine import SpineInterface
 import upkie.config
 from upkie.observers.base_pitch import compute_base_pitch_from_imu
 from upkie.utils.exceptions import UpkieException
+from upkie.utils.nested_update import nested_update
 
 from .init_randomization import InitRandomization
 from .reward import Reward
@@ -94,6 +95,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         """
         merged_spine_config = upkie.config.SPINE_CONFIG.copy()
         if spine_config is not None:
+            # nested_update(merged_spine_config, spine_config)
             merged_spine_config.update(spine_config)
         if regulate_frequency and frequency is None:
             raise UpkieException(f"{regulate_frequency=} but {frequency=}")

@@ -1,6 +1,11 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+#
+# Copyright 2023 Inria
+# SPDX-License-Identifier: Apache-2.0
 
 
-def deep_update(target_dict, new_dict) -> None:
+def nested_update(target_dict: dict, new_dict: dict) -> None:
     """!
     Update a target dictionary recursively.
 
@@ -29,6 +34,6 @@ def deep_update(target_dict, new_dict) -> None:
             and isinstance(target_dict[key], dict)
             and isinstance(value, dict)
         ):
-            deep_update(target_dict[key], value)
+            nested_update(target_dict[key], value)
         else:
             target_dict[key] = new_dict[key]

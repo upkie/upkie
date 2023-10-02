@@ -39,6 +39,11 @@ py_library(
 )
 
 py_library(
+    name = "nested_update",
+    srcs = ["nested_update.py"],
+)
+
+py_library(
     name = "pinocchio",
     srcs = ["pinocchio.py"],
 )
@@ -68,6 +73,7 @@ py_library(
         ":exceptions",
         ":filters",
         ":log_path",
+        ":nested_update",
         ":pinocchio",
         ":raspi",
         ":rotations",
