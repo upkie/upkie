@@ -10,6 +10,10 @@ All notable changes to this project will be documented in this file.
 - agents: Closed-loop model predictive control
 - examples: Closed-loop model predictive control
 
+### Fixed
+
+- envs: Merge default and runtime configuration dictionaries
+
 ## [1.5.0] - 2023/09/29
 
 ### Added
