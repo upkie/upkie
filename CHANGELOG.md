@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- PPO balancer: Low-pass filter action before acceleration clamping
 - agents: Closed-loop model predictive control
 - examples: Closed-loop model predictive control
 
