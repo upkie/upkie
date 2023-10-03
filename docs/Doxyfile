@@ -867,6 +867,7 @@ WARN_LOGFILE           =
 INPUT                  = README.md \
                          docs/code_overview.md \
                          docs/observations.md \
+                         docs/sensors.md \
                          upkie/config \
                          upkie/envs \
                          upkie/observers \
