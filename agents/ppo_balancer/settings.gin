@@ -26,7 +26,7 @@ EnvSettings.spine_config = {
 }
 
 PPOSettings.batch_size = 64
-PPOSettings.clip_range = 0.2
+PPOSettings.clip_range = 0.1
 PPOSettings.clip_range_vf = None
 PPOSettings.ent_coef = 0.0
 PPOSettings.gae_lambda = 0.95
