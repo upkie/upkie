@@ -27,6 +27,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PPO balancer: Allow custom training path
 - PPO balancer: Allow re-training with the same policy name
 - PPO balancer: Low-pass filter action before acceleration clamping
+- PPO balancer: Update reward to penalize commanded accelerations
+- UpkieGroundVelocity: Augment observation with previous command
 - agents: Closed-loop model predictive control
 - envs: Allow custom initial base velocity in Bullet config
 - examples: Closed-loop model predictive control

@@ -36,14 +36,15 @@ class Reward(upkie.envs.Reward):
         """
         # pitch = observation[0]
         # ground_position = observation[1]
-        ground_velocity = observation[2]
+        # ground_velocity = observation[2]
         # abs_angular_velocity = abs(observation[3])
+        previous_commanded_velocity = observation[4]
 
         commanded_velocity = action[0]
 
         # low_velocity = np.exp(-1.5 * ground_velocity**2)
         # low_velocity = -(ground_velocity**2)
         low_acceleration = np.exp(
-            -1.5 * (commanded_velocity - ground_velocity) ** 2
+            -1.5 * (commanded_velocity - previous_commanded_velocity) ** 2
         )
         return 1.0 + self.acceleration_penalty_weight * low_acceleration
