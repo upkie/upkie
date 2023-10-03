@@ -202,7 +202,28 @@ def find_save_path(training_dir: str, policy_name: str):
     return path_for_iter(nb_iter)
 
 
-def exp_decay_schedule(
+def linear_schedule(initial_value: float) -> Callable[[float], float]:
+    """!
+    Linear learning rate schedule.
+
+    @param initial_value Learning rate at the beginning of training.
+    @return Function computing the current learning rate from remaining
+        progress.
+    """
+
+    def lr(progress_remaining: float) -> float:
+        """!
+        Compute the current learning rate from remaining progress.
+
+        @param progress_remaining Progress decreasing from 1 (beginning) to 0.
+        @return Corresponding learning rate>
+        """
+        return progress_remaining * initial_value
+
+    return lr
+
+
+def exponential_decay_schedule(
     initial_value: float,
     nb_steps: int = 3,
     factor: float = 0.1,
@@ -279,7 +300,7 @@ def train_policy(
     policy = stable_baselines3.PPO(
         "MlpPolicy",
         vec_env,
-        learning_rate=exp_decay_schedule(ppo_settings.learning_rate),
+        learning_rate=exponential_decay_schedule(ppo_settings.learning_rate),
         n_steps=ppo_settings.n_steps,
         batch_size=ppo_settings.batch_size,
         n_epochs=ppo_settings.n_epochs,
