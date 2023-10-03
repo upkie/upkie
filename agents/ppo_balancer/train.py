@@ -202,11 +202,17 @@ def find_save_path(training_dir: str, policy_name: str):
     return path_for_iter(nb_iter)
 
 
-def linear_schedule(initial_value: float) -> Callable[[float], float]:
+def geometric_decay_schedule(
+    initial_value: float,
+    nb_steps: int = 3,
+    factor: float = 0.1,
+) -> Callable[[float], float]:
     """!
-    Linear learning rate schedule.
+    Step-by-step exponential-decay learning rate schedule.
 
     @param initial_value Learning rate at the beginning of training.
+    @param nb_steps Number of geometric decay steps.
+    @param factor Initial value is multiplied by this factor at each step.
     @return Function computing the current learning rate from remaining
         progress.
     """
@@ -218,7 +224,8 @@ def linear_schedule(initial_value: float) -> Callable[[float], float]:
         @param progress_remaining Progress decreasing from 1 (beginning) to 0.
         @return Corresponding learning rate>
         """
-        return progress_remaining * initial_value
+        step_number = int(nb_steps * (1.0 - progress_remaining))
+        return initial_value * factor**step_number
 
     return lr
 
@@ -272,7 +279,7 @@ def train_policy(
     policy = stable_baselines3.PPO(
         "MlpPolicy",
         vec_env,
-        learning_rate=linear_schedule(ppo_settings.learning_rate),
+        learning_rate=geometric_decay_schedule(ppo_settings.learning_rate),
         n_steps=ppo_settings.n_steps,
         batch_size=ppo_settings.batch_size,
         n_epochs=ppo_settings.n_epochs,
