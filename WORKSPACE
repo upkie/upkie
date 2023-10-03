@@ -37,12 +37,6 @@ parse_deps()
 load("@pip_upkie//:requirements.bzl", "install_deps")
 install_deps()
 
-# mpacklog also has Python dependencies
-load("@mpacklog//tools/workspace/pip_mpacklog:parse_deps.bzl", parse_mpacklog_deps = "parse_deps")
-parse_mpacklog_deps()
-load("@pip_mpacklog//:requirements.bzl", install_mpacklog_deps = "install_deps")
-install_mpacklog_deps()
-
 # Vulp also has Python dependencies
 load("@vulp//tools/workspace/pip_vulp:parse_deps.bzl", parse_vulp_deps = "parse_deps")
 parse_vulp_deps()
