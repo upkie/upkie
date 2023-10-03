@@ -35,10 +35,10 @@ py_binary(
         "//upkie/utils:filters",
         "//upkie/utils:raspi",
         "//upkie/utils:spdlog",
-        "@mpacklog//:python",
         "@vulp//:python",
         requirement("gin-config"),
         requirement("loop_rate_limiters"),
+        requirement("mpacklog"),
         requirement("packaging"),
         requirement("upkie_description"),
     ] + select({

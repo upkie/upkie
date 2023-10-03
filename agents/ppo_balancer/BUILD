@@ -67,9 +67,9 @@ py_binary(
         "//upkie/utils:raspi",
         ":reward",  # needed by gin config
         ":settings",
-        "@mpacklog//:python",
         requirement("gin-config"),
         requirement("loop-rate-limiters"),
+        requirement("mpacklog"),
     ] + select({
         # Selecting the right CPU architecture for the Raspberry Pi is
         # currently a tough nut to crack for Bazel. We only enable compiled

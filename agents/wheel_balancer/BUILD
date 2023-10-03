@@ -66,9 +66,9 @@ py_binary(
         "//upkie/utils:raspi",
         "//upkie/utils:spdlog",
         ":controllers",
-        "@mpacklog//:python",
         "@vulp//:python",
         requirement("loop_rate_limiters"),
+        requirement("mpacklog"),
         requirement("pyyaml"),
     ],
 )
