@@ -123,6 +123,29 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
         if self.dt is None:
             raise UpkieException("This environment needs a loop frequency")
 
+        MAX_BASE_PITCH: float = np.pi
+        MAX_GROUND_POSITION: float = float("inf")
+        MAX_GROUND_VELOCITY: float = 2.0  # m/s
+        MAX_BASE_ANGULAR_VELOCITY: float = 1000.0  # rad/s
+        observation_limit = np.array(
+            [
+                MAX_BASE_PITCH,
+                MAX_GROUND_POSITION,
+                MAX_BASE_ANGULAR_VELOCITY,
+                MAX_GROUND_VELOCITY,
+                MAX_GROUND_VELOCITY,
+            ],
+            dtype=np.float32,
+        )
+
+        # gymnasium.Env: observation_space
+        self.observation_space = spaces.Box(
+            -observation_limit,
+            +observation_limit,
+            shape=(5,),
+            dtype=np.float32,
+        )
+
         # gymnasium.Env: action_space
         self.action_space = spaces.Box(
             -np.float32(max_ground_velocity),
@@ -157,8 +180,10 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
             - ``info``: Dictionary with auxiliary diagnostic information. For
               Upkie this is the full observation dictionary sent by the spine.
         """
-        observation, info = super().reset(seed=seed)
+        self._filtered_action = 0.0
+        self._ground_velocity = 0.0
 
+        observation, info = super().reset(seed=seed)
         if self.velocity_filter_rand is not None:
             low, high = self.velocity_filter_rand
             self.velocity_filter = self.np_random.uniform(low=low, high=high)
@@ -206,3 +231,10 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
         )
         action_dict = {"servo": servo_dict}
         return action_dict
+
+    def vectorize_observation(self, observation_dict: dict) -> np.ndarray:
+        observation = super().vectorize_observation(observation_dict)
+        augmented_obs = np.hstack(
+            [observation, [self._ground_velocity]], dtype=np.float32
+        )
+        return augmented_obs
