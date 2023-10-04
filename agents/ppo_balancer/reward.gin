@@ -5,4 +5,5 @@
 
 import reward
 
-Reward.acceleration_penalty_weight = 1.0
+Reward.ground_velocity_weight = 0.1
+Reward.ground_acceleration_weight = 0.1
