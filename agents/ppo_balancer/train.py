@@ -79,10 +79,9 @@ def parse_command_line_arguments() -> argparse.Namespace:
 
 
 class SummaryWriterCallback(BaseCallback):
-    def __init__(self, vec_env: VecEnv, policy_name: str, training_dir: str):
+    def __init__(self, vec_env: VecEnv, save_path: str):
         super().__init__()
-        self.policy_name = policy_name
-        self.training_dir = training_dir
+        self.save_path = save_path
         self.vec_env = vec_env
 
     def _on_training_start(self):
@@ -111,7 +110,7 @@ class SummaryWriterCallback(BaseCallback):
             f"```yaml\n{yaml.dump(config, indent=4)}\n```",
             global_step=None,
         )
-        save_path = f"{self.training_dir}/{self.policy_name}/config.yaml"
+        save_path = f"{self.save_path}/config.yaml"
         with open(save_path, "w") as fh:
             yaml.dump(config, fh, indent=4)
         logging.info(f"Saved configuration to {save_path}")
@@ -213,6 +212,16 @@ def make_env(
     return _init
 
 
+def find_save_path(training_dir: str, policy_name: str):
+    def path_for_iter(nb_iter: int):
+        return f"{training_dir}/{policy_name}_{nb_iter}"
+
+    nb_iter = 1
+    while os.path.exists(path_for_iter(nb_iter)):
+        nb_iter += 1
+    return path_for_iter(nb_iter)
+
+
 def train_policy(
     policy_name: str,
     training_dir: str,
@@ -229,7 +238,9 @@ def train_policy(
     """
     if policy_name == "":
         policy_name = get_random_word()
+    save_path = find_save_path(training_dir, policy_name)
     logging.info('New policy name is "%s"', policy_name)
+    logging.info("Training data will be logged to %s", save_path)
 
     deez_runfiles = runfiles.Create()
     spine_path = os.path.join(
@@ -292,10 +303,10 @@ def train_policy(
             callback=[
                 CheckpointCallback(
                     save_freq=int(1e5),
-                    save_path=f"{training_dir}/{policy_name}",
+                    save_path=save_path,
                     name_prefix="checkpoint",
                 ),
-                SummaryWriterCallback(vec_env, policy_name, training_dir),
+                SummaryWriterCallback(vec_env, save_path),
             ],
             tb_log_name=policy_name,
         )
@@ -303,7 +314,7 @@ def train_policy(
         logging.info("Training interrupted.")
 
     # Save policy no matter what!
-    policy.save(f"{training_dir}/{policy_name}/final.zip")
+    policy.save(f"{save_path}/final.zip")
     policy.env.close()
 
 
