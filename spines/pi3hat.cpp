@@ -167,7 +167,15 @@ int main(const CommandLineArguments& args) {
   // Observation: Joystick
   auto joystick = std::make_shared<Joystick>();
   if (!joystick->present()) {
-    throw std::runtime_error("Joystick required to run the pi3hat spine");
+    char response;
+    std::cout << "\n /!\\ Joystick not found /!\\\n\n"
+              << "Ctrl-C will be the only way to stop the spine. "
+              << "Proceed? [yN] ";
+    std::cin >> response;
+    if (response != 'y') {
+      std::cout << "Joystick required to run the pi3hat spine.\n";
+      return -6;
+    }
   }
   observation.connect_source(joystick);
 
