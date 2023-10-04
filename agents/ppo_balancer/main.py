@@ -12,7 +12,7 @@ import tempfile
 import gin
 import gymnasium as gym
 import numpy as np
-from settings import EnvSettings
+from settings import EnvSettings, PPOSettings
 from stable_baselines3 import PPO
 
 import upkie.envs
@@ -79,7 +79,18 @@ def main(policy_path: str):
         },
         # velocity_filter=None,
     ) as env:
-        policy = PPO("MlpPolicy", env, verbose=1)
+        ppo_settings = PPOSettings()
+        policy = PPO(
+            "MlpPolicy",
+            env,
+            policy_kwargs={
+                "net_arch": dict(
+                    pi=ppo_settings.net_arch_pi,
+                    vf=ppo_settings.net_arch_vf,
+                ),
+            },
+            verbose=1,
+        )
         policy.set_parameters(policy_path)
         run_policy(env, policy)
 
