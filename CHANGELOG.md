@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- PPO balancer: Allow custom training path
 - PPO balancer: Allow re-training with the same policy name
 - PPO balancer: Low-pass filter action before acceleration clamping
 - agents: Closed-loop model predictive control
