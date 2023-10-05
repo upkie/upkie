@@ -21,7 +21,7 @@ class Reward(upkie.envs.Reward):
     Reward function for balancing in place.
     """
 
-    ground_velocity_weight: float
+    base_velocity_weight: float
     ground_acceleration_weight: float
 
     def get(
@@ -34,21 +34,24 @@ class Reward(upkie.envs.Reward):
         @param action Action to base the reward on.
         @returns Reward earned from executing the action from the observation.
         """
-        pitch = observation[0]
+        base_pitch = observation[0]
         # ground_position = observation[1]
         ground_velocity = observation[2]
-        # abs_angular_velocity = abs(observation[3])
+        base_angular_velocity = observation[3]
         previous_commanded_velocity = observation[4]
+
+        base_height = 0.3  # [m]
+        base_velocity = ground_velocity + base_angular_velocity * base_height * np.cos(base_pitch)
 
         commanded_velocity = action[0]
 
-        upright_reward = np.exp(-2.0 * pitch**2)
-        ground_velocity_penalty = -(ground_velocity**2)
+        upright_reward = np.exp(-2.0 * base_pitch**2)
+        base_velocity_penalty = -(base_velocity**2)
         ground_acceleration_penalty = -(
             (commanded_velocity - previous_commanded_velocity) ** 2
         )
         return (
             upright_reward
-            + self.ground_velocity_weight * ground_velocity_penalty
+            + self.base_velocity_weight * base_velocity_penalty
             + self.ground_acceleration_weight * ground_acceleration_penalty
         )
