@@ -4,5 +4,6 @@ dist/
 docs/html/
 logs/
 tools/bazel
+training/
 upkie.wiki/
 wiki/
