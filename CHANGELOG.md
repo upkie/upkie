@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- envs: Move reset state sampling to `InitRandomization` class
 - spines: Allow pi3hat spine to run without joystick if user validates
 
 ### Fixed
