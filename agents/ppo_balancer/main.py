@@ -3,6 +3,7 @@
 #
 # Copyright 2022 Stéphane Caron
 # Copyright 2023 Inria
+# SPDX-License-Identifier: Apache-2.0
 
 import argparse
 import logging
