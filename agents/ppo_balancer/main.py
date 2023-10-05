@@ -58,7 +58,8 @@ def run_policy(env: UpkieGroundVelocity, policy) -> None:
             if floor_contact
             else no_contact_policy(action, env.dt)
         )
-        action[0] = 1.0 * action[0]
+        action_scale = 0.7
+        action[0] = action_scale * action[0]
         observation, _, terminated, truncated, info = env.step(action)
         floor_contact = info["observation"]["floor_contact"]["contact"]
         if terminated or truncated:
