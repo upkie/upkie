@@ -178,7 +178,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
             self.__rate = RateLimiter(self.__frequency, name=name)
 
     def __reset_initial_robot_state(self):
-        orientation_matrix = self.init_rand.sample_orientation( self.np_random)
+        orientation_matrix = self.init_rand.sample_orientation(self.np_random)
         qx, qy, qz, qw = orientation_matrix.as_quat()
         orientation_quat = np.array([qw, qx, qy, qz])
         position = self.init_rand.sample_position(self.np_random)
