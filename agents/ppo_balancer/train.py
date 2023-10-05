@@ -18,6 +18,7 @@ import stable_baselines3
 import yaml
 from reward import Reward
 from rules_python.python.runfiles import runfiles
+from schedules import exponential_decay_schedule
 from settings import EnvSettings, PPOSettings
 from stable_baselines3.common.callbacks import BaseCallback, CheckpointCallback
 from stable_baselines3.common.logger import TensorBoardOutputFormat
@@ -30,7 +31,7 @@ from stable_baselines3.common.vec_env import (
 )
 from stable_baselines3.common.vec_env.base_vec_env import VecEnv
 from torch import nn
-from utils import exponential_decay_schedule, gin_operative_config_dict
+from utils import gin_operative_config_dict
 
 import upkie.envs
 from upkie.envs import InitRandomization
