@@ -5,7 +5,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from dataclasses import dataclass
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Dict
 
 import gin
 
@@ -20,7 +20,7 @@ class EnvSettings:
     agent_frequency: int
     discounted_horizon_duration: float
     env_id: str
-    init_pitch_rand: float
+    init_rand: Dict[str, float]
     max_episode_duration: float
     max_ground_accel: float
     max_ground_velocity: float

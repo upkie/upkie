@@ -160,11 +160,7 @@ def make_env(
         # parent process: trainer
         agent_frequency = settings.agent_frequency
         max_episode_duration = settings.max_episode_duration
-        init_rand = (
-            InitRandomization(pitch=settings.init_pitch_rand)
-            if settings.init_pitch_rand is not None
-            else None
-        )
+        init_rand = InitRandomization(**settings.init_rand)
         env = gymnasium.make(
             settings.env_id,
             max_episode_steps=int(max_episode_duration * agent_frequency),
