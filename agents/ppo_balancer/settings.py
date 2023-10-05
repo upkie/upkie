@@ -46,6 +46,7 @@ class PPOSettings:
     max_grad_norm: float
     n_epochs: int
     n_steps: int
+    nb_lr_schedule_steps: int
     net_arch_pi: Tuple[int, int]
     net_arch_vf: Tuple[int, int]
     normalize_advantage: bool
