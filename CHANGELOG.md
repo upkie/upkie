@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 - PPO balancer: Allow re-training with the same policy name
 - PPO balancer: Low-pass filter action before acceleration clamping
 - agents: Closed-loop model predictive control
+- envs: Allow custom initial base velocity in Bullet config
 - examples: Closed-loop model predictive control
 
 ### Changed
