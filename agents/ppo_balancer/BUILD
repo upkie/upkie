@@ -82,7 +82,10 @@ py_binary(
 
 py_binary(
     name = "train",
-    srcs = ["train.py"],
+    srcs = [
+        "schedules.py",
+        "train.py",
+    ],
     main = "train.py",
 
     # Enable `from X import y` rather than `from agents.agent_name.X import y`
