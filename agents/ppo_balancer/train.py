@@ -251,7 +251,10 @@ def train_policy(
     policy = stable_baselines3.PPO(
         "MlpPolicy",
         vec_env,
-        learning_rate=exponential_decay_schedule(ppo_settings.learning_rate),
+        learning_rate=exponential_decay_schedule(
+            ppo_settings.learning_rate,
+            nb_steps=ppo_settings.nb_lr_schedule_steps,
+        ),
         n_steps=ppo_settings.n_steps,
         batch_size=ppo_settings.batch_size,
         n_epochs=ppo_settings.n_epochs,

@@ -31,7 +31,7 @@ def linear_schedule(initial_value: float) -> Callable[[float], float]:
 
 def exponential_decay_schedule(
     initial_value: float,
-    nb_steps: int = 3,
+    nb_steps: int,
     factor: float = 0.1,
 ) -> Callable[[float], float]:
     """!
