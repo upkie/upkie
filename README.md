@@ -31,7 +31,7 @@ Click on the robot in the simulator window to apply external forces 😉
 
 ## Running a spine
 
-Upkie's code is organized into *spines*, which communicate with the simulation or mjbots actuators, and *agents*, the programs that implement robot behaviors. We use [Bazel](https://bazel.build/) to build spines, both for simulation on your development computer or for running on the robot's Raspberry Pi. Bazel builds everything locally, does not install anything on your system, and makes sure that all versions of all dependencies are correct. Check out [this introduction](https://github.com/tasts-robots/vulp#readme) for more details.
+Upkie's code is organized into *spines*, which communicate with the simulation or mjbots actuators, and *agents*, the programs that implement robot behaviors. We use [Bazel](https://bazel.build/) to build spines, both for simulation on your development computer or for running on the robot's Raspberry Pi. Bazel does not install anything on your system: it fetches dependencies with specific versions and builds them locally, making sure the code stays consistent over time. Check out [this introduction](https://github.com/tasts-robots/vulp#readme) for more details.
 
 ### Simulation spine
 
