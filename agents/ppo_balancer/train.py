@@ -286,7 +286,7 @@ def train_policy(
             total_timesteps=env_settings.total_timesteps,
             callback=[
                 CheckpointCallback(
-                    save_freq=max(int(1e5) // nb_envs, 1_000),
+                    save_freq=max(300_000 // nb_envs, 1_000),
                     save_path=save_path,
                     name_prefix="checkpoint",
                 ),
