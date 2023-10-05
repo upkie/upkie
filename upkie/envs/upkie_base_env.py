@@ -202,9 +202,18 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
             size=3,
         )
 
+        default_linear_velocity = np.zeros(3)
+        linear_velocity = default_linear_velocity + self.np_random.uniform(
+            low=np.array([-self.init_rand.v_x, 0.0, -self.init_rand.v_z]),
+            high=np.array([+self.init_rand.v_x, 0.0, +self.init_rand.v_z]),
+            size=3,
+        )
+
         bullet_config = self.spine_config["bullet"]
-        bullet_config["orientation_init_base_in_world"] = orientation
-        bullet_config["position_init_base_in_world"] = position
+        reset = bullet_config["reset"]
+        reset["orientation_base_in_world"] = orientation
+        reset["position_base_in_world"] = position
+        reset["linear_velocity_base_to_world_in_world"] = linear_velocity
 
     @property
     def rate(self) -> Union[AsyncRateLimiter, RateLimiter, None]:

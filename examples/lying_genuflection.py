@@ -16,8 +16,10 @@ amplitude = 1.0  # in radians
 
 spine_config = {
     "bullet": {
-        "orientation_init_base_in_world": [0.707, 0.0, -0.707, 0.0],
-        "position_init_base_in_world": [0.0, 0.0, 0.1],
+        "reset": {
+            "orientation_base_in_world": [0.707, 0.0, -0.707, 0.0],
+            "position_base_in_world": [0.0, 0.0, 0.1],
+        },
     }
 }
 
