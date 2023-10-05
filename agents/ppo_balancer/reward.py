@@ -41,7 +41,10 @@ class Reward(upkie.envs.Reward):
         previous_commanded_velocity = observation[4]
 
         base_height = 0.3  # [m]
-        base_velocity = ground_velocity + base_angular_velocity * base_height * np.cos(base_pitch)
+        base_velocity = (
+            ground_velocity
+            + base_angular_velocity * base_height * np.cos(base_pitch)
+        )
 
         commanded_velocity = action[0]
 
