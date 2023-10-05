@@ -22,7 +22,6 @@ from typing import Dict, Optional, Tuple, Union
 import gymnasium
 import numpy as np
 from loop_rate_limiters import AsyncRateLimiter, RateLimiter
-from scipy.spatial.transform import Rotation as ScipyRotation
 from vulp.spine import SpineInterface
 
 import upkie.config
@@ -179,41 +178,19 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
             self.__rate = RateLimiter(self.__frequency, name=name)
 
     def __reset_initial_robot_state(self):
-        yaw_pitch_roll_bounds = np.array(
-            [
-                0.0,
-                self.init_rand.pitch,
-                self.init_rand.roll,
-            ]
-        )
-        yaw_pitch_roll = self.np_random.uniform(
-            low=-yaw_pitch_roll_bounds,
-            high=+yaw_pitch_roll_bounds,
-            size=3,
-        )
-        orientation_matrix = ScipyRotation.from_euler("ZYX", yaw_pitch_roll)
+        orientation_matrix = self.init_rand.sample_orientation( self.np_random)
         qx, qy, qz, qw = orientation_matrix.as_quat()
-        orientation = np.array([qw, qx, qy, qz])
-
-        default_position = np.array([0.0, 0.0, 0.6])
-        position = default_position + self.np_random.uniform(
-            low=np.array([-self.init_rand.x, 0.0, 0.0]),
-            high=np.array([+self.init_rand.x, 0.0, self.init_rand.z]),
-            size=3,
-        )
-
-        default_linear_velocity = np.zeros(3)
-        linear_velocity = default_linear_velocity + self.np_random.uniform(
-            low=np.array([-self.init_rand.v_x, 0.0, -self.init_rand.v_z]),
-            high=np.array([+self.init_rand.v_x, 0.0, +self.init_rand.v_z]),
-            size=3,
-        )
+        orientation_quat = np.array([qw, qx, qy, qz])
+        position = self.init_rand.sample_position(self.np_random)
+        linear_velocity = self.init_rand.sample_linear_velocity(self.np_random)
+        omega = self.init_rand.sample_angular_velocity(self.np_random)
 
         bullet_config = self.spine_config["bullet"]
         reset = bullet_config["reset"]
-        reset["orientation_base_in_world"] = orientation
+        reset["orientation_base_in_world"] = orientation_quat
         reset["position_base_in_world"] = position
         reset["linear_velocity_base_to_world_in_world"] = linear_velocity
+        reset["angular_velocity_base_in_base"] = omega
 
     @property
     def rate(self) -> Union[AsyncRateLimiter, RateLimiter, None]:
