@@ -55,7 +55,7 @@ def run_policy(env: UpkieGroundVelocity, policy) -> None:
             floor_contact = False
         action, _ = (
             policy.predict(observation, deterministic=True)
-            if floor_contact
+            if floor_contact or True
             else no_contact_policy(action, env.dt)
         )
         action_scale = 0.7
