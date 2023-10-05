@@ -33,15 +33,5 @@ class InitRandomization:
     pitch: float = 0.0
     x: float = 0.0
     z: float = 0.0
-
-    def update(
-        self,
-        roll: float = 0.0,
-        pitch: float = 0.0,
-        x: float = 0.0,
-        z: float = 0.0,
-    ) -> None:
-        self.roll = roll
-        self.pitch = pitch
-        self.x = x
-        self.z = z
+    v_x: float = 0.0
+    v_z: float = 0.0

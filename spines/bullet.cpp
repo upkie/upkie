@@ -179,7 +179,7 @@ int main(const char* argv0, const CommandLineArguments& args) {
   bullet_params.floor = true;
   bullet_params.gravity = true;
   bullet_params.gui = args.show;
-  bullet_params.position_init_base_in_world = Eigen::Vector3d(0., 0., 0.6);
+  bullet_params.position_base_in_world = Eigen::Vector3d(0., 0., 0.6);
   bullet_params.urdf_path = "external/upkie_description/urdf/upkie.urdf";
   BulletInterface interface(servo_layout, bullet_params);
 
