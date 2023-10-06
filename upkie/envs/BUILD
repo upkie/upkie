@@ -75,6 +75,18 @@ py_library(
 )
 
 py_library(
+    name = "upkie_ground_acceleration",
+    srcs = [
+        "upkie_ground_acceleration.py",
+    ],
+    deps = [
+        "//upkie/utils:exceptions",
+        "//upkie/utils:filters",
+        ":upkie_wheeled_pendulum",
+    ],
+)
+
+py_library(
     name = "upkie_ground_velocity",
     srcs = [
         "upkie_ground_velocity.py",
@@ -94,6 +106,7 @@ py_library(
     deps = [
         ":rewards",
         ":upkie_base_env",
+        ":upkie_ground_acceleration",
         ":upkie_ground_velocity",
         ":upkie_servos",
     ] + select({
