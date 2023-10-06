@@ -168,14 +168,16 @@ def make_env(
             # upkie.envs.UpkieBaseEnv
             frequency=agent_frequency,
             init_rand=init_rand,
-            max_ground_accel=env_settings.max_ground_accel,
-            max_ground_velocity=env_settings.max_ground_velocity,
             regulate_frequency=False,
             reward=Reward(),
             shm_name=shm_name,
             spine_config=env_settings.spine_config,
-            velocity_filter=env_settings.velocity_filter,
-            velocity_filter_rand=env_settings.velocity_filter_rand,
+            # upkie.envs.UpkieGroundVelocity
+            # velocity_filter=settings.velocity_filter,
+            # velocity_filter_rand=settings.velocity_filter_rand,
+            # upkie.envs.UpkieGroundAcceleration
+            max_ground_accel=env_settings.max_ground_accel,
+            max_ground_velocity=env_settings.max_ground_velocity,
         )
         env.reset(seed=seed)
         env._prepatch_close = env.close
