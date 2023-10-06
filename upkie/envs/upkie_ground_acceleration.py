@@ -23,7 +23,6 @@ class UpkieGroundAcceleration(UpkieWheeledPendulum):
     """
 
     __ground_velocity: float
-    max_ground_accel: float
     max_ground_velocity: float
     version: int = 1
     wheel_radius: float
@@ -123,13 +122,8 @@ class UpkieGroundAcceleration(UpkieWheeledPendulum):
         @param action Action vector.
         @returns Action dictionary.
         """
-        self.__ground_acceleration = action[0]
-        assert (
-            abs(self.__ground_acceleration) <= self.max_ground_accel
-        )  # TODO(scaron): remove
-
         self.__ground_velocity = clamp_abs(
-            self.__ground_velocity + self.__ground_acceleration * self.dt,
+            self.__ground_velocity + action[0] * self.dt,
             self.max_ground_velocity,
         )
 
