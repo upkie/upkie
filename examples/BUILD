@@ -29,9 +29,19 @@ py_binary(
         "//upkie/utils:filters",
         "//upkie/utils:raspi",
         "//upkie/utils:spdlog",
-        # TODO(scaron): add ltv-mpc
-        requirement("qpsolvers"),
-    ],
+    ] + select({
+        # Selecting the right CPU architecture for the Raspberry Pi is
+        # currently a tough nut to crack for Bazel. We only enable compiled
+        # dependencies on the host side for now.
+        # Followed in: https://github.com/tasts-robots/upkie/issues/1
+        "//:pi32_config": [],
+        "//:pi64_config": [],
+        "//conditions:default": [
+            requirement("numpy"),
+            requirement("qpmpc"),
+            requirement("qpsolvers"),
+        ],
+    }),
 )
 
 py_binary(

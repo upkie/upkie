@@ -44,8 +44,8 @@ py_binary(
         "//:pi32_config": [],
         "//:pi64_config": [],
         "//conditions:default": [
-            requirement("ltv-mpc"),
             requirement("numpy"),
+            requirement("qpmpc"),
             requirement("qpsolvers"),
         ],
     }),
