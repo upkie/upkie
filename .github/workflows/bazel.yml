@@ -25,6 +25,36 @@ jobs:
               run: |
                   tools/bazelisk build --compilation_mode=fastbuild  //...
 
+    generate-artifacts:
+        name: "Artifacts"
+        runs-on: ubuntu-latest
+        env:
+            SPLINE: pi3hat
+            SPLINE_PATH: ./bazel-out/aarch64-opt/bin/spines/
+        steps:
+            - name: "Checkout sources"
+              uses: actions/checkout@v3
+
+            - name: "Install dependencies"
+              run: |
+                  python -m pip install --upgrade pip
+                  python -m pip install numpy
+                  sudo apt install libncurses5
+                  
+            - name: "Build Raspeberry artifact"
+              run: |
+                  tools/bazelisk build --verbose_failures --config=pi64 //spines:pi3hat
+                           
+            - name: "Prepare artifacts directory"
+              run: |
+                  mkdir -p artifacts && mv ${{ env.SPLINE_PATH }}${{ env.SPLINE }} ./artifacts/
+
+            - name: "Upload artifacts"
+              uses: actions/upload-artifact@v3
+              with:
+                  name: ${{ env.SPLINE }}
+                  path: ./artifacts
+                  
     coverage:
         name: "Coverage"
         runs-on: ubuntu-latest
