@@ -16,13 +16,13 @@
 
 #include "upkie/observers/FloorContact.h"
 
-#include <palimpsest/KeyError.h>
+#include <palimpsest/exceptions/KeyError.h>
 
 #include "vulp/utils/low_pass_filter.h"
 
 namespace upkie::observers {
 
-using palimpsest::KeyError;
+using palimpsest::exceptions::KeyError;
 using vulp::utils::low_pass_filter;
 
 FloorContact::FloorContact(const Parameters& params)

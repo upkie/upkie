@@ -15,7 +15,7 @@
  */
 
 #include <palimpsest/Dictionary.h>
-#include <palimpsest/KeyError.h>
+#include <palimpsest/exceptions/KeyError.h>
 
 #include <memory>
 
@@ -25,7 +25,7 @@
 namespace upkie::observers::tests {
 
 using palimpsest::Dictionary;
-using palimpsest::KeyError;
+using palimpsest::exceptions::KeyError;
 
 class FloorContactTest : public ::testing::Test {
  protected:
