@@ -5,19 +5,16 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import argparse
-import asyncio
 import datetime
 import os
 import shutil
 import socket
-import time
 import traceback
 from os import path
 from typing import Any, Dict
 
 import gin
-import mpacklog
-from loop_rate_limiters import AsyncRateLimiter
+from loop_rate_limiters import RateLimiter
 from vulp.spine import SpineInterface
 from whole_body_controller import WholeBodyController
 
@@ -52,11 +49,10 @@ def parse_command_line_arguments() -> argparse.Namespace:
     return parser.parse_args()
 
 
-async def run(
+def run(
     spine: SpineInterface,
     spine_config: Dict[str, Any],
     controller: WholeBodyController,
-    logger: mpacklog.AsyncLogger,
     frequency: float = 200.0,
 ) -> None:
     """
@@ -66,54 +62,18 @@ async def run(
         spine: Interface to the spine.
         spine_config: Spine configuration dictionary.
         controller: Whole-body controller.
-        logger: Dictionary logger.
         frequency: Control frequency in Hz.
     """
-    debug: Dict[str, Any] = {}
     dt = 1.0 / frequency
-    rate = AsyncRateLimiter(frequency, "controller")
+    rate = RateLimiter(frequency, "controller")
 
     spine.start(spine_config)
     observation = spine.get_observation()  # pre-reset observation
     while True:
         observation = spine.get_observation()
         action = controller.cycle(observation, dt)
-        action_time = time.time()
         spine.set_action(action)
-        debug["rate"] = {
-            "measured_period": rate.measured_period,
-            "slack": rate.slack,
-        }
-        await logger.put(
-            {
-                "action": action,
-                "debug": debug,
-                "observation": observation,
-                "time": action_time,
-            }
-        )
-        await rate.sleep()
-
-
-async def main(spine, args: argparse.Namespace):
-    controller = WholeBodyController(visualize=args.visualize)
-    spine_config = upkie.config.SPINE_CONFIG.copy()
-    wheel_radius = controller.wheel_balancer.wheel_radius
-    wheel_odometry_config = spine_config["wheel_odometry"]
-    wheel_odometry_config["signed_radius"]["left_wheel"] = +wheel_radius
-    wheel_odometry_config["signed_radius"]["right_wheel"] = -wheel_radius
-    logger = mpacklog.AsyncLogger("/dev/shm/pink_balancer.mpack")
-    await logger.put(
-        {
-            "config": spine_config,
-            "time": time.time(),
-        }
-    )
-    await asyncio.gather(
-        run(spine, spine_config, controller, logger),
-        logger.write(),
-        return_exceptions=False,  # make sure exceptions are raised
-    )
+        rate.sleep()
 
 
 def load_gin_configuration(name: str) -> None:
@@ -142,8 +102,14 @@ if __name__ == "__main__":
         configure_agent_process()
 
     spine = SpineInterface()
+    controller = WholeBodyController(visualize=args.visualize)
+    spine_config = upkie.config.SPINE_CONFIG.copy()
+    wheel_radius = controller.wheel_balancer.wheel_radius
+    wheel_odometry_config = spine_config["wheel_odometry"]
+    wheel_odometry_config["signed_radius"]["left_wheel"] = +wheel_radius
+    wheel_odometry_config["signed_radius"]["right_wheel"] = -wheel_radius
     try:
-        asyncio.run(main(spine, args))
+        run(spine, spine_config, controller)
     except KeyboardInterrupt:
         logging.info("Caught a keyboard interrupt")
     except Exception:
