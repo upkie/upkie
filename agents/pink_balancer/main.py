@@ -5,9 +5,6 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import argparse
-import datetime
-import os
-import shutil
 import socket
 import traceback
 from os import path
@@ -126,10 +123,3 @@ if __name__ == "__main__":
         print("")
         traceback.print_exc()
         print("")
-
-    now = datetime.datetime.now()
-    stamp = now.strftime("%Y-%m-%d_%H%M%S")
-    log_dir = os.environ.get("UPKIE_LOG_PATH", "~")
-    save_path = os.path.expanduser(f"{log_dir}/{stamp}_pink_balancer.mpack")
-    shutil.copy("/dev/shm/pink_balancer.mpack", save_path)
-    logging.info(f"Log saved to {save_path}")
