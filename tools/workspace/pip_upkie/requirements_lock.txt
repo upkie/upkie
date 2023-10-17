@@ -16,7 +16,7 @@ importlib-metadata==4.13.0
 importlib-resources==5.9.0
 jax-jumpy==1.0.0
 kiwisolver==1.0.1
-loop-rate-limiters==0.6.0
+loop-rate-limiters==0.6.1
 matplotlib==3.7.0
 mpacklog==3.1.0
 msgpack==1.0.4
