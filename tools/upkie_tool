@@ -4,6 +4,10 @@
 # Copyright 2022 Stéphane Caron
 # Copyright 2023 Inria
 
+"""
+Command-line script to communicate with Upkie's servos.
+"""
+
 import argparse
 import asyncio
 import math
