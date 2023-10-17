@@ -52,12 +52,4 @@ py_binary(
     ],
 )
 
-py_binary(
-    name = "wheeled_balancing_async",
-    srcs = ["wheeled_balancing_async.py"],
-    deps = [
-        "//upkie/envs",
-    ],
-)
-
 add_lint_tests()
