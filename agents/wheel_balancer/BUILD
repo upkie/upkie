@@ -63,7 +63,6 @@ py_binary(
     }),
     deps = [
         "//upkie/utils:exceptions",
-        "//upkie/utils:log_path",
         "//upkie/utils:raspi",
         "//upkie/utils:spdlog",
         ":controllers",

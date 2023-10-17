@@ -64,7 +64,6 @@ py_binary(
     deps = [
         "//upkie/envs",
         "//upkie/utils:filters",
-        "//upkie/utils:log_path",
         "//upkie/utils:raspi",
         ":reward",  # needed by gin config
         ":settings",
