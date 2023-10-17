@@ -34,11 +34,6 @@ py_library(
 )
 
 py_library(
-    name = "log_path",
-    srcs = ["log_path.py"],
-)
-
-py_library(
     name = "nested_update",
     srcs = ["nested_update.py"],
 )
@@ -72,7 +67,6 @@ py_library(
         ":clamp",
         ":exceptions",
         ":filters",
-        ":log_path",
         ":nested_update",
         ":pinocchio",
         ":raspi",
