@@ -7,7 +7,6 @@
 """Wheel balancing using model predictive control with the ProxQP solver."""
 
 import argparse
-import asyncio
 import os
 import time
 from time import perf_counter
@@ -15,7 +14,6 @@ from typing import Optional
 
 import gin
 import gymnasium as gym
-import mpacklog
 import numpy as np
 import proxsuite
 import qpsolvers
@@ -111,7 +109,6 @@ class UpkieCartPole(CartPole):
 @gin.configurable
 async def balance(
     env: gym.Env,
-    logger: mpacklog.AsyncLogger,
     nb_env_steps: int,
     rebuild_qp_every_time: bool,
     show_live_plot: bool,
@@ -124,7 +121,6 @@ async def balance(
     Run proportional balancer in gym environment with logging.
 
     @param env Gym environment to Upkie.
-    @param logger Additional logger.
     """
     cart_pole = UpkieCartPole()
     mpc_problem = cart_pole.build_mpc_problem(
@@ -151,9 +147,7 @@ async def balance(
     step = 0
     while True:
         action[0] = commanded_velocity
-        observation, _, terminated, truncated, info = await env.async_step(
-            action
-        )
+        observation, _, terminated, truncated, info = env.step(action)
         if terminated or truncated:
             observation, info = env.reset()
             commanded_velocity = 0.0
@@ -219,20 +213,12 @@ async def balance(
                 upper=+1.0,
                 label="commanded_velocity",
             )
-        await logger.put(  # log info to be written to file later
-            {
-                "action": action,
-                "observation": info["observation"],
-                "time": time.time(),
-            }
-        )
 
         if nb_env_steps > 0:
             step += 1
             if step >= nb_env_steps:
                 break
 
-    await logger.stop()
     report(mpc_problem, mpc_qp, planning_times)
     np.save("base_pitches.npy", base_pitches)
     np.save("planning_times.npy", planning_times)
@@ -261,16 +247,6 @@ def report(mpc_problem, mpc_qp, planning_times: Optional[np.ndarray]):
         print("")
 
 
-async def main(args):
-    """Main function of our asyncio program."""
-    logger = mpacklog.AsyncLogger("mpc_balancing.mpack")
-    with gym.make("UpkieGroundVelocity-v1", frequency=200.0) as env:
-        await asyncio.gather(
-            balance(env, logger, show_live_plot=args.live_plot),
-            logger.write(),  # write logs to file when there is time
-        )
-
-
 if __name__ == "__main__":
     if on_raspi():
         configure_agent_process()
@@ -278,4 +254,5 @@ if __name__ == "__main__":
     agent_dir = os.path.dirname(__file__)
     gin.parse_config_file(f"{agent_dir}/config.gin")
     args = parse_command_line_arguments()
-    asyncio.run(main(args))
+    with gym.make("UpkieGroundVelocity-v1", frequency=200.0) as env:
+        balance(env, show_live_plot=args.live_plot)
