@@ -5,18 +5,15 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import argparse
-import asyncio
 import shutil
 import socket
-import time
 import traceback
 from os import path
 from typing import Any, Dict
 
 import gin
-import mpacklog
 import yaml
-from loop_rate_limiters import AsyncRateLimiter
+from loop_rate_limiters import RateLimiter
 from servo_controller import ServoController
 from vulp.spine import SpineInterface
 
@@ -44,10 +41,9 @@ def parse_command_line_arguments() -> argparse.Namespace:
     return parser.parse_args()
 
 
-async def run(
+def run(
     spine: SpineInterface,
     spine_config: Dict[str, Any],
-    logger: mpacklog.AsyncLogger,
     frequency: float = 200.0,
 ) -> None:
     """
@@ -61,7 +57,7 @@ async def run(
     controller = ServoController()
     debug: Dict[str, Any] = {}
     dt = 1.0 / frequency
-    rate = AsyncRateLimiter(frequency, "controller")
+    rate = RateLimiter(frequency, "controller")
 
     wheel_radius = controller.wheel_balancer.wheel_radius
     spine_config["wheel_odometry"] = {
@@ -76,36 +72,9 @@ async def run(
     while True:
         observation = spine.get_observation()
         action = controller.cycle(observation, dt)
-        action_time = time.time()
         spine.set_action(action)
-        debug["rate"] = {
-            "measured_period": rate.measured_period,
-            "slack": rate.slack,
-        }
-        await logger.put(
-            {
-                "action": action,
-                "debug": debug,
-                "observation": observation,
-                "time": action_time,
-            }
-        )
-        await rate.sleep()
-
-
-async def main(spine, spine_config: Dict[str, Any]):
-    logger = mpacklog.AsyncLogger("/dev/shm/wheel_balancer.mpack")
-    await logger.put(
-        {
-            "config": spine_config,
-            "time": time.time(),
-        }
-    )
-    await asyncio.gather(
-        run(spine, spine_config, logger),
-        logger.write(),
-        return_exceptions=False,  # make sure exceptions are raised
-    )
+        debug["rate"] = {"slack": rate.slack}
+        rate.sleep()
 
 
 def load_gin_configuration(base_dir: str, path: str) -> None:
@@ -138,7 +107,7 @@ if __name__ == "__main__":
 
     spine = SpineInterface()
     try:
-        asyncio.run(main(spine, spine_config))
+        run(spine, spine_config)
     except KeyboardInterrupt:
         logging.info("Caught a keyboard interrupt")
     except Exception:
