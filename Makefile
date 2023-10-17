@@ -27,7 +27,7 @@ PROJECT_NAME = upkie
 
 BAZEL = $(CURDIR)/tools/bazelisk
 COVERAGE_DIR = $(CURDIR)/bazel-out/_coverage
-CURDATE = $(shell date --iso=seconds)
+CURDATE = $(shell date -Iseconds)
 CURDIR_NAME = $(shell basename $(CURDIR))
 RASPUNZEL = $(CURDIR)/tools/raspunzel
 
