@@ -29,6 +29,10 @@ All notable changes to this project will be documented in this file.
 - PPO balancer: Run policy deterministically after training
 - envs: Merge default and runtime configuration dictionaries
 
+### Removed
+
+- ``upkie.utils.log_path`` submodule and its utility function
+
 ## [1.5.0] - 2023/09/29
 
 ### Added
