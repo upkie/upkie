@@ -16,12 +16,11 @@
 # limitations under the License.
 
 import abc
-import asyncio
-from typing import Dict, Optional, Tuple, Union
+from typing import Dict, Optional, Tuple
 
 import gymnasium
 import numpy as np
-from loop_rate_limiters import AsyncRateLimiter, RateLimiter
+from loop_rate_limiters import RateLimiter
 from vulp.spine import SpineInterface
 
 import upkie.config
@@ -53,15 +52,14 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
     real robot, as it relies on the same spine interface that runs on Upkie.
     """
 
-    __async_rate: Optional[AsyncRateLimiter]
     __frequency: Optional[float]
-    __rate: Optional[RateLimiter]
     __regulate_frequency: bool
     _spine: SpineInterface
     fall_pitch: float
-    spine_config: dict
-    reward: Reward
     init_rand: InitRandomization
+    rate: Optional[RateLimiter]
+    reward: Reward
+    spine_config: dict
 
     def __init__(
         self,
@@ -152,7 +150,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         """
         super().reset(seed=seed)
         self._spine.stop()
-        self.__reset_rates()
+        self.__reset_rate()
         self.__reset_initial_robot_state()
         self._spine.start(self.spine_config)
         self._spine.get_observation()  # might be a pre-reset observation
@@ -165,17 +163,11 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         }
         return observation, info
 
-    def __reset_rates(self):
-        self.__async_rate = None
-        self.__rate = None
-        if not self.__regulate_frequency:
-            return
-        name = f"{self.__class__.__name__} rate limiter"
-        try:
-            asyncio.get_running_loop()
-            self.__async_rate = AsyncRateLimiter(self.__frequency, name=name)
-        except RuntimeError:  # not asyncio
-            self.__rate = RateLimiter(self.__frequency, name=name)
+    def __reset_rate(self):
+        self.rate = None
+        if self.__regulate_frequency:
+            rate_name = f"{self.__class__.__name__} rate limiter"
+            self.rate = RateLimiter(self.__frequency, name=rate_name)
 
     def __reset_initial_robot_state(self):
         orientation_matrix = self.init_rand.sample_orientation(self.np_random)
@@ -191,19 +183,6 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         reset["position_base_in_world"] = position
         reset["linear_velocity_base_to_world_in_world"] = linear_velocity
         reset["angular_velocity_base_in_base"] = omega
-
-    @property
-    def rate(self) -> Union[AsyncRateLimiter, RateLimiter, None]:
-        """!
-        Get the internal rate used for loop frequency regulation.
-
-        @returns Internal rate.
-        """
-        if self.__async_rate is not None:
-            return self.__async_rate
-        elif self.__rate is not None:
-            return self.__rate
-        return None
 
     def step(
         self,
@@ -230,41 +209,9 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
               us this will be the full observation dictionary coming sent by
               the spine.
         """
-        if self.__rate is not None:
-            self.__rate.sleep()  # wait until clock tick to send the action
-        return self.__step(action)
+        if self.rate is not None:
+            self.rate.sleep()  # wait until clock tick to send the action
 
-    async def async_step(
-        self, action: np.ndarray
-    ) -> Tuple[np.ndarray, float, bool, bool, dict]:
-        """!
-        Run one timestep of the environment's dynamics using asynchronous I/O.
-        When the end of the episode is reached, you are responsible for calling
-        `reset()` to reset the environment's state.
-
-        @param action Action from the agent.
-        @returns
-            - ``observation``: Observation of the environment, i.e. an element
-              of its ``observation_space``.
-            - ``reward``: Reward returned after taking the action.
-            - ``terminated``: Whether the agent reached a terminal state,
-              which can be a good or a bad thing. When true, the user needs to
-              call :func:`reset()`.
-            - ``truncated'': Whether the episode is reaching max number of
-              steps. This boolean can signal a premature end of the episode,
-              i.e. before a terminal state is reached. When true, the user
-              needs to call :func:`reset()`.
-            - ``info``: Dictionary with auxiliary diagnostic information. For
-              us this will be the full observation dictionary coming sent by
-              the spine.
-        """
-        if self.__async_rate is not None:
-            await self.__async_rate.sleep()  # send action at next clock tick
-        return self.__step(action)
-
-    def __step(
-        self, action: np.ndarray
-    ) -> Tuple[np.ndarray, float, bool, bool, dict]:
         action_dict = self.dictionarize_action(action)
         self._spine.set_action(action_dict)
         observation_dict = self._spine.get_observation()
