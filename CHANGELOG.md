@@ -15,6 +15,11 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
+- **Breaking:** envs: Remove ``async_step`` function and ``asyncio`` logic
+- MPC balancer: Remove ``asyncio`` logic
+- PPO balancer: Remove ``asyncio`` logic
+- Pink balancer: Remove ``asyncio`` logic
+- Wheel balancer: Remove ``asyncio`` logic
 - envs: Move reset state sampling to `InitRandomization` class
 - spines: Allow pi3hat spine to run without joystick if user validates
 
