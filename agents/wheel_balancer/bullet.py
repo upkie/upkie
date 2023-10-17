@@ -5,7 +5,6 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import argparse
-import asyncio
 import logging
 import os
 import signal
@@ -15,7 +14,7 @@ from typing import Any, Dict
 
 import gin
 import yaml
-from loop_rate_limiters import AsyncRateLimiter
+from loop_rate_limiters import RateLimiter
 from rules_python.python.runfiles import runfiles
 from servo_controller import ServoController
 from vulp.spine import SpineInterface
@@ -42,7 +41,7 @@ def parse_command_line_arguments() -> argparse.Namespace:
     return parser.parse_args()
 
 
-async def run(
+def run(
     spine: SpineInterface,
     spine_config: Dict[str, Any],
     frequency: float = 200.0,
@@ -57,7 +56,7 @@ async def run(
     """
     controller = ServoController()
     dt = 1.0 / frequency
-    rate = AsyncRateLimiter(frequency, "controller")
+    rate = RateLimiter(frequency, "controller")
 
     wheel_radius = controller.wheel_balancer.wheel_radius
     spine_config["wheel_odometry"] = {
@@ -73,7 +72,7 @@ async def run(
         observation = spine.get_observation()
         action = controller.cycle(observation, dt)
         spine.set_action(action)
-        await rate.sleep()
+        rate.sleep()
 
 
 if __name__ == "__main__":
@@ -111,7 +110,7 @@ if __name__ == "__main__":
         spine = None
         try:
             spine = SpineInterface(retries=10)
-            asyncio.run(run(spine, config))
+            run(spine, config)
         except KeyboardInterrupt:
             logging.info("Caught a keyboard interrupt")
         except Exception:
