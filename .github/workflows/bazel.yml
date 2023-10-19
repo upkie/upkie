@@ -29,7 +29,7 @@ jobs:
         name: "Artifacts"
         runs-on: ubuntu-latest
         env:
-            SPLINE: pi3hat
+            SPLINE: pi3hat_spine
             SPLINE_PATH: ./bazel-out/aarch64-opt/bin/spines/
         steps:
             - name: "Checkout sources"
@@ -38,11 +38,11 @@ jobs:
             - name: "Install dependencies"
               run: |
                   sudo apt install libncurses5
-                  
+
             - name: "Build Raspeberry artifact"
               run: |
-                  tools/bazelisk build --verbose_failures --config=pi64 //spines:pi3hat
-                           
+                  tools/bazelisk build --verbose_failures --config=pi64 //spines:pi3hat_spine
+
             - name: "Prepare artifacts directory"
               run: |
                   mkdir -p artifacts && mv ${{ env.SPLINE_PATH }}${{ env.SPLINE }} ./artifacts/
@@ -52,7 +52,7 @@ jobs:
               with:
                   name: ${{ env.SPLINE }}
                   path: ./artifacts
-                  
+
     coverage:
         name: "Coverage"
         runs-on: ubuntu-latest
