@@ -31,7 +31,9 @@ All notable changes to this project will be documented in this file.
 
 ### Removed
 
-- ``upkie.utils.log_path`` submodule and its utility function
+- Dependency on mpacklog.cpp (already in Vulp)
+- Dependency on mpacklog.py
+- Log-path ``upkie.utils.log_path`` submodule and its utility function
 
 ## [1.5.0] - 2023/09/29
 
