@@ -1,17 +1,7 @@
 /*
  * Copyright 2022 Stéphane Caron
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2023 Inria
+ * SPDX-License-Identifier: Apache-2.0
  */
 
 #include <vulp/actuation/BulletInterface.h>
@@ -38,6 +28,7 @@
 #include "upkie/observers/FloorContact.h"
 #include "upkie/observers/WheelOdometry.h"
 #include "upkie/utils/datetime_now_string.h"
+#include "upkie/version.h"
 
 namespace spines::bullet {
 
@@ -66,6 +57,8 @@ class CommandLineArguments {
       const auto& arg = args[i];
       if (arg == "-h" || arg == "--help") {
         help = true;
+      } else if (arg == "-v" || arg == "--version") {
+        version = true;
       } else if (arg == "--log-dir") {
         log_dir = args.at(++i);
         spdlog::info("Command line: log_dir = {}", log_dir);
@@ -112,8 +105,12 @@ class CommandLineArguments {
               << "    Name for IPC shared memory file.\n";
     std::cout << "--show\n"
               << "    Show the Bullet GUI.\n";
+    std::cout << "--space\n"
+              << "    No ground, no gravity, fly like an eagle!\n";
     std::cout << "--spine-frequency <frequency>\n"
               << "    Spine frequency in Hertz (default: 1000 Hz).\n";
+    std::cout << "-v, --version\n"
+              << "    Print out the spine version number.\n";
     std::cout << "\n";
   }
 
@@ -141,6 +138,9 @@ class CommandLineArguments {
 
   //! Spine frequency in Hz.
   unsigned spine_frequency = 1000u;
+
+  //! Version flag
+  bool version = false;
 };
 
 int main(const char* argv0, const CommandLineArguments& args) {
@@ -215,6 +215,9 @@ int main(int argc, char** argv) {
     return EXIT_FAILURE;
   } else if (args.help) {
     args.print_usage(argv[0]);
+    return EXIT_SUCCESS;
+  } else if (args.version) {
+    std::cout << "Upkie bullet spine " << upkie::kVersion << "\n";
     return EXIT_SUCCESS;
   }
   return spines::bullet::main(argv[0], args);

@@ -16,3 +16,10 @@ py_library(
         "//upkie/utils:python",
     ],
 )
+
+cc_library(
+    name = "version",
+    hdrs = [
+        "version.h",
+    ],
+)

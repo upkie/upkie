@@ -18,6 +18,7 @@ cc_binary(
         "//upkie/config:layout",
         "//upkie/observers",
         "//upkie/utils:datetime_now_string",
+        "//upkie:version",
         "@vulp//vulp/actuation:bullet_interface",
         "@vulp//vulp/observation",
         "@vulp//vulp/observation/sources",
@@ -33,6 +34,7 @@ cc_binary(
     deps = [
         "//upkie/config:layout",
         "//upkie/observers",
+        "//upkie:version",
         "@vulp//vulp/actuation:mock_interface",
         "@vulp//vulp/observation",
         "@vulp//vulp/observation/sources",
@@ -59,6 +61,7 @@ cc_binary(
         "//upkie/config:layout",
         "//upkie/observers",
         "//upkie/utils:datetime_now_string",
+        "//upkie:version",
         "@vulp//vulp/observation",
         "@vulp//vulp/observation/sources",
         "@vulp//vulp/spine",

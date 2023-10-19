@@ -1,17 +1,7 @@
 /*
  * Copyright 2022 Stéphane Caron
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2023 Inria
+ * SPDX-License-Identifier: Apache-2.0
  */
 
 #include <vulp/actuation/MockInterface.h>
@@ -33,6 +23,7 @@
 #include "upkie/config/layout.h"
 #include "upkie/observers/FloorContact.h"
 #include "upkie/observers/WheelOdometry.h"
+#include "upkie/version.h"
 
 namespace spines::mock {
 
@@ -57,6 +48,8 @@ class CommandLineArguments {
       const auto& arg = args[i];
       if (arg == "-h" || arg == "--help") {
         help = true;
+      } else if (arg == "-v" || arg == "--version") {
+        version = true;
       } else if (arg == "--spine-cpu") {
         spine_cpu = std::stol(args.at(++i));
         spdlog::info("Command line: spine_cpu = {}", spine_cpu);
@@ -84,6 +77,8 @@ class CommandLineArguments {
               << "    CPUID for the spine thread (default: -1).\n";
     std::cout << "--spine-frequency <frequency>\n"
               << "    Spine frequency in Hertz.\n";
+    std::cout << "-v, --version\n"
+              << "    Print out the spine version number.\n";
     std::cout << "\n";
   }
 
@@ -99,6 +94,9 @@ class CommandLineArguments {
 
   //! Spine frequency in Hz.
   unsigned spine_frequency = 1000u;
+
+  //! Version flag
+  bool version = false;
 };
 
 int main(const CommandLineArguments& args) {
@@ -159,6 +157,9 @@ int main(int argc, char** argv) {
     return EXIT_FAILURE;
   } else if (args.help) {
     args.print_usage(argv[0]);
+    return EXIT_SUCCESS;
+  } else if (args.version) {
+    std::cout << "Upkie mock spine " << upkie::kVersion << "\n";
     return EXIT_SUCCESS;
   }
   return spines::mock::main(args);
