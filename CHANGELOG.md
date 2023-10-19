@@ -21,6 +21,7 @@ All notable changes to this project will be documented in this file.
 - Pink balancer: Remove ``asyncio`` logic
 - Wheel balancer: Remove ``asyncio`` logic
 - envs: Move reset state sampling to `InitRandomization` class
+- spines: Add `_spine` suffix to binary names, e.g. `pi3hat_spine`
 - spines: Allow pi3hat spine to run without joystick if user validates
 
 ### Fixed
