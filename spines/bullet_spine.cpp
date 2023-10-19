@@ -66,8 +66,6 @@ class CommandLineArguments {
       const auto& arg = args[i];
       if (arg == "-h" || arg == "--help") {
         help = true;
-      } else if (arg == "--air") {
-        air = true;
       } else if (arg == "--log-dir") {
         log_dir = args.at(++i);
         spdlog::info("Command line: log_dir = {}", log_dir);
@@ -79,6 +77,8 @@ class CommandLineArguments {
         spdlog::info("Command line: shm_name = {}", shm_name);
       } else if (arg == "--show") {
         show = true;
+      } else if (arg == "--space") {
+        space = true;
       } else if (arg == "--spine-frequency") {
         spine_frequency = std::stol(args.at(++i));
         spdlog::info("Command line: spine_frequency = {} Hz", spine_frequency);
@@ -118,9 +118,6 @@ class CommandLineArguments {
   }
 
  public:
-  //! "Air" mode (no gravity)
-  bool air = false;
-
   //! Error flag
   bool error = false;
 
@@ -138,6 +135,9 @@ class CommandLineArguments {
 
   //! Show Bullet GUI
   bool show = false;
+
+  //! Space mode (no gravity)
+  bool space = false;
 
   //! Spine frequency in Hz.
   unsigned spine_frequency = 1000u;
@@ -178,12 +178,12 @@ int main(const char* argv0, const CommandLineArguments& args) {
 
   // Simulator
   const auto servo_layout = upkie::config::servo_layout();
-  const double base_altitude = args.air ? 0.0 : 0.6;  // [m]
+  const double base_altitude = args.space ? 0.0 : 0.6;  // [m]
   BulletInterface::Parameters bullet_params(Dictionary{});
   bullet_params.argv0 = argv0;
   bullet_params.dt = 1.0 / args.spine_frequency;
-  bullet_params.floor = !args.air;
-  bullet_params.gravity = !args.air;
+  bullet_params.floor = !args.space;
+  bullet_params.gravity = !args.space;
   bullet_params.gui = args.show;
   bullet_params.position_base_in_world = Eigen::Vector3d(0., 0., base_altitude);
   bullet_params.urdf_path = "external/upkie_description/urdf/upkie.urdf";
