@@ -57,8 +57,8 @@ py_binary(
     data = [
         "//agents/wheel_balancer/config",
     ] + select({
-        "//:pi32_config": ["//spines:pi3hat"],
-        "//:pi64_config": ["//spines:pi3hat"],
+        "//:pi32_config": ["//spines:pi3hat_spine"],
+        "//:pi64_config": ["//spines:pi3hat_spine"],
         "//conditions:default": [],
     }),
     deps = [
