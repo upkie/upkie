@@ -39,7 +39,6 @@ py_binary(
         "@vulp//:python",
         requirement("gin-config"),
         requirement("loop_rate_limiters"),
-        requirement("mpacklog"),
         requirement("packaging"),
         requirement("upkie_description"),
     ] + select({
