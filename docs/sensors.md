@@ -10,12 +10,12 @@ The inertial measurement unit (IMU) mounted on the [pi3hat](https://mjbots.com/p
 
 These measurements are exposed by the spine in ``observation["imu"]``.
 
-## mjbots actuators
+## Actuators
 
-All mjbots actuators on the robot, be it qdd100's in the hips and knees or mj5208's in the wheels, have [moteus](https://mjbots.com/products/moteus-r4-11) controller boards that provide the following measurements:
+Actuators on the robot are [qdd100 beta 3](https://mjbots.com/products/qdd100-beta-3) (hips and knees) and [mj5208 brushless motors](https://mjbots.com/products/mj5208) (wheels). All of them have [moteus](https://mjbots.com/products/moteus-r4-11) controller boards that provide the following measurements:
 
 - Joint angle, sensed by two orthogonal Hall-effect sensors at the back of the moteus controller board (each measuring the magnetic field in one direction; the output angle is then the arc-tangent of the ratio between these two values)
 - Joint velocity, obtained by filtering joint angle measurements (not a direct measurement)
 - Joint torque, estimated from sensed phase currents (with a model that includes [stator magnetic saturation](https://jpieper.com/2020/07/31/dealing-with-stator-magnetic-saturation/)
 
-These measurements are exposed by the spine ni ``observation["servos"]``.
+These measurements are exposed by the spine in ``observation["servos"]``.
