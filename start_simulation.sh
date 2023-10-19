@@ -3,4 +3,4 @@
 SCRIPT=$(realpath "$0")
 SCRIPTDIR=$(dirname "${SCRIPT}")
 
-(cd ${SCRIPTDIR} && ${SCRIPTDIR}/tools/bazelisk run //spines:bullet -- --show)
+(cd ${SCRIPTDIR} && ${SCRIPTDIR}/tools/bazelisk run //spines:bullet_spine -- --show)

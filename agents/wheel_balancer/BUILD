@@ -33,7 +33,7 @@ py_binary(
 
     data = [
         ":config",
-        "//spines:bullet",
+        "//spines:bullet_spine",
     ],
     deps = [
         "//upkie/utils:exceptions",

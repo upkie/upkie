@@ -44,7 +44,7 @@ In the example above we ran an agent called "wheel balancer". We could also star
 This script is just an alias for a Bazel ``run`` command:
 
 ```console
-./tools/bazelisk run -c opt //spines:bullet -- --show
+./tools/bazelisk run -c opt //spines:bullet_spine -- --show
 ```
 
 The ``-c opt`` flag selects the optimized compilation mode. It is actually the default in this project, we just show it here for example.
