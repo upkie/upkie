@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file.
 - agents: Closed-loop model predictive control
 - envs: Allow custom initial base velocity in Bullet config
 - examples: Closed-loop model predictive control
+- spines: ``--version`` flag for all spine binaries
 
 ### Changed
 
