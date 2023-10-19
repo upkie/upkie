@@ -1,4 +1,4 @@
-# Sensors
+# Sensors {#Sensors}
 
 ## Inertial measurement unit
 
