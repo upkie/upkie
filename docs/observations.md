@@ -1,4 +1,4 @@
-# Observations
+# Observations {#observations}
 
 The following index gives pointers to understand the data in observation dictionaries.
 
@@ -14,4 +14,4 @@ The following index gives pointers to understand the data in observation diction
 | `___ └── torque`   | Joint torque | [N] [m] | |
 | `___ └── velocity` | Angular velocity of the rotor w.r.t. stator in rotor | [rad] / [s] | |
 
-See also [Sensors](@ref Sensors).
+See also [Sensors](@ref sensors).
