@@ -9,9 +9,19 @@
 
 Build instructions and software for **Upkie** wheeled bipeds. Develop on Linux 🐧 or macOS 🍏, deploy to the robot's Raspberry Pi 🍓. Questions are welcome in the [Discussions](https://github.com/tasts-robots/upkie/discussions) forum or on the [Chat](https://app.element.io/#/room/#tasts-robots:matrix.org).
 
-## Quick sim
+## Installation
 
-If you have Python and a C++ compiler (setup one-liners: [Fedora](https://github.com/tasts-robots/upkie/discussions/100), [Ubuntu](https://github.com/tasts-robots/upkie/discussions/101)), you can run an Upkie simulation right from the command line. It won't install anything on your machine, as everything will run locally from the repository:
+We develop agents for Upkie in Python:
+
+```console
+pip install upkie
+```
+
+Yes, it's as simple as that. This Python interface is already [fast enough](https://github.com/tasts-robots/vulp#performance) for real-time control.
+
+## Simulation
+
+Assuming you have a C++ compiler (setup one-liners: [Fedora](https://github.com/tasts-robots/upkie/discussions/100), [Ubuntu](https://github.com/tasts-robots/upkie/discussions/101)), you can run an Upkie simulation right from the command line. It won't install anything on your machine, everything will run locally from the repository:
 
 <img src="https://user-images.githubusercontent.com/1189580/170496331-e1293dd3-b50c-40ee-9c2e-f75f3096ebd8.png" height="100" align="right" />
 
@@ -21,74 +31,11 @@ cd upkie
 ./start_wheel_balancer.sh
 ```
 
-Click on the robot in the simulator window to apply external forces 😉
+Click on the robot in the simulator window to apply external forces.
 
-## Getting started
+## Run your own code
 
-1. [Build an Upkie](https://github.com/tasts-robots/upkie/wiki) or [run a simulation](https://github.com/tasts-robots/upkie#simulation-spine)
-2. [Run an existing agent](https://github.com/tasts-robots/upkie#running-a-python-agent)
-3. [Develop your own agent](https://github.com/tasts-robots/upkie#example-of-a-custom-agent)
-
-## Running a spine
-
-Upkie's code is organized into *spines*, which communicate with the simulation or mjbots actuators, and *agents*, the programs that implement robot behaviors. We use [Bazel](https://bazel.build/) to build spines, both for simulation on your development computer or for running on the robot's Raspberry Pi. Bazel does not install anything on your system: it fetches dependencies with specific versions and builds them locally, making sure the code stays consistent over time. Check out [this introduction](https://github.com/tasts-robots/vulp#readme) for more details.
-
-### Simulation spine
-
-In the example above we ran an agent called "wheel balancer". We could also start the simulation spine independently, and let it run waiting for agents to connect:
-
-```console
-./start_simulation.sh
-```
-
-This script is just an alias for a Bazel ``run`` command:
-
-```console
-./tools/bazelisk run -c opt //spines:bullet_spine -- --show
-```
-
-The ``-c opt`` flag selects the optimized compilation mode. It is actually the default in this project, we just show it here for example.
-
-### Robot spine
-
-To run a spine on the robot, we first build it locally and upload it to the onboard Raspberry Pi:
-
-```console
-make build
-make upload UPKIE_NAME=your_upkie
-```
-
-Next, log into the Pi and run a pi3hat spine:
-
-```console
-$ ssh foo@robot
-foo@robot:~$ cd upkie
-foo@robot:upkie$ make run_pi3hat_spine
-```
-
-Once the spine is running, you can run any agent in a separate shell on the robot, for example the wheel balancer:
-
-```console
-foo@robot:upkie$ make run_wheel_balancer
-```
-
-## Running a Python agent
-
-We develop Python agents using the ``upkie`` interface distributed on PyPI. This interface is already [fast enough](https://github.com/tasts-robots/vulp#performance) for real-time control. To install it:
-
-```console
-pip install upkie
-```
-
-The repository ships a number of [agents](#agents) that have been tested on several Upkie's. You will find them in the [`agents/`](https://github.com/tasts-robots/upkie/tree/main/agents) directory. To run an agent, call its main Python script. For instance, to run the PPO balancer:
-
-```console
-python agents/ppo_balancer/main.py
-```
-
-## Example of a custom agent
-
-You can develop your own agent using the [environments](#environments) distributed in ``upkie.envs``. For example, [run a spine](#running-a-spine) and try executing the following code in a Python interpreter:
+You can develop your own agent using the [environments](#environments) distributed in ``upkie.envs``. For instance, here is a simple proportional-feedback balancer:
 
 ```python
 import gymnasium as gym
@@ -107,4 +54,14 @@ with gym.make("UpkieGroundVelocity-v1", frequency=200.0) as env:
         action[0] = 10.0 * pitch
 ```
 
-With a simulation spine, this code will reset the robot's state and execute the policy continuously. In a pi3hat spine, this code will control the robot directly. You can check out the [`examples/`](https://github.com/tasts-robots/upkie/tree/main/examples) directory for more examples.
+To test this agent on your computer, run the agent and simulation spine in two separate processes:
+
+1. `python this_agent.py`
+2. `./start_simulation.sh`
+
+To test it on the robot, `scp` the script to the Raspberry Pi, start a [pi3hat spine](https://tasts-robots.github.io/upkie/spines.html#pi3hat-spine) and run the script itself.
+
+## To go further with Upkie
+
+- Check out the [`examples/`](https://github.com/tasts-robots/upkie/tree/main/examples) directory
+- [Build your own Upkie](https://github.com/tasts-robots/upkie/wiki)
