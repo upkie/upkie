@@ -7,17 +7,17 @@
 [![PyPI version](https://img.shields.io/pypi/v/upkie)](https://pypi.org/project/upkie/)
 [![Chat](https://img.shields.io/badge/matrix-chat-%234eb899)](https://app.element.io/#/room/#tasts-robots:matrix.org)
 
-Build instructions and software for **Upkie** wheeled bipeds. Develop on Linux 🐧 or macOS 🍏, deploy to the robot's Raspberry Pi 🍓. Questions are welcome in the [Discussions](https://github.com/tasts-robots/upkie/discussions) forum or on the [Chat](https://app.element.io/#/room/#tasts-robots:matrix.org).
+Build instructions and software for **Upkie** wheeled bipeds. Develop in Python or C++ on Linux or macOS, run on the robot's Raspberry Pi. Questions are welcome in the [Discussions](https://github.com/tasts-robots/upkie/discussions) forum or on the [Chat](https://app.element.io/#/room/#tasts-robots:matrix.org).
 
 ## Installation
 
-We develop agents for Upkie in Python:
+Everything needed to develop with Upkie in Python lies in a single package:
 
 ```console
 pip install upkie
 ```
 
-Yes, it's as simple as that. This Python interface is already [fast enough](https://github.com/tasts-robots/vulp#performance) for real-time control.
+Yes, it's as simple as that. This Python interface is already [fast enough](https://github.com/tasts-robots/vulp#performance) for real-time control. If later on you want to optimize parts of your code, you can move them to C++ [spines](https://tasts-robots.github.io/upkie/spines.html).
 
 ## Simulation
 
@@ -35,7 +35,7 @@ Click on the robot in the simulator window to apply external forces.
 
 ## Run your own code
 
-You can develop your own agent using the [environments](#environments) distributed in ``upkie.envs``. For instance, here is a simple proportional-feedback balancer:
+You can develop your own *agent* using the Gymnasium environments distributed in ``upkie.envs``. For example, here is a simple proportional-feedback balancer:
 
 ```python
 import gymnasium as gym
@@ -54,14 +54,11 @@ with gym.make("UpkieGroundVelocity-v1", frequency=200.0) as env:
         action[0] = 10.0 * pitch
 ```
 
-To test this agent on your computer, run the agent and simulation spine in two separate processes:
+To test this agent on your computer, run the agent and simulation spine in two separate processes: `python this_agent.py` in one shell, and `./start_simulation.sh` in the other.
 
-1. `python this_agent.py`
-2. `./start_simulation.sh`
-
-To test it on the robot, `scp` the script to the Raspberry Pi, start a [pi3hat spine](https://tasts-robots.github.io/upkie/spines.html#pi3hat-spine) and run the script itself.
+To run this agent on the robot, `scp` the script to the Raspberry Pi, start a [pi3hat spine](https://tasts-robots.github.io/upkie/spines.html#pi3hat-spine) and execute the script on the Pi itself.
 
 ## To go further with Upkie
 
-- Check out the [`examples/`](https://github.com/tasts-robots/upkie/tree/main/examples) directory
 - [Build your own Upkie](https://github.com/tasts-robots/upkie/wiki)
+- Check out the [`examples/`](https://github.com/tasts-robots/upkie/tree/main/examples) directory
