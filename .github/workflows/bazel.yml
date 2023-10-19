@@ -7,25 +7,7 @@ on:
         branches: [ main ]
 
 jobs:
-    build:
-        name: "Build"
-        runs-on: ubuntu-latest
-        steps:
-            - name: "Checkout sources"
-              uses: actions/checkout@v3
-
-            - name: "Install dependencies"
-              run: |
-                  python -m pip install --upgrade pip
-                  python -m pip install numpy
-
-            - name: "Build agents and observers"
-              env:
-                  BAZELISK_GITHUB_TOKEN: ${{ secrets.BAZELISK_GITHUB_TOKEN }}
-              run: |
-                  tools/bazelisk build --compilation_mode=fastbuild  //...
-
-    generate-artifacts:
+    artifacts:
         name: "Artifacts"
         runs-on: ubuntu-latest
         env:
@@ -39,7 +21,7 @@ jobs:
               run: |
                   sudo apt install libncurses5
 
-            - name: "Build Raspeberry artifact"
+            - name: "Build Raspberry Pi artifact"
               run: |
                   tools/bazelisk build --verbose_failures --config=pi64 //spines:pi3hat_spine
 
@@ -52,6 +34,24 @@ jobs:
               with:
                   name: ${{ env.SPLINE }}
                   path: ./artifacts
+
+    build:
+        name: "Build"
+        runs-on: ubuntu-latest
+        steps:
+            - name: "Checkout sources"
+              uses: actions/checkout@v3
+
+            - name: "Install dependencies"
+              run: |
+                  python -m pip install --upgrade pip
+                  python -m pip install numpy
+
+            - name: "Build all targets"
+              env:
+                  BAZELISK_GITHUB_TOKEN: ${{ secrets.BAZELISK_GITHUB_TOKEN }}
+              run: |
+                  tools/bazelisk build --compilation_mode=fastbuild  //...
 
     coverage:
         name: "Coverage"
