@@ -7,9 +7,9 @@ load("//tools/lint:lint.bzl", "add_lint_tests")
 package(default_visibility = ["//visibility:public"])
 
 cc_binary(
-    name = "airbullet",
+    name = "bullet_spine",
     srcs = [
-        "airbullet.cpp",
+        "bullet_spine.cpp",
     ],
     data = [
         "@upkie_description",
@@ -26,28 +26,9 @@ cc_binary(
 )
 
 cc_binary(
-    name = "bullet",
+    name = "mock_spine",
     srcs = [
-        "bullet.cpp",
-    ],
-    data = [
-        "@upkie_description",
-    ],
-    deps = [
-        "//upkie/config:layout",
-        "//upkie/observers",
-        "//upkie/utils:datetime_now_string",
-        "@vulp//vulp/actuation:bullet_interface",
-        "@vulp//vulp/observation",
-        "@vulp//vulp/observation/sources",
-        "@vulp//vulp/spine",
-    ],
-)
-
-cc_binary(
-    name = "mock",
-    srcs = [
-        "mock.cpp",
+        "mock_spine.cpp",
     ],
     deps = [
         "//upkie/config:layout",
@@ -70,8 +51,10 @@ cc_binary(
 )
 
 cc_binary(
-    name = "pi3hat",
-    srcs = ["pi3hat.cpp"],
+    name = "pi3hat_spine",
+    srcs = [
+        "pi3hat_spine.cpp",
+    ],
     deps = [
         "//upkie/config:layout",
         "//upkie/observers",
