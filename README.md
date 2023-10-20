@@ -33,9 +33,9 @@ cd upkie
 
 Click on the robot in the simulator window to apply external forces.
 
-## Run your own code
+## Example
 
-You can develop your own *agent* using the Gymnasium environments distributed in ``upkie.envs``. For example, here is a simple proportional-feedback balancer:
+You can develop your own agent using the Gymnasium environments distributed in ``upkie.envs``. For example, here is a simple proportional-feedback balancer:
 
 ```python
 import gymnasium as gym
