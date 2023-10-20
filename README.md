@@ -58,7 +58,7 @@ To test this agent on your computer, run the agent and simulation spine in two s
 
 To run this agent on the robot, `scp` the script to the Raspberry Pi, start a [pi3hat spine](https://tasts-robots.github.io/upkie/spines.html#pi3hat-spine) and execute the script on the Pi itself.
 
-## To go further with Upkie
+## To go further
 
-- [Build your own Upkie](https://github.com/tasts-robots/upkie/wiki)
-- Check out the [`examples/`](https://github.com/tasts-robots/upkie/tree/main/examples) directory
+- [Build your own Upkie](https://github.com/tasts-robots/upkie/wiki) 🧰
+- [More examples](https://github.com/tasts-robots/upkie/tree/main/examples)
