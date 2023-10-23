@@ -31,11 +31,11 @@ from stable_baselines3.common.vec_env import (
 )
 from stable_baselines3.common.vec_env.base_vec_env import VecEnv
 from torch import nn
-from utils import gin_operative_config_dict
 
 import upkie.envs
 from upkie.envs import InitRandomization
 from upkie.utils.spdlog import logging
+from utils import gin_operative_config_dict
 
 upkie.envs.register()
 
@@ -67,6 +67,32 @@ def parse_command_line_arguments() -> argparse.Namespace:
         help="show simulator during trajectory rollouts",
     )
     return parser.parse_args()
+
+
+class DomainRandomizationCallback(BaseCallback):
+    def __init__(self, vec_env: VecEnv, nb_levels: int = 4):
+        super().__init__()
+        settings = EnvSettings()
+        self.current_values = {key: 0.0 for key in settings.init_rand.keys()}
+        self.nb_calls_per_level = settings.total_timesteps // (nb_levels + 1)
+        self.nb_levels = nb_levels
+        self.settings = settings
+        self.vec_env = vec_env
+
+    def set_level_values(self, level: int):
+        for key, full_value in self.settings.init_rand.items():
+            new_value = full_value * level / self.nb_levels
+            for wrapped_env in self.vec_env.envs:
+                env = wrapped_env.unwrapped
+                self.current_values[key] = new_value
+                setattr(env.init_rand, key, new_value)
+
+    def _on_step(self) -> bool:
+        if self.n_calls % self.nb_calls_per_level != 1:
+            level = self.n_calls // self.nb_calls_per_level
+            self.set_level_values(level)
+        for key, value in self.current_values.items():
+            self.logger.record(f"init_rand/{key}", value)
 
 
 class SummaryWriterCallback(BaseCallback):
@@ -293,6 +319,7 @@ def train_policy(
                     name_prefix="checkpoint",
                 ),
                 SummaryWriterCallback(vec_env, save_path),
+                DomainRandomizationCallback(vec_env),
             ],
             tb_log_name=policy_name,
         )
