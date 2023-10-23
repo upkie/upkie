@@ -231,7 +231,7 @@ def train_policy(
     deez_runfiles = runfiles.Create()
     spine_path = os.path.join(
         agent_dir,
-        deez_runfiles.Rlocation("upkie/spines/bullet"),
+        deez_runfiles.Rlocation("upkie/spines/bullet_spine"),
     )
 
     vec_env = (
