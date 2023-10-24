@@ -117,6 +117,15 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         """
         return self.__frequency
 
+    def update_init_rand(self, **kwargs) -> None:
+        """!
+        Update initial-state randomization.
+
+        Keyword arguments are forwarded as is to @ref
+        upkie.envs.init_randomization.InitRandomization.update.
+        """
+        self.init_rand.update(**kwargs)
+
     def close(self) -> None:
         """!
         Stop the spine properly.

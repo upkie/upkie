@@ -9,9 +9,10 @@ Domain randomization of Upkie environments.
 """
 
 from dataclasses import dataclass
-from numpy.typing import NDArray
+from typing import Optional
 
 import numpy as np
+from numpy.typing import NDArray
 from scipy.spatial.transform import Rotation as ScipyRotation
 
 
@@ -30,6 +31,34 @@ class InitRandomization:
     v_z: float = 0.0
     omega_x: float = 0.0
     omega_y: float = 0.0
+
+    def update(
+        self,
+        roll: Optional[float] = None,
+        pitch: Optional[float] = None,
+        x: Optional[float] = None,
+        z: Optional[float] = None,
+        v_x: Optional[float] = None,
+        v_z: Optional[float] = None,
+        omega_x: Optional[float] = None,
+        omega_y: Optional[float] = None,
+    ) -> None:
+        if roll is not None:
+            self.roll = roll
+        if pitch is not None:
+            self.pitch = pitch
+        if x is not None:
+            self.x = x
+        if z is not None:
+            self.z = z
+        if v_x is not None:
+            self.v_x = v_x
+        if v_z is not None:
+            self.v_z = v_z
+        if omega_x is not None:
+            self.omega_x = omega_x
+        if omega_y is not None:
+            self.omega_y = omega_y
 
     def sample_orientation(self, np_random) -> ScipyRotation:
         yaw_pitch_roll_bounds = np.array([0.0, self.pitch, self.roll])
