@@ -37,15 +37,16 @@ def linear_schedule(param: float) -> Callable[[float], float]:
 
 def exponential_decay_schedule(
     initial_value: float,
-    nb_steps: int,
+    nb_phases: int,
     factor: float = 0.1,
 ) -> Callable[[float], float]:
     """!
     Step-by-step exponential-decay learning rate schedule.
 
     @param initial_value Learning rate at the beginning of training.
-    @param nb_steps Number of decay steps.
-    @param factor Initial value is multiplied by this factor at each step.
+    @param nb_phases Number of different phases.
+    @param factor Initial value is multiplied by this factor at each successive
+        phase.
     @return Function computing the current learning rate from remaining
         progress.
     """
@@ -57,7 +58,8 @@ def exponential_decay_schedule(
         @param progress_remaining Progress decreasing from 1 (beginning) to 0.
         @return Corresponding learning rate>
         """
-        step_number = int(nb_steps * (1.0 - progress_remaining))
-        return initial_value * factor**step_number
+        progress: float = 1.0 - progress_remaining
+        phase = int(nb_phases * progress)
+        return initial_value * factor**phase
 
     return schedule
