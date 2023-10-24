@@ -50,7 +50,7 @@ def exponential_decay_schedule(
         progress.
     """
 
-    def lr(progress_remaining: float) -> float:
+    def schedule(progress_remaining: float) -> float:
         """!
         Compute the current learning rate from remaining progress.
 
@@ -60,4 +60,4 @@ def exponential_decay_schedule(
         step_number = int(nb_steps * (1.0 - progress_remaining))
         return initial_value * factor**step_number
 
-    return lr
+    return schedule
