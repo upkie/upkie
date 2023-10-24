@@ -32,6 +32,7 @@ from stable_baselines3.common.vec_env import (
 from stable_baselines3.common.vec_env.base_vec_env import VecEnv
 from torch import nn
 from utils import gin_operative_config_dict
+from wrappers import ActionNormalizer
 
 import upkie.envs
 from upkie.envs import InitRandomization
@@ -212,7 +213,7 @@ def make_env(
             env._prepatch_close()
 
         env.close = close_monkeypatch
-        return Monitor(env)
+        return ActionNormalizer(Monitor(env))
 
     set_random_seed(seed)
     return _init
