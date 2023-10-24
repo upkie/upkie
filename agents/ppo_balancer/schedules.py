@@ -8,25 +8,31 @@
 from typing import Callable
 
 
-def linear_schedule(initial_value: float) -> Callable[[float], float]:
-    """!
-    Linear learning rate schedule.
+def constant_schedule(param: float) -> Callable[[float], float]:
+    def schedule(x: float) -> float:
+        return param
 
-    @param initial_value Learning rate at the beginning of training.
-    @return Function computing the current learning rate from remaining
-        progress.
+    return schedule
+
+
+def linear_schedule(param: float) -> Callable[[float], float]:
+    """!
+    Linear schedule for a function argument between 0 and 1.
+
+    @param param Maximum output value (when parameter is 1).
+    @return Corresponding linear function.
     """
 
-    def lr(progress_remaining: float) -> float:
+    def schedule(x: float) -> float:
         """!
         Compute the current learning rate from remaining progress.
 
-        @param progress_remaining Progress decreasing from 1 (beginning) to 0.
+        @param x Progress decreasing from 1 (beginning) to 0.
         @return Corresponding learning rate>
         """
-        return progress_remaining * initial_value
+        return x * param
 
-    return lr
+    return schedule
 
 
 def exponential_decay_schedule(
