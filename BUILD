@@ -20,13 +20,6 @@ config_setting(
 )
 
 config_setting(
-    name = "pi32_config",
-    values = {
-        "cpu": "armeabihf",
-    }
-)
-
-config_setting(
     name = "pi64_config",
     values = {
         "cpu": "aarch64",
