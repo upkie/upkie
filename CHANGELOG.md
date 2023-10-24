@@ -16,7 +16,6 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 
-- **Breaking:** envs: Remove ``async_step`` function and ``asyncio`` logic
 - MPC balancer: Remove ``asyncio`` logic
 - PPO balancer: Remove ``asyncio`` logic
 - Pink balancer: Remove ``asyncio`` logic
@@ -33,6 +32,8 @@ All notable changes to this project will be documented in this file.
 
 ### Removed
 
+- **Breaking:** Remove ``async_step`` function and ``asyncio`` logic
+- **Breaking:** Remove ``pi32_config`` as 64-bit is the new default
 - Dependency on mpacklog.cpp (already in Vulp)
 - Dependency on mpacklog.py
 - Log-path ``upkie.utils.log_path`` submodule and its utility function
