@@ -25,6 +25,9 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
 
     The environment id is ``UpkieGroundVelocity-v1``.
 
+    @note To deep reinforcement learning practitioners: the observation space
+    and action space are not normalized.
+
     ### Action space
 
     Vectorized actions have the following structure:

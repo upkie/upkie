@@ -99,6 +99,9 @@ class UpkieWheeledPendulum(UpkieBaseEnv):
         Keyword arguments are forwarded as-is to parent class constructors.
         Check out @ref envs.upkie_base_env.UpkieBaseEnv "UpkieBaseEnv" for
         their documentation.
+
+        @note To deep reinforcement learning practitioners: the observation
+        space is not normalized.
         """
         super().__init__(**kwargs)
 

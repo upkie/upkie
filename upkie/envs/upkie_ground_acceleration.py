@@ -20,6 +20,9 @@ class UpkieGroundAcceleration(UpkieWheeledPendulum):
 
     """!
     Environment where Upkie balances by ground acceleration control.
+
+    @note To deep reinforcement learning practitioners: the observation space
+    and action space are not normalized.
     """
 
     __ground_velocity: float
