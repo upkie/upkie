@@ -18,7 +18,7 @@ import stable_baselines3
 import yaml
 from reward import Reward
 from rules_python.python.runfiles import runfiles
-from schedules import affine_schedule, linear_schedule
+from schedules import affine_schedule, twice_affine_schedule
 from settings import EnvSettings, PPOSettings
 from stable_baselines3.common.callbacks import BaseCallback, CheckpointCallback
 from stable_baselines3.common.logger import TensorBoardOutputFormat
@@ -324,7 +324,13 @@ def train_policy(
                 InitRandomizationCallback(
                     vec_env,
                     "pitch",
-                    schedule=linear_schedule(max_init_rand.pitch),
+                    # schedule=linear_schedule(max_init_rand.pitch),
+                    schedule=twice_affine_schedule(
+                        alpha=0.7,
+                        y_0=0.0,
+                        y_alpha=max_init_rand.pitch,
+                        y_1=max_init_rand.pitch,
+                    ),
                 ),
             ],
             tb_log_name=policy_name,
