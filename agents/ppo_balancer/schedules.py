@@ -72,8 +72,8 @@ def twice_affine_schedule(
     @param y_1 Function value at one.
     @return Corresponding affine function.
     """
-    diff_alpha = y_1 - y_alpha
-    diff_0 = y_alpha - y_0
+    delta_alpha = (y_1 - y_alpha) / (1.0 - alpha)
+    delta_0 = (y_alpha - y_0) / (alpha - 0.0)
 
     def schedule(x: float) -> float:
         """!
@@ -83,9 +83,9 @@ def twice_affine_schedule(
         @return Corresponding learning rate>
         """
         return (
-            y_0 + x * diff_0
-            if x < alpha
-            else y_alpha + (x - alpha) * diff_alpha
+            y_0 + delta_0 * x
+            if x <= alpha
+            else y_alpha + delta_alpha * (x - alpha)
         )
 
     return schedule
