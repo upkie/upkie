@@ -306,6 +306,7 @@ def train_policy(
         verbose=1,
     )
 
+    max_init_rand = InitRandomization(**settings.init_rand)
     try:
         policy.learn(
             total_timesteps=env_settings.total_timesteps,
@@ -316,7 +317,12 @@ def train_policy(
                     name_prefix="checkpoint",
                 ),
                 SummaryWriterCallback(vec_env, save_path),
-                DomainRandomizationCallback(vec_env),
+                InitRandomizationCallback(
+                    vec_env,
+                    "pitch",
+                    max_init_rand.pitch,
+                    nb_levels=4,
+                ),
             ],
             tb_log_name=policy_name,
         )
