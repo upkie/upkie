@@ -10,7 +10,7 @@ import os
 import random
 import signal
 import tempfile
-from typing import List
+from typing import Callable, List
 
 import gin
 import gymnasium
@@ -18,7 +18,7 @@ import stable_baselines3
 import yaml
 from reward import Reward
 from rules_python.python.runfiles import runfiles
-from schedules import constant_schedule, exponential_decay_schedule
+from schedules import exponential_decay_schedule, linear_schedule
 from settings import EnvSettings, PPOSettings
 from stable_baselines3.common.callbacks import BaseCallback, CheckpointCallback
 from stable_baselines3.common.logger import TensorBoardOutputFormat
@@ -71,16 +71,16 @@ def parse_command_line_arguments() -> argparse.Namespace:
 
 class InitRandomizationCallback(BaseCallback):
     def __init__(
-        self, vec_env: VecEnv, key: str, max_value: float, schedule=None
+        self,
+        vec_env: VecEnv,
+        key: str,
+        schedule: Callable,
     ):
         super().__init__()
         settings = EnvSettings()
-        if schedule is None:
-            schedule = constant_schedule(max_value)
         self.key = key
         self.schedule = schedule
         self.cur_value = 0.0
-        self.max_value = max_value
         self.total_timesteps = settings.total_timesteps
         self.vec_env = vec_env
 
@@ -320,8 +320,7 @@ def train_policy(
                 InitRandomizationCallback(
                     vec_env,
                     "pitch",
-                    max_init_rand.pitch,
-                    nb_levels=4,
+                    schedule=linear_schedule(max_init_rand.pitch),
                 ),
             ],
             tb_log_name=policy_name,
