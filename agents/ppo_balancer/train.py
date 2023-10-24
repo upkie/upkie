@@ -18,7 +18,7 @@ import stable_baselines3
 import yaml
 from reward import Reward
 from rules_python.python.runfiles import runfiles
-from schedules import exponential_decay_schedule
+from schedules import constant_schedule, exponential_decay_schedule
 from settings import EnvSettings, PPOSettings
 from stable_baselines3.common.callbacks import BaseCallback, CheckpointCallback
 from stable_baselines3.common.logger import TensorBoardOutputFormat
@@ -69,27 +69,28 @@ def parse_command_line_arguments() -> argparse.Namespace:
     return parser.parse_args()
 
 
-class DomainRandomizationCallback(BaseCallback):
-    def __init__(self, vec_env: VecEnv, nb_levels: int = 4):
+class InitRandomizationCallback(BaseCallback):
+    def __init__(
+        self, vec_env: VecEnv, key: str, max_value: float, schedule=None
+    ):
         super().__init__()
         settings = EnvSettings()
-        self.cur_init_rand = {key: 0.0 for key in settings.init_rand.keys()}
-        self.max_init_rand = settings.init_rand.copy()
-        self.nb_levels = nb_levels
+        if schedule is None:
+            schedule = constant_schedule(max_value)
+        self.key = key
+        self.schedule = schedule
+        self.cur_value = 0.0
+        self.max_value = max_value
         self.total_timesteps = settings.total_timesteps
         self.vec_env = vec_env
 
     def _on_step(self) -> bool:
         progress: float = self.num_timesteps / self.total_timesteps
-        self.update_init_rand(progress)
-        for key, value in self.cur_init_rand.items():
-            self.logger.record(f"init_rand/{key}", value)
-
-    def update_init_rand(self, progress: float):
-        level = min(self.nb_levels, int((self.nb_levels + 1) * progress))
-        for key, max_value in self.max_init_rand.items():
-            self.cur_init_rand[key] = max_value * level / self.nb_levels
-        self.vec_env.env_method("update_init_rand", **self.cur_init_rand)
+        self.cur_value = self.schedule(progress)
+        self.vec_env.env_method(
+            "update_init_rand", **{self.key: self.cur_value}
+        )
+        self.logger.record(f"init_rand/{self.key}", self.cur_value)
 
 
 class SummaryWriterCallback(BaseCallback):
@@ -184,13 +185,12 @@ def make_env(
         # parent process: trainer
         agent_frequency = env_settings.agent_frequency
         max_episode_duration = env_settings.max_episode_duration
-        init_rand = InitRandomization(**env_settings.init_rand)
         env = gymnasium.make(
             env_settings.env_id,
             max_episode_steps=int(max_episode_duration * agent_frequency),
             # upkie.envs.UpkieBaseEnv
             frequency=agent_frequency,
-            init_rand=init_rand,
+            init_rand=None,  # updated by callback
             regulate_frequency=False,
             reward=Reward(),
             shm_name=shm_name,
