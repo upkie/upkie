@@ -18,7 +18,7 @@ import stable_baselines3
 import yaml
 from reward import Reward
 from rules_python.python.runfiles import runfiles
-from schedules import exponential_decay_schedule, linear_schedule
+from schedules import affine_schedule, linear_schedule
 from settings import EnvSettings, PPOSettings
 from stable_baselines3.common.callbacks import BaseCallback, CheckpointCallback
 from stable_baselines3.common.logger import TensorBoardOutputFormat
@@ -277,10 +277,14 @@ def train_policy(
     policy = stable_baselines3.PPO(
         "MlpPolicy",
         vec_env,
-        learning_rate=exponential_decay_schedule(
-            ppo_settings.learning_rate,
-            nb_phases=ppo_settings.learning_rate_phases,
+        learning_rate=affine_schedule(
+            y_one=ppo_settings.learning_rate,  # progress_remaining=1.0
+            y_zero=ppo_settings.learning_rate / 3,  # progress_remaining=0.0
         ),
+        # exponential_decay_schedule(
+        #     ppo_settings.learning_rate,
+        #     nb_phases=ppo_settings.learning_rate_phases,
+        # ),
         n_steps=ppo_settings.n_steps,
         batch_size=ppo_settings.batch_size,
         n_epochs=ppo_settings.n_epochs,
