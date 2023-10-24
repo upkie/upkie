@@ -278,8 +278,8 @@ def train_policy(
         "MlpPolicy",
         vec_env,
         learning_rate=affine_schedule(
-            y_one=ppo_settings.learning_rate,  # progress_remaining=1.0
-            y_zero=ppo_settings.learning_rate / 3,  # progress_remaining=0.0
+            y_1=ppo_settings.learning_rate,  # progress_remaining=1.0
+            y_0=ppo_settings.learning_rate / 3,  # progress_remaining=0.0
         ),
         # exponential_decay_schedule(
         #     ppo_settings.learning_rate,
