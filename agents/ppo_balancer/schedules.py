@@ -15,11 +15,11 @@ def constant_schedule(param: float) -> Callable[[float], float]:
     return schedule
 
 
-def linear_schedule(stop: float) -> Callable[[float], float]:
+def linear_schedule(y_1: float) -> Callable[[float], float]:
     """!
     Linear schedule as a function over the [0, 1] interval.
 
-    @param stop Function value at one.
+    @param y_1 Function value at one.
     @return Corresponding linear function.
     """
 
@@ -30,20 +30,20 @@ def linear_schedule(stop: float) -> Callable[[float], float]:
         @param x Progress decreasing from 1 (beginning) to 0.
         @return Corresponding learning rate>
         """
-        return x * stop
+        return x * y_1
 
     return schedule
 
 
-def affine_schedule(start: float, stop: float) -> Callable[[float], float]:
+def affine_schedule(y_0: float, y_1: float) -> Callable[[float], float]:
     """!
     Affine schedule as a function over the [0, 1] interval.
 
-    @param start Function value at zero.
-    @param stop Function value at one.
+    @param y_0 Function value at zero.
+    @param y_1 Function value at one.
     @return Corresponding affine function.
     """
-    diff = stop - start
+    diff = y_1 - y_0
 
     def schedule(x: float) -> float:
         """!
@@ -52,7 +52,7 @@ def affine_schedule(start: float, stop: float) -> Callable[[float], float]:
         @param x Progress decreasing from 1 (beginning) to 0.
         @return Corresponding learning rate>
         """
-        return start + x * diff
+        return y_0 + x * diff
 
     return schedule
 
