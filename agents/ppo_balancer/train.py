@@ -73,23 +73,23 @@ class DomainRandomizationCallback(BaseCallback):
     def __init__(self, vec_env: VecEnv, nb_levels: int = 4):
         super().__init__()
         settings = EnvSettings()
-        self.init_rand = {key: 0.0 for key in settings.init_rand.keys()}
-        self.nb_calls_per_level = settings.total_timesteps // (nb_levels + 1)
+        self.cur_init_rand = {key: 0.0 for key in settings.init_rand.keys()}
+        self.max_init_rand = settings.init_rand.copy()
         self.nb_levels = nb_levels
-        self.settings = settings
+        self.total_timesteps = settings.total_timesteps
         self.vec_env = vec_env
 
-    def set_level_values(self, level: int):
-        for key, full_value in self.settings.init_rand.items():
-            self.init_rand[key] = full_value * level / self.nb_levels
-        self.vec_env.env_method("update_init_rand", **self.init_rand)
-
     def _on_step(self) -> bool:
-        if self.n_calls % self.nb_calls_per_level != 1:
-            level = self.n_calls // self.nb_calls_per_level
-            self.set_level_values(level)
-        for key, value in self.init_rand.items():
+        progress: float = self.num_timesteps / self.total_timesteps
+        self.update_init_rand(progress)
+        for key, value in self.cur_init_rand.items():
             self.logger.record(f"init_rand/{key}", value)
+
+    def update_init_rand(self, progress: float):
+        level = min(self.nb_levels, int((self.nb_levels + 1) * progress))
+        for key, max_value in self.max_init_rand.items():
+            self.cur_init_rand[key] = max_value * level / self.nb_levels
+        self.vec_env.env_method("update_init_rand", **self.cur_init_rand)
 
 
 class SummaryWriterCallback(BaseCallback):
