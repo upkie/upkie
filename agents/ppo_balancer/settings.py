@@ -43,7 +43,7 @@ class PPOSettings:
     ent_coef: float
     gae_lambda: float
     learning_rate: float
-    learning_rate_steps: int
+    learning_rate_phases: int
     max_grad_norm: float
     n_epochs: int
     n_steps: int

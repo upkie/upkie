@@ -279,7 +279,7 @@ def train_policy(
         vec_env,
         learning_rate=exponential_decay_schedule(
             ppo_settings.learning_rate,
-            nb_steps=ppo_settings.learning_rate_steps,
+            nb_steps=ppo_settings.learning_rate_phases,
         ),
         n_steps=ppo_settings.n_steps,
         batch_size=ppo_settings.batch_size,
