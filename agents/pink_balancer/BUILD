@@ -24,7 +24,6 @@ py_binary(
     data = [
         ":config",
     ] + select({
-        "//:pi32_config": ["//spines:pi3hat_spine"],
         "//:pi64_config": ["//spines:pi3hat_spine"],
         "//conditions:default": [],
     }),
@@ -46,7 +45,6 @@ py_binary(
         # currently a tough nut to crack for Bazel. We only enable compiled
         # dependencies on the host side for now.
         # Followed in: https://github.com/tasts-robots/upkie/issues/1
-        "//:pi32_config": [],
         "//:pi64_config": [],
         "//conditions:default": [
             requirement("numpy"),

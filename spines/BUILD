@@ -40,10 +40,6 @@ cc_binary(
         "@vulp//vulp/observation/sources",
         "@vulp//vulp/spine",
     ] + select({
-        "//:pi32_config": [
-            "@org_llvm_libcxx//:libcxx",
-            "@pi3hat//lib/cpp/mjbots/pi3hat:libpi3hat",
-        ],
         "//:pi64_config": [
             "@org_llvm_libcxx//:libcxx",
             "@pi3hat//lib/cpp/mjbots/pi3hat:libpi3hat",
@@ -66,12 +62,10 @@ cc_binary(
         "@vulp//vulp/observation/sources",
         "@vulp//vulp/spine",
     ] + select({
-        "//:pi32_config": ["@vulp//vulp/actuation:pi3hat_interface"],
         "//:pi64_config": ["@vulp//vulp/actuation:pi3hat_interface"],
         "//conditions:default": [],
     }),
     target_compatible_with = select({
-        "//:pi32_config": [],
         "//:pi64_config": [],
         "//conditions:default": ["@platforms//:incompatible"],
     }),

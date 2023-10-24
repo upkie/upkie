@@ -19,7 +19,6 @@ py_library(
         # currently a tough nut to crack for Bazel. We only enable compiled
         # dependencies on the host side for now.
         # Followed in: https://github.com/tasts-robots/upkie/issues/1
-        "//:pi32_config": [],
         "//:pi64_config": [],
         "//conditions:default": [
             requirement("numpy"),
@@ -47,7 +46,6 @@ py_library(
         # currently a tough nut to crack for Bazel. We only enable compiled
         # dependencies on the host side for now.
         # Followed in: https://github.com/tasts-robots/upkie/issues/1
-        "//:pi32_config": [],
         "//:pi64_config": [],
         "//conditions:default": [
             requirement("gymnasium"),
@@ -103,7 +101,6 @@ py_library(
         # currently a tough nut to crack for Bazel. We only enable compiled
         # dependencies on the host side for now.
         # Followed in: https://github.com/tasts-robots/upkie/issues/1
-        "//:pi32_config": [],
         "//:pi64_config": [],
         "//conditions:default": [
             requirement("gymnasium"),
