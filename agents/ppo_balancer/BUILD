@@ -14,12 +14,18 @@ filegroup(
 )
 
 py_library(
-    name = "reward",
+    name = "common",
     srcs = [
         "reward.py",
+        "settings.py",
+        "wrappers.py",
+    ],
+    data = [
+        ":config",
     ],
     deps = [
         "//upkie/envs",
+        requirement("gin-config"),
     ] + select({
         # Selecting the right CPU architecture for the Raspberry Pi is
         # currently a tough nut to crack for Bazel. We only enable compiled
@@ -30,22 +36,6 @@ py_library(
             requirement("numpy"),
         ],
     }),
-)
-
-py_library(
-    name = "settings",
-    srcs = ["settings.py"],
-    data = [
-        ":config",
-    ],
-    deps = [
-        requirement("gin-config"),
-    ],
-)
-
-py_library(
-    name = "utils",
-    srcs = ["utils.py"],
 )
 
 py_binary(
@@ -64,9 +54,7 @@ py_binary(
         "//upkie/envs",
         "//upkie/utils:filters",
         "//upkie/utils:raspi",
-        ":reward",  # needed by gin config
-        ":settings",
-        requirement("gin-config"),
+        ":common",
         requirement("loop-rate-limiters"),
     ] + select({
         # Selecting the right CPU architecture for the Raspberry Pi is
@@ -85,6 +73,7 @@ py_binary(
     srcs = [
         "schedules.py",
         "train.py",
+        "utils.py",
     ],
     main = "train.py",
 
@@ -98,8 +87,7 @@ py_binary(
     deps = [
         "//upkie/envs",
         "//upkie/utils:spdlog",
-        ":reward",
-        ":settings",
+        ":common",
         ":utils",
         "@rules_python//python/runfiles",
         requirement("gin-config"),
