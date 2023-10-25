@@ -79,6 +79,9 @@ upload: check_robot build  ## upload built targets to the Raspberry Pi
 run_mock_spine:  ### run the mock spine on the Raspberry Pi
 	$(RASPUNZEL) run -s //spines:mock_spine
 
+run_mpc_balancer:  ### run the test balancer on the Raspberry Pi
+	$(RASPUNZEL) run -s //agents/mpc_balancer:mpc_balancer
+
 # NB: run_pi3hat_spine is used in build instructions
 run_pi3hat_spine:  ### run the pi3hat spine on the Raspberry Pi
 	$(RASPUNZEL) run -s //spines:pi3hat_spine
