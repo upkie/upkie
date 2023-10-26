@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2023-10-26
+
 ### Added
 
 - PPO balancer: Allow custom training path
@@ -321,7 +323,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Starting this changelog.
 
-[unreleased]: https://github.com/tasts-robots/upkie/compare/v1.5.0...HEAD
+[unreleased]: https://github.com/tasts-robots/upkie/compare/v2.0.0...HEAD
+[2.0.0]: https://github.com/tasts-robots/upkie/compare/v1.5.0...v2.0.0
 [1.5.0]: https://github.com/tasts-robots/upkie/compare/v1.4.0...v1.5.0
 [1.4.0]: https://github.com/tasts-robots/upkie/compare/v1.3.4...v1.4.0
 [1.3.4]: https://github.com/tasts-robots/upkie/compare/v1.3.3...v1.3.4
