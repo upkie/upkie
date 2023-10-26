@@ -16,7 +16,7 @@
 # limitations under the License.
 
 import abc
-from typing import Dict, Optional, Tuple
+from typing import Dict, Optional, Tuple, Union
 
 import gymnasium
 import numpy as np
@@ -53,8 +53,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
     """
 
     __frequency: Optional[float]
-    __latest_observation: Optional[np.ndarray]
-    __latest_reward: Optional[float]
+    __log_dict: Dict[str, Union[float, np.ndarray]]
     __regulate_frequency: bool
     _spine: SpineInterface
     fall_pitch: float
@@ -103,8 +102,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
             reward = SurvivalReward()
 
         self.__frequency = frequency
-        self.__latest_observation = None
-        self.__latest_reward = None
+        self.__log_dict = {}
         self.__regulate_frequency = regulate_frequency
         self._spine = SpineInterface(shm_name, retries=spine_retries)
         self.fall_pitch = fall_pitch
@@ -213,12 +211,9 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
             self.rate.sleep()  # wait until clock tick to send the action
 
         # Act
+        self.__log_dict["action"] = action  # vector, not dictionary
         action_dict = self.dictionarize_action(action)
-        action_dict["env"] = {
-            "action": action,  # vector, not dictionary
-            "observation": self.__latest_observation,
-            "reward": self.__latest_reward,
-        }
+        action_dict["env"] = self.__log_dict
         self._spine.set_action(action_dict)
 
         # Observe
@@ -228,8 +223,8 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         terminated = self.detect_fall(observation_dict)
         truncated = False
         info = {"observation": observation_dict}
-        self.__latest_observation = observation
-        self.__latest_reward = reward
+        self.__log_dict["observation"] = observation
+        self.__log_dict["reward"] = reward
         return observation, reward, terminated, truncated, info
 
     def detect_fall(self, observation_dict: dict) -> bool:
