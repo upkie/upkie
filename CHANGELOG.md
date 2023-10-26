@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- envs: Log action, observation and reward to "env" sub-dict of action
+
+### Changed
+
+- envs: ``info`` dictionary does not repeat "action" any more
+
 ## [2.0.0] - 2023-10-26
 
 ### Added
