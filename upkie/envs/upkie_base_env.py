@@ -160,6 +160,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         self.parse_first_observation(observation_dict)
         observation = self.vectorize_observation(observation_dict)
         info = {"observation": observation_dict}
+        self.__log_dict["observation"] = observation
         return observation, info
 
     def __reset_rate(self):
