@@ -53,6 +53,8 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
     """
 
     __frequency: Optional[float]
+    __latest_observation: Optional[np.ndarray]
+    __latest_reward: Optional[float]
     __regulate_frequency: bool
     _spine: SpineInterface
     fall_pitch: float
@@ -101,6 +103,8 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
             reward = SurvivalReward()
 
         self.__frequency = frequency
+        self.__latest_observation = None
+        self.__latest_reward = None
         self.__regulate_frequency = regulate_frequency
         self._spine = SpineInterface(shm_name, retries=spine_retries)
         self.fall_pitch = fall_pitch
@@ -157,10 +161,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         observation_dict = self._spine.get_observation()
         self.parse_first_observation(observation_dict)
         observation = self.vectorize_observation(observation_dict)
-        info = {
-            "action": {},
-            "observation": observation_dict,
-        }
+        info = {"observation": observation_dict}
         return observation, info
 
     def __reset_rate(self):
@@ -206,23 +207,29 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
               i.e. before a terminal state is reached. When true, the user
               needs to call :func:`reset()`.
             - ``info``: Dictionary with auxiliary diagnostic information. For
-              us this will be the full observation dictionary coming sent by
-              the spine.
+              us this is the full observation dictionary coming from the spine.
         """
         if self.rate is not None:
             self.rate.sleep()  # wait until clock tick to send the action
 
+        # Act
         action_dict = self.dictionarize_action(action)
+        action_dict["env"] = {
+            "action": action,  # vector, not dictionary
+            "observation": self.__latest_observation,
+            "reward": self.__latest_reward,
+        }
         self._spine.set_action(action_dict)
+
+        # Observe
         observation_dict = self._spine.get_observation()
         observation = self.vectorize_observation(observation_dict)
         reward = self.reward.get(observation, action)
         terminated = self.detect_fall(observation_dict)
         truncated = False
-        info = {
-            "action": action_dict,
-            "observation": observation_dict,
-        }
+        info = {"observation": observation_dict}
+        self.__latest_observation = observation
+        self.__latest_reward = reward
         return observation, reward, terminated, truncated, info
 
     def detect_fall(self, observation_dict: dict) -> bool:
