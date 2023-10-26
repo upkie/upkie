@@ -73,7 +73,7 @@ jobs:
               uses: coverallsapp/github-action@v2
               with:
                   github-token: ${{ secrets.github_token }}
-                  path-to-lcov: ${{ github.workspace }}/bazel-out/_coverage/_coverage_report.dat
+                  file: ${{ github.workspace }}/bazel-out/_coverage/_coverage_report.dat
 
     lint:
         name: "Lint"
