@@ -42,8 +42,8 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
 
     This base environment has the following attributes:
 
-    - ``config``: Configuration dictionary sent to the spine.
     - ``fall_pitch``: Fall pitch angle, in radians.
+    - ``init_rand``: Initial state randomization ranges.
     - ``reward``: Reward function.
 
     @note This environment is made to run on a single CPU thread rather than on
@@ -53,14 +53,14 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
     """
 
     __frequency: Optional[float]
-    __log_dict: Dict[str, Union[float, np.ndarray]]
+    __log: Dict[str, Union[float, np.ndarray]]
+    __rate: Optional[RateLimiter]
     __regulate_frequency: bool
     _spine: SpineInterface
+    _spine_config: Dict
     fall_pitch: float
     init_rand: InitRandomization
-    rate: Optional[RateLimiter]
     reward: Reward
-    spine_config: dict
 
     def __init__(
         self,
@@ -76,7 +76,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         """!
         Initialize environment.
 
-        @param fall_pitch Fall pitch angle, in radians.
+        @param fall_pitch Fall detection pitch angle, in radians.
         @param frequency Regulated frequency of the control loop, in Hz. Can be
             set even when `regulate_frequency` is false, as some environments
             make use of e.g. `self.dt` internally.
@@ -102,13 +102,14 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
             reward = SurvivalReward()
 
         self.__frequency = frequency
-        self.__log_dict = {}
+        self.__log = {}
+        self.__rate = None
         self.__regulate_frequency = regulate_frequency
         self._spine = SpineInterface(shm_name, retries=spine_retries)
+        self._spine_config = merged_spine_config
         self.fall_pitch = fall_pitch
         self.init_rand = init_rand
         self.reward = reward
-        self.spine_config = merged_spine_config
 
     @property
     def dt(self) -> Optional[float]:
@@ -154,20 +155,19 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         self._spine.stop()
         self.__reset_rate()
         self.__reset_initial_robot_state()
-        self._spine.start(self.spine_config)
+        self._spine.start(self._spine_config)
         self._spine.get_observation()  # might be a pre-reset observation
         observation_dict = self._spine.get_observation()
         self.parse_first_observation(observation_dict)
         observation = self.vectorize_observation(observation_dict)
         info = {"observation": observation_dict}
-        self.__log_dict["observation"] = observation
+        self.__log["observation"] = observation
         return observation, info
 
     def __reset_rate(self):
-        self.rate = None
         if self.__regulate_frequency:
             rate_name = f"{self.__class__.__name__} rate limiter"
-            self.rate = RateLimiter(self.__frequency, name=rate_name)
+            self.__rate = RateLimiter(self.__frequency, name=rate_name)
 
     def __reset_initial_robot_state(self):
         orientation_matrix = self.init_rand.sample_orientation(self.np_random)
@@ -177,7 +177,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         linear_velocity = self.init_rand.sample_linear_velocity(self.np_random)
         omega = self.init_rand.sample_angular_velocity(self.np_random)
 
-        bullet_config = self.spine_config["bullet"]
+        bullet_config = self._spine_config["bullet"]
         reset = bullet_config["reset"]
         reset["orientation_base_in_world"] = orientation_quat
         reset["position_base_in_world"] = position
@@ -208,13 +208,13 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
             - ``info``: Dictionary with auxiliary diagnostic information. For
               us this is the full observation dictionary coming from the spine.
         """
-        if self.rate is not None:
-            self.rate.sleep()  # wait until clock tick to send the action
+        if self.__regulate_frequency:
+            self.__rate.sleep()  # wait until clock tick to send the action
 
         # Act
-        self.__log_dict["action"] = action  # vector, not dictionary
+        self.__log["action"] = action  # vector, not dictionary
         action_dict = self.dictionarize_action(action)
-        action_dict["env"] = self.__log_dict
+        action_dict["env"] = self.__log
         self._spine.set_action(action_dict)
 
         # Observe
@@ -224,8 +224,8 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         terminated = self.detect_fall(observation_dict)
         truncated = False
         info = {"observation": observation_dict}
-        self.__log_dict["observation"] = observation
-        self.__log_dict["reward"] = reward
+        self.__log["observation"] = observation
+        self.__log["reward"] = reward
         return observation, reward, terminated, truncated, info
 
     def detect_fall(self, observation_dict: dict) -> bool:
