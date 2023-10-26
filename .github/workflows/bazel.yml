@@ -74,6 +74,7 @@ jobs:
               with:
                   github-token: ${{ secrets.github_token }}
                   file: ${{ github.workspace }}/bazel-out/_coverage/_coverage_report.dat
+                  format: lcov
 
     lint:
         name: "Lint"
