@@ -321,4 +321,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Starting this changelog.
 
-[unreleased]: https://github.com/olivierlacan/keep-a-changelog/compare/v1.1.1...HEAD
+[unreleased]: https://github.com/tasts-robots/upkie/compare/v1.5.0...HEAD
+[1.5.0]: https://github.com/tasts-robots/upkie/compare/v1.4.0...v1.5.0
+[1.4.0]: https://github.com/tasts-robots/upkie/compare/v1.3.4...v1.4.0
+[1.3.4]: https://github.com/tasts-robots/upkie/compare/v1.3.3...v1.3.4
+[1.3.3]: https://github.com/tasts-robots/upkie/compare/v1.3.2...v1.3.3
+[1.3.2]: https://github.com/tasts-robots/upkie/compare/v1.3.1...v1.3.2
+[1.3.1]: https://github.com/tasts-robots/upkie/compare/v1.3.0...v1.3.1
+[1.3.0]: https://github.com/tasts-robots/upkie/compare/v1.2.1...v1.3.0
+[1.2.1]: https://github.com/tasts-robots/upkie/compare/v1.2.0...v1.2.1
+[1.2.0]: https://github.com/tasts-robots/upkie/compare/v1.1.0...v1.2.0
+[1.1.0]: https://github.com/tasts-robots/upkie/compare/v1.0.0...v1.1.0
+[1.0.0]: https://github.com/tasts-robots/upkie/compare/v0.5.0...v1.0.0
+[0.5.0]: https://github.com/tasts-robots/upkie/compare/v0.4.0...v0.5.0
+[0.4.0]: https://github.com/tasts-robots/upkie/compare/v0.3.1...v0.4.0
+[0.3.1]: https://github.com/tasts-robots/upkie/compare/v0.3.0...v0.3.1
+[0.3.0]: https://github.com/tasts-robots/upkie/compare/v0.2.0...v0.3.0
+[0.2.0]: https://github.com/tasts-robots/upkie/compare/v0.1.0...v0.2.0
+[0.1.0]: https://github.com/tasts-robots/upkie/releases/tag/v0.1.0
