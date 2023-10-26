@@ -2,7 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
-## Unreleased
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
 
 ### Added
 
@@ -38,7 +41,7 @@ All notable changes to this project will be documented in this file.
 - Dependency on mpacklog.py
 - Log-path ``upkie.utils.log_path`` submodule and its utility function
 
-## [1.5.0] - 2023/09/29
+## [1.5.0] - 2023-09-29
 
 ### Added
 
@@ -77,7 +80,7 @@ All notable changes to this project will be documented in this file.
 
 - envs: Remove `get_range` from rewards as it is deprecated from Gymnasium
 
-## [1.4.0] - 2023/08/24
+## [1.4.0] - 2023-08-24
 
 ### Added
 
@@ -110,7 +113,7 @@ All notable changes to this project will be documented in this file.
 - observers: Check whether floor contact observer is initialized properly
 - tools: Fix permissions of `vcgencheck`
 
-## [1.3.4] - 2023/08/09
+## [1.3.4] - 2023-08-09
 
 ### Added
 
@@ -127,27 +130,27 @@ All notable changes to this project will be documented in this file.
 - envs: Export ``register`` from submodule
 - envs: Overlay constructor spine configuration on top of default config
 
-## [1.3.3] - 2023/08/07
+## [1.3.3] - 2023-08-07
 
 ### Changed
 
 - PyPI: Bump scipy dependency from 1.8.0 to 1.10.0
 - envs: Skip environment registration upon missing dependency
 
-## [1.3.2] - 2023/08/07
+## [1.3.2] - 2023-08-07
 
 ### Fixed
 
 - config: Distribute missing ``config`` submodule in PyPI package
 
-## [1.3.1] - 2023/07/28
+## [1.3.1] - 2023-07-28
 
 ### Fixed
 
 - config: Add missing ``config`` submodule to PyPI
 - Fix source code distribution of PyPI package
 
-## [1.3.0] - 2023/07/26
+## [1.3.0] - 2023-07-26
 
 ### Added
 
@@ -168,13 +171,13 @@ All notable changes to this project will be documented in this file.
 - PPO balancer: Fix time-limit import
 - envs: Add ``dt`` attribute to the base environment
 
-## [1.2.1] - 2023/07/18
+## [1.2.1] - 2023-07-18
 
 ### Changed
 
 - envs: Bump UpkieWheelsEnv version number to 4
 
-## [1.2.0] - 2023/07/18
+## [1.2.0] - 2023-07-18
 
 ### Added
 
@@ -191,7 +194,7 @@ All notable changes to this project will be documented in this file.
 - build: Only run lint tests when ``--config lint`` is supplied
 - envs: Make sure vectorized observations are float32
 
-## [1.1.0] - 2023/07/07
+## [1.1.0] - 2023-07-07
 
 ### Added
 
@@ -214,7 +217,7 @@ All notable changes to this project will be documented in this file.
 - workspace: Update Vulp for IMU frame simulation fix
 - workspace: Update ``upkie_description`` for IMU orientation fix
 
-## [1.0.0] - 2023/06/12
+## [1.0.0] - 2023-06-12
 
 ### Added
 
@@ -230,7 +233,7 @@ All notable changes to this project will be documented in this file.
 - Rename main repository and project to just "upkie"
 - Update Vulp to v1.2.0
 
-## [0.5.0] - 2023/06/05
+## [0.5.0] - 2023-06-05
 
 ### Added
 
@@ -257,7 +260,7 @@ All notable changes to this project will be documented in this file.
 - PPO balancer: simplify training
 - Pink balancer: default frequency is 200 Hz
 
-## [0.4.0] - 2023/04/06
+## [0.4.0] - 2023-04-06
 
 ### Added
 
@@ -278,13 +281,13 @@ All notable changes to this project will be documented in this file.
 - Pink balancer: reduce LM damping to fix stalling when crouching
 - PPO balancer: get environment id (thanks @Varun-GP)
 
-## [0.3.1] - 2023/03/15
+## [0.3.1] - 2023-03-15
 
 ### Added
 
 - UpkieWheelsEnv: return action and observation dicts in ``info``
 
-## [0.3.0] - 2023/03/13
+## [0.3.0] - 2023-03-13
 
 ### Added
 
@@ -296,7 +299,7 @@ All notable changes to this project will be documented in this file.
 
 - UpkieWheelsEnv: remove dependency on gin
 
-## [0.2.0] - 2023/03/03
+## [0.2.0] - 2023-03-03
 
 ### Added
 
@@ -314,6 +317,8 @@ All notable changes to this project will be documented in this file.
 - Document both C++ and Python code with Doxygen
 - Python requirements and dependencies in Bazel
 
-## [0.1.0] - 2022/09/12
+## [0.1.0] - 2022-09-12
 
 Starting this changelog.
+
+[unreleased]: https://github.com/olivierlacan/keep-a-changelog/compare/v1.1.1...HEAD
