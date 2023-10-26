@@ -88,7 +88,6 @@ py_binary(
         "//upkie/envs",
         "//upkie/utils:spdlog",
         ":common",
-        ":utils",
         "@rules_python//python/runfiles",
         requirement("gin-config"),
     ] + select({
