@@ -21,9 +21,11 @@ class Reward(upkie.envs.Reward):
     Reward function for balancing in place.
     """
 
-    pitch_weight: float
-    base_velocity_weight: float
     ground_acceleration_weight: float
+    pitch_weight: float
+    torso_height: float
+    torso_position_weight: float
+    torso_velocity_weight: float
 
     def get(
         self, observation: NDArray[float], action: NDArray[float],
@@ -35,25 +37,29 @@ class Reward(upkie.envs.Reward):
         @param action Action to base the reward on.
         @returns Reward earned from executing the action from the observation.
         """
-        base_pitch = observation[0]
-        # ground_position = observation[1]
+        torso_height = self.torso_height
+        torso_pitch = observation[0]
+        ground_position = observation[1]
         ground_velocity = observation[2]
-        base_angular_velocity = observation[3]
+        torso_angular_velocity = observation[3]
         # last_commanded_velocity = observation[4]
-
-        base_height = 0.3  # [m]
-        base_velocity = (
-            ground_velocity
-            + base_angular_velocity * base_height * np.cos(base_pitch)
-        )
-
         commanded_acceleration = action[0]
 
-        pitch_reward = np.exp(-2.0 * base_pitch**2)
-        base_velocity_penalty = -(base_velocity**2)
+        torso_position = ground_position + torso_height * np.sin(torso_pitch)
+        torso_velocity = (
+            ground_velocity
+            + torso_height * torso_angular_velocity * np.cos(torso_pitch)
+        )
+
         ground_acceleration_penalty = -(commanded_acceleration**2)
+        pitch_reward = np.exp(-2.0 * torso_pitch**2)
+        torso_position_reward = np.exp(-2.0 * torso_position**2)
+        torso_velocity_penalty = -(torso_velocity**2)
+
         return (
-            self.pitch_weight * pitch_reward
-            + self.base_velocity_weight * base_velocity_penalty
+            0.0
             + self.ground_acceleration_weight * ground_acceleration_penalty
+            + self.pitch_weight * pitch_reward
+            + self.torso_position_weight * torso_position_reward
+            + self.torso_velocity_weight * torso_velocity_penalty
         )
