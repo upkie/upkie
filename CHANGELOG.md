@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.2.0] - 2023-10-26
+## [2.0.0] - 2023-10-26
 
 ### Added
 
@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - agents: Closed-loop model predictive control
 - envs: Allow custom initial base velocity in Bullet config
 - examples: Closed-loop model predictive control
+- spines: Build and export the pi3hat spine binary in continuous integration (thanks to @pgraverdy)
 - spines: ``--version`` flag for all spine binaries
 
 ### Changed
@@ -31,17 +32,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Make Makefile date command more portable (thanks to @boragokbakan)
 - PPO balancer: Correct save frequency during training
 - PPO balancer: Run policy deterministically after training
 - envs: Merge default and runtime configuration dictionaries
 
 ### Removed
 
-- **Breaking:** Remove ``async_step`` function and ``asyncio`` logic
-- **Breaking:** Remove ``pi32_config`` as 64-bit is the new default
+- **Breaking:** ``async_step`` function and ``asyncio`` logic
+- **Breaking:** ``pi32_config`` as 64-bit is the new default
+- **Breaking:** ``upkie.utils.log_path`` submodule and its utility function
 - Dependency on mpacklog.cpp (already in Vulp)
 - Dependency on mpacklog.py
-- Log-path ``upkie.utils.log_path`` submodule and its utility function
 
 ## [1.5.0] - 2023-09-29
 
