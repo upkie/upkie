@@ -5,6 +5,13 @@
 
 import reward
 
-Reward.pitch_weight = 1.0
-Reward.base_velocity_weight = 1.0
+Reward.torso_height = 0.3  # [m]
+
+# Reward.pitch_weight = 1.0
+# Reward.torso_velocity_weight = 1.0
+# Reward.ground_acceleration_weight = 0.001
+
+Reward.torso_position_weight = 1.0
 Reward.ground_acceleration_weight = 0.001
+Reward.pitch_weight = 0.0
+Reward.torso_velocity_weight = 0.0
