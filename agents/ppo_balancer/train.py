@@ -10,15 +10,16 @@ import os
 import random
 import signal
 import tempfile
-from typing import Callable, List
+from typing import List
 
 import gin
 import gymnasium
+import numpy as np
 import stable_baselines3
 import yaml
 from reward import Reward
 from rules_python.python.runfiles import runfiles
-from schedules import affine_schedule, twice_affine_schedule
+from schedules import affine_schedule
 from settings import EnvSettings, PPOSettings
 from stable_baselines3.common.callbacks import BaseCallback, CheckpointCallback
 from stable_baselines3.common.logger import TensorBoardOutputFormat
@@ -75,23 +76,26 @@ class InitRandomizationCallback(BaseCallback):
         self,
         vec_env: VecEnv,
         key: str,
-        schedule: Callable,
+        max_value: float,
+        start_timestep: int,
+        end_timestep: int,
     ):
         super().__init__()
-        settings = EnvSettings()
+        self.end_timestep = end_timestep
         self.key = key
-        self.schedule = schedule
-        self.cur_value = 0.0
-        self.total_timesteps = settings.total_timesteps
+        self.max_value = max_value
+        self.start_timestep = start_timestep
         self.vec_env = vec_env
 
     def _on_step(self) -> bool:
-        progress: float = self.num_timesteps / self.total_timesteps
-        self.cur_value = self.schedule(progress)
-        self.vec_env.env_method(
-            "update_init_rand", **{self.key: self.cur_value}
+        progress: float = np.clip(
+            (self.num_timesteps - self.start_timestep) / self.end_timestep,
+            0.0,
+            1.0,
         )
-        self.logger.record(f"init_rand/{self.key}", self.cur_value)
+        cur_value = progress * self.max_value
+        self.vec_env.env_method("update_init_rand", **{self.key: cur_value})
+        self.logger.record(f"init_rand/{self.key}", cur_value)
 
 
 class SummaryWriterCallback(BaseCallback):
@@ -325,13 +329,23 @@ def train_policy(
                 InitRandomizationCallback(
                     vec_env,
                     "pitch",
-                    # schedule=linear_schedule(max_init_rand.pitch),
-                    schedule=twice_affine_schedule(
-                        alpha=0.7,
-                        y_0=0.0,
-                        y_alpha=max_init_rand.pitch,
-                        y_1=max_init_rand.pitch,
-                    ),
+                    max_init_rand.pitch,
+                    start_timestep=0,
+                    end_timestep=1e6,
+                ),
+                InitRandomizationCallback(
+                    vec_env,
+                    "v_x",
+                    max_init_rand.v_x,
+                    start_timestep=0,
+                    end_timestep=1e6,
+                ),
+                InitRandomizationCallback(
+                    vec_env,
+                    "omega_y",
+                    max_init_rand.omega_y,
+                    start_timestep=0,
+                    end_timestep=1e6,
                 ),
             ],
             tb_log_name=policy_name,

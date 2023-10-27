@@ -8,33 +8,6 @@
 from typing import Callable
 
 
-def constant_schedule(param: float) -> Callable[[float], float]:
-    def schedule(x: float) -> float:
-        return param
-
-    return schedule
-
-
-def linear_schedule(y_1: float) -> Callable[[float], float]:
-    """!
-    Linear schedule as a function over the [0, 1] interval.
-
-    @param y_1 Function value at one.
-    @return Corresponding linear function.
-    """
-
-    def schedule(x: float) -> float:
-        """!
-        Compute the current learning rate from remaining progress.
-
-        @param x Progress decreasing from 1 (beginning) to 0.
-        @return Corresponding learning rate>
-        """
-        return x * y_1
-
-    return schedule
-
-
 def affine_schedule(y_0: float, y_1: float) -> Callable[[float], float]:
     """!
     Affine schedule as a function over the [0, 1] interval.
@@ -53,40 +26,6 @@ def affine_schedule(y_0: float, y_1: float) -> Callable[[float], float]:
         @return Corresponding learning rate>
         """
         return y_0 + x * diff
-
-    return schedule
-
-
-def twice_affine_schedule(
-    alpha: float, y_0: float, y_alpha: float, y_1: float
-) -> Callable[[float], float]:
-    """!
-    Piecewise affine schedule as a function over the [0, 1] interval.
-
-    There are only two phases, thus "twice" rather than "piecewise" in the name
-    of this function.
-
-    @param alpha Abscissa between the two affine functions.
-    @param y_0 Function value at zero.
-    @param y_alpha Function value at the alpha abscissa.
-    @param y_1 Function value at one.
-    @return Corresponding affine function.
-    """
-    delta_alpha = (y_1 - y_alpha) / (1.0 - alpha)
-    delta_0 = (y_alpha - y_0) / (alpha - 0.0)
-
-    def schedule(x: float) -> float:
-        """!
-        Compute the current learning rate from remaining progress.
-
-        @param x Progress decreasing from 1 (beginning) to 0.
-        @return Corresponding learning rate>
-        """
-        return (
-            y_0 + delta_0 * x
-            if x <= alpha
-            else y_alpha + delta_alpha * (x - alpha)
-        )
 
     return schedule
 
