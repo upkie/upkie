@@ -20,7 +20,7 @@ import yaml
 from reward import Reward
 from rules_python.python.runfiles import runfiles
 from schedules import affine_schedule
-from settings import EnvSettings, PPOSettings
+from settings import EnvSettings, PPOSettings, SACSettings
 from stable_baselines3.common.callbacks import BaseCallback, CheckpointCallback
 from stable_baselines3.common.logger import TensorBoardOutputFormat
 from stable_baselines3.common.monitor import Monitor
@@ -278,42 +278,86 @@ def train_policy(
     dt = 1.0 / agent_frequency
     gamma = 1.0 - dt / env_settings.discounted_horizon_duration
 
-    ppo_settings = PPOSettings()
-    policy = stable_baselines3.PPO(
-        "MlpPolicy",
-        vec_env,
-        learning_rate=affine_schedule(
-            y_1=ppo_settings.learning_rate,  # progress_remaining=1.0
-            y_0=ppo_settings.learning_rate / 3,  # progress_remaining=0.0
-        ),
-        # exponential_decay_schedule(
-        #     ppo_settings.learning_rate,
-        #     nb_phases=ppo_settings.learning_rate_phases,
-        # ),
-        n_steps=ppo_settings.n_steps,
-        batch_size=ppo_settings.batch_size,
-        n_epochs=ppo_settings.n_epochs,
-        gamma=gamma,
-        gae_lambda=ppo_settings.gae_lambda,
-        clip_range=ppo_settings.clip_range,
-        clip_range_vf=ppo_settings.clip_range_vf,
-        normalize_advantage=ppo_settings.normalize_advantage,
-        ent_coef=ppo_settings.ent_coef,
-        vf_coef=ppo_settings.vf_coef,
-        max_grad_norm=ppo_settings.max_grad_norm,
-        use_sde=ppo_settings.use_sde,
-        sde_sample_freq=ppo_settings.sde_sample_freq,
-        target_kl=ppo_settings.target_kl,
-        tensorboard_log=training_dir,
-        policy_kwargs={
-            "activation_fn": nn.Tanh,
-            "net_arch": dict(
-                pi=ppo_settings.net_arch_pi,
-                vf=ppo_settings.net_arch_vf,
+    algorithm = "SAC"
+    if algorithm == "PPO":
+        ppo_settings = PPOSettings()
+        policy = stable_baselines3.PPO(
+            "MlpPolicy",
+            vec_env,
+            learning_rate=affine_schedule(
+                y_1=ppo_settings.learning_rate,  # progress_remaining=1.0
+                y_0=ppo_settings.learning_rate / 3,  # progress_remaining=0.0
             ),
-        },
-        verbose=1,
-    )
+            # exponential_decay_schedule(
+            #     ppo_settings.learning_rate,
+            #     nb_phases=2,
+            # ),
+            n_steps=ppo_settings.n_steps,
+            batch_size=ppo_settings.batch_size,
+            n_epochs=ppo_settings.n_epochs,
+            gamma=gamma,
+            gae_lambda=ppo_settings.gae_lambda,
+            clip_range=ppo_settings.clip_range,
+            clip_range_vf=ppo_settings.clip_range_vf,
+            normalize_advantage=ppo_settings.normalize_advantage,
+            ent_coef=ppo_settings.ent_coef,
+            vf_coef=ppo_settings.vf_coef,
+            max_grad_norm=ppo_settings.max_grad_norm,
+            use_sde=ppo_settings.use_sde,
+            sde_sample_freq=ppo_settings.sde_sample_freq,
+            target_kl=ppo_settings.target_kl,
+            tensorboard_log=training_dir,
+            policy_kwargs={
+                "activation_fn": nn.Tanh,
+                "net_arch": dict(
+                    pi=ppo_settings.net_arch_pi,
+                    vf=ppo_settings.net_arch_vf,
+                ),
+            },
+            verbose=1,
+        )
+    elif algorithm == "SAC":
+        sac_settings = SACSettings()
+        action_noise = (
+            stable_baselines3.NormalActionNoise(
+                mean=np.zeros(1),
+                sigma=sac_settings.action_noise * np.ones(1),
+            )
+            if sac_settings.action_noise is not None
+            else None
+        )
+        policy = stable_baselines3.SAC(
+            "MlpPolicy",
+            vec_env,
+            learning_rate=sac_settings.learning_rate,
+            buffer_size=sac_settings.buffer_size,
+            learning_starts=sac_settings.learning_starts,
+            batch_size=sac_settings.batch_size,
+            tau=sac_settings.tau,
+            gamma=gamma,
+            train_freq=sac_settings.train_freq,
+            gradient_steps=sac_settings.gradient_steps,
+            action_noise=action_noise,
+            optimize_memory_usage=sac_settings.optimize_memory_usage,
+            ent_coef=sac_settings.ent_coef,
+            target_update_interval=sac_settings.target_update_interval,
+            target_entropy=sac_settings.target_entropy,
+            use_sde=sac_settings.use_sde,
+            sde_sample_freq=sac_settings.sde_sample_freq,
+            use_sde_at_warmup=sac_settings.use_sde_at_warmup,
+            stats_window_size=sac_settings.stats_window_size,
+            tensorboard_log=training_dir,
+            policy_kwargs={
+                "activation_fn": nn.ReLU,
+                "net_arch": dict(
+                    pi=sac_settings.net_arch_pi,
+                    qf=sac_settings.net_arch_qf,
+                ),
+            },
+            verbose=1,
+        )
+    else:
+        raise Exception(f"Unknown RL algorithm: {algorithm}")
 
     max_init_rand = InitRandomization(**settings.init_rand)
     try:
@@ -331,21 +375,21 @@ def train_policy(
                     "pitch",
                     max_init_rand.pitch,
                     start_timestep=0,
-                    end_timestep=1e6,
+                    end_timestep=2e6,
                 ),
                 InitRandomizationCallback(
                     vec_env,
                     "v_x",
                     max_init_rand.v_x,
                     start_timestep=0,
-                    end_timestep=1e6,
+                    end_timestep=2e6,
                 ),
                 InitRandomizationCallback(
                     vec_env,
                     "omega_y",
                     max_init_rand.omega_y,
                     start_timestep=0,
-                    end_timestep=1e6,
+                    end_timestep=2e6,
                 ),
             ],
             tb_log_name=policy_name,
