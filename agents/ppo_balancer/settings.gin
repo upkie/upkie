@@ -8,7 +8,7 @@ import settings
 EnvSettings.agent_frequency = 200
 EnvSettings.discounted_horizon_duration = 1.0
 EnvSettings.env_id = "UpkieGroundAcceleration-v1"
-EnvSettings.init_rand = {"pitch": 0.1, "v_x": 0.0, "omega_y": 0.0}
+EnvSettings.init_rand = {"pitch": 0.5, "v_x": 0.5, "omega_y": 0.5}
 EnvSettings.max_episode_duration = 10.0
 EnvSettings.max_ground_accel = 10.0
 EnvSettings.max_ground_velocity = 1.0
