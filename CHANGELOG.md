@@ -86,7 +86,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PPO balancer: Change training directory to `/tmp/ppo_balancer`
 - PPO balancer: Policy CLI argument becomes positional and optional
 - PPO balancer: Refactor agent settings
-- PPO balancer: Rename `effective_time_horizon` to `discounted_horizon_duration`
 - agents: Retry connecting to the spine several times at startup
 - envs: Retry connecting to the spine several times at startup
 

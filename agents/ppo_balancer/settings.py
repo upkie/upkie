@@ -18,12 +18,12 @@ class EnvSettings:
     """
 
     agent_frequency: int
-    discounted_horizon_duration: float
     env_id: str
     init_rand: Dict[str, float]
     max_episode_duration: float
     max_ground_accel: float
     max_ground_velocity: float
+    return_horizon: float
     seed: Optional[int]
     spine_config: Dict
     spine_frequency: int

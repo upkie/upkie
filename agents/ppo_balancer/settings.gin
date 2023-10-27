@@ -6,12 +6,12 @@
 import settings
 
 EnvSettings.agent_frequency = 200
-EnvSettings.discounted_horizon_duration = 1.0
 EnvSettings.env_id = "UpkieGroundAcceleration-v1"
 EnvSettings.init_rand = {"pitch": 0.5, "v_x": 0.5, "omega_y": 0.5}
 EnvSettings.max_episode_duration = 10.0
 EnvSettings.max_ground_accel = 10.0
 EnvSettings.max_ground_velocity = 1.0
+EnvSettings.return_horizon = 5.0
 EnvSettings.seed = None
 EnvSettings.spine_frequency = 1000
 EnvSettings.total_timesteps = 3e6
@@ -46,7 +46,10 @@ SACSettings.action_noise = None
 SACSettings.batch_size = 256
 SACSettings.buffer_size = 1000000
 SACSettings.ent_coef = "auto"
-SACSettings.gradient_steps = 1
+
+# https://stable-baselines3.readthedocs.io/en/master/guide/examples.html#multiprocessing-with-off-policy-algorithms
+SACSettings.gradient_steps = -1
+
 SACSettings.learning_rate = 3e-4
 SACSettings.learning_starts = 100
 SACSettings.net_arch_pi = (64, 64)

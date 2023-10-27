@@ -2,12 +2,12 @@ env: UpkieGroundVelocity-v1
 gin:
     EnvSettings:
         agent_frequency: 200
-        discounted_horizon_duration: 1.0
         env_id: UpkieGroundVelocity-v1
         init_pitch_rand: 0.1
         max_episode_duration: 10.0
         max_ground_accel: 10.0
         max_ground_velocity: 1.0
+        return_horizon: 1.0
         seed: null
         sim_torque_control_kd: 0.2
         spine_frequency: 1000

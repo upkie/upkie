@@ -274,11 +274,15 @@ def train_policy(
         vec_env = VecNormalize(vec_env)
 
     env_settings = EnvSettings()
-    agent_frequency = env_settings.agent_frequency
-    dt = 1.0 / agent_frequency
-    gamma = 1.0 - dt / env_settings.discounted_horizon_duration
+    dt = 1.0 / env_settings.agent_frequency
+    gamma = 1.0 - dt / env_settings.return_horizon
+    logging.info(
+        "Discount factor gamma=%f for a return horizon of %f s",
+        gamma,
+        env_settings.return_horizon,
+    )
 
-    algorithm = "SAC"
+    algorithm = "PPO"
     if algorithm == "PPO":
         ppo_settings = PPOSettings()
         policy = stable_baselines3.PPO(
@@ -359,7 +363,7 @@ def train_policy(
     else:
         raise Exception(f"Unknown RL algorithm: {algorithm}")
 
-    max_init_rand = InitRandomization(**settings.init_rand)
+    max_init_rand = InitRandomization(**env_settings.init_rand)
     try:
         policy.learn(
             total_timesteps=env_settings.total_timesteps,
