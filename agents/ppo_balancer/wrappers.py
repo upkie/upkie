@@ -26,16 +26,18 @@ class ActionNoiser(gymnasium.ActionWrapper):
         return action + noise
 
 
-class ObservationNoiser(gymnasium.Wrapper):
+class ObservationNoiser(gymnasium.ObservationWrapper):
     def __init__(self, env, noise: np.ndarray):
+        super(ObservationNoiser, self).__init__(env)
         self.high = +np.abs(noise)
         self.low = -np.abs(noise)
-        super(ObservationNoiser, self).__init__(env)
+        self.observation_space = spaces.Box(
+            low=env.observation_space.low + self.low,
+            high=env.observation_space.high + self.high,
+            shape=env.observation_space.shape,
+            dtype=env.observation_space.dtype,
+        )
 
-    def reset(self, **kwargs):
-        return self.env.reset(**kwargs)
-
-    def step(self, action):
-        obs, reward, terminated, truncated, info = self.env.step(action)
+    def observation(self, observation):
         noise = self.np_random.uniform(low=self.low, high=self.high)
-        return (obs + noise), reward, terminated, truncated, info
+        return observation + noise
