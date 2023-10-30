@@ -4,24 +4,14 @@
 # Copyright 2023 Inria
 # SPDX-License-Identifier: Apache-2.0
 
-"""Test UpkieBaseEnv."""
+"""Test NoisifyAction wrapper."""
 
 import unittest
 
-import gymnasium
 import numpy as np
-from gymnasium import spaces
 
 from upkie.envs.wrappers.noisify_action import NoisifyAction
-
-
-class ActionObserverEnv(gymnasium.Env):
-    def __init__(self):
-        self.action_space = spaces.Box(0.0, 2.0, shape=(1,))
-
-    def step(self, action):
-        observation = action
-        return observation, 0.0, False, False, {}
+from upkie.envs.wrappers.tests.envs import ActionObserverEnv
 
 
 class NoisifyActionTestCase(unittest.TestCase):

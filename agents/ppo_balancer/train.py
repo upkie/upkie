@@ -36,7 +36,7 @@ from stable_baselines3.common.vec_env.base_vec_env import VecEnv
 from torch import nn
 from utils import gin_operative_config_dict
 from wrappers import (
-    DerivateAction,
+    DifferentiateAction,
     LowPassFilterAction,
     NoisifyAction,
     NoisifyObservation,
@@ -223,7 +223,7 @@ def make_env(
         observation_noise = np.array(env_settings.observation_noise)
         return Monitor(
             RescaleAction(
-                DerivateAction(
+                DifferentiateAction(
                     LowPassFilterAction(
                         NoisifyAction(
                             NoisifyObservation(
