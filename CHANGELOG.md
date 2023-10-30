@@ -20,6 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - examples: Refactor lying genuflections
 - examples: Refactor wheeled balancing
 
+### Removed
+
+- envs: Acceleration filter in `UpkieGroundVelocity` (use a gymnasium.Wrapper)
+
 ## [2.0.0] - 2023-10-26
 
 ### Added
