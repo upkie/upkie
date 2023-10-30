@@ -13,7 +13,7 @@ import numpy as np
 from gymnasium import spaces
 
 from upkie.utils.exceptions import UpkieException
-from upkie.utils.filters import abs_bounded_derivative_filter, low_pass_filter
+from upkie.utils.filters import low_pass_filter
 
 from .upkie_wheeled_pendulum import UpkieWheeledPendulum
 
@@ -80,7 +80,6 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
 
     The environment class defines the following attributes:
 
-    - ``max_ground_accel``: Maximum commanded ground acceleration in m/s².
     - ``max_ground_velocity``: Maximum commanded ground velocity in m/s.
     - ``version``: Environment version number.
     - ``wheel_radius``: Wheel radius in [m].
@@ -89,7 +88,6 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
 
     _filtered_action: float
     _ground_velocity: float
-    max_ground_accel: float
     max_ground_velocity: float
     version: int = 1
     velocity_filter: Optional[float]
@@ -97,7 +95,6 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
 
     def __init__(
         self,
-        max_ground_accel: float = 10.0,
         max_ground_velocity: float = 1.0,
         velocity_filter: Optional[float] = None,
         velocity_filter_rand: Optional[Tuple[float, float]] = None,
@@ -107,7 +104,6 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
         """!
         Initialize environment.
 
-        @param max_ground_accel Maximum commanded ground acceleration in m/s^2.
         @param max_ground_velocity Maximum commanded ground velocity in m/s.
         @param velocity_filter If set, cutoff period in seconds of a low-pass
             filter applied to commanded velocities.
@@ -159,7 +155,6 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
 
         self._filtered_action = 0.0
         self._ground_velocity = 0.0
-        self.max_ground_accel = max_ground_accel
         self.max_ground_velocity = max_ground_velocity
         self.velocity_filter = velocity_filter
         self.velocity_filter_rand = velocity_filter_rand
@@ -210,13 +205,7 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
         else:  # self.velocity_filter is None
             self._filtered_action = action[0]
 
-        self._ground_velocity = abs_bounded_derivative_filter(
-            self._ground_velocity,
-            self._filtered_action,
-            self.dt,
-            self.max_ground_velocity,
-            self.max_ground_accel,
-        )
+        self._ground_velocity = self._filtered_action
 
         wheel_velocity = self._ground_velocity / self.wheel_radius
         servo_dict = self.get_leg_servo_action()
