@@ -20,6 +20,7 @@ from settings import EnvSettings, PPOSettings
 from stable_baselines3 import PPO
 
 import upkie.envs
+from upkie.envs.wrappers import DifferentiateAction
 from upkie.utils.filters import low_pass_filter
 from upkie.utils.raspi import configure_agent_process, on_raspi
 
@@ -74,12 +75,20 @@ def main(policy_path: str):
         spine_config=env_settings.spine_config,
         # upkie.envs.UpkieGroundVelocity-v2
         max_ground_velocity=env_settings.max_ground_velocity,
-    ) as unscaled_env:
-        env = RescaleAction(unscaled_env, min_action=-1.0, max_action=1.0)
+    ) as velocity_env:
+        accel_env = RescaleAction(
+            DifferentiateAction(
+                velocity_env,
+                min_derivative=-env_settings.max_ground_accel,
+                max_derivative=env_settings.max_ground_accel,
+            ),
+            min_action=-1.0,
+            max_action=1.0,
+        )
         ppo_settings = PPOSettings()
         policy = PPO(
             "MlpPolicy",
-            env,
+            accel_env,
             policy_kwargs={
                 "net_arch": dict(
                     pi=ppo_settings.net_arch_pi,
@@ -89,7 +98,7 @@ def main(policy_path: str):
             verbose=0,
         )
         policy.set_parameters(policy_path)
-        run_policy(env, policy)
+        run_policy(accel_env, policy)
 
 
 def locate_policy(path: Optional[str], agent_dir: str) -> str:
