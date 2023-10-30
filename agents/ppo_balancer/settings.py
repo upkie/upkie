@@ -25,7 +25,7 @@ class EnvSettings:
     max_ground_accel: float
     max_ground_velocity: float
     seed: Optional[int]
-    sim_torque_control_kd: float
+    spine_config: Dict
     spine_frequency: int
     total_timesteps: int
     velocity_filter: Optional[float]

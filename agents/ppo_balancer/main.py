@@ -64,21 +64,14 @@ def run_policy(env: UpkieGroundVelocity, policy) -> None:
 
 
 def main(policy_path: str):
-    settings = EnvSettings()
+    env_settings = EnvSettings()
     with gym.make(
-        settings.env_id,
-        frequency=settings.agent_frequency,
-        max_ground_accel=settings.max_ground_accel,
-        max_ground_velocity=settings.max_ground_velocity,
+        env_settings.env_id,
+        frequency=env_settings.agent_frequency,
+        max_ground_accel=env_settings.max_ground_accel,
+        max_ground_velocity=env_settings.max_ground_velocity,
         regulate_frequency=True,
-        spine_config={
-            "bullet": {
-                "torque_control": {
-                    "kd": settings.sim_torque_control_kd,
-                },
-            },
-        },
-        # velocity_filter=None,
+        spine_config=env_settings.spine_config,
     ) as env:
         ppo_settings = PPOSettings()
         policy = PPO(

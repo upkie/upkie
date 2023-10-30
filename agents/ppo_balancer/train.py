@@ -123,9 +123,9 @@ def get_bullet_argv(shm_name: str, show: bool) -> List[str]:
     @param show If true, show simulator GUI.
     @returns Command-line arguments.
     """
-    settings = EnvSettings()
-    agent_frequency = settings.agent_frequency
-    spine_frequency = settings.spine_frequency
+    env_settings = EnvSettings()
+    agent_frequency = env_settings.agent_frequency
+    spine_frequency = env_settings.spine_frequency
     assert spine_frequency % agent_frequency == 0
     nb_substeps = spine_frequency / agent_frequency
     bullet_argv = []
@@ -142,10 +142,10 @@ def make_env(
     show: bool,
     subproc_index: int,
 ):
-    settings = EnvSettings()
+    env_settings = EnvSettings()
     seed = (
-        settings.seed + subproc_index
-        if settings.seed is not None
+        env_settings.seed + subproc_index
+        if env_settings.seed is not None
         else random.randint(0, 1_000_000)
     )
 
@@ -158,23 +158,23 @@ def make_env(
             return
 
         # parent process: trainer
-        agent_frequency = settings.agent_frequency
-        max_episode_duration = settings.max_episode_duration
-        init_rand = InitRandomization(**settings.init_rand)
+        agent_frequency = env_settings.agent_frequency
+        max_episode_duration = env_settings.max_episode_duration
+        init_rand = InitRandomization(**env_settings.init_rand)
         env = gymnasium.make(
-            settings.env_id,
+            env_settings.env_id,
             max_episode_steps=int(max_episode_duration * agent_frequency),
             # upkie.envs.UpkieBaseEnv
             frequency=agent_frequency,
             init_rand=init_rand,
-            max_ground_accel=settings.max_ground_accel,
-            max_ground_velocity=settings.max_ground_velocity,
+            max_ground_accel=env_settings.max_ground_accel,
+            max_ground_velocity=env_settings.max_ground_velocity,
             regulate_frequency=False,
             reward=Reward(),
             shm_name=shm_name,
-            spine_config=settings.spine_config,
-            velocity_filter=settings.velocity_filter,
-            velocity_filter_rand=settings.velocity_filter_rand,
+            spine_config=env_settings.spine_config,
+            velocity_filter=env_settings.velocity_filter,
+            velocity_filter_rand=env_settings.velocity_filter_rand,
         )
         env.reset(seed=seed)
         env._prepatch_close = env.close
@@ -242,10 +242,10 @@ def train_policy(
     if False:  # does not always improve returns during training
         vec_env = VecNormalize(vec_env)
 
-    settings = EnvSettings()
-    agent_frequency = settings.agent_frequency
+    env_settings = EnvSettings()
+    agent_frequency = env_settings.agent_frequency
     dt = 1.0 / agent_frequency
-    gamma = 1.0 - dt / settings.discounted_horizon_duration
+    gamma = 1.0 - dt / env_settings.discounted_horizon_duration
 
     ppo_settings = PPOSettings()
     policy = stable_baselines3.PPO(
@@ -279,7 +279,7 @@ def train_policy(
 
     try:
         policy.learn(
-            total_timesteps=settings.total_timesteps,
+            total_timesteps=env_settings.total_timesteps,
             callback=[
                 CheckpointCallback(
                     save_freq=max(int(1e5) // nb_envs, 1_000),
