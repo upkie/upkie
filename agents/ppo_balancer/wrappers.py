@@ -12,7 +12,7 @@ from upkie.utils.exceptions import UpkieException
 
 class ActionNoiser(gymnasium.ActionWrapper):
     def __init__(self, env, noise: np.ndarray):
-        super(ActionNoiser, self).__init__(env)
+        super().__init__(env)
         if noise.shape != env.action_space.shape:
             raise UpkieException(
                 f"Action {noise.shape=} does not "
@@ -33,7 +33,7 @@ class ActionNoiser(gymnasium.ActionWrapper):
 
 class ObservationNoiser(gymnasium.ObservationWrapper):
     def __init__(self, env, noise: np.ndarray):
-        super(ObservationNoiser, self).__init__(env)
+        super().__init__(env)
         if noise.shape != env.observation_space.shape:
             raise UpkieException(
                 f"Observation {noise.shape=} does not "
