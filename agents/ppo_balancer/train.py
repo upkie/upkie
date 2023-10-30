@@ -389,7 +389,7 @@ def train_policy(
             total_timesteps=env_settings.total_timesteps,
             callback=[
                 CheckpointCallback(
-                    save_freq=max(600_000 // nb_envs, 1_000),
+                    save_freq=max(210_000 // nb_envs, 1_000),
                     save_path=save_path,
                     name_prefix="checkpoint",
                 ),
@@ -399,21 +399,21 @@ def train_policy(
                     "pitch",
                     max_init_rand.pitch,
                     start_timestep=0,
-                    end_timestep=2e6,
+                    end_timestep=1e6,
                 ),
                 InitRandomizationCallback(
                     vec_env,
                     "v_x",
                     max_init_rand.v_x,
                     start_timestep=0,
-                    end_timestep=2e6,
+                    end_timestep=1e6,
                 ),
                 InitRandomizationCallback(
                     vec_env,
                     "omega_y",
                     max_init_rand.omega_y,
                     start_timestep=0,
-                    end_timestep=2e6,
+                    end_timestep=1e6,
                 ),
             ],
             tb_log_name=policy_name,
