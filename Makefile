@@ -90,7 +90,7 @@ run_mpc_balancer:  ### run the test balancer on the Raspberry Pi
 	$(RASPUNZEL) run -s //agents/mpc_balancer:mpc_balancer
 
 run_ppo_balancer:  ### run the test balancer on the Raspberry Pi
-	$(RASPUNZEL) run -s //agents/ppo_balancer:ppo_balancer
+	$(RASPUNZEL) run -s //agents/ppo_balancer:run
 
 # A specific gain config file can be loaded with the CONFIG variable
 # Example: ``make run_wheel_balancer CONFIG=michel-strogoff``
