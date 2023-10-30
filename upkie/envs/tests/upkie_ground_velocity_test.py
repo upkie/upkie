@@ -24,7 +24,6 @@ class TestUpkieGroundVelocity(unittest.TestCase):
         self.env = UpkieGroundVelocity(
             fall_pitch=1.0,
             frequency=100.0,
-            max_ground_accel=10.0,
             max_ground_velocity=1.0,
             shm_name=shm_name,
         )
@@ -44,35 +43,6 @@ class TestUpkieGroundVelocity(unittest.TestCase):
         action = np.zeros(self.env.action_space.shape)
         observation, reward, terminated, truncated, _ = self.env.step(action)
         self.assertAlmostEqual(reward, 1.0)  # survival reward
-
-    def test_disabled_velocity_filter(self):
-        observation, info = self.env.reset()
-        velocity_step = 0.05  # [m] / [s]
-        self.env.velocity_filter = None
-        self.env.step(np.array([velocity_step]))
-        self.assertAlmostEqual(
-            self.env._ground_velocity,
-            velocity_step,
-        )
-
-    def test_enabled_velocity_filter(self):
-        observation, info = self.env.reset()
-        velocity_step = 0.05  # [m] / [s]
-        self.env.velocity_filter = 0.1  # [s]
-        self.env.step(np.array([velocity_step]))
-        self.assertLess(
-            self.env._ground_velocity,
-            velocity_step,
-        )
-
-    def test_velocity_filter_randomization(self):
-        low, high = 12.0, 42.0
-        self.env.velocity_filter_rand = (low, high)
-        self.assertIsNone(self.env.velocity_filter)
-        self.env.reset()
-        self.assertIsNotNone(self.env.velocity_filter)
-        self.assertGreaterEqual(self.env.velocity_filter, low)
-        self.assertLessEqual(self.env.velocity_filter, high)
 
 
 if __name__ == "__main__":
