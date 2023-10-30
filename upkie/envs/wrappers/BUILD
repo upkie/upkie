@@ -18,6 +18,8 @@ py_library(
         "noisify_observation.py",
     ],
     deps = [
+        "//upkie/utils:exceptions",
+        "//upkie/utils:filters",
     ] + select({
         # Selecting the right CPU architecture for the Raspberry Pi is
         # currently a tough nut to crack for Bazel. We only enable compiled
