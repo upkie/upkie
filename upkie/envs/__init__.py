@@ -26,14 +26,6 @@ __all__ = [
 __envs__ = {}
 
 try:
-    from .upkie_ground_acceleration import UpkieGroundAcceleration
-
-    __all__.append("UpkieGroundAcceleration")
-    __envs__["UpkieGroundAcceleration"] = UpkieGroundAcceleration
-except ImportError as import_error:
-    __envs__["UpkieGroundAcceleration"] = import_error
-
-try:
     from .upkie_ground_velocity import UpkieGroundVelocity
 
     __all__.append("UpkieGroundVelocity")
