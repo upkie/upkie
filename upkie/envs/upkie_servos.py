@@ -225,3 +225,15 @@ class UpkieServos(UpkieBaseEnv):
             servo_action[joint]["torque"] = tau[i]
             self.__last_positions[joint] = q[i]
         return {"servo": servo_action}
+
+    def get_reward(
+        self, observation: NDArray[float], action: NDArray[float]
+    ) -> float:
+        """!
+        Get reward from observation and action.
+
+        @param observation Observation vector.
+        @param action Action vector.
+        @returns Reward.
+        """
+        return 1.0
