@@ -18,6 +18,7 @@ py_test(
     deps = [
         "//upkie/envs",
         ":mock_spine",
+        requirement("stable_baselines3"),
     ],
 )
 
@@ -45,6 +46,7 @@ py_test(
     deps = [
         "//upkie/envs",
         ":mock_spine",
+        requirement("stable_baselines3"),
     ],
 )
 
