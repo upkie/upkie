@@ -194,7 +194,7 @@ def make_env(
         # parent process: trainer
         agent_frequency = env_settings.agent_frequency
         max_episode_duration = env_settings.max_episode_duration
-        env = gymnasium.make(
+        velocity_env = gymnasium.make(
             env_settings.env_id,
             max_episode_steps=int(max_episode_duration * agent_frequency),
             frequency=agent_frequency,
@@ -204,26 +204,25 @@ def make_env(
             # upkie.envs.UpkieGroundVelocity-v2
             max_ground_velocity=env_settings.max_ground_velocity,
         )
-        env.reset(seed=seed)
-        env._prepatch_close = env.close
+        velocity_env.reset(seed=seed)
+        velocity_env._prepatch_close = velocity_env.close
 
         def close_monkeypatch():
             logging.info(f"Terminating spine {shm_name} with {pid=}...")
             os.kill(pid, signal.SIGINT)  # interrupt spine child process
             os.waitpid(pid, 0)  # wait for spine to terminate
-            env._prepatch_close()
+            velocity_env._prepatch_close()
 
-        env.close = close_monkeypatch
+        velocity_env.close = close_monkeypatch
 
         velocity_action_noise = np.array(env_settings.velocity_action_noise)
         observation_noise = np.array(env_settings.observation_noise)
-        return Monitor(
-            RescaleAction(
+        accel_env = RescaleAction(
                 DifferentiateAction(
                     LowPassFilterAction(
                         NoisifyAction(
                             NoisifyObservation(
-                                env,
+                                velocity_env,
                                 noise=observation_noise,
                             ),
                             noise=velocity_action_noise,
@@ -237,8 +236,8 @@ def make_env(
                 ),
                 min_action=-1.0,
                 max_action=+1.0,
-            ),
-        )
+            )
+        return Monitor(accel_env)
 
     set_random_seed(seed)
     return _init
