@@ -15,17 +15,17 @@ EnvSettings.max_ground_accel = 10.0
 EnvSettings.max_ground_velocity = 1.0
 EnvSettings.return_horizon = 5.0
 EnvSettings.seed = None
+EnvSettings.spine_config = {
+    "bullet": {
+        "torque_control": {
+            "kd": 1.0,
+        },
+    },
+}
 EnvSettings.spine_frequency = 1000
 EnvSettings.total_timesteps = 3e6
 EnvSettings.velocity_filter = None
 EnvSettings.velocity_filter_rand = None
-EnvSettings.spine_config = {
-    "bullet": {
-        "torque_control": {
-            "kd": 0.2,
-        },
-    },
-}
 
 PPOSettings.batch_size = 64
 PPOSettings.clip_range = 0.1
