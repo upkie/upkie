@@ -24,7 +24,7 @@ EnvSettings.spine_config = {
 EnvSettings.spine_frequency = 1000
 EnvSettings.total_timesteps = 3e6
 EnvSettings.velocity_action_lpf = (0.0, 0.01)
-EnvSettings.velocity_action_noise = 0.05
+EnvSettings.velocity_action_noise = [0.05]
 
 PPOSettings.batch_size = 64
 PPOSettings.clip_range = 0.1

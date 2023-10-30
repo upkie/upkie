@@ -30,7 +30,7 @@ class EnvSettings:
     spine_frequency: int
     total_timesteps: int
     velocity_action_lpf: Tuple[float, float]
-    velocity_action_noise: float
+    velocity_action_noise: List[float]
 
 
 @gin.configurable

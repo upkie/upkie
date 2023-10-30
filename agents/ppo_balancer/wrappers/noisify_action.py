@@ -10,7 +10,7 @@ import numpy as np
 from upkie.utils.exceptions import UpkieException
 
 
-class ActionNoiser(gymnasium.ActionWrapper):
+class NoisifyAction(gymnasium.ActionWrapper):
 
     """!
     Add noise to the action of an environment.
