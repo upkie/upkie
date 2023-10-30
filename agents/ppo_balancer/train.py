@@ -217,7 +217,7 @@ def make_env(
             env._prepatch_close()
 
         env.close = close_monkeypatch
-        return ActionNormalizer(Monitor(env))
+        return Monitor(ActionNormalizer(env))
 
     set_random_seed(seed)
     return _init
