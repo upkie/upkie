@@ -6,38 +6,47 @@
 
 import gymnasium
 import numpy as np
-from gymnasium import spaces
+
+from upkie.utils.exceptions import UpkieException
 
 
 class ActionNoiser(gymnasium.ActionWrapper):
     def __init__(self, env, noise: np.ndarray):
         super(ActionNoiser, self).__init__(env)
+        if noise.shape != env.action_space.shape:
+            raise UpkieException(
+                f"Action {noise.shape=} does not "
+                f"match {env.action_space.shape=}"
+            )
         self.high = +np.abs(noise)
         self.low = -np.abs(noise)
-        self.action_space = spaces.Box(
-            low=env.action_space.low + self.low,
-            high=env.action_space.high + self.high,
-            shape=env.action_space.shape,
-            dtype=env.action_space.dtype,
-        )
 
     def action(self, action):
         noise = self.np_random.uniform(low=self.low, high=self.high)
-        return action + noise
+        noisy_action = np.clip(
+            action + noise,
+            self.env.action_space.low,
+            self.env.action_space.high,
+        )
+        return noisy_action
 
 
 class ObservationNoiser(gymnasium.ObservationWrapper):
     def __init__(self, env, noise: np.ndarray):
         super(ObservationNoiser, self).__init__(env)
+        if noise.shape != env.observation_space.shape:
+            raise UpkieException(
+                f"Observation {noise.shape=} does not "
+                f"match {env.observation_space.shape=}"
+            )
         self.high = +np.abs(noise)
         self.low = -np.abs(noise)
-        self.observation_space = spaces.Box(
-            low=env.observation_space.low + self.low,
-            high=env.observation_space.high + self.high,
-            shape=env.observation_space.shape,
-            dtype=env.observation_space.dtype,
-        )
 
     def observation(self, observation):
         noise = self.np_random.uniform(low=self.low, high=self.high)
-        return observation + noise
+        noisy_observation = np.clip(
+            observation + noise,
+            self.env.observation_space.low,
+            self.env.observation_space.high,
+        )
+        return noisy_observation
