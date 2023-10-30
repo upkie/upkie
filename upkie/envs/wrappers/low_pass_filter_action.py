@@ -51,7 +51,8 @@ class LowPassFilterAction(gymnasium.Wrapper):
         return self.env.reset(**kwargs)
 
     def step(self, action):
-        if self.time_constant <= 2.0 * self.env.dt:
+        dt = self.env.unwrapped.dt
+        if self.time_constant <= 2.0 * dt:
             # Nyquist–Shannon sampling theorem
             return self.env.step(action)
 
@@ -59,6 +60,6 @@ class LowPassFilterAction(gymnasium.Wrapper):
             self.filtered_action,
             self.time_constant,
             action,
-            self.env.dt,
+            dt,
         )
         return self.env.step(self.filtered_action)

@@ -43,7 +43,7 @@ class DifferentiateAction(gymnasium.Wrapper):
 
     def step(self, action):
         self._integral = np.clip(
-            self._integral + action * self.env.dt,
+            self._integral + action * self.env.unwrapped.dt,
             self.env.action_space.low,
             self.env.action_space.high,
         )
