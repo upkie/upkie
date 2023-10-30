@@ -25,8 +25,8 @@ class ActionNoiser(gymnasium.Wrapper):
 class ActionNormalizer(gymnasium.Wrapper):
     def __init__(self, env):
         assert isinstance(env.action_space, gymnasium.spaces.Box)
-        self.rescaled_low = env.action_space.low
-        self.rescaled_high = env.action_space.high
+        self.low = env.action_space.low
+        self.delta = env.action_space.high - env.action_space.low
         env.action_space = gymnasium.spaces.Box(
             low=-1.0,
             high=1.0,
@@ -39,10 +39,20 @@ class ActionNormalizer(gymnasium.Wrapper):
         return self.env.reset(**kwargs)
 
     def step(self, action):
-        rescaled_action = self.rescaled_low + 0.5 * (1.0 + action) * (
-            self.rescaled_high - self.rescaled_low
-        )
-        observation, reward, terminated, truncated, info = self.env.step(
-            rescaled_action
-        )
-        return observation, reward, terminated, truncated, info
+        rescaled_action = self.low + 0.5 * (1.0 + action) * self.delta
+        return self.env.step(rescaled_action)
+
+
+class ObservationNoiser(gymnasium.Wrapper):
+    def __init__(self, env, noise: np.ndarray):
+        self.high = +np.abs(noise)
+        self.low = -np.abs(noise)
+        super(ObservationNoiser, self).__init__(env)
+
+    def reset(self, **kwargs):
+        return self.env.reset(**kwargs)
+
+    def step(self, action):
+        obs, reward, terminated, truncated, info = self.env.step(action)
+        noise = self.np_random.uniform(low=self.low, high=self.high)
+        return (obs + noise), reward, terminated, truncated, info
