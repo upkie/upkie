@@ -10,6 +10,9 @@ package(default_visibility = ["//visibility:public"])
 py_library(
     name = "envs",
     srcs = ["envs.py"],
+    deps = [
+        requirement("gymnasium"),
+    ],
 )
 
 py_test(
@@ -19,6 +22,7 @@ py_test(
         "//upkie/envs/wrappers",
         ":envs",
         requirement("gymnasium"),
+        requirement("stable_baselines3"),
     ],
 )
 
@@ -29,6 +33,7 @@ py_test(
         "//upkie/envs/wrappers",
         ":envs",
         requirement("gymnasium"),
+        requirement("stable_baselines3"),
     ],
 )
 
@@ -39,6 +44,7 @@ py_test(
         "//upkie/envs/wrappers",
         ":envs",
         requirement("gymnasium"),
+        requirement("stable_baselines3"),
     ],
 )
 
@@ -49,6 +55,7 @@ py_test(
         "//upkie/envs/wrappers",
         ":envs",
         requirement("gymnasium"),
+        requirement("stable_baselines3"),
     ],
 )
 
