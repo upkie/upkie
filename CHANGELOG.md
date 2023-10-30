@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - envs: Acceleration filter from `UpkieGroundVelocity` (=> gymnasium.Wrapper)
 - envs: Low-pass filter from `UpkieGroundVelocity` (=> gymnasium.Wrapper)
+- envs: Survival reward, as environments now ship their own rewards
 
 ## [2.0.0] - 2023-10-26
 

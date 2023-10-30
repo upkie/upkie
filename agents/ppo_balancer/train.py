@@ -430,7 +430,6 @@ def train_policy(
 if __name__ == "__main__":
     args = parse_command_line_arguments()
     agent_dir = os.path.dirname(__file__)
-    gin.parse_config_file(f"{agent_dir}/reward.gin")
     gin.parse_config_file(f"{agent_dir}/settings.gin")
 
     training_path = os.environ.get(
