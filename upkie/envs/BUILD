@@ -49,6 +49,7 @@ py_library(
         "//:pi64_config": [],
         "//conditions:default": [
             requirement("gymnasium"),
+            requirement("scipy"),
         ],
     }),
 )
