@@ -80,15 +80,12 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
 
     The environment class defines the following attributes:
 
-    - ``max_ground_velocity``: Maximum commanded ground velocity in m/s.
     - ``version``: Environment version number.
     - ``wheel_radius``: Wheel radius in [m].
 
     """
 
-    _filtered_action: float
     _ground_velocity: float
-    max_ground_velocity: float
     version: int = 1
     velocity_filter: Optional[float]
     wheel_radius: float
@@ -124,15 +121,14 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
 
         MAX_BASE_PITCH: float = np.pi
         MAX_GROUND_POSITION: float = float("inf")
-        MAX_GROUND_VELOCITY: float = 2.0  # m/s
         MAX_BASE_ANGULAR_VELOCITY: float = 1000.0  # rad/s
         observation_limit = np.array(
             [
                 MAX_BASE_PITCH,
                 MAX_GROUND_POSITION,
                 MAX_BASE_ANGULAR_VELOCITY,
-                MAX_GROUND_VELOCITY,
-                MAX_GROUND_VELOCITY,
+                max_ground_velocity,
+                max_ground_velocity,
             ],
             dtype=np.float32,
         )
@@ -153,9 +149,7 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
             dtype=np.float32,
         )
 
-        self._filtered_action = 0.0
         self._ground_velocity = 0.0
-        self.max_ground_velocity = max_ground_velocity
         self.velocity_filter = velocity_filter
         self.velocity_filter_rand = velocity_filter_rand
         self.wheel_radius = wheel_radius
@@ -178,7 +172,6 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
             - ``info``: Dictionary with auxiliary diagnostic information. For
               Upkie this is the full observation dictionary sent by the spine.
         """
-        self._filtered_action = 0.0
         self._ground_velocity = 0.0
 
         observation, info = super().reset(seed=seed)
@@ -196,16 +189,14 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
         @returns Action dictionary.
         """
         if self.velocity_filter is not None:
-            self._filtered_action = low_pass_filter(
-                self._filtered_action,
+            self._ground_velocity = low_pass_filter(
+                self._ground_velocity,
                 self.velocity_filter,
                 action[0],
                 self.dt,
             )
         else:  # self.velocity_filter is None
-            self._filtered_action = action[0]
-
-        self._ground_velocity = self._filtered_action
+            self._ground_velocity = action[0]
 
         wheel_velocity = self._ground_velocity / self.wheel_radius
         servo_dict = self.get_leg_servo_action()
