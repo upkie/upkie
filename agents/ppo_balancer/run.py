@@ -109,11 +109,13 @@ if __name__ == "__main__":
     gin.parse_config_file(f"{agent_dir}/settings.gin")
 
     policy_path = args.policy
-    training_dir = f"{tempfile.gettempdir()}/ppo_balancer"
     if policy_path.endswith(".zip"):
         policy_path = policy_path[:-4]
-    if os.path.exists(f"{training_dir}/{policy_path}.zip"):
-        policy_path = f"{training_dir}/{policy_path}"
+    if not os.path.exists(f"{policy_path}.zip"):
+        training_dir = f"{tempfile.gettempdir()}/ppo_balancer"
+        if os.path.exists(f"{training_dir}/{policy_path}.zip"):
+            policy_path = f"{training_dir}/{policy_path}"
+    logging.info("Loading policy from %s", policy_path)
 
     try:
         main(policy_path)
