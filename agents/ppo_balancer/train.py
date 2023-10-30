@@ -17,6 +17,7 @@ import gymnasium
 import numpy as np
 import stable_baselines3
 import yaml
+from gymnasium import spaces
 from gymnasium.wrappers import RescaleAction
 from reward import Reward
 from rules_python.python.runfiles import runfiles
@@ -34,7 +35,12 @@ from stable_baselines3.common.vec_env import (
 from stable_baselines3.common.vec_env.base_vec_env import VecEnv
 from torch import nn
 from utils import gin_operative_config_dict
-from wrappers import ActionNoiser, ObservationNoiser
+from wrappers import (
+    DerivateAction,
+    LowPassFilterAction,
+    NoisifyAction,
+    NoisifyObservation,
+)
 
 import upkie.envs
 from upkie.envs import InitRandomization
@@ -194,20 +200,12 @@ def make_env(
         env = gymnasium.make(
             env_settings.env_id,
             max_episode_steps=int(max_episode_duration * agent_frequency),
-            # upkie.envs.UpkieBaseEnv
             frequency=agent_frequency,
-            init_rand=None,  # updated by callback
             regulate_frequency=False,
             reward=Reward(),
             shm_name=shm_name,
             spine_config=env_settings.spine_config,
-            #
-            # upkie.envs.UpkieGroundVelocity
-            # velocity_filter=settings.velocity_filter,
-            # velocity_filter_rand=settings.velocity_filter_rand,
-            #
-            # upkie.envs.UpkieGroundAcceleration
-            max_ground_accel=env_settings.max_ground_accel,
+            # upkie.envs.UpkieGroundVelocity-v2
             max_ground_velocity=env_settings.max_ground_velocity,
         )
         env.reset(seed=seed)
@@ -220,14 +218,30 @@ def make_env(
             env._prepatch_close()
 
         env.close = close_monkeypatch
+
+        velocity_action_noise = np.array(env_settings.velocity_action_noise)
+        observation_noise = np.array(env_settings.observation_noise)
         return Monitor(
-            ObservationNoiser(
-                ActionNoiser(
-                    RescaleAction(env, min_action=-1.0, max_action=+1.0),
-                    noise=np.array([env_settings.action_noise]),
+            RescaleAction(
+                DerivateAction(
+                    LowPassFilterAction(
+                        NoisifyAction(
+                            NoisifyObservation(
+                                env,
+                                noise=observation_noise,
+                            ),
+                            noise=velocity_action_noise,
+                        ),
+                        time_constant=spaces.Box(
+                            *env_settings.velocity_action_lpf
+                        ),
+                    ),
+                    min_derivative=-env_settings.max_ground_accel,
+                    max_derivative=env_settings.max_ground_accel,
                 ),
-                noise=np.array(env_settings.observation_noise),
-            )
+                min_action=-1.0,
+                max_action=+1.0,
+            ),
         )
 
     set_random_seed(seed)

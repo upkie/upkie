@@ -14,7 +14,12 @@ from numpy.typing import NDArray
 from upkie.utils.filters import low_pass_filter
 
 
-class ActionLowPassFilter(gymnasium.Wrapper):
+class LowPassFilterAction(gymnasium.Wrapper):
+
+    """!
+    Apply a low-pass filter to the action of an environment.
+    """
+
     filtered_action: NDArray[float]
     time_constant: float
     time_constant_box: Box

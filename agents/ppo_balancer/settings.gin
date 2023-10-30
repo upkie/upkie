@@ -6,13 +6,12 @@
 import settings
 
 EnvSettings.agent_frequency = 200
-EnvSettings.action_noise = 0.05
-EnvSettings.observation_noise = [0.01, 0.01, 0.01, 0.01, 0.01]
-EnvSettings.env_id = "UpkieGroundAcceleration-v1"
+EnvSettings.env_id = "UpkieGroundVelocity-v2"
 EnvSettings.init_rand = {"pitch": 0.5, "v_x": 0.5, "omega_y": 0.5}
 EnvSettings.max_episode_duration = 10.0
 EnvSettings.max_ground_accel = 10.0
 EnvSettings.max_ground_velocity = 1.0
+EnvSettings.observation_noise = [0.01, 0.01, 0.01, 0.01, 0.01]
 EnvSettings.return_horizon = 5.0
 EnvSettings.seed = None
 EnvSettings.spine_config = {
@@ -24,8 +23,8 @@ EnvSettings.spine_config = {
 }
 EnvSettings.spine_frequency = 1000
 EnvSettings.total_timesteps = 3e6
-EnvSettings.velocity_filter = None
-EnvSettings.velocity_filter_rand = None
+EnvSettings.velocity_action_lpf = (0.0, 0.01)
+EnvSettings.velocity_action_noise = 0.05
 
 PPOSettings.batch_size = 64
 PPOSettings.clip_range = 0.1

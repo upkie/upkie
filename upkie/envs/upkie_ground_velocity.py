@@ -22,7 +22,7 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
     """!
     Environment where Upkie balances by ground velocity control.
 
-    The environment id is ``UpkieGroundVelocity-v1``.
+    The environment id is ``UpkieGroundVelocity-v2``.
 
     @note To deep reinforcement learning practitioners: the observation space
     and action space are not normalized.
@@ -85,7 +85,7 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
     """
 
     _last_action: float
-    version: int = 1
+    version: int = 2
     wheel_radius: float
 
     def __init__(
