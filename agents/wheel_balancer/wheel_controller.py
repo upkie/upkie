@@ -12,6 +12,7 @@ from typing import Any, Dict, Tuple
 
 import gin
 import numpy as np
+from numpy.typing import NDArray
 
 from upkie.observers.base_pitch import compute_base_pitch_from_imu
 from upkie.utils.clamp import clamp, clamp_abs
@@ -121,7 +122,7 @@ class WheelController:
             )
 
     air_return_period: float
-    error: np.ndarray
+    error: NDArray[float]
     gains: Gains
     ground_velocity: float
     integral_error_velocity: float
@@ -399,7 +400,7 @@ class WheelController:
 
     def get_wheel_velocities(
         self,
-        position_right_in_left: np.ndarray,
+        position_right_in_left: NDArray[float],
     ) -> Tuple[float, float]:
         """
         Get left and right wheel velocities.

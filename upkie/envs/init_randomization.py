@@ -9,6 +9,7 @@ Domain randomization of Upkie environments.
 """
 
 from dataclasses import dataclass
+from numpy.typing import NDArray
 
 import numpy as np
 from scipy.spatial.transform import Rotation as ScipyRotation
@@ -39,7 +40,7 @@ class InitRandomization:
         )
         return ScipyRotation.from_euler("ZYX", yaw_pitch_roll)
 
-    def sample_position(self, np_random) -> np.ndarray:
+    def sample_position(self, np_random) -> NDArray[float]:
         default_position = np.array([0.0, 0.0, 0.6])
         return default_position + np_random.uniform(
             low=np.array([-self.x, 0.0, 0.0]),
@@ -47,14 +48,14 @@ class InitRandomization:
             size=3,
         )
 
-    def sample_linear_velocity(self, np_random) -> np.ndarray:
+    def sample_linear_velocity(self, np_random) -> NDArray[float]:
         return np_random.uniform(
             low=np.array([-self.v_x, 0.0, -self.v_z]),
             high=np.array([+self.v_x, 0.0, +self.v_z]),
             size=3,
         )
 
-    def sample_angular_velocity(self, np_random) -> np.ndarray:
+    def sample_angular_velocity(self, np_random) -> NDArray[float]:
         return np_random.uniform(
             low=np.array([-self.omega_x, -self.omega_y, 0.0]),
             high=np.array([+self.omega_x, +self.omega_y, 0.0]),

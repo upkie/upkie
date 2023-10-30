@@ -6,6 +6,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from typing import Dict
+from numpy.typing import NDArray
 
 import numpy as np
 from gymnasium import spaces
@@ -151,7 +152,7 @@ class UpkieWheeledPendulum(UpkieBaseEnv):
             for joint in self.LEG_JOINTS
         }
 
-    def vectorize_observation(self, observation_dict: dict) -> np.ndarray:
+    def vectorize_observation(self, observation_dict: dict) -> NDArray[float]:
         """!
         Extract observation vector from a full observation dictionary.
 

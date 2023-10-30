@@ -5,6 +5,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from typing import Optional, Tuple
+from numpy.typing import NDArray
 
 import numpy as np
 
@@ -13,7 +14,7 @@ from upkie.utils.rotations import rotation_matrix_from_quaternion
 
 
 def compute_pitch_frame_in_parent(
-    orientation_frame_in_parent: np.ndarray,
+    orientation_frame_in_parent: NDArray[float],
 ) -> float:
     """!
     Get pitch angle of a given frame relative to the parent vertical.
@@ -64,8 +65,8 @@ def compute_pitch_frame_in_parent(
 
 def compute_base_orientation_from_imu(
     quat_imu_in_ars: Tuple[float, float, float, float],
-    rotation_base_to_imu: Optional[np.ndarray] = None,
-) -> np.ndarray:
+    rotation_base_to_imu: Optional[NDArray[float]] = None,
+) -> NDArray[float]:
     """!
     Get the orientation of the base frame with respect to the world frame.
 
@@ -97,7 +98,7 @@ def compute_base_orientation_from_imu(
 
 def compute_base_pitch_from_imu(
     quat_imu_in_ars: Tuple[float, float, float, float],
-    rotation_base_to_imu: Optional[np.ndarray] = None,
+    rotation_base_to_imu: Optional[NDArray[float]] = None,
 ) -> float:
     """!
     Get pitch angle of the base frame relative to the world frame.
@@ -119,8 +120,8 @@ def compute_base_pitch_from_imu(
 
 
 def compute_base_angular_velocity_from_imu(
-    angular_velocity_imu_in_imu: np.ndarray,
-) -> np.ndarray:
+    angular_velocity_imu_in_imu: NDArray[float],
+) -> NDArray[float]:
     r"""!
     Compute the body angular velocity of the base from IMU readings.
 

@@ -11,6 +11,7 @@ import os
 import time
 from time import perf_counter
 from typing import Optional
+from numpy.typing import NDArray
 
 import gin
 import gymnasium as gym
@@ -224,7 +225,7 @@ async def balance(
     np.save("planning_times.npy", planning_times)
 
 
-def report(mpc_problem, mpc_qp, planning_times: Optional[np.ndarray]):
+def report(mpc_problem, mpc_qp, planning_times: Optional[NDArray[float]]):
     average_ms = 1e3 * np.average(planning_times)
     std_ms = 1e3 * np.std(planning_times)
     nb_env_steps = planning_times.size

@@ -10,6 +10,7 @@ from typing import Dict, Optional, Tuple, Union
 import gymnasium
 import numpy as np
 from loop_rate_limiters import RateLimiter
+from numpy.typing import NDArray
 from vulp.spine import SpineInterface
 
 import upkie.config
@@ -42,7 +43,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
     """
 
     __frequency: Optional[float]
-    __log: Dict[str, Union[float, np.ndarray]]
+    __log: Dict[str, Union[float, NDArray[float]]]
     __rate: Optional[RateLimiter]
     __regulate_frequency: bool
     _spine: SpineInterface
@@ -127,7 +128,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         *,
         seed: Optional[int] = None,
         options: Optional[dict] = None,
-    ) -> Tuple[np.ndarray, Dict]:
+    ) -> Tuple[NDArray[float], Dict]:
         """!
         Resets the spine and get an initial observation.
 
@@ -175,8 +176,8 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
 
     def step(
         self,
-        action: np.ndarray,
-    ) -> Tuple[np.ndarray, float, bool, bool, dict]:
+        action: NDArray[float],
+    ) -> Tuple[NDArray[float], float, bool, bool, dict]:
         """!
         Run one timestep of the environment's dynamics. When the end of the
         episode is reached, you are responsible for calling `reset()` to reset
@@ -237,7 +238,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         """
 
     @abc.abstractmethod
-    def vectorize_observation(self, observation_dict: dict) -> np.ndarray:
+    def vectorize_observation(self, observation_dict: dict) -> NDArray[float]:
         """!
         Extract observation vector from a full observation dictionary.
 
@@ -246,7 +247,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         """
 
     @abc.abstractmethod
-    def dictionarize_action(self, action: np.ndarray) -> dict:
+    def dictionarize_action(self, action: NDArray[float]) -> dict:
         """!
         Convert action vector into a spine action dictionary.
 

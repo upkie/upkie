@@ -10,6 +10,7 @@ import unittest
 
 import numpy as np
 import posix_ipc
+from numpy.typing import NDArray
 
 from upkie.envs import Reward, UpkieBaseEnv
 from upkie.envs.tests.mock_spine import MockSpine
@@ -19,10 +20,10 @@ class UpkieBaseChild(UpkieBaseEnv):
     def parse_first_observation(self, observation_dict: dict) -> None:
         pass
 
-    def vectorize_observation(self, observation_dict: dict) -> np.ndarray:
+    def vectorize_observation(self, observation_dict: dict) -> NDArray[float]:
         return np.empty(42)
 
-    def dictionarize_action(self, action: np.ndarray) -> dict:
+    def dictionarize_action(self, action: NDArray[float]) -> dict:
         return {}
 
 

@@ -7,6 +7,7 @@
 
 import math
 from typing import Dict, Optional, Tuple
+from numpy.typing import NDArray
 
 import numpy as np
 from gymnasium import spaces
@@ -143,7 +144,7 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
         *,
         seed: Optional[int] = None,
         options: Optional[dict] = None,
-    ) -> Tuple[np.ndarray, Dict]:
+    ) -> Tuple[NDArray[float], Dict]:
         """!
         Resets the environment and get an initial observation.
 
@@ -164,7 +165,7 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
 
         return observation, info
 
-    def dictionarize_action(self, action: np.ndarray) -> dict:
+    def dictionarize_action(self, action: NDArray[float]) -> dict:
         """!
         Convert action vector into a spine action dictionary.
 

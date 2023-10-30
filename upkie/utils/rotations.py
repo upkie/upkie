@@ -5,13 +5,14 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from typing import Tuple
+from numpy.typing import NDArray
 
 import numpy as np
 
 
 def rotation_matrix_from_quaternion(
     quat: Tuple[float, float, float, float]
-) -> np.ndarray:
+) -> NDArray[float]:
     """Convert a unit quaternion to the matrix representing the same rotation.
 
     Args:

@@ -8,9 +8,12 @@ from typing import Tuple
 
 import numpy as np
 import pinocchio as pin
+from numpy.typing import NDArray
 
 
-def box_position_limits(model: pin.Model) -> Tuple[np.ndarray, np.ndarray]:
+def box_position_limits(
+    model: pin.Model,
+) -> Tuple[NDArray[float], NDArray[float]]:
     r"""!
     Compute position limits in box format:
 
@@ -33,7 +36,9 @@ def box_position_limits(model: pin.Model) -> Tuple[np.ndarray, np.ndarray]:
     return q_min, q_max
 
 
-def box_velocity_limits(model: pin.Model) -> Tuple[np.ndarray, np.ndarray]:
+def box_velocity_limits(
+    model: pin.Model,
+) -> Tuple[NDArray[float], NDArray[float]]:
     r"""!
     Compute velocity limits in box format:
 
@@ -54,7 +59,9 @@ def box_velocity_limits(model: pin.Model) -> Tuple[np.ndarray, np.ndarray]:
     return v_max
 
 
-def box_torque_limits(model: pin.Model) -> Tuple[np.ndarray, np.ndarray]:
+def box_torque_limits(
+    model: pin.Model,
+) -> Tuple[NDArray[float], NDArray[float]]:
     r"""!
     Compute velocity limits in box format:
 

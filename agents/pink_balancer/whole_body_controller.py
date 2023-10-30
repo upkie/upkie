@@ -11,6 +11,7 @@ import numpy as np
 import pink
 import pinocchio as pin
 import upkie_description
+from numpy.typing import NDArray
 from packaging import version
 from pink import solve_ik
 from pink.tasks import FrameTask, PostureTask
@@ -30,7 +31,7 @@ if version.parse(pink.__version__) < version.parse(MINIMUM_PINK_VERSION):
     )
 
 
-def observe(observation, configuration, servo_layout) -> np.ndarray:
+def observe(observation, configuration, servo_layout) -> NDArray[float]:
     """
     Compute configuration vector from a new observation.
 
@@ -109,9 +110,9 @@ class WholeBodyController:
     max_crouch_height: float
     max_crouch_velocity: float
     robot: pin.RobotWrapper
-    target_position_wheel_in_rest: np.ndarray
+    target_position_wheel_in_rest: NDArray[float]
     tasks: Dict[str, Any]
-    transform_rest_to_world: Dict[str, np.ndarray]
+    transform_rest_to_world: Dict[str, NDArray[float]]
     turning_gain_scale: float
 
     def __init__(

@@ -5,8 +5,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from typing import Tuple
-
-import numpy as np
+from numpy.typing import NDArray
 
 from .reward import Reward
 
@@ -24,7 +23,9 @@ class SurvivalReward(Reward):
         """
         return (0.0, 2.0)
 
-    def get(self, observation: np.ndarray, action: np.ndarray) -> float:
+    def get(
+        self, observation: NDArray[float], action: NDArray[float]
+    ) -> float:
         """!
         Get reward corresponding to an observation.
 

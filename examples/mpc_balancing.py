@@ -9,6 +9,7 @@ import gymnasium as gym
 import numpy as np
 from ltv_mpc import solve_mpc
 from ltv_mpc.systems import CartPole
+from numpy.typing import NDArray
 
 import upkie.envs
 from upkie.utils.clamp import clamp_and_warn
@@ -18,9 +19,9 @@ upkie.envs.register()
 
 def get_target_states(
     cart_pole: CartPole,
-    state: np.ndarray,
+    state: NDArray[float],
     target_vel: float = 0.0,
-) -> np.ndarray:
+) -> NDArray[float]:
     """Define the reference state trajectory over the receding horizon.
 
     Args:

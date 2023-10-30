@@ -6,6 +6,7 @@
 
 import gin
 import numpy as np
+from numpy.typing import NDArray
 
 import upkie.envs
 
@@ -23,7 +24,9 @@ class Reward(upkie.envs.Reward):
         """
         self.acceleration_penalty_weight = acceleration_penalty_weight
 
-    def get(self, observation: np.ndarray, action: np.ndarray) -> float:
+    def get(
+        self, observation: NDArray[float], action: NDArray[float],
+    ) -> float:
         """!
         Get reward corresponding to an observation.
 

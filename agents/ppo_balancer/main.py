@@ -9,10 +9,12 @@ import argparse
 import logging
 import os
 import tempfile
+from typing import Any, Tuple
 
 import gin
 import gymnasium as gym
 import numpy as np
+from numpy.typing import NDArray
 from settings import EnvSettings, PPOSettings
 from stable_baselines3 import PPO
 
@@ -24,7 +26,9 @@ from upkie.utils.raspi import configure_agent_process, on_raspi
 upkie.envs.register()
 
 
-def no_contact_policy(prev_action: np.ndarray, dt: float) -> np.ndarray:
+def no_contact_policy(
+    prev_action: NDArray[float], dt: float
+) -> Tuple[NDArray[float], Any]:
     return (
         low_pass_filter(
             prev_action,

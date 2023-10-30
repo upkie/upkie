@@ -10,6 +10,7 @@ import numpy as np
 import pinocchio as pin
 import upkie_description
 from gymnasium import spaces
+from numpy.typing import NDArray
 
 from upkie.utils.clamp import clamp_and_warn
 from upkie.utils.pinocchio import (
@@ -165,7 +166,7 @@ class UpkieServos(UpkieBaseEnv):
             for joint in self.__joints
         }
 
-    def vectorize_observation(self, observation_dict: dict) -> np.ndarray:
+    def vectorize_observation(self, observation_dict: dict) -> NDArray[float]:
         """!
         Extract observation vector from a full observation dictionary.
 
@@ -182,7 +183,7 @@ class UpkieServos(UpkieBaseEnv):
             obs[nq + nv + i] = observation_dict["servo"][joint]["torque"]
         return obs
 
-    def dictionarize_action(self, action: np.ndarray) -> dict:
+    def dictionarize_action(self, action: NDArray[float]) -> dict:
         """!
         Convert action vector into a spine action dictionary.
 

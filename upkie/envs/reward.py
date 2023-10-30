@@ -6,8 +6,7 @@
 
 import abc
 
-import numpy as np
-
+from numpy.typing import NDArray
 
 class Reward:
 
@@ -16,7 +15,9 @@ class Reward:
     """
 
     @abc.abstractmethod
-    def get(self, observation: np.ndarray, action: np.ndarray) -> float:
+    def get(
+        self, observation: NDArray[float], action: NDArray[float]
+    ) -> float:
         """!
         Get reward corresponding to an observation.
 
