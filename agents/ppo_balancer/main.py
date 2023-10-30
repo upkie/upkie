@@ -14,10 +14,10 @@ from typing import Any, Tuple
 import gin
 import gymnasium as gym
 import numpy as np
+from gymnasium.wrappers import RescaleAction
 from numpy.typing import NDArray
 from settings import EnvSettings, PPOSettings
 from stable_baselines3 import PPO
-from wrappers import ActionNormalizer
 
 import upkie.envs
 from upkie.envs import UpkieGroundVelocity
@@ -59,8 +59,6 @@ def run_policy(env: UpkieGroundVelocity, policy) -> None:
             if floor_contact or True
             else no_contact_policy(action, env.dt)
         )
-        action_scale = 0.7
-        action[0] = action_scale * action[0]
         observation, _, terminated, truncated, info = env.step(action)
         floor_contact = info["observation"]["floor_contact"]["contact"]
         if terminated or truncated:
@@ -77,9 +75,8 @@ def main(policy_path: str):
         max_ground_velocity=env_settings.max_ground_velocity,
         regulate_frequency=True,
         spine_config=env_settings.spine_config,
-        # velocity_filter=None,
     ) as unscaled_env:
-        env = ActionNormalizer(unscaled_env)
+        env = RescaleAction(unscaled_env, min_action=-1.0, max_action=1.0)
         ppo_settings = PPOSettings()
         policy = PPO(
             "MlpPolicy",
@@ -90,7 +87,7 @@ def main(policy_path: str):
                     vf=ppo_settings.net_arch_vf,
                 ),
             },
-            verbose=1,
+            verbose=0,
         )
         policy.set_parameters(policy_path)
         run_policy(env, policy)
