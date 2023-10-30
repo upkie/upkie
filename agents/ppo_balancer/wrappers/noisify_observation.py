@@ -10,7 +10,7 @@ import numpy as np
 from upkie.utils.exceptions import UpkieException
 
 
-class ObservationNoiser(gymnasium.ObservationWrapper):
+class NoisifyObservation(gymnasium.ObservationWrapper):
 
     """!
     Add noise to the observation of an environment.
