@@ -19,7 +19,6 @@ import stable_baselines3
 import yaml
 from gymnasium import spaces
 from gymnasium.wrappers import RescaleAction
-from reward import Reward
 from rules_python.python.runfiles import runfiles
 from schedules import affine_schedule
 from settings import EnvSettings, PPOSettings, SACSettings
@@ -35,15 +34,15 @@ from stable_baselines3.common.vec_env import (
 from stable_baselines3.common.vec_env.base_vec_env import VecEnv
 from torch import nn
 from utils import gin_operative_config_dict
-from wrappers import (
+
+import upkie.envs
+from upkie.envs import InitRandomization
+from upkie.envs.wrappers import (
     DifferentiateAction,
     LowPassFilterAction,
     NoisifyAction,
     NoisifyObservation,
 )
-
-import upkie.envs
-from upkie.envs import InitRandomization
 from upkie.utils.spdlog import logging
 
 upkie.envs.register()
@@ -124,12 +123,10 @@ class SummaryWriterCallback(BaseCallback):
         # for functions called by the environment are logged as well.
         if self.n_calls != 1:
             return
-        reward = self.vec_env.get_attr("reward")[0]
         env_settings = EnvSettings()
         config = {
             "env": env_settings.env_id,
             "gin": gin_operative_config_dict(gin.config._OPERATIVE_CONFIG),
-            "reward": reward.__dict__,
             "spine_config": env_settings.spine_config,
         }
         self.tb_formatter.writer.add_text(
@@ -202,7 +199,6 @@ def make_env(
             max_episode_steps=int(max_episode_duration * agent_frequency),
             frequency=agent_frequency,
             regulate_frequency=False,
-            reward=Reward(),
             shm_name=shm_name,
             spine_config=env_settings.spine_config,
             # upkie.envs.UpkieGroundVelocity-v2

@@ -12,7 +12,7 @@ import numpy as np
 import posix_ipc
 from numpy.typing import NDArray
 
-from upkie.envs import Reward, UpkieBaseEnv
+from upkie.envs import UpkieBaseEnv
 from upkie.envs.tests.mock_spine import MockSpine
 
 
@@ -34,7 +34,6 @@ class TestUpkieBaseEnv(unittest.TestCase):
             shm_name, posix_ipc.O_RDWR | posix_ipc.O_CREAT, size=42
         )
         self.env = UpkieBaseChild(
-            reward=Reward(),
             fall_pitch=1.0,
             frequency=100.0,
             shm_name=shm_name,
@@ -55,7 +54,6 @@ class TestUpkieBaseEnv(unittest.TestCase):
             shm_name, posix_ipc.O_RDWR | posix_ipc.O_CREAT, size=42
         )
         env = UpkieBaseChild(
-            reward=Reward(),
             fall_pitch=1.0,
             frequency=100.0,
             shm_name=shm_name,

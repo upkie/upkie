@@ -7,10 +7,10 @@
 
 import math
 from typing import Dict, Optional, Tuple
-from numpy.typing import NDArray
 
 import numpy as np
 from gymnasium import spaces
+from numpy.typing import NDArray
 
 from upkie.utils.exceptions import UpkieException
 
@@ -195,3 +195,28 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
             [observation, [self._last_action]], dtype=np.float32
         )
         return augmented_obs
+
+    def get_reward(
+        self, observation: NDArray[float], action: NDArray[float]
+    ) -> float:
+        """!
+        Get reward from observation and action.
+
+        @param observation Observation vector.
+        @param action Action vector.
+        @returns Reward.
+        """
+        pitch = observation[0]
+        ground_position = observation[1]
+        ground_velocity = observation[2]
+        angular_velocity = observation[3]
+
+        tip_height = 0.6  # [m]
+        tip_position = ground_position + tip_height * np.sin(pitch)
+        tip_velocity = (
+            ground_velocity + tip_height * angular_velocity * np.cos(pitch)
+        )
+
+        tip_position_reward = np.exp(-2.0 * tip_position**2)
+        tip_velocity_penalty = -(tip_velocity**2)
+        return tip_position_reward + 0.1 * tip_velocity_penalty
