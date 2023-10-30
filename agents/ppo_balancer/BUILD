@@ -23,8 +23,8 @@ py_library(
         ":config",
     ],
     deps = [
-        "//agents/ppo_balancer/wrappers",
         "//upkie/envs",
+        "//upkie/envs/wrappers",
         requirement("gin-config"),
     ] + select({
         # Selecting the right CPU architecture for the Raspberry Pi is
