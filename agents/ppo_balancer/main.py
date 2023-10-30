@@ -20,7 +20,6 @@ from settings import EnvSettings, PPOSettings
 from stable_baselines3 import PPO
 
 import upkie.envs
-from upkie.envs import UpkieGroundVelocity
 from upkie.utils.filters import low_pass_filter
 from upkie.utils.raspi import configure_agent_process, on_raspi
 
@@ -41,7 +40,7 @@ def no_contact_policy(
     )
 
 
-def run_policy(env: UpkieGroundVelocity, policy) -> None:
+def run_policy(env, policy) -> None:
     """!
     Run policy in the robot environment.
 
