@@ -9,7 +9,7 @@ import argparse
 import logging
 import os
 import tempfile
-from typing import Any, Tuple
+from typing import Any, Optional, Tuple
 
 import gin
 import gymnasium as gym
@@ -92,11 +92,27 @@ def main(policy_path: str):
         run_policy(env, policy)
 
 
+def locate_policy(path: Optional[str], agent_dir: str) -> str:
+    default_path = f"{agent_dir}/policy/params.zip"
+    policy_path: str = default_path if path is None else path
+    if not os.path.exists(policy_path):
+        training_dir = f"{tempfile.gettempdir()}/ppo_balancer"
+        if os.path.exists(f"{training_dir}/{policy_path}"):
+            policy_path = f"{training_dir}/{policy_path}"
+    if not os.path.exists(policy_path):
+        raise FileNotFoundError(f"No policy params found at {policy_path=}")
+    if policy_path.endswith(".zip"):
+        policy_path = policy_path[:-4]
+    return policy_path
+
+
 if __name__ == "__main__":
     if on_raspi():
         configure_agent_process()
 
     agent_dir = os.path.abspath(os.path.dirname(__file__))
+    gin.parse_config_file(f"{agent_dir}/settings.gin")
+
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "policy",
@@ -104,18 +120,8 @@ if __name__ == "__main__":
         help="path to the policy parameters file",
     )
     args = parser.parse_args()
-    if args.policy is None:
-        args.policy = f"{agent_dir}/policy/params.zip"
-    gin.parse_config_file(f"{agent_dir}/settings.gin")
-
-    policy_path = args.policy
-    if policy_path.endswith(".zip"):
-        policy_path = policy_path[:-4]
-    if not os.path.exists(f"{policy_path}.zip"):
-        training_dir = f"{tempfile.gettempdir()}/ppo_balancer"
-        if os.path.exists(f"{training_dir}/{policy_path}.zip"):
-            policy_path = f"{training_dir}/{policy_path}"
-    logging.info("Loading policy from %s", policy_path)
+    policy_path = locate_policy(args.policy, agent_dir)
+    logging.info("Loading policy from %s.zip", policy_path)
 
     try:
         main(policy_path)
