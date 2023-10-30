@@ -7,11 +7,27 @@ load("@pip_upkie//:requirements.bzl", "requirement")
 
 package(default_visibility = ["//visibility:public"])
 
+py_library(
+    name = "envs",
+    srcs = ["envs.py"],
+)
+
+py_test(
+    name = "differentiate_action_test",
+    srcs = ["differentiate_action_test.py"],
+    deps = [
+        "//upkie/envs/wrappers",
+        ":envs",
+        requirement("gymnasium"),
+    ],
+)
+
 py_test(
     name = "noisify_action_test",
     srcs = ["noisify_action_test.py"],
     deps = [
         "//upkie/envs/wrappers",
+        ":envs",
         requirement("gymnasium"),
     ],
 )
@@ -21,6 +37,7 @@ py_test(
     srcs = ["noisify_observation_test.py"],
     deps = [
         "//upkie/envs/wrappers",
+        ":envs",
         requirement("gymnasium"),
     ],
 )

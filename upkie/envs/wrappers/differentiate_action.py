@@ -10,7 +10,7 @@ from gymnasium import spaces
 from numpy.typing import NDArray
 
 
-class DerivateAction(gymnasium.Wrapper):
+class DifferentiateAction(gymnasium.Wrapper):
     def __init__(
         self,
         env,

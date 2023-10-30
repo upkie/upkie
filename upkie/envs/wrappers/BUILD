@@ -12,7 +12,7 @@ py_library(
     name = "wrappers",
     srcs = [
         "__init__.py",
-        "derivate_action.py",
+        "differentiate_action.py",
         "low_pass_filter_action.py",
         "noisify_action.py",
         "noisify_observation.py",

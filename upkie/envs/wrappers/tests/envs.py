@@ -12,6 +12,7 @@ from gymnasium import spaces
 class ActionObserverEnv(gymnasium.Env):
     def __init__(self):
         self.action_space = spaces.Box(0.0, 2.0, shape=(1,))
+        self.dt = 1e-3
 
     def step(self, action):
         observation = action
