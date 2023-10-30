@@ -18,6 +18,13 @@ EnvSettings.spine_frequency = 1000
 EnvSettings.total_timesteps = 1e6
 EnvSettings.velocity_filter = None
 EnvSettings.velocity_filter_rand = None
+EnvSettings.spine_config = {
+    "bullet": {
+        "torque_control": {
+            "kd": settings.sim_torque_control_kd,
+        },
+    },
+}
 
 PPOSettings.batch_size = 64
 PPOSettings.clip_range = 0.2

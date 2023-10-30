@@ -46,10 +46,10 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
     __rate: Optional[RateLimiter]
     __regulate_frequency: bool
     _spine: SpineInterface
+    _spine_config: Dict
     fall_pitch: float
     init_rand: InitRandomization
     reward: Reward
-    spine_config: Dict
 
     def __init__(
         self,
@@ -95,10 +95,10 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         self.__rate = None
         self.__regulate_frequency = regulate_frequency
         self._spine = SpineInterface(shm_name, retries=spine_retries)
+        self._spine_config = merged_spine_config
         self.fall_pitch = fall_pitch
         self.init_rand = init_rand
         self.reward = reward
-        self.spine_config = merged_spine_config
 
     @property
     def dt(self) -> Optional[float]:
@@ -144,7 +144,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         self._spine.stop()
         self.__reset_rate()
         self.__reset_initial_robot_state()
-        self._spine.start(self.spine_config)
+        self._spine.start(self._spine_config)
         self._spine.get_observation()  # might be a pre-reset observation
         observation_dict = self._spine.get_observation()
         self.parse_first_observation(observation_dict)
@@ -166,7 +166,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         linear_velocity = self.init_rand.sample_linear_velocity(self.np_random)
         omega = self.init_rand.sample_angular_velocity(self.np_random)
 
-        bullet_config = self.spine_config["bullet"]
+        bullet_config = self._spine_config["bullet"]
         reset = bullet_config["reset"]
         reset["orientation_base_in_world"] = orientation_quat
         reset["position_base_in_world"] = position

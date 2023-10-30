@@ -88,12 +88,12 @@ class SummaryWriterCallback(BaseCallback):
         if self.n_calls != 1:
             return
         reward = self.vec_env.get_attr("reward")[0]
-        spine_config = self.vec_env.get_attr("spine_config")[0]
+        env_settings = EnvSettings()
         config = {
-            "env": EnvSettings().env_id,
+            "env": env_settings.env_id,
             "gin": gin_operative_config_dict(gin.config._OPERATIVE_CONFIG),
             "reward": reward.__dict__,
-            "spine_config": spine_config,
+            "spine_config": env_settings.spine_config,
         }
         self.tb_formatter.writer.add_text(
             "config",
@@ -172,13 +172,7 @@ def make_env(
             regulate_frequency=False,
             reward=Reward(),
             shm_name=shm_name,
-            spine_config={
-                "bullet": {
-                    "torque_control": {
-                        "kd": settings.sim_torque_control_kd,
-                    },
-                },
-            },
+            spine_config=settings.spine_config,
             velocity_filter=settings.velocity_filter,
             velocity_filter_rand=settings.velocity_filter_rand,
         )
