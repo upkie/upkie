@@ -13,7 +13,6 @@ import numpy as np
 from gymnasium import spaces
 
 from upkie.utils.exceptions import UpkieException
-from upkie.utils.filters import low_pass_filter
 
 from .upkie_wheeled_pendulum import UpkieWheeledPendulum
 
@@ -85,16 +84,13 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
 
     """
 
-    _ground_velocity: float
+    _last_action: float
     version: int = 1
-    velocity_filter: Optional[float]
     wheel_radius: float
 
     def __init__(
         self,
         max_ground_velocity: float = 1.0,
-        velocity_filter: Optional[float] = None,
-        velocity_filter_rand: Optional[Tuple[float, float]] = None,
         wheel_radius: float = 0.06,
         **kwargs,
     ):
@@ -102,12 +98,6 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
         Initialize environment.
 
         @param max_ground_velocity Maximum commanded ground velocity in m/s.
-        @param velocity_filter If set, cutoff period in seconds of a low-pass
-            filter applied to commanded velocities.
-        @param velocity_filter_rand If set, couple of lower and upper bounds
-            for the @ref velocity_filter parameter. At new period is sampled
-            uniformly at random between these bounds at every reset of the
-            environment.
         @param wheel_radius Wheel radius in [m].
         @param kwargs Other keyword arguments are forwarded as-is to parent
             class constructors. Follow the chain up from @ref
@@ -149,9 +139,7 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
             dtype=np.float32,
         )
 
-        self._ground_velocity = 0.0
-        self.velocity_filter = velocity_filter
-        self.velocity_filter_rand = velocity_filter_rand
+        self._last_action = 0.0
         self.wheel_radius = wheel_radius
 
     def reset(
@@ -172,14 +160,8 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
             - ``info``: Dictionary with auxiliary diagnostic information. For
               Upkie this is the full observation dictionary sent by the spine.
         """
-        self._ground_velocity = 0.0
-
-        observation, info = super().reset(seed=seed)
-        if self.velocity_filter_rand is not None:
-            low, high = self.velocity_filter_rand
-            self.velocity_filter = self.np_random.uniform(low=low, high=high)
-
-        return observation, info
+        self._last_action = 0.0
+        return super().reset(seed=seed)
 
     def dictionarize_action(self, action: NDArray[float]) -> dict:
         """!
@@ -188,17 +170,9 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
         @param action Action vector.
         @returns Action dictionary.
         """
-        if self.velocity_filter is not None:
-            self._ground_velocity = low_pass_filter(
-                self._ground_velocity,
-                self.velocity_filter,
-                action[0],
-                self.dt,
-            )
-        else:  # self.velocity_filter is None
-            self._ground_velocity = action[0]
-
-        wheel_velocity = self._ground_velocity / self.wheel_radius
+        self._last_action = action[0]
+        ground_velocity = action[0]
+        wheel_velocity = ground_velocity / self.wheel_radius
         servo_dict = self.get_leg_servo_action()
         servo_dict.update(
             {
@@ -218,6 +192,6 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
     def vectorize_observation(self, observation_dict: dict) -> np.ndarray:
         observation = super().vectorize_observation(observation_dict)
         augmented_obs = np.hstack(
-            [observation, [self._ground_velocity]], dtype=np.float32
+            [observation, [self._last_action]], dtype=np.float32
         )
         return augmented_obs
