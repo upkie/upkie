@@ -16,7 +16,6 @@ filegroup(
 py_library(
     name = "common",
     srcs = [
-        "reward.py",
         "settings.py",
     ],
     data = [

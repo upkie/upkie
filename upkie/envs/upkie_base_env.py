@@ -19,8 +19,6 @@ from upkie.utils.exceptions import UpkieException
 from upkie.utils.nested_update import nested_update
 
 from .init_randomization import InitRandomization
-from .reward import Reward
-from .survival_reward import SurvivalReward
 
 
 class UpkieBaseEnv(abc.ABC, gymnasium.Env):
@@ -34,7 +32,6 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
 
     - ``fall_pitch``: Fall pitch angle, in radians.
     - ``init_rand``: Initial state randomization ranges.
-    - ``reward``: Reward function.
 
     @note This environment is made to run on a single CPU thread rather than on
     GPU/TPU. The downside for reinforcement learning is that computations are
@@ -50,7 +47,6 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
     _spine_config: Dict
     fall_pitch: float
     init_rand: InitRandomization
-    reward: Reward
 
     def __init__(
         self,
@@ -58,7 +54,6 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         frequency: Optional[float] = 200.0,
         regulate_frequency: bool = True,
         init_rand: Optional[InitRandomization] = None,
-        reward: Optional[Reward] = None,
         shm_name: str = "/vulp",
         spine_config: Optional[dict] = None,
         spine_retries: int = 10,
@@ -73,7 +68,6 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         @param regulate_frequency Enables loop frequency regulation.
         @param init_rand Magnitude of the random disturbance added to the
             default initial state when the environment is reset.
-        @param reward Reward function.
         @param shm_name Name of shared-memory file to exchange with the spine.
         @param spine_config Additional spine configuration overriding the
             defaults from ``//config:spine.yaml``. The combined configuration
@@ -88,8 +82,6 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
             raise UpkieException(f"{regulate_frequency=} but {frequency=}")
         if init_rand is None:
             init_rand = InitRandomization()
-        if reward is None:
-            reward = SurvivalReward()
 
         self.__frequency = frequency
         self.__log = {}
@@ -99,7 +91,6 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         self._spine_config = merged_spine_config
         self.fall_pitch = fall_pitch
         self.init_rand = init_rand
-        self.reward = reward
 
     @property
     def dt(self) -> Optional[float]:
@@ -219,7 +210,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         # Observe
         observation_dict = self._spine.get_observation()
         observation = self.vectorize_observation(observation_dict)
-        reward = self.reward.get(observation, action)
+        reward = self.get_reward(observation, action)
         terminated = self.detect_fall(observation_dict)
         truncated = False
         info = {"observation": observation_dict}
@@ -262,4 +253,14 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
 
         @param action Action vector.
         @returns Action dictionary.
+        """
+
+    @abc.abstractmethod
+    def get_reward(self, observation: NDArray[float], action: NDArray[float]) -> float:
+        """!
+        Get reward from observation and action.
+
+        @param observation Observation vector.
+        @param action Action vector.
+        @returns Reward.
         """

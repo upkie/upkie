@@ -19,8 +19,6 @@ from upkie.utils.pinocchio import (
     box_velocity_limits,
 )
 
-from .reward import Reward
-from .survival_reward import SurvivalReward
 from .upkie_base_env import UpkieBaseEnv
 
 
@@ -93,7 +91,6 @@ class UpkieServos(UpkieBaseEnv):
 
     def __init__(
         self,
-        reward: Optional[Reward] = None,
         fall_pitch: float = 1.0,
         frequency: float = 200.0,
         shm_name: str = "/vulp",
@@ -102,7 +99,6 @@ class UpkieServos(UpkieBaseEnv):
         """!
         Initialize environment.
 
-        @param reward Reward function.
         @param fall_pitch Fall pitch angle, in radians.
         @param frequency Regulated frequency of the control loop, in Hz.
         @param shm_name Name of shared-memory file.
@@ -111,7 +107,6 @@ class UpkieServos(UpkieBaseEnv):
             dictionary is sent to the spine at every :func:`reset`.
         """
         super().__init__(
-            reward=reward if reward is not None else SurvivalReward(),
             fall_pitch=fall_pitch,
             frequency=frequency,
             shm_name=shm_name,
