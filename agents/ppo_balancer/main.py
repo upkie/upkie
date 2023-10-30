@@ -70,10 +70,10 @@ def main(policy_path: str):
     with gym.make(
         env_settings.env_id,
         frequency=env_settings.agent_frequency,
-        max_ground_accel=env_settings.max_ground_accel,
-        max_ground_velocity=env_settings.max_ground_velocity,
         regulate_frequency=True,
         spine_config=env_settings.spine_config,
+        # upkie.envs.UpkieGroundVelocity-v2
+        max_ground_velocity=env_settings.max_ground_velocity,
     ) as unscaled_env:
         env = RescaleAction(unscaled_env, min_action=-1.0, max_action=1.0)
         ppo_settings = PPOSettings()
