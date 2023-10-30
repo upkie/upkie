@@ -201,9 +201,11 @@ def make_env(
             reward=Reward(),
             shm_name=shm_name,
             spine_config=env_settings.spine_config,
+            #
             # upkie.envs.UpkieGroundVelocity
             # velocity_filter=settings.velocity_filter,
             # velocity_filter_rand=settings.velocity_filter_rand,
+            #
             # upkie.envs.UpkieGroundAcceleration
             max_ground_accel=env_settings.max_ground_accel,
             max_ground_velocity=env_settings.max_ground_velocity,
@@ -222,9 +224,9 @@ def make_env(
             ObservationNoiser(
                 ActionNoiser(
                     RescaleAction(env, min_action=-1.0, max_action=+1.0),
-                    noise=np.array([settings.action_noise]),
+                    noise=np.array([env_settings.action_noise]),
                 ),
-                noise=np.array(settings.observation_noise),
+                noise=np.array(env_settings.observation_noise),
             )
         )
 
