@@ -26,7 +26,7 @@ class NoisifyObservationTestCase(unittest.TestCase):
         observation, _, _, _, _ = noisy_env.step(None)
         self.assertGreater(abs(observation[0] - 1.0), 1e-10)
 
-    def test_env(self):
+    def test_check_env(self):
         env = gymnasium.make("Acrobot-v1")
         noisy_env = NoisifyObservation(env, noise=np.full(6, 0.42))
         check_env(noisy_env)

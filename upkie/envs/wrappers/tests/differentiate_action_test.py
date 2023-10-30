@@ -8,7 +8,9 @@
 
 import unittest
 
+import gymnasium
 import numpy as np
+from stable_baselines3.common.env_checker import check_env
 
 from upkie.envs.wrappers.differentiate_action import DifferentiateAction
 from upkie.envs.wrappers.tests.envs import ActionObserverEnv
@@ -25,6 +27,15 @@ class DifferentiateActionTestCase(unittest.TestCase):
         action = np.array([1.0])
         inner_action, _, _, _, _ = diff_env.step(action)
         self.assertTrue(np.allclose(action * env.dt, inner_action))
+
+    def test_check_env(self):
+        env = gymnasium.make("Pendulum-v1")
+        diff_env = DifferentiateAction(
+            env,
+            min_derivative=-0.1,
+            max_derivative=0.1,
+        )
+        check_env(diff_env)
 
 
 if __name__ == "__main__":
