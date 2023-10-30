@@ -218,25 +218,25 @@ def make_env(
         velocity_action_noise = np.array(env_settings.velocity_action_noise)
         observation_noise = np.array(env_settings.observation_noise)
         accel_env = RescaleAction(
-                DifferentiateAction(
-                    LowPassFilterAction(
-                        NoisifyAction(
-                            NoisifyObservation(
-                                velocity_env,
-                                noise=observation_noise,
-                            ),
-                            noise=velocity_action_noise,
+            DifferentiateAction(
+                LowPassFilterAction(
+                    NoisifyAction(
+                        NoisifyObservation(
+                            velocity_env,
+                            noise=observation_noise,
                         ),
-                        time_constant=spaces.Box(
-                            *env_settings.velocity_action_lpf
-                        ),
+                        noise=velocity_action_noise,
                     ),
-                    min_derivative=-env_settings.max_ground_accel,
-                    max_derivative=env_settings.max_ground_accel,
+                    time_constant=spaces.Box(
+                        *env_settings.velocity_action_lpf
+                    ),
                 ),
-                min_action=-1.0,
-                max_action=+1.0,
-            )
+                min_derivative=-env_settings.max_ground_accel,
+                max_derivative=env_settings.max_ground_accel,
+            ),
+            min_action=-1.0,
+            max_action=+1.0,
+        )
         return Monitor(accel_env)
 
     set_random_seed(seed)
