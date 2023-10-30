@@ -256,7 +256,9 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         """
 
     @abc.abstractmethod
-    def get_reward(self, observation: NDArray[float], action: NDArray[float]) -> float:
+    def get_reward(
+        self, observation: NDArray[float], action: NDArray[float]
+    ) -> float:
         """!
         Get reward from observation and action.
 

@@ -5,9 +5,9 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from typing import Optional, Tuple
-from numpy.typing import NDArray
 
 import numpy as np
+from numpy.typing import NDArray
 
 from upkie.utils.clamp import clamp
 from upkie.utils.rotations import rotation_matrix_from_quaternion
@@ -59,7 +59,7 @@ def compute_pitch_frame_in_parent(
         heading_in_parent *= -1.0
     sign = +1 if sagittal[2] < 0 else -1
     cos_pitch = clamp(np.dot(sagittal, heading_in_parent), -1.0, 1.0)
-    pitch: float = sign * np.arccos(cos_pitch)
+    pitch = float(sign * np.arccos(cos_pitch))  # float rather than np.float64
     return pitch
 
 
