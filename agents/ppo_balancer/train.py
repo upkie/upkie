@@ -34,6 +34,7 @@ from stable_baselines3.common.vec_env import (
 from stable_baselines3.common.vec_env.base_vec_env import VecEnv
 from torch import nn
 from utils import gin_operative_config_dict
+from wrappers import ActionNoiser, ObservationNoiser
 
 import upkie.envs
 from upkie.envs import InitRandomization
@@ -217,7 +218,15 @@ def make_env(
             env._prepatch_close()
 
         env.close = close_monkeypatch
-        return Monitor(RescaleAction(env, min_action=-1.0, max_action=+1.0))
+        return Monitor(
+            ObservationNoiser(
+                ActionNoiser(
+                    RescaleAction(env, min_action=-1.0, max_action=+1.0),
+                    noise=np.array([settings.action_noise]),
+                ),
+                noise=np.array(settings.observation_noise),
+            )
+        )
 
     set_random_seed(seed)
     return _init

@@ -5,7 +5,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from dataclasses import dataclass
-from typing import Dict, Optional, Tuple
+from typing import Dict, Optional, Tuple, List
 
 import gin
 
@@ -17,12 +17,14 @@ class EnvSettings:
     Environment settings.
     """
 
+    action_noise: float
     agent_frequency: int
     env_id: str
     init_rand: Dict[str, float]
     max_episode_duration: float
     max_ground_accel: float
     max_ground_velocity: float
+    observation_noise: List[float]
     return_horizon: float
     seed: Optional[int]
     spine_config: Dict
