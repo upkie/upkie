@@ -10,6 +10,7 @@ import unittest
 
 import numpy as np
 import posix_ipc
+
 from upkie.envs import UpkieServos
 from upkie.envs.tests.mock_spine import MockSpine
 
