@@ -26,10 +26,12 @@ from upkie.utils.rotations import rotation_matrix_from_quaternion
 def compute_pitch_frame_in_parent(
     orientation_frame_in_parent: np.ndarray,
 ) -> float:
-    """
+    """!
     Get pitch angle of a given frame relative to the parent vertical.
 
     Figure:
+
+    ```
         parent z
           ^    frame z
           |     /
@@ -45,21 +47,19 @@ def compute_pitch_frame_in_parent(
               \\
                \\
               frame x
+    ```
 
-    Args:
-        orientation_frame_in_parent: Rotation matrix from the target frame to
-            the parent frame.
+    @param orientation_frame_in_parent Rotation matrix from the target frame to
+        the parent frame.
 
-    Returns:
-        Angle from the parent z-axis (gravity) to the frame z-axis.
+    @returns Angle from the parent z-axis (gravity) to the frame z-axis.
         Equivalently, angle from the heading vector to the sagittal vector of
         the frame.
 
-    Note:
-        Angle is positive in the trigonometric sense (CCW positive, CW
-        negative) in the heading-vertical plane directed by the lateral vector,
-        which is ``(x)`` in the above schematic (pointing away) and not ``(.)``
-        (poiting from screen to the reader).
+    @note Angle is positive in the trigonometric sense (CCW positive, CW
+    negative) in the heading-vertical plane directed by the lateral vector,
+    which is ``(x)`` in the above schematic (pointing away) and not ``(.)``
+    (poiting from screen to the reader).
     """
     sagittal = orientation_frame_in_parent[:, 0]
     sagittal /= np.linalg.norm(sagittal)  # needed for prec around cos_pitch=0.
@@ -77,18 +77,16 @@ def compute_base_orientation_from_imu(
     quat_imu_in_ars: Tuple[float, float, float, float],
     rotation_base_to_imu: Optional[np.ndarray] = None,
 ) -> np.ndarray:
-    """Get the orientation of the base frame with respect to the world frame.
+    """!
+    Get the orientation of the base frame with respect to the world frame.
 
-    Args:
-        quat_imu_in_ars: Quaternion representing the rotation matrix from
-            the IMU frame to the  attitude reference system (ARS) frame, in
-            ``[w, x, y, z]`` format.
-        rotation_base_to_imu: Rotation matrix from the base frame to the IMU
-            frame. When not specified, the default Upkie mounting orientation
-            is used.
-
-    Returns:
-        Rotation matrix from the base frame to the world frame.
+    @param quat_imu_in_ars Quaternion representing the rotation matrix from the
+        IMU frame to the  attitude reference system (ARS) frame, in ``[w, x, y,
+        z]`` format.
+    @param rotation_base_to_imu Rotation matrix from the base frame to the IMU
+        frame. When not specified, the default Upkie mounting orientation is
+        used.
+    @returns Rotation matrix from the base frame to the world frame.
     """
     if rotation_base_to_imu is None:
         # Default Upkie mounting orientation: USB connectors of the raspi
@@ -112,19 +110,17 @@ def compute_base_pitch_from_imu(
     quat_imu_in_ars: Tuple[float, float, float, float],
     rotation_base_to_imu: Optional[np.ndarray] = None,
 ) -> float:
-    """Get pitch angle of the base frame relative to the world frame.
+    """!
+    Get pitch angle of the base frame relative to the world frame.
 
-    Args:
-        quat_imu_in_ars: Quaternion representing the rotation matrix from
-            the IMU frame to the  attitude reference system (ARS) frame, in
-            ``[w, x, y, z]`` format.
-        rotation_base_to_imu: Rotation matrix from the base frame to the IMU
-            frame. When not specified, the default Upkie mounting orientation
-            is used.
-
-    Returns:
-        Angle from the world z-axis (unit vector opposite to gravity) to the
-        base z-axis. This angle is positive when the base leans forward.
+    @param quat_imu_in_ars Quaternion representing the rotation matrix from
+        the IMU frame to the  attitude reference system (ARS) frame, in ``[w,
+        x, y, z]`` format.
+    @param rotation_base_to_imu Rotation matrix from the base frame to the IMU
+        frame. When not specified, the default Upkie mounting orientation is
+        used.
+    @returns Angle from the world z-axis (unit vector opposite to gravity) to
+        the base z-axis. This angle is positive when the base leans forward.
     """
     rotation_base_to_world = compute_base_orientation_from_imu(
         quat_imu_in_ars, rotation_base_to_imu
@@ -136,18 +132,32 @@ def compute_base_pitch_from_imu(
 def compute_base_angular_velocity_from_imu(
     angular_velocity_imu_in_imu: np.ndarray,
 ) -> np.ndarray:
-    """
-    Kron
+    r"""!
+    Compute the body angular velocity of the base from IMU readings.
 
-        R_{WI}
-        Rdot_{WI} = R_{WI} (I_omega_{WI} x)
-        R_{WB} = R_WI R_IB
-        Rdot_{WB} = Rdot_WI R_IB
-                  = R_WI (I_omega_WI x) R_IB
-                  = R_WI R_IB (B_omega_WIx)
-                  = R_WB (B_omega_WIx) = R_WB (B_omega_WBx)
-        thus:
-           B_omega_WB = R_BI I_omega_WI
+    @param angular_velocity_imu_in_imu Angular velocity from the IMU.
+    @returns Body angular velocity of the base frame.
+
+    Calculation checks:
+
+    - \f$I\f$: IMU frame
+    - \f$B\f$: base frame
+    - \f$W\f$: world (inertial) frame
+
+    Our input is \f${}_I \omega_{WI}\f$, we seek \f${}_B \omega_{WB}\f$.
+
+    \f$
+    \begin{align*}
+        \dot{R}_{WI} & = R_{WI} ({}_I \omega_{WI} \times) \\
+        R_{WB} & = R_{WI} R_{IB} \\
+        \dot{R}_{WB} & = \dot{R}_{WI} R_{IB} \\
+        & = R_{WI} ({}_I \omega_{WI} \times) R_{IB} \\
+        & = R_{WI} R_{IB} ({}_B \omega_{WI} \times) \\
+        & = R_{WB} ({}_B \omega_{WI} \times) = R_{WB} ({}_B \omega_{WB} \times)
+    \end{align*}
+    \f$
+
+    Thus \f${}_B \omega_{WB} = R_{BI} {}_I \omega_{WI}\f$.
     """
     # TODO(scaron): move to config
     rotation_base_to_imu = np.diag([-1.0, 1.0, -1.0])
