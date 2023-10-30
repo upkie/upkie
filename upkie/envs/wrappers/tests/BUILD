@@ -23,6 +23,16 @@ py_test(
 )
 
 py_test(
+    name = "low_pass_filter_action_test",
+    srcs = ["low_pass_filter_action_test.py"],
+    deps = [
+        "//upkie/envs/wrappers",
+        ":envs",
+        requirement("gymnasium"),
+    ],
+)
+
+py_test(
     name = "noisify_action_test",
     srcs = ["noisify_action_test.py"],
     deps = [
