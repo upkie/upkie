@@ -18,12 +18,12 @@ py_library(
     srcs = [
         "reward.py",
         "settings.py",
-        "wrappers.py",
     ],
     data = [
         ":config",
     ],
     deps = [
+        "//agents/ppo_balancer/wrappers",
         "//upkie/envs",
         requirement("gin-config"),
     ] + select({
@@ -63,6 +63,7 @@ py_binary(
         # Followed in: https://github.com/upkie/upkie/issues/1
         "//:pi64_config": [],
         "//conditions:default": [
+            requirement("gymnasium"),
             requirement("stable_baselines3"),
         ],
     }),
@@ -97,6 +98,7 @@ py_binary(
         # Followed in: https://github.com/upkie/upkie/issues/1
         "//:pi64_config": [],
         "//conditions:default": [
+            requirement("gymnasium"),
             requirement("stable_baselines3"),
             requirement("torch"),
         ],
