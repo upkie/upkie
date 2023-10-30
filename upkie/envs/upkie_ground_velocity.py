@@ -192,7 +192,8 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
     def vectorize_observation(self, observation_dict: dict) -> np.ndarray:
         observation = super().vectorize_observation(observation_dict)
         augmented_obs = np.hstack(
-            [observation, [self._last_action]], dtype=np.float32
+            [observation, [self._last_action]],
+            dtype=np.float32,
         )
         return augmented_obs
 

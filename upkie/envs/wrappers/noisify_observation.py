@@ -32,5 +32,5 @@ class NoisifyObservation(gymnasium.ObservationWrapper):
             observation + noise,
             self.env.observation_space.low,
             self.env.observation_space.high,
-        )
+        ).astype(self.env.observation_space.dtype)
         return noisy_observation
