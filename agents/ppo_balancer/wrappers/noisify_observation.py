@@ -11,6 +11,11 @@ from upkie.utils.exceptions import UpkieException
 
 
 class ObservationNoiser(gymnasium.ObservationWrapper):
+
+    """!
+    Add noise to the observation of an environment.
+    """
+
     def __init__(self, env, noise: np.ndarray):
         super().__init__(env)
         if noise.shape != env.observation_space.shape:

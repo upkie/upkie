@@ -11,6 +11,11 @@ from upkie.utils.exceptions import UpkieException
 
 
 class ActionNoiser(gymnasium.ActionWrapper):
+
+    """!
+    Add noise to the action of an environment.
+    """
+
     def __init__(self, env, noise: np.ndarray):
         super().__init__(env)
         if noise.shape != env.action_space.shape:

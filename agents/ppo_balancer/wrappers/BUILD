@@ -12,9 +12,10 @@ py_library(
     name = "wrappers",
     srcs = [
         "__init__.py",
-        "action_low_pass_filter.py",
-        "action_noiser.py",
-        "observation_noiser.py",
+        "derivate_action.py",
+        "low_pass_filter_action.py",
+        "noisify_action.py",
+        "noisify_observation.py",
     ],
     deps = [
     ] + select({

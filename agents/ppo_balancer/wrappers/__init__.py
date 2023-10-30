@@ -4,12 +4,14 @@
 # Copyright 2023 Inria
 # SPDX-License-Identifier: Apache-2.0
 
-from .action_low_pass_filter import ActionLowPassFilter
-from .action_noiser import ActionNoiser
-from .observation_noiser import ObservationNoiser
+from .derivate_action import DerivateAction
+from .low_pass_filter_action import LowPassFilterAction
+from .noisify_action import NoisifyAction
+from .noisify_observation import NoisifyObservation
 
 __all__ = [
-    "ActionLowPassFilter",
-    "ActionNoiser",
-    "ObservationNoiser",
+    "DerivateAction",
+    "LowPassFilterAction",
+    "NoisifyAction",
+    "NoisifyObservation",
 ]
