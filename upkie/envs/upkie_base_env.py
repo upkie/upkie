@@ -5,7 +5,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import abc
-from typing import Dict, Optional, Tuple, Union
+from typing import Dict, Optional, Tuple
 
 import gymnasium
 import numpy as np
@@ -40,7 +40,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
     """
 
     __frequency: Optional[float]
-    __log: Dict[str, Union[float, NDArray[float]]]
+    __log: Dict
     __rate: Optional[RateLimiter]
     __regulate_frequency: bool
     _spine: SpineInterface
@@ -151,7 +151,6 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         self.parse_first_observation(observation_dict)
         observation = self.vectorize_observation(observation_dict)
         info = {"observation": observation_dict}
-        self.__log["observation"] = observation
         return observation, info
 
     def __reset_rate(self):
@@ -202,9 +201,9 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
             self.__rate.sleep()  # wait until clock tick to send the action
 
         # Act
-        self.__log["action"] = action  # vector, not dictionary
         action_dict = self.dictionarize_action(action)
-        action_dict["env"] = self.__log
+        if self.__log:
+            action_dict["env"] = self.__log
         self._spine.set_action(action_dict)
 
         # Observe
@@ -214,8 +213,6 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         terminated = self.detect_fall(observation_dict)
         truncated = False
         info = {"observation": observation_dict}
-        self.__log["observation"] = observation
-        self.__log["reward"] = reward
         return observation, reward, terminated, truncated, info
 
     def detect_fall(self, observation_dict: dict) -> bool:
@@ -266,3 +263,11 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         @param action Action vector.
         @returns Reward.
         """
+
+    def log(self, new_log: Dict) -> None:
+        """!
+        Log anything to the action dictionary.
+
+        @param new_log New log entry.
+        """
+        self.__log = new_log

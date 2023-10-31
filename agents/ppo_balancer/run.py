@@ -50,6 +50,7 @@ def run_policy(env, policy) -> None:
     action = np.zeros(env.action_space.shape)
     observation, info = env.reset()
     floor_contact = False
+    reward = 0.0
     while True:
         joystick = info["observation"].get("joystick", {})
         if joystick.get("cross_button", False):
@@ -59,7 +60,12 @@ def run_policy(env, policy) -> None:
             if floor_contact or True
             else no_contact_policy(action, env.dt)
         )
-        observation, _, terminated, truncated, info = env.step(action)
+        env.log({
+            "action": action,
+            "observation": observation,
+            "reward": reward,
+        })
+        observation, reward, terminated, truncated, info = env.step(action)
         floor_contact = info["observation"]["floor_contact"]["contact"]
         if terminated or truncated:
             observation, info = env.reset()
