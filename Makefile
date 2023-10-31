@@ -41,7 +41,7 @@ clean: clean_broken_links  ## clean all local build and intermediate files
 .PHONY: build
 build: clean_broken_links  ## build Raspberry Pi targets
 	$(BAZEL) build --config=pi64 //agents/mpc_balancer
-	$(BAZEL) build --config=pi64 //agents/ppo_balancer
+	$(BAZEL) build --config=pi64 //agents/ppo_balancer:run
 	$(BAZEL) build --config=pi64 //agents/wheel_balancer
 	$(BAZEL) build --config=pi64 //spines:mock_spine
 	$(BAZEL) build --config=pi64 //spines:pi3hat_spine
