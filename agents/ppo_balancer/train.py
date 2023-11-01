@@ -416,6 +416,7 @@ if __name__ == "__main__":
     agent_dir = os.path.dirname(__file__)
     gin.parse_config_file(f"{agent_dir}/envs.gin")
     gin.parse_config_file(f"{agent_dir}/settings.gin")
+    gin.parse_config_file(f"{agent_dir}/train.gin")
 
     training_path = os.environ.get(
         "UPKIE_TRAINING_PATH", tempfile.gettempdir()
