@@ -10,15 +10,14 @@ import os
 import random
 import signal
 import tempfile
-from typing import List
+from typing import Dict, List
 
 import gin
 import gymnasium
 import numpy as np
 import stable_baselines3
 import yaml
-from gymnasium import spaces
-from gymnasium.wrappers import RescaleAction
+from envs import make_accel_env
 from rules_python.python.runfiles import runfiles
 from schedules import affine_schedule
 from settings import EnvSettings, PPOSettings, SACSettings
@@ -37,12 +36,6 @@ from utils import gin_operative_config_dict
 
 import upkie.envs
 from upkie.envs import InitRandomization
-from upkie.envs.wrappers import (
-    DifferentiateAction,
-    LowPassFilterAction,
-    NoisifyAction,
-    NoisifyObservation,
-)
 from upkie.utils.spdlog import logging
 
 upkie.envs.register()
@@ -171,17 +164,14 @@ def get_bullet_argv(shm_name: str, show: bool) -> List[str]:
     return bullet_argv
 
 
-def make_env(
-    spine_path: str,
+def make_training_env(
+    max_episode_duration: float,
     show: bool,
+    spine_path: str,
     subproc_index: int,
 ):
     env_settings = EnvSettings()
-    seed = (
-        env_settings.seed + subproc_index
-        if env_settings.seed is not None
-        else random.randint(0, 1_000_000)
-    )
+    seed = random.randint(0, 1_000_000)
 
     def _init():
         shm_name = f"/{get_random_word()}"
@@ -193,7 +183,6 @@ def make_env(
 
         # parent process: trainer
         agent_frequency = env_settings.agent_frequency
-        max_episode_duration = env_settings.max_episode_duration
         velocity_env = gymnasium.make(
             env_settings.env_id,
             max_episode_steps=int(max_episode_duration * agent_frequency),
@@ -201,7 +190,6 @@ def make_env(
             regulate_frequency=False,
             shm_name=shm_name,
             spine_config=env_settings.spine_config,
-            # upkie.envs.UpkieGroundVelocity-v2
             max_ground_velocity=env_settings.max_ground_velocity,
         )
         velocity_env.reset(seed=seed)
@@ -214,29 +202,7 @@ def make_env(
             velocity_env._prepatch_close()
 
         velocity_env.close = close_monkeypatch
-
-        velocity_action_noise = np.array(env_settings.velocity_action_noise)
-        observation_noise = np.array(env_settings.observation_noise)
-        accel_env = RescaleAction(
-            DifferentiateAction(
-                LowPassFilterAction(
-                    NoisifyAction(
-                        NoisifyObservation(
-                            velocity_env,
-                            noise=observation_noise,
-                        ),
-                        noise=velocity_action_noise,
-                    ),
-                    time_constant=spaces.Box(
-                        *env_settings.velocity_action_lpf
-                    ),
-                ),
-                min_derivative=-env_settings.max_ground_accel,
-                max_derivative=env_settings.max_ground_accel,
-            ),
-            min_action=-1.0,
-            max_action=+1.0,
-        )
+        accel_env = make_accel_env(velocity_env, training=True)
         return Monitor(accel_env)
 
     set_random_seed(seed)
@@ -253,11 +219,16 @@ def find_save_path(training_dir: str, policy_name: str):
     return path_for_iter(nb_iter)
 
 
+@gin.configurable
 def train_policy(
     policy_name: str,
     training_dir: str,
     nb_envs: int,
     show: bool,
+    init_rand: Dict[str, float],
+    max_episode_duration: float,
+    return_horizon: float,
+    total_timesteps: int,
 ) -> None:
     """!
     Train a new policy and save it to a directory.
@@ -282,24 +253,38 @@ def train_policy(
     vec_env = (
         SubprocVecEnv(
             [
-                make_env(spine_path, show, subproc_index=i)
+                make_training_env(
+                    max_episode_duration=max_episode_duration,
+                    show=show,
+                    spine_path=spine_path,
+                    subproc_index=i,
+                )
                 for i in range(nb_envs)
             ],
             start_method="fork",
         )
         if nb_envs > 1
-        else DummyVecEnv([make_env(spine_path, show, subproc_index=0)])
+        else DummyVecEnv(
+            [
+                make_training_env(
+                    max_episode_duration=max_episode_duration,
+                    show=show,
+                    spine_path=spine_path,
+                    subproc_index=0,
+                )
+            ]
+        )
     )
     if False:  # does not always improve returns during training
         vec_env = VecNormalize(vec_env)
 
     env_settings = EnvSettings()
     dt = 1.0 / env_settings.agent_frequency
-    gamma = 1.0 - dt / env_settings.return_horizon
+    gamma = 1.0 - dt / return_horizon
     logging.info(
         "Discount factor gamma=%f for a return horizon of %f s",
         gamma,
-        env_settings.return_horizon,
+        return_horizon,
     )
 
     algorithm = "PPO"
@@ -383,10 +368,10 @@ def train_policy(
     else:
         raise Exception(f"Unknown RL algorithm: {algorithm}")
 
-    max_init_rand = InitRandomization(**env_settings.init_rand)
+    max_init_rand = InitRandomization(**init_rand)
     try:
         policy.learn(
-            total_timesteps=env_settings.total_timesteps,
+            total_timesteps=total_timesteps,
             callback=[
                 CheckpointCallback(
                     save_freq=max(210_000 // nb_envs, 1_000),

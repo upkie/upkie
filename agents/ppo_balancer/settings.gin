@@ -3,17 +3,12 @@
 # Copyright 2023 Inria
 # SPDX-License-Identifier: Apache-2.0
 
+import envs
 import settings
 
 EnvSettings.agent_frequency = 200
 EnvSettings.env_id = "UpkieGroundVelocity-v2"
-EnvSettings.init_rand = {"pitch": 0.25, "v_x": 0.1, "omega_y": 0.1}
-EnvSettings.max_episode_duration = 10.0
-EnvSettings.max_ground_accel = 10.0
 EnvSettings.max_ground_velocity = 1.0
-EnvSettings.observation_noise = [0.01, 0.01, 0.01, 0.01, 0.01]
-EnvSettings.return_horizon = 5.0
-EnvSettings.seed = None
 EnvSettings.spine_config = {
     "bullet": {
         "torque_control": {
@@ -22,9 +17,16 @@ EnvSettings.spine_config = {
     },
 }
 EnvSettings.spine_frequency = 1000
-EnvSettings.total_timesteps = 3e6
-EnvSettings.velocity_action_lpf = (0.0, 0.01)
-EnvSettings.velocity_action_noise = [0.05]
+
+envs.make_accel_env.max_ground_accel = 10.0
+envs.wrap_velocity_env.action_lpf = (0.0, 0.01)
+envs.wrap_velocity_env.action_noise = [0.05]
+envs.wrap_velocity_env.observation_noise = [0.01, 0.01, 0.01, 0.01, 0.01]
+
+train_policy.init_rand = {"pitch": 0.25, "v_x": 0.1, "omega_y": 0.1}
+train_policy.max_episode_duration = 10.0
+train_policy.return_horizon = 5.0
+train_policy.total_timesteps = 3e6
 
 PPOSettings.batch_size = 64
 PPOSettings.clip_range = 0.1
@@ -41,7 +43,7 @@ PPOSettings.normalize_advantage = True
 PPOSettings.sde_sample_freq = -1
 PPOSettings.target_kl = None
 PPOSettings.use_sde = False
-PPOSettings.vf_coef  = 0.5
+PPOSettings.vf_coef = 0.5
 
 SACSettings.action_noise = None
 SACSettings.batch_size = 256
