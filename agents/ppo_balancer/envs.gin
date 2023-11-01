@@ -6,6 +6,6 @@
 import envs
 
 make_accel_env.max_ground_accel = 10.0
-wrap_velocity_env.action_lpf = (0.04, 0.08)
+wrap_velocity_env.action_lpf = (0.0, 0.01)
 wrap_velocity_env.action_noise = [0.05]
 wrap_velocity_env.observation_noise = [0.01, 0.01, 0.01, 0.01, 0.01]
