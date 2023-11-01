@@ -1,0 +1,9 @@
+# -*- python -*-
+#
+# Copyright 2023 Inria
+# SPDX-License-Identifier: Apache-2.0
+
+train_policy.init_rand = {"pitch": 0.25, "v_x": 0.1, "omega_y": 0.1}
+train_policy.max_episode_duration = 10.0
+train_policy.return_horizon = 5.0
+train_policy.total_timesteps = 3e6
