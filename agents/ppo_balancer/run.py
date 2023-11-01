@@ -14,17 +14,38 @@ from typing import Any, Optional, Tuple
 import gin
 import gymnasium as gym
 import numpy as np
-from gymnasium.wrappers import RescaleAction
+from envs import make_accel_env
 from numpy.typing import NDArray
 from settings import EnvSettings, PPOSettings
 from stable_baselines3 import PPO
 
 import upkie.envs
-from upkie.envs.wrappers import DifferentiateAction
 from upkie.utils.filters import low_pass_filter
 from upkie.utils.raspi import configure_agent_process, on_raspi
 
 upkie.envs.register()
+
+
+def parse_command_line_arguments() -> argparse.Namespace:
+    """
+    Parse command line arguments.
+
+    Returns:
+        Command-line arguments.
+    """
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "policy",
+        nargs="?",
+        help="path to the policy parameters file",
+    )
+    parser.add_argument(
+        "--training",
+        default=False,
+        action="store_true",
+        help="add noise and delays as in training",
+    )
+    return parser.parse_args()
 
 
 def no_contact_policy(
@@ -74,7 +95,7 @@ def run_policy(env, policy) -> None:
             floor_contact = False
 
 
-def main(policy_path: str):
+def main(policy_path: str, training: bool):
     env_settings = EnvSettings()
     with gym.make(
         env_settings.env_id,
@@ -83,15 +104,7 @@ def main(policy_path: str):
         spine_config=env_settings.spine_config,
         max_ground_velocity=env_settings.max_ground_velocity,
     ) as velocity_env:
-        accel_env = RescaleAction(
-            DifferentiateAction(
-                velocity_env,
-                min_derivative=-env_settings.max_ground_accel,
-                max_derivative=env_settings.max_ground_accel,
-            ),
-            min_action=-1.0,
-            max_action=1.0,
-        )
+        accel_env = make_accel_env(velocity_env, training=training)
         ppo_settings = PPOSettings()
         policy = PPO(
             "MlpPolicy",
@@ -129,17 +142,11 @@ if __name__ == "__main__":
     agent_dir = os.path.abspath(os.path.dirname(__file__))
     gin.parse_config_file(f"{agent_dir}/settings.gin")
 
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument(
-        "policy",
-        nargs="?",
-        help="path to the policy parameters file",
-    )
-    args = parser.parse_args()
+    args = parse_command_line_arguments()
     policy_path = locate_policy(args.policy, agent_dir)
     logging.info("Loading policy from %s.zip", policy_path)
 
     try:
-        main(policy_path)
+        main(policy_path, args.training)
     except KeyboardInterrupt:
         logging.info("Caught a keyboard interrupt")
