@@ -5,7 +5,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from dataclasses import dataclass
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, Optional, Tuple
 
 import gin
 
@@ -19,18 +19,9 @@ class EnvSettings:
 
     agent_frequency: int
     env_id: str
-    init_rand: Dict[str, float]
-    max_episode_duration: float
-    max_ground_accel: float
     max_ground_velocity: float
-    observation_noise: List[float]
-    return_horizon: float
-    seed: Optional[int]
     spine_config: Dict
     spine_frequency: int
-    total_timesteps: int
-    velocity_action_lpf: Tuple[float, float]
-    velocity_action_noise: List[float]
 
 
 @gin.configurable

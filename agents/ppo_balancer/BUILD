@@ -16,6 +16,7 @@ filegroup(
 py_library(
     name = "common",
     srcs = [
+        "envs.py",
         "settings.py",
     ],
     data = [

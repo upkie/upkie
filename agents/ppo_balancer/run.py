@@ -60,11 +60,13 @@ def run_policy(env, policy) -> None:
             if floor_contact or True
             else no_contact_policy(action, env.dt)
         )
-        env.log({
-            "action": action,
-            "observation": observation,
-            "reward": reward,
-        })
+        env.log(
+            {
+                "action": action,
+                "observation": observation,
+                "reward": reward,
+            }
+        )
         observation, reward, terminated, truncated, info = env.step(action)
         floor_contact = info["observation"]["floor_contact"]["contact"]
         if terminated or truncated:
@@ -79,7 +81,6 @@ def main(policy_path: str):
         frequency=env_settings.agent_frequency,
         regulate_frequency=True,
         spine_config=env_settings.spine_config,
-        # upkie.envs.UpkieGroundVelocity-v2
         max_ground_velocity=env_settings.max_ground_velocity,
     ) as velocity_env:
         accel_env = RescaleAction(
