@@ -6,6 +6,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import math
+from dataclasses import dataclass
 from typing import Dict, Optional, Tuple
 
 import numpy as np
@@ -84,6 +85,11 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
 
     """
 
+    @dataclass
+    class RewardWeights:
+        position: float = 1.0
+        velocity: float = 1.0
+
     _last_action: float
     version: int = 2
     wheel_radius: float
@@ -91,6 +97,7 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
     def __init__(
         self,
         max_ground_velocity: float = 1.0,
+        reward_weights: Optional[RewardWeights] = None,
         wheel_radius: float = 0.06,
         **kwargs,
     ):
@@ -108,6 +115,12 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
 
         if self.dt is None:
             raise UpkieException("This environment needs a loop frequency")
+
+        weights: UpkieGroundVelocity.RewardWeights = (
+            reward_weights
+            if reward_weights is not None
+            else UpkieGroundVelocity.RewardWeights()
+        )
 
         MAX_BASE_PITCH: float = np.pi
         MAX_GROUND_POSITION: float = float("inf")
@@ -140,6 +153,7 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
         )
 
         self._last_action = 0.0
+        self.reward_weights = weights
         self.wheel_radius = wheel_radius
 
     def reset(
@@ -220,4 +234,7 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
 
         tip_position_reward = np.exp(-2.0 * tip_position**2)
         tip_velocity_penalty = -(tip_velocity**2)
-        return tip_position_reward + 0.1 * tip_velocity_penalty
+        return (
+            self.reward_weights.position * tip_position_reward
+            + self.reward_weights.velocity * tip_velocity_penalty
+        )
