@@ -140,6 +140,7 @@ if __name__ == "__main__":
         configure_agent_process()
 
     agent_dir = os.path.abspath(os.path.dirname(__file__))
+    gin.parse_config_file(f"{agent_dir}/envs.gin")
     gin.parse_config_file(f"{agent_dir}/settings.gin")
 
     args = parse_command_line_arguments()
