@@ -8,6 +8,7 @@ import abc
 
 from numpy.typing import NDArray
 
+
 class Reward:
 
     """!
