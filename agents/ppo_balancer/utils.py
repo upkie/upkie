@@ -12,5 +12,5 @@ def gin_operative_config_dict(operative_config: dict) -> dict:
         if name not in output:
             output[name] = {}
         for k, v in values.items():
-            output[name][k] = v
+            output[name][k] = list(v) if isinstance(v, tuple) else v
     return output
