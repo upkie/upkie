@@ -188,6 +188,9 @@ def make_training_env(
             max_episode_steps=int(max_episode_duration * agent_frequency),
             frequency=agent_frequency,
             regulate_frequency=False,
+            reward_weights=upkie.envs.UpkieGroundVelocity.RewardWeights(
+                **env_settings.reward_weights
+            ),
             shm_name=shm_name,
             spine_config=env_settings.spine_config,
             max_ground_velocity=env_settings.max_ground_velocity,

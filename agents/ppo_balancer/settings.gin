@@ -8,6 +8,10 @@ import settings
 EnvSettings.agent_frequency = 200
 EnvSettings.env_id = "UpkieGroundVelocity-v2"
 EnvSettings.max_ground_velocity = 1.0
+EnvSettings.reward_weights = {
+    "position": 1.0,
+    "velocity": 1.0,
+}
 EnvSettings.spine_config = {
     "bullet": {
         "torque_control": {

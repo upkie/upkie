@@ -226,15 +226,20 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
         ground_velocity = observation[2]
         angular_velocity = observation[3]
 
-        tip_height = 0.6  # [m]
+        tip_height = 0.58  # [m]
         tip_position = ground_position + tip_height * np.sin(pitch)
         tip_velocity = (
             ground_velocity + tip_height * angular_velocity * np.cos(pitch)
         )
 
-        tip_position_reward = np.exp(-2.0 * tip_position**2)
-        tip_velocity_penalty = -(tip_velocity**2)
+        sigma = 0.6  # [rad] ~= 35 [deg]
+        # at pitch = 35 deg = sigma the position reward is exp(-1) ~= 0.36
+        # at pitch = 45 deg ~= 1.3 * sigma the position reward is 0.16
+        position_reward = np.exp(-((pitch / sigma) ** 2))
+
+        velocity_penalty = -np.abs(ground_velocity)
+
         return (
-            self.reward_weights.position * tip_position_reward
-            + self.reward_weights.velocity * tip_velocity_penalty
+            self.reward_weights.position * position_reward
+            + self.reward_weights.velocity * velocity_penalty
         )
