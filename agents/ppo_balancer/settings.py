@@ -20,7 +20,8 @@ class EnvSettings:
     agent_frequency: int
     env_id: str
     max_ground_velocity: float
-    spine_config: Dict
+    reward_weights: Dict[str, Any]
+    spine_config: Dict[str, Any]
     spine_frequency: int
 
 
