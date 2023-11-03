@@ -5,7 +5,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import abc
-from typing import Dict, Optional, Tuple
+from typing import Any, Dict, Optional, Tuple
 
 import gymnasium
 import numpy as np
@@ -176,7 +176,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
     def step(
         self,
         action: NDArray[float],
-    ) -> Tuple[NDArray[float], float, bool, bool, dict]:
+    ) -> Tuple[NDArray[float], float, bool, bool, dict[str, Any]]:
         """!
         Run one timestep of the environment's dynamics. When the end of the
         episode is reached, you are responsible for calling `reset()` to reset
