@@ -58,3 +58,14 @@ def make_accel_env(
         max_action=+1.0,
     )
     return rescaled_accel_env
+
+
+def make_ppo_balancer_env(velocity_env: UpkieGroundVelocity, training: bool):
+    # return make_accel_env(velocity_env, training=training)
+    inner_env = make_training_env(velocity_env) if training else velocity_env
+    rescaled_env = RescaleAction(
+        inner_env,
+        min_action=-1.0,
+        max_action=+1.0,
+    )
+    return rescaled_env
