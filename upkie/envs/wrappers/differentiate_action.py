@@ -4,6 +4,8 @@
 # Copyright 2023 Inria
 # SPDX-License-Identifier: Apache-2.0
 
+from typing import Any
+
 import gymnasium
 import numpy as np
 from gymnasium import spaces
@@ -16,6 +18,7 @@ class DifferentiateAction(gymnasium.Wrapper):
         env,
         min_derivative: NDArray[float],
         max_derivative: NDArray[float],
+        action_penalty: float = 0.0,
     ):
         """!
         Act on the derivative of the action.
@@ -25,6 +28,8 @@ class DifferentiateAction(gymnasium.Wrapper):
             action.
         @param max_derivative Upper bound on the derivative of the original
             action.
+        @param action_penalty Weight for an additional penalty on the
+            differential action added to the reward.
 
         @note We assume the original action lives in a vector space.
         """
@@ -36,15 +41,23 @@ class DifferentiateAction(gymnasium.Wrapper):
             dtype=np.float32,
         )
         self._integral = np.zeros(env.action_space.shape)
+        self.action_penalty = action_penalty
 
     def reset(self, **kwargs):
         self._integral = np.zeros(self.action_space.shape)
         return self.env.reset(**kwargs)
 
-    def step(self, action):
+    def step(
+        self,
+        action: NDArray[float],
+    ) -> tuple[NDArray[float], float, bool, bool, dict[str, Any]]:
         self._integral = np.clip(
             self._integral + action * self.env.unwrapped.dt,
             self.env.action_space.low,
             self.env.action_space.high,
         )
-        return self.env.step(self._integral)
+        observation, reward, terminated, truncated, info = self.env.step(
+            self._integral
+        )
+        wrapped_reward = reward - self.action_penalty * action.dot(action)
+        return observation, wrapped_reward, terminated, truncated, info

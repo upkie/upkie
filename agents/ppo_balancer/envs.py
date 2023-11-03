@@ -44,6 +44,7 @@ def make_accel_env(
     velocity_env: UpkieGroundVelocity,
     training: bool,
     max_ground_accel: float,
+    accel_penalty: float,
 ) -> gymnasium.Wrapper:
     inner_env = wrap_velocity_env(velocity_env) if training else velocity_env
     accel_env = DifferentiateAction(
