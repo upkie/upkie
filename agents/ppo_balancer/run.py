@@ -14,7 +14,7 @@ from typing import Any, Optional, Tuple
 import gin
 import gymnasium as gym
 import numpy as np
-from envs import make_accel_env
+from envs import make_ppo_balancer_env
 from numpy.typing import NDArray
 from settings import EnvSettings, PPOSettings
 from stable_baselines3 import PPO
@@ -104,11 +104,11 @@ def main(policy_path: str, training: bool):
         spine_config=env_settings.spine_config,
         max_ground_velocity=env_settings.max_ground_velocity,
     ) as velocity_env:
-        accel_env = make_accel_env(velocity_env, training=training)
+        env = make_ppo_balancer_env(velocity_env, training=training)
         ppo_settings = PPOSettings()
         policy = PPO(
             "MlpPolicy",
-            accel_env,
+            env,
             policy_kwargs={
                 "net_arch": dict(
                     pi=ppo_settings.net_arch_pi,
@@ -118,7 +118,7 @@ def main(policy_path: str, training: bool):
             verbose=0,
         )
         policy.set_parameters(policy_path)
-        run_policy(accel_env, policy)
+        run_policy(env, policy)
 
 
 def locate_policy(path: Optional[str], agent_dir: str) -> str:

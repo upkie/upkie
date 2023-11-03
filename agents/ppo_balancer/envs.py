@@ -22,7 +22,7 @@ from upkie.envs.wrappers import (
 
 
 @gin.configurable
-def wrap_velocity_env(
+def make_training_env(
     velocity_env: UpkieGroundVelocity,
     observation_noise: List[float],
     action_lpf: Tuple[float, float],
@@ -46,7 +46,7 @@ def make_accel_env(
     max_ground_accel: float,
     accel_penalty: float,
 ) -> gymnasium.Wrapper:
-    inner_env = wrap_velocity_env(velocity_env) if training else velocity_env
+    inner_env = make_training_env(velocity_env) if training else velocity_env
     accel_env = DifferentiateAction(
         inner_env,
         min_derivative=-max_ground_accel,
