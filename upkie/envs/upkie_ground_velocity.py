@@ -223,8 +223,8 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
         """
         pitch = observation[0]
         # ground_position = observation[1]
-        ground_velocity = observation[2]
-        # angular_velocity = observation[3]
+        # angular_velocity = observation[2]
+        ground_velocity = observation[3]
 
         # tip_height = 0.58  # [m]
         # tip_position = ground_position + tip_height * np.sin(pitch)
