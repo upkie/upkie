@@ -17,7 +17,7 @@ import gymnasium
 import numpy as np
 import stable_baselines3
 import yaml
-from envs import make_accel_env
+from envs import make_ppo_balancer_env
 from rules_python.python.runfiles import runfiles
 from schedules import affine_schedule
 from settings import EnvSettings, PPOSettings, SACSettings
@@ -205,8 +205,7 @@ def make_training_env(
             velocity_env._prepatch_close()
 
         velocity_env.close = close_monkeypatch
-        accel_env = make_accel_env(velocity_env, training=True)
-        return Monitor(accel_env)
+        return Monitor(make_ppo_balancer_env(velocity_env, training=True))
 
     set_random_seed(seed)
     return _init
