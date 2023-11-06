@@ -147,8 +147,10 @@ inline bool calibration_needed() {
 }
 
 inline const std::string get_log_path(const std::string& log_dir) {
+  char hostname[512];
+  gethostname(hostname, 512);
   const auto now = upkie::utils::datetime_now_string();
-  return log_dir + "/" + now + "_pi3hat_spine.mpack";
+  return log_dir + "/" + now + "_pi3hat_spine_" + hostname + ".mpack";
 }
 
 int main(const CommandLineArguments& args) {
