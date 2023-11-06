@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+#include <unistd.h>
 #include <vulp/actuation/Pi3HatInterface.h>
 #include <vulp/observation/ObserverPipeline.h>
 #include <vulp/observation/sources/CpuTemperature.h>
