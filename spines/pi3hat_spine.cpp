@@ -146,6 +146,11 @@ inline bool calibration_needed() {
   return !file_found;
 }
 
+inline const std::string get_log_path(const std::string& log_dir) {
+  const auto now = upkie::utils::datetime_now_string();
+  return log_dir + "/" + now + "_pi3hat_spine.mpack";
+}
+
 int main(const CommandLineArguments& args) {
   if (calibration_needed()) {
     spdlog::error("Calibration needed: did you run `upkie_tool rezero`?");
@@ -207,8 +212,7 @@ int main(const CommandLineArguments& args) {
     Spine::Parameters spine_params;
     spine_params.cpu = args.spine_cpu;
     spine_params.frequency = args.spine_frequency;
-    const auto now = upkie::utils::datetime_now_string();
-    spine_params.log_path = args.log_dir + "/" + now + "_pi3hat_spine.mpack";
+    spine_params.log_path = get_log_path(args.log_dir);
     spdlog::info("Spine data logged to {}", spine_params.log_path);
     Spine spine(spine_params, interface, observation);
     spine.run();
