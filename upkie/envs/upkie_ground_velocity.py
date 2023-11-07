@@ -222,22 +222,56 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
         @returns Reward.
         """
         pitch = observation[0]
-        # ground_position = observation[1]
-        # angular_velocity = observation[2]
+        ground_position = observation[1]
+        angular_velocity = observation[2]
         ground_velocity = observation[3]
 
-        # tip_height = 0.58  # [m]
-        # tip_position = ground_position + tip_height * np.sin(pitch)
-        # tip_velocity = (
-        #     ground_velocity + tip_height * angular_velocity * np.cos(pitch)
-        # )
+        tip_height = 0.58  # [m]
+        tip_position = ground_position + tip_height * np.sin(pitch)
+        tip_velocity = (
+            ground_velocity + tip_height * angular_velocity * np.cos(pitch)
+        )
 
-        sigma = 0.6  # [rad] ~= 35 [deg]
-        # at pitch = 35 deg = sigma the position reward is exp(-1) ~= 0.36
-        # at pitch = 45 deg ~= 1.3 * sigma the position reward is 0.16
-        position_reward = np.exp(-((pitch / sigma) ** 2))
+        duration = 0.5  # [s]
+        # anchor frame: inertial frame that coincides with the ground frame
+        position_tip_in_anchor_frame = tip_height * np.sin(pitch)
+        velocity_tip_in_anchor_frame = (
+            tip_height * angular_velocity * np.cos(pitch)
+        )
+        pos = position_tip_in_anchor_frame
+        vel = velocity_tip_in_anchor_frame
+        dcm = pos + vel * duration
 
-        velocity_penalty = -np.abs(ground_velocity)
+        position_reward = 0.0
+        if False:
+            sigma = 0.6  # [rad] ~= 35 [deg]
+            # at pitch = 0 the position reward is 1
+            # at pitch = 35 deg = sigma the position reward is exp(-1) ~= 0.36
+            # at pitch = 45 deg ~= 1.3 * sigma the position reward is 0.16
+            standardized_pitch = pitch / sigma
+            position_reward = np.exp(-(standardized_pitch**2))
+        elif False:
+            sigma = 0.195  # [m]
+            # np.round(sigma * np.sqrt(-np.log([0.5, 0.1, 0.01])), 2)
+            # 50% reward at 16 cm
+            # 10% reward at 30 cm
+            #  1% reward at 42 cm
+            standardized_dcm = dcm / sigma
+            position_reward = np.exp(-(standardized_dcm**2))
+        elif True:
+            std_position = 0.05  # [m]
+            position_reward = np.exp(-((tip_position / std_position) ** 2))
+        else:
+            assert False
+
+        velocity_penalty = 0.0
+        if False:
+            acceptable_velocity = 0.05  # [m] / [s]
+            velocity_penalty = min(0.0, acceptable_velocity - ground_velocity)
+        elif True:
+            velocity_penalty = -abs(tip_velocity)
+        else:
+            assert False
 
         return (
             self.reward_weights.position * position_reward
