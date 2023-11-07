@@ -273,15 +273,19 @@ def train_policy(
         if nb_envs > 1
         else DummyVecEnv(
             [
-                make_training_env(
+                init_env(
                     max_episode_duration=max_episode_duration,
                     show=show,
                     spine_path=spine_path,
-                    subproc_index=0,
                 )
             ]
         )
     )
+
+    # call make_ppo_balancer_env once to update the logged gin config
+    # (otherwise done in child processes, the config wouldn't be fully logged)
+    make_ppo_balancer_env(vec_env, training=True)
+
     if False:  # does not always improve returns during training
         vec_env = VecNormalize(vec_env)
 
