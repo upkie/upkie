@@ -148,10 +148,16 @@ inline bool calibration_needed() {
 }
 
 inline const std::string get_log_path(const std::string& log_dir) {
-  char hostname[512];
-  gethostname(hostname, 512);
   const auto now = upkie::utils::datetime_now_string();
-  return log_dir + "/" + now + "_pi3hat_spine_" + hostname + ".mpack";
+  const std::string prefix = log_dir + "/" + now + "_pi3hat_spine";
+
+  char hostname[512];
+  int return_code = gethostname(hostname, 512);
+  if (return_code != 0) {
+    spdlog::error("Could not get the robot's hostname, errno = {}", errno);
+    return prefix + ".mpack";
+  }
+  return prefix + "_" + hostname + ".mpack";
 }
 
 int main(const CommandLineArguments& args) {
