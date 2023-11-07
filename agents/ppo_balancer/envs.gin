@@ -10,4 +10,4 @@ make_training_env.action_noise = [0.05]
 make_training_env.observation_noise = [0.01, 0.01, 0.01, 0.01, 0.0]
 
 make_accel_env.max_ground_accel = 10.0
-make_accel_env.accel_penalty = 10.0
+make_accel_env.accel_penalty = 0.0

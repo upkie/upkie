@@ -164,11 +164,10 @@ def get_bullet_argv(shm_name: str, show: bool) -> List[str]:
     return bullet_argv
 
 
-def make_training_env(
+def init_env(
     max_episode_duration: float,
     show: bool,
     spine_path: str,
-    subproc_index: int,
 ):
     env_settings = EnvSettings()
     seed = random.randint(0, 1_000_000)
@@ -255,11 +254,10 @@ def train_policy(
     vec_env = (
         SubprocVecEnv(
             [
-                make_training_env(
+                init_env(
                     max_episode_duration=max_episode_duration,
                     show=show,
                     spine_path=spine_path,
-                    subproc_index=i,
                 )
                 for i in range(nb_envs)
             ],
