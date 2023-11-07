@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - envs: Log action, observation and reward to "env" sub-dict of action
+- spines: Label pi3hat spine log filenames with the robot's hostname
 
 ### Changed
 
