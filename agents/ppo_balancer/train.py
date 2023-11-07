@@ -169,6 +169,13 @@ def init_env(
     show: bool,
     spine_path: str,
 ):
+    """!
+    Get an environment initialization function for a set of parameters.
+
+    @param max_episode_duration Maximum duration of an episode, in seconds.
+    @param show If true, show simulator GUI.
+    @param spine_path Path to the Bullet spine binary.
+    """
     env_settings = EnvSettings()
     seed = random.randint(0, 1_000_000)
 
