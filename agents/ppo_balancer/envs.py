@@ -60,8 +60,9 @@ def make_accel_env(
     return rescaled_accel_env
 
 
-def make_ppo_balancer_env(velocity_env: UpkieGroundVelocity, training: bool):
-    # return make_accel_env(velocity_env, training=training)
+def make_rescaled_velocity_env(
+    velocity_env: UpkieGroundVelocity, training: bool
+) -> gymnasium.Wrapper:
     inner_env = make_training_env(velocity_env) if training else velocity_env
     rescaled_env = RescaleAction(
         inner_env,
@@ -69,3 +70,10 @@ def make_ppo_balancer_env(velocity_env: UpkieGroundVelocity, training: bool):
         max_action=+1.0,
     )
     return rescaled_env
+
+
+def make_ppo_balancer_env(
+    velocity_env: UpkieGroundVelocity, training: bool
+) -> gymnasium.Wrapper:
+    # return make_rescaled_velocity_env(velocity_env, training=training)
+    return make_accel_env(velocity_env, training=training)
