@@ -39,13 +39,13 @@ class AddActionToObservation(gymnasium.ObservationWrapper):
                 f"between {env.observation_space.dtype=} "
                 f"and {env.action_space.dtype=}"
             )
+        low = np.concatenate([env.observation_space.low, env.action_space.low])
         self.observation_space = spaces.Box(
-            low=np.concatenate(
-                [env.observation_space.low, env.action_space.low]
-            ),
+            low=low,
             high=np.concatenate(
                 [env.observation_space.high, env.action_space.high]
             ),
+            shape=low.shape,
             dtype=env.observation_space.dtype,
         )
         self._last_action = np.zeros(
