@@ -28,7 +28,6 @@ from stable_baselines3.common.utils import set_random_seed
 from stable_baselines3.common.vec_env import (
     DummyVecEnv,
     SubprocVecEnv,
-    VecNormalize,
 )
 from stable_baselines3.common.vec_env.base_vec_env import VecEnv
 from torch import nn
@@ -285,9 +284,6 @@ def train_policy(
     # call make_ppo_balancer_env once to update the logged gin config
     # (otherwise done in child processes, the config wouldn't be fully logged)
     make_ppo_balancer_env(vec_env, training=True)
-
-    if False:  # does not always improve returns during training
-        vec_env = VecNormalize(vec_env)
 
     env_settings = EnvSettings()
     dt = 1.0 / env_settings.agent_frequency
