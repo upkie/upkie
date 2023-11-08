@@ -22,7 +22,7 @@ class EnvSettings:
     action_noise: List[float]
     agent_frequency: int
     env_id: str
-    history_length: int
+    history_size: int
     max_ground_accel: float
     max_ground_velocity: float
     observation_noise: List[float]
