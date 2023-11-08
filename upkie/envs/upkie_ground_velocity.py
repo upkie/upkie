@@ -90,7 +90,6 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
         position: float = 1.0
         velocity: float = 1.0
 
-    _last_action: float
     version: int = 2
     wheel_radius: float
 
@@ -131,7 +130,6 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
                 MAX_GROUND_POSITION,
                 MAX_BASE_ANGULAR_VELOCITY,
                 max_ground_velocity,
-                max_ground_velocity,
             ],
             dtype=np.float32,
         )
@@ -140,19 +138,19 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
         self.observation_space = spaces.Box(
             -observation_limit,
             +observation_limit,
-            shape=(5,),
-            dtype=np.float32,
+            shape=observation_limit.shape,
+            dtype=observation_limit.dtype,
         )
 
         # gymnasium.Env: action_space
+        action_limit = np.array([max_ground_velocity], dtype=np.float32)
         self.action_space = spaces.Box(
-            -np.float32(max_ground_velocity),
-            +np.float32(max_ground_velocity),
-            shape=(1,),
-            dtype=np.float32,
+            -action_limit,
+            +action_limit,
+            shape=action_limit.shape,
+            dtype=action_limit.dtype,
         )
 
-        self._last_action = 0.0
         self.reward_weights = weights
         self.wheel_radius = wheel_radius
 
@@ -174,7 +172,6 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
             - ``info``: Dictionary with auxiliary diagnostic information. For
               Upkie this is the full observation dictionary sent by the spine.
         """
-        self._last_action = 0.0
         return super().reset(seed=seed)
 
     def dictionarize_action(self, action: NDArray[float]) -> dict:
@@ -184,7 +181,6 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
         @param action Action vector.
         @returns Action dictionary.
         """
-        self._last_action = action[0]
         ground_velocity = action[0]
         wheel_velocity = ground_velocity / self.wheel_radius
         servo_dict = self.get_leg_servo_action()
@@ -202,14 +198,6 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
         )
         action_dict = {"servo": servo_dict}
         return action_dict
-
-    def vectorize_observation(self, observation_dict: dict) -> np.ndarray:
-        observation = super().vectorize_observation(observation_dict)
-        augmented_obs = np.hstack(
-            [observation, [self._last_action]],
-            dtype=np.float32,
-        )
-        return augmented_obs
 
     def get_reward(
         self, observation: NDArray[float], action: NDArray[float]
