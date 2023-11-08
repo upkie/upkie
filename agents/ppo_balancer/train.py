@@ -25,10 +25,7 @@ from stable_baselines3.common.callbacks import BaseCallback, CheckpointCallback
 from stable_baselines3.common.logger import TensorBoardOutputFormat
 from stable_baselines3.common.monitor import Monitor
 from stable_baselines3.common.utils import set_random_seed
-from stable_baselines3.common.vec_env import (
-    DummyVecEnv,
-    SubprocVecEnv,
-)
+from stable_baselines3.common.vec_env import DummyVecEnv, SubprocVecEnv
 from stable_baselines3.common.vec_env.base_vec_env import VecEnv
 from torch import nn
 from utils import gin_operative_config_dict
@@ -210,7 +207,8 @@ def init_env(
             velocity_env._prepatch_close()
 
         velocity_env.close = close_monkeypatch
-        return Monitor(make_ppo_balancer_env(velocity_env, training=True))
+        env = make_ppo_balancer_env(velocity_env, env_settings, training=True)
+        return Monitor(env)
 
     set_random_seed(seed)
     return _init
@@ -280,10 +278,6 @@ def train_policy(
             ]
         )
     )
-
-    # call make_ppo_balancer_env once to update the logged gin config
-    # (otherwise done in child processes, the config wouldn't be fully logged)
-    make_ppo_balancer_env(vec_env, training=True)
 
     env_settings = EnvSettings()
     dt = 1.0 / env_settings.agent_frequency
@@ -421,7 +415,6 @@ def train_policy(
 if __name__ == "__main__":
     args = parse_command_line_arguments()
     agent_dir = os.path.dirname(__file__)
-    gin.parse_config_file(f"{agent_dir}/envs.gin")
     gin.parse_config_file(f"{agent_dir}/settings.gin")
     gin.parse_config_file(f"{agent_dir}/train.gin")
 

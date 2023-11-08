@@ -5,7 +5,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from dataclasses import dataclass
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 import gin
 
@@ -17,9 +17,15 @@ class EnvSettings:
     Environment settings.
     """
 
+    accel_penalty: float
+    action_lpf: Tuple[float, float]
+    action_noise: List[float]
     agent_frequency: int
     env_id: str
+    history_length: int
+    max_ground_accel: float
     max_ground_velocity: float
+    observation_noise: List[float]
     reward_weights: Dict[str, Any]
     spine_config: Dict[str, Any]
     spine_frequency: int
