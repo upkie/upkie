@@ -14,6 +14,7 @@ from gymnasium.wrappers import RescaleAction
 
 from upkie.envs import UpkieGroundVelocity
 from upkie.envs.wrappers import (
+    AddActionToObservation,
     DifferentiateAction,
     LowPassFilterAction,
     NoisifyAction,

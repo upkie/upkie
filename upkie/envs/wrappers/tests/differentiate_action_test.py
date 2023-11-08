@@ -4,7 +4,7 @@
 # Copyright 2023 Inria
 # SPDX-License-Identifier: Apache-2.0
 
-"""Test NoisifyAction wrapper."""
+"""Test DifferentiateAction wrapper."""
 
 import unittest
 
