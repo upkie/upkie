@@ -82,10 +82,11 @@ def run_policy(env, policy) -> None:
             else no_contact_policy(action, env.dt)
         )
 
-        pitch = observation[0]
-        ground_position = observation[1]
-        angular_velocity = observation[2]
-        ground_velocity = observation[3]
+        last_observation = observation[0]
+        pitch = last_observation[0]
+        ground_position = last_observation[1]
+        angular_velocity = last_observation[2]
+        ground_velocity = last_observation[3]
 
         tip_height = 0.58  # [m]
         tip_position = ground_position + tip_height * np.sin(pitch)
@@ -96,9 +97,8 @@ def run_policy(env, policy) -> None:
         env.log(
             {
                 "action": action,
-                "observation": observation,
+                "observation": last_observation,
                 "reward": reward,
-                "dcm": dcm,
                 "tip_position": tip_position,
                 "tip_velocity": tip_velocity,
             }
