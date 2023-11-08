@@ -129,7 +129,11 @@ def main(policy_path: str, training: bool):
         spine_config=env_settings.spine_config,
         max_ground_velocity=env_settings.max_ground_velocity,
     ) as velocity_env:
-        env = make_ppo_balancer_env(velocity_env, training=training)
+        env = make_ppo_balancer_env(
+            velocity_env,
+            env_settings,
+            training=training,
+        )
         ppo_settings = PPOSettings()
         policy = PPO(
             "MlpPolicy",
@@ -165,7 +169,6 @@ if __name__ == "__main__":
         configure_agent_process()
 
     agent_dir = os.path.abspath(os.path.dirname(__file__))
-    gin.parse_config_file(f"{agent_dir}/envs.gin")
     gin.parse_config_file(f"{agent_dir}/settings.gin")
 
     args = parse_command_line_arguments()
