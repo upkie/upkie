@@ -7,7 +7,7 @@
 import gymnasium
 import numpy as np
 from gymnasium import spaces
-from gymnasium.wrappers import FrameStackObservation, RescaleAction
+from gymnasium.wrappers import FrameStack, RescaleAction
 from settings import EnvSettings
 
 from upkie.envs import UpkieGroundVelocity
@@ -45,9 +45,9 @@ def make_accel_env(
         if training
         else velocity_env
     )
-    history_env = FrameStackObservation(
+    history_env = FrameStack(
         AddActionToObservation(inner_env),
-        stack_size=env_settings.history_size,
+        env_settings.history_size,
     )
     accel_env = DifferentiateAction(
         history_env,
