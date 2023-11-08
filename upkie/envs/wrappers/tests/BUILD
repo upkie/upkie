@@ -16,6 +16,17 @@ py_library(
 )
 
 py_test(
+    name = "add_action_to_observation_test",
+    srcs = ["add_action_to_observation_test.py"],
+    deps = [
+        "//upkie/envs/wrappers",
+        ":envs",
+        requirement("gymnasium"),
+        requirement("stable_baselines3"),
+    ],
+)
+
+py_test(
     name = "differentiate_action_test",
     srcs = ["differentiate_action_test.py"],
     deps = [
