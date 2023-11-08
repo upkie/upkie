@@ -88,16 +88,6 @@ def run_policy(env, policy) -> None:
         ground_velocity = observation[3]
 
         tip_height = 0.58  # [m]
-        duration = 0.5  # [s]
-        # anchor frame: inertial frame that coincides with the ground frame
-        position_tip_in_anchor_frame = tip_height * np.sin(pitch)
-        velocity_tip_in_anchor_frame = (
-            ground_velocity + tip_height * angular_velocity * np.cos(pitch)
-        )
-        pos = position_tip_in_anchor_frame
-        vel = velocity_tip_in_anchor_frame
-        dcm = pos + vel * duration
-
         tip_position = ground_position + tip_height * np.sin(pitch)
         tip_velocity = (
             ground_velocity + tip_height * angular_velocity * np.cos(pitch)
