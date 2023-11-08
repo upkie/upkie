@@ -82,7 +82,7 @@ def run_policy(env, policy) -> None:
             else no_contact_policy(action, env.dt)
         )
 
-        last_observation = observation[0]
+        last_observation = observation[-1]
         pitch = last_observation[0]
         ground_position = last_observation[1]
         angular_velocity = last_observation[2]
