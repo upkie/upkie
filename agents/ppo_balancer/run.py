@@ -103,10 +103,10 @@ def main(policy_path: str, training: bool):
             "MlpPolicy",
             env,
             policy_kwargs={
-                "net_arch": dict(
-                    pi=ppo_settings.net_arch_pi,
-                    vf=ppo_settings.net_arch_vf,
-                ),
+                "net_arch": {
+                    "pi": ppo_settings.net_arch_pi,
+                    "vf": ppo_settings.net_arch_vf,
+                },
             },
             verbose=0,
         )

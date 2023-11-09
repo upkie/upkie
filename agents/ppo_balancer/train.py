@@ -301,10 +301,10 @@ def train_policy(
         tensorboard_log=training_dir,
         policy_kwargs={
             "activation_fn": nn.Tanh,
-            "net_arch": dict(
-                pi=ppo_settings.net_arch_pi,
-                vf=ppo_settings.net_arch_vf,
-            ),
+            "net_arch": {
+                "pi": ppo_settings.net_arch_pi,
+                "vf": ppo_settings.net_arch_vf,
+            },
         },
         verbose=1,
     )
