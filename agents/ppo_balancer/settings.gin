@@ -51,4 +51,4 @@ TrainingSettings.init_rand = {
 }
 TrainingSettings.max_episode_duration = 10.0
 TrainingSettings.return_horizon = 5.0
-TrainingSettings.total_timesteps = 2e6
+TrainingSettings.total_timesteps = 2_000_000
