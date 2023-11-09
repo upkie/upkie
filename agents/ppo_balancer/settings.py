@@ -56,31 +56,6 @@ class PPOSettings:
 
 @gin.configurable
 @dataclass
-class SACSettings:
-    """SAC algorithm settings."""
-
-    action_noise: Optional[float]
-    batch_size: int
-    buffer_size: int
-    ent_coef: str
-    gradient_steps: int
-    learning_rate: float
-    learning_starts: int
-    net_arch_pi: Tuple[int, int]
-    net_arch_qf: Tuple[int, int]
-    optimize_memory_usage: bool
-    sde_sample_freq: int
-    stats_window_size: int
-    target_entropy: str
-    target_update_interval: int
-    tau: float
-    train_freq: int
-    use_sde: bool
-    use_sde_at_warmup: bool
-
-
-@gin.configurable
-@dataclass
 class TrainingSettings:
     """Training settings."""
 

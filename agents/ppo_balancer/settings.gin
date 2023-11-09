@@ -10,7 +10,7 @@ EnvSettings.action_lpf = (0.05, 0.15)
 EnvSettings.action_noise = [0.05]
 EnvSettings.agent_frequency = 200
 EnvSettings.env_id = "UpkieGroundVelocity-v2"
-EnvSettings.history_size = 10
+EnvSettings.history_size = 20
 EnvSettings.max_ground_accel = 10.0
 EnvSettings.max_ground_velocity = 1.0
 EnvSettings.observation_noise = [0.01, 0.01, 0.01, 0.01]
@@ -44,28 +44,6 @@ PPOSettings.target_kl = None
 PPOSettings.use_sde = False
 PPOSettings.vf_coef = 0.5
 
-SACSettings.action_noise = None
-SACSettings.batch_size = 256
-SACSettings.buffer_size = 1000000
-SACSettings.ent_coef = "auto"
-
-# https://stable-baselines3.readthedocs.io/en/master/guide/examples.html#multiprocessing-with-off-policy-algorithms
-SACSettings.gradient_steps = -1
-
-SACSettings.learning_rate = 3e-4
-SACSettings.learning_starts = 100
-SACSettings.net_arch_pi = (64, 64)
-SACSettings.net_arch_qf = (64, 64)
-SACSettings.optimize_memory_usage = False
-SACSettings.sde_sample_freq = -1
-SACSettings.stats_window_size = 100
-SACSettings.target_entropy = "auto"
-SACSettings.target_update_interval = 1
-SACSettings.tau = 0.005
-SACSettings.train_freq = 1
-SACSettings.use_sde = False
-SACSettings.use_sde_at_warmup = False
-
 TrainingSettings.init_rand = {
     "pitch": 0.25,
     "v_x": 0.1,
@@ -73,4 +51,4 @@ TrainingSettings.init_rand = {
 }
 TrainingSettings.max_episode_duration = 10.0
 TrainingSettings.return_horizon = 5.0
-TrainingSettings.total_timesteps = 2e4
+TrainingSettings.total_timesteps = 2e6
