@@ -62,4 +62,4 @@ class TrainingSettings:
     init_rand: Dict[str, float]
     max_episode_duration: float
     return_horizon: float
-    total_timesteps: float
+    total_timesteps: int
