@@ -48,6 +48,7 @@ py_binary(
     imports = ["."],
 
     data = [
+        "policy/operative_config.gin",
         "policy/params.zip",
     ],
     deps = [
@@ -74,7 +75,6 @@ py_binary(
     srcs = [
         "schedules.py",
         "train.py",
-        "utils.py",
     ],
     main = "train.py",
 

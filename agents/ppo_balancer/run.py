@@ -8,8 +8,7 @@
 import argparse
 import logging
 import os
-import tempfile
-from typing import Any, Optional, Tuple
+from typing import Any, Tuple
 
 import gin
 import gymnasium as gym
@@ -24,6 +23,16 @@ from upkie.utils.filters import low_pass_filter
 from upkie.utils.raspi import configure_agent_process, on_raspi
 
 upkie.envs.register()
+
+
+@gin.configurable
+def train_policy(
+    init_rand,
+    max_episode_duration,
+    return_horizon,
+    total_timesteps,
+):
+    """Mock function so that the runner can load the trainer's gin config."""
 
 
 def parse_command_line_arguments() -> argparse.Namespace:
@@ -140,29 +149,19 @@ def main(policy_path: str, training: bool):
         run_policy(env, policy)
 
 
-def locate_policy(path: Optional[str], agent_dir: str) -> str:
-    default_path = f"{agent_dir}/policy/params.zip"
-    policy_path: str = default_path if path is None else path
-    if not os.path.exists(policy_path):
-        training_dir = f"{tempfile.gettempdir()}/ppo_balancer"
-        if os.path.exists(f"{training_dir}/{policy_path}"):
-            policy_path = f"{training_dir}/{policy_path}"
-    if not os.path.exists(policy_path):
-        raise FileNotFoundError(f"No policy params found at {policy_path=}")
-    if policy_path.endswith(".zip"):
-        policy_path = policy_path[:-4]
-    return policy_path
-
-
 if __name__ == "__main__":
     if on_raspi():
         configure_agent_process()
 
     agent_dir = os.path.abspath(os.path.dirname(__file__))
-    gin.parse_config_file(f"{agent_dir}/settings.gin")
+    gin.parse_config_file(f"{agent_dir}/policy/operative_config.gin")
 
     args = parse_command_line_arguments()
-    policy_path = locate_policy(args.policy, agent_dir)
+    policy_path = args.policy
+    if policy_path is None:
+        policy_path = f"{agent_dir}/policy/params.zip"
+    if policy_path.endswith(".zip"):
+        policy_path = policy_path[:-4]
     logging.info("Loading policy from %s.zip", policy_path)
 
     try:
