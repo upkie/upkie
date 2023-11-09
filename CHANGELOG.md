@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - envs: Wrapper to noisify actions
 - envs: Wrapper to noisify observations
 - spines: Label pi3hat spine log filenames with the robot's hostname
+- tools: Convenience Makefiles for logs and training directories
 
 ### Changed
 
