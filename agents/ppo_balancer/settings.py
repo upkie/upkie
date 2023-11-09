@@ -77,3 +77,14 @@ class SACSettings:
     train_freq: int
     use_sde: bool
     use_sde_at_warmup: bool
+
+
+@gin.configurable
+@dataclass
+class TrainingSettings:
+    """Training settings."""
+
+    init_rand: Dict[str, float]
+    max_episode_duration: float
+    return_horizon: float
+    total_timesteps: float

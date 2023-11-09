@@ -10,7 +10,7 @@ import os
 import random
 import signal
 import tempfile
-from typing import Dict, List
+from typing import List
 
 import gin
 import gymnasium
@@ -19,7 +19,7 @@ import stable_baselines3
 from envs import make_ppo_balancer_env
 from rules_python.python.runfiles import runfiles
 from schedules import affine_schedule
-from settings import EnvSettings, PPOSettings, SACSettings
+from settings import EnvSettings, PPOSettings, TrainingSettings
 from stable_baselines3.common.callbacks import BaseCallback, CheckpointCallback
 from stable_baselines3.common.logger import TensorBoardOutputFormat
 from stable_baselines3.common.monitor import Monitor
@@ -216,16 +216,11 @@ def find_save_path(training_dir: str, policy_name: str):
     return path_for_iter(nb_iter)
 
 
-@gin.configurable
 def train_policy(
     policy_name: str,
     training_dir: str,
     nb_envs: int,
     show: bool,
-    init_rand: Dict[str, float],
-    max_episode_duration: float,
-    return_horizon: float,
-    total_timesteps: int,
 ) -> None:
     """!
     Train a new policy and save it to a directory.
@@ -241,6 +236,7 @@ def train_policy(
     logging.info('New policy name is "%s"', policy_name)
     logging.info("Training data will be logged to %s", save_path)
 
+    training = TrainingSettings()
     deez_runfiles = runfiles.Create()
     spine_path = os.path.join(
         agent_dir,
@@ -251,7 +247,7 @@ def train_policy(
         SubprocVecEnv(
             [
                 init_env(
-                    max_episode_duration=max_episode_duration,
+                    max_episode_duration=training.max_episode_duration,
                     show=show,
                     spine_path=spine_path,
                 )
@@ -263,7 +259,7 @@ def train_policy(
         else DummyVecEnv(
             [
                 init_env(
-                    max_episode_duration=max_episode_duration,
+                    max_episode_duration=training.max_episode_duration,
                     show=show,
                     spine_path=spine_path,
                 )
@@ -273,98 +269,50 @@ def train_policy(
 
     env_settings = EnvSettings()
     dt = 1.0 / env_settings.agent_frequency
-    gamma = 1.0 - dt / return_horizon
+    gamma = 1.0 - dt / training.return_horizon
     logging.info(
         "Discount factor gamma=%f for a return horizon of %f s",
         gamma,
-        return_horizon,
+        training.return_horizon,
     )
 
-    algorithm = "PPO"
-    if algorithm == "PPO":
-        ppo_settings = PPOSettings()
-        policy = stable_baselines3.PPO(
-            "MlpPolicy",
-            vec_env,
-            learning_rate=affine_schedule(
-                y_1=ppo_settings.learning_rate,  # progress_remaining=1.0
-                y_0=ppo_settings.learning_rate / 3,  # progress_remaining=0.0
+    ppo_settings = PPOSettings()
+    policy = stable_baselines3.PPO(
+        "MlpPolicy",
+        vec_env,
+        learning_rate=affine_schedule(
+            y_1=ppo_settings.learning_rate,  # progress_remaining=1.0
+            y_0=ppo_settings.learning_rate / 3,  # progress_remaining=0.0
+        ),
+        n_steps=ppo_settings.n_steps,
+        batch_size=ppo_settings.batch_size,
+        n_epochs=ppo_settings.n_epochs,
+        gamma=gamma,
+        gae_lambda=ppo_settings.gae_lambda,
+        clip_range=ppo_settings.clip_range,
+        clip_range_vf=ppo_settings.clip_range_vf,
+        normalize_advantage=ppo_settings.normalize_advantage,
+        ent_coef=ppo_settings.ent_coef,
+        vf_coef=ppo_settings.vf_coef,
+        max_grad_norm=ppo_settings.max_grad_norm,
+        use_sde=ppo_settings.use_sde,
+        sde_sample_freq=ppo_settings.sde_sample_freq,
+        target_kl=ppo_settings.target_kl,
+        tensorboard_log=training_dir,
+        policy_kwargs={
+            "activation_fn": nn.Tanh,
+            "net_arch": dict(
+                pi=ppo_settings.net_arch_pi,
+                vf=ppo_settings.net_arch_vf,
             ),
-            # exponential_decay_schedule(
-            #     ppo_settings.learning_rate,
-            #     nb_phases=2,
-            # ),
-            n_steps=ppo_settings.n_steps,
-            batch_size=ppo_settings.batch_size,
-            n_epochs=ppo_settings.n_epochs,
-            gamma=gamma,
-            gae_lambda=ppo_settings.gae_lambda,
-            clip_range=ppo_settings.clip_range,
-            clip_range_vf=ppo_settings.clip_range_vf,
-            normalize_advantage=ppo_settings.normalize_advantage,
-            ent_coef=ppo_settings.ent_coef,
-            vf_coef=ppo_settings.vf_coef,
-            max_grad_norm=ppo_settings.max_grad_norm,
-            use_sde=ppo_settings.use_sde,
-            sde_sample_freq=ppo_settings.sde_sample_freq,
-            target_kl=ppo_settings.target_kl,
-            tensorboard_log=training_dir,
-            policy_kwargs={
-                "activation_fn": nn.Tanh,
-                "net_arch": dict(
-                    pi=ppo_settings.net_arch_pi,
-                    vf=ppo_settings.net_arch_vf,
-                ),
-            },
-            verbose=1,
-        )
-    elif algorithm == "SAC":
-        sac_settings = SACSettings()
-        action_noise = (
-            stable_baselines3.NormalActionNoise(
-                mean=np.zeros(1),
-                sigma=sac_settings.action_noise * np.ones(1),
-            )
-            if sac_settings.action_noise is not None
-            else None
-        )
-        policy = stable_baselines3.SAC(
-            "MlpPolicy",
-            vec_env,
-            learning_rate=sac_settings.learning_rate,
-            buffer_size=sac_settings.buffer_size,
-            learning_starts=sac_settings.learning_starts,
-            batch_size=sac_settings.batch_size,
-            tau=sac_settings.tau,
-            gamma=gamma,
-            train_freq=sac_settings.train_freq,
-            gradient_steps=sac_settings.gradient_steps,
-            action_noise=action_noise,
-            optimize_memory_usage=sac_settings.optimize_memory_usage,
-            ent_coef=sac_settings.ent_coef,
-            target_update_interval=sac_settings.target_update_interval,
-            target_entropy=sac_settings.target_entropy,
-            use_sde=sac_settings.use_sde,
-            sde_sample_freq=sac_settings.sde_sample_freq,
-            use_sde_at_warmup=sac_settings.use_sde_at_warmup,
-            stats_window_size=sac_settings.stats_window_size,
-            tensorboard_log=training_dir,
-            policy_kwargs={
-                "activation_fn": nn.ReLU,
-                "net_arch": dict(
-                    pi=sac_settings.net_arch_pi,
-                    qf=sac_settings.net_arch_qf,
-                ),
-            },
-            verbose=1,
-        )
-    else:
-        raise Exception(f"Unknown RL algorithm: {algorithm}")
+        },
+        verbose=1,
+    )
 
-    max_init_rand = InitRandomization(**init_rand)
+    max_init_rand = InitRandomization(**training.init_rand)
     try:
         policy.learn(
-            total_timesteps=total_timesteps,
+            total_timesteps=training.total_timesteps,
             callback=[
                 CheckpointCallback(
                     save_freq=max(210_000 // nb_envs, 1_000),
@@ -408,7 +356,6 @@ if __name__ == "__main__":
     args = parse_command_line_arguments()
     agent_dir = os.path.dirname(__file__)
     gin.parse_config_file(f"{agent_dir}/settings.gin")
-    gin.parse_config_file(f"{agent_dir}/train.gin")
 
     training_path = os.environ.get(
         "UPKIE_TRAINING_PATH", tempfile.gettempdir()

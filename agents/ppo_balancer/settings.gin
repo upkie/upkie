@@ -65,3 +65,12 @@ SACSettings.tau = 0.005
 SACSettings.train_freq = 1
 SACSettings.use_sde = False
 SACSettings.use_sde_at_warmup = False
+
+TrainingSettings.init_rand = {
+    "pitch": 0.25,
+    "v_x": 0.1,
+    "omega_y": 0.1,
+}
+TrainingSettings.max_episode_duration = 10.0
+TrainingSettings.return_horizon = 5.0
+TrainingSettings.total_timesteps = 2e4

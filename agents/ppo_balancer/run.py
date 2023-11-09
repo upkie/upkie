@@ -25,16 +25,6 @@ from upkie.utils.raspi import configure_agent_process, on_raspi
 upkie.envs.register()
 
 
-@gin.configurable
-def train_policy(
-    init_rand,
-    max_episode_duration,
-    return_horizon,
-    total_timesteps,
-):
-    """Mock function so that the runner can load the trainer's gin config."""
-
-
 def parse_command_line_arguments() -> argparse.Namespace:
     """
     Parse command line arguments.
