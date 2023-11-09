@@ -16,7 +16,6 @@ import gin
 import gymnasium
 import numpy as np
 import stable_baselines3
-import yaml
 from envs import make_ppo_balancer_env
 from rules_python.python.runfiles import runfiles
 from schedules import affine_schedule
@@ -28,7 +27,6 @@ from stable_baselines3.common.utils import set_random_seed
 from stable_baselines3.common.vec_env import DummyVecEnv, SubprocVecEnv
 from stable_baselines3.common.vec_env.base_vec_env import VecEnv
 from torch import nn
-from utils import gin_operative_config_dict
 
 import upkie.envs
 from upkie.envs import InitRandomization
@@ -112,21 +110,15 @@ class SummaryWriterCallback(BaseCallback):
         # for functions called by the environment are logged as well.
         if self.n_calls != 1:
             return
-        env_settings = EnvSettings()
-        config = {
-            "env": env_settings.env_id,
-            "gin": gin_operative_config_dict(gin.config._OPERATIVE_CONFIG),
-            "spine_config": env_settings.spine_config,
-        }
         self.tb_formatter.writer.add_text(
-            "config",
-            f"```yaml\n{yaml.dump(config, indent=4)}\n```",
+            "gin/operative_config",
+            gin.operative_config_str(),
             global_step=None,
         )
-        save_path = f"{self.save_path}/config.yaml"
-        with open(save_path, "w") as fh:
-            yaml.dump(config, fh, indent=4)
-        logging.info(f"Saved configuration to {save_path}")
+        gin_path = f"{self.save_path}/operative_config.gin"
+        with open(gin_path, "w") as fh:
+            fh.write(gin.operative_config_str())
+        logging.info(f"Saved gin configuration to {gin_path}")
 
 
 def get_random_word():
