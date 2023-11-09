@@ -8,18 +8,15 @@
 import argparse
 import logging
 import os
-from typing import Any, Tuple
 
 import gin
 import gymnasium as gym
 import numpy as np
 from envs import make_ppo_balancer_env
-from numpy.typing import NDArray
 from settings import EnvSettings, PPOSettings
 from stable_baselines3 import PPO
 
 import upkie.envs
-from upkie.utils.filters import low_pass_filter
 from upkie.utils.raspi import configure_agent_process, on_raspi
 
 upkie.envs.register()
@@ -47,18 +44,18 @@ def parse_command_line_arguments() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def no_contact_policy(
-    prev_action: NDArray[float], dt: float
-) -> Tuple[NDArray[float], Any]:
-    return (
-        low_pass_filter(
-            prev_action,
-            cutoff_period=1.0,
-            new_input=np.zeros(prev_action.shape),
-            dt=dt,
-        ),
-        None,
+def get_tip_state(observation):
+    pitch = observation[0]
+    ground_position = observation[1]
+    angular_velocity = observation[2]
+    ground_velocity = observation[3]
+
+    tip_height = 0.58  # [m]
+    tip_position = ground_position + tip_height * np.sin(pitch)
+    tip_velocity = ground_velocity + tip_height * angular_velocity * np.cos(
+        pitch
     )
+    return tip_position, tip_velocity
 
 
 def run_policy(env, policy) -> None:
@@ -69,44 +66,22 @@ def run_policy(env, policy) -> None:
     """
     action = np.zeros(env.action_space.shape)
     observation, info = env.reset()
-    floor_contact = False
     reward = 0.0
     while True:
-        joystick = info["observation"].get("joystick", {})
-        if joystick.get("cross_button", False):
-            floor_contact = False
-        action, _ = (
-            policy.predict(observation, deterministic=True)
-            if floor_contact or True
-            else no_contact_policy(action, env.dt)
-        )
-
-        last_observation = observation[-1]
-        pitch = last_observation[0]
-        ground_position = last_observation[1]
-        angular_velocity = last_observation[2]
-        ground_velocity = last_observation[3]
-
-        tip_height = 0.58  # [m]
-        tip_position = ground_position + tip_height * np.sin(pitch)
-        tip_velocity = (
-            ground_velocity + tip_height * angular_velocity * np.cos(pitch)
-        )
-
+        action, _ = policy.predict(observation, deterministic=True)
+        tip_position, tip_velocity = get_tip_state(observation[-1])
         env.log(
             {
                 "action": action,
-                "observation": last_observation,
+                "observation": observation[-1],
                 "reward": reward,
                 "tip_position": tip_position,
                 "tip_velocity": tip_velocity,
             }
         )
         observation, reward, terminated, truncated, info = env.step(action)
-        floor_contact = info["observation"]["floor_contact"]["contact"]
         if terminated or truncated:
             observation, info = env.reset()
-            floor_contact = False
 
 
 def main(policy_path: str, training: bool):
