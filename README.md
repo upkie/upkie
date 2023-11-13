@@ -7,11 +7,13 @@
 [![PyPI version](https://img.shields.io/pypi/v/upkie)](https://pypi.org/project/upkie/)
 [![Chat](https://img.shields.io/badge/matrix-chat-%234eb899)](https://app.element.io/#/room/#tasts-robots:matrix.org)
 
-Build instructions and software for **Upkie** wheeled bipeds. Develop in Python or C++ on Linux or macOS, run on the robot's Raspberry Pi. Questions are welcome in the [Discussions](https://github.com/upkie/upkie/discussions) forum or on the [Chat](https://app.element.io/#/room/#tasts-robots:matrix.org).
+**Upkie** is a fully open source self-balancing wheeled biped robot. It has wheels for balancing, and legs to go off-road or negotiate uneven terrains. Upkies are designed to be buildable at home with tools and components ordered online, like [mjbots](https://github.com/mjbots) actuators. Robot motions are coordinated onboard by a Raspberry Pi 4.
+
+This repository contains all the software and instructions required to build and operate an Upkie. Development can be done in Python or C++ on Linux or macOS. Questions are welcome in the [Discussions](https://github.com/upkie/upkie/discussions) forum or on the [Chat](https://app.element.io/#/room/#tasts-robots:matrix.org).
 
 ## Installation
 
-Everything needed to develop with Upkie in Python lies in a single package:
+Everything needed to develop for Upkie in Python lies in a single package:
 
 ```console
 pip install upkie
