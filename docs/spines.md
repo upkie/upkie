@@ -1,6 +1,6 @@
 # Spines {#spines}
 
-Upkie's code is organized into *spines*, which communicate with the simulation or mjbots actuators, and *agents*, the programs that implement robot behaviors. We use [Bazel](https://bazel.build/) to build spines, both for simulation on your development computer or for running on the robot's Raspberry Pi. Bazel does not install anything on your system: it fetches dependencies with specific versions and builds them locally, making sure the code stays consistent over time. Check out [this introduction](https://github.com/tasts-robots/vulp#readme) for more details.
+Upkie's code is organized into *spines*, which communicate with the simulation or mjbots actuators, and *agents*, the programs that implement robot behaviors. We use [Bazel](https://bazel.build/) to build spines, both for simulation on your development computer or for running on the robot's Raspberry Pi. Bazel does not install anything on your system: it fetches dependencies with specific versions and builds them locally, making sure the code stays consistent over time. Check out [this introduction](https://github.com/upkie/vulp#readme) for more details.
 
 ## Bullet spine {#bullet-spine}
 
@@ -24,7 +24,7 @@ The pi3hat spine is the one that runs on the real robot, where a [pi3hat r4.5](h
 
 ### Download the latest release
 
-To get the latest pi3hat spine from GitHub, download the latest `pi3hat_spine` binary from [Continuous Integration build artifacts](https://github.com/tasts-robots/upkie/actions/workflows/bazel.yml), then `scp` it to the robot. TODO: make this more user-friendly ;)
+To get the latest pi3hat spine from GitHub, download the latest `pi3hat_spine` binary from [Continuous Integration build artifacts](https://github.com/upkie/upkie/actions/workflows/bazel.yml), then `scp` it to the robot. TODO: make this more user-friendly ;)
 
 ```console
 $ scp pi3hat_spine foo@robot

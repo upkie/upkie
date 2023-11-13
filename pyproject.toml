@@ -45,10 +45,10 @@ the_full_monty = [
 ]
 
 [project.urls]
-Documentation = "https://tasts-robots.github.io/upkie/"
-Source = "https://github.com/tasts-robots/upkie"
-Tracker = "https://github.com/tasts-robots/upkie/issues"
-Changelog = "https://github.com/tasts-robots/upkie/blob/main/CHANGELOG.md"
+Documentation = "https://upkie.github.io/upkie/"
+Source = "https://github.com/upkie/upkie"
+Tracker = "https://github.com/upkie/upkie/issues"
+Changelog = "https://github.com/upkie/upkie/blob/main/CHANGELOG.md"
 
 [tool.flit.sdist]
 include = [

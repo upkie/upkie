@@ -44,7 +44,7 @@ py_binary(
         # Selecting the right CPU architecture for the Raspberry Pi is
         # currently a tough nut to crack for Bazel. We only enable compiled
         # dependencies on the host side for now.
-        # Followed in: https://github.com/tasts-robots/upkie/issues/1
+        # Followed in: https://github.com/upkie/upkie/issues/1
         "//:pi64_config": [],
         "//conditions:default": [
             requirement("numpy"),

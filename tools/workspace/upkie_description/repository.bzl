@@ -10,7 +10,7 @@ def upkie_description_repository():
     """
     git_repository(
         name = "upkie_description",
-        remote = "https://github.com/tasts-robots/upkie_description",
+        remote = "https://github.com/upkie/upkie_description",
         commit = "bb886d0f453c2d6822d431cfd42385bf06052b42",
         shallow_since = "1687961108 +0200"
     )

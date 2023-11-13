@@ -3,7 +3,7 @@
 # Copyright 2022 Stéphane Caron
 # Copyright 2023 Inria
 #
-# See https://github.com/tasts-robots/upkie_description#joint-limits
+# See https://github.com/upkie/upkie_description#joint-limits
 
 HIP_LIMIT_REV=0.2
 KNEE_LIMIT_REV=0.25

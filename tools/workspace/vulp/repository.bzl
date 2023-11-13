@@ -10,7 +10,7 @@ def vulp_repository():
     """
     git_repository(
         name = "vulp",
-        remote = "https://github.com/tasts-robots/vulp.git",
+        remote = "https://github.com/upkie/vulp.git",
         commit = "fdf5b26d0bfe5723907326e2ddf0568a3c8779f9",
         shallow_since = "1698844792 +0100",
     )
