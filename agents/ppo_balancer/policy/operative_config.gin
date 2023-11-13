@@ -1,0 +1,42 @@
+import settings
+
+# Parameters for EnvSettings:
+# ==============================================================================
+EnvSettings.accel_penalty = 0.0
+EnvSettings.action_lpf = (0.05, 0.15)
+EnvSettings.action_noise = [0.05]
+EnvSettings.agent_frequency = 200
+EnvSettings.env_id = 'UpkieGroundVelocity-v2'
+EnvSettings.history_size = 10
+EnvSettings.max_ground_accel = 10.0
+EnvSettings.max_ground_velocity = 1.0
+EnvSettings.observation_noise = [0.01, 0.01, 0.01, 0.01]
+EnvSettings.reward_weights = {'position': 1.0, 'velocity': 0.1}
+EnvSettings.spine_config = {'bullet': {'torque_control': {'kd': 1.0}}}
+EnvSettings.spine_frequency = 1000
+
+# Parameters for PPOSettings:
+# ==============================================================================
+PPOSettings.batch_size = 64
+PPOSettings.clip_range = 0.1
+PPOSettings.clip_range_vf = None
+PPOSettings.ent_coef = 0.0
+PPOSettings.gae_lambda = 0.95
+PPOSettings.learning_rate = 0.003
+PPOSettings.max_grad_norm = 0.5
+PPOSettings.n_epochs = 10
+PPOSettings.n_steps = 2048
+PPOSettings.net_arch_pi = (16, 16)
+PPOSettings.net_arch_vf = (32, 32)
+PPOSettings.normalize_advantage = True
+PPOSettings.sde_sample_freq = -1
+PPOSettings.target_kl = None
+PPOSettings.use_sde = False
+PPOSettings.vf_coef = 0.5
+
+# Parameters for TrainingSettings:
+# ==============================================================================
+TrainingSettings.init_rand = {'omega_y': 0.1, 'pitch': 0.25, 'v_x': 0.1}
+TrainingSettings.max_episode_duration = 10.0
+TrainingSettings.return_horizon = 5.0
+TrainingSettings.total_timesteps = 2000000
