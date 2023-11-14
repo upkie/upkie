@@ -30,7 +30,6 @@ gin:
 reward: {}
 spine_config:
     bullet:
-        control_mode: torque
         follower_camera: false
         gui: true
         position_init_base_in_world:

@@ -1,5 +1,4 @@
 bullet:
-    control_mode: torque
     follower_camera: false
     gui: true
     reset:

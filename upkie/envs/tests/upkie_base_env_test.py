@@ -64,7 +64,6 @@ class TestUpkieBaseEnv(unittest.TestCase):
         shared_memory.close_fd()
         self.assertEqual(env._spine_config["some_value"], 12)
         self.assertEqual(env._spine_config["some_value"], 12)
-        self.assertEqual(env._spine_config["bullet"]["control_mode"], "torque")
         self.assertEqual(env._spine_config["bullet"]["gui"], False)
 
 
