@@ -23,4 +23,4 @@ fi
 cp -f ${CONFIG} ./agents/ppo_balancer/policy/operative_config.gin
 cp -f ${PARAMS} ./agents/ppo_balancer/policy/params.zip
 
-./tools/bazel run //agents/ppo_balancer:run ${PARAMS} -- --training
+./tools/bazel run //agents/ppo_balancer:run -- --training
