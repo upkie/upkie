@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - envs: ``info`` dictionary does not repeat "action" any more
 - envs: ``rate`` attribute from base environment is now internal
+- examples: Refactor lying genuflections
+- examples: Refactor wheeled balancing
 
 ## [2.0.0] - 2023-10-26
 
