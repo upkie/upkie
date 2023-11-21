@@ -18,8 +18,8 @@ import gymnasium as gym
 import numpy as np
 import proxsuite
 import qpsolvers
-from ltv_mpc import MPCQP, Plan, solve_mpc
-from ltv_mpc.systems import CartPole
+from qpmpc import MPCQP, Plan, solve_mpc
+from qpmpc.systems import CartPole
 from qpsolvers import solve_problem
 
 import upkie.envs
@@ -135,7 +135,7 @@ async def balance(
 
     live_plot = None
     if show_live_plot and not on_raspi():
-        from ltv_mpc.live_plots import CartPolePlot  # imports matplotlib
+        from qpmpc.live_plots import CartPolePlot  # imports matplotlib
 
         live_plot = CartPolePlot(cart_pole, order="velocities")
 
