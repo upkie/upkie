@@ -7,9 +7,9 @@
 
 import gymnasium as gym
 import numpy as np
-from qpmpc import solve_mpc
-from qpmpc.systems import CartPole
 from numpy.typing import NDArray
+from qpmpc import solve_mpc
+from qpmpc.systems import WheeledInvertedPendulum
 
 import upkie.envs
 from upkie.utils.clamp import clamp_and_warn
@@ -18,25 +18,25 @@ upkie.envs.register()
 
 
 def get_target_states(
-    cart_pole: CartPole,
+    pendulum: WheeledInvertedPendulum,
     state: NDArray[float],
     target_vel: float = 0.0,
 ) -> NDArray[float]:
     """Define the reference state trajectory over the receding horizon.
 
     Args:
-        cart_pole: Instance from which we read receding-horizon properties.
-        state: Initial state of the cart-pole system.
+        pendulum: Instance from which we read receding-horizon properties.
+        state: Initial state of the wheeled inverted pendulum system.
         target_vel: Target ground velocity in m/s.
 
     Returns:
         Reference state trajectory over the horizon.
     """
-    nx = CartPole.STATE_DIM
-    target_states = np.zeros((cart_pole.nb_timesteps + 1) * nx)
-    for k in range(cart_pole.nb_timesteps + 1):
+    nx = WheeledInvertedPendulum.STATE_DIM
+    target_states = np.zeros((pendulum.nb_timesteps + 1) * nx)
+    for k in range(pendulum.nb_timesteps + 1):
         target_states[k * nx] = (
-            state[0] + (k * cart_pole.sampling_period) * target_vel
+            state[0] + (k * pendulum.sampling_period) * target_vel
         )
         target_states[k * nx + 2] = target_vel
     return target_states
@@ -52,13 +52,13 @@ def balance(env: gym.Env, nb_env_steps: int = 10_000) -> None:
     implement hot-starting, both of which impact performance. See the MPC
     balancer agent for a more complete example.
     """
-    cart_pole = CartPole(
+    pendulum = WheeledInvertedPendulum(
         length=0.3,
         max_ground_accel=10.0,
         nb_timesteps=50,
         sampling_period=0.02,
     )
-    mpc_problem = cart_pole.build_mpc_problem(
+    mpc_problem = pendulum.build_mpc_problem(
         terminal_cost_weight=1.0,
         stage_state_cost_weight=1e-2,
         stage_input_cost_weight=1e-3,
@@ -76,10 +76,14 @@ def balance(env: gym.Env, nb_env_steps: int = 10_000) -> None:
 
         theta, ground_pos, theta_dot, ground_vel = observation
         initial_state = np.array([ground_pos, theta, ground_vel, theta_dot])
-        target_states = get_target_states(cart_pole, initial_state)
+        target_states = get_target_states(pendulum, initial_state)
         mpc_problem.update_initial_state(initial_state)
-        mpc_problem.update_goal_state(target_states[-CartPole.STATE_DIM :])
-        mpc_problem.update_target_states(target_states[: -CartPole.STATE_DIM])
+        mpc_problem.update_goal_state(
+            target_states[-WheeledInvertedPendulum.STATE_DIM :]
+        )
+        mpc_problem.update_target_states(
+            target_states[: -WheeledInvertedPendulum.STATE_DIM]
+        )
 
         # NB: we solve the MPC problem "cold" here, i.e. without hot-starting.
         # This will likely take too much time to fit in a 200 Hz control loop
