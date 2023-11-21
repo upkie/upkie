@@ -40,6 +40,7 @@ clean: clean_broken_links  ## clean all local build and intermediate files
 
 .PHONY: build
 build: clean_broken_links  ## build Raspberry Pi targets
+	$(BAZEL) build --config=pi64 //agents/mpc_balancer
 	$(BAZEL) build --config=pi64 //agents/ppo_balancer
 	$(BAZEL) build --config=pi64 //agents/wheel_balancer
 	$(BAZEL) build --config=pi64 //spines:mock_spine
@@ -81,6 +82,9 @@ run_mock_spine:  ### run the mock spine on the Raspberry Pi
 # NB: run_pi3hat_spine is used in build instructions
 run_pi3hat_spine:  ### run the pi3hat spine on the Raspberry Pi
 	$(RASPUNZEL) run -s //spines:pi3hat_spine
+
+run_mpc_balancer:  ### run the test balancer on the Raspberry Pi
+	$(RASPUNZEL) run -s //agents/mpc_balancer:mpc_balancer
 
 run_ppo_balancer:  ### run the test balancer on the Raspberry Pi
 	$(RASPUNZEL) run -s //agents/ppo_balancer:ppo_balancer
