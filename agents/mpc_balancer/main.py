@@ -108,7 +108,7 @@ class PendularUpkie(WheeledInvertedPendulum):
 
 
 @gin.configurable
-async def balance(
+def balance(
     env: gym.Env,
     nb_env_steps: int,
     rebuild_qp_every_time: bool,
