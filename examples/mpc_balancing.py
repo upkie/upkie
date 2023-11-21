@@ -7,8 +7,8 @@
 
 import gymnasium as gym
 import numpy as np
-from ltv_mpc import solve_mpc
-from ltv_mpc.systems import CartPole
+from qpmpc import solve_mpc
+from qpmpc.systems import CartPole
 from numpy.typing import NDArray
 
 import upkie.envs
