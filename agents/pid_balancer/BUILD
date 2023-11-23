@@ -46,7 +46,7 @@ py_binary(
 )
 
 py_binary(
-    name = "wheel_balancer",
+    name = "pid_balancer",
     srcs = ["main.py"],
     main = "main.py",
 
@@ -55,7 +55,7 @@ py_binary(
     imports = ["."],
 
     data = [
-        "//agents/wheel_balancer/config",
+        "//agents/pid_balancer/config",
     ] + select({
         "//:pi64_config": ["//spines:pi3hat_spine"],
         "//conditions:default": [],

@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Breaking:** Rename the "wheel" balancer agent to "PID balancer"
 - MPC balancer: Update height of control point to 60 cm
 - envs: Rewards are now part of individual environments
 - envs: ``info`` dictionary does not repeat "action" any more

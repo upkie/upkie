@@ -35,7 +35,7 @@ foo@robot:~$ ./pi3hat_spine
 Once the spine is running, you can run any agent in a separate shell on the robot, for example the wheel balancer:
 
 ```console
-foo@robot:upkie$ make run_wheel_balancer
+foo@robot:upkie$ make run_pid_balancer
 ```
 
 ### Build from source
@@ -58,7 +58,7 @@ foo@robot:upkie$ make run_pi3hat_spine
 Once the spine is running, you can run any agent in a separate shell on the robot, for example the wheel balancer:
 
 ```console
-foo@robot:upkie$ make run_wheel_balancer
+foo@robot:upkie$ make run_pid_balancer
 ```
 
 ## Mock spine {#mock-spine}
