@@ -1,5 +1,4 @@
 __pycache__
-agents/ppo_balancer/policy/params.zip
 bazel-*
 dist/
 docs/html/
