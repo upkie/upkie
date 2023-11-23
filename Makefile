@@ -73,23 +73,23 @@ upload: check_robot build  ## upload built targets to the Raspberry Pi
 	ssh $(REMOTE) sudo find $(PROJECT_NAME) -type d -name __pycache__ -user root -exec chmod go+wx {} "\;"
 	rsync -Lrtu --delete-after --delete-excluded --exclude bazel-out/ --exclude bazel-testlogs/ --exclude bazel-$(CURDIR_NAME) --exclude bazel-$(PROJECT_NAME)/ --exclude logs/ --exclude training/ --progress $(CURDIR)/ $(REMOTE):$(PROJECT_NAME)/
 
-# REMOTE TARGETS
-# ==============
+# REMOTE SPINE TARGETS
+# ====================
 
 run_mock_spine:  ### run the mock spine on the Raspberry Pi
 	$(RASPUNZEL) run -s //spines:mock_spine
-
-run_mpc_balancer:  ### run the test balancer on the Raspberry Pi
-	$(RASPUNZEL) run -s //agents/mpc_balancer:mpc_balancer
 
 # NB: run_pi3hat_spine is used in build instructions
 run_pi3hat_spine:  ### run the pi3hat spine on the Raspberry Pi
 	$(RASPUNZEL) run -s //spines:pi3hat_spine
 
-run_mpc_balancer:  ### run the test balancer on the Raspberry Pi
+# REMOTE AGENT TARGETS
+# ====================
+
+run_mpc_balancer:  ### run the MPC balancer on the Raspberry Pi
 	$(RASPUNZEL) run -s //agents/mpc_balancer:mpc_balancer
 
-run_ppo_balancer:  ### run the test balancer on the Raspberry Pi
+run_ppo_balancer:  ### run the PPO balancer on the Raspberry Pi
 	$(RASPUNZEL) run -s //agents/ppo_balancer:run
 
 # A specific gain config file can be loaded with the CONFIG variable
