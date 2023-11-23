@@ -10,7 +10,7 @@ import os
 import random
 import signal
 import tempfile
-from typing import List
+from typing import Callable, List
 
 import gin
 import gymnasium
@@ -18,7 +18,6 @@ import numpy as np
 import stable_baselines3
 from envs import make_ppo_balancer_env
 from rules_python.python.runfiles import runfiles
-from schedules import affine_schedule
 from settings import EnvSettings, PPOSettings, TrainingSettings
 from stable_baselines3.common.callbacks import BaseCallback, CheckpointCallback
 from stable_baselines3.common.logger import TensorBoardOutputFormat
@@ -214,6 +213,28 @@ def find_save_path(training_dir: str, policy_name: str):
     while os.path.exists(path_for_iter(nb_iter)):
         nb_iter += 1
     return path_for_iter(nb_iter)
+
+
+def affine_schedule(y_0: float, y_1: float) -> Callable[[float], float]:
+    """!
+    Affine schedule as a function over the [0, 1] interval.
+
+    @param y_0 Function value at zero.
+    @param y_1 Function value at one.
+    @return Corresponding affine function.
+    """
+    diff = y_1 - y_0
+
+    def schedule(x: float) -> float:
+        """!
+        Compute the current learning rate from remaining progress.
+
+        @param x Progress decreasing from 1 (beginning) to 0.
+        @return Corresponding learning rate>
+        """
+        return y_0 + x * diff
+
+    return schedule
 
 
 def train_policy(
