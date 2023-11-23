@@ -34,16 +34,16 @@ class ServoController:
         turning_gain_scale: float,
         wheel_distance: float,
     ):
-        """Create controller.
+        """!
+        Create controller.
 
-        Args:
-            gain_scale: PD gain scale for hip and knee joints.
-            turning_gain_scale: Additional gain scale added when the robot is
-                turning to keep the legs stiff in spite of the ground pulling
-                them apart.
-            wheel_distance: Lateral distance between the two wheels in meters.
-                This controller does not handle the case where the two wheels
-                are not in the lateral plane.
+        @param gain_scale PD gain scale for hip and knee joints.
+        @param turning_gain_scale Additional gain scale added when the robot is
+            turning to keep the legs stiff in spite of the ground pulling them
+            apart.
+        @param wheel_distance Lateral distance between the two wheels in
+            meters. This controller does not handle the case where the two
+            wheels are not in the lateral plane.
         """
         self.gain_scale = clamp(gain_scale, 0.1, 2.0)
         self.position_right_in_left = np.array([0.0, wheel_distance, 0.0])
@@ -52,10 +52,10 @@ class ServoController:
         self.wheel_balancer = WheelController()  # type: ignore
 
     def initialize_servo_action(self, observation: Dict[str, Any]) -> None:
-        """Initialize default servo action from initial observation.
+        """!
+        Initialize default servo action from initial observation.
 
-        Args:
-            observation: Initial observation.
+        @param observation Initial observation.
         """
         self.servo_action = {
             joint: {
@@ -79,14 +79,13 @@ class ServoController:
         )
 
     def cycle(self, observation: Dict[str, Any], dt: float) -> Dict[str, Any]:
-        """Compute action for a new cycle.
+        """!
+        Compute action for a new cycle.
 
-        Args:
-            observation: Latest observation.
-            dt: Duration in seconds until next cycle.
-
-        Returns:
-            Dictionary with the new action and some internal state for logging.
+        @param observation Latest observation.
+        @param dt Duration in seconds until next cycle.
+        @return Dictionary with the new action and some internal state for
+            logging.
         """
         if self.servo_action is None:
             self.initialize_servo_action(observation)

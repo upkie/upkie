@@ -46,13 +46,12 @@ def run(
     spine_config: Dict[str, Any],
     frequency: float = 200.0,
 ) -> None:
-    """
+    """!
     Read observations and send actions to the spine.
 
-    Args:
-        spine: Interface to the spine.
-        spine_config: Spine configuration dictionary.
-        frequency: Control frequency in Hz.
+    @param spine Interface to the spine.
+    @param spine_config Spine configuration dictionary.
+    @param frequency Control frequency in Hz.
     """
     controller = ServoController()
     dt = 1.0 / frequency

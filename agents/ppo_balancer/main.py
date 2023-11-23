@@ -41,11 +41,10 @@ def no_contact_policy(
 
 
 def run_policy(env: UpkieGroundVelocity, policy) -> None:
-    """
+    """!
     Run policy in the robot environment.
 
-    Args:
-        policy: Policy to run.
+    @param policy Policy to run.
     """
     action = np.zeros(env.action_space.shape)
     observation, info = env.reset()

@@ -22,15 +22,13 @@ def get_target_states(
     state: NDArray[float],
     target_vel: float = 0.0,
 ) -> NDArray[float]:
-    """Define the reference state trajectory over the receding horizon.
+    """!
+    Define the reference state trajectory over the receding horizon.
 
-    Args:
-        pendulum: Instance from which we read receding-horizon properties.
-        state: Initial state of the wheeled inverted pendulum system.
-        target_vel: Target ground velocity in m/s.
-
-    Returns:
-        Reference state trajectory over the horizon.
+    @param pendulum Instance from which we read receding-horizon properties.
+    @param state Initial state of the wheeled inverted pendulum system.
+    @param target_vel Target ground velocity in m/s.
+    @return Reference state trajectory over the horizon.
     """
     nx = WheeledInvertedPendulum.STATE_DIM
     target_states = np.zeros((pendulum.nb_timesteps + 1) * nx)

@@ -32,16 +32,13 @@ if version.parse(pink.__version__) < version.parse(MINIMUM_PINK_VERSION):
 
 
 def observe(observation, configuration, servo_layout) -> NDArray[float]:
-    """
+    """!
     Compute configuration vector from a new observation.
 
-    Args:
-        observation: Observation dictionary.
-        configuration: Previous configuration.
-        servo_layout: Robot servo layout.
-
-    Returns:
-        Configuration vector from observation.
+    @param observation Observation dictionary.
+    @param configuration Previous configuration.
+    @param servo_layout Robot servo layout.
+    @return Configuration vector from observation.
     """
     q = configuration.q.copy()
     for joint, servo in servo_layout.items():
@@ -55,16 +52,13 @@ def observe(observation, configuration, servo_layout) -> NDArray[float]:
 def serialize_to_servo_action(
     configuration, velocity, servo_layout
 ) -> Dict[str, dict]:
-    """
+    """!
     Serialize robot state for the spine.
 
-    Args:
-        configuration: Robot configuration.
-        velocity: Robot velocity in tangent space.
-        servo_layout: Robot servo layout.
-
-    Returns:
-        Dictionary of position and velocity targets for each joint.
+    @param configuration Robot configuration.
+    @param velocity Robot velocity in tangent space.
+    @param servo_layout Robot servo layout.
+    @return Dictionary of position and velocity targets for each joint.
     """
     target = {}
     for joint, servo in servo_layout.items():
@@ -123,18 +117,17 @@ class WholeBodyController:
         turning_gain_scale: float,
         visualize: bool,
     ):
-        """
+        """!
         Create controller.
 
-        Args:
-            gain_scale: PD gain scale for hip and knee joints.
-            max_crouch_height: Maximum distance along the vertical axis that
-                the robot goes down while crouching, in [m].
-            max_crouch_velocity: Maximum vertical velocity in [m] / [s].
-            turning_gain_scale: Additional gain scale added when the robot is
-                turning to keep the legs stiff in spite of the ground pulling
-                them apart.
-            visualize: If true, open a MeshCat visualizer on the side.
+        @param gain_scale: PD gain scale for hip and knee joints.
+        @param max_crouch_height: Maximum distance along the vertical axis that
+            the robot goes down while crouching, in [m].
+        @param max_crouch_velocity: Maximum vertical velocity in [m] / [s].
+        @param turning_gain_scale: Additional gain scale added when the robot
+            is turning to keep the legs stiff in spite of the ground pulling
+            them apart.
+        @param visualize: If true, open a MeshCat visualizer on the side.
         """
         robot = upkie_description.load_in_pinocchio(root_joint=None)
         configuration = pink.Configuration(robot.model, robot.data, robot.q0)
@@ -218,12 +211,11 @@ class WholeBodyController:
     def update_target_heights(
         self, observation: Dict[str, Any], dt: float
     ) -> None:
-        """
+        """!
         Update target base height from joystick inputs.
 
-        Args:
-            observation: Observation from the spine.
-            dt: Duration in seconds until next cycle.
+        @param observation Observation from the spine.
+        @param dt Duration in seconds until next cycle.
         """
         try:
             axis_value: float = observation["joystick"]["pad_axis"][1]
@@ -239,12 +231,11 @@ class WholeBodyController:
     def update_ik_targets(
         self, observation: Dict[str, Any], dt: float
     ) -> None:
-        """
+        """!
         Update IK frame targets from individual target positions.
 
-        Args:
-            observation: Observation from the spine.
-            dt: Duration in seconds until next cycle.
+        @param observation Observation from the spine.
+        @param dt Duration in seconds until next cycle.
         """
         self.update_target_heights(observation, dt)
         transform_common_to_rest = pin.SE3(
@@ -264,11 +255,10 @@ class WholeBodyController:
             self.tasks[target].set_target(transform_target_to_world)
 
     def _process_first_observation(self, observation: Dict[str, Any]) -> None:
-        """
+        """!
         Function called at the first iteration of the controller.
 
-        Args:
-            observation: Observation from the spine.
+        @param observation Observation from the spine.
         """
         q = observe(observation, self.configuration, self.servo_layout)
         self.configuration = pink.Configuration(
@@ -286,12 +276,10 @@ class WholeBodyController:
         """
         Compute action for a new cycle.
 
-        Args:
-            observation: Latest observation.
-            dt: Duration in seconds until next cycle.
-
-        Returns:
-            Dictionary with the new action and some internal state for logging.
+        @param observation Latest observation.
+        @param dt Duration in seconds until next cycle.
+        @return Dictionary with the new action and some internal state for
+            logging.
         """
         if not self.__initialized:
             self._process_first_observation(observation)
