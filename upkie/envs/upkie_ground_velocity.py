@@ -104,6 +104,7 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
         Initialize environment.
 
         @param max_ground_velocity Maximum commanded ground velocity in m/s.
+        @param reward_weights Coefficients before each reward term.
         @param wheel_radius Wheel radius in [m].
         @param kwargs Other keyword arguments are forwarded as-is to parent
             class constructors. Follow the chain up from @ref
