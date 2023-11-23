@@ -1,14 +1,16 @@
 # PPO balancer
 
+This agent balances Upkie with its wheels only, using an MLP policy trained using the [PPO implementation from stable-baselines3](https://stable-baselines3.readthedocs.io/en/master/modules/ppo.html).
+
 ## Training a new policy
 
 First, check that training progresses one rollout at a time:
 
 ```
-./tools/bazelisk run //agents/ppo_balancer:train -- --show
+./tools/bazelisk run //agents/ppo_balancer:train -- --show --nb-envs K
 ```
 
-Once this works you can remove the ``--show`` GUI toggle.
+Once this works you can remove the ``--show`` GUI toggle. Check out the `time/fps` plots in the command line or in TensorBoard to adjust the number `K` of parallel environments based on your CPU.
 
 ## Running a trained policy
 
@@ -18,6 +20,10 @@ You can specify the path to policy parameters to the agent. For instance, if the
 
 - Python: `` python ./agents/ppo_balancer/main.py --policy /path/to/foobar.zip``
 - Bazel: ``./tools/bazelisk run //agents/ppo_balancer -- --policy /path/to/foobar.zip``
+
+## Deploying to the robot
+
+The `requirements.txt` file in the agent directory can be used to quickly install packages from PyPI directly on Upkie.
 
 ## Troubleshooting
 
