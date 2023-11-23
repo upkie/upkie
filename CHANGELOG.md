@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- MPC balancer: Update height of control point to 60 cm
 - envs: ``info`` dictionary does not repeat "action" any more
 - envs: ``rate`` attribute from base environment is now internal
 - examples: Refactor lying genuflections
