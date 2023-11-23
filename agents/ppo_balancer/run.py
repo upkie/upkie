@@ -8,6 +8,7 @@
 import argparse
 import logging
 import os
+from typing import Tuple
 
 import gin
 import gymnasium as gym
@@ -23,8 +24,7 @@ upkie.envs.register()
 
 
 def parse_command_line_arguments() -> argparse.Namespace:
-    """
-    Parse command line arguments.
+    """Parse command line arguments.
 
     Returns:
         Command-line arguments.
@@ -44,13 +44,24 @@ def parse_command_line_arguments() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def get_tip_state(observation):
+def get_tip_state(
+    observation, tip_height: float = 0.58
+) -> Tuple[float, float]:
+    """Compute the state of the virtual tip used in the agent's reward.
+
+    This extra info is for logging only.
+
+    Args:
+        observation: Observation vector.
+        tip_height: Height of the virtual tip.
+
+    Returns:
+        Pair of tip (position, velocity) in the sagittal plane.
+    """
     pitch = observation[0]
     ground_position = observation[1]
     angular_velocity = observation[2]
     ground_velocity = observation[3]
-
-    tip_height = 0.58  # [m]
     tip_position = ground_position + tip_height * np.sin(pitch)
     tip_velocity = ground_velocity + tip_height * angular_velocity * np.cos(
         pitch
@@ -58,11 +69,12 @@ def get_tip_state(observation):
     return tip_position, tip_velocity
 
 
-def run_policy(env, policy) -> None:
+def run_policy(env: gym.Wrapper, policy) -> None:
     """!
     Run policy in the robot environment.
 
-    @param policy Policy to run.
+    @param env Upkie environment, wrapped by the agent.
+    @param policy MLP policy to follow.
     """
     action = np.zeros(env.action_space.shape)
     observation, info = env.reset()
@@ -84,7 +96,13 @@ def run_policy(env, policy) -> None:
             observation, info = env.reset()
 
 
-def main(policy_path: str, training: bool):
+def main(policy_path: str, training: bool) -> None:
+    """Load environment and policy, and run the latter on the former.
+
+    Args:
+        policy_path: Path to policy parameters.
+        training: If True, add training noise and domain randomization.
+    """
     env_settings = EnvSettings()
     with gym.make(
         env_settings.env_id,
