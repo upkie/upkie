@@ -41,8 +41,8 @@ clean: clean_broken_links  ## clean all local build and intermediate files
 .PHONY: build
 build: clean_broken_links  ## build Raspberry Pi targets
 	$(BAZEL) build --config=pi64 //agents/mpc_balancer
+	$(BAZEL) build --config=pi64 //agents/pid_balancer
 	$(BAZEL) build --config=pi64 //agents/ppo_balancer:run
-	$(BAZEL) build --config=pi64 //agents/wheel_balancer
 	$(BAZEL) build --config=pi64 //spines:mock_spine
 	$(BAZEL) build --config=pi64 //spines:pi3hat_spine
 
@@ -89,15 +89,15 @@ run_pi3hat_spine:  ### run the pi3hat spine on the Raspberry Pi
 run_mpc_balancer:  ### run the MPC balancer on the Raspberry Pi
 	$(RASPUNZEL) run -s //agents/mpc_balancer:mpc_balancer
 
+# A specific gain config file can be loaded with the CONFIG variable
+# Example: ``make run_pid_balancer CONFIG=michel-strogoff``
+# where michel-strogoff.gin is a file in agents/pid_balancer/config/
+# By default we detect the config file to load by running `hostname`.
+PID_BALANCER_CONFIG = $(or ${CONFIG}, hostname)
+
+# NB: run_pid_balancer is used in build instructions
+run_pid_balancer:  ### run the test balancer on the Raspberry Pi
+	$(RASPUNZEL) run -s //agents/pid_balancer:pid_balancer -- --config $(PID_BALANCER_CONFIG)
+
 run_ppo_balancer:  ### run the PPO balancer on the Raspberry Pi
 	$(RASPUNZEL) run -s //agents/ppo_balancer:run
-
-# A specific gain config file can be loaded with the CONFIG variable
-# Example: ``make run_wheel_balancer CONFIG=michel-strogoff``
-# where michel-strogoff.gin is a file in agents/wheel_balancer/config/
-# By default we detect the config file to load by running `hostname`.
-WHEEL_BALANCER_CONFIG = $(or ${CONFIG}, hostname)
-
-# NB: run_wheel_balancer is used in build instructions
-run_wheel_balancer:  ### run the test balancer on the Raspberry Pi
-	$(RASPUNZEL) run -s //agents/wheel_balancer:wheel_balancer -- --config $(WHEEL_BALANCER_CONFIG)

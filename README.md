@@ -30,7 +30,7 @@ Assuming you have a C++ compiler (setup one-liners: [Fedora](https://github.com/
 ```console
 git clone https://github.com/upkie/upkie.git
 cd upkie
-./start_wheel_balancer.sh
+./start_pid_balancer.sh
 ```
 
 Click on the robot in the simulator window to apply external forces.
