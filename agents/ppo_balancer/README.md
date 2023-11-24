@@ -18,8 +18,8 @@ Testing a policy assumes the spine is already up and running, for instance via `
 
 You can specify the path to policy parameters to the agent. For instance, if the policy parameters are saved in `foobar.zip`, run:
 
-- Python: `` python ./agents/ppo_balancer/main.py --policy /path/to/foobar.zip``
-- Bazel: ``./tools/bazelisk run //agents/ppo_balancer -- --policy /path/to/foobar.zip``
+- Python: `` python ./agents/ppo_balancer/main.py --policy ./agents/ppo_balancer/training/2023-11-15/final.zip``
+- Bazel: ``./tools/bazelisk run //agents/ppo_balancer -- --policy ./agents/ppo_balancer/training/2023-11-15/final.zip``
 
 ## Deploying to the robot
 
