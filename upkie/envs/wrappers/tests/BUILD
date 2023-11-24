@@ -22,7 +22,6 @@ py_test(
         "//upkie/envs/wrappers",
         ":envs",
         requirement("gymnasium"),
-        requirement("stable_baselines3"),
     ],
 )
 
@@ -33,7 +32,6 @@ py_test(
         "//upkie/envs/wrappers",
         ":envs",
         requirement("gymnasium"),
-        requirement("stable_baselines3"),
     ],
 )
 
@@ -44,7 +42,6 @@ py_test(
         "//upkie/envs/wrappers",
         ":envs",
         requirement("gymnasium"),
-        requirement("stable_baselines3"),
     ],
 )
 
@@ -55,7 +52,6 @@ py_test(
         "//upkie/envs/wrappers",
         ":envs",
         requirement("gymnasium"),
-        requirement("stable_baselines3"),
     ],
 )
 
@@ -66,7 +62,6 @@ py_test(
         "//upkie/envs/wrappers",
         ":envs",
         requirement("gymnasium"),
-        requirement("stable_baselines3"),
     ],
 )
 

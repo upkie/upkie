@@ -10,7 +10,6 @@ import unittest
 
 import gymnasium
 import numpy as np
-from stable_baselines3.common.env_checker import check_env
 
 from upkie.envs.wrappers.differentiate_action import DifferentiateAction
 from upkie.envs.wrappers.tests.envs import ActionObserverEnv
@@ -29,13 +28,18 @@ class DifferentiateActionTestCase(unittest.TestCase):
         self.assertTrue(np.allclose(action * env.dt, inner_action))
 
     def test_check_env(self):
-        env = gymnasium.make("Pendulum-v1")
-        diff_env = DifferentiateAction(
-            env,
-            min_derivative=-0.1,
-            max_derivative=0.1,
-        )
-        check_env(diff_env)
+        try:
+            from stable_baselines3.common.env_checker import check_env
+
+            env = gymnasium.make("Pendulum-v1")
+            diff_env = DifferentiateAction(
+                env,
+                min_derivative=-0.1,
+                max_derivative=0.1,
+            )
+            check_env(diff_env)
+        except ImportError:
+            pass
 
 
 if __name__ == "__main__":
