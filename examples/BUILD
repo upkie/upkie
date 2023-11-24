@@ -1,6 +1,7 @@
 # -*- python -*-
 #
 # Copyright 2022 Stéphane Caron
+# SPDX-License-Identifier: Apache-2.0
 #
 # This BUILD file allows launching the examples through Bazel. You don't need
 # to go through Bazel if you have installed the "upkie" Python package from

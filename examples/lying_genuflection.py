@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright 2023 Inria
+# SPDX-License-Identifier: Apache-2.0
 
 """Genuflect while lying on a horizontal floor."""
 

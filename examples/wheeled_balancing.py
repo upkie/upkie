@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright 2023 Inria
+# SPDX-License-Identifier: Apache-2.0
 
 """Tiny example: balancing using a proportional wheel controller."""
 
