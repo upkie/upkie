@@ -63,4 +63,5 @@ To run this agent on the robot, `scp` the script to the Raspberry Pi, start a [p
 ## To go further
 
 - [Build your own Upkie](https://github.com/upkie/upkie/wiki) 🧰
+- [Documentation](https://upkie.github.io/upkie/)
 - [More examples](https://github.com/upkie/upkie/tree/main/examples)
