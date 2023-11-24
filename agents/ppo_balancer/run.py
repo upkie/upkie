@@ -13,11 +13,11 @@ from typing import Tuple
 import gin
 import gymnasium as gym
 import numpy as np
-from envs import make_ppo_balancer_env
 from settings import EnvSettings, PPOSettings
 from stable_baselines3 import PPO
 
 import upkie.envs
+from envs import make_ppo_balancer_env
 from upkie.utils.raspi import configure_agent_process, on_raspi
 
 upkie.envs.register()
@@ -135,15 +135,20 @@ if __name__ == "__main__":
         configure_agent_process()
 
     agent_dir = os.path.abspath(os.path.dirname(__file__))
-    gin.parse_config_file(f"{agent_dir}/policy/operative_config.gin")
-
     args = parse_command_line_arguments()
+
+    # Policy parameters
     policy_path = args.policy
     if policy_path is None:
         policy_path = f"{agent_dir}/policy/params.zip"
     if policy_path.endswith(".zip"):
         policy_path = policy_path[:-4]
     logging.info("Loading policy from %s.zip", policy_path)
+
+    # Configuration
+    config_path = f"{os.path.dirname(policy_path)}/operative_config.gin"
+    logging.info("Loading policy configuration from %s", config_path)
+    gin.parse_config_file(config_path)
 
     try:
         main(policy_path, args.training)
