@@ -123,6 +123,8 @@ class UpkieGroundVelocity(UpkieBaseEnv):
         """!
         Initialize environment.
 
+        @param leg_return_period Time constant for the legs (hips and knees) to
+            revert to their neutral configuration.
         @param max_ground_velocity Maximum commanded ground velocity in m/s.
         @param reward_weights Coefficients before each reward term.
         @param wheel_radius Wheel radius in [m].
