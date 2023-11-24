@@ -1,8 +1,8 @@
-env: UpkieGroundVelocity-v1
+env: UpkieGroundVelocity-v3
 gin:
     EnvSettings:
         agent_frequency: 200
-        env_id: UpkieGroundVelocity-v1
+        env_id: UpkieGroundVelocity-v3
         init_pitch_rand: 0.1
         max_episode_duration: 10.0
         max_ground_accel: 10.0

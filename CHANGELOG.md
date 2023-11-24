@@ -22,7 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - **Breaking:** Rename the "wheel" balancer agent to "PID balancer"
-- MPC balancer: Update height of control point to 60 cm
+- MPC balancer: Update height of control point to 58 cm
+- PPO balancer: Update height of control point to 58 cm
 - envs: Bump `UpkieGroundVelocity` to version 3
 - envs: Legs now return to their neutral configuration in `UpkieGroundVelocity`
 - envs: Rewards are now part of individual environments

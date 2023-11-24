@@ -257,5 +257,5 @@ if __name__ == "__main__":
     agent_dir = os.path.dirname(__file__)
     gin.parse_config_file(f"{agent_dir}/config.gin")
     args = parse_command_line_arguments()
-    with gym.make("UpkieGroundVelocity-v1", frequency=200.0) as env:
+    with gym.make("UpkieGroundVelocity-v3", frequency=200.0) as env:
         balance(env, show_live_plot=args.live_plot)

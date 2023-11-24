@@ -133,12 +133,13 @@ class UpkieGroundVelocity(UpkieBaseEnv):
         if self.dt is None:
             raise UpkieException("This environment needs a loop frequency")
 
-        weights: UpkieGroundVelocity.RewardWeights = (
+        reward_weights: UpkieGroundVelocity.RewardWeights = (
             reward_weights
             if reward_weights is not None
             else UpkieGroundVelocity.RewardWeights()
         )
 
+        # gymnasium.Env: observation_space
         MAX_BASE_PITCH: float = np.pi
         MAX_GROUND_POSITION: float = float("inf")
         MAX_BASE_ANGULAR_VELOCITY: float = 1000.0  # rad/s
@@ -151,8 +152,6 @@ class UpkieGroundVelocity(UpkieBaseEnv):
             ],
             dtype=np.float32,
         )
-
-        # gymnasium.Env: observation_space
         self.observation_space = spaces.Box(
             -observation_limit,
             +observation_limit,
@@ -178,7 +177,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
         }
 
         self.leg_return_period = leg_return_period
-        self.reward_weights = weights
+        self.reward_weights = reward_weights
         self.wheel_radius = wheel_radius
 
     def reset(
