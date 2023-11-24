@@ -4,12 +4,12 @@
 # Convenience Makefile to synchronize Upkie log files
 #
 # Put this Makefile in the directory to synchronize and run ``make download``
-# to download the latest logs from the robot. For now this Makefile assumes
-# logs are stored in a logs/ directory the remote user's home directory.
+# to download the latest logs from the robot.
 
 # Hostname or IP address of the Raspberry Pi Uses the value from the UPKIE_NAME
 # environment variable, if defined.
-REMOTE = ${UPKIE_NAME}
+REMOTE_NAME = ${UPKIE_NAME}
+REMOTE_PATH = logs  # no trailing slash
 
 .PHONY: clean
 clean:  ## Clean up logs smaller than 100 KiB
@@ -17,7 +17,7 @@ clean:  ## Clean up logs smaller than 100 KiB
 
 .PHONY: download
 download:  ## Download logs from remote host
-	rsync -auvz --progress --exclude Makefile ${REMOTE}:logs/ $(CURDIR)/
+	rsync -auvz --progress --exclude Makefile ${REMOTE_NAME}:${REMOTE_PATH}/ $(CURDIR)/
 
 .PHONY: foxplot_last
 foxplot_last:  ## Plot latest log

@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- PPO balancer: Convenience Makefile to manage the training directory
 - docs: Agents and Environments pages
 - envs: Log action, observation and reward to "env" sub-dict of action
 - envs: New `upkie.envs.wrappers` submodule
@@ -17,8 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - envs: Wrapper to low-pass filter action (modeling a delay)
 - envs: Wrapper to noisify actions
 - envs: Wrapper to noisify observations
+- logs: Convenience Makefile for log synchronization
 - spines: Label pi3hat spine log filenames with the robot's hostname
-- tools: Convenience Makefiles for logs and training directories
 
 ### Changed
 
