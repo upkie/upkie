@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Breaking:** Rename the "wheel" balancer agent to "PID balancer"
 - MPC balancer: Update height of control point to 60 cm
+- envs: Bump `UpkieGroundVelocity` to version 3
 - envs: Rewards are now part of individual environments
 - envs: ``info`` dictionary does not repeat "action" any more
 - envs: ``rate`` attribute from base environment is now internal
@@ -32,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - envs: Acceleration filter from `UpkieGroundVelocity` (=> gymnasium.Wrapper)
+- envs: Intermediate `UpkieWheeledPendulum` environment
 - envs: Low-pass filter from `UpkieGroundVelocity` (=> gymnasium.Wrapper)
 - envs: Survival reward, as environments now ship their own rewards
 

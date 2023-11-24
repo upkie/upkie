@@ -13,24 +13,32 @@ import numpy as np
 from gymnasium import spaces
 from numpy.typing import NDArray
 
+from upkie.observers.base_pitch import (
+    compute_base_angular_velocity_from_imu,
+    compute_base_pitch_from_imu,
+)
 from upkie.utils.exceptions import UpkieException
 
-from .upkie_wheeled_pendulum import UpkieWheeledPendulum
+from .upkie_base_env import UpkieBaseEnv
 
 
-class UpkieGroundVelocity(UpkieWheeledPendulum):
+class UpkieGroundVelocity(UpkieBaseEnv):
 
     """!
-    Environment where Upkie balances by ground velocity control.
+    Environment where Upkie is used as a wheeled inverted pendulum.
 
-    The environment id is ``UpkieGroundVelocity-v2``.
+    The environment id is ``UpkieGroundVelocity-v3``. Model assumptions are
+    summarized in the <a
+    href="https://scaron.info/robotics/wheeled-inverted-pendulum-model.html">following
+    note</a>.
 
-    @note To deep reinforcement learning practitioners: the observation space
-    and action space are not normalized.
+    @note For reinforcement learning with neural networks: the observation
+    space and action space are not normalized.
 
     ### Action space
 
-    Vectorized actions have the following structure:
+    The action corresponds to the ground velocity resulting from wheel
+    velocities. The action vector is simply:
 
     <table>
         <tr>
@@ -80,17 +88,25 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
 
     The environment class defines the following attributes:
 
+    - ``fall_pitch``: Fall pitch angle, in radians.
     - ``version``: Environment version number.
     - ``wheel_radius``: Wheel radius in [m].
 
     """
+
+    LEG_JOINTS = [
+        f"{side}_{joint}"
+        for side in ("left", "right")
+        for joint in ("hip", "knee")
+    ]
 
     @dataclass
     class RewardWeights:
         position: float = 1.0
         velocity: float = 1.0
 
-    version: int = 2
+    fall_pitch: float
+    version: int = 3
     wheel_radius: float
 
     def __init__(
@@ -106,10 +122,7 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
         @param max_ground_velocity Maximum commanded ground velocity in m/s.
         @param reward_weights Coefficients before each reward term.
         @param wheel_radius Wheel radius in [m].
-        @param kwargs Other keyword arguments are forwarded as-is to parent
-            class constructors. Follow the chain up from @ref
-            envs.upkie_wheeled_pendulum.UpkieWheeledPendulum
-            "UpkieWheeledPendulum" for their documentation.
+        @param kwargs Keyword arguments are forwarded to the parent class ctor.
         """
         super().__init__(**kwargs)
 
@@ -152,6 +165,7 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
             dtype=action_limit.dtype,
         )
 
+        self.leg_positions = {}
         self.reward_weights = weights
         self.wheel_radius = wheel_radius
 
@@ -174,6 +188,53 @@ class UpkieGroundVelocity(UpkieWheeledPendulum):
               Upkie this is the full observation dictionary sent by the spine.
         """
         return super().reset(seed=seed)
+
+    def parse_first_observation(self, observation_dict: dict) -> None:
+        """!
+        Parse first observation after the spine interface is initialize.
+
+        @param observation_dict First observation.
+        """
+        self.leg_positions = {
+            joint: observation_dict["servo"][joint]["position"]
+            for joint in self.LEG_JOINTS
+        }
+
+    def vectorize_observation(self, observation_dict: dict) -> NDArray[float]:
+        """!
+        Extract observation vector from a full observation dictionary.
+
+        @param observation_dict Full observation dictionary from the spine.
+        @returns Observation vector.
+        """
+        imu = observation_dict["imu"]
+        pitch_base_in_world = compute_base_pitch_from_imu(imu["orientation"])
+        angular_velocity_base_in_base = compute_base_angular_velocity_from_imu(
+            observation_dict["imu"]["angular_velocity"]
+        )
+        ground_position = observation_dict["wheel_odometry"]["position"]
+        ground_velocity = observation_dict["wheel_odometry"]["velocity"]
+
+        obs = np.empty(4, dtype=np.float32)
+        obs[0] = pitch_base_in_world
+        obs[1] = ground_position
+        obs[2] = angular_velocity_base_in_base[1]
+        obs[3] = ground_velocity
+        return obs
+
+    def get_leg_servo_action(self) -> Dict[str, Dict[str, float]]:
+        """!
+        Get servo actions for each hip and knee joint.
+
+        @returns Servo action dictionary.
+        """
+        return {
+            joint: {
+                "position": self.leg_positions[joint],
+                "velocity": 0.0,
+            }
+            for joint in self.LEG_JOINTS
+        }
 
     def dictionarize_action(self, action: NDArray[float]) -> dict:
         """!

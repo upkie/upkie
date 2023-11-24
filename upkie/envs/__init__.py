@@ -10,12 +10,10 @@ import gymnasium as gym
 
 from .init_randomization import InitRandomization
 from .upkie_base_env import UpkieBaseEnv
-from .upkie_wheeled_pendulum import UpkieWheeledPendulum
 
 __all__ = [
     "InitRandomization",
     "UpkieBaseEnv",
-    "UpkieWheeledPendulum",
     "register",
 ]
 
