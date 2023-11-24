@@ -47,16 +47,6 @@ py_library(
 )
 
 py_library(
-    name = "upkie_wheeled_pendulum",
-    srcs = [
-        "upkie_wheeled_pendulum.py",
-    ],
-    deps = [
-        ":upkie_base_env",
-    ],
-)
-
-py_library(
     name = "upkie_ground_velocity",
     srcs = [
         "upkie_ground_velocity.py",
@@ -64,7 +54,6 @@ py_library(
     deps = [
         "//upkie/utils:exceptions",
         "//upkie/utils:filters",
-        ":upkie_wheeled_pendulum",
     ],
 )
 
