@@ -10,7 +10,6 @@ import unittest
 
 import numpy as np
 import posix_ipc
-from stable_baselines3.common.env_checker import check_env
 
 from upkie.envs import UpkieGroundVelocity
 from upkie.envs.tests.mock_spine import MockSpine
@@ -46,7 +45,12 @@ class TestUpkieGroundVelocity(unittest.TestCase):
         self.assertAlmostEqual(reward, 1.0)  # survival reward
 
     def test_check_env(self):
-        check_env(self.env)
+        try:
+            from stable_baselines3.common.env_checker import check_env
+
+            check_env(self.env)
+        except ImportError:
+            pass
 
 
 if __name__ == "__main__":

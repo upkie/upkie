@@ -12,7 +12,6 @@ import numpy as np
 import posix_ipc
 from gymnasium import spaces
 from numpy.typing import NDArray
-from stable_baselines3.common.env_checker import check_env
 
 from upkie.envs import UpkieBaseEnv
 from upkie.envs.tests.mock_spine import MockSpine
@@ -87,7 +86,12 @@ class TestUpkieBaseEnv(unittest.TestCase):
         self.assertEqual(env._spine_config["bullet"]["gui"], False)
 
     def test_check_env(self):
-        check_env(self.env)
+        try:
+            from stable_baselines3.common.env_checker import check_env
+
+            check_env(self.env)
+        except ImportError:
+            pass
 
 
 if __name__ == "__main__":

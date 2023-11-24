@@ -10,7 +10,6 @@ import unittest
 
 import gymnasium
 import numpy as np
-from stable_baselines3.common.env_checker import check_env
 
 from upkie.envs.wrappers.add_action_to_observation import (
     AddActionToObservation,
@@ -28,9 +27,13 @@ class AddActionToObservationTestCase(unittest.TestCase):
         self.assertAlmostEqual(observation[1], 1.0)
 
     def test_check_env(self):
-        env = gymnasium.make("Pendulum-v1")
-        wrapped_env = AddActionToObservation(env)
-        check_env(wrapped_env)
+        try:
+            from stable_baselines3.common.env_checker import check_env
+            env = gymnasium.make("Pendulum-v1")
+            wrapped_env = AddActionToObservation(env)
+            check_env(wrapped_env)
+        except ImportError:
+            pass
 
 
 if __name__ == "__main__":
