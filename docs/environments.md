@@ -1,6 +1,6 @@
 # Environments {#environments}
 
-Upkie has reinforcement learning environments following the [Gymnasium API](https://gymnasium.farama.org/). They all derive from the same internal [base class](@ref upkie.envs.upkie_base_env.UpkieBaseEnv).
+Upkie has reinforcement learning environments following the [Gymnasium API](https://gymnasium.farama.org/). They all derive from the same internal [base class](@ref upkie.envs.upkie_base_env.UpkieBaseEnv). All of them are single-threaded; in return, they run as-is both in simulati and on real robots.
 
 ## Ground velocity {#ground-velocity-env}
 
