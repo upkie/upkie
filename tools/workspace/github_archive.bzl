@@ -19,9 +19,8 @@ def github_archive(
         strip_prefix = None,
         local_override = None,
         **kwargs):
-    """
-    Download a repository from GitHub as a ZIP archive, decompress it and make
-    its targets available for binding.
+    """Download a repository from GitHub as a ZIP archive, decompress it and
+    make its targets available for binding.
 
     Args:
         name: rule name, i.e. the one used in `@name//...` labels when

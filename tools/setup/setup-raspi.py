@@ -34,6 +34,12 @@ logging_depth = 0
 
 
 def log_message(message: str, indent: int = 0) -> None:
+    """Log a single message.
+
+    Args:
+        message: Message to log.
+        indent: Indentation level.
+    """
     logging_indent = " | " * (logging_depth + indent)
     now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
     print(f"{now}: {logging_indent}{message}")
@@ -66,11 +72,13 @@ def log_method(func):
 
 @log_method
 def run(*args, **kwargs):
+    """Run a subprocess."""
     subprocess.check_call(*args, shell=True, **kwargs)
 
 
 @log_method
 def install_packages():
+    """Install Debian and PyPI packages."""
     run("apt-get install --yes python3-pip")  # for moteus-pi3hat
     run("apt-get install --yes screen vim")  # convenient later on
     run("pip install moteus-pi3hat")

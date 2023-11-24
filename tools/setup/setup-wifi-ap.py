@@ -36,6 +36,12 @@ logging_depth = 0
 
 
 def log_message(message: str, indent: int = 0) -> None:
+    """Log a single message.
+
+    Args:
+        message: Message to log.
+        indent: Indentation level.
+    """
     logging_indent = " | " * (logging_depth + indent)
     now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
     print(f"{now}: {logging_indent}{message}")
@@ -69,7 +75,8 @@ def log_method(func):
 def parse_command_line_arguments() -> argparse.Namespace:
     """Parse command-line arguments.
 
-    Returns:
+    Returns
+    -------
         Namespace resulting from parsing command-line arguments.
     """
     parser = argparse.ArgumentParser(description=__doc__)
@@ -104,6 +111,7 @@ def parse_command_line_arguments() -> argparse.Namespace:
 
 @log_method
 def run(*args, **kwargs):
+    """Run a subprocess."""
     subprocess.check_call(*args, shell=True, **kwargs)
 
 
@@ -189,6 +197,12 @@ def install_packages():
 
 @log_method
 def configure_interfaces(wlan_prefix, eth_prefix):
+    """Configure network interfaces.
+
+    Args:
+        wlan_prefix: IP prefix (XXX.YYY.ZZZ) for the wireless network.
+        eth_prefix: IP prefix (XXX.YYY.ZZZ) for the wired network.
+    """
     ensure_contents(
         "/etc/network/interfaces",
         """# interfaces(5) file used by ifup(8) and ifdown(8)
@@ -260,6 +274,13 @@ static routers={wlan_prefix}.1
 
 @log_method
 def configure_hostapd(ssid, wpa_passphrase, country_code):
+    """Configure the Wi-Fi access point.
+
+    Args:
+        ssid: Name of the network (SSID).
+        wpa_passphrase: Passphrase.
+        country_code: Two-letter country code.
+    """
     ensure_contents(
         "/etc/hostapd/hostapd.conf",
         f"""country_code={country_code}
@@ -305,6 +326,11 @@ rsn_pairwise=CCMP
 
 @log_method
 def configure_dnsmasq(wlan_prefix):
+    """Configure dnsmasq.
+
+    Args:
+        wlan_prefix: IP prefix (XXX.YYY.ZZZ) for the wireless network.
+    """
     ensure_contents(
         "/etc/dnsmasq.conf",
         f"""interface=wlan0

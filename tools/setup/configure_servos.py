@@ -27,6 +27,12 @@ logging_depth = 0
 
 
 def log_message(message: str, indent: int = 0) -> None:
+    """Log a single message.
+
+    Args:
+        message: Message to log.
+        indent: Indentation level.
+    """
     logging_indent = " | " * (logging_depth + indent)
     now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
     print(f"{now}: {logging_indent}{message}")
@@ -55,10 +61,18 @@ def log_method(func):
 
 @log_method
 def run(*args, **kwargs):
+    """Run a subprocess."""
     subprocess.check_call(*args, shell=True, **kwargs)
 
 
 def configure_servo(id: int, param: str, value: Union[float, str]):
+    """Configure a moteus controller.
+
+    Args:
+        id: Identifier of the servo.
+        param: Parameter to configure.
+        value: Value corresponding to the parameter.
+    """
     moteus_command = f"conf set {param} {value}"
     shell_command = (
         f'echo "{moteus_command}" | '
@@ -68,6 +82,11 @@ def configure_servo(id: int, param: str, value: Union[float, str]):
 
 
 def write_configuration(id: int):
+    """Write configuration to a moteus controller.
+
+    Args:
+        id: Identifier of the servo that should write its configuration.
+    """
     shell_command = (
         f'echo "conf write" | '
         f'sudo moteus_tool --pi3hat-cfg "1=1,2,3;2=4,5,6" -t {id} -c'

@@ -73,8 +73,7 @@ class UpkieTool:
         return servos
 
     def __get_servo_bus_map(self, servos: List[Servo]) -> Dict[int, List[int]]:
-        """
-        Extract servo bus -> id map from servo layout.
+        """Extract servo bus -> id map from servo layout.
 
         Args:
             servos: List of servos.
@@ -90,9 +89,7 @@ class UpkieTool:
         return servo_bus_map
 
     async def set_stop(self) -> None:
-        """
-        Send stop commands to moteus controllers.
-        """
+        """Send stop commands to moteus controllers."""
         print("Sending stop commands to all motors... ", end='')
         await self.transport.cycle(
             [controller.make_stop() for controller in self.controllers]

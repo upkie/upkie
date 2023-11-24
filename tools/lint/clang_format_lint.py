@@ -9,6 +9,8 @@
 #     Copyright 2012-2016 Robot Locomotion Group @ CSAIL
 #     License: BSD-3-Clause (see licenses/LICENSE-drake)
 
+"""Linting with clang-format."""
+
 import glob
 import os
 import platform
@@ -83,9 +85,11 @@ def _check_clang_format_idempotence(filename):
 
 
 def main():
-    """Checks that clang-format is idempotent on each path specified as a
-    command-line argument.  Exit 1 if any of the paths are invalid or
-    clang-format suggests any edits.  Otherwise exit 0.
+    """Checks that clang-format is idempotent.
+
+    Checks are performed on each path specified as a command-line argument. We
+    exit with code 1 if any of the paths are invalid or clang-format suggests
+    any edits. Otherwise, we exit with code 0.
     """
     total_errors = 0
     for filename in sys.argv[1:]:
