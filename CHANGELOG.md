@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- docs: Agents and Environments pages
 - envs: Log action, observation and reward to "env" sub-dict of action
 - envs: New `upkie.envs.wrappers` submodule
 - envs: Wrapper to act on the discrete-derivative of an action
@@ -34,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+- docs: Code overview page, split into Agents, Environments and Observations
 - envs: Acceleration filter from `UpkieGroundVelocity` (=> gymnasium.Wrapper)
 - envs: Intermediate `UpkieWheeledPendulum` environment
 - envs: Low-pass filter from `UpkieGroundVelocity` (=> gymnasium.Wrapper)
