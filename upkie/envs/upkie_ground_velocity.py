@@ -18,6 +18,7 @@ from upkie.observers.base_pitch import (
     compute_base_pitch_from_imu,
 )
 from upkie.utils.exceptions import UpkieException
+from upkie.utils.filters import low_pass_filter
 
 from .upkie_base_env import UpkieBaseEnv
 
@@ -89,6 +90,8 @@ class UpkieGroundVelocity(UpkieBaseEnv):
     The environment class defines the following attributes:
 
     - ``fall_pitch``: Fall pitch angle, in radians.
+    - ``leg_return_period``: Time constant for the legs (hips and knees) to
+        revert to their neutral configuration.
     - ``version``: Environment version number.
     - ``wheel_radius``: Wheel radius in [m].
 
@@ -111,6 +114,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
 
     def __init__(
         self,
+        leg_return_period: float = 1.0,
         max_ground_velocity: float = 1.0,
         reward_weights: Optional[RewardWeights] = None,
         wheel_radius: float = 0.06,
@@ -165,7 +169,15 @@ class UpkieGroundVelocity(UpkieBaseEnv):
             dtype=action_limit.dtype,
         )
 
-        self.leg_positions = {}
+        self.__leg_servo_action = {
+            joint: {
+                "position": None,
+                "velocity": 0.0,
+            }
+            for joint in self.LEG_JOINTS
+        }
+
+        self.leg_return_period = leg_return_period
         self.reward_weights = weights
         self.wheel_radius = wheel_radius
 
@@ -195,10 +207,9 @@ class UpkieGroundVelocity(UpkieBaseEnv):
 
         @param observation_dict First observation.
         """
-        self.leg_positions = {
-            joint: observation_dict["servo"][joint]["position"]
-            for joint in self.LEG_JOINTS
-        }
+        for joint in self.LEG_JOINTS:
+            position = observation_dict["servo"][joint]["position"]
+            self.__leg_servo_action[joint]["position"] = position
 
     def vectorize_observation(self, observation_dict: dict) -> NDArray[float]:
         """!
@@ -224,17 +235,20 @@ class UpkieGroundVelocity(UpkieBaseEnv):
 
     def get_leg_servo_action(self) -> Dict[str, Dict[str, float]]:
         """!
-        Get servo actions for each hip and knee joint.
+        Get servo actions for both hip and knee joints.
 
         @returns Servo action dictionary.
         """
-        return {
-            joint: {
-                "position": self.leg_positions[joint],
-                "velocity": 0.0,
-            }
-            for joint in self.LEG_JOINTS
-        }
+        for joint in self.LEG_JOINTS:
+            prev_position = self.__leg_servo_action[joint]["position"]
+            new_position = low_pass_filter(
+                prev_output=prev_position,
+                cutoff_period=self.leg_return_period,
+                new_input=0.0,
+                dt=self.dt,
+            )
+            self.__leg_servo_action[joint]["position"] = new_position
+        return self.__leg_servo_action.copy()
 
     def dictionarize_action(self, action: NDArray[float]) -> dict:
         """!
