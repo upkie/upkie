@@ -19,10 +19,10 @@
 ## Environments
 
 <dl>
-  <dt><code><a href="https://upkie.github.io/upkie/classupkie_1_1envs_1_1upkie__servos__env_1_1UpkieServosEnv.html#details">UpkieServosEnv</a></code></dt>
-  <dd>Upkie with full observation and joint position-velocity-torque actions.</dd>
-  <dt><code><a href="https://upkie.github.io/upkie/classupkie_1_1envs_1_1upkie__wheels__env_1_1UpkieWheelsEnv.html#details">UpkieWheelsEnv</a></code></dt>
+  <dt><code>[UpkieGroundVelocity](@ref ground-velocity-env)</code></dt>
   <dd>Upkie with full observation but only wheel velocity actions.</dd>
+  <dt><code>[UpkieServos](@ref servos-env)</code></dt>
+  <dd>Upkie with full observation and joint position-velocity-torque actions.</dd>
 </dl>
 
 Environments are single-threaded rather than vectorized. In return, they run as-is on the real robot.
