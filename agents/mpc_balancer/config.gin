@@ -6,7 +6,7 @@
 ProxQPWorkspace.update_preconditioner = True
 ProxQPWorkspace.verbose = False
 
-PendularUpkie.length = 0.6
+PendularUpkie.length = 0.58
 PendularUpkie.max_ground_accel = 10.0
 PendularUpkie.nb_timesteps = 50
 PendularUpkie.sampling_period = 0.02
