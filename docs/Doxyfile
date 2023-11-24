@@ -866,6 +866,7 @@ WARN_LOGFILE           =
 
 INPUT                  = README.md \
                          docs/code-overview.md \
+                         docs/environments.md \
                          docs/observations.md \
                          docs/sensors.md \
                          docs/spines.md \
