@@ -28,6 +28,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breaking:** envs: ``info`` dictionary does not repeat "action" any more
 - MPC balancer: Update height of control point to 58 cm
 - PPO balancer: Update height of control point to 58 cm
+- dependencies: Bump Gymnasium to 0.29.1
+- dependencies: Bump loop-rate-limiters to 0.6.1
+- dependencies: Bump NumPy to 1.24.3
+- dependencies: Bump Vulp to 2.0.0
 - envs: Bump `UpkieGroundVelocity` to version 3
 - envs: Legs now return to their neutral configuration in `UpkieGroundVelocity`
 - envs: ``rate`` attribute from base environment is now internal
