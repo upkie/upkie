@@ -15,9 +15,13 @@ jobs:
             - name: "Checkout sources"
               uses: actions/checkout@v3
 
+            - name: "Install dependencies"
+              run: |
+                  sudo apt install libncurses5
+
             - name: "Build the pi3hat spine"
               run: |
-                  tools/bazelisk build --config=pi64 //spines:pi3hat_spine
+                  tools/bazelisk build --verbose_failures --config=pi64 //spines:pi3hat_spine
 
             - name: "Add the spine to release assets"
               uses: shogo82148/actions-upload-release-asset@v1
