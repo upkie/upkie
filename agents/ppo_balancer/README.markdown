@@ -1,6 +1,6 @@
 # PPO balancer {#ppo-balancer}
 
-The PPO balancer is a [feedforward neural network](https://en.wikipedia.org/wiki/Feedforward_neural_network) policy trained by reinforcement learning with a sim-to-real pipeline. Like the [MPC balancer](@ref mpc-balancer) and [PID balancer](@ref pid-balancer), it balances Upkie with straight legs. Training uses the [`UpkieGroundVelocity`](@ref upkie.envs.upkie_ground_velocity.UpkieGroundVelocity) gym environment and the PPO implementation from [Stable Baselines3](https://stable-baselines3.readthedocs.io/en/master/modules/ppo.html).
+The PPO balancer is a [feedforward neural network](https://en.wikipedia.org/wiki/Feedforward_neural_network) policy trained by reinforcement learning with a sim-to-real pipeline. Like the [MPC balancer](@ref mpc-balancer) and [PID balancer](@ref pid-balancer), it balances Upkie with straight legs. Training uses the <code><a href="https://upkie.github.io/upkie/classupkie_1_1envs_1_1upkie__ground__velocity_1_1UpkieGroundVelocity.html">UpkieGroundVelocity</a></code> gym environment and the PPO implementation from [Stable Baselines3](https://stable-baselines3.readthedocs.io/en/master/modules/ppo.html).
 
 ## Training a new policy
 
