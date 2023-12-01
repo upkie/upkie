@@ -865,8 +865,10 @@ WARN_LOGFILE           =
 # Note: If this tag is empty the current directory is searched.
 
 INPUT                  = README.md \
-                         docs/agents.md \
-                         docs/environments.md \
+                         agents/mpc_balancer/README.markdown \
+                         agents/pid_balancer/README.markdown \
+                         agents/ppo_balancer/README.markdown \
+                         docs/gym-environments.md \
                          docs/observations.md \
                          docs/sensors.md \
                          docs/spines.md \
