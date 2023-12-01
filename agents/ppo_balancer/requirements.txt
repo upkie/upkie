@@ -68,7 +68,7 @@ torch==2.0.1
 traitlets==5.13.0
 typing-extensions==4.5.0
 tzdata==2023.3
-urllib3==1.26.5
+urllib3==1.26.18
 v4l2-python3==0.3.2
 wcwidth==0.2.9
 wrapt==1.15.0
