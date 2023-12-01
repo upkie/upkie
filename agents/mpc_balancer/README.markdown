@@ -2,7 +2,7 @@
 
 The MPC balancer allows Upkie to stand upright, balancing with its wheels only, by closed-loop model predictive control. It performs better than the [PID balancer](@ref pid-balancer) with significantly less hacks ;-)
 
-## Test in simulation
+## Simulation
 
 To test this agent in simulation, run the Bullet spine:
 
@@ -16,7 +16,7 @@ Then run the MPC balancer:
 bazel run //agents/mpc_balancer
 ```
 
-## Test on a real robot
+## Real robot
 
 To run this agent on a real Upkie, you can use the Makefile at the root of the repository:
 
