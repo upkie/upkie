@@ -2,9 +2,7 @@
 
 The PPO balancer is a [feedforward neural network](https://en.wikipedia.org/wiki/Feedforward_neural_network) policy trained by reinforcement learning with a sim-to-real pipeline. Like the [MPC balancer](@ref mpc-balancer) and [PID balancer](@ref pid-balancer), it balances Upkie with straight legs. Training uses the [`UpkieGroundVelocity`](@ref upkie.envs.upkie_ground_velocity.UpkieGroundVelocity) gym environment and the PPO implementation from [Stable Baselines3](https://stable-baselines3.readthedocs.io/en/master/modules/ppo.html).
 
-## Usage
-
-### Training a new policy
+## Training a new policy
 
 First, check that training progresses one rollout at a time:
 
@@ -14,7 +12,7 @@ First, check that training progresses one rollout at a time:
 
 Once this works you can remove the ``--show`` GUI toggle. Check out the `time/fps` plots in the command line or in TensorBoard to adjust the number `K` of parallel environments based on your CPU.
 
-### Running a trained policy
+## Running a trained policy
 
 Testing a policy assumes the spine is already up and running, for instance via ``start_simulation.sh`` on your dev machine, or by starting a pi3hat spine on the robot.
 
@@ -23,9 +21,7 @@ You can specify the path to policy parameters to the agent. For instance, if the
 - Python: `` python ./agents/ppo_balancer/main.py --policy ./agents/ppo_balancer/training/2023-11-15/final.zip``
 - Bazel: ``./tools/bazelisk run //agents/ppo_balancer -- --policy ./agents/ppo_balancer/training/2023-11-15/final.zip``
 
-### Deploying to the robot
-
-The `requirements.txt` file in the agent directory can be used to quickly install packages from PyPI directly on Upkie.
+The `requirements.txt` file in the agent directory can be used to install all packages from PyPI to your robot.
 
 ## Troubleshooting
 
