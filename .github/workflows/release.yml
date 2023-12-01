@@ -1,4 +1,4 @@
-name: Coverage
+name: Release
 
 on:
     release:
@@ -6,12 +6,11 @@ on:
             - created
 
 jobs:
-    build:
-        name: "Add pi3hat spine to Release assets"
+    pi3hat_spine:
+        name: "Add pi3hat spine to release assets"
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v3
-
             - run: |
                   tools/bazelisk build --config=pi64 //spines:pi3hat
 

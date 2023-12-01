@@ -1,4 +1,4 @@
-name: CI
+name: Bazel
 
 on:
     push:
@@ -21,7 +21,7 @@ jobs:
               run: |
                   sudo apt install libncurses5
 
-            - name: "Build Raspberry Pi artifact"
+            - name: "Build pi3hat spine artifact"
               run: |
                   tools/bazelisk build --verbose_failures --config=pi64 //spines:pi3hat_spine
 
@@ -112,9 +112,9 @@ jobs:
               run: |
                   tools/bazelisk test --compilation_mode=fastbuild //...
 
-    ci_success:
-        name: "CI success"
+    bazel_success:
+        name: "Bazel success"
         runs-on: ubuntu-latest
-        needs: [build, coverage, lint, test]
+        needs: [artifacts, build, coverage, lint, test]
         steps:
-            - run: echo "CI workflow completed successfully"
+            - run: echo "Bazel workflow completed successfully"
