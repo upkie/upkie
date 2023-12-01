@@ -39,3 +39,10 @@ jobs:
                   github_token: ${{ secrets.GITHUB_TOKEN }}
                   publish_dir: docs/html/
                   force_orphan: true
+
+    docs_success:
+        name: "Documentation success"
+        runs-on: ubuntu-latest
+        needs: [docs]
+        steps:
+            - run: echo "Documentation workflow completed successfully"
