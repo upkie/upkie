@@ -4,6 +4,7 @@ on:
     release:
         types:
             - created
+            - edited
 
 jobs:
     pi3hat_spine:
@@ -15,10 +16,10 @@ jobs:
 
             - name: "Build the pi3hat spine"
               run: |
-                  tools/bazelisk build --config=pi64 //spines:pi3hat
+                  tools/bazelisk build --config=pi64 //spines:pi3hat_spine
 
             - name: "Add the spine to release assets"
               uses: shogo82148/actions-upload-release-asset@v1
               with:
                   upload_url: ${{ github.event.release.upload_url }}
-                  asset_path: ${{ github.workspace }}/bazel-bin/spines/pi3hat
+                  asset_path: ${{ github.workspace }}/bazel-bin/spines/pi3hat_spine
