@@ -64,8 +64,6 @@ jobs:
               run: |
                   python -m pip install --upgrade pip
                   python -m pip install numpy pin pin-pink
-                  # Temporary: https://github.com/cmake-wheel/cmeel/issues/88
-                  python -m pip install --force-reinstall tomli
 
             - name: "Test coverage"
               run: |
