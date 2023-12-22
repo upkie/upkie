@@ -251,12 +251,12 @@ class UpkieGroundVelocity(UpkieBaseEnv):
             self.__leg_servo_action[joint]["position"] = new_position
         return self.__leg_servo_action.copy()
 
-    def dictionarize_action(self, action: NDArray[float]) -> dict:
+    def compute_spine_action(self, action: NDArray[float]) -> dict:
         """!
-        Convert action vector into a spine action dictionary.
+        Convert environment action to a spine action dictionary.
 
-        @param action Action vector.
-        @returns Action dictionary.
+        @param action Environment action.
+        @returns Spine action dictionary.
         """
         ground_velocity = action[0]
         wheel_velocity = ground_velocity / self.wheel_radius
@@ -273,8 +273,8 @@ class UpkieGroundVelocity(UpkieBaseEnv):
                 },
             }
         )
-        action_dict = {"servo": servo_dict}
-        return action_dict
+        spine_action = {"servo": servo_dict}
+        return spine_action
 
     def get_reward(
         self, observation: NDArray[float], action: NDArray[float]

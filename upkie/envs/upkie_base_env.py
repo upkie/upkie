@@ -201,10 +201,10 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
             self.__rate.sleep()  # wait until clock tick to send the action
 
         # Act
-        action_dict = self.dictionarize_action(action)
+        spine_action = self.compute_spine_action(action)
         if self.__log:
-            action_dict["env"] = self.__log
-        self._spine.set_action(action_dict)
+            spine_action["env"] = self.__log
+        self._spine.set_action(spine_action)
 
         # Observe
         spine_observation = self._spine.get_observation()
@@ -244,12 +244,12 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         """
 
     @abc.abstractmethod
-    def dictionarize_action(self, action: NDArray[float]) -> dict:
+    def compute_spine_action(self, action) -> dict:
         """!
-        Convert action vector into a spine action dictionary.
+        Convert environment action to a spine action dictionary.
 
-        @param action Action vector.
-        @returns Action dictionary.
+        @param action Environment action.
+        @returns Spine action dictionary.
         """
 
     @abc.abstractmethod

@@ -39,7 +39,7 @@ class UpkieTestEnv(UpkieBaseEnv):
     def extract_observation(self, spine_observation: dict) -> NDArray[float]:
         return np.full((1,), 0.5, dtype=self.observation_space.dtype)
 
-    def dictionarize_action(self, action: NDArray[float]) -> dict:
+    def compute_spine_action(self, action: NDArray[float]) -> dict:
         return {"test": action}
 
     def get_reward(
