@@ -26,19 +26,19 @@ The ``UpkieServos`` environment has dictionary observation and action spaces. Ob
 
 \f[
 \begin{align*}
-\tau_i & = \tau_i^{\mathit{ff}} + k_{p,i} k_{p,i}^{\mathit{scale}} (\theta_i^* - \theta_i) + k_{d,i} k_{d,i}^{\mathit{scale}} (\dot{\theta}_i^* - \dot{\theta}_i)
+\tau & = \tau_{\mathit{ff}} + k_{p} k_{p}^{\mathit{scale}} (\theta^* - \theta) + k_{d} k_{d}^{\mathit{scale}} (\dot{\theta}^* - \dot{\theta})
 \end{align*}
 \f]
 
 where for joint \f$i\f$ we denote by:
 
-- \f$\tau_i\f$ is the commanded joint torque,
-- \f$\tau_i^{\mathit{ff}}\f$ the feedforward torque (set only this one for direct torque control),
-- \f$\theta_i\f$ the measured joint position,
-- \f$\dot{\theta}_i\f$ the measured joint velocity,
-- \f$\theta_i^*\f$ the target joint position,
-- \f$\dot{\theta}_i^*\f$ the target joint velocity.
+- \f$\tau\f$ is the commanded joint torque,
+- \f$\tau_{\mathit{ff}}\f$ the feedforward torque (set only this one for direct torque control),
+- \f$\theta\f$ the measured joint position,
+- \f$\dot{\theta}\f$ the measured joint velocity,
+- \f$\theta^*\f$ the target joint position,
+- \f$\dot{\theta}^*\f$ the target joint velocity.
 
-Position and velocity gains \f$k_{p,i}\f$ and \f$k_{d,i}\f$ are configured in each moteus controller directly; we can update the overall feedback gains via the normalized parameters \f$k_{p,i}^{\mathit{scale}} \in [0, 1]\f$ and \f$k_{d,i}^{\mathit{scale}} \in [0, 1]\f$.
+Position and velocity gains \f$k_{p}\f$ and \f$k_{d}\f$ are configured in each moteus controller directly; we can update the overall feedback gains via the normalized parameters \f$k_{p}^{\mathit{scale}} \in [0, 1]\f$ and \f$k_{d}^{\mathit{scale}} \in [0, 1]\f$.
 
 Check out the [UpkieServos](@ref upkie.envs.upkie_servos.UpkieServos) documentation for more details.
