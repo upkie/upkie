@@ -149,7 +149,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         self._spine.get_observation()  # might be a pre-reset observation
         spine_observation = self._spine.get_observation()
         self.parse_first_observation(spine_observation)
-        observation = self.extract_observation(spine_observation)
+        observation = self.get_env_observation(spine_observation)
         info = {"spine_observation": spine_observation}
         return observation, info
 
@@ -201,14 +201,14 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
             self.__rate.sleep()  # wait until clock tick to send the action
 
         # Act
-        spine_action = self.compute_spine_action(action)
+        spine_action = self.get_spine_action(action)
         if self.__log:
             spine_action["env"] = self.__log
         self._spine.set_action(spine_action)
 
         # Observe
         spine_observation = self._spine.get_observation()
-        observation = self.extract_observation(spine_observation)
+        observation = self.get_env_observation(spine_observation)
         reward = self.get_reward(observation, action)
         terminated = self.detect_fall(spine_observation)
         truncated = False
@@ -235,16 +235,16 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         """
 
     @abc.abstractmethod
-    def extract_observation(self, spine_observation: dict):
+    def get_env_observation(self, spine_observation: dict):
         """!
-        Extract observation vector from a full observation dictionary.
+        Extract environment observation from spine observation dictionary.
 
-        @param spine_observation Full observation dictionary from the spine.
-        @returns Observation mapped to the environment's observation space.
+        @param spine_observation Spine observation dictionary.
+        @returns Environment observation.
         """
 
     @abc.abstractmethod
-    def compute_spine_action(self, action) -> dict:
+    def get_spine_action(self, action) -> dict:
         """!
         Convert environment action to a spine action dictionary.
 

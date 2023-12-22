@@ -212,12 +212,12 @@ class UpkieGroundVelocity(UpkieBaseEnv):
             position = spine_observation["servo"][joint]["position"]
             self.__leg_servo_action[joint]["position"] = position
 
-    def extract_observation(self, spine_observation: dict) -> NDArray[float]:
+    def get_env_observation(self, spine_observation: dict) -> NDArray[float]:
         """!
-        Extract observation vector from a full observation dictionary.
+        Extract environment observation from spine observation dictionary.
 
-        @param spine_observation Full observation dictionary from the spine.
-        @returns Observation vector.
+        @param spine_observation Spine observation dictionary.
+        @returns Environment observation vector.
         """
         imu = spine_observation["imu"]
         pitch_base_in_world = compute_base_pitch_from_imu(imu["orientation"])
@@ -251,7 +251,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
             self.__leg_servo_action[joint]["position"] = new_position
         return self.__leg_servo_action.copy()
 
-    def compute_spine_action(self, action: NDArray[float]) -> dict:
+    def get_spine_action(self, action: NDArray[float]) -> dict:
         """!
         Convert environment action to a spine action dictionary.
 

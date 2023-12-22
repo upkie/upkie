@@ -184,12 +184,12 @@ class UpkieServos(UpkieBaseEnv):
             for joint in self.__joints
         }
 
-    def extract_observation(self, spine_observation: dict):
+    def get_env_observation(self, spine_observation: dict):
         """!
-        Extract observation vector from a full observation dictionary.
+        Extract environment observation from spine observation dictionary.
 
         @param spine_observation Full observation dictionary from the spine.
-        @returns Observation vector.
+        @returns Environment observation.
         """
         nq, nv = self.robot.model.nq, self.robot.model.nv
         model = self.robot.model
@@ -201,7 +201,7 @@ class UpkieServos(UpkieBaseEnv):
             obs[nq + nv + i] = spine_observation["servo"][joint]["torque"]
         return obs
 
-    def compute_spine_action(self, action: NDArray[float]) -> dict:
+    def get_spine_action(self, action: NDArray[float]) -> dict:
         """!
         Convert environment action to a spine action dictionary.
 
