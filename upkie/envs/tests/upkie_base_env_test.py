@@ -36,10 +36,10 @@ class UpkieTestEnv(UpkieBaseEnv):
     def parse_first_observation(self, spine_observation: dict) -> None:
         pass
 
-    def extract_observation(self, spine_observation: dict) -> NDArray[float]:
+    def get_env_observation(self, spine_observation: dict) -> NDArray[float]:
         return np.full((1,), 0.5, dtype=self.observation_space.dtype)
 
-    def compute_spine_action(self, action: NDArray[float]) -> dict:
+    def get_spine_action(self, action: NDArray[float]) -> dict:
         return {"test": action}
 
     def get_reward(
