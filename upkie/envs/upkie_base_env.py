@@ -226,12 +226,14 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         pitch = compute_base_pitch_from_imu(imu["orientation"])
         return abs(pitch) > self.fall_pitch
 
-    @abc.abstractmethod
     def parse_first_observation(self, spine_observation: dict) -> None:
         """!
         Parse first observation after the spine interface is initialized.
 
         @param spine_observation First observation.
+
+        This method is an optional way for environments to record some state
+        (abstracted away from the agnet) at reset.
         """
 
     @abc.abstractmethod
