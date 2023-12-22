@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright 2022 Stéphane Caron
 # SPDX-License-Identifier: Apache-2.0
-
-from typing import Any, Dict
+# Copyright 2022 Stéphane Caron
+# Copyright 2023 Inria
 
 import gin
 import numpy as np
@@ -49,9 +48,7 @@ def observe(observation, configuration, servo_layout) -> NDArray[float]:
     return q
 
 
-def serialize_to_servo_action(
-    configuration, velocity, servo_layout
-) -> Dict[str, dict]:
+def serialize_to_servo_action(configuration, velocity, servo_layout) -> dict:
     """!
     Serialize robot state for the spine.
 
@@ -105,8 +102,8 @@ class WholeBodyController:
     max_crouch_velocity: float
     robot: pin.RobotWrapper
     target_position_wheel_in_rest: NDArray[float]
-    tasks: Dict[str, Any]
-    transform_rest_to_world: Dict[str, NDArray[float]]
+    tasks: dict
+    transform_rest_to_world: dict
     turning_gain_scale: float
 
     def __init__(
@@ -208,9 +205,7 @@ class WholeBodyController:
         self.visualizer = visualizer
         self.wheel_balancer = WheelBalancer()  # type: ignore
 
-    def update_target_heights(
-        self, observation: Dict[str, Any], dt: float
-    ) -> None:
+    def update_target_heights(self, observation: dict, dt: float) -> None:
         """!
         Update target base height from joystick inputs.
 
@@ -228,9 +223,7 @@ class WholeBodyController:
             height, 0.0, self.max_crouch_height
         )
 
-    def update_ik_targets(
-        self, observation: Dict[str, Any], dt: float
-    ) -> None:
+    def update_ik_targets(self, observation: dict, dt: float) -> None:
         """!
         Update IK frame targets from individual target positions.
 
@@ -254,7 +247,7 @@ class WholeBodyController:
             )
             self.tasks[target].set_target(transform_target_to_world)
 
-    def _process_first_observation(self, observation: Dict[str, Any]) -> None:
+    def _process_first_observation(self, observation: dict) -> None:
         """!
         Function called at the first iteration of the controller.
 
@@ -272,7 +265,7 @@ class WholeBodyController:
             self.transform_rest_to_world[target] = transform_target_to_world
         self.__initialized = True
 
-    def cycle(self, observation: Dict[str, Any], dt: float) -> Dict[str, Any]:
+    def cycle(self, observation: dict, dt: float) -> dict:
         """
         Compute action for a new cycle.
 

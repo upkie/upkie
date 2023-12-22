@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright 2023 Inria
 # SPDX-License-Identifier: Apache-2.0
+# Copyright 2023 Inria
 
-from typing import Any, Dict, Tuple
+from typing import Tuple
 
 import gymnasium
 import numpy as np
@@ -50,7 +50,7 @@ class DifferentiateAction(gymnasium.Wrapper):
     def step(
         self,
         action: NDArray[float],
-    ) -> Tuple[NDArray[float], float, bool, bool, Dict[str, Any]]:
+    ) -> Tuple[NDArray[float], float, bool, bool, dict]:
         self._integral = np.clip(
             self._integral + action * self.env.unwrapped.dt,
             self.env.action_space.low,

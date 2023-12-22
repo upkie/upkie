@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright 2022 Stéphane Caron
 # SPDX-License-Identifier: Apache-2.0
+# Copyright 2022 Stéphane Caron
+# Copyright 2023 Inria
 
 """
 Import ``logging`` from this module to use logging from Python standard library
@@ -10,12 +11,11 @@ with formatting similar to spdlog.
 """
 
 import logging
-from typing import Any, Dict
 
 
 class SpdlogFormatter(logging.Formatter):
 
-    """
+    """!
     Custom logging formatter visually consistent with spdlog.
     """
 
@@ -26,7 +26,7 @@ class SpdlogFormatter(logging.Formatter):
     ON_RED: str = "\033[41m"
     RESET: str = "\033[0m"
 
-    LEVEL_FORMAT: Dict[Any, str] = {
+    LEVEL_FORMAT: dict = {
         logging.CRITICAL: f"[{ON_RED}{BOLD_WHITE}critical{RESET}]",
         logging.DEBUG: "[debug]",
         logging.ERROR: f"[{BOLD_RED}error{RESET}]",

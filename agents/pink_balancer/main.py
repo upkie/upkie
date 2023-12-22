@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright 2022 Stéphane Caron
 # SPDX-License-Identifier: Apache-2.0
+# Copyright 2022 Stéphane Caron
+# Copyright 2023 Inria
 
 import argparse
 import socket
 import traceback
 from os import path
-from typing import Any, Dict
 
 import gin
 from loop_rate_limiters import RateLimiter
@@ -47,7 +47,7 @@ def parse_command_line_arguments() -> argparse.Namespace:
 
 def run(
     spine: SpineInterface,
-    spine_config: Dict[str, Any],
+    spine_config: dict,
     controller: WholeBodyController,
     frequency: float = 200.0,
 ) -> None:

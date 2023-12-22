@@ -1,14 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright 2022 Stéphane Caron
 # SPDX-License-Identifier: Apache-2.0
+# Copyright 2022 Stéphane Caron
+# Copyright 2023 Inria
 
-"""
-Keep Upkie up! Using its wheels.
-"""
+"""Keep Upkie up using its wheels."""
 
-from typing import Any, Dict, Tuple
+from typing import Tuple
 
 import gin
 import numpy as np
@@ -278,7 +277,7 @@ class WheelBalancer:
         if abs(self.target_yaw_velocity) > 0.01:  # still turning
             self.turning_probability = 1.0
 
-    def process_joystick_buttons(self, observation: Dict[str, Any]) -> None:
+    def process_joystick_buttons(self, observation: dict) -> None:
         ground_position = observation["wheel_odometry"]["position"]
         try:
             if observation["joystick"]["cross_button"]:
@@ -291,7 +290,7 @@ class WheelBalancer:
         except KeyError:
             pass
 
-    def cycle(self, observation: Dict[str, Any], dt: float) -> None:
+    def cycle(self, observation: dict, dt: float) -> None:
         """!
         Compute a new ground velocity.
 

@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright 2023 Inria
 # SPDX-License-Identifier: Apache-2.0
+# Copyright 2023 Inria
 
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional, Tuple
+from typing import List, Optional, Tuple
 
 import gin
 
@@ -26,8 +26,8 @@ class EnvSettings:
     max_ground_accel: float
     max_ground_velocity: float
     observation_noise: List[float]
-    reward_weights: Dict[str, Any]
-    spine_config: Dict[str, Any]
+    reward_weights: dict
+    spine_config: dict
     spine_frequency: int
 
 
@@ -59,7 +59,7 @@ class PPOSettings:
 class TrainingSettings:
     """Training settings."""
 
-    init_rand: Dict[str, float]
+    init_rand: dict
     max_episode_duration: float
     return_horizon: float
     total_timesteps: int

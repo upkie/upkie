@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright 2023 Inria
 # SPDX-License-Identifier: Apache-2.0
+# Copyright 2023 Inria
 
 import abc
-from typing import Any, Dict, Optional, Tuple
+from typing import Optional, Tuple
 
 import gymnasium
 import numpy as np
@@ -40,11 +40,11 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
     """
 
     __frequency: Optional[float]
-    __log: Dict
+    __log: dict
     __rate: Optional[RateLimiter]
     __regulate_frequency: bool
     _spine: SpineInterface
-    _spine_config: Dict
+    _spine_config: dict
     fall_pitch: float
     init_rand: InitRandomization
 
@@ -128,7 +128,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         *,
         seed: Optional[int] = None,
         options: Optional[dict] = None,
-    ) -> Tuple[NDArray[float], Dict]:
+    ) -> Tuple[NDArray[float], dict]:
         """!
         Resets the spine and get an initial observation.
 
@@ -176,7 +176,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
     def step(
         self,
         action: NDArray[float],
-    ) -> Tuple[NDArray[float], float, bool, bool, Dict[str, Any]]:
+    ) -> Tuple[NDArray[float], float, bool, bool, dict]:
         """!
         Run one timestep of the environment's dynamics. When the end of the
         episode is reached, you are responsible for calling `reset()` to reset
@@ -264,7 +264,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         @returns Spine action dictionary.
         """
 
-    def log(self, new_log: Dict) -> None:
+    def log(self, new_log: dict) -> None:
         """!
         Log anything to the action dictionary.
 
