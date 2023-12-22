@@ -145,11 +145,36 @@ class UpkieServos(UpkieBaseEnv):
             )
 
         action_space = {}
-        max_action_values = {}
-        min_action_values = {}
+        default_action = {}
+        max_action = {}
+        min_action = {}
         observation_space = {}
         for name in joint_names:
             joint = model.joints[model.getJointId(name)]
+            default_action[name] = {
+                "position": np.nan,
+                "velocity": 0.0,
+                "feedforward_torque": 0.0,
+                "kp_scale": 1.0,
+                "kd_scale": 1.0,
+                "maximum_torque": tau_max[joint.idx_v],
+            }
+            max_action[name] = {
+                "position": q_max[joint.idx_q],
+                "velocity": v_max[joint.idx_v],
+                "feedforward_torque": tau_max[joint.idx_v],
+                "kp_scale": 1.0,
+                "kd_scale": 1.0,
+                "maximum_torque": tau_max[joint.idx_v],
+            }
+            min_action[name] = {
+                "position": q_min[joint.idx_q],
+                "velocity": -v_max[joint.idx_v],
+                "feedforward_torque": -tau_max[joint.idx_v],
+                "kp_scale": 0.0,
+                "kd_scale": 0.0,
+                "maximum_torque": 0.0,
+            }
             for space in (action_space, observation_space):
                 space[name] = spaces.Dict(
                     {
@@ -191,22 +216,6 @@ class UpkieServos(UpkieBaseEnv):
                         ),
                     }
                 )
-                max_action_values[joint] = {
-                    "position": q_max[joint.idx_q],
-                    "velocity": v_max[joint.idx_v],
-                    "feedforward_torque": tau_max[joint.idx_v],
-                    "kp_scale": 1.0,
-                    "kd_scale": 1.0,
-                    "maximum_torque": tau_max[joint.idx_v],
-                }
-                min_action_values[joint] = {
-                    "position": q_min[joint.idx_q],
-                    "velocity": -v_max[joint.idx_v],
-                    "feedforward_torque": -tau_max[joint.idx_v],
-                    "kp_scale": 0.0,
-                    "kd_scale": 0.0,
-                    "maximum_torque": 0.0,
-                }
 
         # gymnasium.Env: action_space
         self.action_space = spaces.Dict(action_space)
@@ -215,8 +224,9 @@ class UpkieServos(UpkieBaseEnv):
         self.observation_space = spaces.Dict(observation_space)
 
         # Class members
-        self.__max_action_values = max_action_values
-        self.__min_action_values = min_action_values
+        self.__default_action = default_action
+        self.__max_action = max_action
+        self.__min_action = min_action
         self.robot = robot
 
     def get_env_observation(self, spine_observation: dict):
@@ -237,16 +247,19 @@ class UpkieServos(UpkieBaseEnv):
         """
         return {
             "servo": {
-                joint: {
+                name: {
                     key: clamp_and_warn(
-                        action[joint][key],
-                        self.__min_action_values[joint][key],
-                        self.__max_action_values[joint][key],
-                        label=f"{joint}: {key}",
+                        action.get(name, {}).get(
+                            key,
+                            self.__default_action[name][key],
+                        ),
+                        self.__min_action[name][key],
+                        self.__max_action[name][key],
+                        label=f"{name}: {key}",
                     )
                     for key in self.ACTION_KEYS
                 }
-                for joint in self.JOINT_NAMES
+                for name in self.JOINT_NAMES
             }
         }
 
