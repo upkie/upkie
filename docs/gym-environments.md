@@ -22,11 +22,10 @@ Check out the [UpkieGroundVelocity](@ref upkie.envs.upkie_ground_velocity.UpkieG
 
 ## Servos {#servos-env}
 
-Actions in the ``UpkieServos`` environment are joint (position, velocity, torque) commands directly sent to the moteus controllers. They correspond to the standard control law with feedforward torque and position-velocity feedback:
+The ``UpkieServos`` environment has dictionary observation and action spaces. Observation dictionaries are those coming from the spine and documentation on the [Observations page](@ref observations). Action dictionaries specify target positions, target velocities and feedforward torque commands that are directly sent to the moteus controllers. Each motor controller will then apply a standard control law with feedforward torque and position-velocity feedback:
 
 \f[
 \begin{align*}
-a &= (\tau_0, \tau_1, \ldots, \tau_5) \\
 \tau_i & = \tau_i^{\mathit{ff}} + k_{p,i} k_{p,i}^{\mathit{scale}} (\theta_i^* - \theta_i) + k_{d,i} k_{d,i}^{\mathit{scale}} (\dot{\theta}_i^* - \dot{\theta}_i)
 \end{align*}
 \f]
