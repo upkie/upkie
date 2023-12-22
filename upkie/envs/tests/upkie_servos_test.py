@@ -40,10 +40,30 @@ class TestUpkieServos(unittest.TestCase):
         self.assertGreaterEqual(spine_observation["number"], 1)
 
     def test_reward(self):
-        observation, info = self.env.reset()
-        action = {}
-        observation, reward, terminated, truncated, _ = self.env.step(action)
+        self.env.reset()
+        action = {
+            servo: {
+                "position": np.nan,
+                "velocity": 0.0,
+            }
+            for servo in self.env.JOINT_NAMES
+        }
+        _, reward, _, _, _ = self.env.step(action)
         self.assertAlmostEqual(reward, 1.0)  # survival reward
+
+    def test_action_needs_position(self):
+        observation, info = self.env.reset()
+        action = {servo: {"velocity": 0.0} for servo in self.env.JOINT_NAMES}
+        with self.assertRaises(ActionError):
+            self.env.step(action)
+
+    def test_action_needs_velocity(self):
+        observation, info = self.env.reset()
+        action = {
+            servo: {"position": np.nan} for servo in self.env.JOINT_NAMES
+        }
+        with self.assertRaises(ActionError):
+            self.env.step(action)
 
     def test_action_clamping(self):
         action = {

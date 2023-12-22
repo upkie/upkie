@@ -12,7 +12,7 @@ import upkie_description
 from gymnasium import spaces
 
 from upkie.utils.clamp import clamp_and_warn
-from upkie.utils.exceptions import ModelError
+from upkie.utils.exceptions import ActionError, ModelError
 from upkie.utils.pinocchio import (
     box_position_limits,
     box_torque_limits,
@@ -152,8 +152,8 @@ class UpkieServos(UpkieBaseEnv):
         for name in joint_names:
             joint = model.joints[model.getJointId(name)]
             default_action[name] = {
-                "position": np.nan,
-                "velocity": 0.0,
+                # "position": np.nan,  # no default, needs to be explicit
+                # "velocity": 0.0,  # no default, needs to be explicit
                 "feedforward_torque": 0.0,
                 "kp_scale": 1.0,
                 "kd_scale": 1.0,
@@ -238,30 +238,35 @@ class UpkieServos(UpkieBaseEnv):
         """
         return spine_observation
 
-    def get_spine_action(self, action: Dict[str, Any]) -> dict:
+    def get_spine_action(self, env_action: Dict[str, Any]) -> dict:
         """!
         Convert environment action to a spine action dictionary.
 
         @param action Environment action.
         @returns Spine action dictionary.
         """
-        return {
-            "servo": {
-                name: {
-                    key: clamp_and_warn(
-                        action.get(name, {}).get(
-                            key,
-                            self.__default_action[name][key],
-                        ),
-                        self.__min_action[name][key],
-                        self.__max_action[name][key],
-                        label=f"{name}: {key}",
+        spine_action = {"servo": {}}
+        for joint in self.JOINT_NAMES:
+            servo_action = {}
+            for key in self.ACTION_KEYS:
+                try:
+                    action = (
+                        env_action[joint][key]
+                        if key in env_action[joint]
+                        else self.__default_action[joint][key]
                     )
-                    for key in self.ACTION_KEYS
-                }
-                for name in self.JOINT_NAMES
-            }
-        }
+                except KeyError as key_error:
+                    raise ActionError(
+                        f'Missing key "{key}" required for joint "{joint}"'
+                    ) from key_error
+                servo_action[key] = clamp_and_warn(
+                    action,
+                    self.__min_action[joint][key],
+                    self.__max_action[joint][key],
+                    label=f"{joint}: {key}",
+                )
+            spine_action["servo"][joint] = servo_action
+        return spine_action
 
     def get_reward(
         self,
