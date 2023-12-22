@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- **Breaking:** envs: Rename `"observation"` info key to `"spine_observation"`
+- **Breaking:** Rename info key to `"spine_observation"` in all environments
+- **Breaking:** Switch `UpkieServos` env to dictionary action and observation
 - Rename ``start_pid_balancer.sh`` to ``try_pid_balancer.sh``
 
 ## [3.0.0] - 2023-12-01
