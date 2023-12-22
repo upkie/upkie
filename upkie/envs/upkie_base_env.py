@@ -147,10 +147,10 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         self.__reset_initial_robot_state()
         self._spine.start(self._spine_config)
         self._spine.get_observation()  # might be a pre-reset observation
-        observation_dict = self._spine.get_observation()
-        self.parse_first_observation(observation_dict)
-        observation = self.vectorize_observation(observation_dict)
-        info = {"observation": observation_dict}
+        spine_observation = self._spine.get_observation()
+        self.parse_first_observation(spine_observation)
+        observation = self.extract_observation(spine_observation)
+        info = {"spine_observation": spine_observation}
         return observation, info
 
     def __reset_rate(self):
@@ -207,40 +207,40 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         self._spine.set_action(action_dict)
 
         # Observe
-        observation_dict = self._spine.get_observation()
-        observation = self.vectorize_observation(observation_dict)
+        spine_observation = self._spine.get_observation()
+        observation = self.extract_observation(spine_observation)
         reward = self.get_reward(observation, action)
-        terminated = self.detect_fall(observation_dict)
+        terminated = self.detect_fall(spine_observation)
         truncated = False
-        info = {"observation": observation_dict}
+        info = {"spine_observation": spine_observation}
         return observation, reward, terminated, truncated, info
 
-    def detect_fall(self, observation_dict: dict) -> bool:
+    def detect_fall(self, spine_observation: dict) -> bool:
         """!
         Detect a fall based on the body-to-world pitch angle.
 
-        @param observation_dict Observation dictionary with an "imu" key.
+        @param spine_observation Observation dictionary with an "imu" key.
         @returns True if and only if a fall is detected.
         """
-        imu = observation_dict["imu"]
+        imu = spine_observation["imu"]
         pitch = compute_base_pitch_from_imu(imu["orientation"])
         return abs(pitch) > self.fall_pitch
 
     @abc.abstractmethod
-    def parse_first_observation(self, observation_dict: dict) -> None:
+    def parse_first_observation(self, spine_observation: dict) -> None:
         """!
         Parse first observation after the spine interface is initialized.
 
-        @param observation_dict First observation.
+        @param spine_observation First observation.
         """
 
     @abc.abstractmethod
-    def vectorize_observation(self, observation_dict: dict) -> NDArray[float]:
+    def extract_observation(self, spine_observation: dict):
         """!
         Extract observation vector from a full observation dictionary.
 
-        @param observation_dict Full observation dictionary from the spine.
-        @returns Observation vector.
+        @param spine_observation Full observation dictionary from the spine.
+        @returns Observation mapped to the environment's observation space.
         """
 
     @abc.abstractmethod

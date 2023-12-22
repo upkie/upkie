@@ -202,30 +202,30 @@ class UpkieGroundVelocity(UpkieBaseEnv):
         """
         return super().reset(seed=seed)
 
-    def parse_first_observation(self, observation_dict: dict) -> None:
+    def parse_first_observation(self, spine_observation: dict) -> None:
         """!
-        Parse first observation after the spine interface is initialize.
+        Parse first observation after the spine interface is initialized.
 
-        @param observation_dict First observation.
+        @param spine_observation First observation.
         """
         for joint in self.LEG_JOINTS:
-            position = observation_dict["servo"][joint]["position"]
+            position = spine_observation["servo"][joint]["position"]
             self.__leg_servo_action[joint]["position"] = position
 
-    def vectorize_observation(self, observation_dict: dict) -> NDArray[float]:
+    def extract_observation(self, spine_observation: dict) -> NDArray[float]:
         """!
         Extract observation vector from a full observation dictionary.
 
-        @param observation_dict Full observation dictionary from the spine.
+        @param spine_observation Full observation dictionary from the spine.
         @returns Observation vector.
         """
-        imu = observation_dict["imu"]
+        imu = spine_observation["imu"]
         pitch_base_in_world = compute_base_pitch_from_imu(imu["orientation"])
         angular_velocity_base_in_base = compute_base_angular_velocity_from_imu(
-            observation_dict["imu"]["angular_velocity"]
+            spine_observation["imu"]["angular_velocity"]
         )
-        ground_position = observation_dict["wheel_odometry"]["position"]
-        ground_velocity = observation_dict["wheel_odometry"]["velocity"]
+        ground_position = spine_observation["wheel_odometry"]["position"]
+        ground_velocity = spine_observation["wheel_odometry"]["velocity"]
 
         obs = np.empty(4, dtype=np.float32)
         obs[0] = pitch_base_in_world

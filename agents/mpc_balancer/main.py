@@ -155,8 +155,8 @@ def balance(
             observation, info = env.reset()
             commanded_velocity = 0.0
 
-        observation_dict = info["observation"]
-        floor_contact = observation_dict["floor_contact"]["contact"]
+        spine_observation = info["spine_observation"]
+        floor_contact = spine_observation["floor_contact"]["contact"]
 
         # Unpack observation into initial MPC state
         (

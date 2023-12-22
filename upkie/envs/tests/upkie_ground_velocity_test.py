@@ -32,11 +32,11 @@ class TestUpkieGroundVelocity(unittest.TestCase):
 
     def test_reset(self):
         observation, info = self.env.reset()
-        observation_dict = info["observation"]
+        spine_observation = info["spine_observation"]
         self.assertAlmostEqual(
-            observation[1], observation_dict["wheel_odometry"]["position"]
+            observation[1], spine_observation["wheel_odometry"]["position"]
         )
-        self.assertGreaterEqual(observation_dict["number"], 1)
+        self.assertGreaterEqual(spine_observation["number"], 1)
 
     def test_reward(self):
         observation, info = self.env.reset()
