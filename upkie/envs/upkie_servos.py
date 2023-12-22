@@ -134,38 +134,61 @@ class UpkieServos(UpkieBaseEnv):
         )
 
         # gymnasium.Env: observation_space
-        self.observation_space = spaces.Box(
-            state_min,
-            state_max,
-            shape=(state_dim,),
-            dtype=np.float32,
-        )
+        observation_space = {}
+        for name in servos:
+            joint = model.joints[model.getJointId(name)]
+            observation_space[name] = {
+                "position": spaces.Box(
+                    q_min[joint.idx_q],
+                    q_max[joint.idx_q],
+                    shape=(1,),
+                    dtype=np.float32,
+                ),
+                "velocity": spaces.Box(
+                    -v_max[joint.idx_v],
+                    +v_max[joint.idx_v],
+                    shape=(1,),
+                    dtype=np.float32,
+                ),
+                "torque": spaces.Box(
+                    -tau_max[joint.idx_v],
+                    +tau_max[joint.idx_v],
+                    shape=(1,),
+                    dtype=np.float32,
+                ),
+            }
+        self.observation_space = spaces.Dict(observation_space)
 
         # Class members
         self.__joints = list(robot.model.names)[1:]
         self.__last_positions = {}
+        self.__servos = servos
         self.q_max = q_max
         self.q_min = q_min
         self.robot = robot
         self.tau_max = tau_max
         self.v_max = v_max
 
-    def parse_first_observation(self, observation_dict: dict) -> None:
-        """!
-        Parse first observation after the spine interface is initialize.
+    @property
+    def servos(self) -> Tuple[str, str, str, str, str, str]:
+        return self.__servos
 
-        @param observation_dict First observation.
+    def parse_first_observation(self, spine_observation: dict) -> None:
+        """!
+        Parse first observation after the spine interface is initialized.
+
+        @param spine_observation First observation.
         """
         self.__last_positions = {
-            joint: observation_dict["servo"][joint]["position"]
+            joint: spine_observation["servo"][joint]["position"]
             for joint in self.__joints
         }
 
-    def vectorize_observation(self, observation_dict: dict) -> NDArray[float]:
+    def extract_observation(self, spine_observation: dict):
         """!
         Extract observation vector from a full observation dictionary.
 
-        @param observation_dict Full observation dictionary from the spine.
+        @param spine_observation Full observation dictionary from the spine.
         @returns Observation vector.
         """
         nq, nv = self.robot.model.nq, self.robot.model.nv
@@ -173,17 +196,17 @@ class UpkieServos(UpkieBaseEnv):
         obs = np.empty(nq + 2 * nv, dtype=np.float32)
         for joint in self.__joints:
             i = model.getJointId(joint) - 1
-            obs[i] = observation_dict["servo"][joint]["position"]
-            obs[nq + i] = observation_dict["servo"][joint]["velocity"]
-            obs[nq + nv + i] = observation_dict["servo"][joint]["torque"]
+            obs[i] = spine_observation["servo"][joint]["position"]
+            obs[nq + i] = spine_observation["servo"][joint]["velocity"]
+            obs[nq + nv + i] = spine_observation["servo"][joint]["torque"]
         return obs
 
-    def dictionarize_action(self, action: NDArray[float]) -> dict:
+    def compute_spine_action(self, action: NDArray[float]) -> dict:
         """!
-        Convert action vector into a spine action dictionary.
+        Convert environment action to a spine action dictionary.
 
-        @param action Action vector.
-        @returns Action dictionary.
+        @param action Environment action.
+        @returns Spine action dictionary.
         """
         nq = self.robot.model.nq
         model = self.robot.model
