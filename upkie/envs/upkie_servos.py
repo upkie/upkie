@@ -265,6 +265,14 @@ class UpkieServos(UpkieBaseEnv):
         self.__min_action = min_action
         self.robot = robot
 
+    def get_default_action(self) -> dict:
+        """!
+        Get a default action dictionary.
+
+        @returns Default action dictionary.
+        """
+        return self.__default_action.copy()
+
     def get_env_observation(self, spine_observation: dict):
         """!
         Extract environment observation from spine observation dictionary.
