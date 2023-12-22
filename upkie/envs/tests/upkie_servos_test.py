@@ -13,6 +13,7 @@ import posix_ipc
 
 from upkie.envs import UpkieServos
 from upkie.envs.tests.mock_spine import MockSpine
+from upkie.utils.exceptions import ActionError
 
 
 class TestUpkieServos(unittest.TestCase):
