@@ -29,61 +29,38 @@ class UpkieServos(UpkieBaseEnv):
 
     ### Action space
 
-    Vectorized actions have the following structure:
+    The action space is a dictionary with one key for each servo on Upkie:
 
-    <table>
-        <tr>
-            <td><strong>Index</strong></td>
-            <td><strong>Description</strong></td>
-            </tr>
-        <tr>
-            <td>``[0:nq]``</td>
-            <td>Joint position commands in [rad].</td>
-        </tr>
-        <tr>
-            <td>``[nq:nq + nv]``</td>
-            <td>Joint velocity commands in [rad] / [s].</td>
-        </tr>
-        <tr>
-            <td>``[nq + nv:nq + 2 * nv]``</td>
-            <td>Joint torques in [N] * [m].</td>
-        </tr>
-    </table>
+    - ``left_hip``: Left hip joint (qdd100)
+    - ``left_hip``: Left knee joint (qdd100)
+    - ``left_hip``: Left wheel joint (mj5208)
+    - ``right_hip``: Right hip joint (qdd100)
+    - ``right_hip``: Right knee joint (qdd100)
+    - ``right_hip``: Right wheel joint (mj5208)
+
+    The value for each dictionary is itself a dictionary for each
+
+    - ``position``: Joint angle in [rad] (NaN to disable) (required).
+    - ``velocity``: Joint velocity in [rad] / [s] (required).
+    - ``feedforward_torque``: Joint torque in [N] * [m].
+    - ``kp_scale``: Scaling factor applied to the position feedback gain,
+        between zero and one.
+    - ``kd_scale``: Scaling factor applied to the velocity feedback gain,
+        between zero and one.
+    - ``maximum_torque``: Maximum joint torque (feedforward + feedback) during
+        the whole actuation step, in [N] * [m].
 
     ### Observation space
 
-    Vectorized observations have the following structure:
-
-    <table>
-        <tr>
-            <td><strong>Index</strong></td>
-            <td><strong>Description</strong></td>
-            </tr>
-        <tr>
-            <td>``[0:nq]``</td>
-            <td>Joint positions in [rad].</td>
-        </tr>
-        <tr>
-            <td>``[nq:nq + nv]``</td>
-            <td>Joint velocities in [rad] / [s].</td>
-        </tr>
-        <tr>
-            <td>``[nq + nv:nq + 2 * nv]``</td>
-            <td>Joint torques in [N] * [m].</td>
-        </tr>
-    </table>
+    Obversations from this environment are full dictionary reported by the
+    spine. See @ref observations.
 
     ### Attributes
 
     The environment has the following attributes:
 
     - ``robot``: Pinocchio robot wrapper.
-    - ``state_max``: Maximum values for the action and observation vectors.
-    - ``state_min``: Minimum values for the action and observation vectors.
     - ``version``: Environment version number.
-
-    See also @ref envs.upkie_base_env.UpkieBaseEnv "UpkieBaseEnv" for notes on
-    using this environment.
     """
 
     ACTION_KEYS: Tuple[str, str, str, str, str, str] = (
