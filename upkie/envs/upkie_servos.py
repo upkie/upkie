@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright 2023 Inria
 # SPDX-License-Identifier: Apache-2.0
+# Copyright 2023 Inria
 
-from typing import Optional
+from typing import Optional, Tuple
 
 import numpy as np
 import pinocchio as pin
@@ -113,54 +113,54 @@ class UpkieServos(UpkieBaseEnv):
             spine_config=spine_config,
         )
 
+        servos = tuple(
+            f"{side}_{name}"
+            for side in ("left", "right")
+            for name in ("hip", "knee", "wheel")
+        )
+
         robot = upkie_description.load_in_pinocchio(root_joint=None)
         model = robot.model
-
         q_min, q_max = box_position_limits(model)
         v_max = box_velocity_limits(model)
         tau_max = box_torque_limits(model)
-        state_dim = model.nq + 2 * model.nv
-        state_max = np.hstack([q_max, v_max, tau_max])
-        state_min = np.hstack([q_min, -v_max, -tau_max])
-        state_max = np.float32(state_max)
-        state_min = np.float32(state_min)
 
-        # gymnasium.Env: action_space
-        self.action_space = spaces.Box(
-            state_min,
-            state_max,
-            shape=(state_dim,),
-            dtype=np.float32,
-        )
-
-        # gymnasium.Env: observation_space
+        action_space = {}
         observation_space = {}
         for name in servos:
             joint = model.joints[model.getJointId(name)]
-            observation_space[name] = {
-                "position": spaces.Box(
-                    q_min[joint.idx_q],
-                    q_max[joint.idx_q],
-                    shape=(1,),
-                    dtype=np.float32,
-                ),
-                "velocity": spaces.Box(
-                    -v_max[joint.idx_v],
-                    +v_max[joint.idx_v],
-                    shape=(1,),
-                    dtype=np.float32,
-                ),
-                "torque": spaces.Box(
-                    -tau_max[joint.idx_v],
-                    +tau_max[joint.idx_v],
-                    shape=(1,),
-                    dtype=np.float32,
-                ),
-            }
+            for space in (action_space, observation_space):
+                space[name].update(
+                    {
+                        "position": spaces.Box(
+                            low=q_min[joint.idx_q],
+                            high=q_max[joint.idx_q],
+                            shape=(1,),
+                            dtype=np.float32,
+                        ),
+                        "velocity": spaces.Box(
+                            low=-v_max[joint.idx_v],
+                            high=+v_max[joint.idx_v],
+                            shape=(1,),
+                            dtype=np.float32,
+                        ),
+                        "torque": spaces.Box(
+                            low=-tau_max[joint.idx_v],
+                            high=+tau_max[joint.idx_v],
+                            shape=(1,),
+                            dtype=np.float32,
+                        ),
+                    }
+                )
+
+        # gymnasium.Env: action_space
+        self.action_space = spaces.Dict(action_space)
+
+        # gymnasium.Env: observation_space
         self.observation_space = spaces.Dict(observation_space)
 
         # Class members
-        self.__joints = list(robot.model.names)[1:]
+        self.__joints = list(model.names)[1:]
         self.__last_positions = {}
         self.__servos = servos
         self.q_max = q_max
