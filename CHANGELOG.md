@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- envs: Take feedforward torque commands into account in `UpkieServos` environment
 - examples: Wheeled balancing with wheel torque control
 - utils: ActionError exception
 - utils: ModelError exception
