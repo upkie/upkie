@@ -82,7 +82,7 @@ class UpkieServos(UpkieBaseEnv):
     )
 
     robot: pin.RobotWrapper
-    version: int = 2
+    version: int = 3
 
     def __init__(
         self,
