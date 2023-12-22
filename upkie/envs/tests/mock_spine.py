@@ -16,6 +16,8 @@ class MockSpine:
                     "position": 0.0,
                     "velocity": 0.0,
                     "torque": 0.0,
+                    "temperature": 42.0,
+                    "voltage": 18.0,
                 }
                 for side in ("left", "right")
                 for joint in ("hip", "knee", "wheel")
@@ -23,6 +25,7 @@ class MockSpine:
             "imu": {
                 "orientation": np.array([1.0, 0.0, 0.0, 0.0]),
                 "angular_velocity": np.zeros(3),
+                "linear_acceleration": np.zeros(3),
             },
             "wheel_odometry": {
                 "position": 0.0,

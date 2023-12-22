@@ -11,6 +11,8 @@ Here is an index to learn more about the data written to observation dictionarie
 - `servos.<name>.position`: Angle between the stator and the rotor | [rad] | |
 - `servos.<name>.torque`: Joint torque in [N] * [m].
 - `servos.<name>.velocity`: Angular velocity of the rotor w.r.t. stator in rotor, in [rad] / [s].
+- `wheel_odometry.position`: Ground position in [m], see @ref upkie::observers::WheelOdometry.
+- `wheel_odometry.velocity`: Ground velocity in [m] / [s], see @ref upkie::observers::WheelOdometry.
 
 See also [Sensors](@ref sensors).
 
