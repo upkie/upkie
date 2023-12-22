@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright 2022 Stéphane Caron
 # SPDX-License-Identifier: Apache-2.0
-
-from typing import Any, Dict
+# Copyright 2022 Stéphane Caron
+# Copyright 2023 Inria
 
 import gin
 import numpy as np
@@ -51,7 +50,7 @@ class ServoController:
         self.turning_gain_scale = turning_gain_scale
         self.wheel_balancer = WheelController()  # type: ignore
 
-    def initialize_servo_action(self, observation: Dict[str, Any]) -> None:
+    def initialize_servo_action(self, observation: dict) -> None:
         """!
         Initialize default servo action from initial observation.
 
@@ -78,7 +77,7 @@ class ServoController:
             }
         )
 
-    def cycle(self, observation: Dict[str, Any], dt: float) -> Dict[str, Any]:
+    def cycle(self, observation: dict, dt: float) -> dict:
         """!
         Compute action for a new cycle.
 
