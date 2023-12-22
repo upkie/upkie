@@ -256,6 +256,22 @@ class UpkieServos(UpkieBaseEnv):
                     }
                 ),
                 "servo": spaces.Dict(servo_space),
+                "wheel_odometry": spaces.Dict(
+                    {
+                        "position": spaces.Box(
+                            low=-np.inf,
+                            high=np.inf,
+                            shape=(1,),
+                            dtype=np.float32,
+                        ),
+                        "velocity": spaces.Box(
+                            low=-np.inf,
+                            high=np.inf,
+                            shape=(1,),
+                            dtype=np.float32,
+                        ),
+                    }
+                ),
             }
         )
 
@@ -296,6 +312,10 @@ class UpkieServos(UpkieBaseEnv):
                     for key in self.observation_space["servo"][joint]
                 }
                 for joint in self.JOINT_NAMES
+            },
+            "wheel_odometry": {
+                "position": spine_observation["wheel_odometry"]["position"],
+                "velociy": spine_observation["wheel_odometry"]["velocity"],
             },
         }
 
