@@ -33,15 +33,50 @@ class TestUpkieServos(unittest.TestCase):
         observation, info = self.env.reset()
         spine_observation = info["spine_observation"]
         self.assertAlmostEqual(
-            observation[1], spine_observation["wheel_odometry"]["position"]
+            observation["wheel_odometry"]["position"],
+            spine_observation["wheel_odometry"]["position"],
         )
         self.assertGreaterEqual(spine_observation["number"], 1)
 
     def test_reward(self):
         observation, info = self.env.reset()
-        action = np.zeros(self.env.action_space.shape)
+        action = {}
         observation, reward, terminated, truncated, _ = self.env.step(action)
         self.assertAlmostEqual(reward, 1.0)  # survival reward
+
+    def test_action_clamping(self):
+        action = {
+            servo: {
+                "position": np.nan,
+                "velocity": 0.0,
+                "feedforward_torque": 0.0,
+            }
+            for servo in self.env.JOINT_NAMES
+        }
+        not_wheel = "left_hip"  # wheels don't have position limits
+        self.env.reset()
+
+        action[not_wheel]["position"] = np.nan
+        self.env.step(action)
+        self.assertTrue(
+            np.isnan(self.env._spine.action["servo"][not_wheel]["position"])
+        )
+
+        action[not_wheel]["position"] = 0.5
+        self.env.step(action)
+        self.assertAlmostEqual(
+            self.env._spine.action["servo"][not_wheel]["position"],
+            0.5,
+            places=5,
+        )
+
+        action[not_wheel]["position"] = 5e5
+        self.env.step(action)
+        self.assertAlmostEqual(
+            self.env._spine.action["servo"][not_wheel]["position"],
+            float(self.env.action_space[not_wheel]["position"].high),
+            places=5,
+        )
 
 
 if __name__ == "__main__":
