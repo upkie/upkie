@@ -11,3 +11,7 @@ class UpkieException(Exception):
 
 class FallDetected(UpkieException):
     """Exception raised when a fall is detected."""
+
+
+class ModelError(UpkieException):
+    """Error related to the robot model."""
