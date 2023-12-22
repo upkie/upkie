@@ -33,10 +33,10 @@ class UpkieTestEnv(UpkieBaseEnv):
             dtype=np.float32,
         )
 
-    def parse_first_observation(self, observation_dict: dict) -> None:
+    def parse_first_observation(self, spine_observation: dict) -> None:
         pass
 
-    def vectorize_observation(self, observation_dict: dict) -> NDArray[float]:
+    def extract_observation(self, spine_observation: dict) -> NDArray[float]:
         return np.full((1,), 0.5, dtype=self.observation_space.dtype)
 
     def dictionarize_action(self, action: NDArray[float]) -> dict:
@@ -65,8 +65,8 @@ class TestUpkieBaseEnv(unittest.TestCase):
 
     def test_reset(self):
         _, info = self.env.reset()
-        observation_dict = info["observation"]
-        self.assertGreaterEqual(observation_dict["number"], 1)
+        spine_observation = info["spine_observation"]
+        self.assertGreaterEqual(spine_observation["number"], 1)
 
     def test_spine_config(self):
         """Check that runtime and default configs are merged properly."""
