@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Inria
 
-from typing import Any, Dict, Optional, Tuple
+from typing import Optional, Tuple
 
 import numpy as np
 import pinocchio as pin
@@ -299,11 +299,11 @@ class UpkieServos(UpkieBaseEnv):
             },
         }
 
-    def get_spine_action(self, env_action: Dict[str, Any]) -> dict:
+    def get_spine_action(self, env_action: dict) -> dict:
         """!
         Convert environment action to a spine action dictionary.
 
-        @param action Environment action.
+        @param env_action Environment action.
         @returns Spine action dictionary.
         """
         spine_action = {"servo": {}}
@@ -329,11 +329,7 @@ class UpkieServos(UpkieBaseEnv):
             spine_action["servo"][joint] = servo_action
         return spine_action
 
-    def get_reward(
-        self,
-        observation: Dict[str, Any],
-        action: Dict[str, Any],
-    ) -> float:
+    def get_reward(self, observation: dict, action: dict) -> float:
         """!
         Get reward from observation and action.
 
