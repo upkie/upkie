@@ -277,13 +277,15 @@ class UpkieGroundVelocity(UpkieBaseEnv):
         return spine_action
 
     def get_reward(
-        self, observation: NDArray[float], action: NDArray[float]
+        self,
+        observation: NDArray[float],
+        action: NDArray[float],
     ) -> float:
         """!
         Get reward from observation and action.
 
-        @param observation Observation vector.
-        @param action Action vector.
+        @param observation Environment observation vector.
+        @param action Environment action vector.
         @returns Reward.
         """
         pitch = observation[0]

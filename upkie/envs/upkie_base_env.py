@@ -246,24 +246,22 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         """
 
     @abc.abstractmethod
+    def get_reward(self, observation, action) -> float:
+        """!
+        Get reward from observation and action.
+
+        @param observation Environment observation.
+        @param action Environment action.
+        @returns Reward.
+        """
+
+    @abc.abstractmethod
     def get_spine_action(self, action) -> dict:
         """!
         Convert environment action to a spine action dictionary.
 
         @param action Environment action.
         @returns Spine action dictionary.
-        """
-
-    @abc.abstractmethod
-    def get_reward(
-        self, observation: NDArray[float], action: NDArray[float]
-    ) -> float:
-        """!
-        Get reward from observation and action.
-
-        @param observation Observation vector.
-        @param action Action vector.
-        @returns Reward.
         """
 
     def log(self, new_log: Dict) -> None:

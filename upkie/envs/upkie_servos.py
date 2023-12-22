@@ -4,15 +4,15 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Inria
 
-from typing import Optional, Tuple
+from typing import Any, Dict, Optional, Tuple
 
 import numpy as np
 import pinocchio as pin
 import upkie_description
 from gymnasium import spaces
-from numpy.typing import NDArray
 
 from upkie.utils.clamp import clamp_and_warn
+from upkie.utils.exceptions import ModelError
 from upkie.utils.pinocchio import (
     box_position_limits,
     box_torque_limits,
@@ -86,6 +86,24 @@ class UpkieServos(UpkieBaseEnv):
     using this environment.
     """
 
+    ACTION_KEYS: Tuple[str, str, str, str, str, str] = (
+        "position",
+        "velocity",
+        "feedforward_torque",
+        "kp_scale",
+        "kd_scale",
+        "maximum_torque",
+    )
+
+    JOINT_NAMES: Tuple[str, str, str, str, str, str] = (
+        "left_hip",
+        "left_knee",
+        "left_wheel",
+        "right_hip",
+        "right_knee",
+        "right_wheel",
+    )
+
     robot: pin.RobotWrapper
     version: int = 2
 
@@ -113,24 +131,27 @@ class UpkieServos(UpkieBaseEnv):
             spine_config=spine_config,
         )
 
-        servos = tuple(
-            f"{side}_{name}"
-            for side in ("left", "right")
-            for name in ("hip", "knee", "wheel")
-        )
-
         robot = upkie_description.load_in_pinocchio(root_joint=None)
         model = robot.model
         q_min, q_max = box_position_limits(model)
         v_max = box_velocity_limits(model)
         tau_max = box_torque_limits(model)
+        joint_names = list(model.names)[1:]
+        if set(joint_names) != set(self.JOINT_NAMES):
+            raise ModelError(
+                "Upkie joints don't match:"
+                f"expected {self.JOINT_NAMES} "
+                f"got {joint_names}"
+            )
 
         action_space = {}
+        max_action_values = {}
+        min_action_values = {}
         observation_space = {}
-        for name in servos:
+        for name in joint_names:
             joint = model.joints[model.getJointId(name)]
             for space in (action_space, observation_space):
-                space[name].update(
+                space[name] = spaces.Dict(
                     {
                         "position": spaces.Box(
                             low=q_min[joint.idx_q],
@@ -144,14 +165,48 @@ class UpkieServos(UpkieBaseEnv):
                             shape=(1,),
                             dtype=np.float32,
                         ),
-                        "torque": spaces.Box(
+                        "feedforward_torque": spaces.Box(
                             low=-tau_max[joint.idx_v],
                             high=+tau_max[joint.idx_v],
                             shape=(1,),
                             dtype=np.float32,
                         ),
+                        "kp_scale": spaces.Box(
+                            low=0.0,
+                            high=1.0,
+                            shape=(1,),
+                            dtype=np.float32,
+                        ),
+                        "kd_scale": spaces.Box(
+                            low=0.0,
+                            high=1.0,
+                            shape=(1,),
+                            dtype=np.float32,
+                        ),
+                        "maximum_torque": spaces.Box(
+                            low=0.0,
+                            high=tau_max[joint.idx_v],
+                            shape=(1,),
+                            dtype=np.float32,
+                        ),
                     }
                 )
+                max_action_values[joint] = {
+                    "position": q_max[joint.idx_q],
+                    "velocity": v_max[joint.idx_v],
+                    "feedforward_torque": tau_max[joint.idx_v],
+                    "kp_scale": 1.0,
+                    "kd_scale": 1.0,
+                    "maximum_torque": tau_max[joint.idx_v],
+                }
+                min_action_values[joint] = {
+                    "position": q_min[joint.idx_q],
+                    "velocity": -v_max[joint.idx_v],
+                    "feedforward_torque": -tau_max[joint.idx_v],
+                    "kp_scale": 0.0,
+                    "kd_scale": 0.0,
+                    "maximum_torque": 0.0,
+                }
 
         # gymnasium.Env: action_space
         self.action_space = spaces.Dict(action_space)
@@ -160,29 +215,9 @@ class UpkieServos(UpkieBaseEnv):
         self.observation_space = spaces.Dict(observation_space)
 
         # Class members
-        self.__joints = list(model.names)[1:]
-        self.__last_positions = {}
-        self.__servos = servos
-        self.q_max = q_max
-        self.q_min = q_min
+        self.__max_action_values = max_action_values
+        self.__min_action_values = min_action_values
         self.robot = robot
-        self.tau_max = tau_max
-        self.v_max = v_max
-
-    @property
-    def servos(self) -> Tuple[str, str, str, str, str, str]:
-        return self.__servos
-
-    def parse_first_observation(self, spine_observation: dict) -> None:
-        """!
-        Parse first observation after the spine interface is initialized.
-
-        @param spine_observation First observation.
-        """
-        self.__last_positions = {
-            joint: spine_observation["servo"][joint]["position"]
-            for joint in self.__joints
-        }
 
     def get_env_observation(self, spine_observation: dict):
         """!
@@ -191,72 +226,40 @@ class UpkieServos(UpkieBaseEnv):
         @param spine_observation Full observation dictionary from the spine.
         @returns Environment observation.
         """
-        nq, nv = self.robot.model.nq, self.robot.model.nv
-        model = self.robot.model
-        obs = np.empty(nq + 2 * nv, dtype=np.float32)
-        for joint in self.__joints:
-            i = model.getJointId(joint) - 1
-            obs[i] = spine_observation["servo"][joint]["position"]
-            obs[nq + i] = spine_observation["servo"][joint]["velocity"]
-            obs[nq + nv + i] = spine_observation["servo"][joint]["torque"]
-        return obs
+        return spine_observation
 
-    def get_spine_action(self, action: NDArray[float]) -> dict:
+    def get_spine_action(self, action: Dict[str, Any]) -> dict:
         """!
         Convert environment action to a spine action dictionary.
 
         @param action Environment action.
         @returns Spine action dictionary.
         """
-        nq = self.robot.model.nq
-        model = self.robot.model
-        servo_action = {
-            joint: {
-                "position": self.__last_positions[joint],
-                "velocity": 0.0,
-                "torque": 0.0,
+        return {
+            "servo": {
+                joint: {
+                    key: clamp_and_warn(
+                        action[joint][key],
+                        self.__min_action_values[joint][key],
+                        self.__max_action_values[joint][key],
+                        label=f"{joint}: {key}",
+                    )
+                    for key in self.ACTION_KEYS
+                }
+                for joint in self.JOINT_NAMES
             }
-            for joint in self.__joints
         }
 
-        nq, nv = model.nq, model.nv
-        q = action[:nq]
-        v = action[nq : nq + nv]
-        tau = action[nq + nv : nq + 2 * nv]
-        for joint in self.__joints:
-            i = model.getJointId(joint) - 1
-            q[i] = clamp_and_warn(
-                q[i],
-                self.q_min[i],
-                self.q_max[i],
-                label=f"{joint}: position",
-            )
-            v[i] = clamp_and_warn(
-                v[i],
-                -self.v_max[i],
-                self.v_max[i],
-                label=f"{joint}: velocity",
-            )
-            tau[i] = clamp_and_warn(
-                tau[i],
-                -self.tau_max[i],
-                self.tau_max[i],
-                label=f"{joint}: torque",
-            )
-            servo_action[joint]["position"] = q[i]
-            servo_action[joint]["velocity"] = v[i]
-            servo_action[joint]["torque"] = tau[i]
-            self.__last_positions[joint] = q[i]
-        return {"servo": servo_action}
-
     def get_reward(
-        self, observation: NDArray[float], action: NDArray[float]
+        self,
+        observation: Dict[str, Any],
+        action: Dict[str, Any],
     ) -> float:
         """!
         Get reward from observation and action.
 
-        @param observation Observation vector.
-        @param action Action vector.
+        @param observation Environment observation.
+        @param action Environment action.
         @returns Reward.
         """
         return 1.0
