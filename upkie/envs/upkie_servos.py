@@ -125,9 +125,83 @@ class UpkieServos(UpkieBaseEnv):
         default_action = {}
         max_action = {}
         min_action = {}
-        observation_space = {}
+        servo_space = {}
         for name in joint_names:
             joint = model.joints[model.getJointId(name)]
+            action_space[name] = spaces.Dict(
+                {
+                    "position": spaces.Box(
+                        low=q_min[joint.idx_q],
+                        high=q_max[joint.idx_q],
+                        shape=(1,),
+                        dtype=np.float32,
+                    ),
+                    "velocity": spaces.Box(
+                        low=-v_max[joint.idx_v],
+                        high=+v_max[joint.idx_v],
+                        shape=(1,),
+                        dtype=np.float32,
+                    ),
+                    "feedforward_torque": spaces.Box(
+                        low=-tau_max[joint.idx_v],
+                        high=+tau_max[joint.idx_v],
+                        shape=(1,),
+                        dtype=np.float32,
+                    ),
+                    "kp_scale": spaces.Box(
+                        low=0.0,
+                        high=1.0,
+                        shape=(1,),
+                        dtype=np.float32,
+                    ),
+                    "kd_scale": spaces.Box(
+                        low=0.0,
+                        high=1.0,
+                        shape=(1,),
+                        dtype=np.float32,
+                    ),
+                    "maximum_torque": spaces.Box(
+                        low=0.0,
+                        high=tau_max[joint.idx_v],
+                        shape=(1,),
+                        dtype=np.float32,
+                    ),
+                }
+            )
+            servo_space[name] = spaces.Dict(
+                {
+                    "position": spaces.Box(
+                        low=q_min[joint.idx_q],
+                        high=q_max[joint.idx_q],
+                        shape=(1,),
+                        dtype=np.float32,
+                    ),
+                    "velocity": spaces.Box(
+                        low=-v_max[joint.idx_v],
+                        high=+v_max[joint.idx_v],
+                        shape=(1,),
+                        dtype=np.float32,
+                    ),
+                    "torque": spaces.Box(
+                        low=-tau_max[joint.idx_v],
+                        high=+tau_max[joint.idx_v],
+                        shape=(1,),
+                        dtype=np.float32,
+                    ),
+                    "temperature": spaces.Box(
+                        low=0.0,
+                        high=100.0,
+                        shape=(1,),
+                        dtype=np.float32,
+                    ),
+                    "voltage": spaces.Box(
+                        low=10.0,  # moteus min 10 V
+                        high=44.0,  # moteus max 44 V
+                        shape=(1,),
+                        dtype=np.float32,
+                    ),
+                }
+            )
             default_action[name] = {
                 # "position": np.nan,  # no default, needs to be explicit
                 # "velocity": 0.0,  # no default, needs to be explicit
@@ -152,53 +226,38 @@ class UpkieServos(UpkieBaseEnv):
                 "kd_scale": 0.0,
                 "maximum_torque": 0.0,
             }
-            for space in (action_space, observation_space):
-                space[name] = spaces.Dict(
-                    {
-                        "position": spaces.Box(
-                            low=q_min[joint.idx_q],
-                            high=q_max[joint.idx_q],
-                            shape=(1,),
-                            dtype=np.float32,
-                        ),
-                        "velocity": spaces.Box(
-                            low=-v_max[joint.idx_v],
-                            high=+v_max[joint.idx_v],
-                            shape=(1,),
-                            dtype=np.float32,
-                        ),
-                        "feedforward_torque": spaces.Box(
-                            low=-tau_max[joint.idx_v],
-                            high=+tau_max[joint.idx_v],
-                            shape=(1,),
-                            dtype=np.float32,
-                        ),
-                        "kp_scale": spaces.Box(
-                            low=0.0,
-                            high=1.0,
-                            shape=(1,),
-                            dtype=np.float32,
-                        ),
-                        "kd_scale": spaces.Box(
-                            low=0.0,
-                            high=1.0,
-                            shape=(1,),
-                            dtype=np.float32,
-                        ),
-                        "maximum_torque": spaces.Box(
-                            low=0.0,
-                            high=tau_max[joint.idx_v],
-                            shape=(1,),
-                            dtype=np.float32,
-                        ),
-                    }
-                )
 
         # gymnasium.Env: action_space
         self.action_space = spaces.Dict(action_space)
 
         # gymnasium.Env: observation_space
-        self.observation_space = spaces.Dict(observation_space)
+        self.observation_space = spaces.Dict(
+            {
+                "imu": spaces.Dict(
+                    {
+                        "angular_velocity": spaces.Box(
+                            low=-np.inf,
+                            high=np.inf,
+                            shape=(3,),
+                            dtype=np.float32,
+                        ),
+                        "linear_acceleration": spaces.Box(
+                            low=-np.inf,
+                            high=np.inf,
+                            shape=(3,),
+                            dtype=np.float32,
+                        ),
+                        "orientation": spaces.Box(
+                            low=-1.0,
+                            high=1.0,
+                            shape=(4,),
+                            dtype=np.float32,
+                        ),
+                    }
+                ),
+                "servo": spaces.Dict(servo_space),
+            }
+        )
 
         # Class members
         self.__default_action = default_action
