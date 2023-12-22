@@ -280,7 +280,24 @@ class UpkieServos(UpkieBaseEnv):
         @param spine_observation Full observation dictionary from the spine.
         @returns Environment observation.
         """
-        return spine_observation
+        return {
+            "imu": {
+                "angular_velocity": spine_observation["imu"][
+                    "angular_velocity"
+                ],
+                "linear_acceleration": spine_observation["imu"][
+                    "linear_acceleration"
+                ],
+                "orientation": spine_observation["imu"]["orientation"],
+            },
+            "servo": {
+                joint: {
+                    key: spine_observation["servo"][joint][key]
+                    for key in self.observation_space["servo"][joint]
+                }
+                for joint in self.JOINT_NAMES
+            },
+        }
 
     def get_spine_action(self, env_action: Dict[str, Any]) -> dict:
         """!
