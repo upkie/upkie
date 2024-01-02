@@ -13,7 +13,7 @@ To test this agent in simulation, run the Bullet spine:
 Then run the MPC balancer:
 
 ```console
-bazel run //agents/mpc_balancer
+./tools/bazelisk run //agents/mpc_balancer
 ```
 
 ## Real robot
