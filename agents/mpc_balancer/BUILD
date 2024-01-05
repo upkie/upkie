@@ -23,10 +23,7 @@ py_binary(
 
     data = [
         ":config",
-    ] + select({
-        "//:pi64_config": ["@upkie//spines:pi3hat_spine"],
-        "//conditions:default": [],
-    }),
+    ],
     deps = [
         "//upkie/envs",
         "//upkie/observers/base_pitch",
