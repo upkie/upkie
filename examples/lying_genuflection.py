@@ -8,6 +8,7 @@
 
 import gymnasium as gym
 import numpy as np
+
 import upkie.envs
 
 NB_GENUFLECTIONS = 10
@@ -31,13 +32,18 @@ spine_config = {
 if __name__ == "__main__":
     upkie.envs.register()
     with gym.make(
-        "UpkieServos-v2", spine_config=spine_config, frequency=200.0,
+        "UpkieServos-v3",
+        spine_config=spine_config,
+        frequency=200.0,
     ) as env:
-        action = np.zeros(env.action_space.shape)
+        action = env.get_default_action()
         observation, _ = env.reset()  # connects to the spine
         for step in range(NB_GENUFLECTIONS * GENUFLECTION_STEPS):
             x = float(step % GENUFLECTION_STEPS) / GENUFLECTION_STEPS
             y = 4.0 * x * (1.0 - x)  # in [0, 1]
             q_0134 = AMPLITUDE * y * np.array([1.0, -2.0, -1.0, 2.0])
-            action[[LEFT_HIP, LEFT_KNEE, RIGHT_HIP, RIGHT_KNEE]] = q_0134
+            action["left_hip"]["position"] = q_0134[0]
+            action["left_knee"]["position"] = q_0134[1]
+            action["right_hip"]["position"] = q_0134[2]
+            action["right_knee"]["position"] = q_0134[3]
             observation, _, _, _, _ = env.step(action)
