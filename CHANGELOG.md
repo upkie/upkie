@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - dependencies: Bump Vulp to 2.1.0
 - whoopsies: Rename ``try_pid_balancer.sh`` to ``start_pid_balancer.sh`` 😊
 
+### Fixed
+
+- MPC balancer: add missing dependencies to requirements.txt
+
 ## [3.1.0] - 2023-12-22
 
 ### Added
