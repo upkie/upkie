@@ -20,8 +20,8 @@ Testing a policy assumes the spine is already up and running, for instance via `
 
 You can specify the path to policy parameters to the agent. For instance, if the policy parameters are saved in `foobar.zip`, run:
 
-- Python: `` python ./agents/ppo_balancer/main.py --policy ./agents/ppo_balancer/training/2023-11-15/final.zip``
-- Bazel: ``./tools/bazelisk run //agents/ppo_balancer -- --policy ./agents/ppo_balancer/training/2023-11-15/final.zip``
+- Python: `` python ./agents/ppo_balancer/run.py --policy ./agents/ppo_balancer/training/2023-11-15/final.zip``
+- Bazel: ``./tools/bazelisk run //agents/ppo_balancer:run -- --policy ./agents/ppo_balancer/training/2023-11-15/final.zip``
 
 The `requirements.txt` file in the agent directory can be used to install all packages from PyPI to your robot.
 
