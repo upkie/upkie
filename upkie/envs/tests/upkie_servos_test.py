@@ -39,6 +39,14 @@ class TestUpkieServos(unittest.TestCase):
         )
         self.assertGreaterEqual(spine_observation["number"], 1)
 
+        imu = spine_observation["imu"]
+        self.assertIsInstance(imu["angular_velocity"], np.ndarray)
+        self.assertIsInstance(imu["linear_acceleration"], np.ndarray)
+        self.assertIsInstance(imu["orientation"], np.ndarray)
+        self.assertEquals(imu["angular_velocity"].shape, (3,))
+        self.assertEquals(imu["linear_acceleration"].shape, (3,))
+        self.assertEquals(imu["orientation"].shape, (4,))
+
     def test_reward(self):
         self.env.reset()
         action = {
