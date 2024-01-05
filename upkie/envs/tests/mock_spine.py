@@ -4,8 +4,6 @@
 # Copyright 2023 Inria
 # SPDX-License-Identifier: Apache-2.0
 
-import numpy as np
-
 
 class MockSpine:
     def __init__(self):
@@ -23,9 +21,9 @@ class MockSpine:
                 for joint in ("hip", "knee", "wheel")
             },
             "imu": {
-                "orientation": np.array([1.0, 0.0, 0.0, 0.0]),
-                "angular_velocity": np.zeros(3),
-                "linear_acceleration": np.zeros(3),
+                "orientation": [1.0, 0.0, 0.0, 0.0],
+                "angular_velocity": [0.0, 0.0, 0.0],
+                "linear_acceleration": [0.0, 0.0, 0.0],
             },
             "wheel_odometry": {
                 "position": 0.0,
