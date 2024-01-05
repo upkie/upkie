@@ -134,37 +134,37 @@ class UpkieServos(UpkieBaseEnv):
                         low=q_min[joint.idx_q],
                         high=q_max[joint.idx_q],
                         shape=(1,),
-                        dtype=np.float32,
+                        dtype=float,
                     ),
                     "velocity": spaces.Box(
                         low=-v_max[joint.idx_v],
                         high=+v_max[joint.idx_v],
                         shape=(1,),
-                        dtype=np.float32,
+                        dtype=float,
                     ),
                     "feedforward_torque": spaces.Box(
                         low=-tau_max[joint.idx_v],
                         high=+tau_max[joint.idx_v],
                         shape=(1,),
-                        dtype=np.float32,
+                        dtype=float,
                     ),
                     "kp_scale": spaces.Box(
                         low=0.0,
                         high=1.0,
                         shape=(1,),
-                        dtype=np.float32,
+                        dtype=float,
                     ),
                     "kd_scale": spaces.Box(
                         low=0.0,
                         high=1.0,
                         shape=(1,),
-                        dtype=np.float32,
+                        dtype=float,
                     ),
                     "maximum_torque": spaces.Box(
                         low=0.0,
                         high=tau_max[joint.idx_v],
                         shape=(1,),
-                        dtype=np.float32,
+                        dtype=float,
                     ),
                 }
             )
@@ -174,31 +174,31 @@ class UpkieServos(UpkieBaseEnv):
                         low=q_min[joint.idx_q],
                         high=q_max[joint.idx_q],
                         shape=(1,),
-                        dtype=np.float32,
+                        dtype=float,
                     ),
                     "velocity": spaces.Box(
                         low=-v_max[joint.idx_v],
                         high=+v_max[joint.idx_v],
                         shape=(1,),
-                        dtype=np.float32,
+                        dtype=float,
                     ),
                     "torque": spaces.Box(
                         low=-tau_max[joint.idx_v],
                         high=+tau_max[joint.idx_v],
                         shape=(1,),
-                        dtype=np.float32,
+                        dtype=float,
                     ),
                     "temperature": spaces.Box(
                         low=0.0,
                         high=100.0,
                         shape=(1,),
-                        dtype=np.float32,
+                        dtype=float,
                     ),
                     "voltage": spaces.Box(
                         low=10.0,  # moteus min 10 V
                         high=44.0,  # moteus max 44 V
                         shape=(1,),
-                        dtype=np.float32,
+                        dtype=float,
                     ),
                 }
             )
@@ -239,19 +239,19 @@ class UpkieServos(UpkieBaseEnv):
                             low=-np.inf,
                             high=np.inf,
                             shape=(3,),
-                            dtype=np.float32,
+                            dtype=float,
                         ),
                         "linear_acceleration": spaces.Box(
                             low=-np.inf,
                             high=np.inf,
                             shape=(3,),
-                            dtype=np.float32,
+                            dtype=float,
                         ),
                         "orientation": spaces.Box(
                             low=-1.0,
                             high=1.0,
                             shape=(4,),
-                            dtype=np.float32,
+                            dtype=float,
                         ),
                     }
                 ),
@@ -262,13 +262,13 @@ class UpkieServos(UpkieBaseEnv):
                             low=-np.inf,
                             high=np.inf,
                             shape=(1,),
-                            dtype=np.float32,
+                            dtype=float,
                         ),
                         "velocity": spaces.Box(
                             low=-np.inf,
                             high=np.inf,
                             shape=(1,),
-                            dtype=np.float32,
+                            dtype=float,
                         ),
                     }
                 ),
@@ -299,7 +299,7 @@ class UpkieServos(UpkieBaseEnv):
         return {
             "imu": {
                 "angular_velocity": np.array(
-                    spine_observation["imu"]["angular_velocity"]
+                    spine_observation["imu"]["angular_velocity"],
                 ),
                 "linear_acceleration": np.array(
                     spine_observation["imu"]["linear_acceleration"]
