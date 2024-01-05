@@ -152,7 +152,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
                 MAX_BASE_ANGULAR_VELOCITY,
                 max_ground_velocity,
             ],
-            dtype=np.float32,
+            dtype=float,
         )
         self.observation_space = spaces.Box(
             -observation_limit,
@@ -162,7 +162,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
         )
 
         # gymnasium.Env: action_space
-        action_limit = np.array([max_ground_velocity], dtype=np.float32)
+        action_limit = np.array([max_ground_velocity], dtype=float)
         self.action_space = spaces.Box(
             -action_limit,
             +action_limit,
@@ -228,7 +228,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
         ground_position = spine_observation["wheel_odometry"]["position"]
         ground_velocity = spine_observation["wheel_odometry"]["velocity"]
 
-        obs = np.empty(4, dtype=np.float32)
+        obs = np.empty(4, dtype=float)
         obs[0] = pitch_base_in_world
         obs[1] = ground_position
         obs[2] = angular_velocity_base_in_base[1]
