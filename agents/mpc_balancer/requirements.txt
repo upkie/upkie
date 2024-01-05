@@ -1,4 +1,5 @@
 gin-config >= 0.5.0
+gymnasium >= 0.29.1
 loop-rate-limiters >= 0.5.0
 matplotlib >= 3.7.0
 numpy >= 1.24.3
@@ -6,4 +7,5 @@ proxsuite >= 0.4.1
 qpmpc >= 3.0.0
 qpsolvers >= 3.4.0
 scipy >= 1.10.0
+upkie >= 3.1.0
 upkie_description >= 1.4.0
