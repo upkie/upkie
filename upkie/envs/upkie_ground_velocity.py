@@ -174,6 +174,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
             joint: {
                 "position": None,
                 "velocity": 0.0,
+                "maximum_torque": 10.0,  # qdd100 actuators
             }
             for joint in self.LEG_JOINTS
         }
@@ -266,10 +267,12 @@ class UpkieGroundVelocity(UpkieBaseEnv):
                 "left_wheel": {
                     "position": math.nan,
                     "velocity": +wheel_velocity,
+                    "maximum_torque": 1.0,  # mj5208 actuator
                 },
                 "right_wheel": {
                     "position": math.nan,
                     "velocity": -wheel_velocity,
+                    "maximum_torque": 1.0,  # mj5208 actuator
                 },
             }
         )

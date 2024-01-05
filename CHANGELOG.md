@@ -9,19 +9,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- envs: Specify maximum torques in `UpkieGroundVelocity`
 - dependencies: Bump Vulp to 2.1.0
 - whoopsies: Rename ``try_pid_balancer.sh`` to ``start_pid_balancer.sh`` 😊
 
 ### Fixed
 
 - MPC balancer: add missing dependencies to requirements.txt
-- envs: typo in UpkieServos dictionary key
+- envs: typo in `UpkieServos` dictionary key
 
 ## [3.1.0] - 2023-12-22
 
 ### Added
 
-- envs: Take feedforward torque commands into account in `UpkieServos` environment
+- envs: Take feedforward torque commands into account in `UpkieServos`
 - examples: Wheeled balancing with wheel torque control
 - utils: ActionError exception
 - utils: ModelError exception
