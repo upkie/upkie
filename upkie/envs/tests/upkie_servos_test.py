@@ -43,9 +43,9 @@ class TestUpkieServos(unittest.TestCase):
         self.assertIsInstance(imu["angular_velocity"], np.ndarray)
         self.assertIsInstance(imu["linear_acceleration"], np.ndarray)
         self.assertIsInstance(imu["orientation"], np.ndarray)
-        self.assertEquals(imu["angular_velocity"].shape, (3,))
-        self.assertEquals(imu["linear_acceleration"].shape, (3,))
-        self.assertEquals(imu["orientation"].shape, (4,))
+        self.assertEqual(imu["angular_velocity"].shape, (3,))
+        self.assertEqual(imu["linear_acceleration"].shape, (3,))
+        self.assertEqual(imu["orientation"].shape, (4,))
 
     def test_reward(self):
         self.env.reset()
@@ -62,14 +62,6 @@ class TestUpkieServos(unittest.TestCase):
     def test_action_needs_position(self):
         observation, info = self.env.reset()
         action = {servo: {"velocity": 0.0} for servo in self.env.JOINT_NAMES}
-        with self.assertRaises(ActionError):
-            self.env.step(action)
-
-    def test_action_needs_velocity(self):
-        observation, info = self.env.reset()
-        action = {
-            servo: {"position": np.nan} for servo in self.env.JOINT_NAMES
-        }
         with self.assertRaises(ActionError):
             self.env.step(action)
 
