@@ -296,6 +296,8 @@ class UpkieServos(UpkieBaseEnv):
         @param spine_observation Full observation dictionary from the spine.
         @returns Environment observation.
         """
+        # If creating a new object turns out to be too slow we can switch to
+        # updating in-place.
         return {
             "imu": {
                 "angular_velocity": np.array(
