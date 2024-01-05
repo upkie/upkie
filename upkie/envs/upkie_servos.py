@@ -315,7 +315,7 @@ class UpkieServos(UpkieBaseEnv):
             },
             "wheel_odometry": {
                 "position": spine_observation["wheel_odometry"]["position"],
-                "velociy": spine_observation["wheel_odometry"]["velocity"],
+                "velocity": spine_observation["wheel_odometry"]["velocity"],
             },
         }
 
