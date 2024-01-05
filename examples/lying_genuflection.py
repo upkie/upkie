@@ -15,11 +15,6 @@ NB_GENUFLECTIONS = 10
 GENUFLECTION_STEPS = 200
 AMPLITUDE = 1.0  # in radians
 
-LEFT_HIP = 0  # index of left hip position in vectorized action
-LEFT_KNEE = 1  # same for left knee, etc.
-RIGHT_HIP = 3
-RIGHT_KNEE = 4
-
 spine_config = {
     "bullet": {
         "reset": {
