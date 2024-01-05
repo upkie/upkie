@@ -298,13 +298,15 @@ class UpkieServos(UpkieBaseEnv):
         """
         return {
             "imu": {
-                "angular_velocity": spine_observation["imu"][
-                    "angular_velocity"
-                ],
-                "linear_acceleration": spine_observation["imu"][
-                    "linear_acceleration"
-                ],
-                "orientation": spine_observation["imu"]["orientation"],
+                "angular_velocity": np.array(
+                    spine_observation["imu"]["angular_velocity"]
+                ),
+                "linear_acceleration": np.array(
+                    spine_observation["imu"]["linear_acceleration"]
+                ),
+                "orientation": np.array(
+                    spine_observation["imu"]["orientation"]
+                ),
             },
             "servo": {
                 joint: {
