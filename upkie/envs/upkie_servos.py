@@ -204,7 +204,7 @@ class UpkieServos(UpkieBaseEnv):
             )
             default_action[name] = {
                 # "position": np.nan,  # no default, needs to be explicit
-                # "velocity": 0.0,  # no default, needs to be explicit
+                "velocity": 0.0,
                 "feedforward_torque": 0.0,
                 "kp_scale": 1.0,
                 "kd_scale": 1.0,
