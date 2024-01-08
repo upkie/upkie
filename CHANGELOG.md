@@ -18,6 +18,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - MPC balancer: add missing dependencies to requirements.txt
 - envs: typo in `UpkieServos` dictionary key
 
+### Removed
+
+- Pink balancer: moved to a separate repository
+
 ## [3.1.0] - 2023-12-22
 
 ### Added
