@@ -60,6 +60,7 @@ class ServoController:
             joint: {
                 "position": observation["servo"][joint]["position"],
                 "velocity": 0.0,
+                "maximum_torque": 10.0,  # qdd100 actuators
             }
             for joint in (
                 f"{side}_{func}"
@@ -72,6 +73,7 @@ class ServoController:
                 wheel: {
                     "position": np.nan,
                     "velocity": 0.0,
+                    "maximum_torque": 1.0,  # mj5208 actuators
                 }
                 for wheel in ("left_wheel", "right_wheel")
             }
