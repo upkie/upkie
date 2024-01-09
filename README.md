@@ -9,7 +9,7 @@
 
 **Upkie** is a fully open source self-balancing wheeled biped robot. It has wheels for balancing, and legs to go off-road or negotiate uneven terrains. Upkies are designed to be buildable at home with tools and components ordered online, like mjbots actuators. Motion control runs onboard the robot's Raspberry Pi.
 
-This repository contains all the software and instructions required to build and operate an Upkie. Development can be done in Python or C++, on Linux or macOS. Questions are welcome in the [Chat](https://app.element.io/#/room/#tasts-robots:matrix.org) and [Discussions](https://github.com/upkie/upkie/discussions) forum.
+This repository contains all the software and instructions required to build and operate an Upkie. Development can be done in Python or C++, on Linux or macOS. Questions are welcome in the [Chat](https://app.element.io/#/room/#tasts-robots:matrix.org) and [Discussions forum](https://github.com/upkie/upkie/discussions).
 
 ## Installation
 
