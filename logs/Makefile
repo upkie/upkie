@@ -9,7 +9,7 @@
 # Hostname or IP address of the Raspberry Pi Uses the value from the UPKIE_NAME
 # environment variable, if defined.
 REMOTE_NAME = ${UPKIE_NAME}
-REMOTE_PATH = logs  # no trailing slash
+REMOTE_PATH = logs
 
 .PHONY: clean
 clean:  ## Clean up logs smaller than 100 KiB
