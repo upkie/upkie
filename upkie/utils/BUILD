@@ -51,13 +51,17 @@ py_library(
 )
 
 py_library(
-    name = "rotations",
-    srcs = ["rotations.py"],
+    name = "spdlog",
+    srcs = ["spdlog.py"],
 )
 
 py_library(
-    name = "spdlog",
-    srcs = ["spdlog.py"],
+    name = "transforms",
+    srcs = [
+        "rigid_body_state.py",
+        "rigid_body_state_randomization.py",
+        "rotations.py",
+    ],
 )
 
 py_library(
@@ -69,8 +73,8 @@ py_library(
         ":nested_update",
         ":pinocchio",
         ":raspi",
-        ":rotations",
         ":spdlog",
+        ":transforms",
     ],
 )
 
