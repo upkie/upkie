@@ -68,17 +68,19 @@ class RigidBodyState:
         )
 
     def sample_orientation(self, np_random) -> ScipyRotation:
-        rotation_rand_to_base = self.randomization.sample_orientation()
-        rotation_base_to_world = self.orientation
+        rotation_rand_to_base = self.randomization.sample_orientation(
+            np_random
+        )
+        rotation_base_to_world = self.orientation_base_in_world
         return rotation_base_to_world * rotation_rand_to_base
 
     def sample_position(self, np_random) -> NDArray[float]:
-        position_rand_in_world = self.randomization.sample_position()
+        position_rand_in_world = self.randomization.sample_position(np_random)
         return self.position_base_in_world + position_rand_in_world
 
     def sample_linear_velocity(self, np_random) -> NDArray[float]:
         linear_velocity_rand_to_world_in_world = (
-            self.randomization.sample_linear_velocity()
+            self.randomization.sample_linear_velocity(np_random)
         )
         return (
             self.linear_velocity_base_to_world_in_world
@@ -87,7 +89,7 @@ class RigidBodyState:
 
     def sample_angular_velocity(self, np_random) -> NDArray[float]:
         angular_velocity_rand_to_base_in_base = (
-            self.randomization.sample_angular_velocity()
+            self.randomization.sample_angular_velocity(np_random)
         )
         angular_velocity_base_to_world_in_base = (
             self.angular_velocity_base_in_base
