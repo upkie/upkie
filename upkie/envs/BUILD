@@ -9,10 +9,7 @@ package(default_visibility = ["//visibility:public"])
 
 py_library(
     name = "upkie_base_env",
-    srcs = [
-        "init_randomization.py",
-        "upkie_base_env.py",
-    ],
+    srcs = ["upkie_base_env.py"],
     deps = [
         "//upkie/config",
         "//upkie/observers/base_pitch",

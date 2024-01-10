@@ -8,11 +8,9 @@ import logging
 
 import gymnasium as gym
 
-from .init_randomization import InitRandomization
 from .upkie_base_env import UpkieBaseEnv
 
 __all__ = [
-    "InitRandomization",
     "UpkieBaseEnv",
     "register",
 ]
