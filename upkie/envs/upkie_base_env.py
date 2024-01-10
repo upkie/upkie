@@ -112,7 +112,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         Update initial-state randomization.
 
         Keyword arguments are forwarded as is to @ref
-        upkie.envs.init_randomization.InitRandomization.update.
+        upkie.utils.rigid_body_state_randomization.RigidBodyStateRandomization.update.
         """
         self.init_state.randomization.update(**kwargs)
 
