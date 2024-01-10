@@ -17,8 +17,7 @@ import upkie.config
 from upkie.observers.base_pitch import compute_base_pitch_from_imu
 from upkie.utils.exceptions import UpkieException
 from upkie.utils.nested_update import nested_update
-
-from .init_randomization import InitRandomization
+from upkie.utils.rigid_body_state import RigidBodyState
 
 
 class UpkieBaseEnv(abc.ABC, gymnasium.Env):
@@ -46,14 +45,14 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
     _spine: SpineInterface
     _spine_config: dict
     fall_pitch: float
-    init_rand: InitRandomization
+    init_state: RigidBodyState
 
     def __init__(
         self,
         fall_pitch: float = 1.0,
         frequency: Optional[float] = 200.0,
         regulate_frequency: bool = True,
-        init_rand: Optional[InitRandomization] = None,
+        init_state: Optional[RigidBodyState] = None,
         shm_name: str = "/vulp",
         spine_config: Optional[dict] = None,
         spine_retries: int = 10,
@@ -80,8 +79,8 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
             nested_update(merged_spine_config, spine_config)
         if regulate_frequency and frequency is None:
             raise UpkieException(f"{regulate_frequency=} but {frequency=}")
-        if init_rand is None:
-            init_rand = InitRandomization()
+        if init_state is None:
+            init_state = RigidBodyState()
 
         self.__frequency = frequency
         self.__log = {}
@@ -90,7 +89,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         self._spine = SpineInterface(shm_name, retries=spine_retries)
         self._spine_config = merged_spine_config
         self.fall_pitch = fall_pitch
-        self.init_rand = init_rand
+        self.init_state = init_state
 
     @property
     def dt(self) -> Optional[float]:
@@ -115,7 +114,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         Keyword arguments are forwarded as is to @ref
         upkie.envs.init_randomization.InitRandomization.update.
         """
-        self.init_rand.update(**kwargs)
+        self.init_state.randomization.update(**kwargs)
 
     def close(self) -> None:
         """!
@@ -144,7 +143,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         super().reset(seed=seed)
         self._spine.stop()
         self.__reset_rate()
-        self.__reset_initial_robot_state()
+        self.__reset_init_sate()
         self._spine.start(self._spine_config)
         self._spine.get_observation()  # might be a pre-reset observation
         spine_observation = self._spine.get_observation()
@@ -158,13 +157,14 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
             rate_name = f"{self.__class__.__name__} rate limiter"
             self.__rate = RateLimiter(self.__frequency, name=rate_name)
 
-    def __reset_initial_robot_state(self):
-        orientation_matrix = self.init_rand.sample_orientation(self.np_random)
+    def __reset_init_state(self):
+        init_state, np_random = self.init_state, self.np_random
+        orientation_matrix = init_state.sample_orientation(np_random)
         qx, qy, qz, qw = orientation_matrix.as_quat()
         orientation_quat = np.array([qw, qx, qy, qz])
-        position = self.init_rand.sample_position(self.np_random)
-        linear_velocity = self.init_rand.sample_linear_velocity(self.np_random)
-        omega = self.init_rand.sample_angular_velocity(self.np_random)
+        position = init_state.sample_position(np_random)
+        linear_velocity = init_state.sample_linear_velocity(np_random)
+        omega = init_state.sample_angular_velocity(np_random)
 
         bullet_config = self._spine_config["bullet"]
         reset = bullet_config["reset"]
