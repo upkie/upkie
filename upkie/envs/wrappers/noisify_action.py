@@ -6,6 +6,7 @@
 
 import gymnasium
 import numpy as np
+from numpy.typing import NDArray
 
 from upkie.utils.exceptions import UpkieException
 
@@ -16,7 +17,7 @@ class NoisifyAction(gymnasium.ActionWrapper):
     Add noise to the action of an environment.
     """
 
-    def __init__(self, env, noise: np.ndarray):
+    def __init__(self, env, noise: NDArray[float]):
         super().__init__(env)
         if noise.shape != env.action_space.shape:
             raise UpkieException(
