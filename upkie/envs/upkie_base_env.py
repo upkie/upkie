@@ -30,7 +30,8 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
     This base environment has the following attributes:
 
     - ``fall_pitch``: Fall pitch angle, in radians.
-    - ``init_rand``: Initial state randomization ranges.
+    - ``init_state``: Initial state for the floating base of the robot, which
+        may be randomized upon resets.
 
     @note This environment is made to run on a single CPU thread rather than on
     GPU/TPU. The downside for reinforcement learning is that computations are
@@ -80,7 +81,9 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         if regulate_frequency and frequency is None:
             raise UpkieException(f"{regulate_frequency=} but {frequency=}")
         if init_state is None:
-            init_state = RigidBodyState()
+            init_state = RigidBodyState(
+                position_base_in_world=np.array([0.0, 0.0, 0.6])
+            )
 
         self.__frequency = frequency
         self.__log = {}
