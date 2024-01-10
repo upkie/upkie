@@ -8,28 +8,26 @@
 
 import gymnasium as gym
 import numpy as np
+from scipy.spatial.transform import Rotation as ScipyRotation
 
 import upkie.envs
+from upkie.utils.rigid_body_state import RigidBodyState
 
 NB_GENUFLECTIONS = 10
 GENUFLECTION_STEPS = 200
 AMPLITUDE = 1.0  # in radians
 
-spine_config = {
-    "bullet": {
-        "reset": {
-            "orientation_base_in_world": [0.707, 0.0, -0.707, 0.0],
-            "position_base_in_world": [0.0, 0.0, 0.1],
-        },
-    }
-}
-
 if __name__ == "__main__":
     upkie.envs.register()
     with gym.make(
         "UpkieServos-v3",
-        spine_config=spine_config,
         frequency=200.0,
+        init_state=RigidBodyState(
+            orientation_base_in_world=ScipyRotation.from_quat(
+                [0.707, 0.0, -0.707, 0.0]
+            ),
+            position_base_in_world=np.array([0.0, 0.0, 0.1]),
+        ),
     ) as env:
         action = env.get_default_action()
         observation, _ = env.reset()  # connects to the spine
