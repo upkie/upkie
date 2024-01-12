@@ -159,6 +159,7 @@ class WheelController:
 
         @param air_return_period Cutoff period for resetting integrators while
             the robot is in the air, in [s].
+        @param fall_pitch Fall pitch angle, in radians.
         @param max_ground_velocity Maximum commanded ground velocity no matter
             what, in [m] / [s].
         @param max_integral_error_velocity Maximum integral error velocity, in
