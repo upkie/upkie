@@ -122,6 +122,15 @@ def balance(
     Run proportional balancer in gym environment with logging.
 
     @param env Gym environment to Upkie.
+    @param nb_env_steps Number of environment steps to perform (zero to run
+        indefinitely).
+    @param rebuild_qp_every_time If set, rebuild all QP matrices at every
+        iteration. Otherwise, only update vectors.
+    @param show_live_plot Show a live plot.
+    @param stage_input_cost_weight Weight for the stage input cost.
+    @param stage_state_cost_weight Weight for the stage state cost.
+    @param terminal_cost_weight Weight for the terminal cost.
+    @param warm_start If set, use the warm-starting feature of ProxQP.
     """
     pendulum = PendularUpkie()
     mpc_problem = pendulum.build_mpc_problem(
