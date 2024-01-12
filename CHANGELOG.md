@@ -15,8 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- envs: Specify maximum torques in `UpkieGroundVelocity`
+- Code style: ignore E266 as Doxygen uses ## to document class attributes
 - dependencies: Bump Vulp to 2.1.0
+- envs: Specify maximum torques in `UpkieGroundVelocity`
 - whoopsies: Rename ``try_pid_balancer.sh`` to ``start_pid_balancer.sh`` 😊
 
 ### Fixed
