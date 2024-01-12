@@ -56,7 +56,7 @@ def run(
     dt = 1.0 / frequency
     rate = RateLimiter(frequency, "controller")
 
-    wheel_radius = controller.wheel_balancer.wheel_radius
+    wheel_radius = controller.wheel_radius
     spine_config["wheel_odometry"] = {
         "signed_radius": {
             "left_wheel": +wheel_radius,

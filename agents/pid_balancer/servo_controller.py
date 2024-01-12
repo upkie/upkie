@@ -52,6 +52,11 @@ class ServoController:
         self.__servo_action = None
         self.__wheel_balancer = WheelController()  # type: ignore
 
+    @property
+    def wheel_radius(self) -> float:
+        """!Wheel radius in [m]."""
+        return self.__wheel_balancer.wheel_radius
+
     def initialize_servo_action(self, observation: dict) -> None:
         """!
         Initialize default servo action from initial observation.
