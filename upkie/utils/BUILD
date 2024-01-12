@@ -58,8 +58,8 @@ py_library(
 py_library(
     name = "transforms",
     srcs = [
-        "rigid_body_state.py",
-        "rigid_body_state_randomization.py",
+        "robot_state.py",
+        "robot_state_randomization.py",
         "rotations.py",
     ],
 )

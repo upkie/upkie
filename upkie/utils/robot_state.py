@@ -14,12 +14,10 @@ import numpy as np
 from numpy.typing import NDArray
 from scipy.spatial.transform import Rotation as ScipyRotation
 
-from upkie.utils.rigid_body_state_randomization import (
-    RigidBodyStateRandomization,
-)
+from upkie.utils.robot_state_randomization import RobotStateRandomization
 
 
-class RigidBodyState:
+class RobotState:
 
     """!
     Rigid-body state (configuration and velocity) with optional randomization.
@@ -29,7 +27,7 @@ class RigidBodyState:
     position_base_in_world: NDArray[float]
     angular_velocity_base_in_base: NDArray[float]
     linear_velocity_base_to_world_in_world: NDArray[float]
-    randomization: RigidBodyStateRandomization
+    randomization: RobotStateRandomization
 
     def __init__(
         self,
@@ -39,7 +37,7 @@ class RigidBodyState:
             NDArray[float]
         ] = None,
         angular_velocity_base_in_base: Optional[NDArray[float]] = None,
-        randomization: Optional[RigidBodyStateRandomization] = None,
+        randomization: Optional[RobotStateRandomization] = None,
     ):
         self.orientation_base_in_world = (
             orientation_base_in_world
@@ -64,7 +62,7 @@ class RigidBodyState:
         self.randomization = (
             randomization
             if randomization is not None
-            else RigidBodyStateRandomization()
+            else RobotStateRandomization()
         )
 
     def sample_orientation(self, np_random) -> ScipyRotation:

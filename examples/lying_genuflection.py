@@ -11,7 +11,7 @@ import numpy as np
 from scipy.spatial.transform import Rotation as ScipyRotation
 
 import upkie.envs
-from upkie.utils.rigid_body_state import RigidBodyState
+from upkie.utils.robot_state import RobotState
 
 NB_GENUFLECTIONS = 10
 GENUFLECTION_STEPS = 200
@@ -22,7 +22,7 @@ if __name__ == "__main__":
     with gym.make(
         "UpkieServos-v3",
         frequency=200.0,
-        init_state=RigidBodyState(
+        init_state=RobotState(
             orientation_base_in_world=ScipyRotation.from_quat(
                 [0.707, 0.0, -0.707, 0.0]
             ),

@@ -17,7 +17,7 @@ import upkie.config
 from upkie.observers.base_pitch import compute_base_pitch_from_imu
 from upkie.utils.exceptions import UpkieException
 from upkie.utils.nested_update import nested_update
-from upkie.utils.rigid_body_state import RigidBodyState
+from upkie.utils.robot_state import RobotState
 
 
 class UpkieBaseEnv(abc.ABC, gymnasium.Env):
@@ -46,14 +46,14 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
     _spine: SpineInterface
     _spine_config: dict
     fall_pitch: float
-    init_state: RigidBodyState
+    init_state: RobotState
 
     def __init__(
         self,
         fall_pitch: float = 1.0,
         frequency: Optional[float] = 200.0,
         regulate_frequency: bool = True,
-        init_state: Optional[RigidBodyState] = None,
+        init_state: Optional[RobotState] = None,
         shm_name: str = "/vulp",
         spine_config: Optional[dict] = None,
         spine_retries: int = 10,
@@ -81,7 +81,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         if regulate_frequency and frequency is None:
             raise UpkieException(f"{regulate_frequency=} but {frequency=}")
         if init_state is None:
-            init_state = RigidBodyState(
+            init_state = RobotState(
                 position_base_in_world=np.array([0.0, 0.0, 0.6])
             )
 
@@ -115,7 +115,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         Update initial-state randomization.
 
         Keyword arguments are forwarded as is to @ref
-        upkie.utils.rigid_body_state_randomization.RigidBodyStateRandomization.update.
+        upkie.utils.robot_state_randomization.RobotStateRandomization.update.
         """
         self.init_state.randomization.update(**kwargs)
 
