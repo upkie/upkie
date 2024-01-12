@@ -66,8 +66,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
             set even when `regulate_frequency` is false, as some environments
             make use of e.g. `self.dt` internally.
         @param regulate_frequency Enables loop frequency regulation.
-        @param init_rand Magnitude of the random disturbance added to the
-            default initial state when the environment is reset.
+        @param init_state Initial state of the robot, only used in simulation.
         @param shm_name Name of shared-memory file to exchange with the spine.
         @param spine_config Additional spine configuration overriding the
             defaults from ``//config:spine.yaml``. The combined configuration
