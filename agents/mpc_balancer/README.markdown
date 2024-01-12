@@ -1,5 +1,7 @@
 # MPC balancer {#mpc-balancer}
 
+[![Documentation](https://img.shields.io/badge/docs-online-brightgreen?logo=read-the-docs&style=flat)](https://upkie.github.io/upkie/namespacempc__balancer.html)
+
 The MPC balancer allows Upkie to stand upright, balancing with its wheels only, by closed-loop model predictive control. It performs better than the [PID balancer](@ref pid-balancer) with significantly less hacks ;-)
 
 ## Simulation
