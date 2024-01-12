@@ -17,10 +17,10 @@ from scipy.spatial.transform import Rotation as ScipyRotation
 
 
 @dataclass
-class RigidBodyStateRandomization:
+class RobotStateRandomization:
 
     """!
-    Domain randomization parameters for Upkie's floating-base state.
+    Domain randomization parameters for Upkie's state.
     """
 
     roll: float = 0.0
