@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- MPC balancer: add classes and functions to the documentation
+- PID balancer: add classes and functions to the documentation
+- PPO balancer: add classes and functions to the documentation
+
 ### Changed
 
 - envs: Specify maximum torques in `UpkieGroundVelocity`
