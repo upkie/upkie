@@ -5,7 +5,7 @@
 # Copyright 2024 Inria
 
 """!
-Domain randomization of rigid-body states.
+Domain randomization of robot states.
 """
 
 from dataclasses import dataclass
@@ -56,8 +56,8 @@ class RobotStateRandomization:
             parent frame.
         @param omega_x Angular velocity from the randomized frame to the parent
             frame, expressed in the randomized frame, along the x-axis.
-        @param omega_z Angular velocity from the randomized frame to the parent
-            frame, expressed in the randomized frame, along the z-axis.
+        @param omega_y Angular velocity from the randomized frame to the parent
+            frame, expressed in the randomized frame, along the y-axis.
         @param v_x Linear velocity from the randomized frame to the parent
             frame, expressed in the parent frame and along the x-axis.
         @param v_z Linear velocity from the randomized frame to the parent

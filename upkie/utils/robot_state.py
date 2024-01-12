@@ -5,7 +5,7 @@
 # Copyright 2023 Inria
 
 """!
-Rigid-body state with optional randomization.
+Robot state with optional randomization.
 """
 
 from typing import Optional
@@ -20,23 +20,25 @@ from upkie.utils.robot_state_randomization import RobotStateRandomization
 class RobotState:
 
     """!
-    Rigid-body state (configuration and velocity) with optional randomization.
+    Robot state (configuration and velocity) with optional randomization.
     """
 
+    angular_velocity_base_in_base: NDArray[float]
+    joint_configuration: NDArray[float]
+    joint_velocity: NDArray[float]
+    linear_velocity_base_to_world_in_world: NDArray[float]
     orientation_base_in_world: ScipyRotation
     position_base_in_world: NDArray[float]
-    angular_velocity_base_in_base: NDArray[float]
-    linear_velocity_base_to_world_in_world: NDArray[float]
     randomization: RobotStateRandomization
 
     def __init__(
         self,
+        angular_velocity_base_in_base: Optional[NDArray[float]] = None,
+        joint_configuration: Optional[NDArray[float]] = None,
+        joint_velocity: Optional[NDArray[float]] = None,
+        linear_velocity_base_to_world_in_world: Optional[ NDArray[float] ] = None,
         orientation_base_in_world: Optional[ScipyRotation] = None,
         position_base_in_world: Optional[NDArray[float]] = None,
-        linear_velocity_base_to_world_in_world: Optional[
-            NDArray[float]
-        ] = None,
-        angular_velocity_base_in_base: Optional[NDArray[float]] = None,
         randomization: Optional[RobotStateRandomization] = None,
     ):
         self.orientation_base_in_world = (
