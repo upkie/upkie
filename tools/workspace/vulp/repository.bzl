@@ -1,6 +1,7 @@
 # -*- python -*-
 #
 # Copyright 2022 Stéphane Caron
+# Copyright 2024 Inria
 
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
@@ -11,6 +12,6 @@ def vulp_repository():
     git_repository(
         name = "vulp",
         remote = "https://github.com/upkie/vulp.git",
-        commit = "815a3816b3b27436705c60e213ce0f41d1489e77",
-        shallow_since = "1704471649 +0100",
+        commit = "b179d224da0468a93b6a9a051f6137b70f86498c",
+        shallow_since = "1705597050 +0100",
     )
