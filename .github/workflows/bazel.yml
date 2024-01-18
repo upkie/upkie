@@ -45,7 +45,7 @@ jobs:
             - name: "Install dependencies"
               run: |
                   python -m pip install --upgrade pip
-                  python -m pip install gymnasium loop-rate-limiters numpy vulp
+                  python -m pip install gymnasium loop-rate-limiters numpy upkie_description vulp
 
             - name: "Build all targets"
               env:
@@ -63,7 +63,7 @@ jobs:
             - name: "Install dependencies"
               run: |
                   python -m pip install --upgrade pip
-                  python -m pip install gymnasium loop-rate-limiters numpy pin pin-pink vulp
+                  python -m pip install gymnasium loop-rate-limiters numpy pin pin-pink upkie_description vulp
 
             - name: "Test coverage"
               run: |
@@ -104,7 +104,7 @@ jobs:
             - name: "Install dependencies"
               run: |
                   python -m pip install --upgrade pip
-                  python -m pip install gymnasium loop-rate-limiters numpy pin pin-pink six vulp
+                  python -m pip install gymnasium loop-rate-limiters numpy pin pin-pink six upkie_description vulp
 
             - name: "Check unit tests"
               env:
