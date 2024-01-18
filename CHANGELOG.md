@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+- Bazel: dependencies based on ``pip_parse`` from ``rules_python``
 - Pink balancer: moved to a separate repository
 
 ## [3.1.0] - 2023-12-22
