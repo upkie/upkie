@@ -4,7 +4,6 @@
 # Copyright 2023 Inria
 
 load("//tools/lint:lint.bzl", "add_lint_tests")
-load("@pip_upkie//:requirements.bzl", "requirement")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -20,19 +19,7 @@ py_library(
         "//upkie/utils:exceptions",
         "//upkie/utils:nested_update",
         "@vulp//:python",
-        requirement("loop-rate-limiters"),
-        requirement("upkie_description"),
-    ] + select({
-        # Selecting the right CPU architecture for the Raspberry Pi is
-        # currently a tough nut to crack for Bazel. We only enable compiled
-        # dependencies on the host side for now.
-        # Followed in: https://github.com/upkie/upkie/issues/1
-        "//:pi64_config": [],
-        "//conditions:default": [
-            requirement("gymnasium"),
-            requirement("scipy"),
-        ],
-    }),
+    ],
 )
 
 py_library(

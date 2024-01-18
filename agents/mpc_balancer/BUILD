@@ -3,7 +3,6 @@
 # Copyright 2022 Stéphane Caron
 
 load("//tools/lint:lint.bzl", "add_lint_tests")
-load("@pip_upkie//:requirements.bzl", "requirement")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -31,19 +30,7 @@ py_binary(
         "//upkie/utils:filters",
         "//upkie/utils:raspi",
         "//upkie/utils:spdlog",
-        requirement("gin-config"),
-    ] + select({
-        # Selecting the right CPU architecture for the Raspberry Pi is
-        # currently a tough nut to crack for Bazel. We only enable compiled
-        # dependencies on the host side for now.
-        # Followed in: https://github.com/upkie/upkie/issues/1
-        "//:pi64_config": [],
-        "//conditions:default": [
-            requirement("numpy"),
-            requirement("qpmpc"),
-            requirement("qpsolvers"),
-        ],
-    }),
+    ],
 )
 
 add_lint_tests()

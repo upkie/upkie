@@ -3,16 +3,12 @@
 # Copyright 2023 Inria
 
 load("//tools/lint:lint.bzl", "add_lint_tests")
-load("@pip_upkie//:requirements.bzl", "requirement")
 
 package(default_visibility = ["//visibility:public"])
 
 py_library(
     name = "envs",
     srcs = ["envs.py"],
-    deps = [
-        requirement("gymnasium"),
-    ],
 )
 
 py_test(
@@ -21,7 +17,6 @@ py_test(
     deps = [
         "//upkie/envs/wrappers",
         ":envs",
-        requirement("gymnasium"),
     ],
 )
 
@@ -31,7 +26,6 @@ py_test(
     deps = [
         "//upkie/envs/wrappers",
         ":envs",
-        requirement("gymnasium"),
     ],
 )
 
@@ -41,7 +35,6 @@ py_test(
     deps = [
         "//upkie/envs/wrappers",
         ":envs",
-        requirement("gymnasium"),
     ],
 )
 
@@ -51,7 +44,6 @@ py_test(
     deps = [
         "//upkie/envs/wrappers",
         ":envs",
-        requirement("gymnasium"),
     ],
 )
 
@@ -61,7 +53,6 @@ py_test(
     deps = [
         "//upkie/envs/wrappers",
         ":envs",
-        requirement("gymnasium"),
     ],
 )
 
