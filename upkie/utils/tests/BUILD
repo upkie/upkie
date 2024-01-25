@@ -35,4 +35,12 @@ py_test(
     ],
 )
 
+py_test(
+    name = "robot_state_test",
+    srcs = ["robot_state_test.py"],
+    deps = [
+        "//upkie/utils:robot_state",
+    ],
+)
+
 add_lint_tests()
