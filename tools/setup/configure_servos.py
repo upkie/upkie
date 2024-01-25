@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright 2023 Inria
 # SPDX-License-Identifier: Apache-2.0
+# Copyright 2023 Inria
 #
 # This file incorporates work covered by the following copyright and
 # permission notice:
 #
 #     setup-system.py from github.com:mjbots/quad
 #     Copyright 2018-2020 Josh Pieper
-#     License: Apache-2.0
+#     SPDX-License-Identifier: Apache-2.0
 
 
 """Configure all servos connected to an Upkie wheeled biped."""

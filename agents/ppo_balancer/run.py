@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
+# SPDX-License-Identifier: Apache-2.0
 # Copyright 2022 Stéphane Caron
 # Copyright 2023 Inria
-# SPDX-License-Identifier: Apache-2.0
 
 import argparse
 import logging
@@ -13,11 +13,11 @@ from typing import Tuple
 import gin
 import gymnasium as gym
 import numpy as np
+from envs import make_ppo_balancer_env
 from settings import EnvSettings, PPOSettings
 from stable_baselines3 import PPO
 
 import upkie.envs
-from envs import make_ppo_balancer_env
 from upkie.utils.raspi import configure_agent_process, on_raspi
 
 upkie.envs.register()
