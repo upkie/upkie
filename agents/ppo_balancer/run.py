@@ -14,11 +14,13 @@ import gin
 import gymnasium as gym
 import numpy as np
 from envs import make_ppo_balancer_env
-from settings import EnvSettings, PPOSettings
+from settings import EnvSettings, PPOSettings, TrainingSettings
 from stable_baselines3 import PPO
 
 import upkie.envs
 from upkie.utils.raspi import configure_agent_process, on_raspi
+from upkie.utils.robot_state import RobotState
+from upkie.utils.robot_state_randomization import RobotStateRandomization
 
 upkie.envs.register()
 
@@ -102,12 +104,21 @@ def main(policy_path: str, training: bool) -> None:
     @param training If True, add training noise and domain randomization.
     """
     env_settings = EnvSettings()
+    init_state = None
+    if training:
+        training_settings = TrainingSettings()
+        init_state = RobotState(
+            randomization=RobotStateRandomization(
+                **training_settings.init_rand
+            ),
+        )
     with gym.make(
         env_settings.env_id,
         frequency=env_settings.agent_frequency,
+        init_state=init_state,
+        max_ground_velocity=env_settings.max_ground_velocity,
         regulate_frequency=True,
         spine_config=env_settings.spine_config,
-        max_ground_velocity=env_settings.max_ground_velocity,
     ) as velocity_env:
         env = make_ppo_balancer_env(
             velocity_env,
