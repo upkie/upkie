@@ -54,7 +54,10 @@ jobs:
           - name: "Prepare artifacts directory"
             run: |
                 mkdir -p artifacts
-                tar czvf linux_amd64_bullet_spine.tar.gz ./bazel-bin/spines/bullet_spine ./bazel-bin/spines/bullet_spine.runfiles/
+                mkdir -p spine/external
+                mv ./bazel-bin/spines/bullet_spine ./spine/
+                mv ./bazel-bin/spines/bullet_spine.runfiles/upkie_description ./spine/external/
+                tar czvf linux_amd64_bullet_spine.tar.gz ./bazel-bin/
                 mv linux_amd64_bullet_spine.tar.gz  ./artifacts/
 
           - name: "Upload artifacts"
@@ -83,7 +86,10 @@ jobs:
           - name: "Prepare artifacts directory"
             run: |
                 mkdir -p artifacts
-                tar czvf darwin_x86_bullet_spine.tar.gz ./bazel-bin/spines/bullet_spine 
+                mkdir -p spine/external
+                mv ./bazel-bin/spines/bullet_spine ./spine/
+                mv ./bazel-bin/spines/bullet_spine.runfiles/upkie_description ./spine/external/
+                tar czvf darwin_x86_bullet_spine.tar.gz ./spine/
                 mv darwin_x86_bullet_spine.tar.gz  ./artifacts/
 
           - name: "Upload artifacts"
@@ -98,8 +104,8 @@ jobs:
                     
           - name: "Prepare artifacts directory"
             run: |
-                mkdir -p artifacts
-                tar czvf darwin_arm64_bullet_spine.tar.gz ./bazel-bin/spines/bullet_spine 
+                mv -f ./bazel-bin/spines/bullet_spine ./spine/
+                tar czvf darwin_arm64_bullet_spine.tar.gz ./spine/ 
                 mv darwin_arm64_bullet_spine.tar.gz ./artifacts/
 
           - name: "Upload artifacts"
