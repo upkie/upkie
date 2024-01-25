@@ -36,12 +36,9 @@ jobs:
                   name: ${{ env.SPLINE }}
                   path: ./artifacts
 
-    artifacts_bullet:
+    artifacts_bullet_ubuntu:
       name: "Artifacts Bullet Linux"
       runs-on: ubuntu-latest
-      env:
-          SPLINE: bullet_spine
-          SPLINE_PATH: ./bazel-out/darwin-opt/bin/spines/
       steps:
           - name: "Checkout sources"
             uses: actions/checkout@v3
@@ -54,6 +51,29 @@ jobs:
             run: |
                 tools/bazelisk build --verbose_failures  //spines:bullet_spine
 
+          - name: "Prepare artifacts directory"
+            run: |
+                mkdir -p artifacts
+                tar czvf linux_amd64_bullet_spine.tar.gz ./bazel-out/darwin-opt/bin/spines/bullet_spine
+                mv linux_amd64_bullet_spine.tar.gz  ./artifacts/
+
+          - name: "Upload artifacts"
+            uses: actions/upload-artifact@v3
+            with:
+                name: linux_amd64_bullet_spine.tar.gz
+                path: ./artifacts
+
+    artifacts_bullet_macos:
+      name: "Artifacts Bullet Macos"
+      runs-on: macos-latest
+      steps:
+          - name: "Checkout sources"
+            uses: actions/checkout@v3
+
+          - name: "Install dependencies"
+            run: |
+                sudo apt install libncurses5
+
           - name: "Build macos intel bullet spine artifact"
             run: |
                 tools/bazelisk build --verbose_failures --config=darwin_x86 //spines:bullet_spine
@@ -65,7 +85,6 @@ jobs:
           - name: "Prepare artifacts directory"
             run: |
                 mkdir -p artifacts
-                tar czvf linux_amd64_bullet_spine.tar.gz ./bazel-out/darwin-opt/bin/spines/bullet_spine
                 tar czvf darwin_arm64_bullet_spine.tar.gz ./bazel-out/darwin_arm64-opt/bin/spines/bullet_spine
                 tar czvf darwin_x86_bullet_spine.tar.gz ./bazel-out/darwin_x86_64-opt/bin/spines/bullet_spine
                 mv linux_amd64_bullet_spine.tar.gz darwin_arm64_bullet_spine.tar.gz darwin_x86_bullet_spine.tar.gz  ./artifacts/
@@ -73,9 +92,9 @@ jobs:
           - name: "Upload artifacts"
             uses: actions/upload-artifact@v3
             with:
-                name: ${{ env.SPLINE }}
+                name: darwin_arm64_bullet_spine.tar.gz
                 path: ./artifacts
-            
+
     build:
         name: "Build"
         runs-on: ubuntu-latest
