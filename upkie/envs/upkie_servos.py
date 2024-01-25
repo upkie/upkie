@@ -18,6 +18,7 @@ from upkie.utils.pinocchio import (
     box_torque_limits,
     box_velocity_limits,
 )
+from upkie.utils.robot_state import RobotState
 
 from .upkie_base_env import UpkieBaseEnv
 
@@ -88,6 +89,7 @@ class UpkieServos(UpkieBaseEnv):
         self,
         fall_pitch: float = 1.0,
         frequency: float = 200.0,
+        init_state: Optional[RobotState] = None,
         shm_name: str = "/vulp",
         spine_config: Optional[dict] = None,
     ):
@@ -96,6 +98,7 @@ class UpkieServos(UpkieBaseEnv):
 
         @param fall_pitch Fall pitch angle, in radians.
         @param frequency Regulated frequency of the control loop, in Hz.
+        @param init_state Initial state of the robot, only used in simulation.
         @param shm_name Name of shared-memory file.
         @param spine_config Additional spine configuration overriding the
             defaults from ``//config:spine.yaml``. The combined configuration
@@ -104,6 +107,7 @@ class UpkieServos(UpkieBaseEnv):
         super().__init__(
             fall_pitch=fall_pitch,
             frequency=frequency,
+            init_state=init_state,
             shm_name=shm_name,
             spine_config=spine_config,
         )
