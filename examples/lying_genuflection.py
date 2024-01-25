@@ -24,7 +24,7 @@ if __name__ == "__main__":
         frequency=200.0,
         init_state=RobotState(
             orientation_base_in_world=ScipyRotation.from_quat(
-                [0.707, 0.0, -0.707, 0.0]
+                [0.0, -0.707, 0.0, 0.707]  # SciPy convention: (x, y, z, w)
             ),
             position_base_in_world=np.array([0.0, 0.0, 0.1]),
         ),
