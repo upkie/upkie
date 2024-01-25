@@ -17,7 +17,8 @@ from upkie.utils.robot_state_randomization import RobotStateRandomization
 class TestRobotState(unittest.TestCase):
     def test_robot_state(self):
         init_state = RobotState(
-        randomization=RobotStateRandomization(roll=0., pitch=0.))
+            randomization=RobotStateRandomization(roll=0.0, pitch=0.0)
+        )
         zyx_angles = init_state.sample_orientation(np.random).as_euler("ZYX")
         self.assertTrue(np.allclose(zyx_angles, np.zeros(3)))
 
