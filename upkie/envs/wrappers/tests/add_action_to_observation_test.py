@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright 2023 Inria
 # SPDX-License-Identifier: Apache-2.0
+# Copyright 2023 Inria
 
 """Test AddActionToObservation wrapper."""
 
@@ -29,6 +29,7 @@ class AddActionToObservationTestCase(unittest.TestCase):
     def test_check_env(self):
         try:
             from stable_baselines3.common.env_checker import check_env
+
             env = gymnasium.make("Pendulum-v1")
             wrapped_env = AddActionToObservation(env)
             check_env(wrapped_env)

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright 2023 Inria
 # SPDX-License-Identifier: Apache-2.0
+# Copyright 2023 Inria
 
 """Test NoisifyAction wrapper."""
 
@@ -26,6 +26,7 @@ class LowPassFilterActionTestCase(unittest.TestCase):
     def test_check_env(self):
         try:
             from stable_baselines3.common.env_checker import check_env
+
             env = gymnasium.make("Pendulum-v1")
             lpf_env = LowPassFilterAction(env, time_constant=1.0)
             check_env(lpf_env)
