@@ -15,6 +15,7 @@ py_library(
         "//upkie/observers/base_pitch",
         "//upkie/utils:exceptions",
         "//upkie/utils:nested_update",
+        "//upkie/utils:robot_state",
         "@vulp//:python",
     ],
 )
