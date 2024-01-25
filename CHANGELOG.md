@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - MPC balancer: add classes and functions to the documentation
 - PID balancer: add classes and functions to the documentation
 - PPO balancer: add classes and functions to the documentation
+- Robot state class to describe initial state distributions
 
 ### Changed
 

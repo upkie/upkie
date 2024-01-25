@@ -52,8 +52,8 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         self,
         fall_pitch: float = 1.0,
         frequency: Optional[float] = 200.0,
-        regulate_frequency: bool = True,
         init_state: Optional[RobotState] = None,
+        regulate_frequency: bool = True,
         shm_name: str = "/vulp",
         spine_config: Optional[dict] = None,
         spine_retries: int = 10,
@@ -65,8 +65,8 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         @param frequency Regulated frequency of the control loop, in Hz. Can be
             set even when `regulate_frequency` is false, as some environments
             make use of e.g. `self.dt` internally.
-        @param regulate_frequency Enables loop frequency regulation.
         @param init_state Initial state of the robot, only used in simulation.
+        @param regulate_frequency Enables loop frequency regulation.
         @param shm_name Name of shared-memory file to exchange with the spine.
         @param spine_config Additional spine configuration overriding the
             defaults from ``//config:spine.yaml``. The combined configuration

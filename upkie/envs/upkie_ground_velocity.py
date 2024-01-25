@@ -19,6 +19,7 @@ from upkie.observers.base_pitch import (
 )
 from upkie.utils.exceptions import UpkieException
 from upkie.utils.filters import low_pass_filter
+from upkie.utils.robot_state import RobotState
 
 from .upkie_base_env import UpkieBaseEnv
 
@@ -89,7 +90,6 @@ class UpkieGroundVelocity(UpkieBaseEnv):
 
     The environment class defines the following attributes:
 
-    - ``fall_pitch``: Fall pitch angle, in radians.
     - ``leg_return_period``: Time constant for the legs (hips and knees) to
         revert to their neutral configuration.
     - ``version``: Environment version number.
@@ -108,29 +108,44 @@ class UpkieGroundVelocity(UpkieBaseEnv):
         position: float = 1.0
         velocity: float = 1.0
 
-    fall_pitch: float
     version: int = 3
     wheel_radius: float
 
     def __init__(
         self,
+        fall_pitch: float = 1.0,
+        frequency: float = 200.0,
+        init_state: Optional[RobotState] = None,
         leg_return_period: float = 1.0,
         max_ground_velocity: float = 1.0,
         reward_weights: Optional[RewardWeights] = None,
+        shm_name: str = "/vulp",
+        spine_config: Optional[dict] = None,
         wheel_radius: float = 0.06,
-        **kwargs,
     ):
         """!
         Initialize environment.
 
+        @param fall_pitch Fall detection pitch angle, in radians.
+        @param frequency Regulated frequency of the control loop, in Hz.
+        @param init_state Initial state of the robot, only used in simulation.
         @param leg_return_period Time constant for the legs (hips and knees) to
             revert to their neutral configuration.
         @param max_ground_velocity Maximum commanded ground velocity in m/s.
         @param reward_weights Coefficients before each reward term.
+        @param shm_name Name of shared-memory file.
+        @param spine_config Additional spine configuration overriding the
+            defaults from ``//config:spine.yaml``. The combined configuration
+            dictionary is sent to the spine at every :func:`reset`.
         @param wheel_radius Wheel radius in [m].
-        @param kwargs Keyword arguments are forwarded to the parent class ctor.
         """
-        super().__init__(**kwargs)
+        super().__init__(
+            fall_pitch=fall_pitch,
+            frequency=frequency,
+            init_state=init_state,
+            shm_name=shm_name,
+            spine_config=spine_config,
+        )
 
         if self.dt is None:
             raise UpkieException("This environment needs a loop frequency")
