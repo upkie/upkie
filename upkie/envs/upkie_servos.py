@@ -90,6 +90,7 @@ class UpkieServos(UpkieBaseEnv):
         fall_pitch: float = 1.0,
         frequency: float = 200.0,
         init_state: Optional[RobotState] = None,
+        regulate_frequency: bool = True,
         shm_name: str = "/vulp",
         spine_config: Optional[dict] = None,
     ):
@@ -99,6 +100,7 @@ class UpkieServos(UpkieBaseEnv):
         @param fall_pitch Fall pitch angle, in radians.
         @param frequency Regulated frequency of the control loop, in Hz.
         @param init_state Initial state of the robot, only used in simulation.
+        @param regulate_frequency Enables loop frequency regulation.
         @param shm_name Name of shared-memory file.
         @param spine_config Additional spine configuration overriding the
             defaults from ``//config:spine.yaml``. The combined configuration
@@ -108,6 +110,7 @@ class UpkieServos(UpkieBaseEnv):
             fall_pitch=fall_pitch,
             frequency=frequency,
             init_state=init_state,
+            regulate_frequency=regulate_frequency,
             shm_name=shm_name,
             spine_config=spine_config,
         )
