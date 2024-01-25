@@ -62,6 +62,7 @@ py_binary(
     ],
     deps = [
         "//upkie/envs",
+        "//upkie/utils:robot_state",
         "//upkie/utils:spdlog",
         ":common",
         "@rules_python//python/runfiles",
