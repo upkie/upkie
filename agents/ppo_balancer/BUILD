@@ -43,6 +43,7 @@ py_binary(
         "//upkie/envs",
         "//upkie/utils:filters",
         "//upkie/utils:raspi",
+        "//upkie/utils:robot_state",
         ":common",
     ],
 )
