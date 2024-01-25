@@ -28,7 +28,6 @@ from stable_baselines3.common.vec_env.base_vec_env import VecEnv
 from torch import nn
 
 import upkie.envs
-from upkie.envs import InitRandomization
 from upkie.utils.spdlog import logging
 
 upkie.envs.register()
@@ -330,7 +329,6 @@ def train_policy(
         verbose=1,
     )
 
-    max_init_rand = InitRandomization(**training.init_rand)
     try:
         policy.learn(
             total_timesteps=training.total_timesteps,
@@ -344,21 +342,21 @@ def train_policy(
                 InitRandomizationCallback(
                     vec_env,
                     "pitch",
-                    max_init_rand.pitch,
+                    training.init_rand["pitch"],
                     start_timestep=0,
                     end_timestep=1e5,
                 ),
                 InitRandomizationCallback(
                     vec_env,
                     "v_x",
-                    max_init_rand.v_x,
+                    training.init_rand["v_x"],
                     start_timestep=0,
                     end_timestep=1e5,
                 ),
                 InitRandomizationCallback(
                     vec_env,
                     "omega_y",
-                    max_init_rand.omega_y,
+                    training.init_rand["omega_y"],
                     start_timestep=0,
                     end_timestep=1e5,
                 ),
