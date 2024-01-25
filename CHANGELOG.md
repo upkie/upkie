@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - MPC balancer: add missing dependencies to requirements.txt
+- PPO balancer: add missing initial state randomization to ``--training`` mode
 - envs: typo in `UpkieServos` dictionary key
 
 ### Removed
