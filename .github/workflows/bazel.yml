@@ -54,7 +54,7 @@ jobs:
           - name: "Prepare artifacts directory"
             run: |
                 mkdir -p artifacts
-                tar czvf linux_amd64_bullet_spine.tar.gz ./bazel-out/darwin-opt/bin/spines/bullet_spine
+                tar czvf linux_amd64_bullet_spine.tar.gz ./bazel-bin/spines/bullet_spine ./bazel-bin/spines/bullet_spine.runfiles/
                 mv linux_amd64_bullet_spine.tar.gz  ./artifacts/
 
           - name: "Upload artifacts"
@@ -80,6 +80,18 @@ jobs:
             run: |
                 tools/bazelisk build --verbose_failures --config=darwin_x86 //spines:bullet_spine
 
+          - name: "Prepare artifacts directory"
+            run: |
+                mkdir -p artifacts
+                tar czvf darwin_x86_bullet_spine.tar.gz ./bazel-bin/spines/bullet_spine 
+                mv darwin_x86_bullet_spine.tar.gz  ./artifacts/
+
+          - name: "Upload artifacts"
+            uses: actions/upload-artifact@v3
+            with:
+                name: darwin_x86_bullet_spine.tar.gz
+                path: ./artifacts
+                
           - name: "Build macos arm bullet spine artifact"
             run: |
                 tools/bazelisk build --verbose_failures --config=darwin_arm64 //spines:bullet_spine
@@ -87,9 +99,8 @@ jobs:
           - name: "Prepare artifacts directory"
             run: |
                 mkdir -p artifacts
-                tar czvf darwin_arm64_bullet_spine.tar.gz ./bazel-out/darwin_arm64-opt/bin/spines/bullet_spine
-                tar czvf darwin_x86_bullet_spine.tar.gz ./bazel-out/darwin_x86_64-opt/bin/spines/bullet_spine
-                mv linux_amd64_bullet_spine.tar.gz darwin_arm64_bullet_spine.tar.gz darwin_x86_bullet_spine.tar.gz  ./artifacts/
+                tar czvf darwin_arm64_bullet_spine.tar.gz ./bazel-bin/spines/bullet_spine 
+                mv darwin_arm64_bullet_spine.tar.gz ./artifacts/
 
           - name: "Upload artifacts"
             uses: actions/upload-artifact@v3
