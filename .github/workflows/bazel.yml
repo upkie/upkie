@@ -70,10 +70,12 @@ jobs:
           - name: "Checkout sources"
             uses: actions/checkout@v3
 
-          - name: "Install dependencies"
-            run: |
-                sudo apt install libncurses5
-
+          - name: 'Set up latest Oracle JDK 21'
+            uses: oracle-actions/setup-java@v1
+            with:
+              website: oracle.com
+              release: 21
+        
           - name: "Build macos intel bullet spine artifact"
             run: |
                 tools/bazelisk build --verbose_failures --config=darwin_x86 //spines:bullet_spine
