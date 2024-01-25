@@ -14,6 +14,8 @@ from upkie.observers.base_pitch import compute_base_pitch_from_imu
 
 upkie.envs.register()
 
+GAIN = 10.0  # base pitch to wheel torque, in [N] * [m] / [rad]
+
 if __name__ == "__main__":
     with gym.make("UpkieServos-v3", frequency=200.0) as env:
         action = env.get_default_action()
@@ -33,8 +35,8 @@ if __name__ == "__main__":
         obs, _ = env.reset()  # connects to the spine
         for step in range(1_000_000):
             pitch = compute_base_pitch_from_imu(obs["imu"]["orientation"])
-            action["left_wheel"]["feedforward_torque"] = +10.0 * pitch
-            action["right_wheel"]["feedforward_torque"] = -10.0 * pitch
+            action["left_wheel"]["feedforward_torque"] = +GAIN * pitch
+            action["right_wheel"]["feedforward_torque"] = -GAIN * pitch
             obs, _, terminated, truncated, _ = env.step(action)
             if terminated or truncated:
                 obs, _ = env.reset()
