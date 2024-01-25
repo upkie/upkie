@@ -69,7 +69,7 @@ class RobotState:
         self.position_base_in_world = (
             position_base_in_world
             if position_base_in_world is not None
-            else np.zeros(3)
+            else np.array([0.0, 0.0, 0.6])  # Upkie above horizontal plane
         )
         self.randomization = (
             randomization
