@@ -118,6 +118,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
         init_state: Optional[RobotState] = None,
         leg_return_period: float = 1.0,
         max_ground_velocity: float = 1.0,
+        regulate_frequency: bool = True,
         reward_weights: Optional[RewardWeights] = None,
         shm_name: str = "/vulp",
         spine_config: Optional[dict] = None,
@@ -132,6 +133,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
         @param leg_return_period Time constant for the legs (hips and knees) to
             revert to their neutral configuration.
         @param max_ground_velocity Maximum commanded ground velocity in m/s.
+        @param regulate_frequency Enables loop frequency regulation.
         @param reward_weights Coefficients before each reward term.
         @param shm_name Name of shared-memory file.
         @param spine_config Additional spine configuration overriding the
@@ -143,6 +145,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
             fall_pitch=fall_pitch,
             frequency=frequency,
             init_state=init_state,
+            regulate_frequency=regulate_frequency,
             shm_name=shm_name,
             spine_config=spine_config,
         )
