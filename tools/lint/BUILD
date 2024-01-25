@@ -1,12 +1,12 @@
 # -*- python -*-
 #
-# Copyright 2022 Stéphane Caron
+# SPDX-License-Identifier: Apache-2.0
 #
 # This file incorporates work covered by the following copyright and permission
 # notice:
 #
 #     Copyright 2012-2016 Robot Locomotion Group @ CSAIL
-#     License: BSD-3-Clause (see licenses/LICENSE-drake)
+#     SPDX-License-Identifier: BSD-3-Clause
 
 package(default_visibility = ["//visibility:public"])
 

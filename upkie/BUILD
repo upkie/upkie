@@ -1,6 +1,6 @@
 # -*- python -*-
 #
-# Copyright 2023 Inria
+# SPDX-License-Identifier: Apache-2.0
 
 package(default_visibility = ["//visibility:public"])
 
