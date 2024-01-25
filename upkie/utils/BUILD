@@ -51,17 +51,23 @@ py_library(
 )
 
 py_library(
-    name = "spdlog",
-    srcs = ["spdlog.py"],
-)
-
-py_library(
-    name = "transforms",
+    name = "robot_state",
     srcs = [
         "robot_state.py",
         "robot_state_randomization.py",
+    ],
+)
+
+py_library(
+    name = "rotations",
+    srcs = [
         "rotations.py",
     ],
+)
+
+py_library(
+    name = "spdlog",
+    srcs = ["spdlog.py"],
 )
 
 py_library(
@@ -74,7 +80,8 @@ py_library(
         ":pinocchio",
         ":raspi",
         ":spdlog",
-        ":transforms",
+        ":robot_state",
+        ":rotations",
     ],
 )
 
