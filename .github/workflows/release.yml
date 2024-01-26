@@ -48,15 +48,16 @@ jobs:
                 mkdir -p linux_amd64_bullet_spine/external
                 cp ./bazel-bin/spines/bullet_spine ./linux_amd64_bullet_spine/
                 cp -Lr ./bazel-bin/spines/bullet_spine.runfiles/upkie_description ./linux_amd64_bullet_spine/external/
+                tar zcvf linux_amd64_bullet_spine.tar.gz ./linux_amd64_bullet_spine
 
           - name: "Add the spine to release assets"
             uses: shogo82148/actions-upload-release-asset@v1
             with:
                 upload_url: ${{ github.event.release.upload_url }}
-                asset_path: ${{ github.workspace }}/linux_amd64_bullet_spine
+                asset_path: ${{ github.workspace }}/linux_amd64_bullet_spine.tar.gz
               
-    artifacts_bullet_macos:
-      name: "Artifacts Bullet Macos"
+    bullet_macos_spine:
+      name: "Add Bullet Macos spine to release assets"
       runs-on: macos-latest
       steps:
           - name: "Checkout sources"
@@ -77,12 +78,13 @@ jobs:
                 mkdir -p darwin_x86_bullet_spine/external
                 cp ./bazel-bin/spines/bullet_spine ./darwin_x86_bullet_spine/
                 cp -Lr ./bazel-bin/spines/bullet_spine.runfiles/upkie_description ./darwin_x86_bullet_spine/external/
+                tar zcvf darwin_x86_bullet_spine.tar.gz ./darwin_x86_bullet_spine
                
-          - name: "Add the spine to release assets"
+          - name: "Add the x86 spine to release assets"
             uses: shogo82148/actions-upload-release-asset@v1
             with:
                 upload_url: ${{ github.event.release.upload_url }}
-                asset_path: ${{ github.workspace }}/darwin_x86_bullet_spine
+                asset_path: ${{ github.workspace }}/darwin_x86_bullet_spine.tar.gz
                 
           - name: "Build macos arm bullet spine artifact"
             run: |
@@ -93,9 +95,10 @@ jobs:
                 mkdir -p darwin_arm64_bullet_spine/external
                 cp ./bazel-bin/spines/bullet_spine ./darwin_arm64_bullet_spine/
                 cp -Lr ./bazel-bin/spines/bullet_spine.runfiles/upkie_description ./darwin_arm64_bullet_spine/external/
+                tar zcvf darwin_arm64_bullet_spine.tar.gz ./darwin_arm64_bullet_spine
 
-          - name: "Add the spine to release assets"
+          - name: "Add the arm64 spine to release assets"
             uses: shogo82148/actions-upload-release-asset@v1
             with:
                 upload_url: ${{ github.event.release.upload_url }}
-                asset_path: ${{ github.workspace }}/darwin_arm64_bullet_spine
+                asset_path: ${{ github.workspace }}/darwin_arm64_bullet_spine.tar.gz
