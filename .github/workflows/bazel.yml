@@ -53,17 +53,14 @@ jobs:
 
           - name: "Prepare artifacts directory"
             run: |
-                mkdir -p artifacts
-                mkdir -p spine_linux/external
-                cp ./bazel-bin/spines/bullet_spine ./spine_linux/
-                cp -Lr ./bazel-bin/spines/bullet_spine.runfiles/upkie_description ./spine_linux/external/
-                tar czvf linux_amd64_bullet_spine.tar.gz ./spine_linux/
-                mv linux_amd64_bullet_spine.tar.gz  ./artifacts/
+                mkdir -p artifacts/external
+                cp ./bazel-bin/spines/bullet_spine ./artifacts/
+                cp -Lr ./bazel-bin/spines/bullet_spine.runfiles/upkie_description ./artifacts/external/
 
           - name: "Upload artifacts"
             uses: actions/upload-artifact@v3
             with:
-                name: linux_amd64_bullet_spine.tar.gz
+                name: linux_amd64_bullet_spine.zip
                 path: ./artifacts
 
     artifacts_bullet_macos:
@@ -85,18 +82,15 @@ jobs:
 
           - name: "Prepare artifacts directory"
             run: |
-                mkdir -p artifacts
-                mkdir -p spine_darwin_x86/external
-                cp ./bazel-bin/spines/bullet_spine ./spine_darwin_x86/
-                cp -Lr ./bazel-bin/spines/bullet_spine.runfiles/upkie_description ./spine_darwin_x86/external/
-                tar czvf darwin_x86_bullet_spine.tar.gz ./spine_darwin_x86/
-                mv darwin_x86_bullet_spine.tar.gz  ./artifacts/
+                mkdir -p artifacts_x86/external
+                cp ./bazel-bin/spines/bullet_spine ./artifacts_x86/
+                cp -Lr ./bazel-bin/spines/bullet_spine.runfiles/upkie_description ./artifacts_x86/external/
 
           - name: "Upload artifacts"
             uses: actions/upload-artifact@v3
             with:
-                name: darwin_x86_bullet_spine.tar.gz
-                path: ./artifacts
+                name: darwin_x86_bullet_spine.zip
+                path: ./artifacts_x86
                 
           - name: "Build macos arm bullet spine artifact"
             run: |
@@ -104,17 +98,15 @@ jobs:
                     
           - name: "Prepare artifacts directory"
             run: |
-                mkdir -p spine_darwin_arm64/external
-                cp ./bazel-bin/spines/bullet_spine ./spine_darwin_arm64/
-                cp -Lr ./bazel-bin/spines/bullet_spine.runfiles/upkie_description ./spine_darwin_arm64/external/
-                tar czvf darwin_arm64_bullet_spine.tar.gz ./spine_darwin_arm64/ 
-                mv darwin_arm64_bullet_spine.tar.gz ./artifacts/
+                mkdir -p artifacts_arm64/external
+                cp ./bazel-bin/spines/bullet_spine ./artifacts_arm64/
+                cp -Lr ./bazel-bin/spines/bullet_spine.runfiles/upkie_description ./artifacts_arm64/external/
 
           - name: "Upload artifacts"
             uses: actions/upload-artifact@v3
             with:
-                name: darwin_arm64_bullet_spine.tar.gz
-                path: ./artifacts
+                name: darwin_arm64_bullet_spine.zip
+                path: ./artifacts_arm64
 
     build:
         name: "Build"
