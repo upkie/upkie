@@ -78,7 +78,7 @@ jobs:
             run: |
                 mkdir -p darwin_x86_bullet_spine/external
                 cp ./bazel-bin/spines/bullet_spine ./darwin_x86_bullet_spine/
-                cp -Lr ./bazel-bin/spines/bullet_spine.runfiles ./linux_amd64_bullet_spine/
+                cp -Lr ./bazel-bin/spines/bullet_spine.runfiles ./darwin_x86_bullet_spine/
                 cp -Lr ./bazel-bin/spines/bullet_spine.runfiles/upkie_description ./darwin_x86_bullet_spine/external/
                 tar zcvf darwin_x86_bullet_spine.tar.gz ./darwin_x86_bullet_spine
                
@@ -96,7 +96,7 @@ jobs:
             run: |
                 mkdir -p darwin_arm64_bullet_spine/external
                 cp ./bazel-bin/spines/bullet_spine ./darwin_arm64_bullet_spine/
-                cp -Lr ./bazel-bin/spines/bullet_spine.runfiles ./linux_amd64_bullet_spine/
+                cp -Lr ./bazel-bin/spines/bullet_spine.runfiles ./darwin_arm64_bullet_spine/
                 cp -Lr ./bazel-bin/spines/bullet_spine.runfiles/upkie_description ./darwin_arm64_bullet_spine/external/
                 tar zcvf darwin_arm64_bullet_spine.tar.gz ./darwin_arm64_bullet_spine
 
