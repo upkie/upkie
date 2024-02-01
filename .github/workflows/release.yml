@@ -105,3 +105,34 @@ jobs:
             with:
                 upload_url: ${{ github.event.release.upload_url }}
                 asset_path: ${{ github.workspace }}/darwin_arm64_bullet_spine.tar.gz
+
+    bullet_macos_14_spine:
+      name: "Add Bullet Macos spine to release assets"
+      runs-on: macos-14
+      steps:
+          - name: "Checkout sources"
+            uses: actions/checkout@v3
+
+          - name: 'Set up latest Oracle JDK 21'
+            uses: oracle-actions/setup-java@v1
+            with:
+              website: oracle.com
+              release: 21
+        
+          - name: "Build macos arm bullet spine artifact"
+            run: |
+                tools/bazelisk build --verbose_failures --config=darwin_arm64 //spines:bullet_spine
+                    
+          - name: "Prepare artifacts directory"
+            run: |
+                mkdir -p darwin_14_arm64_bullet_spine/external
+                cp ./bazel-bin/spines/bullet_spine ./darwin_14_arm64_bullet_spine/
+                cp -Lr ./bazel-bin/spines/bullet_spine.runfiles ./darwin_14_arm64_bullet_spine/
+                cp -Lr ./bazel-bin/spines/bullet_spine.runfiles/upkie_description ./darwin_14_arm64_bullet_spine/external/
+                tar zcvf darwin_14_arm64_bullet_spine.tar.gz ./darwin_14_arm64_bullet_spine
+
+          - name: "Add the macos 14 arm64 spine to release assets"
+            uses: shogo82148/actions-upload-release-asset@v1
+            with:
+                upload_url: ${{ github.event.release.upload_url }}
+                asset_path: ${{ github.workspace }}/darwin_14_arm64_bullet_spine.tar.gz
