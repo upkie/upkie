@@ -2,11 +2,10 @@ name: CI
 
 on:
     push:
-        branches:
-          - '**'        # matches every branch
-    pull_request:
         branches: [ main ]
-        
+
+    pull_request:
+        branches: [ main ]  
 jobs:
     artifacts:
         name: "Artifacts"
