@@ -1,8 +1,8 @@
 # Makefile for upkie targets
 #
-# Copyright 2022 Stéphane Caron
-# Copyright 2023 Inria
 # SPDX-License-Identifier: Apache-2.0
+# Copyright 2022 Stéphane Caron
+# Copyright 2023-2024 Inria
 
 # Hostname or IP address of the Raspberry Pi Uses the value from the UPKIE_NAME
 # environment variable, if defined. Valid usage: ``make upload UPKIE_NAME=foo``
@@ -52,8 +52,8 @@ coverage:  ## check unit test coverage and open an HTML report in Firefox
 	genhtml $(COVERAGE_DIR)/_coverage_report.dat -o $(COVERAGE_DIR)
 	firefox $(COVERAGE_DIR)/index.html
 
-.PHONY: check_robot
-check_robot:
+.PHONY: check_upkie_name
+check_upkie_name:
 	@ if [ -z "${UPKIE_NAME}" ]; then \
 		echo "ERROR: Environment variable UPKIE_NAME is not set.\n"; \
 		echo "This variable should contain the robot's hostname or IP address for SSH. "; \
@@ -67,7 +67,7 @@ check_robot:
 # Running ``raspunzel -s`` can create __pycache__ directories owned by root
 # that rsync is not allowed to remove. We therefore give permissions first.
 .PHONY: upload
-upload: check_robot build  ## upload built targets to the Raspberry Pi
+upload: check_upkie_name build  ## upload built targets to the Raspberry Pi
 	ssh $(REMOTE) sudo date -s "$(CURDATE)"
 	ssh $(REMOTE) mkdir -p $(PROJECT_NAME)
 	ssh $(REMOTE) sudo find $(PROJECT_NAME) -type d -name __pycache__ -user root -exec chmod go+wx {} "\;"
