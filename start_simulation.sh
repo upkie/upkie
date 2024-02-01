@@ -5,9 +5,8 @@ SCRIPTDIR=$(dirname "${SCRIPT}")
 
 URL_ARCHIVE="https://github.com/pgraverdy/upkie/releases/download"
 
+# no v at start of version number here
 VERSION=$(awk '/^PROJECT_NUMBER/{print $3}' docs/Doxyfile)
-# no v at start of version
-VERSION="3.3.1-alpha8"
 
 SYSTEM=$(uname -s)
 ARCH=$(uname -m)
@@ -27,32 +26,26 @@ if [[ "$SYSTEM" == Darwin ]]; then
         SPINE_ARCHIVE="$URL_ARCHIVE"/v"$VERSION"/darwin_arm64_bullet_spine.tar.gz
         DIR_ARCHIVE="darwin_arm64_bullet_spine"
     else
-        echo "Unsupported architecture"
+        echo "Unsupported architecture $ARCH"
     fi
-elif  [[ "$ARCH" == Linux ]]; then
+elif  [[ "$SYSTEM" == Linux ]]; then
     echo "Linux system"
     if [[ "$ARCH" == x86_64* ]]; then
         echo "X64 Architecture"
         SPINE_ARCHIVE="$URL_ARCHIVE"/v"$VERSION"/linux_amd64_bullet_spine.tar.gz
         DIR_ARCHIVE="linux_amd64_bullet_spine"
-    elif [[ "$ARCH" == i*86 ]]; then
-        echo "X32 Architecture"
-        SPINE_ARCHIVE="$URL_ARCHIVE"/v"$VERSION"/linux_i386_bullet_spine.tar.gz
-        DIR_ARCHIVE="linux_i386_bullet_spine"
     else
-        echo "Unsupported architecture"
+        echo "Unsupported architecture $ARCH"
     fi
 else
-    echo "Unsupported System"
+    echo "Unsupported System $SYSTEM"
 fi
-
-echo SPINE_ARCHIVE $SPINE_ARCHIVE
-
 
 if [[ -z "$SPINE_ARCHIVE" ]]; then
     echo "Build spine and use";
     (cd ${SCRIPTDIR} && ${SCRIPTDIR}/tools/bazelisk run //spines:bullet_spine -- --show)
 else
+    echo "Using SPINE_ARCHIVE:$SPINE_ARCHIVE"
     mkdir tmp-bin
     cd tmp-bin
 
@@ -68,6 +61,7 @@ else
         exit;
     else        
         echo "Unable to download, Build spine and use";
+        cd ..
         (cd ${SCRIPTDIR} && ${SCRIPTDIR}/tools/bazelisk run //spines:bullet_spine -- --show)
     fi
 fi
