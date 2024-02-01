@@ -46,8 +46,9 @@ jobs:
           - name: "Prepare artifacts directory"
             run: |
                 mkdir -p linux_amd64_bullet_spine/external
+                mkdir -p linux_amd64_bullet_spine/bullet_spine.runfiles
                 cp ./bazel-bin/spines/bullet_spine ./linux_amd64_bullet_spine/
-                cp -Lr ./bazel-bin/spines/bullet_spine.runfiles/vulp ./linux_amd64_bullet_spine/external/
+                cp -Lr ./bazel-bin/spines/bullet_spine.runfiles/vulp ./linux_amd64_bullet_spine/bullet_spine.runfiles/
                 cp -Lr ./bazel-bin/spines/bullet_spine.runfiles/upkie_description ./linux_amd64_bullet_spine/external/
                 tar zcvf linux_amd64_bullet_spine.tar.gz ./linux_amd64_bullet_spine
 
@@ -77,8 +78,9 @@ jobs:
           - name: "Prepare artifacts directory"
             run: |
                 mkdir -p darwin_x86_bullet_spine/external
+                mkdir -p darwin_x86_bullet_spine/bullet_spine.runfiles
                 cp ./bazel-bin/spines/bullet_spine ./darwin_x86_bullet_spine/
-                cp -Lr ./bazel-bin/spines/bullet_spine.runfiles/vulp ./darwin_x86_bullet_spine/external/
+                cp -Lr ./bazel-bin/spines/bullet_spine.runfiles/vulp ./darwin_x86_bullet_spine/bullet_spine.runfiles/
                 cp -Lr ./bazel-bin/spines/bullet_spine.runfiles/upkie_description ./darwin_x86_bullet_spine/external/
                 tar zcvf darwin_x86_bullet_spine.tar.gz ./darwin_x86_bullet_spine
                
@@ -95,8 +97,9 @@ jobs:
           - name: "Prepare artifacts directory"
             run: |
                 mkdir -p darwin_arm64_bullet_spine/external
+                mkdir -p darwin_arm64_bullet_spine/bullet_spine.runfiles
                 cp ./bazel-bin/spines/bullet_spine ./darwin_arm64_bullet_spine/
-                cp -Lr ./bazel-bin/spines/bullet_spine.runfiles/vulp ./darwin_arm64_bullet_spine/external/
+                cp -Lr ./bazel-bin/spines/bullet_spine.runfiles/vulp ./darwin_arm64_bullet_spine/bullet_spine.runfiles/
                 cp -Lr ./bazel-bin/spines/bullet_spine.runfiles/upkie_description ./darwin_arm64_bullet_spine/external/
                 tar zcvf darwin_arm64_bullet_spine.tar.gz ./darwin_arm64_bullet_spine
 
@@ -126,8 +129,9 @@ jobs:
           - name: "Prepare artifacts directory"
             run: |
                 mkdir -p darwin_14_arm64_bullet_spine/external
+                mkdir -p darwin_14_arm64_bullet_spine/bullet_spine.runfiles
                 cp ./bazel-bin/spines/bullet_spine ./darwin_14_arm64_bullet_spine/
-                cp -Lr ./bazel-bin/spines/bullet_spine.runfiles/vulp ./darwin_14_arm64_bullet_spine/external/
+                cp -Lr ./bazel-bin/spines/bullet_spine.runfiles/vulp ./darwin_14_arm64_bullet_spine/bullet_spine.runfiles/
                 cp -Lr ./bazel-bin/spines/bullet_spine.runfiles/upkie_description ./darwin_14_arm64_bullet_spine/external/
                 tar zcvf darwin_14_arm64_bullet_spine.tar.gz ./darwin_14_arm64_bullet_spine
 
