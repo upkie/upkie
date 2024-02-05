@@ -45,7 +45,7 @@ if [[ -z "$SPINE_ARCHIVE" ]]; then
     echo "Build spine and use";
     (cd ${SCRIPTDIR} && ${SCRIPTDIR}/tools/bazelisk run //spines:bullet_spine -- --show)
 else
-    echo "Using SPINE_ARCHIVE:$SPINE_ARCHIVE"
+    echo "Downloading the simulation spine from $SPINE_ARCHIVE..."
     mkdir tmp-bin
     cd tmp-bin
 
