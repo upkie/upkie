@@ -54,7 +54,7 @@ else
 
 
     if [[ $RETCODE -eq 0 ]]; then
-        echo "Use downloaded spine";
+        echo "Simulation spine downloaded successfully, let's roll!";
         cd $DIR_ARCHIVE
         ./bullet_spine --show
         exit;
