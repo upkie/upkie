@@ -20,15 +20,12 @@ if [[ "$SYSTEM" == Darwin ]]; then
     if [[ "$ARCH" == x86_64* ]]; then
         echo "X64 Architecture"
         SPINE_ARCHIVE="$URL_ARCHIVE"/v"$VERSION"/darwin_x86_bullet_spine.tar.gz
-        DIR_ARCHIVE="darwin_x86_bullet_spine"
     elif [[ "$ARCH" == i*86 ]]; then
         echo "X32 Architecture"
         SPINE_ARCHIVE="$URL_ARCHIVE"/v"$VERSION"/darwin_x86_bullet_spine.tar.gz
-        DIR_ARCHIVE="darwin_x86_bullet_spine"
     elif  [[ "$ARCH" == arm* ]]; then
         echo "ARM Architecture"
         SPINE_ARCHIVE="$URL_ARCHIVE"/v"$VERSION"/darwin_arm64_bullet_spine.tar.gz
-        DIR_ARCHIVE="darwin_arm64_bullet_spine"
     else
         echo "Unsupported architecture $ARCH"
     fi
@@ -37,7 +34,6 @@ elif  [[ "$SYSTEM" == Linux ]]; then
     if [[ "$ARCH" == x86_64* ]]; then
         echo "X64 Architecture"
         SPINE_ARCHIVE="$URL_ARCHIVE"/v"$VERSION"/linux_amd64_bullet_spine.tar.gz
-        DIR_ARCHIVE="linux_amd64_bullet_spine"
     else
         echo "Unsupported architecture: $ARCH"
     fi
@@ -59,7 +55,6 @@ else
 
     if [[ $RETCODE -eq 0 ]]; then
         echo "Simulation spine downloaded successfully, let's roll!";
-        cd $DIR_ARCHIVE
         ./bullet_spine --show
         exit;
     else        
