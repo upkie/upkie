@@ -74,8 +74,9 @@ class CommandLineArguments {
         space = true;
       } else if (arg == "--extra-urdf-path") {
         extra_urdf_paths.push_back(args.at(++i));
-        spdlog::info("Command line: extra-urdf-path = {}", extra_urdf_paths.back());
-      }else if (arg == "--spine-frequency") {
+        spdlog::info("Command line: extra-urdf-path = {}",
+                     extra_urdf_paths.back());
+      } else if (arg == "--spine-frequency") {
         spine_frequency = std::stol(args.at(++i));
         spdlog::info("Command line: spine_frequency = {} Hz", spine_frequency);
       } else {
@@ -111,7 +112,8 @@ class CommandLineArguments {
     std::cout << "--space\n"
               << "    No gravity, fly like an eagle!\n";
     std::cout << "--extra-urdf-path\n"
-              << "    Load extra URDFs (like ground plane or obstacles) into the environment.\n";
+              << "    Load extra URDFs (like ground plane or obstacles) into "
+                 "the environment.\n";
     std::cout << "--spine-frequency <frequency>\n"
               << "    Spine frequency in Hertz (default: 1000 Hz).\n";
     std::cout << "-v, --version\n"
