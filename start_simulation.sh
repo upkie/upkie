@@ -52,7 +52,6 @@ else
     # check that the full operation works - use pipefail as it works for bash/zsh
     (set -o pipefail;  curl -s -L $SPINE_ARCHIVE | tar -xf - -C . ); RETCODE=$?
 
-    echo RETCODE $RETCODE
 
     if [[ $RETCODE -eq 0 ]]; then
         echo "Use downloaded spine";
