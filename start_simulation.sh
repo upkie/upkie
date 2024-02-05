@@ -35,7 +35,7 @@ elif  [[ "$SYSTEM" == Linux ]]; then
         SPINE_ARCHIVE="$URL_ARCHIVE"/v"$VERSION"/linux_amd64_bullet_spine.tar.gz
         DIR_ARCHIVE="linux_amd64_bullet_spine"
     else
-        echo "Unsupported architecture $ARCH"
+        echo "Unsupported architecture: $ARCH"
     fi
 else
     echo "Unsupported System $SYSTEM"
