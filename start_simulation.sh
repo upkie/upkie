@@ -5,6 +5,10 @@ SCRIPTDIR=$(dirname "${SCRIPT}")
 
 URL_ARCHIVE="https://github.com/upkie/upkie/releases/download"
 
+if [ ! -f docs/Doxyfile ]; then
+    echo "Unable to find file 'docs/Doxyfile' for version number";
+    exit;
+fi
 # no v at start of version number here
 VERSION=$(awk '/^PROJECT_NUMBER/{print $3}' docs/Doxyfile)
 
