@@ -3,7 +3,7 @@
 SCRIPT=$(realpath "$0")
 SCRIPTDIR=$(dirname "${SCRIPT}")
 
-URL_ARCHIVE="https://github.com/pgraverdy/upkie/releases/download"
+URL_ARCHIVE="https://github.com/upkie/upkie/releases/download"
 
 # no v at start of version number here
 VERSION=$(awk '/^PROJECT_NUMBER/{print $3}' docs/Doxyfile)
