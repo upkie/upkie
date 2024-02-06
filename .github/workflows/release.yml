@@ -30,7 +30,7 @@ jobs:
 
     bullet_ubuntu_spine:
       name: "Add Bullet Linux spine to release assets"
-      runs-on: ubuntu-latest
+      runs-on: ubuntu-20.04
       steps:
           - name: "Checkout sources"
             uses: actions/checkout@v3
