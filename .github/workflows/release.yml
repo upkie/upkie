@@ -50,7 +50,7 @@ jobs:
                 cp ./bazel-bin/spines/bullet_spine ./linux_amd64_bullet_spine/
                 cp -Lr ./bazel-bin/spines/bullet_spine.runfiles/vulp ./linux_amd64_bullet_spine/bullet_spine.runfiles/
                 cp -Lr ./bazel-bin/spines/bullet_spine.runfiles/upkie_description ./linux_amd64_bullet_spine/external/
-                tar -C linux_amd64_bullet_spine zcvf linux_amd64_bullet_spine.tar.gz ./linux_amd64_bullet_spine
+                tar -C linux_amd64_bullet_spine -zcvf linux_amd64_bullet_spine.tar.gz .
 
           - name: "Add the spine to release assets"
             uses: shogo82148/actions-upload-release-asset@v1
@@ -82,7 +82,7 @@ jobs:
                 cp ./bazel-bin/spines/bullet_spine ./darwin_x86_bullet_spine/
                 cp -Lr ./bazel-bin/spines/bullet_spine.runfiles/vulp ./darwin_x86_bullet_spine/bullet_spine.runfiles/
                 cp -Lr ./bazel-bin/spines/bullet_spine.runfiles/upkie_description ./darwin_x86_bullet_spine/external/
-                tar -C ./darwin_x86_bullet_spine/ zcvf darwin_x86_bullet_spine.tar.gz .
+                tar -C ./darwin_x86_bullet_spine/ -zcvf darwin_x86_bullet_spine.tar.gz .
                
           - name: "Add the x86 spine to release assets"
             uses: shogo82148/actions-upload-release-asset@v1
@@ -101,7 +101,7 @@ jobs:
                 cp ./bazel-bin/spines/bullet_spine ./darwin_arm64_bullet_spine/
                 cp -Lr ./bazel-bin/spines/bullet_spine.runfiles/vulp ./darwin_arm64_bullet_spine/bullet_spine.runfiles/
                 cp -Lr ./bazel-bin/spines/bullet_spine.runfiles/upkie_description ./darwin_arm64_bullet_spine/external/
-                tar -C ./darwin_arm64_bullet_spine/ zcvf darwin_arm64_bullet_spine.tar.gz .
+                tar -C ./darwin_arm64_bullet_spine/ -zcvf darwin_arm64_bullet_spine.tar.gz .
 
           - name: "Add the arm64 spine to release assets"
             uses: shogo82148/actions-upload-release-asset@v1
@@ -133,7 +133,7 @@ jobs:
                 cp ./bazel-bin/spines/bullet_spine ./darwin_14_arm64_bullet_spine/
                 cp -Lr ./bazel-bin/spines/bullet_spine.runfiles/vulp ./darwin_14_arm64_bullet_spine/bullet_spine.runfiles/
                 cp -Lr ./bazel-bin/spines/bullet_spine.runfiles/upkie_description ./darwin_14_arm64_bullet_spine/external/
-                tar -C ./darwin_14_arm64_bullet_spine/ zcvf darwin_14_arm64_bullet_spine.tar.gz .
+                tar -C ./darwin_14_arm64_bullet_spine/ -zcvf darwin_14_arm64_bullet_spine.tar.gz .
 
           - name: "Add the macos 14 arm64 spine to release assets"
             uses: shogo82148/actions-upload-release-asset@v1
