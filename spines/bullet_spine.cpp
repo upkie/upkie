@@ -196,7 +196,7 @@ int main(const char* argv0, const CommandLineArguments& args) {
   bullet_params.gui = args.show;
   bullet_params.position_base_in_world = Eigen::Vector3d(0., 0., base_altitude);
   bullet_params.urdf_path = "external/upkie_description/urdf/upkie.urdf";
-  bullet_params.extra_urdf_paths = args.extra_urdf_paths;
+  bullet_params.env_urdf_paths = args.extra_urdf_paths;
   BulletInterface interface(servo_layout, bullet_params);
 
   // Spine
