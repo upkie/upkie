@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright 2023 Inria
 # SPDX-License-Identifier: Apache-2.0
+# Copyright 2023 Inria
 
 import gymnasium
 import numpy as np
+from numpy.typing import NDArray
 
 from upkie.utils.exceptions import UpkieException
 
@@ -16,7 +17,7 @@ class NoisifyObservation(gymnasium.ObservationWrapper):
     Add noise to the observation of an environment.
     """
 
-    def __init__(self, env, noise: np.ndarray):
+    def __init__(self, env, noise: NDArray[float]):
         super().__init__(env)
         if noise.shape != env.observation_space.shape:
             raise UpkieException(

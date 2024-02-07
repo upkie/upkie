@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright 2023 Inria
 # SPDX-License-Identifier: Apache-2.0
+# Copyright 2023 Inria
 
 """Tests for UpkieServos environment."""
 
@@ -39,6 +39,14 @@ class TestUpkieServos(unittest.TestCase):
         )
         self.assertGreaterEqual(spine_observation["number"], 1)
 
+        imu = observation["imu"]
+        self.assertIsInstance(imu["angular_velocity"], np.ndarray)
+        self.assertIsInstance(imu["linear_acceleration"], np.ndarray)
+        self.assertIsInstance(imu["orientation"], np.ndarray)
+        self.assertEqual(imu["angular_velocity"].shape, (3,))
+        self.assertEqual(imu["linear_acceleration"].shape, (3,))
+        self.assertEqual(imu["orientation"].shape, (4,))
+
     def test_reward(self):
         self.env.reset()
         action = {
@@ -54,14 +62,6 @@ class TestUpkieServos(unittest.TestCase):
     def test_action_needs_position(self):
         observation, info = self.env.reset()
         action = {servo: {"velocity": 0.0} for servo in self.env.JOINT_NAMES}
-        with self.assertRaises(ActionError):
-            self.env.step(action)
-
-    def test_action_needs_velocity(self):
-        observation, info = self.env.reset()
-        action = {
-            servo: {"position": np.nan} for servo in self.env.JOINT_NAMES
-        }
         with self.assertRaises(ActionError):
             self.env.step(action)
 

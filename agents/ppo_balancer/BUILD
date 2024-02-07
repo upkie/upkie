@@ -1,6 +1,5 @@
 # -*- python -*-
 #
-# Copyright 2022 Stéphane Caron
 # SPDX-License-Identifier: Apache-2.0
 
 load("//tools/lint:lint.bzl", "add_lint_tests")
@@ -44,6 +43,7 @@ py_binary(
         "//upkie/envs",
         "//upkie/utils:filters",
         "//upkie/utils:raspi",
+        "//upkie/utils:robot_state",
         ":common",
     ],
 )
@@ -62,6 +62,7 @@ py_binary(
     ],
     deps = [
         "//upkie/envs",
+        "//upkie/utils:robot_state",
         "//upkie/utils:spdlog",
         ":common",
         "@rules_python//python/runfiles",

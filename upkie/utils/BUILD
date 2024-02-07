@@ -1,6 +1,6 @@
 # -*- python -*-
 #
-# Copyright 2022 Stéphane Caron
+# SPDX-License-Identifier: Apache-2.0
 
 load("//tools/lint:lint.bzl", "add_lint_tests")
 
@@ -51,8 +51,18 @@ py_library(
 )
 
 py_library(
+    name = "robot_state",
+    srcs = [
+        "robot_state.py",
+        "robot_state_randomization.py",
+    ],
+)
+
+py_library(
     name = "rotations",
-    srcs = ["rotations.py"],
+    srcs = [
+        "rotations.py",
+    ],
 )
 
 py_library(
@@ -69,8 +79,9 @@ py_library(
         ":nested_update",
         ":pinocchio",
         ":raspi",
-        ":rotations",
         ":spdlog",
+        ":robot_state",
+        ":rotations",
     ],
 )
 

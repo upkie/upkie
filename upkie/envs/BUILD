@@ -1,7 +1,6 @@
 # -*- python -*-
 #
-# Copyright 2022 Stéphane Caron
-# Copyright 2023 Inria
+# SPDX-License-Identifier: Apache-2.0
 
 load("//tools/lint:lint.bzl", "add_lint_tests")
 
@@ -9,15 +8,13 @@ package(default_visibility = ["//visibility:public"])
 
 py_library(
     name = "upkie_base_env",
-    srcs = [
-        "init_randomization.py",
-        "upkie_base_env.py",
-    ],
+    srcs = ["upkie_base_env.py"],
     deps = [
         "//upkie/config",
         "//upkie/observers/base_pitch",
         "//upkie/utils:exceptions",
         "//upkie/utils:nested_update",
+        "//upkie/utils:robot_state",
         "@vulp//:python",
     ],
 )
@@ -28,8 +25,9 @@ py_library(
         "upkie_servos.py",
     ],
     deps = [
-        ":upkie_base_env",
         "//upkie/utils:pinocchio",
+        "//upkie/utils:robot_state",
+        ":upkie_base_env",
     ],
 )
 
@@ -41,6 +39,7 @@ py_library(
     deps = [
         "//upkie/utils:exceptions",
         "//upkie/utils:filters",
+        "//upkie/utils:robot_state",
     ],
 )
 

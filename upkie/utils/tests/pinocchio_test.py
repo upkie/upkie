@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright 2023 Inria
 # SPDX-License-Identifier: Apache-2.0
+# Copyright 2023 Inria
 
 """Test Pinocchio utility functions."""
 
@@ -50,7 +50,6 @@ class TestPinocchio(unittest.TestCase):
         q_min, q_max = box_position_limits(model)
         v_max = box_velocity_limits(model)
         tau_max = box_torque_limits(model)
-        print(f"{q_max=}")
         self.assertTrue(np.allclose(q_max, [+np.inf, +np.inf, 12.0, +np.inf]))
         self.assertTrue(np.allclose(q_min, [-np.inf, -np.inf, -12.0, -np.inf]))
         self.assertTrue(np.allclose(v_max, [+np.inf, 42.0, +np.inf]))

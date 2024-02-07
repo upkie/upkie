@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright 2023 Inria
 # SPDX-License-Identifier: Apache-2.0
-
-import numpy as np
+# Copyright 2023 Inria
 
 
 class MockSpine:
@@ -23,9 +21,9 @@ class MockSpine:
                 for joint in ("hip", "knee", "wheel")
             },
             "imu": {
-                "orientation": np.array([1.0, 0.0, 0.0, 0.0]),
-                "angular_velocity": np.zeros(3),
-                "linear_acceleration": np.zeros(3),
+                "orientation": [1.0, 0.0, 0.0, 0.0],
+                "angular_velocity": [0.0, 0.0, 0.0],
+                "linear_acceleration": [0.0, 0.0, 0.0],
             },
             "wheel_odometry": {
                 "position": 0.0,

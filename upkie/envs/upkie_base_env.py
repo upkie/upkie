@@ -17,8 +17,7 @@ import upkie.config
 from upkie.observers.base_pitch import compute_base_pitch_from_imu
 from upkie.utils.exceptions import UpkieException
 from upkie.utils.nested_update import nested_update
-
-from .init_randomization import InitRandomization
+from upkie.utils.robot_state import RobotState
 
 
 class UpkieBaseEnv(abc.ABC, gymnasium.Env):
@@ -31,7 +30,8 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
     This base environment has the following attributes:
 
     - ``fall_pitch``: Fall pitch angle, in radians.
-    - ``init_rand``: Initial state randomization ranges.
+    - ``init_state``: Initial state for the floating base of the robot, which
+        may be randomized upon resets.
 
     @note This environment is made to run on a single CPU thread rather than on
     GPU/TPU. The downside for reinforcement learning is that computations are
@@ -46,14 +46,14 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
     _spine: SpineInterface
     _spine_config: dict
     fall_pitch: float
-    init_rand: InitRandomization
+    init_state: RobotState
 
     def __init__(
         self,
         fall_pitch: float = 1.0,
         frequency: Optional[float] = 200.0,
+        init_state: Optional[RobotState] = None,
         regulate_frequency: bool = True,
-        init_rand: Optional[InitRandomization] = None,
         shm_name: str = "/vulp",
         spine_config: Optional[dict] = None,
         spine_retries: int = 10,
@@ -65,9 +65,8 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         @param frequency Regulated frequency of the control loop, in Hz. Can be
             set even when `regulate_frequency` is false, as some environments
             make use of e.g. `self.dt` internally.
+        @param init_state Initial state of the robot, only used in simulation.
         @param regulate_frequency Enables loop frequency regulation.
-        @param init_rand Magnitude of the random disturbance added to the
-            default initial state when the environment is reset.
         @param shm_name Name of shared-memory file to exchange with the spine.
         @param spine_config Additional spine configuration overriding the
             defaults from ``//config:spine.yaml``. The combined configuration
@@ -80,8 +79,10 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
             nested_update(merged_spine_config, spine_config)
         if regulate_frequency and frequency is None:
             raise UpkieException(f"{regulate_frequency=} but {frequency=}")
-        if init_rand is None:
-            init_rand = InitRandomization()
+        if init_state is None:
+            init_state = RobotState(
+                position_base_in_world=np.array([0.0, 0.0, 0.6])
+            )
 
         self.__frequency = frequency
         self.__log = {}
@@ -90,7 +91,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         self._spine = SpineInterface(shm_name, retries=spine_retries)
         self._spine_config = merged_spine_config
         self.fall_pitch = fall_pitch
-        self.init_rand = init_rand
+        self.init_state = init_state
 
     @property
     def dt(self) -> Optional[float]:
@@ -113,9 +114,9 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         Update initial-state randomization.
 
         Keyword arguments are forwarded as is to @ref
-        upkie.envs.init_randomization.InitRandomization.update.
+        upkie.utils.robot_state_randomization.RobotStateRandomization.update.
         """
-        self.init_rand.update(**kwargs)
+        self.init_state.randomization.update(**kwargs)
 
     def close(self) -> None:
         """!
@@ -144,7 +145,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         super().reset(seed=seed)
         self._spine.stop()
         self.__reset_rate()
-        self.__reset_initial_robot_state()
+        self.__reset_init_state()
         self._spine.start(self._spine_config)
         self._spine.get_observation()  # might be a pre-reset observation
         spine_observation = self._spine.get_observation()
@@ -158,13 +159,14 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
             rate_name = f"{self.__class__.__name__} rate limiter"
             self.__rate = RateLimiter(self.__frequency, name=rate_name)
 
-    def __reset_initial_robot_state(self):
-        orientation_matrix = self.init_rand.sample_orientation(self.np_random)
+    def __reset_init_state(self):
+        init_state, np_random = self.init_state, self.np_random
+        orientation_matrix = init_state.sample_orientation(np_random)
         qx, qy, qz, qw = orientation_matrix.as_quat()
         orientation_quat = np.array([qw, qx, qy, qz])
-        position = self.init_rand.sample_position(self.np_random)
-        linear_velocity = self.init_rand.sample_linear_velocity(self.np_random)
-        omega = self.init_rand.sample_angular_velocity(self.np_random)
+        position = init_state.sample_position(np_random)
+        linear_velocity = init_state.sample_linear_velocity(np_random)
+        omega = init_state.sample_angular_velocity(np_random)
 
         bullet_config = self._spine_config["bullet"]
         reset = bullet_config["reset"]

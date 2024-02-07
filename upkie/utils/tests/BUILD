@@ -1,6 +1,6 @@
 # -*- python -*-
 #
-# Copyright 2023 Inria
+# SPDX-License-Identifier: Apache-2.0
 
 load("//tools/lint:lint.bzl", "add_lint_tests")
 
@@ -32,6 +32,14 @@ py_test(
     srcs = ["pinocchio_test.py"],
     deps = [
         "//upkie/utils:pinocchio",
+    ],
+)
+
+py_test(
+    name = "robot_state_test",
+    srcs = ["robot_state_test.py"],
+    deps = [
+        "//upkie/utils:robot_state",
     ],
 )
 

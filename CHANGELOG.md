@@ -12,11 +12,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - MPC balancer: add classes and functions to the documentation
 - PID balancer: add classes and functions to the documentation
 - PPO balancer: add classes and functions to the documentation
+- Robot state class to describe initial state distributions
 
 ### Changed
 
 - Code style: ignore E266 as Doxygen uses ## to document class attributes
 - dependencies: Bump Vulp to 2.1.0
+- envs: Default velocity in `UpkieServos` is now zero
+- envs: Observation and action values are `float` rather than `np.float32`
 - envs: Specify maximum torques in `UpkieGroundVelocity`
 - whoopsies: Rename ``try_pid_balancer.sh`` to ``start_pid_balancer.sh`` 😊
 - CICD: update release GH action to package simulation spines on various architectures
@@ -24,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - MPC balancer: add missing dependencies to requirements.txt
+- PPO balancer: add missing initial state randomization to ``--training`` mode
 - envs: typo in `UpkieServos` dictionary key
 
 ### Removed
