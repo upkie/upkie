@@ -59,7 +59,7 @@ else
         cd cache
         ./bullet_spine --show
         if [ ! $? -eq 0 ] 
-            echo "Unable to execute, Build spine and use";
+        echo "Could not execute a binary simulation spine, let's build one locally...";
             cd ..
             (cd ${SCRIPTDIR} && ${SCRIPTDIR}/tools/bazelisk run //spines:bullet_spine -- --show)
         fi
