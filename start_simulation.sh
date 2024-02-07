@@ -58,7 +58,7 @@ else
         ./bullet_spine --show
         exit;
     else        
-        echo "Unable to download, Build spine and use";
+        echo "Could not download a simulation spine, let's build one locally...";
         cd ..
         (cd ${SCRIPTDIR} && ${SCRIPTDIR}/tools/bazelisk run //spines:bullet_spine -- --show)
     fi
