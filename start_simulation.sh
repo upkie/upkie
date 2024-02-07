@@ -38,7 +38,7 @@ elif  [[ "$SYSTEM" == Linux ]]; then
         echo "Unsupported architecture: $ARCH"
     fi
 else
-    echo "Unsupported System $SYSTEM"
+    echo "Unsupported system: $SYSTEM"
 fi
 
 if [[ -z "$SPINE_ARCHIVE" ]]; then
