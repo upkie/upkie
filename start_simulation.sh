@@ -46,11 +46,11 @@ if [[ -z "$SPINE_ARCHIVE" ]]; then
     (cd ${SCRIPTDIR} && ${SCRIPTDIR}/tools/bazelisk run //spines:bullet_spine -- --show)
 else
     echo "Downloading the simulation spine from $SPINE_ARCHIVE..."
-    mkdir tmp-bin
-    cd tmp-bin
+    tmp_dir=$(mktemp -d)
+    cd $(tmp_dir)
 
     # check that the full operation works - use pipefail as it works for bash/zsh
-    (set -o pipefail;  curl -s -L $SPINE_ARCHIVE | tar -xf - -C . ); RETCODE=$?
+    (set -o pipefail;  curl -s -L $SPINE_ARCHIVE | tar -zxf - ); RETCODE=$?
 
 
     if [[ $RETCODE -eq 0 ]]; then
