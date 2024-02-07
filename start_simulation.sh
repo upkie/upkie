@@ -42,7 +42,7 @@ else
 fi
 
 if [[ -z "$SPINE_ARCHIVE" ]]; then
-    echo "Build spine and use";
+    echo "Building the simulation spine locally...";
     (cd ${SCRIPTDIR} && ${SCRIPTDIR}/tools/bazelisk run //spines:bullet_spine -- --show)
 else
     echo "Downloading the simulation spine from $SPINE_ARCHIVE..."
