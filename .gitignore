@@ -1,5 +1,6 @@
 __pycache__
 bazel-*
+cache/
 dist/
 docs/html/
 logs/*.mpack

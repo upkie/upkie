@@ -27,3 +27,116 @@ jobs:
               with:
                   upload_url: ${{ github.event.release.upload_url }}
                   asset_path: ${{ github.workspace }}/bazel-bin/spines/pi3hat_spine
+
+    bullet_ubuntu_spine:
+      name: "Add Bullet Linux spine to release assets"
+      runs-on: ubuntu-20.04
+      steps:
+          - name: "Checkout sources"
+            uses: actions/checkout@v3
+
+          - name: "Install dependencies"
+            run: |
+                sudo apt install libncurses5
+
+          - name: "Build linux bullet spine artifact"
+            run: |
+                tools/bazelisk build --verbose_failures  //spines:bullet_spine
+
+          - name: "Prepare artifacts directory"
+            run: |
+                mkdir -p linux_amd64_bullet_spine/external
+                mkdir -p linux_amd64_bullet_spine/bullet_spine.runfiles
+                cp ./bazel-bin/spines/bullet_spine ./linux_amd64_bullet_spine/
+                cp -Lr ./bazel-bin/spines/bullet_spine.runfiles/vulp ./linux_amd64_bullet_spine/bullet_spine.runfiles/
+                cp -Lr ./bazel-bin/spines/bullet_spine.runfiles/upkie_description ./linux_amd64_bullet_spine/external/
+                tar -C linux_amd64_bullet_spine -zcvf linux_amd64_bullet_spine.tar.gz .
+
+          - name: "Add the spine to release assets"
+            uses: shogo82148/actions-upload-release-asset@v1
+            with:
+                upload_url: ${{ github.event.release.upload_url }}
+                asset_path: ${{ github.workspace }}/linux_amd64_bullet_spine.tar.gz
+              
+    bullet_macos_spine:
+      name: "Add Bullet Macos spine to release assets"
+      runs-on: macos-latest
+      steps:
+          - name: "Checkout sources"
+            uses: actions/checkout@v3
+
+          - name: 'Set up latest Oracle JDK 21'
+            uses: oracle-actions/setup-java@v1
+            with:
+              website: oracle.com
+              release: 21
+        
+          - name: "Build macos intel bullet spine artifact"
+            run: |
+                tools/bazelisk build --verbose_failures --config=darwin_x86 //spines:bullet_spine
+
+          - name: "Prepare artifacts directory"
+            run: |
+                mkdir -p darwin_x86_bullet_spine/external
+                mkdir -p darwin_x86_bullet_spine/bullet_spine.runfiles
+                cp ./bazel-bin/spines/bullet_spine ./darwin_x86_bullet_spine/
+                cp -Lr ./bazel-bin/spines/bullet_spine.runfiles/vulp ./darwin_x86_bullet_spine/bullet_spine.runfiles/
+                cp -Lr ./bazel-bin/spines/bullet_spine.runfiles/upkie_description ./darwin_x86_bullet_spine/external/
+                tar -C ./darwin_x86_bullet_spine/ -zcvf darwin_x86_bullet_spine.tar.gz .
+               
+          - name: "Add the x86 spine to release assets"
+            uses: shogo82148/actions-upload-release-asset@v1
+            with:
+                upload_url: ${{ github.event.release.upload_url }}
+                asset_path: ${{ github.workspace }}/darwin_x86_bullet_spine.tar.gz
+                
+          - name: "Build macos arm bullet spine artifact"
+            run: |
+                tools/bazelisk build --verbose_failures --config=darwin_arm64 //spines:bullet_spine
+                    
+          - name: "Prepare artifacts directory"
+            run: |
+                mkdir -p darwin_arm64_bullet_spine/external
+                mkdir -p darwin_arm64_bullet_spine/bullet_spine.runfiles
+                cp ./bazel-bin/spines/bullet_spine ./darwin_arm64_bullet_spine/
+                cp -Lr ./bazel-bin/spines/bullet_spine.runfiles/vulp ./darwin_arm64_bullet_spine/bullet_spine.runfiles/
+                cp -Lr ./bazel-bin/spines/bullet_spine.runfiles/upkie_description ./darwin_arm64_bullet_spine/external/
+                tar -C ./darwin_arm64_bullet_spine/ -zcvf darwin_arm64_bullet_spine.tar.gz .
+
+          - name: "Add the arm64 spine to release assets"
+            uses: shogo82148/actions-upload-release-asset@v1
+            with:
+                upload_url: ${{ github.event.release.upload_url }}
+                asset_path: ${{ github.workspace }}/darwin_arm64_bullet_spine.tar.gz
+
+    bullet_macos_14_spine:
+      name: "Add Bullet Macos 14 spine to release assets"
+      runs-on: macos-14
+      steps:   
+          - name: "Checkout sources"
+            uses: actions/checkout@v4
+
+          - name: 'Set up zulu JDK 21'
+            uses: actions/setup-java@v4
+            with:
+                distribution: 'zulu' # See 'Supported distributions' for available options
+                java-version: '21'
+        
+          - name: "Build macos arm bullet spine artifact"
+            run: |
+                tools/bazelisk build --verbose_failures --config=darwin_arm64 //spines:bullet_spine
+                    
+          - name: "Prepare artifacts directory"
+            run: |
+                mkdir -p darwin_14_arm64_bullet_spine/external
+                mkdir -p darwin_14_arm64_bullet_spine/bullet_spine.runfiles
+                cp ./bazel-bin/spines/bullet_spine ./darwin_14_arm64_bullet_spine/
+                cp -Lr ./bazel-bin/spines/bullet_spine.runfiles/vulp ./darwin_14_arm64_bullet_spine/bullet_spine.runfiles/
+                cp -Lr ./bazel-bin/spines/bullet_spine.runfiles/upkie_description ./darwin_14_arm64_bullet_spine/external/
+                tar -C ./darwin_14_arm64_bullet_spine/ -zcvf darwin_14_arm64_bullet_spine.tar.gz .
+
+          - name: "Add the macos 14 arm64 spine to release assets"
+            uses: shogo82148/actions-upload-release-asset@v1
+            with:
+                upload_url: ${{ github.event.release.upload_url }}
+                asset_path: ${{ github.workspace }}/darwin_14_arm64_bullet_spine.tar.gz
