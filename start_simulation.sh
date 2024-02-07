@@ -47,11 +47,10 @@ if [[ -z "$SPINE_ARCHIVE" ]]; then
 else
     echo "Downloading the simulation spine from $SPINE_ARCHIVE..."
     tmp_dir=$(mktemp -d)
-    cd $(tmp_dir)
+    pushd $tmp_dir
 
     # check that the full operation works - use pipefail as it works for bash/zsh
     (set -o pipefail;  curl -s -L $SPINE_ARCHIVE | tar -zxf - ); RETCODE=$?
-
 
     if [[ $RETCODE -eq 0 ]]; then
         echo "Simulation spine downloaded successfully, let's roll!";
