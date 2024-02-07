@@ -42,23 +42,29 @@ else
 fi
 
 if [[ -z "$SPINE_ARCHIVE" ]]; then
-    echo "Building the simulation spine locally...";
+    echo "Build spine and use";
     (cd ${SCRIPTDIR} && ${SCRIPTDIR}/tools/bazelisk run //spines:bullet_spine -- --show)
 else
-    echo "Downloading the simulation spine from $SPINE_ARCHIVE..."
-    tmp_dir=$(mktemp -d)
-    pushd $tmp_dir
+    RETCODE=0
+    if [ ! -f cache/bullet_spine ]; then
+        echo "Downloading the simulation spine from $SPINE_ARCHIVE..."
+        mkdir -p cache
 
-    # check that the full operation works - use pipefail as it works for bash/zsh
-    (set -o pipefail;  curl -s -L $SPINE_ARCHIVE | tar -zxf - ); RETCODE=$?
+        # check that the full operation works - use pipefail as it works for bash/zsh
+        (set -o pipefail;  curl -s -L $SPINE_ARCHIVE | tar -C ./cache/ -zxf - ); RETCODE=$?
+    fi
 
     if [[ $RETCODE -eq 0 ]]; then
-        echo "Simulation spine downloaded successfully, let's roll!";
+        echo "Simulation spine downloaded successfully or already in cache, let's roll!";
+        cd cache
         ./bullet_spine --show
-        exit;
+        if [ ! $? -eq 0 ] 
+            echo "Unable to execute, Build spine and use";
+            cd ..
+            (cd ${SCRIPTDIR} && ${SCRIPTDIR}/tools/bazelisk run //spines:bullet_spine -- --show)
+        fi
     else        
-        echo "Could not download a simulation spine, let's build one locally...";
-        cd ..
+        echo "Unable to download, Build spine and use";
         (cd ${SCRIPTDIR} && ${SCRIPTDIR}/tools/bazelisk run //spines:bullet_spine -- --show)
     fi
 fi
