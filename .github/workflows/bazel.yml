@@ -21,8 +21,8 @@ jobs:
               uses: actions/cache@v3
               with:
                 path: "/home/runner/.cache/bazel"
-                key: bazelcache-linux-pi3hat-${{ github.sha }}
-                restore-keys: bazelcache-linux-pi3hat-
+                key: bazelcache-linux-pi3hat-${{ github.ref_name }}-${{ github.sha }}
+                restore-keys: bazelcache-linux-pi3hat-${{ github.ref_name }}-
           
             - name: "Install dependencies"
               run: |
