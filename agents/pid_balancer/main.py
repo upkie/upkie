@@ -52,7 +52,6 @@ def run(
     @param frequency Control frequency in Hz.
     """
     controller = ServoController()
-    debug: dict = {}
     dt = 1.0 / frequency
     rate = RateLimiter(frequency, "controller")
 
@@ -69,8 +68,8 @@ def run(
     while True:
         observation = spine.get_observation()
         action = controller.cycle(observation, dt)
+        action["env"] = {"rate": {"slack": rate.slack}}
         spine.set_action(action)
-        debug["rate"] = {"slack": rate.slack}
         rate.sleep()
 
 
