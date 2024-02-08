@@ -1,7 +1,6 @@
 # -*- python -*-
 #
-# Copyright 2022 Stéphane Caron
-# Copyright 2024 Inria
+# SPDX-License-Identifier: Apache-2.0
 
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 

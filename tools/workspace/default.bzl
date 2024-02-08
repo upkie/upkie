@@ -1,5 +1,6 @@
 # -*- python -*-
 #
+# SPDX-License-Identifier: Apache-2.0
 # Copyright 2022 Stéphane Caron
 
 load("//tools/workspace/pycodestyle:repository.bzl", "pycodestyle_repository")
