@@ -49,6 +49,13 @@ jobs:
             - name: "Checkout sources"
               uses: actions/checkout@v3
 
+            - name: Mount bazel cache
+              uses: actions/cache@v3
+              with:
+                path: "/home/runner/.cache/bazel"
+                key: bazelcache-linux-ubuntu-build-${{ github.ref_name }}-${{ github.sha }}
+                restore-keys: bazelcache-linux-pi3hat-${{ github.ref_name }}-
+
             - name: "Install dependencies"
               run: |
                   python -m pip install --upgrade pip
@@ -67,6 +74,13 @@ jobs:
             - name: "Checkout sources"
               uses: actions/checkout@v3
 
+            - name: Mount bazel cache
+              uses: actions/cache@v3
+              with:
+                path: "/home/runner/.cache/bazel"
+                key: bazelcache-linux-ubuntu-coverage-${{ github.ref_name }}-${{ github.sha }}
+                restore-keys: bazelcache-linux-pi3hat-${{ github.ref_name }}-
+                
             - name: "Install dependencies"
               run: |
                   python -m pip install --upgrade pip
@@ -90,6 +104,13 @@ jobs:
             - name: "Checkout sources"
               uses: actions/checkout@v3
 
+            - name: Mount bazel cache
+              uses: actions/cache@v3
+              with:
+                path: "/home/runner/.cache/bazel"
+                key: bazelcache-linux-ubuntu-lint-${{ github.ref_name }}-${{ github.sha }}
+                restore-keys: bazelcache-linux-pi3hat-${{ github.ref_name }}-
+                
             - name: "Check code formatting"
               env:
                   BAZELISK_GITHUB_TOKEN: ${{ secrets.BAZELISK_GITHUB_TOKEN }}
@@ -103,6 +124,13 @@ jobs:
             - name: "Checkout sources"
               uses: actions/checkout@v3
 
+            - name: Mount bazel cache
+              uses: actions/cache@v3
+              with:
+                path: "/home/runner/.cache/bazel"
+                key: bazelcache-linux-ubuntu-test-${{ github.ref_name }}-${{ github.sha }}
+                restore-keys: bazelcache-linux-pi3hat-${{ github.ref_name }}-
+                
             - name: "Set up Python"
               uses: actions/setup-python@v4
               with:
