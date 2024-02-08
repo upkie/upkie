@@ -1,4 +1,6 @@
 # -*- python -*-
+#
+# SPDX-License-Identifier: Apache-2.0
 
 load("//tools/workspace:github_archive.bzl", "github_archive")
 
