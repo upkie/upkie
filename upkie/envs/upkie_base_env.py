@@ -204,8 +204,11 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
 
         # Act
         spine_action = self.get_spine_action(action)
+        spine_action["env"] = {}
         if self.__log:
-            spine_action["env"] = self.__log
+            spine_action["env"].update(self.__log)
+        if self.__regulate_frequency:
+            spine_action["env"]["rate"] = {"slack": self.__rate.slack}
         self._spine.set_action(spine_action)
 
         # Observe
