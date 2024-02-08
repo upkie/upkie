@@ -17,6 +17,13 @@ jobs:
             - name: "Checkout sources"
               uses: actions/checkout@v3
 
+            - name: Mount bazel cache
+              uses: actions/cache@v3
+              with:
+                path: "/home/runner/.cache/bazel"
+                key: bazelcache-linux-pi3hat-${{ github.sha }}
+                restore-keys: bazelcache-linux-pi3hat-
+          
             - name: "Install dependencies"
               run: |
                   sudo apt install libncurses5
