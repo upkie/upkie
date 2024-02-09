@@ -54,7 +54,7 @@ jobs:
               with:
                 path: "/home/runner/.cache/bazel"
                 key: bazelcache-linux-ubuntu-build-${{ github.ref_name }}-${{ github.sha }}
-                restore-keys: bazelcache-linux-pi3hat-${{ github.ref_name }}-
+                restore-keys: bazelcache-linux-ubuntu-build-${{ github.ref_name }}-
 
             - name: "Install dependencies"
               run: |
@@ -79,7 +79,7 @@ jobs:
               with:
                 path: "/home/runner/.cache/bazel"
                 key: bazelcache-linux-ubuntu-coverage-${{ github.ref_name }}-${{ github.sha }}
-                restore-keys: bazelcache-linux-pi3hat-${{ github.ref_name }}-
+                restore-keys: bazelcache-linux-ubuntu-coverage-${{ github.ref_name }}-
                 
             - name: "Install dependencies"
               run: |
@@ -109,7 +109,7 @@ jobs:
               with:
                 path: "/home/runner/.cache/bazel"
                 key: bazelcache-linux-ubuntu-lint-${{ github.ref_name }}-${{ github.sha }}
-                restore-keys: bazelcache-linux-pi3hat-${{ github.ref_name }}-
+                restore-keys: bazelcache-linux-ubuntu-lint-${{ github.ref_name }}-
                 
             - name: "Check code formatting"
               env:
@@ -129,7 +129,7 @@ jobs:
               with:
                 path: "/home/runner/.cache/bazel"
                 key: bazelcache-linux-ubuntu-test-${{ github.ref_name }}-${{ github.sha }}
-                restore-keys: bazelcache-linux-pi3hat-${{ github.ref_name }}-
+                restore-keys: bazelcache-linux-ubuntu-test-${{ github.ref_name }}-
                 
             - name: "Set up Python"
               uses: actions/setup-python@v4
