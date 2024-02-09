@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- dependencies: Bump loop-rate-limiters to 1.0.0
+
 ## [3.2.0] - 2024-02-08
 
 ### Added
@@ -20,7 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - CICD: update release GH action to package simulation spines on various architectures
 - Code style: ignore E266 as Doxygen uses ## to document class attributes
-- Dependencies: Bump Vulp to 2.1.0
+- dependencies: Bump Vulp to 2.1.0
 - envs: Default velocity in `UpkieServos` is now zero
 - envs: Observation and action values are `float` rather than `np.float32`
 - envs: Specify maximum torques in `UpkieGroundVelocity`
@@ -78,9 +82,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - MPC balancer: Update height of control point to 58 cm
 - PPO balancer: Update height of control point to 58 cm
 - dependencies: Bump Gymnasium to 0.29.1
-- dependencies: Bump loop-rate-limiters to 0.6.1
 - dependencies: Bump NumPy to 1.24.3
 - dependencies: Bump Vulp to 2.0.0
+- dependencies: Bump loop-rate-limiters to 0.6.1
 - envs: Bump `UpkieGroundVelocity` to version 3
 - envs: Legs now return to their neutral configuration in `UpkieGroundVelocity`
 - envs: ``rate`` attribute from base environment is now internal
