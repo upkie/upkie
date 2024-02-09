@@ -13,13 +13,13 @@ This repository contains all the software and instructions required to build and
 
 ## Installation
 
-Everything needed to develop for Upkie in Python lies in a single package:
+To code for Upkie in Python, just install:
 
 ```console
 pip install upkie
 ```
 
-Yes, it's as simple as that. This Python interface is already [fast enough](https://github.com/upkie/vulp#performance) for real-time control. If later on you want to optimize parts of your code, you can move them to C++ [spines](https://upkie.github.io/upkie/spines.html).
+This Python interface is already [fast enough](https://github.com/upkie/vulp#performance) for real-time control. If later on you want to optimize parts of your code, you can move them to C++ [spines](https://upkie.github.io/upkie/spines.html).
 
 ## Simulation
 
