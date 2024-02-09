@@ -7,9 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Script to run any of the standard agents
+
 ### Changed
 
 - dependencies: Bump loop-rate-limiters to 1.0.0
+
+### Removed
+
+- Script to compile and run the PID balancer
 
 ## [3.2.0] - 2024-02-08
 
