@@ -15,8 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - dependencies: Bump loop-rate-limiters to 1.0.0
+- dependencies: Replace posix-ipc by shared-memory from the standard library
+- envs: Redirect logging to /env prefix
 - Minimum Python version is now 3.8
-- Replace posix-ipc by the shared-memory class from Python standard library
 
 ### Removed
 
