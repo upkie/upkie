@@ -45,7 +45,7 @@ jobs:
             - name: "Install dependencies"
               run: |
                   python -m pip install --upgrade pip
-                  python -m pip install PyYAML gymnasium loop-rate-limiters numpy scipy upkie_description vulp
+                  python -m pip install PyYAML gymnasium loop-rate-limiters numpy scipy upkie_description vulp posix_ipc
 
             - name: "Build all targets"
               env:
@@ -63,7 +63,7 @@ jobs:
             - name: "Install dependencies"
               run: |
                   python -m pip install --upgrade pip
-                  python -m pip install PyYAML gymnasium loop-rate-limiters numpy pin pin-pink scipy upkie_description vulp
+                  python -m pip install PyYAML gymnasium loop-rate-limiters numpy pin pin-pink scipy upkie_description vulp posix_ipc
 
             - name: "Test coverage"
               run: |
@@ -104,7 +104,7 @@ jobs:
             - name: "Install dependencies"
               run: |
                   python -m pip install --upgrade pip
-                  python -m pip install PyYAML gymnasium loop-rate-limiters numpy pin pin-pink scipy six upkie_description vulp
+                  python -m pip install PyYAML gymnasium loop-rate-limiters numpy pin pin-pink scipy six upkie_description vulp posix_ipc
 
             - name: "Check unit tests"
               env:
