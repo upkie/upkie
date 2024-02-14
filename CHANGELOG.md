@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - dependencies: Bump loop-rate-limiters to 1.0.0
 - dependencies: Replace posix-ipc by shared-memory from the standard library
 - envs: Redirect logging to /env prefix
+- envs: Rename default action in UpkieServos to neutral, its position is NaN
 - Minimum Python version is now 3.8
 
 ### Removed
