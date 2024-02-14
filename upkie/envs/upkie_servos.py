@@ -129,7 +129,7 @@ class UpkieServos(UpkieBaseEnv):
             )
 
         action_space = {}
-        default_action = {}
+        neutral_action = {}
         max_action = {}
         min_action = {}
         servo_space = {}
@@ -209,8 +209,8 @@ class UpkieServos(UpkieBaseEnv):
                     ),
                 }
             )
-            default_action[name] = {
-                # "position": np.nan,  # no default, needs to be explicit
+            neutral_action[name] = {
+                "position": np.nan,
                 "velocity": 0.0,
                 "feedforward_torque": 0.0,
                 "kp_scale": 1.0,
@@ -283,18 +283,18 @@ class UpkieServos(UpkieBaseEnv):
         )
 
         # Class members
-        self.__default_action = default_action
+        self.__neutral_action = neutral_action
         self.__max_action = max_action
         self.__min_action = min_action
         self.robot = robot
 
-    def get_default_action(self) -> dict:
+    def get_neutral_action(self) -> dict:
         """!
-        Get a default action dictionary.
+        Get the neutral action where servos don't move.
 
-        @returns Default action dictionary.
+        @returns Neutral action where servos don't move.
         """
-        return self.__default_action.copy()
+        return self.__neutral_action.copy()
 
     def get_env_observation(self, spine_observation: dict):
         """!
@@ -345,7 +345,7 @@ class UpkieServos(UpkieBaseEnv):
                     action = (
                         env_action[joint][key]
                         if key in env_action[joint]
-                        else self.__default_action[joint][key]
+                        else self.__neutral_action[joint][key]
                     )
                 except KeyError as key_error:
                     raise ActionError(
