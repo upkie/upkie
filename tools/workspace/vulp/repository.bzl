@@ -12,6 +12,6 @@ def vulp_repository():
     git_repository(
         name = "vulp",
         remote = "https://github.com/upkie/vulp.git",
-        commit = "b783d69f1d6b2f228a875dc207323270fd0f5b9b",
-        shallow_since = "1707476830 +0100",
+        commit = "b179d224da0468a93b6a9a051f6137b70f86498c",
+        shallow_since = "1705597050 +0100",
     )
