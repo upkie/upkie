@@ -191,6 +191,7 @@ int main(const char* argv0, const CommandLineArguments& args) {
   bullet_params.argv0 = argv0;
   bullet_params.dt = 1.0 / args.spine_frequency;
   bullet_params.gravity = !args.space;
+  bullet_params.floor = !args.space;
   bullet_params.gui = args.show;
   bullet_params.position_base_in_world = Eigen::Vector3d(0., 0., base_altitude);
   bullet_params.robot_urdf_path = "external/upkie_description/urdf/upkie.urdf";
