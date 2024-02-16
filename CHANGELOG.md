@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Script to run any of the standard agents
 - spines: `bullet_spine` will set `floor` of `BulletInterface`.
+- spines: `bullet_spine` accepts extra URDFs as arguments
 
 ### Changed
 
@@ -29,7 +30,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PID balancer: add classes and functions to the documentation
 - PPO balancer: add classes and functions to the documentation
 - Robot state class to describe initial state distributions
-- spines: `bullet_spine` accepts extra URDFs as arguments
 
 ### Changed
 
