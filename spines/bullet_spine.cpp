@@ -137,7 +137,7 @@ class CommandLineArguments {
   //! Show Bullet GUI
   bool show = false;
 
-  //! Space mode (no gravity)
+  //! Space mode (no ground, no gravity)
   bool space = false;
 
   //! Extra URDF paths
