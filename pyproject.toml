@@ -21,19 +21,18 @@ classifiers = [
     "License :: OSI Approved :: Apache Software License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
     "Topic :: Scientific/Engineering",
 ]
 dependencies = [
     "PyYAML >=6.0",
     "gymnasium >=0.29.1",
-    "loop-rate-limiters >=0.6.1",
+    "loop-rate-limiters >=1.0.0",
     "numpy >=1.24.3",
-    "upkie_description >=1.4.0",
     "scipy >=1.10.0",
+    "upkie_description >=1.4.0",
     "vulp >=2.0.0",
 ]
 keywords = ["wheeled", "biped", "robot", "balance", "motion", "control", "robotics"]

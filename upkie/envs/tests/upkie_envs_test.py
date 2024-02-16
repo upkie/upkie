@@ -7,9 +7,9 @@
 """Test upkie.envs submodule."""
 
 import unittest
+from multiprocessing.shared_memory import SharedMemory
 
 import gymnasium as gym
-import posix_ipc
 
 from upkie.envs import register
 
@@ -21,12 +21,10 @@ class TestUpkieEnvs(unittest.TestCase):
             # before the call to ``register()``
             gym.make(env_name)
         shm_name = "/foobar"
-        shared_memory = posix_ipc.SharedMemory(
-            shm_name, posix_ipc.O_RDWR | posix_ipc.O_CREAT, size=42
-        )
+        shared_memory = SharedMemory(shm_name, size=42, create=True)
         register()
         gym.make(env_name, shm_name=shm_name)
-        shared_memory.close_fd()
+        shared_memory.close()
 
 
 if __name__ == "__main__":

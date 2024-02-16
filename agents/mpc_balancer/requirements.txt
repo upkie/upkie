@@ -7,5 +7,5 @@ proxsuite >= 0.4.1
 qpmpc >= 3.0.0
 qpsolvers >= 3.4.0
 scipy >= 1.10.0
-upkie >= 3.1.0
+upkie >= 3.2.0
 upkie_description >= 1.4.0

@@ -1,8 +1,8 @@
 # Upkie wheeled biped robot
 
 [![CI](https://github.com/upkie/upkie/actions/workflows/bazel.yml/badge.svg)](https://github.com/upkie/upkie/actions/workflows/bazel.yml)
-[![Build instructions](https://img.shields.io/badge/build-instructions-brightgreen?logo=read-the-docs&style=flat)](https://github.com/upkie/upkie/wiki)
-[![Documentation](https://img.shields.io/badge/docs-online-brightgreen?logo=read-the-docs&style=flat)](https://upkie.github.io/upkie/)
+[![Build instructions](https://img.shields.io/badge/build-read-brightgreen?logo=read-the-docs&style=flat)](https://github.com/upkie/upkie/wiki)
+[![Documentation](https://img.shields.io/badge/docs-read-brightgreen?logo=read-the-docs&style=flat)](https://upkie.github.io/upkie/)
 [![Coverage](https://coveralls.io/repos/github/upkie/upkie/badge.svg?branch=main)](https://coveralls.io/github/upkie/upkie?branch=main)
 [![PyPI version](https://img.shields.io/pypi/v/upkie)](https://pypi.org/project/upkie/)
 [![Chat](https://img.shields.io/badge/matrix-chat-%234eb899)](https://app.element.io/#/room/#tasts-robots:matrix.org)
@@ -13,13 +13,13 @@ This repository contains all the software and instructions required to build and
 
 ## Installation
 
-Everything needed to develop for Upkie in Python lies in a single package:
+To code for Upkie in Python, just install:
 
 ```console
 pip install upkie
 ```
 
-Yes, it's as simple as that. This Python interface is already [fast enough](https://github.com/upkie/vulp#performance) for real-time control. If later on you want to optimize parts of your code, you can move them to C++ [spines](https://upkie.github.io/upkie/spines.html).
+This Python interface is already [fast enough](https://github.com/upkie/vulp#performance) for real-time control. If later on you want to optimize parts of your code, you can move them to C++ [spines](https://upkie.github.io/upkie/spines.html).
 
 ## Simulation
 

@@ -7,9 +7,9 @@
 """Test UpkieBaseEnv."""
 
 import unittest
+from multiprocessing.shared_memory import SharedMemory
 
 import numpy as np
-import posix_ipc
 from gymnasium import spaces
 from numpy.typing import NDArray
 
@@ -51,16 +51,14 @@ class UpkieTestEnv(UpkieBaseEnv):
 class TestUpkieBaseEnv(unittest.TestCase):
     def setUp(self):
         shm_name = "/vroum"
-        shared_memory = posix_ipc.SharedMemory(
-            shm_name, posix_ipc.O_RDWR | posix_ipc.O_CREAT, size=42
-        )
+        shared_memory = SharedMemory(shm_name, size=42, create=True)
         self.env = UpkieTestEnv(
             fall_pitch=1.0,
             frequency=100.0,
             shm_name=shm_name,
             spine_config=None,
         )
-        shared_memory.close_fd()
+        shared_memory.close()
         self.env._spine = MockSpine()
 
     def test_reset(self):
@@ -71,16 +69,14 @@ class TestUpkieBaseEnv(unittest.TestCase):
     def test_spine_config(self):
         """Check that runtime and default configs are merged properly."""
         shm_name = "/vroum"
-        shared_memory = posix_ipc.SharedMemory(
-            shm_name, posix_ipc.O_RDWR | posix_ipc.O_CREAT, size=42
-        )
+        shared_memory = SharedMemory(shm_name, size=42, create=True)
         env = UpkieTestEnv(
             fall_pitch=1.0,
             frequency=100.0,
             shm_name=shm_name,
             spine_config={"some_value": 12, "bullet": {"gui": False}},
         )
-        shared_memory.close_fd()
+        shared_memory.close()
         self.assertEqual(env._spine_config["some_value"], 12)
         self.assertEqual(env._spine_config["some_value"], 12)
         self.assertEqual(env._spine_config["bullet"]["gui"], False)

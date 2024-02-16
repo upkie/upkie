@@ -9,6 +9,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Script to run any of the standard agents
+
+### Changed
+
+- dependencies: Bump loop-rate-limiters to 1.0.0
+- Replace posix-ipc by the shared-memory class from Python standard library
+
+### Removed
+
+- Script to compile and run the PID balancer
+
+## [3.2.0] - 2024-02-08
+
+### Added
+
 - MPC balancer: add classes and functions to the documentation
 - PID balancer: add classes and functions to the documentation
 - PPO balancer: add classes and functions to the documentation
@@ -17,18 +32,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- CICD: update release GH action to package simulation spines on various architectures
 - Code style: ignore E266 as Doxygen uses ## to document class attributes
 - dependencies: Bump Vulp to 2.1.0
 - envs: Default velocity in `UpkieServos` is now zero
 - envs: Observation and action values are `float` rather than `np.float32`
 - envs: Specify maximum torques in `UpkieGroundVelocity`
+- Simulation script downloads a binary if available, o/w compiles from source (thanks to @pgraverdy)
 - whoopsies: Rename ``try_pid_balancer.sh`` to ``start_pid_balancer.sh`` 😊
 
 ### Fixed
 
+- envs: typo in `UpkieServos` dictionary key
 - MPC balancer: add missing dependencies to requirements.txt
 - PPO balancer: add missing initial state randomization to ``--training`` mode
-- envs: typo in `UpkieServos` dictionary key
 
 ### Removed
 
@@ -75,9 +92,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - MPC balancer: Update height of control point to 58 cm
 - PPO balancer: Update height of control point to 58 cm
 - dependencies: Bump Gymnasium to 0.29.1
-- dependencies: Bump loop-rate-limiters to 0.6.1
 - dependencies: Bump NumPy to 1.24.3
 - dependencies: Bump Vulp to 2.0.0
+- dependencies: Bump loop-rate-limiters to 0.6.1
 - envs: Bump `UpkieGroundVelocity` to version 3
 - envs: Legs now return to their neutral configuration in `UpkieGroundVelocity`
 - envs: ``rate`` attribute from base environment is now internal
@@ -411,7 +428,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Starting this changelog.
 
-[unreleased]: https://github.com/upkie/upkie/compare/v3.1.0...HEAD
+[unreleased]: https://github.com/upkie/upkie/compare/v3.2.0...HEAD
+[3.2.0]: https://github.com/upkie/upkie/compare/v3.1.0...v3.2.0
 [3.1.0]: https://github.com/upkie/upkie/compare/v3.0.0...v3.1.0
 [3.0.0]: https://github.com/upkie/upkie/compare/v2.0.0...v3.0.0
 [2.0.0]: https://github.com/upkie/upkie/compare/v1.5.0...v2.0.0

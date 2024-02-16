@@ -1,8 +1,10 @@
 __pycache__
 bazel-*
+cache/
 dist/
 docs/html/
 logs/*.mpack
+logs/*.tar.*
 tools/bazel
 training/
 upkie.wiki/

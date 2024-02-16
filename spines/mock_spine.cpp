@@ -1,8 +1,6 @@
-/*
- * Copyright 2022 Stéphane Caron
- * Copyright 2023 Inria
- * SPDX-License-Identifier: Apache-2.0
- */
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2022 Stéphane Caron
+// Copyright 2023 Inria
 
 #include <vulp/actuation/MockInterface.h>
 #include <vulp/observation/ObserverPipeline.h>

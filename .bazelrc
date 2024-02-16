@@ -51,3 +51,17 @@ test:pi64 --compiler=clang
 test:pi64 --cpu=aarch64
 test:pi64 --crosstool_top=@rpi_bazel//tools/cc_toolchain:toolchain
 test:pi64 --test_output=errors
+
+# Target platform: Mac OSX arm64
+
+build:darwin_arm64 --compilation_mode=opt
+build:darwin_arm64 --compiler=clang
+build:darwin_arm64 --cpu=darwin_arm64
+build:darwin_arm64 --macos_minimum_os=11.5
+
+# Target platform: Mac OSX x86
+
+build:darwin_x86 --compilation_mode=opt
+build:darwin_x86 --compiler=clang
+build:darwin_x86 --cpu=darwin_x86_64
+build:darwin_x86 --macos_minimum_os=11.5
