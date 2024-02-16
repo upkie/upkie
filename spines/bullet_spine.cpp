@@ -108,10 +108,9 @@ class CommandLineArguments {
     std::cout << "--show\n"
               << "    Show the Bullet GUI.\n";
     std::cout << "--space\n"
-              << "    No gravity, fly like an eagle!\n";
+              << "    No ground, no gravity, fly like an eagle!\n";
     std::cout << "--extra-urdf-path\n"
-              << "    Load extra URDFs (like ground plane or obstacles) into "
-                 "the environment.\n";
+              << "    Load extra URDFs into the environment.\n";
     std::cout << "--spine-frequency <frequency>\n"
               << "    Spine frequency in Hertz (default: 1000 Hz).\n";
     std::cout << "-v, --version\n"
