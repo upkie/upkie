@@ -20,18 +20,6 @@ py_library(
 )
 
 py_library(
-    name = "upkie_servos",
-    srcs = [
-        "upkie_servos.py",
-    ],
-    deps = [
-        "//upkie/utils:pinocchio",
-        "//upkie/utils:robot_state",
-        ":upkie_base_env",
-    ],
-)
-
-py_library(
     name = "upkie_ground_velocity",
     srcs = [
         "upkie_ground_velocity.py",
@@ -40,6 +28,18 @@ py_library(
         "//upkie/utils:exceptions",
         "//upkie/utils:filters",
         "//upkie/utils:robot_state",
+    ],
+)
+
+py_library(
+    name = "upkie_servos",
+    srcs = [
+        "upkie_servos.py",
+    ],
+    deps = [
+        "//upkie/utils:pinocchio",
+        "//upkie/utils:robot_state",
+        ":upkie_base_env",
     ],
 )
 
