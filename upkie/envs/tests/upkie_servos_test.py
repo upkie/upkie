@@ -19,12 +19,11 @@ from upkie.utils.exceptions import ActionError
 
 class TestUpkieServos(unittest.TestCase):
     def setUp(self):
-        shm_name = "/vroum"
-        shared_memory = SharedMemory(shm_name, size=42, create=True)
+        shared_memory = SharedMemory(name=None, size=42, create=True)
         self.env = UpkieServos(
             fall_pitch=1.0,
             frequency=100.0,
-            shm_name=shm_name,
+            shm_name=shared_memory._name,
         )
         shared_memory.close()
         self.env._spine = MockSpine()

@@ -16,15 +16,15 @@ SYSTEM=$(uname -s)
 ARCH=$(uname -m)
 
 if [[ "$SYSTEM" == Darwin ]]; then
-    echo "MacOS system"
+    echo "macOS system"
     if [[ "$ARCH" == x86_64* ]]; then
-        echo "X64 Architecture"
+        echo "x86-64 architecture"
         SPINE_ARCHIVE="$URL_ARCHIVE"/v"$VERSION"/darwin_x86_bullet_spine.tar.gz
     elif [[ "$ARCH" == i*86 ]]; then
-        echo "X32 Architecture"
+        echo "x86-32 architecture"
         SPINE_ARCHIVE="$URL_ARCHIVE"/v"$VERSION"/darwin_x86_bullet_spine.tar.gz
     elif  [[ "$ARCH" == arm* ]]; then
-        echo "ARM Architecture"
+        echo "ARM architecture"
         SPINE_ARCHIVE="$URL_ARCHIVE"/v"$VERSION"/darwin_arm64_bullet_spine.tar.gz
     else
         echo "Unsupported architecture $ARCH"
@@ -32,7 +32,7 @@ if [[ "$SYSTEM" == Darwin ]]; then
 elif  [[ "$SYSTEM" == Linux ]]; then
     echo "Linux system"
     if [[ "$ARCH" == x86_64* ]]; then
-        echo "X64 Architecture"
+        echo "x86-64 architecture"
         SPINE_ARCHIVE="$URL_ARCHIVE"/v"$VERSION"/linux_amd64_bullet_spine.tar.gz
     else
         echo "Unsupported architecture: $ARCH"
@@ -59,8 +59,7 @@ else
         cd cache
         ./bullet_spine --show
         if [ ! $? -eq 0 ]; then
-        echo "Could not execute a binary simulation spine, let's build one locally...";
-            cd ..
+            echo "Could not execute a binary simulation spine, let's build one locally...";
             (cd ${SCRIPTDIR} && ${SCRIPTDIR}/tools/bazelisk run //spines:bullet_spine -- --show)
         fi
     else

@@ -50,12 +50,11 @@ class UpkieTestEnv(UpkieBaseEnv):
 
 class TestUpkieBaseEnv(unittest.TestCase):
     def setUp(self):
-        shm_name = "/vroum"
-        shared_memory = SharedMemory(shm_name, size=42, create=True)
+        shared_memory = SharedMemory(name=None, size=42, create=True)
         self.env = UpkieTestEnv(
             fall_pitch=1.0,
             frequency=100.0,
-            shm_name=shm_name,
+            shm_name=shared_memory._name,
             spine_config=None,
         )
         shared_memory.close()
@@ -68,12 +67,11 @@ class TestUpkieBaseEnv(unittest.TestCase):
 
     def test_spine_config(self):
         """Check that runtime and default configs are merged properly."""
-        shm_name = "/vroum"
-        shared_memory = SharedMemory(shm_name, size=42, create=True)
+        shared_memory = SharedMemory(name=None, size=42, create=True)
         env = UpkieTestEnv(
             fall_pitch=1.0,
             frequency=100.0,
-            shm_name=shm_name,
+            shm_name=shared_memory._name,
             spine_config={"some_value": 12, "bullet": {"gui": False}},
         )
         shared_memory.close()
