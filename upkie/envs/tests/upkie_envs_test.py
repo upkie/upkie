@@ -20,10 +20,9 @@ class TestUpkieEnvs(unittest.TestCase):
             # runs in the same test so that we make sure this is executed
             # before the call to ``register()``
             gym.make(env_name)
-        shm_name = "/foobar"
-        shared_memory = SharedMemory(shm_name, size=42, create=True)
+        shared_memory = SharedMemory(name=None, size=42, create=True)
         register()
-        gym.make(env_name, shm_name=shm_name)
+        gym.make(env_name, shm_name=shared_memory._name)
         shared_memory.close()
 
 
