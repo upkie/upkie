@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Script to run any of the standard agents
+- spines: `bullet_spine` accepts extra URDFs as arguments
 
 ### Changed
 

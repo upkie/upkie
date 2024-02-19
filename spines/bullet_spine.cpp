@@ -70,6 +70,10 @@ class CommandLineArguments {
         show = true;
       } else if (arg == "--space") {
         space = true;
+      } else if (arg == "--extra-urdf-path") {
+        extra_urdf_paths.push_back(args.at(++i));
+        spdlog::info("Command line: extra-urdf-path = {}",
+                     extra_urdf_paths.back());
       } else if (arg == "--spine-frequency") {
         spine_frequency = std::stol(args.at(++i));
         spdlog::info("Command line: spine_frequency = {} Hz", spine_frequency);
@@ -105,6 +109,8 @@ class CommandLineArguments {
               << "    Show the Bullet GUI.\n";
     std::cout << "--space\n"
               << "    No ground, no gravity, fly like an eagle!\n";
+    std::cout << "--extra-urdf-path\n"
+              << "    Load extra URDFs into the environment.\n";
     std::cout << "--spine-frequency <frequency>\n"
               << "    Spine frequency in Hertz (default: 1000 Hz).\n";
     std::cout << "-v, --version\n"
@@ -131,8 +137,11 @@ class CommandLineArguments {
   //! Show Bullet GUI
   bool show = false;
 
-  //! Space mode (no gravity)
+  //! Space mode (no ground, no gravity)
   bool space = false;
+
+  //! Extra URDF paths
+  std::vector<std::string> extra_urdf_paths;
 
   //! Spine frequency in Hz.
   unsigned spine_frequency = 1000u;
@@ -184,7 +193,8 @@ int main(const char* argv0, const CommandLineArguments& args) {
   bullet_params.gravity = !args.space;
   bullet_params.gui = args.show;
   bullet_params.position_base_in_world = Eigen::Vector3d(0., 0., base_altitude);
-  bullet_params.urdf_path = "external/upkie_description/urdf/upkie.urdf";
+  bullet_params.robot_urdf_path = "external/upkie_description/urdf/upkie.urdf";
+  bullet_params.env_urdf_paths = args.extra_urdf_paths;
   BulletInterface interface(servo_layout, bullet_params);
 
   // Spine
