@@ -85,7 +85,7 @@ class TestUpkieServos(unittest.TestCase):
         self.env.step(action)
         self.assertAlmostEqual(
             self.env._spine.action["servo"][not_wheel]["position"],
-            float(self.env.action_space[not_wheel]["position"].high),
+            self.env.action_space[not_wheel]["position"].high[0],
             places=5,
         )
 
