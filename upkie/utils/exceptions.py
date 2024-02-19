@@ -15,7 +15,3 @@ class FallDetected(UpkieException):
 
 class ModelError(UpkieException):
     """Error related to the robot model."""
-
-
-class ActionError(UpkieException):
-    """Error related to an action supplied to an Upkie environment."""

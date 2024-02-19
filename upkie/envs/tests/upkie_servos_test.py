@@ -7,14 +7,12 @@
 """Tests for UpkieServos environment."""
 
 import unittest
-
-import numpy as np
 from multiprocessing.shared_memory import SharedMemory
 
+import numpy as np
 
 from upkie.envs import UpkieServos
 from upkie.envs.tests.mock_spine import MockSpine
-from upkie.utils.exceptions import ActionError
 
 
 class TestUpkieServos(unittest.TestCase):
@@ -56,12 +54,6 @@ class TestUpkieServos(unittest.TestCase):
         }
         _, reward, _, _, _ = self.env.step(action)
         self.assertAlmostEqual(reward, 1.0)  # survival reward
-
-    def test_action_needs_position(self):
-        observation, info = self.env.reset()
-        action = {servo: {"velocity": 0.0} for servo in self.env.JOINT_NAMES}
-        with self.assertRaises(ActionError):
-            self.env.step(action)
 
     def test_action_clamping(self):
         action = {
