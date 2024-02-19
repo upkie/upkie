@@ -12,7 +12,7 @@ import upkie_description
 from gymnasium import spaces
 
 from upkie.utils.clamp import clamp_and_warn
-from upkie.utils.exceptions import ActionError, ModelError
+from upkie.utils.exceptions import ModelError
 from upkie.utils.pinocchio import (
     box_position_limits,
     box_torque_limits,
@@ -24,7 +24,6 @@ from .upkie_base_env import UpkieBaseEnv
 
 
 class UpkieServos(UpkieBaseEnv):
-
     """!
     Upkie with full observation and joint position-velocity-torque actions.
 
@@ -341,16 +340,11 @@ class UpkieServos(UpkieBaseEnv):
         for joint in self.JOINT_NAMES:
             servo_action = {}
             for key in self.ACTION_KEYS:
-                try:
-                    action = (
-                        env_action[joint][key]
-                        if key in env_action[joint]
-                        else self.__neutral_action[joint][key]
-                    )
-                except KeyError as key_error:
-                    raise ActionError(
-                        f'Missing key "{key}" required for joint "{joint}"'
-                    ) from key_error
+                action = (
+                    env_action[joint][key]
+                    if key in env_action[joint]
+                    else self.__neutral_action[joint][key]
+                )
                 servo_action[key] = clamp_and_warn(
                     action,
                     self.__min_action[joint][key],
