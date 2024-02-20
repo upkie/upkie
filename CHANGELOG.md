@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Don't build simulation spine if execution fails
 - dependencies: Update Upkie description to 1.5.0
 - dependencies: Update Vulp to 2.2.1
 
