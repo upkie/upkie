@@ -52,24 +52,25 @@ if [[ -z "$SPINE_ARCHIVE" ]] || [ -v BUILD ]; then
     echo "Building the simulation spine locally...";
     (cd ${SCRIPTDIR} && ${SCRIPTDIR}/tools/bazelisk run //spines:bullet_spine -- --show)
 else
-    RETCODE=0
+    CURL_TAR_RC=0
     if [ ! -f cache/bullet_spine ]; then
         echo "Downloading the simulation spine from $SPINE_ARCHIVE..."
         mkdir -p cache
 
         # check that the full operation works - use pipefail as it works for bash/zsh
-        (set -o pipefail;  curl -s -L $SPINE_ARCHIVE | tar -C ./cache/ -zxf - ); RETCODE=$?
+        (set -o pipefail;  curl -s -L $SPINE_ARCHIVE | tar -C ./cache/ -zxf - ); CURL_TAR_RC=$?
     fi
 
-    if [[ $RETCODE -eq 0 ]]; then
+    if [[ $CURL_TAR_RC -eq 0 ]]; then
         echo "Simulation spine downloaded successfully or already in cache, let's roll!";
         cd cache
         ./bullet_spine --show
+        SPINE_RC=$?
         # Return code 0 is from Ctrl-C (normal exit)
         # Return code 1 is from closing the simulation GUI
-        if [ $? -ne 0 ] && [ $? -ne 1 ]; then
-            echo "Could not execute a binary simulation spine, let's build one locally...";
-            (cd ${SCRIPTDIR} && ${SCRIPTDIR}/tools/bazelisk run //spines:bullet_spine -- --show)
+        if [ $SPINE_RC -ne 0 ] && [ $SPINE_RC -ne 1 ]; then
+            echo "Simulation spine exited with code $SPINE_RC";
+            echo "If this was unexpected, you can also try \`$0 --build\`";
         fi
     else
         echo "Could not download a simulation spine, let's build one locally...";
