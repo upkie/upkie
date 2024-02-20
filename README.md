@@ -1,5 +1,7 @@
 # Upkie wheeled biped robot
 
+<img src="https://github.com/upkie/upkie/assets/1189580/2fc5ee4a-81b0-425c-83df-558c7147cc59" align="right" width="200" />
+
 [![CI](https://github.com/upkie/upkie/actions/workflows/bazel.yml/badge.svg)](https://github.com/upkie/upkie/actions/workflows/bazel.yml)
 [![Build instructions](https://img.shields.io/badge/hardware-docs-brightgreen?logo=read-the-docs&style=flat)](https://github.com/upkie/upkie/wiki)
 [![Documentation](https://img.shields.io/badge/software-docs-brightgreen?logo=read-the-docs&style=flat)](https://upkie.github.io/upkie/)
