@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - dependencies: Update Upkie description to 1.5.0
 - dependencies: Update Vulp to 2.2.1
 
+### Fixed
+
+- Handle closing of GUI window in simulation script
+
 ## [3.3.0] - 2024-02-20
 
 ### Added
