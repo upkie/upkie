@@ -150,8 +150,39 @@ class CommandLineArguments {
   bool version = false;
 };
 
+int clear_shared_memory(const std::string& name) {
+  const char* shm_name = name.c_str();
+  int file_descriptor = ::shm_open(shm_name, O_RDWR, 0666);
+  if (file_descriptor < 0) {
+    if (errno == ENOENT) {
+      return EXIT_SUCCESS;
+    } else if (errno == EINVAL) {
+      spdlog::error("Cannot clear shared memory (EINVAL: name '{}' invalid)",
+                    shm_name);
+      return EXIT_FAILURE;
+    } else {
+      spdlog::error(
+          "Cannot clear shared memory (error opening '{}', error number: {})",
+          shm_name, errno);
+      return EXIT_FAILURE;
+    }
+  }
+  if (::shm_unlink(shm_name) < 0) {
+    spdlog::error(
+        "Failed to unlink shared memory (name: '{}', error number: {})",
+        shm_name, errno);
+    return EXIT_FAILURE;
+  }
+  return EXIT_SUCCESS;
+}
+
 int main(const char* argv0, const CommandLineArguments& args) {
   ObserverPipeline observation;
+
+  // Clear any existing shared-memory file
+  if (clear_shared_memory(args.shm_name) != EXIT_SUCCESS) {
+    return EXIT_FAILURE;
+  }
 
   // Observation: CPU temperature
   auto cpu_temperature = std::make_shared<CpuTemperature>();
