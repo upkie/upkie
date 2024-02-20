@@ -15,6 +15,13 @@ VERSION=$(awk '/^PROJECT_NUMBER/{print $3}' docs/Doxyfile)
 SYSTEM=$(uname -s)
 ARCH=$(uname -m)
 
+for arg in "$@"; do
+    if [ "$arg" == "--build" ]; then
+        BUILD=1
+        break
+    fi
+done
+
 if [[ "$SYSTEM" == Darwin ]]; then
     echo "macOS system"
     if [[ "$ARCH" == x86_64* ]]; then
@@ -41,7 +48,7 @@ else
     echo "Unsupported system: $SYSTEM"
 fi
 
-if [[ -z "$SPINE_ARCHIVE" ]]; then
+if [[ -z "$SPINE_ARCHIVE" ]] || [ -v BUILD ]; then
     echo "Building the simulation spine locally...";
     (cd ${SCRIPTDIR} && ${SCRIPTDIR}/tools/bazelisk run //spines:bullet_spine -- --show)
 else
