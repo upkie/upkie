@@ -19,11 +19,16 @@ if __name__ == "__main__":
     with gym.make("UpkieServos-v3", frequency=200.0) as env:
         action = env.get_neutral_action()
 
-        # Disable position and velocity feedback in the wheels
-        wheels = [servo for servo in action.keys() if "wheel" in servo]
-        for wheel in wheels:
-            action[wheel]["kp_scale"] = 0.0
-            action[wheel]["kd_scale"] = 0.0
+        # Position commands to keep the legs extended
+        action["left_hip"]["position"] = 0.0
+        action["left_knee"]["position"] = 0.0
+        action["right_hip"]["position"] = 0.0
+        action["right_knee"]["position"] = 0.0
+
+        # Disable velocity feedback in the wheels
+        # (we don't set kp_scale as the neutral action has no position command)
+        action["left_wheel"]["kd_scale"] = 0.0
+        action["right_wheel"]["kd_scale"] = 0.0
 
         obs, _ = env.reset()  # connects to the spine
         for step in range(1_000_000):
