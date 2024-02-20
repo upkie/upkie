@@ -58,7 +58,9 @@ else
         echo "Simulation spine downloaded successfully or already in cache, let's roll!";
         cd cache
         ./bullet_spine --show
-        if [ ! $? -eq 0 ]; then
+        # Return code 0 is from Ctrl-C (normal exit)
+        # Return code 1 is from closing the simulation GUI
+        if [ $? -ne 0 ] && [ $? -ne 1 ]; then
             echo "Could not execute a binary simulation spine, let's build one locally...";
             (cd ${SCRIPTDIR} && ${SCRIPTDIR}/tools/bazelisk run //spines:bullet_spine -- --show)
         fi
