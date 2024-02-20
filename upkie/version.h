@@ -4,6 +4,6 @@
 
 namespace upkie {
 
-constexpr std::string_view kVersion = "3.2.0";
+constexpr std::string_view kVersion = "3.3.0";
 
 }
