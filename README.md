@@ -48,12 +48,12 @@ import upkie.envs
 upkie.envs.register()
 
 with gym.make("UpkieGroundVelocity-v3", frequency=200.0) as env:
-    observation = env.reset()
+    observation, _ = env.reset()
     action = 0.0 * env.action_space.sample()
     for step in range(1_000_000):
-        observation, reward, done, _ = env.step(action)
-        if done:
-            observation = env.reset()
+        observation, reward, terminated, truncated, _ = env.step(action)
+        if terminated or truncated:
+            observation, _ = env.reset()
         pitch = observation[0]
         action[0] = 10.0 * pitch
 ```
