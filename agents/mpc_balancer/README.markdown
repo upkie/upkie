@@ -4,6 +4,10 @@
 
 The MPC balancer allows Upkie to stand upright, balancing with its wheels only, by closed-loop model predictive control. It performs better than the [PID balancer](@ref pid-balancer) with significantly less hacks ;-)
 
+## Installation
+
+From PyPI: run ``pip install upkie[mpc_balancer]`` to install all packages necessary to run this agent. This works on both your dev machine and the robot's Raspberry Pi.
+
 ## Simulation
 
 To test this agent in simulation, run the Bullet spine:
