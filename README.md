@@ -62,9 +62,23 @@ To test this agent on your computer, run the agent and simulation spine in two s
 
 To run this agent on the robot, `scp` the script to the Raspberry Pi, start a [pi3hat spine](https://upkie.github.io/upkie/spines.html#pi3hat-spine) and execute the script on the Pi itself.
 
+## Agents
+
+This repository comes with three example balancers based on different techniques:
+
+- [PID balancer](https://upkie.github.io/upkie/pid-balancer.html): balance in place using PID control.
+- [MPC balancer](https://upkie.github.io/upkie/mpc-balancer.html): balance in place using model predictive control.
+- [PPO balancer](https://upkie.github.io/upkie/ppo-balancer.html): balance in place with a policy trained by reinforcement learning.
+
+You can find other Upkie agents developed in their own repositories:
+
+- [Pink balancer](https://github.com/stephane-caron/pink_balancer): an extended PID balancer than can crouch and lift its legs.
+
+Head over to the [new\_agent](https://github.com/upkie/new_agent) template repository to create your own.
+
 ## To go further
 
 - [Build your own Upkie](https://github.com/upkie/upkie/wiki) 🧰
-- [More examples](https://github.com/upkie/upkie/tree/main/examples)
+- [Examples](https://github.com/upkie/upkie/tree/main/examples)
 - [Project log](https://hackaday.io/project/185729-upkie-wheeled-biped-robots) on Hackaday.io
 - [Software documentation](https://upkie.github.io/upkie/)
