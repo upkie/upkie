@@ -6,6 +6,10 @@ The PPO balancer is a feedforward neural network policy trained by reinforcement
 
 An overview video of the training pipeline is given in this video: [Sim-to-real RL pipeline for Upkie wheeled bipeds](https://www.youtube.com/shorts/bvWgYso1dzI).
 
+## Installation
+
+From PyPI: run ``pip install upkie[ppo_balancer]`` to install all packages necessary to run this agent. This works on both your dev machine and the robot's Raspberry Pi.
+
 ## Training a new policy
 
 First, check that training progresses one rollout at a time:
@@ -18,14 +22,12 @@ Once this works you can remove the ``--show`` GUI toggle. Check out the `time/fp
 
 ## Running a trained policy
 
-Testing a policy assumes the spine is already up and running, for instance via ``start_simulation.sh`` on your dev machine, or by starting a pi3hat spine on the robot.
-
-You can specify the path to policy parameters to the agent. For instance, if the policy parameters are saved in `foobar.zip`, run:
+To run a given policy, specify the path to the ZIP file containing policy parameters:
 
 - Python: `` python ./agents/ppo_balancer/run.py --policy ./agents/ppo_balancer/training/2023-11-15/final.zip``
 - Bazel: ``./tools/bazelisk run //agents/ppo_balancer:run -- --policy ./agents/ppo_balancer/training/2023-11-15/final.zip``
 
-The `requirements.txt` file in the agent directory can be used to install all packages from PyPI to your robot.
+Here we assumed the spine is already up and running, for instance via ``start_simulation.sh`` on your dev machine, or by starting a pi3hat spine on the robot.
 
 ## Troubleshooting
 
