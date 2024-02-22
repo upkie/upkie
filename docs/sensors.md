@@ -8,7 +8,7 @@ The inertial measurement unit (IMU) mounted on the [pi3hat](https://mjbots.com/p
 - Body angular velocity of the IMU frame (that is, from the IMU frame to the ARS frame, expressed in the IMU frame)
 - Orientation of the IMU frame in the ARS frame
 
-These measurements are exposed by the spine in ``observation["imu"]``.
+These measurements are exposed by the spine in ``observation["imu"]``. Check out [Observations](@ref observations) for details.
 
 ## Actuators
 
@@ -18,4 +18,4 @@ Actuators on the robot are [qdd100 beta 3](https://mjbots.com/products/qdd100-be
 - Joint velocity, obtained by filtering joint angle measurements (not a direct measurement)
 - Joint torque, estimated from sensed phase currents (with a model that includes [stator magnetic saturation](https://jpieper.com/2020/07/31/dealing-with-stator-magnetic-saturation/)
 
-These measurements are exposed by the spine in ``observation["servos"]``.
+These measurements are exposed by the spine in ``observation["servos"]``. Check out [Observations](@ref observations) for details.
