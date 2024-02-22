@@ -25,17 +25,17 @@ This Python interface is already [fast enough](https://github.com/upkie/vulp#per
 
 ## Simulation
 
-Assuming you have a C++ compiler (setup one-liners: [Fedora](https://github.com/upkie/upkie/discussions/100), [Ubuntu](https://github.com/upkie/upkie/discussions/101)), you can run an Upkie simulation right from the command line. It won't install anything on your machine, everything will run locally from the repository:
+You can run an Upkie simulation right from your command line:
 
 <img src="https://user-images.githubusercontent.com/1189580/170496331-e1293dd3-b50c-40ee-9c2e-f75f3096ebd8.png" height="100" align="right" />
 
 ```console
 git clone https://github.com/upkie/upkie.git
 cd upkie
-./start_pid_balancer.sh
+./start_simulation.sh
 ```
 
-Click on the robot in the simulator window to apply external forces.
+Once the simulation is running, execute `./run_agent.sh` to start one of the default agents. Click on the robot in the simulator window to apply external forces.
 
 ## Example
 
