@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Don't build simulation spine if execution fails
 - Move agents' ``requirements.txt`` files to optional project dependencies
+- Rename top-level run script to ``run_demo_agent.sh``
 - dependencies: Update Upkie description to 1.5.0
 - dependencies: Update Vulp to 2.2.1
 
@@ -23,6 +24,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Handle closing of GUI window in simulation script
 - Fix example in readme
+
+### Removed
+
+- Move MPC balancer to its own repository
 
 ## [3.3.0] - 2024-02-20
 
