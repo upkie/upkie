@@ -72,7 +72,7 @@ This repository comes with three example balancers based on different techniques
 
 You can find other Upkie agents developed in their own repositories:
 
-- [Pink balancer](https://github.com/stephane-caron/pink_balancer): an extended PID balancer than can crouch and lift its legs.
+- [Pink balancer](https://github.com/upkie/pink_balancer): an extended PID balancer than can crouch and lift its legs.
 
 Head over to the [new\_agent](https://github.com/upkie/new_agent) template repository to create your own.
 
