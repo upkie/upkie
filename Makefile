@@ -40,7 +40,6 @@ clean: clean_broken_links  ## clean all local build and intermediate files
 
 .PHONY: build
 build: clean_broken_links  ## build Raspberry Pi targets
-	$(BAZEL) build --config=pi64 //agents/mpc_balancer
 	$(BAZEL) build --config=pi64 //agents/pid_balancer
 	$(BAZEL) build --config=pi64 //agents/ppo_balancer:run
 	$(BAZEL) build --config=pi64 //spines:mock_spine
@@ -85,9 +84,6 @@ run_pi3hat_spine:  ### run the pi3hat spine on the Raspberry Pi
 
 # REMOTE AGENT TARGETS
 # ====================
-
-run_mpc_balancer:  ### run the MPC balancer on the Raspberry Pi
-	$(RASPUNZEL) run -s //agents/mpc_balancer:mpc_balancer
 
 # A specific gain config file can be loaded with the CONFIG variable
 # Example: ``make run_pid_balancer CONFIG=michel-strogoff``
