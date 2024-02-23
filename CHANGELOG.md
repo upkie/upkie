@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Add --build argument to the simulation script
+- Add ``--build`` argument to the simulation script
 - Clear shared-memory when starting the Bullet spine
 
 ### Changed
@@ -22,8 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fix Gymnasium API in the readme example (thanks to @araffin)
 - Handle closing of GUI window in simulation script
-- Fix example in readme
 
 ### Removed
 
