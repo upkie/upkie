@@ -86,8 +86,9 @@ def balance(env: gym.Env, nb_env_steps: int = 10_000) -> None:
 
         # NB: we solve the MPC problem "cold" here, i.e. without hot-starting.
         # This will likely take too much time to fit in a 200 Hz control loop
-        # on most current computers. See the MPC balancer for a more performant
-        # implementation that runs in real-time on a Raspberry Pi 4 Model B.
+        # on most current computers. See https://github.com/upkie/mpc_balancer
+        # for a more performant implementation that runs in real-time on a
+        # Raspberry Pi 4 Model B.
         plan = solve_mpc(mpc_problem, solver="proxqp")
         if not plan.is_empty:
             commanded_accel = plan.first_input
