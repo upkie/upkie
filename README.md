@@ -35,7 +35,7 @@ cd upkie
 ./start_simulation.sh
 ```
 
-Once the simulation is running, you can execute `./run_demo_agent.sh`. Click on the robot in the simulator window to apply external forces.
+Once the simulation is running, you can execute `./run_pid_balancer.sh`. Click on the robot in the simulator window to apply external forces.
 
 ## Example
 

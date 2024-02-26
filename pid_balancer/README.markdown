@@ -9,7 +9,7 @@ The PID balancer is a baseline agent designed to check out Upkie's physical capa
 To test this agent in simulation, run:
 
 ```console
-bazel run //agents/pid_balancer:bullet
+bazel run //pid_balancer:bullet
 ```
 
 ## Real robot
