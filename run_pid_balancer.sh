@@ -10,4 +10,4 @@ case $yn in
     * ) echo "You will first need to run ./start_simulation.sh"; exit;;
 esac
 
-${SCRIPTDIR}/tools/bazelisk run //agents/pid_balancer -- -c bullet
+${SCRIPTDIR}/tools/bazelisk run //pid_balancer -- -c bullet
