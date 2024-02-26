@@ -50,7 +50,7 @@ py_binary(
     imports = ["."],
 
     data = [
-        "//agents/pid_balancer/config",
+        "//pid_balancer/config",
     ] + select({
         "//:pi64_config": ["//spines:pi3hat_spine"],
         "//conditions:default": [],
