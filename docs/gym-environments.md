@@ -4,7 +4,7 @@ Upkie has reinforcement learning environments following the [Gymnasium API](http
 
 ## Ground velocity {#ground-velocity-env}
 
-In the ``UpkieGroundVelocity`` environment, Upkie keeps its legs straight and actions only affect wheel velocities. This environment is used for instance by the [MPC balancer](https://github.com/upkie/mpc_balancer/) and [PPO balancer](@ref ppo-balancer) agents. Its action consists of a 1D vector containing the commanded ground velocity, which is then internally converted to wheel velocity commands.
+In the ``UpkieGroundVelocity`` environment, Upkie keeps its legs straight and actions only affect wheel velocities. This environment is used for instance by the [MPC balancer](https://github.com/upkie/mpc_balancer/) and [PPO balancer](https://github.com/upkie/ppo_balancer) agents. Its action consists of a 1D vector containing the commanded ground velocity, which is then internally converted to wheel velocity commands.
 
 \f[
 \begin{align*}
