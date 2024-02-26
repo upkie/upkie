@@ -867,8 +867,6 @@ WARN_LOGFILE           =
 INPUT                  = README.md \
                          agents/pid_balancer \
                          agents/pid_balancer/README.markdown \
-                         agents/ppo_balancer \
-                         agents/ppo_balancer/README.markdown \
                          docs/gym-environments.md \
                          docs/observations.md \
                          docs/sensors.md \
