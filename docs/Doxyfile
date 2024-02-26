@@ -865,12 +865,12 @@ WARN_LOGFILE           =
 # Note: If this tag is empty the current directory is searched.
 
 INPUT                  = README.md \
-                         agents/pid_balancer \
-                         agents/pid_balancer/README.markdown \
                          docs/gym-environments.md \
                          docs/observations.md \
                          docs/sensors.md \
                          docs/spines.md \
+                         pid_balancer \
+                         pid_balancer/README.markdown \
                          upkie/config \
                          upkie/envs \
                          upkie/observers \
