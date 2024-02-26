@@ -64,17 +64,13 @@ To run this agent on the robot, `scp` the script to the Raspberry Pi, start a [p
 
 ## Agents
 
-This repository comes with two example balancers:
-
-- [PID balancer](https://upkie.github.io/upkie/pid-balancer.html): balance in place using PID control.
-- [PPO balancer](https://upkie.github.io/upkie/ppo-balancer.html): balance in place with a policy trained by reinforcement learning.
-
-You can find more advanced Upkie agents distributed in their own repositories:
+The main Upkie repository comes with a [demo agent](https://upkie.github.io/upkie/pid-balancer.html) that balances in place by PID control. There are more advanced agents distributed in their own repositories:
 
 - [MPC balancer](https://github.com/upkie/mpc_balancer): balance in place using model predictive control.
 - [Pink balancer](https://github.com/upkie/pink_balancer): an extended PID balancer than can crouch and lift its legs.
+- [PPO balancer](https://upkie.github.io/upkie/ppo-balancer.html): balance in place with a policy trained by reinforcement learning.
 
-Head over to the [new\_agent](https://github.com/upkie/new_agent) template repository to create your own.
+Head over to the [new\_agent](https://github.com/upkie/new_agent) template to create your own.
 
 ## To go further
 
