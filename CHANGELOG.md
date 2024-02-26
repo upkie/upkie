@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - Move MPC balancer to its own repository
+- Move PPO balancer to its own repository
 
 ## [3.3.0] - 2024-02-20
 
