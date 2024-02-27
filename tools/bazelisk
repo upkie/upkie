@@ -7,39 +7,27 @@
 
 set -euo pipefail
 
-toolchain_name=""
-
-while getopts "t:h" opt; do
-  case "$opt" in
-    "t") toolchain_name="$OPTARG";;
-    "h") echo "Usage:"
-       echo "-t - Toolchain name to use for testing; default is llvm_toolchain"
-       exit 2
-       ;;
-    "?") echo "invalid option: -$OPTARG"; exit 1;;
-  esac
-done
-
-os="$(uname -s | tr "[:upper:]" "[:lower:]")"
-readonly os
+OS="$(uname -s | tr "[:upper:]" "[:lower:]")"
+readonly OS
 
 # Value of BAZELISK_GITHUB_TOKEN is set as a secret in the GitHub workflow.
 readonly BAZELISK_VERSION="v1.16.0"
-readonly BAZELISK_URL="https://github.com/bazelbuild/bazelisk/releases/download/${BAZELISK_VERSION}/bazelisk-${os}-amd64"
+readonly BAZELISK_URL="https://github.com/bazelbuild/bazelisk/releases/download/${BAZELISK_VERSION}/bazelisk-${OS}-amd64"
 
-readonly CURDIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
+CURDIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
+readonly CURDIR
 
-bazel="${CURDIR}/bazel"
-readonly bazel
+BAZEL="${CURDIR}/bazel"
+readonly BAZEL
 
-if [ -f "${bazel}" ]; then
-    echo "Using existing Bazel binary from ${bazel}..."
+if [ -f "${BAZEL}" ]; then
+    echo "Using existing Bazel binary from ${BAZEL}..."
 else
     echo "Downloading Bazel binary from ${BAZELISK_URL}..."
-    curl -L -Sf --progress-bar -o "${bazel}" "${BAZELISK_URL}"
-    chmod a+x "${bazel}"
+    curl -L -Sf --progress-bar -o "${BAZEL}" "${BAZELISK_URL}"
+    chmod a+x "${BAZEL}"
 fi
 
 set -x
-"${bazel}" version
-"${bazel}" ${@:1:99}
+"${BAZEL}" version
+"${BAZEL}" "${@:1:99}"
