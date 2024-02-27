@@ -131,6 +131,6 @@ jobs:
     bazel_success:
         name: "Bazel success"
         runs-on: ubuntu-latest
-        needs: [artifacts, build, coverage, lint, test]
+        needs: [artifacts, build, coverage, lint, lint_shell, test]
         steps:
             - run: echo "Bazel workflow completed successfully"
