@@ -91,8 +91,11 @@ jobs:
 
             - name: "Check shell scripts formatting"
               run: |
-                  shellcheck run_pid_balancer.sh
-                  shellcheck start_simulation.sh
+                  find . \
+                      -not \( -path '*/.git' -prune \) \
+                      -type f \
+                      -exec grep -l '#!/.*sh' {} \; \
+                      -exec shellcheck {} \;
 
     test:
         name: "Test"
