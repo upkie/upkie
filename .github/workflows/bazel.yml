@@ -89,6 +89,11 @@ jobs:
               run: |
                   tools/bazelisk test --compilation_mode=fastbuild --config lint //...
 
+            - name: "Check shell scripts formatting"
+              run: |
+                  shellcheck run_pid_balancer.sh
+                  shellcheck start_simulation.sh
+
     test:
         name: "Test"
         runs-on: ubuntu-latest
