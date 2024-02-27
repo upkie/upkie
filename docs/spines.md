@@ -24,7 +24,7 @@ The pi3hat spine is the one that runs on the real robot, where a [pi3hat r4.5](h
 
 ### Download the latest release
 
-To get the latest pi3hat spine from GitHub, download the latest `pi3hat_spine` binary from [Continuous Integration build artifacts](https://github.com/upkie/upkie/actions/workflows/bazel.yml), then `scp` it to the robot. TODO: make this more user-friendly ;)
+To get the latest pi3hat spine from GitHub, download the latest `pi3hat_spine` binary from [Continuous Integration build artifacts](https://github.com/upkie/upkie/actions/workflows/ci.yml), then `scp` it to the robot. TODO: make this more user-friendly ;)
 
 ```console
 $ scp pi3hat_spine foo@robot
