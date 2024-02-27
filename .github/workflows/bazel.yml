@@ -77,7 +77,7 @@ jobs:
                   format: lcov
 
     lint:
-        name: "Lint"
+        name: "Lint code"
         runs-on: ubuntu-latest
         steps:
             - name: "Checkout sources"
@@ -88,6 +88,13 @@ jobs:
                   BAZELISK_GITHUB_TOKEN: ${{ secrets.BAZELISK_GITHUB_TOKEN }}
               run: |
                   tools/bazelisk test --compilation_mode=fastbuild --config lint //...
+
+    lint_shell:
+        name: "Lint shell scripts"
+        runs-on: ubuntu-latest
+        steps:
+            - name: "Checkout sources"
+              uses: actions/checkout@v3
 
             - name: "Check shell scripts formatting"
               run: |
