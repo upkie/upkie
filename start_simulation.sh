@@ -50,7 +50,7 @@ fi
 
 if [[ -z "$SPINE_ARCHIVE" ]] || [ -v BUILD ]; then
     echo "Building the simulation spine locally...";
-    (cd ${SCRIPTDIR} && ${SCRIPTDIR}/tools/bazelisk run //spines:bullet_spine -- --show)
+    (cd "${SCRIPTDIR}" && "${SCRIPTDIR}"/tools/bazelisk run //spines:bullet_spine -- --show)
 else
     CURL_TAR_RC=0
     if [ ! -f cache/bullet_spine ]; then
@@ -58,12 +58,12 @@ else
         mkdir -p cache
 
         # check that the full operation works - use pipefail as it works for bash/zsh
-        (set -o pipefail;  curl -s -L $SPINE_ARCHIVE | tar -C ./cache/ -zxf - ); CURL_TAR_RC=$?
+        (set -o pipefail;  curl -s -L "$SPINE_ARCHIVE" | tar -C ./cache/ -zxf - ); CURL_TAR_RC=$?
     fi
 
     if [[ $CURL_TAR_RC -eq 0 ]]; then
         echo "Simulation spine downloaded successfully or already in cache, let's roll!";
-        cd cache
+        cd cache || exit
         ./bullet_spine --show
         SPINE_RC=$?
         # Return code 0 is from Ctrl-C (normal exit)
@@ -74,6 +74,6 @@ else
         fi
     else
         echo "Could not download a simulation spine, let's build one locally...";
-        (cd ${SCRIPTDIR} && ${SCRIPTDIR}/tools/bazelisk run //spines:bullet_spine -- --show)
+        (cd "${SCRIPTDIR}" && "${SCRIPTDIR}"/tools/bazelisk run //spines:bullet_spine -- --show)
     fi
 fi
