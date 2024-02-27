@@ -92,9 +92,10 @@ jobs:
             - name: "Check shell scripts formatting"
               run: |
                   find . \
-                      -not \( -path '*/.git' -prune \) \
                       -type f \
-                      -exec grep -l '#!/.*sh' {} \; \
+                      -not \( -path '*/.git/*' -prune \) \
+                      -not \( -path '*/wiki/*' -prune \) \
+                      -exec sh -c 'head -n 1 {} | grep -q "#!/.*sh"' {} \; \
                       -exec shellcheck {} \;
 
     test:
