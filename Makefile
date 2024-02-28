@@ -47,12 +47,16 @@ build: clean_broken_links  ## build Raspberry Pi targets
 .PHONY: coverage
 coverage:  ## check unit test coverage and open an HTML report in Firefox
 	$(BAZEL) coverage --combined_report=lcov --compilation_mode=fastbuild --instrument_test_targets //...
-	genhtml $(COVERAGE_DIR)/_coverage_report.dat -o $(COVERAGE_DIR)
-	firefox $(COVERAGE_DIR)/index.html
+	@if [ -z "$(shell which genhtml)" ]; then\
+		echo "Error: genhtml not found, is lcov installed?"; \
+	else \
+		genhtml $(COVERAGE_DIR)/_coverage_report.dat -o $(COVERAGE_DIR); \
+		firefox $(COVERAGE_DIR)/index.html; \
+	fi
 
 .PHONY: check_upkie_name
 check_upkie_name:
-	@ if [ -z "${UPKIE_NAME}" ]; then \
+	@if [ -z "${UPKIE_NAME}" ]; then \
 		echo "ERROR: Environment variable UPKIE_NAME is not set.\n"; \
 		echo "This variable should contain the robot's hostname or IP address for SSH. "; \
 		echo "You can define it inline for a one-time use:\n"; \
