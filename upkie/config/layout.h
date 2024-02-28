@@ -10,18 +10,21 @@
 
 namespace upkie::config {
 
+constexpr int kLeftBusID = 1;   // JC1
+constexpr int kRightBusID = 3;  // JC3
+
 /*! Get Upkie's servo layout.
  *
  * \return Upkie's servo layout.
  */
 inline const vulp::actuation::ServoLayout servo_layout() noexcept {
   vulp::actuation::ServoLayout layout;
-  layout.add_servo(1, 1, "left_hip");
-  layout.add_servo(2, 1, "left_knee");
-  layout.add_servo(3, 1, "left_wheel");
-  layout.add_servo(4, 2, "right_hip");
-  layout.add_servo(5, 2, "right_knee");
-  layout.add_servo(6, 2, "right_wheel");
+  layout.add_servo(1, kLeftBusID, "left_hip");
+  layout.add_servo(2, kLeftBusID, "left_knee");
+  layout.add_servo(3, kLeftBusID, "left_wheel");
+  layout.add_servo(4, kRightBusID, "right_hip");
+  layout.add_servo(5, kRightBusID, "right_knee");
+  layout.add_servo(6, kRightBusID, "right_wheel");
   return layout;
 }
 
