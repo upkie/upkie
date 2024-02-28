@@ -21,6 +21,7 @@ import moteus
 import moteus_pi3hat
 
 COMMANDS = ["rezero", "stats", "stop"]
+PI3HAT_CFG = "1=1,2,3;3=4,5,6"
 
 
 @dataclass
@@ -62,8 +63,7 @@ class UpkieTool:
             List of servos.
         """
         servos = []
-        pi3hat_cfg = "1=1,2,3;2=4,5,6"
-        buses = filter(None, pi3hat_cfg.split(";"))
+        buses = filter(None, PI3HAT_CFG.split(";"))
         for bus in buses:
             bus_id, servo_cfg = bus.split("=")
             bus_servos = filter(None, servo_cfg.split(","))
