@@ -2,14 +2,16 @@
 #
 # Copyright 2022 Stéphane Caron
 
-for ((i=1; i<=6; i++)); do
+PI3HAT_CFG="1=1,2,3;3=4,5,6"
+
+for i in {1..6}; do
     echo "Setting zero offset on servo ${i}..."
-    sudo moteus_tool --pi3hat-cfg "1=1,2,3;2=4,5,6" --zero-offset -t "$i"
+    (set -x; sudo moteus_tool --pi3hat-cfg "${PI3HAT_CFG}" --zero-offset -t "$i")
 done
 
 UPKIE_TOOL=$(which upkie_tool)
 if [[ -n "${UPKIE_TOOL}" ]]; then
-    sudo "${UPKIE_TOOL}" stats
+    (set -x; sudo "${UPKIE_TOOL}" stats)
 else
     echo "Warning: upkie_tool not found"
 fi
