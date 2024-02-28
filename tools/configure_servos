@@ -25,6 +25,12 @@ echo "conf set servo.pwm_rate_hz 30000" | sudo moteus_tool --pi3hat-cfg "${PI3HA
 # Joint limits
 # ============
 
+echo "Configuring hip position limits..."
+echo "conf set servopos.position_max ${HIP_LIMIT_REV}" | sudo moteus_tool --pi3hat-cfg "${PI3HAT_CFG}" -t 1 -c
+echo "conf set servopos.position_max ${HIP_LIMIT_REV}" | sudo moteus_tool --pi3hat-cfg "${PI3HAT_CFG}" -t 4 -c
+echo "conf set servopos.position_min -${HIP_LIMIT_REV}" | sudo moteus_tool --pi3hat-cfg "${PI3HAT_CFG}" -t 1 -c
+echo "conf set servopos.position_min -${HIP_LIMIT_REV}" | sudo moteus_tool --pi3hat-cfg "${PI3HAT_CFG}" -t 4 -c
+
 echo "Configuring hip velocity limits..."
 echo "conf set servo.max_velocity 2.0" | sudo moteus_tool --pi3hat-cfg "${PI3HAT_CFG}" -t 1 -c
 echo "conf set servo.max_velocity 2.0" | sudo moteus_tool --pi3hat-cfg "${PI3HAT_CFG}" -t 4 -c
