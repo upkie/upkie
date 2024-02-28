@@ -21,6 +21,31 @@ import sys
 import time
 from typing import Union
 
+LEFT_BUS = 1  # JC1
+LEFT_HIP = 1
+LEFT_KNEE = 2
+LEFT_WHEEL = 3
+
+RIGHT_BUS = 3  # JC3
+RIGHT_HIP = 4
+RIGHT_KNEE = 5
+RIGHT_WHEEL = 6
+
+ALL_SERVOS = (
+    LEFT_HIP,
+    LEFT_KNEE,
+    LEFT_WHEEL,
+    RIGHT_HIP,
+    RIGHT_KNEE,
+    RIGHT_WHEEL,
+)
+
+PI3HAT_CFG = (
+    f"{LEFT_BUS}={LEFT_HIP},{LEFT_KNEE},{LEFT_WHEEL}"
+    ";"
+    f"{RIGHT_BUS}={RIGHT_HIP},{RIGHT_KNEE},{RIGHT_WHEEL}"
+)
+
 ORIG_SUFFIX = time.strftime(".orig-%Y%m%d-%H%M%S")
 
 logging_depth = 0
@@ -76,7 +101,7 @@ def configure_servo(id: int, param: str, value: Union[float, str]):
     moteus_command = f"conf set {param} {value}"
     shell_command = (
         f'echo "{moteus_command}" | '
-        f'sudo moteus_tool --pi3hat-cfg "1=1,2,3;2=4,5,6" -t {id} -c'
+        f'sudo moteus_tool --pi3hat-cfg "{PI3HAT_CFG}" -t {id} -c'
     )
     run(shell_command)
 
@@ -89,7 +114,7 @@ def write_configuration(id: int):
     """
     shell_command = (
         f'echo "conf write" | '
-        f'sudo moteus_tool --pi3hat-cfg "1=1,2,3;2=4,5,6" -t {id} -c'
+        f'sudo moteus_tool --pi3hat-cfg "{PI3HAT_CFG}" -t {id} -c'
     )
     run(shell_command)
 
@@ -99,34 +124,25 @@ if __name__ == "__main__":
         args = ["sudo", "-E", sys.executable] + sys.argv + [os.environ]
         os.execlpe("sudo", *args)
 
-    # TODO(scaron): upkie layout for Python as well
-    left_hip = 1
-    left_knee = 2
-    left_wheel = 3
-    right_hip = 4
-    right_knee = 5
-    right_wheel = 6
-    all_servos = (1, 2, 3, 4, 5, 6)
-
-    for hip in (left_hip, right_hip):
+    for hip in (LEFT_HIP, RIGHT_HIP):
         configure_servo(hip, "servopos.position_max", 0.2)
         configure_servo(hip, "servopos.position_min", -0.2)
         configure_servo(hip, "servo.max_velocity", 2.0)
 
-    for knee in (left_knee, right_knee):
+    for knee in (LEFT_KNEE, RIGHT_KNEE):
         configure_servo(knee, "servopos.position_max", 0.4)
         configure_servo(knee, "servopos.position_min", -0.4)
         configure_servo(knee, "servo.max_velocity", 2.0)
 
-    for wheel in (left_wheel, right_wheel):
+    for wheel in (LEFT_WHEEL, RIGHT_WHEEL):
         configure_servo(wheel, "servopos.position_max", "NaN")
         configure_servo(wheel, "servopos.position_min", "NaN")
         configure_servo(wheel, "servo.max_velocity", 8.0)
 
     # https://github.com/mjbots/moteus/blob/38d688a933ce1584ee09f2628b5849d5e758ac21/docs/reference.md#servodefault_velocity_limit--servodefault_accel_limit
-    for servo in all_servos:
+    for servo in ALL_SERVOS:
         configure_servo(servo, "servo.default_velocity_limit", "NaN")
         configure_servo(servo, "servo.default_accel_limit", "NaN")
 
-    for servo in all_servos:
+    for servo in ALL_SERVOS:
         write_configuration(servo)
