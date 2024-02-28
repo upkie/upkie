@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add ``--build`` argument to the simulation script
 - CICD: Run ShellCheck on scripts
 - Clear shared-memory when starting the Bullet spine
+- Script to dump all servo motor-driver configurations
 
 ### Changed
 
