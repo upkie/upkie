@@ -1,0 +1,13 @@
+#!/bin/bash
+#
+# Copyright 2024 Inria
+
+PI3HAT_CFG="1=1,2,3;3=4,5,6"
+OUTDIR=${HOME}/$(date +%Y-%m-%d)_servo_configs
+
+mkdir -p ${OUTDIR}
+for i in {1..6}; do
+    OUTPUT=${OUTDIR}/servo-${i}.cfg
+    echo "Dumping servo ${i} config to ${OUTPUT}"
+    (set -x; sudo moteus_tool --pi3hat-cfg "${PI3HAT_CFG}" -t $i --dump-config > ${OUTPUT})
+done
