@@ -1,14 +1,17 @@
 #!/bin/sh
 #
+# SPDX-License-Identifier: Apache-2.0
 # Copyright 2022 Stéphane Caron
 # Copyright 2023 Inria
-#
-# See https://github.com/upkie/upkie_description#joint-limits
 
 PI3HAT_CFG="1=1,2,3;3=4,5,6"
 
-HIP_LIMIT_REV=0.2
-KNEE_LIMIT_REV=0.25
+HIP_POSITION_LIMIT_REV=0.2
+KNEE_POSITION_LIMIT_REV=0.25
+
+HIP_VELOCITY_LIMIT_RPS=2.0
+KNEE_VELOCITY_LIMIT_RPS=2.0
+WHEEL_VELOCITY_LIMIT_RPS=8.0
 
 # Servos
 # ======
@@ -24,26 +27,28 @@ echo "conf set servo.pwm_rate_hz 30000" | sudo moteus_tool --pi3hat-cfg "${PI3HA
 
 # Joint limits
 # ============
+#
+# See https://github.com/upkie/upkie_description#joint-limits
 
 echo "Configuring hip position limits..."
-echo "conf set servopos.position_max ${HIP_LIMIT_REV}" | sudo moteus_tool --pi3hat-cfg "${PI3HAT_CFG}" -t 1 -c
-echo "conf set servopos.position_max ${HIP_LIMIT_REV}" | sudo moteus_tool --pi3hat-cfg "${PI3HAT_CFG}" -t 4 -c
-echo "conf set servopos.position_min -${HIP_LIMIT_REV}" | sudo moteus_tool --pi3hat-cfg "${PI3HAT_CFG}" -t 1 -c
-echo "conf set servopos.position_min -${HIP_LIMIT_REV}" | sudo moteus_tool --pi3hat-cfg "${PI3HAT_CFG}" -t 4 -c
+echo "conf set servopos.position_max ${HIP_POSITION_LIMIT_REV}" | sudo moteus_tool --pi3hat-cfg "${PI3HAT_CFG}" -t 1 -c
+echo "conf set servopos.position_max ${HIP_POSITION_LIMIT_REV}" | sudo moteus_tool --pi3hat-cfg "${PI3HAT_CFG}" -t 4 -c
+echo "conf set servopos.position_min -${HIP_POSITION_LIMIT_REV}" | sudo moteus_tool --pi3hat-cfg "${PI3HAT_CFG}" -t 1 -c
+echo "conf set servopos.position_min -${HIP_POSITION_LIMIT_REV}" | sudo moteus_tool --pi3hat-cfg "${PI3HAT_CFG}" -t 4 -c
 
 echo "Configuring hip velocity limits..."
-echo "conf set servo.max_velocity 2.0" | sudo moteus_tool --pi3hat-cfg "${PI3HAT_CFG}" -t 1 -c
-echo "conf set servo.max_velocity 2.0" | sudo moteus_tool --pi3hat-cfg "${PI3HAT_CFG}" -t 4 -c
+echo "conf set servo.max_velocity ${HIP_VELOCITY_LIMIT_RPS}" | sudo moteus_tool --pi3hat-cfg "${PI3HAT_CFG}" -t 1 -c
+echo "conf set servo.max_velocity ${HIP_VELOCITY_LIMIT_RPS}" | sudo moteus_tool --pi3hat-cfg "${PI3HAT_CFG}" -t 4 -c
 
 echo "Configuring knee position limits..."
-echo "conf set servopos.position_max ${KNEE_LIMIT_REV}" | sudo moteus_tool --pi3hat-cfg "${PI3HAT_CFG}" -t 2 -c
-echo "conf set servopos.position_max ${KNEE_LIMIT_REV}" | sudo moteus_tool --pi3hat-cfg "${PI3HAT_CFG}" -t 5 -c
-echo "conf set servopos.position_min -${KNEE_LIMIT_REV}" | sudo moteus_tool --pi3hat-cfg "${PI3HAT_CFG}" -t 2 -c
-echo "conf set servopos.position_min -${KNEE_LIMIT_REV}" | sudo moteus_tool --pi3hat-cfg "${PI3HAT_CFG}" -t 5 -c
+echo "conf set servopos.position_max ${KNEE_POSITION_LIMIT_REV}" | sudo moteus_tool --pi3hat-cfg "${PI3HAT_CFG}" -t 2 -c
+echo "conf set servopos.position_max ${KNEE_POSITION_LIMIT_REV}" | sudo moteus_tool --pi3hat-cfg "${PI3HAT_CFG}" -t 5 -c
+echo "conf set servopos.position_min -${KNEE_POSITION_LIMIT_REV}" | sudo moteus_tool --pi3hat-cfg "${PI3HAT_CFG}" -t 2 -c
+echo "conf set servopos.position_min -${KNEE_POSITION_LIMIT_REV}" | sudo moteus_tool --pi3hat-cfg "${PI3HAT_CFG}" -t 5 -c
 
 echo "Configuring knee velocity limits..."
-echo "conf set servo.max_velocity 2.0" | sudo moteus_tool --pi3hat-cfg "${PI3HAT_CFG}" -t 2 -c
-echo "conf set servo.max_velocity 2.0" | sudo moteus_tool --pi3hat-cfg "${PI3HAT_CFG}" -t 5 -c
+echo "conf set servo.max_velocity ${KNEE_VELOCITY_LIMIT_RPS}" | sudo moteus_tool --pi3hat-cfg "${PI3HAT_CFG}" -t 2 -c
+echo "conf set servo.max_velocity ${KNEE_VELOCITY_LIMIT_RPS}" | sudo moteus_tool --pi3hat-cfg "${PI3HAT_CFG}" -t 5 -c
 
 echo "Configuring wheel position limits..."
 echo "conf set servopos.position_max NaN" | sudo moteus_tool --pi3hat-cfg "${PI3HAT_CFG}" -t 3 -c
@@ -52,10 +57,15 @@ echo "conf set servopos.position_min NaN" | sudo moteus_tool --pi3hat-cfg "${PI3
 echo "conf set servopos.position_min NaN" | sudo moteus_tool --pi3hat-cfg "${PI3HAT_CFG}" -t 6 -c
 
 echo "Configuring wheel velocity limits..."
-echo "conf set servo.max_velocity 8.0" | sudo moteus_tool --pi3hat-cfg "${PI3HAT_CFG}" -t 3 -c
-echo "conf set servo.max_velocity 8.0" | sudo moteus_tool --pi3hat-cfg "${PI3HAT_CFG}" -t 6 -c
+echo "conf set servo.max_velocity ${WHEEL_VELOCITY_LIMIT_RPS}" | sudo moteus_tool --pi3hat-cfg "${PI3HAT_CFG}" -t 3 -c
+echo "conf set servo.max_velocity ${WHEEL_VELOCITY_LIMIT_RPS}" | sudo moteus_tool --pi3hat-cfg "${PI3HAT_CFG}" -t 6 -c
 
+# Interpolation velocity and acceleration limits
+# ==============================================
+#
 # See https://github.com/mjbots/moteus/blob/38d688a933ce1584ee09f2628b5849d5e758ac21/docs/reference.md#servodefault_velocity_limit--servodefault_accel_limit
+# Interpolation velocity limits are capped by velocity limits from `servo.max_velocity`
+
 echo "Disabling interpolation velocity limits on all joints..."
 echo "conf set servo.default_velocity_limit NaN" | sudo moteus_tool --pi3hat-cfg "${PI3HAT_CFG}" -t 1 -c
 echo "conf set servo.default_velocity_limit NaN" | sudo moteus_tool --pi3hat-cfg "${PI3HAT_CFG}" -t 2 -c
@@ -64,7 +74,6 @@ echo "conf set servo.default_velocity_limit NaN" | sudo moteus_tool --pi3hat-cfg
 echo "conf set servo.default_velocity_limit NaN" | sudo moteus_tool --pi3hat-cfg "${PI3HAT_CFG}" -t 5 -c
 echo "conf set servo.default_velocity_limit NaN" | sudo moteus_tool --pi3hat-cfg "${PI3HAT_CFG}" -t 6 -c
 
-# See https://github.com/mjbots/moteus/blob/38d688a933ce1584ee09f2628b5849d5e758ac21/docs/reference.md#servodefault_velocity_limit--servodefault_accel_limit
 echo "Disabling acceleration limits on all joints..."
 echo "conf set servo.default_accel_limit NaN" | sudo moteus_tool --pi3hat-cfg "${PI3HAT_CFG}" -t 1 -c
 echo "conf set servo.default_accel_limit NaN" | sudo moteus_tool --pi3hat-cfg "${PI3HAT_CFG}" -t 2 -c
