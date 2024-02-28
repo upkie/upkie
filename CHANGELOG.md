@@ -14,11 +14,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Don't build simulation spine if execution fails
-- Move agents' ``requirements.txt`` files to optional project dependencies
-- Rename top-level run script to ``run_pid_balancer.sh``
 - dependencies: Update Upkie description to 1.5.0
 - dependencies: Update Vulp to 2.2.1
+- Don't build simulation spine if execution fails
+- Move agents' ``requirements.txt`` files to optional project dependencies
+- palinode: Rename ``run_pid_balancer.sh`` to ``try_pid_balancer.sh`` 😊
+- Rename top-level run script to ``run_pid_balancer.sh``
 
 ### Fixed
 
@@ -67,8 +68,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - envs: Default velocity in `UpkieServos` is now zero
 - envs: Observation and action values are `float` rather than `np.float32`
 - envs: Specify maximum torques in `UpkieGroundVelocity`
+- palinode: Rename ``try_pid_balancer.sh`` to ``start_pid_balancer.sh`` 😊
 - Simulation script downloads a binary if available, o/w compiles from source (thanks to @pgraverdy)
-- whoopsies: Rename ``try_pid_balancer.sh`` to ``start_pid_balancer.sh`` 😊
 
 ### Fixed
 
