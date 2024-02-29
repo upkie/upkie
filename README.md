@@ -72,7 +72,7 @@ The demo agent simply balances in place by [PID control](https://upkie.github.io
 
 - [MPC balancer](https://github.com/upkie/mpc_balancer): balance in place using model predictive control.
 - [Pink balancer](https://github.com/upkie/pink_balancer): an extended PID balancer than can crouch and lift its legs.
-- [PPO balancer](https://upkie.github.io/upkie/ppo-balancer.html): balance in place with a policy trained by reinforcement learning.
+- [PPO balancer](https://github.com/upkie/ppo_balancer): balance in place with a policy trained by reinforcement learning.
 
 Head over to the [new\_agent](https://github.com/upkie/new_agent) template to create your own.
 
