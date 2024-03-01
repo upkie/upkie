@@ -22,28 +22,29 @@ try:
 
     __all__.append("UpkieGroundVelocity")
     __envs__["UpkieGroundVelocity"] = UpkieGroundVelocity
-except ImportError as import_error:
-    __envs__["UpkieGroundVelocity"] = import_error
+except ImportError as exn:
+    __envs__["UpkieGroundVelocity"] = exn
 
 try:
     from .upkie_servos import UpkieServos
 
     __all__.append("UpkieServos")
     __envs__["UpkieServos"] = UpkieServos
-except ImportError as import_error:
-    __envs__["UpkieServos"] = import_error
+except ImportError as exn:
+    __envs__["UpkieServos"] = exn
 
 
 def register() -> None:
     """!
     Register Upkie environments with Gymnasium.
     """
-    for env_name, Env in __envs__.items():
-        if isinstance(Env, ModuleNotFoundError):
-            import_error = str(Env)
+    for env_name, env_class in __envs__.items():
+        if isinstance(env_class, ModuleNotFoundError):
+            import_error = str(env_class)
             logging.warning(
-                f"Cannot register {env_name} "
-                f"due to missing dependency: {import_error}"
+                "Cannot register %s due to missing dependency: %s",
+                env_name,
+                import_error,
             )
             logging.info(
                 "To install optional dependencies: "
@@ -51,6 +52,6 @@ def register() -> None:
             )
         else:  # valid gym.Env subclass
             gym.envs.registration.register(
-                id=f"{env_name}-v{Env.version}",
+                id=f"{env_name}-v{env_class.version}",
                 entry_point=f"upkie.envs:{env_name}",
             )
