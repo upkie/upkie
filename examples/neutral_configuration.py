@@ -7,24 +7,23 @@
 """This example simply makes Upkie go to its neutral configuration."""
 
 import gymnasium as gym
+
 import upkie.envs
 
 upkie.envs.register()
 
 RESET_DURATION = 2.0  # seconds
-HOLD_DURATION = 10.0  # seconds
-
-JOINTS = [
-    f"{side}_{name}"
-    for side in ("left", "right")
-    for name in ("hip", "knee", "wheel")
-]
 
 
 def reset_to_neutral(env: upkie.envs.UpkieServos):
+    JOINTS = [
+        f"{side}_{name}"
+        for side in ("left", "right")
+        for name in ("hip", "knee", "wheel")
+    ]
+
     action = env.unwrapped.get_neutral_action()
     observation, _ = env.reset()  # connects to the spine
-
     for joint in JOINTS:
         position = observation["servo"][joint]["position"]
         action[joint]["position"] = position
@@ -45,6 +44,5 @@ def reset_to_neutral(env: upkie.envs.UpkieServos):
 if __name__ == "__main__":
     with gym.make("UpkieServos-v3", frequency=200.0) as env:
         observation, action = reset_to_neutral(env)
-        nb_steps = int(HOLD_DURATION / env.dt)
-        for step in range(nb_steps):
-            observation, _, _, _, _ = env.step(action)
+        while True:  # hold configuration until the agent is interrupted
+            env.step(action)
