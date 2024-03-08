@@ -308,24 +308,36 @@ class UpkieServos(UpkieBaseEnv):
             "imu": {
                 "angular_velocity": np.array(
                     spine_observation["imu"]["angular_velocity"],
+                    dtype=float,
                 ),
                 "linear_acceleration": np.array(
-                    spine_observation["imu"]["linear_acceleration"]
+                    spine_observation["imu"]["linear_acceleration"],
+                    dtype=float,
                 ),
                 "orientation": np.array(
-                    spine_observation["imu"]["orientation"]
+                    spine_observation["imu"]["orientation"],
+                    dtype=float,
                 ),
             },
             "servo": {
                 joint: {
-                    key: spine_observation["servo"][joint][key]
+                    key: np.array(
+                        [spine_observation["servo"][joint][key]],
+                        dtype=float,
+                    )
                     for key in self.observation_space["servo"][joint]
                 }
                 for joint in self.JOINT_NAMES
             },
             "wheel_odometry": {
-                "position": spine_observation["wheel_odometry"]["position"],
-                "velocity": spine_observation["wheel_odometry"]["velocity"],
+                "position": np.array(
+                    [spine_observation["wheel_odometry"]["position"]],
+                    dtype=float,
+                ),
+                "velocity": np.array(
+                    [spine_observation["wheel_odometry"]["velocity"]],
+                    dtype=float,
+                ),
             },
         }
 
