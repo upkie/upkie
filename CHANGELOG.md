@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fix Gymnasium API in the readme example (thanks to @araffin)
 - Handle closing of GUI window in simulation script
+- Make sure all ``UpkieServos`` box observations are proper arrays
 
 ### Removed
 
