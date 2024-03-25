@@ -25,11 +25,11 @@ from .upkie_base_env import UpkieBaseEnv
 
 class UpkieServos(UpkieBaseEnv):
     """!
-    Upkie with full observation and joint position-velocity-torque actions.
+    Upkie with with action and observation for each servo.
 
     ### Action space
 
-    The action space is a dictionary with one key for each servo on Upkie:
+    The action space is a dictionary with one key for each servo:
 
     - ``left_hip``: Left hip joint (qdd100)
     - ``left_hip``: Left knee joint (qdd100)
@@ -92,7 +92,7 @@ class UpkieServos(UpkieBaseEnv):
     )
 
     robot: pin.RobotWrapper
-    version: int = 3
+    version: int = 4
 
     def __init__(
         self,
