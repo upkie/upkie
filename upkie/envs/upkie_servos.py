@@ -38,7 +38,7 @@ class UpkieServos(UpkieBaseEnv):
     - ``right_hip``: Right knee joint (qdd100)
     - ``right_hip``: Right wheel joint (mj5208)
 
-    The value for each dictionary is itself a dictionary for each
+    The value for each dictionary is a dictionary with the following keys:
 
     - ``position``: Joint angle in [rad] (NaN to disable) (required).
     - ``velocity``: Joint velocity in [rad] / [s] (required).
