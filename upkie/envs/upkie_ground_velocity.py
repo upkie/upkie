@@ -86,6 +86,10 @@ class UpkieGroundVelocity(UpkieBaseEnv):
         </tr>
     </table>
 
+    As with all Upkie environments, full observations from the spine (detailed
+    in @ref observations) are also available in the ``info`` dictionary
+    returned by the reset and step functions.
+
     ### Attributes
 
     The environment class defines the following attributes:
