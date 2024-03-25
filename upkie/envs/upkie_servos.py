@@ -52,8 +52,18 @@ class UpkieServos(UpkieBaseEnv):
 
     ### Observation space
 
-    Obversations from this environment are full dictionary reported by the
-    spine. See @ref observations.
+    The observation space is a dictionary with one key for each servo. The
+    value for each key is a dictionary with keys:
+
+    - ``position``: Joint angle in [rad].
+    - ``velocity``: Joint velocity in [rad] / [s].
+    - ``torque``: Joint torque in [N] * [m].
+    - ``temperature``: Servo temperature in degree Celsius.
+    - ``voltage": Power bus voltage of the servo, in [V].
+
+    As with all Upkie environments, full observations from the spine (detailed
+    in @ref observations) are also available in the ``info`` dictionary
+    returned by the reset and step functions.
 
     ### Attributes
 
@@ -237,49 +247,7 @@ class UpkieServos(UpkieBaseEnv):
         self.action_space = spaces.Dict(action_space)
 
         # gymnasium.Env: observation_space
-        self.observation_space = spaces.Dict(
-            {
-                "imu": spaces.Dict(
-                    {
-                        "angular_velocity": spaces.Box(
-                            low=-np.inf,
-                            high=np.inf,
-                            shape=(3,),
-                            dtype=float,
-                        ),
-                        "linear_acceleration": spaces.Box(
-                            low=-np.inf,
-                            high=np.inf,
-                            shape=(3,),
-                            dtype=float,
-                        ),
-                        "orientation": spaces.Box(
-                            low=-1.0,
-                            high=1.0,
-                            shape=(4,),
-                            dtype=float,
-                        ),
-                    }
-                ),
-                "servo": spaces.Dict(servo_space),
-                "wheel_odometry": spaces.Dict(
-                    {
-                        "position": spaces.Box(
-                            low=-np.inf,
-                            high=np.inf,
-                            shape=(1,),
-                            dtype=float,
-                        ),
-                        "velocity": spaces.Box(
-                            low=-np.inf,
-                            high=np.inf,
-                            shape=(1,),
-                            dtype=float,
-                        ),
-                    }
-                ),
-            }
-        )
+        self.observation_space = spaces.Dict(servo_space)
 
         # Class members
         self.__neutral_action = neutral_action
@@ -305,40 +273,14 @@ class UpkieServos(UpkieBaseEnv):
         # If creating a new object turns out to be too slow we can switch to
         # updating in-place.
         return {
-            "imu": {
-                "angular_velocity": np.array(
-                    spine_observation["imu"]["angular_velocity"],
+            joint: {
+                key: np.array(
+                    [spine_observation["servo"][joint][key]],
                     dtype=float,
-                ),
-                "linear_acceleration": np.array(
-                    spine_observation["imu"]["linear_acceleration"],
-                    dtype=float,
-                ),
-                "orientation": np.array(
-                    spine_observation["imu"]["orientation"],
-                    dtype=float,
-                ),
-            },
-            "servo": {
-                joint: {
-                    key: np.array(
-                        [spine_observation["servo"][joint][key]],
-                        dtype=float,
-                    )
-                    for key in self.observation_space["servo"][joint]
-                }
-                for joint in self.JOINT_NAMES
-            },
-            "wheel_odometry": {
-                "position": np.array(
-                    [spine_observation["wheel_odometry"]["position"]],
-                    dtype=float,
-                ),
-                "velocity": np.array(
-                    [spine_observation["wheel_odometry"]["velocity"]],
-                    dtype=float,
-                ),
-            },
+                )
+                for key in self.observation_space["servo"][joint]
+            }
+            for joint in self.JOINT_NAMES
         }
 
     def get_spine_action(self, env_action: dict) -> dict:
