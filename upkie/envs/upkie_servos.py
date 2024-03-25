@@ -278,7 +278,7 @@ class UpkieServos(UpkieBaseEnv):
                     [spine_observation["servo"][joint][key]],
                     dtype=float,
                 )
-                for key in self.observation_space["servo"][joint]
+                for key in self.observation_space[joint]
             }
             for joint in self.JOINT_NAMES
         }
