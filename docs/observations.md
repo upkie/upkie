@@ -9,10 +9,10 @@ Here is an index of observation dictionaries. Keys are a shorthand for nested di
 | `imu.linear_acceleration` | Body linear acceleration of the IMU in [m] / [s]² |
 | `imu.orientation` | Unit quaternion (``qw``, ``qx``, ``qy``, ``qz``) of the orientation from the IMU frame to the attitude reference system (ARS) frame |
 | `servos` | Servo motor measurements |
-| `servos.<X>` | Observations for servo ``X`` in the servo layout @ref upkie::config::servo_layout |
-| `servos.<X>.position` | Angle between the stator and the rotor in [rad] |
-| `servos.<X>.torque` | Joint torque in [N] * [m] |
-| `servos.<X>.velocity` | Angular velocity of the rotor w.r.t. stator in rotor, in [rad] / [s] |
+| `servos.X` | Observations for servo ``X`` in the servo layout @ref upkie::config::servo_layout |
+| `servos.X.position` | Angle between the stator and the rotor in [rad] |
+| `servos.X.torque` | Joint torque in [N] * [m] |
+| `servos.X.velocity` | Angular velocity of the rotor w.r.t. stator in rotor, in [rad] / [s] |
 | `wheel_odometry.position` | Ground position in [m], see @ref upkie::observers::WheelOdometry |
 | `wheel_odometry.velocity` | Ground velocity in [m] / [s], see @ref upkie::observers::WheelOdometry |
 
