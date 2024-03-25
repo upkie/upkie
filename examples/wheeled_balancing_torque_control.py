@@ -29,16 +29,17 @@ def run(env: upkie.envs.UpkieServos):
     action["left_wheel"]["kd_scale"] = 0.0
     action["right_wheel"]["kd_scale"] = 0.0
 
-    obs, _ = env.reset()  # connects to the spine
+    _, info = env.reset()  # connects to the spine
     for step in range(1_000_000):
-        pitch = compute_base_pitch_from_imu(obs["imu"]["orientation"])
+        imu = info["spine_observation"]["imu"]
+        pitch = compute_base_pitch_from_imu(imu["orientation"])
         action["left_wheel"]["feedforward_torque"] = +GAIN * pitch
         action["right_wheel"]["feedforward_torque"] = -GAIN * pitch
-        obs, _, terminated, truncated, _ = env.step(action)
+        _, _, terminated, truncated, info = env.step(action)
         if terminated or truncated:
-            obs, _ = env.reset()
+            _, info = env.reset()
 
 
 if __name__ == "__main__":
-    with gym.make("UpkieServos-v3", frequency=200.0) as env:
+    with gym.make("UpkieServos-v4", frequency=200.0) as env:
         run(env)
