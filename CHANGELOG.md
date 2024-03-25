@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- envs: Bump ``UpkieServos`` version number to 4
 - envs: Restrict observation space of ``UpkieServos`` to servos
 
 ## [3.4.0] - 2024-03-21
