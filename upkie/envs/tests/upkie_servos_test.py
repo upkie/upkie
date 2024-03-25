@@ -30,18 +30,22 @@ class TestUpkieServos(unittest.TestCase):
         observation, info = self.env.reset()
         spine_observation = info["spine_observation"]
         self.assertAlmostEqual(
-            observation["wheel_odometry"]["position"],
-            spine_observation["wheel_odometry"]["position"],
+            observation["left_wheel"]["position"],
+            spine_observation["servo"]["left_wheel"]["position"],
         )
         self.assertGreaterEqual(spine_observation["number"], 1)
 
-        imu = observation["imu"]
-        self.assertIsInstance(imu["angular_velocity"], np.ndarray)
-        self.assertIsInstance(imu["linear_acceleration"], np.ndarray)
-        self.assertIsInstance(imu["orientation"], np.ndarray)
-        self.assertEqual(imu["angular_velocity"].shape, (3,))
-        self.assertEqual(imu["linear_acceleration"].shape, (3,))
-        self.assertEqual(imu["orientation"].shape, (4,))
+        right_knee = observation["right_knee"]
+        self.assertIsInstance(right_knee["position"], np.ndarray)
+        self.assertIsInstance(right_knee["velocity"], np.ndarray)
+        self.assertIsInstance(right_knee["torque"], np.ndarray)
+        self.assertIsInstance(right_knee["temperature"], np.ndarray)
+        self.assertIsInstance(right_knee["voltage"], np.ndarray)
+        self.assertEqual(right_knee["position"].shape, (1,))
+        self.assertEqual(right_knee["velocity"].shape, (1,))
+        self.assertEqual(right_knee["torque"].shape, (1,))
+        self.assertEqual(right_knee["temperature"].shape, (1,))
+        self.assertEqual(right_knee["voltage"].shape, (1,))
 
     def test_reward(self):
         self.env.reset()
