@@ -8,9 +8,8 @@
 
 import gymnasium as gym
 import numpy as np
-from scipy.spatial.transform import Rotation as ScipyRotation
-
 import upkie.envs
+from scipy.spatial.transform import Rotation as ScipyRotation
 from upkie.utils.robot_state import RobotState
 
 NB_GENUFLECTIONS = 10
@@ -20,7 +19,7 @@ AMPLITUDE = 1.0  # in radians
 if __name__ == "__main__":
     upkie.envs.register()
     with gym.make(
-        "UpkieServos-v3",
+        "UpkieServos-v4",
         frequency=200.0,
         init_state=RobotState(
             orientation_base_in_world=ScipyRotation.from_quat(
@@ -30,7 +29,7 @@ if __name__ == "__main__":
         ),
     ) as env:
         action = env.get_neutral_action()
-        observation, _ = env.reset()  # connects to the spine
+        env.reset()  # connects to the spine
         for step in range(NB_GENUFLECTIONS * GENUFLECTION_STEPS):
             x = float(step % GENUFLECTION_STEPS) / GENUFLECTION_STEPS
             y = 4.0 * x * (1.0 - x)  # in [0, 1]
@@ -39,4 +38,4 @@ if __name__ == "__main__":
             action["left_knee"]["position"] = q_0134[1]
             action["right_hip"]["position"] = q_0134[2]
             action["right_knee"]["position"] = q_0134[3]
-            observation, _, _, _, _ = env.step(action)
+            env.step(action)
