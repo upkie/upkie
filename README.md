@@ -9,14 +9,14 @@
 [![PyPI version](https://img.shields.io/pypi/v/upkie)](https://pypi.org/project/upkie/)
 [![Chat](https://img.shields.io/badge/matrix-chat-%234eb899)](https://app.element.io/#/room/#tasts-robots:matrix.org)
 
-**Upkie** is a fully open source self-balancing wheeled biped robot. It has wheels for balancing and legs to negotiate uneven terrains. Upkies are designed to be buildable at home using only tools and components ordered online, like mjbots actuators. Motion control runs onboard the robot's Raspberry Pi.
+**Upkie** is a fully open source self-balancing wheeled biped robot. It has wheels for balancing and legs to negotiate uneven terrains. Upkies are designed to be buildable at home using only tools and components ordered online, like mjbots actuators. You can develop in Python or C++, on Linux or macOS, then deploy your software to the robot's Raspberry Pi.
 
-This repository contains all the software and instructions required to build and animate an Upkie:
+This repository contains all the materials needed to build and animate an Upkie:
 
 - Hardware:
     - [Bill of materials](https://github.com/upkie/upkie/wiki/Bill-of-materials)
     - [Build instructions](https://github.com/upkie/upkie/wiki)
-    - [Project log](https://hackaday.io/project/185729-upkie-wheeled-biped-robots) on Hackaday.io
+    - [Project log](https://hackaday.io/project/185729-upkie-wheeled-biped-robots)
 - Software:
     - [Installation](https://github.com/upkie/upkie#installation)
     - [Example](https://github.com/upkie/upkie#example)
@@ -24,7 +24,7 @@ This repository contains all the software and instructions required to build and
     - [Agents](https://github.com/upkie/upkie#agents)
     - [More examples](https://github.com/upkie/upkie/tree/main/examples)
 
-Development can be done in Python or C++, on Linux or macOS. Questions are welcome in the [Chat](https://app.element.io/#/room/#tasts-robots:matrix.org) and [Discussions forum](https://github.com/upkie/upkie/discussions).
+Questions are welcome in the [Chat](https://app.element.io/#/room/#tasts-robots:matrix.org) and [Discussions forum](https://github.com/upkie/upkie/discussions).
 
 ## Installation
 
