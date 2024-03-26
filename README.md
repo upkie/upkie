@@ -9,9 +9,22 @@
 [![PyPI version](https://img.shields.io/pypi/v/upkie)](https://pypi.org/project/upkie/)
 [![Chat](https://img.shields.io/badge/matrix-chat-%234eb899)](https://app.element.io/#/room/#tasts-robots:matrix.org)
 
-**Upkie** is a fully open source self-balancing wheeled biped robot. It has wheels for balancing, and legs to go off-road or negotiate uneven terrains. Upkies are designed to be buildable at home with tools and components ordered online, like mjbots actuators. Motion control runs onboard the robot's Raspberry Pi.
+**Upkie** is a fully open source self-balancing wheeled biped robot. It has wheels for balancing and legs to negotiate uneven terrains. Upkies are designed to be buildable at home using only tools and components ordered online, like mjbots actuators. Motion control runs onboard the robot's Raspberry Pi.
 
-This repository contains all the software and instructions required to build and animate an Upkie. Development can be done in Python or C++, on Linux or macOS. Questions are welcome in the [Chat](https://app.element.io/#/room/#tasts-robots:matrix.org) and [Discussions forum](https://github.com/upkie/upkie/discussions).
+This repository contains all the software and instructions required to build and animate an Upkie:
+
+- Hardware:
+    - [Bill of materials](https://github.com/upkie/upkie/wiki/Bill-of-materials)
+    - [Build instructions](https://github.com/upkie/upkie/wiki)
+    - [Project log](https://hackaday.io/project/185729-upkie-wheeled-biped-robots) on Hackaday.io
+- Software:
+    - [Installation](https://github.com/upkie/upkie#installation)
+    - [Example](https://github.com/upkie/upkie#example)
+    - [Documentation](https://upkie.github.io/upkie/)
+    - [Agents](https://github.com/upkie/upkie#agents)
+    - [More examples](https://github.com/upkie/upkie/tree/main/examples)
+
+Development can be done in Python or C++, on Linux or macOS. Questions are welcome in the [Chat](https://app.element.io/#/room/#tasts-robots:matrix.org) and [Discussions forum](https://github.com/upkie/upkie/discussions).
 
 ## Installation
 
@@ -75,10 +88,3 @@ The demo agent simply balances in place by [PID control](https://upkie.github.io
 - [PPO balancer](https://github.com/upkie/ppo_balancer): balance in place with a policy trained by reinforcement learning.
 
 Head over to the [new\_agent](https://github.com/upkie/new_agent) template to create your own.
-
-## To go further
-
-- [Build your own Upkie](https://github.com/upkie/upkie/wiki) 🧰
-- [Examples](https://github.com/upkie/upkie/tree/main/examples)
-- [Project log](https://hackaday.io/project/185729-upkie-wheeled-biped-robots) on Hackaday.io
-- [Software documentation](https://upkie.github.io/upkie/)
