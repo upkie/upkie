@@ -12,6 +12,7 @@
 
 This repository contains all the materials needed to build and animate an Upkie:
 
+- [Demo](https://github.com/upkie/upkie#demo)
 - Hardware:
     - [Bill of materials](https://github.com/upkie/upkie/wiki/Bill-of-materials)
     - [Build instructions](https://github.com/upkie/upkie/wiki)
@@ -25,19 +26,9 @@ This repository contains all the materials needed to build and animate an Upkie:
 
 Questions are welcome in the [Chat](https://app.element.io/#/room/#tasts-robots:matrix.org) and [Discussions forum](https://github.com/upkie/upkie/discussions).
 
-## Installation
-
-To code for Upkie in Python, just install:
-
-```console
-pip install upkie
-```
-
-This Python interface is already [fast enough](https://github.com/upkie/vulp#performance) for real-time control. If later on you want to optimize parts of your code, you can move them to C++ [spines](https://upkie.github.io/upkie/spines.html).
-
 ## Demo
 
-You can try a demo right from your command line:
+You can play with a balancing Upkie right away from your command line:
 
 <img src="https://user-images.githubusercontent.com/1189580/170496331-e1293dd3-b50c-40ee-9c2e-f75f3096ebd8.png" height="100" align="right" />
 
@@ -48,6 +39,16 @@ cd upkie
 ```
 
 Click on the robot in the simulator window to apply external forces. If you have a gaming controller connected to your computer, steer its joysticks to move the robot around 🎮
+
+## Installation
+
+To code for Upkie in Python, just install:
+
+```console
+pip install upkie
+```
+
+This Python interface is already [fast enough](https://github.com/upkie/vulp#performance) for real-time control. If later on you want to optimize parts of your code, you can move them to C++ [spines](https://upkie.github.io/upkie/spines.html).
 
 ## Example
 
