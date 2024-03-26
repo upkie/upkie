@@ -17,16 +17,17 @@ This repository contains all the materials needed to build and animate an Upkie:
     - [Build instructions](https://github.com/upkie/upkie/wiki)
     - [Project log](https://hackaday.io/project/185729-upkie-wheeled-biped-robots)
 - Software:
-    - [Documentation](https://upkie.github.io/upkie/)
-    - [Demo](https://github.com/upkie/upkie#demo)
+    - [Getting started](https://github.com/upkie/upkie#demo)
     - [Installation](https://github.com/upkie/upkie#installation)
     - [Example](https://github.com/upkie/upkie#example)
-    - [Agents](https://github.com/upkie/upkie#agents)
+    - [Documentation](https://upkie.github.io/upkie/)
+- Going further:
+    - [More agents](https://github.com/upkie/upkie#agents)
     - [More examples](https://github.com/upkie/upkie/tree/main/examples)
 
 Questions are welcome in the [Chat](https://app.element.io/#/room/#tasts-robots:matrix.org) and [Discussions forum](https://github.com/upkie/upkie/discussions).
 
-## Demo
+## Getting started
 
 You can play with a balancing Upkie right away from your command line:
 
