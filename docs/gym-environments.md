@@ -1,6 +1,8 @@
 # Gym environments {#environments}
 
-Upkie has reinforcement learning environments following the [Gymnasium API](https://gymnasium.farama.org/). They all derive from the same internal [base class](@ref upkie.envs.upkie_base_env.UpkieBaseEnv). All of them are single-threaded; in return, they run as-is both in simulati and on real robots.
+Upkie has reinforcement learning environments following the [Gymnasium API](https://gymnasium.farama.org/). All of them are single-threaded (in return, they run as-is both in simulation and on real robots).
+
+Each environment has its own observation and action spaces, but all of them provide access to full spine observation (detailed in @ref observations) via the ``info`` dictionary returned by their ``reset`` and ``step`` functions.
 
 ## Ground velocity {#ground-velocity-env}
 
@@ -22,7 +24,7 @@ Check out the [UpkieGroundVelocity](@ref upkie.envs.upkie_ground_velocity.UpkieG
 
 ## Servos {#servos-env}
 
-The ``UpkieServos`` environment has dictionary observation and action spaces. Observation dictionaries are those coming from the spine and documentation on the [Observations page](@ref observations). Action dictionaries specify target positions, target velocities and feedforward torque commands that are directly sent to the moteus controllers. Each motor controller will then apply a standard control law with feedforward torque and position-velocity feedback:
+The ``UpkieServos`` environment has dictionary observation and action spaces. Observation dictionaries return position, velocity and torque for each servo. Action dictionaries specify target positions, target velocities and feedforward torque commands that are directly sent to the moteus controllers. Each motor controller will then apply a standard control law with feedforward torque and position-velocity feedback:
 
 \f[
 \begin{align*}
