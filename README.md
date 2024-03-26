@@ -17,9 +17,9 @@ This repository contains all the materials needed to build and animate an Upkie:
     - [Build instructions](https://github.com/upkie/upkie/wiki)
     - [Project log](https://hackaday.io/project/185729-upkie-wheeled-biped-robots)
 - Software:
-    - [Installation](#installation)
-    - [Example](https://github.com/upkie/upkie#example)
+    - [Installation](https://github.com/upkie/upkie#installation)
     - [Documentation](https://upkie.github.io/upkie/)
+    - [Example](https://github.com/upkie/upkie#example)
     - [Agents](https://github.com/upkie/upkie#agents)
     - [More examples](https://github.com/upkie/upkie/tree/main/examples)
 
