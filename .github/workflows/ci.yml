@@ -15,7 +15,7 @@ jobs:
             SPLINE_PATH: ./bazel-out/aarch64-opt/bin/spines/
         steps:
             - name: "Checkout sources"
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
 
             - name: "Install dependencies"
               run: |
@@ -40,7 +40,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: "Checkout sources"
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
 
             - name: "Install dependencies"
               run: |
@@ -58,7 +58,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: "Checkout sources"
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
 
             - name: "Install dependencies"
               run: |
@@ -81,7 +81,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: "Checkout sources"
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
 
             - name: "Check code formatting"
               env:
@@ -94,7 +94,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: "Checkout sources"
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
 
             - name: "Check shell scripts formatting"
               run: |
@@ -110,7 +110,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: "Checkout sources"
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
 
             - name: "Set up Python"
               uses: actions/setup-python@v4
