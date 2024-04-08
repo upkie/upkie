@@ -1,0 +1,22 @@
+# -*- python -*-
+#
+# SPDX-License-Identifier: Apache-2.0
+
+import servo_controller
+import wheel_controller
+
+ServoController.gain_scale = 2.0
+ServoController.turning_gain_scale = 2.0
+ServoController.wheel_distance = 0.3048
+
+WheelController.air_return_period = 1.0             # [s]
+WheelController.fall_pitch = 1.0                    # [rad]
+WheelController.max_ground_velocity = 1.0           # [m] / [s]
+WheelController.max_integral_error_velocity = 10.0  # [m] / [s]
+WheelController.max_target_accel = 0.3              # [m] / [s]²
+WheelController.max_target_distance = 1.0           # [m]
+WheelController.max_target_velocity = 0.6           # [m] / [s]
+WheelController.max_yaw_accel = 10.0                # [rad] / [s]²
+WheelController.max_yaw_velocity = 1.0              # [rad] / [s]
+WheelController.turning_deadband = 0.3
+WheelController.turning_decision_time = 0.2         # [s]

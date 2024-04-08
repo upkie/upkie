@@ -1,10 +1,46 @@
-# -*- python -*-
-#
-# SPDX-License-Identifier: Apache-2.0
-
 load("//tools/lint:lint.bzl", "add_lint_tests")
 
 package(default_visibility = ["//visibility:public"])
+
+cc_library(
+    name = "lessie_spine_config",
+    hdrs = ["configs.h",
+            ],
+    visibility = ["//visibility:public"],
+)
+
+cc_binary(
+    name = "lessie_spine",
+    srcs = [
+        "lessie_spine.cpp",
+    ],
+    data = [
+        "@upkie_description",
+    ],
+    deps = [
+        "//upkie/config:layout",
+        "//upkie/observers",
+        "//upkie/utils:datetime_now_string",
+        "//upkie:version",
+        ":lessie_spine_config",
+        "@vulp//vulp/observation",
+        "@vulp//vulp/observation/sources",
+        "@vulp//vulp/spine",
+    ]+ select({
+        "//:pi64_config": [
+            "@org_llvm_libcxx//:libcxx",
+            "@pi3hat//lib/cpp/mjbots/pi3hat:libpi3hat",
+            "@vulp//vulp/actuation:lessie_interface",
+        ],
+        "//conditions:default": [],
+    }),
+    target_compatible_with = select({
+        "//:pi64_config": [],
+        "//conditions:default": ["@platforms//:incompatible"],
+    }),
+)
+
+
 
 cc_binary(
     name = "bullet_spine",

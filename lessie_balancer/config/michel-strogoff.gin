@@ -1,0 +1,13 @@
+# -*- python -*-
+#
+# SPDX-License-Identifier: Apache-2.0
+
+import servo_controller
+import wheel_controller
+
+WheelController.wheel_radius = 0.055  # [m]
+
+Gains.pitch_damping = 1.8
+Gains.pitch_stiffness = 20.0
+Gains.position_damping = 0.7
+Gains.position_stiffness = 1.6

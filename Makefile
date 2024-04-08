@@ -41,9 +41,11 @@ clean: clean_broken_links  ## clean all local build and intermediate files
 
 .PHONY: build
 build: clean_broken_links  ## build Raspberry Pi targets
-	$(BAZEL) build --config=pi64 //pid_balancer
-	$(BAZEL) build --config=pi64 //spines:mock_spine
-	$(BAZEL) build --config=pi64 //spines:pi3hat_spine
+	$(BAZEL) build --config=pi64 //lessie_balancer
+	# $(BAZEL) build --config=pi64 //spines:mock_spine
+	# $(BAZEL) build --config=pi64 //spines:pi3hat_spine
+	$(BAZEL) build --config=pi64 //spines:lessie_spine
+
 
 .PHONY: coverage
 coverage:  ## check unit test coverage and open an HTML report in Firefox
@@ -98,3 +100,7 @@ PID_BALANCER_CONFIG = $(or ${CONFIG}, hostname)
 # NB: run_pid_balancer is used in build instructions
 run_pid_balancer:  ### run the test balancer on the Raspberry Pi
 	$(RASPUNZEL) run -s //pid_balancer:pid_balancer -- --config $(PID_BALANCER_CONFIG)
+
+
+run_wiring:  ### run the test balancer on the Raspberry Pi
+	$(RASPUNZEL) run -s //vulp/actuation/wiringpi:wiringpi_app -- --config $(PID_BALANCER_CONFIG)
