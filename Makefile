@@ -101,6 +101,3 @@ PID_BALANCER_CONFIG = $(or ${CONFIG}, hostname)
 run_pid_balancer:  ### run the test balancer on the Raspberry Pi
 	$(RASPUNZEL) run -s //pid_balancer:pid_balancer -- --config $(PID_BALANCER_CONFIG)
 
-
-run_wiring:  ### run the test balancer on the Raspberry Pi
-	$(RASPUNZEL) run -s //vulp/actuation/wiringpi:wiringpi_app -- --config $(PID_BALANCER_CONFIG)

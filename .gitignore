@@ -9,3 +9,4 @@ tools/bazel
 training/
 upkie.wiki/
 wiki/
+.vscode
