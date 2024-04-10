@@ -43,13 +43,21 @@ Click on the robot in the simulator window to apply external forces. If you have
 
 ## Installation
 
-To code for Upkie in Python, just install:
+### Conda
+
+[![Conda version](https://anaconda.org/conda-forge/upkie/badges/version.svg)](https://anaconda.org/conda-forge/upkie)
+
+```console
+conda install -c conda-forge upkie
+```
+
+### PyPI
+
+[![PyPI version](https://img.shields.io/pypi/v/upkie)](https://pypi.org/project/upkie)
 
 ```console
 pip install upkie
 ```
-
-This Python interface is already [fast enough](https://github.com/upkie/vulp#performance) for real-time control. If later on you want to optimize parts of your code, you can move them to C++ [spines](https://upkie.github.io/upkie/spines.html).
 
 ## Example
 
