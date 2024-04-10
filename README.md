@@ -102,3 +102,4 @@ Head over to the [new\_agent](https://github.com/upkie/new_agent) template to cr
 
 - [Is the Python API fast enough for real-time control?](https://github.com/orgs/upkie/discussions/240)
 - [Can we step a Gym environment faster than real time?](https://github.com/orgs/upkie/discussions/79)
+- [How to pair a Bluetooth controller to the Raspberry Pi?](https://github.com/orgs/upkie/discussions/138)
