@@ -97,3 +97,8 @@ The demo agent simply balances in place by [PID control](https://upkie.github.io
 - [PPO balancer](https://github.com/upkie/ppo_balancer): balance in place with a policy trained by reinforcement learning.
 
 Head over to the [new\_agent](https://github.com/upkie/new_agent) template to create your own.
+
+## Frequently Asked Questions
+
+- [Is the Python API fast enough for real-time control?](https://github.com/orgs/upkie/discussions/240)
+- [Can we step a Gym environment faster than real time?](https://github.com/orgs/upkie/discussions/79)
