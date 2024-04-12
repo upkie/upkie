@@ -60,7 +60,7 @@ def run(
         "signed_radius": {
             "left_wheel": +wheel_radius,
             "right_wheel": -wheel_radius,
-        }
+        },
     }
 
     spine.start(spine_config)
