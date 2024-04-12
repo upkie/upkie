@@ -40,11 +40,14 @@ def run(
     rate = RateLimiter(frequency, "controller")
 
     wheel_radius = controller.wheel_radius
+    spine_config["bullet"]["groundtruth"] = {
+        "contacts": {"left_wheel_tire": True}
+    }
     spine_config["wheel_odometry"] = {
         "signed_radius": {
             "left_wheel": +wheel_radius,
             "right_wheel": -wheel_radius,
-        }
+        },
     }
 
     spine.start(spine_config)
