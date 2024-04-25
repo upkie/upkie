@@ -103,3 +103,18 @@ Head over to the [new\_agent](https://github.com/upkie/new_agent) template to cr
 - [Is the Python API fast enough for real-time control?](https://github.com/orgs/upkie/discussions/240)
 - [Can we step a Gym environment faster than real time?](https://github.com/orgs/upkie/discussions/79)
 - [How to pair a Bluetooth controller to the Raspberry Pi?](https://github.com/orgs/upkie/discussions/138)
+
+## Citation
+
+If you built an Upkie or use parts of this project in your works, please cite it as follows:
+
+```bibtex
+@software{upkie,
+  title = {{Upkie open source wheeled biped robot}},
+  author = {Caron, St\'{e}phane and Perrin-Gilbert, Nicolas and Ledoux, Viviane and G\"{o}kbakan, \"{Umit} Bora and Raverdy, Pierre-Guillaume and Raffin, Antonin},
+  license = {Apache-2.0},
+  url = {https://github.com/upkie/upkie},
+  version = {3.4.0},
+  year = {2024}
+}
+```
