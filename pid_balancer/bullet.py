@@ -16,11 +16,27 @@ import yaml
 from loop_rate_limiters import RateLimiter
 from rules_python.python.runfiles import runfiles
 from servo_controller import ServoController
+from multiprocessing import shared_memory
 from vulp.spine import SpineInterface
 
 
 class CompilationModeError(Exception):
     """Raised when the example is called with unexpected parameters."""
+
+
+def clear_shared_memory():
+    """Ensure there is no shared-memory file before forking the Bullet spine.
+
+    We want to make sure there is no shared-memory file before forking to a
+    spine in this script, as the Python child process may otherwise open the
+    pre-existing file before the spine creates a new one.
+    """
+    try:
+        shm = shared_memory.SharedMemory("vulp", create=False, size=0)
+        shm.close()
+        shm.unlink()
+    except Exception:
+        pass
 
 
 def run(
@@ -40,9 +56,7 @@ def run(
     rate = RateLimiter(frequency, "controller")
 
     wheel_radius = controller.wheel_radius
-    spine_config["bullet"]["report"] = {
-        "contacts": {"left_wheel_tire": True}
-    }
+    spine_config["bullet"]["report"] = {"contacts": {"left_wheel_tire": True}}
     spine_config["wheel_odometry"] = {
         "signed_radius": {
             "left_wheel": +wheel_radius,
@@ -83,6 +97,7 @@ if __name__ == "__main__":
     with open(f"{agent_dir}/config/spine.yaml", "r") as fh:
         config = yaml.safe_load(fh)
 
+    clear_shared_memory()
     pid = os.fork()
     if pid == 0:  # child process: spine
         spine_argv = ["--spine-frequency", "1000.0", "--show"]
