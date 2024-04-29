@@ -21,7 +21,6 @@ from upkie.utils.robot_state import RobotState
 
 
 class UpkieBaseEnv(abc.ABC, gymnasium.Env):
-
     """!
     Base class for Upkie environments.
 
