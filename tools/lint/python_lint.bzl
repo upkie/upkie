@@ -78,7 +78,7 @@ def python_lint(
             ]
         else:
             # The select() syntax returns an object we (apparently) can't
-            # inspect.  TODO(jwnimmer-tri) Figure out how to lint these files.
+            # inspect.
             files = []
 
         # Add a lint test if necessary.
