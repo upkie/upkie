@@ -121,11 +121,13 @@ def compute_base_pitch_from_imu(
 
 def compute_base_angular_velocity_from_imu(
     angular_velocity_imu_in_imu: NDArray[float],
+    rotation_base_to_imu: Optional[NDArray] = None,
 ) -> NDArray[float]:
     r"""!
     Compute the body angular velocity of the base from IMU readings.
 
     @param angular_velocity_imu_in_imu Angular velocity from the IMU.
+    @param rotation_base_to_imu Rotation matrix from base to IMU.
     @returns Body angular velocity of the base frame.
 
     Calculation checks:
@@ -149,8 +151,8 @@ def compute_base_angular_velocity_from_imu(
 
     Thus \f${}_B \omega_{WB} = R_{BI} {}_I \omega_{WI}\f$.
     """
-    # TODO(scaron): move to config
-    rotation_base_to_imu = np.diag([-1.0, 1.0, -1.0])
+    if rotation_base_to_imu is None:
+        rotation_base_to_imu = np.diag([-1.0, 1.0, -1.0])
     rotation_imu_to_base = rotation_base_to_imu.T
     angular_velocity_base_in_base = (
         rotation_imu_to_base @ angular_velocity_imu_in_imu
