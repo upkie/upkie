@@ -21,6 +21,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - PID balancer: Fix shared-memory opening in standalone Bullet script
 
+### Removed
+
+- Optional dependencies for balancers that now have their own repositories
+
 ## [3.4.0] - 2024-03-21
 
 ### Added
