@@ -38,22 +38,6 @@ dependencies = [
 ]
 keywords = ["wheeled", "biped", "robot", "balance", "motion", "control", "robotics"]
 
-[project.optional-dependencies]
-mpc_balancer = [
-    "gin-config >= 0.5.0",
-    "matplotlib >= 3.7.0",
-    "proxsuite >= 0.4.1",
-    "qpmpc >= 3.0.0",
-    "qpsolvers >= 3.4.0",
-]
-pink_balancer = [
-    "pin >=2.6.19",
-]
-ppo_balancer = [
-    "stable_baselines3 >=2.1.0",
-]
-the_full_monty = ["upkie[mpc_balancer,pink_balancer,ppo_balancer]"]
-
 [project.urls]
 Documentation = "https://upkie.github.io/upkie/"
 Source = "https://github.com/upkie/upkie"

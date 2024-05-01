@@ -46,10 +46,6 @@ def register() -> None:
                 env_name,
                 import_error,
             )
-            logging.info(
-                "To install optional dependencies: "
-                "``pip install upkie[the_full_monty]``"
-            )
         else:  # valid gym.Env subclass
             gym.envs.registration.register(
                 id=f"{env_name}-v{env_class.version}",
