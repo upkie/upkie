@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- PID balancer: Monitor both tire contacts in simulation examples
+
 ### Changed
 
 - dependencies: Update Vulp to 2.2.2
@@ -15,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- PID balancer: fix shared-memory opening in standalone Bullet script
+- PID balancer: Fix shared-memory opening in standalone Bullet script
 
 ## [3.4.0] - 2024-03-21
 
@@ -70,9 +74,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- MPC balancer: add classes and functions to the documentation
-- PID balancer: add classes and functions to the documentation
-- PPO balancer: add classes and functions to the documentation
+- MPC balancer: Add classes and functions to the documentation
+- PID balancer: Add classes and functions to the documentation
+- PPO balancer: Add classes and functions to the documentation
 - Robot state class to describe initial state distributions
 
 ### Changed
