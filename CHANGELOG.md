@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- dependencies: Update Vulp to 2.2.2
+- dependencies: Update Vulp to 2.3.0
 - envs: Bump ``UpkieServos`` version number to 4
 - envs: Restrict observation space of ``UpkieServos`` to servos
 
