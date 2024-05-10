@@ -90,10 +90,11 @@ def balance(env: gym.Env, nb_env_steps: int = 10_000) -> None:
         # for a more performant implementation that runs in real-time on a
         # Raspberry Pi 4 Model B.
         plan = solve_mpc(mpc_problem, solver="proxqp")
+        dt = env.unwrapped.dt
         if not plan.is_empty:
             commanded_accel = plan.first_input
             commanded_velocity = clamp_and_warn(
-                commanded_velocity + commanded_accel * env.dt / 2.0,
+                commanded_velocity + commanded_accel * dt / 2.0,
                 lower=-1.0,
                 upper=+1.0,
                 label="commanded_velocity",

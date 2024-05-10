@@ -28,11 +28,12 @@ def reset_to_neutral(env: upkie.envs.UpkieServos):
         action[joint]["position"] = position
         action[joint]["velocity"] = -position / RESET_DURATION
 
-    nb_steps = int(RESET_DURATION / env.dt)
+    dt = env.unwrapped.dt
+    nb_steps = int(RESET_DURATION / dt)
     for _ in range(nb_steps):
         env.step(action)
         for joint in JOINTS:
-            action[joint]["position"] += action[joint]["velocity"] * env.dt
+            action[joint]["position"] += action[joint]["velocity"] * dt
 
     for joint in JOINTS:
         action[joint]["position"] = 0.0
