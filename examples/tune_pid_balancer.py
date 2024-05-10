@@ -11,23 +11,44 @@ import multiprocessing as mp
 import gymnasium as gym
 import numpy as np
 import valmix
+from matplotlive import RecentPast
 
 import upkie.envs
 
 upkie.envs.register()
 
 
+def make_plot(dt: float, max_pitch: float, max_position: float) -> RecentPast:
+    plot = RecentPast(
+        timestep=dt,
+        duration=2.0,
+        ylim=(-max_pitch, max_pitch),
+        ylim_right=(-max_position, max_position),
+    )
+    plot.add_left("pitch", "b-")
+    plot.left_axis.set_ylabel("Pitch (rad)", color="b")
+    plot.left_axis.tick_params(axis="y", labelcolor="b")
+    plot.left_axis.grid(True)
+    plot.add_right("position", "g-")
+    plot.right_axis.set_ylabel("Ground position (m)", color="g")
+    plot.right_axis.tick_params(axis="y", labelcolor="g")
+    plot.redraw()
+    return plot
+
+
 def main(pitch_kp, pitch_ki, position_kp, position_ki):
     pitch_integrator = 0.0
     position_integrator = 0.0
-    with gym.make("UpkieGroundVelocity-v3", frequency=200.0) as env:
+    with gym.make("UpkieGroundVelocity-v3", frequency=100.0) as env:
+        dt = env.unwrapped.dt
+        plot = make_plot(dt, 0.5, 0.5)
         observation, _ = env.reset()  # connects to the spine
         action = 0.0 * env.action_space.sample()  # 1D action: [velocity]
         for step in range(1_000_000):
             pitch = observation[0]
             position = observation[1]
-            pitch_integrator += pitch * env.dt
-            position_integrator += position * env.dt
+            pitch_integrator += pitch * dt
+            position_integrator += position * dt
             commanded_velocity = (
                 pitch_kp.value * pitch
                 + pitch_ki.value * pitch_integrator
@@ -42,6 +63,9 @@ def main(pitch_kp, pitch_ki, position_kp, position_ki):
                 position_integrator = 0.0
             if pitch_kp.value < -0.5:  # our signal that the TUI has closed
                 break
+            plot.send("pitch", pitch)
+            plot.send("position", position)
+            plot.update()
 
 
 if __name__ == "__main__":
