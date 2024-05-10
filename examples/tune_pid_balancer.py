@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Inria
 
-"""Tune a (pitch, position) PI balancing controller from the command line."""
+"""Tune a pitch-position PI balancing controller from the command line."""
 
 import multiprocessing as mp
 
@@ -61,8 +61,13 @@ def main(pitch_kp, pitch_ki, position_kp, position_ki):
                 observation, _ = env.reset()
                 pitch_integrator = 0.0
                 position_integrator = 0.0
-            if pitch_kp.value < -0.5:  # our signal that the TUI has closed
+
+            # Our signal that the TUI has closed :p
+            if pitch_kp.value < -0.5:
                 break
+
+            # We update the plot in the control loop to keep the example short,
+            # but in practice this should be handled in a lower-priority thread
             plot.send("pitch", pitch)
             plot.send("position", position)
             plot.update()
