@@ -17,6 +17,7 @@ cc_binary(
     deps = [
         "//upkie/config:layout",
         "//upkie/observers",
+        "//upkie/observers:history_observer",
         "//upkie/utils:datetime_now_string",
         "//upkie:version",
         "@vulp//vulp/actuation:bullet_interface",
