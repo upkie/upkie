@@ -24,6 +24,7 @@
 
 #include "upkie/config/layout.h"
 #include "upkie/observers/FloorContact.h"
+#include "upkie/observers/HistoryObserver.h"
 #include "upkie/observers/WheelOdometry.h"
 #include "upkie/utils/datetime_now_string.h"
 #include "upkie/version.h"
@@ -210,6 +211,12 @@ int main(const char* argv0, const CommandLineArguments& args) {
   odometry_params.dt = 1.0 / args.spine_frequency;
   auto odometry = std::make_shared<WheelOdometry>(odometry_params);
   observation.append_observer(odometry);
+
+  // Floating-point history
+  HistoryObserver<double> float_history(
+      /* default_value = */ std::numeric_limits<double>::quiet_NaN(),
+      "float_history");
+  observation.append_observer(float_history);
 
   // Note that we don't lock memory in this spine. Otherwise Bullet will yield
   // a "b3AlignedObjectArray reserve out-of-memory" error below.

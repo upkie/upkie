@@ -9,7 +9,6 @@ package(default_visibility = ["//visibility:public"])
 cc_library(  # will end up in vulp but we develop it here for now
     name = "history_observer",
     hdrs = ["HistoryObserver.h"],
-    srcs = ["HistoryObserver.cpp"],
     deps = [
         "@vulp//vulp/exceptions:observer_error",
         "@vulp//vulp/observation:observer",
