@@ -17,12 +17,12 @@ cc_binary(
     deps = [
         "//upkie/config:layout",
         "//upkie/observers",
-        "//upkie/observers:history_observer",
         "//upkie/utils:datetime_now_string",
         "//upkie:version",
         "@vulp//vulp/actuation:bullet_interface",
         "@vulp//vulp/observation",
         "@vulp//vulp/observation/sources",
+        "@vulp//vulp/observation:history_observer",
         "@vulp//vulp/spine",
     ],
 )
