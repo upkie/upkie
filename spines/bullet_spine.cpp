@@ -24,10 +24,10 @@
 
 #include "upkie/config/layout.h"
 #include "upkie/observers/FloorContact.h"
-#include "upkie/observers/HistoryObserver.h"
 #include "upkie/observers/WheelOdometry.h"
 #include "upkie/utils/datetime_now_string.h"
 #include "upkie/version.h"
+#include "vulp/observation/HistoryObserver.h"
 
 namespace spines::bullet {
 
@@ -213,7 +213,7 @@ int main(const char* argv0, const CommandLineArguments& args) {
   auto odometry = std::make_shared<WheelOdometry>(odometry_params);
   observation.append_observer(odometry);
 
-  // Floating-point history
+  // Observe knee and wheel torque history
   auto left_knee_torque_history = std::make_shared<HistoryObserver<double> >(
       /* keys = */ std::vector<std::string>{"servo", "left_knee", "torque"},
       /* size = */ 10,
@@ -234,6 +234,14 @@ int main(const char* argv0, const CommandLineArguments& args) {
   observation.append_observer(left_wheel_torque_history);
   observation.append_observer(right_knee_torque_history);
   observation.append_observer(right_wheel_torque_history);
+
+  // Observe IMU linear acceleration history
+  auto linear_acceleration_history =
+      std::make_shared<HistoryObserver<Eigen::Vector3d> >(
+          /* keys = */ std::vector<std::string>{"imu", "linear_acceleration"},
+          /* size = */ 10,
+          /* default_value = */ Eigen::Vector3d::Zero());
+  observation.append_observer(linear_acceleration_history);
 
   // Note that we don't lock memory in this spine. Otherwise Bullet will yield
   // a "b3AlignedObjectArray reserve out-of-memory" error below.

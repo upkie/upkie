@@ -6,16 +6,6 @@ load("//tools/lint:lint.bzl", "add_lint_tests")
 
 package(default_visibility = ["//visibility:public"])
 
-cc_library(  # will end up in vulp but we develop it here for now
-    name = "history_observer",
-    hdrs = ["HistoryObserver.h"],
-    deps = [
-        "@vulp//vulp/exceptions:observer_error",
-        "@vulp//vulp/observation:observer",
-    ],
-    include_prefix = "vulp/observation",
-)
-
 cc_library(
     name = "floor_contact",
     hdrs = ["FloorContact.h"],
