@@ -35,6 +35,7 @@ using palimpsest::Dictionary;
 using upkie::observers::FloorContact;
 using upkie::observers::WheelOdometry;
 using vulp::actuation::BulletInterface;
+using vulp::observation::HistoryObserver;
 using vulp::observation::ObserverPipeline;
 using vulp::observation::sources::CpuTemperature;
 
@@ -213,10 +214,26 @@ int main(const char* argv0, const CommandLineArguments& args) {
   observation.append_observer(odometry);
 
   // Floating-point history
-  HistoryObserver<double> float_history(
-      /* default_value = */ std::numeric_limits<double>::quiet_NaN(),
-      "float_history");
-  observation.append_observer(float_history);
+  auto left_knee_torque_history = std::make_shared<HistoryObserver<double> >(
+      /* keys = */ std::vector<std::string>{"servo", "left_knee", "torque"},
+      /* size = */ 10,
+      /* default_value = */ std::numeric_limits<double>::quiet_NaN());
+  auto left_wheel_torque_history = std::make_shared<HistoryObserver<double> >(
+      /* keys = */ std::vector<std::string>{"servo", "left_wheel", "torque"},
+      /* size = */ 10,
+      /* default_value = */ std::numeric_limits<double>::quiet_NaN());
+  auto right_knee_torque_history = std::make_shared<HistoryObserver<double> >(
+      /* keys = */ std::vector<std::string>{"servo", "right_knee", "torque"},
+      /* size = */ 10,
+      /* default_value = */ std::numeric_limits<double>::quiet_NaN());
+  auto right_wheel_torque_history = std::make_shared<HistoryObserver<double> >(
+      /* keys = */ std::vector<std::string>{"servo", "right_wheel", "torque"},
+      /* size = */ 10,
+      /* default_value = */ std::numeric_limits<double>::quiet_NaN());
+  observation.append_observer(left_knee_torque_history);
+  observation.append_observer(left_wheel_torque_history);
+  observation.append_observer(right_knee_torque_history);
+  observation.append_observer(right_wheel_torque_history);
 
   // Note that we don't lock memory in this spine. Otherwise Bullet will yield
   // a "b3AlignedObjectArray reserve out-of-memory" error below.
