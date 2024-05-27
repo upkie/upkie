@@ -3,6 +3,7 @@ bazel-*
 cache/
 dist/
 docs/html/
+examples/upkie
 logs/*.mpack
 logs/*.tar.*
 tools/bazel
