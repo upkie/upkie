@@ -43,15 +43,15 @@ Click on the robot in the simulator window to apply external forces. If you have
 
 ## Installation
 
-### Conda
+### From conda-forge
 
-[![Conda version](https://anaconda.org/conda-forge/upkie/badges/version.svg)](https://anaconda.org/conda-forge/upkie)
+[![Conda version](https://img.shields.io/conda/vn/conda-forge/upkie.svg)](https://anaconda.org/conda-forge/upkie)
 
 ```console
 conda install -c conda-forge upkie
 ```
 
-### PyPI
+### From PyPI
 
 [![PyPI version](https://img.shields.io/pypi/v/upkie)](https://pypi.org/project/upkie)
 
