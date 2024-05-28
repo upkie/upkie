@@ -3,7 +3,7 @@
 <img src="https://github.com/upkie/upkie/assets/1189580/2fc5ee4a-81b0-425c-83df-558c7147cc59" align="right" width="200" />
 
 [![CI](https://github.com/upkie/upkie/actions/workflows/ci.yml/badge.svg)](https://github.com/upkie/upkie/actions/workflows/ci.yml)
-[![Documentation](https://github.com/upkie/upkie/actions/workflows/docs.yml/badge.svg)](https://upkie.github.io/upkie/)
+[![Documentation](https://img.shields.io/github/actions/workflow/status/upkie/upkie/docs.yml?branch=main&label=docs)](https://upkie.github.io/upkie/)
 [![Coverage](https://coveralls.io/repos/github/upkie/upkie/badge.svg?branch=main)](https://coveralls.io/github/upkie/upkie?branch=main)
 [![PyPI version](https://img.shields.io/pypi/v/upkie)](https://pypi.org/project/upkie/)
 [![Chat](https://img.shields.io/badge/matrix-chat-%234eb899)](https://app.element.io/#/room/#tasts-robots:matrix.org)
