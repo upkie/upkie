@@ -91,6 +91,18 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         self.fall_pitch = fall_pitch
         self.init_state = init_state
 
+    def __del__(self):
+        """!
+        Stop the spine when deleting the environment instance.
+        """
+        self.close()
+
+    def close(self) -> None:
+        """!
+        Stop the spine properly.
+        """
+        self._spine.stop()
+
     @property
     def dt(self) -> Optional[float]:
         """!
@@ -115,12 +127,6 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         upkie.utils.robot_state_randomization.RobotStateRandomization.update.
         """
         self.init_state.randomization.update(**kwargs)
-
-    def close(self) -> None:
-        """!
-        Stop the spine properly.
-        """
-        self._spine.stop()
 
     def reset(
         self,
