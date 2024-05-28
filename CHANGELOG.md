@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- envs: Stop the spine when deleting an environment instance
 - PID balancer: Fix shared-memory opening in standalone Bullet script
 
 ### Removed
