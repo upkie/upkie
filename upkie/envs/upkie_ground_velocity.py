@@ -25,7 +25,6 @@ from .upkie_base_env import UpkieBaseEnv
 
 
 class UpkieGroundVelocity(UpkieBaseEnv):
-
     """!
     Environment where Upkie is used as a wheeled inverted pendulum.
 
@@ -89,16 +88,6 @@ class UpkieGroundVelocity(UpkieBaseEnv):
     As with all Upkie environments, full observations from the spine (detailed
     in @ref observations) are also available in the ``info`` dictionary
     returned by the reset and step functions.
-
-    ### Attributes
-
-    The environment class defines the following attributes:
-
-    - ``leg_return_period``: Time constant for the legs (hips and knees) to
-        revert to their neutral configuration.
-    - ``version``: Environment version number.
-    - ``wheel_radius``: Wheel radius in [m].
-
     """
 
     LEG_JOINTS = [
@@ -112,7 +101,17 @@ class UpkieGroundVelocity(UpkieBaseEnv):
         position: float = 1.0
         velocity: float = 1.0
 
+    ## @var leg_return_period
+    ## Time constant for the legs (hips and knees) to revert to their neutral
+    ## configuration.
+    leg_return_period: float
+
+    ## @var version
+    ## Environment version number.
     version: int = 3
+
+    ## @var wheel_radius
+    ## Wheel radius in [m].
     wheel_radius: float
 
     def __init__(
