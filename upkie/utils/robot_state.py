@@ -21,6 +21,23 @@ class RobotState:
 
     """!
     Robot state (configuration and velocity) with optional randomization.
+
+    ### Attributes
+
+    States have the following attributes:
+
+    - ``angular_velocity_base_in_base``: Angular velocity of the base in body
+        coordinates, in rad/s.
+    - ``joint_configuration``: Vector of joint angles in radians.
+    - ``joint_velocity``: Vector of joint velocities, in rad/s.
+    - ``linear_velocity_base_to_world_in_world``: Linear velocity of the base
+        in world coordinates, in m/s.
+    - ``orientation_base_in_world``: Orientation of the base frame with
+        respect to the world frame.
+    - ``position_base_in_world``: Position of the base frame in the world
+        frame.
+    - ``randomization``: Displacements and velocities added to the state when
+        calling one of the sampling functions.
     """
 
     angular_velocity_base_in_base: NDArray[float]
