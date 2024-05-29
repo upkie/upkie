@@ -18,34 +18,37 @@ from upkie.utils.robot_state_randomization import RobotStateRandomization
 
 
 class RobotState:
-
     """!
     Robot state (configuration and velocity) with optional randomization.
-
-    ### Attributes
-
-    States have the following attributes:
-
-    - ``angular_velocity_base_in_base``: Angular velocity of the base in body
-        coordinates, in rad/s.
-    - ``joint_configuration``: Vector of joint angles in radians.
-    - ``joint_velocity``: Vector of joint velocities, in rad/s.
-    - ``linear_velocity_base_to_world_in_world``: Linear velocity of the base
-        in world coordinates, in m/s.
-    - ``orientation_base_in_world``: Orientation of the base frame with
-        respect to the world frame.
-    - ``position_base_in_world``: Position of the base frame in the world
-        frame.
-    - ``randomization``: Displacements and velocities added to the state when
-        calling one of the sampling functions.
     """
 
+    ## @var angular_velocity_base_in_base
+    ## Angular velocity of the base in body coordinates, in rad/s.
     angular_velocity_base_in_base: NDArray[float]
+
+    ## @var joint_configuration
+    ## Vector of joint angles in radians.
     joint_configuration: NDArray[float]
+
+    ## @var joint_velocity
+    ## Vector of joint velocities, in rad/s.
     joint_velocity: NDArray[float]
+
+    ## @var linear_velocity_base_to_world_in_world
+    ## Linear velocity of the base in world coordinates, in m/s.
     linear_velocity_base_to_world_in_world: NDArray[float]
+
+    ## @var orientation_base_in_world
+    ## Orientation of the base frame with respect to the world frame.
     orientation_base_in_world: ScipyRotation
+
+    ## @var position_base_in_world
+    ## Position of the base frame in the world frame.
     position_base_in_world: NDArray[float]
+
+    ## @var randomization
+    ## Displacements and velocities added to the state when calling one of the
+    ## sampling functions.
     randomization: RobotStateRandomization
 
     def __init__(
