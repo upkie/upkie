@@ -8,7 +8,6 @@
 Domain randomization of robot states.
 """
 
-from dataclasses import dataclass
 from typing import Optional
 
 import numpy as np
@@ -16,43 +15,62 @@ from numpy.typing import NDArray
 from scipy.spatial.transform import Rotation as ScipyRotation
 
 
-@dataclass
 class RobotStateRandomization:
     """!
     Domain randomization parameters for Upkie's state.
+
+    @note The API for this class is likely to change. Initially all its
+    attributes where floating-point numbers due to a quick-and-dirty design
+    decision.
     """
 
     ## @var roll
     ## Amount of roll angle randomization, in radians.
-    roll: float = 0.0
+    roll: float
 
     ## @var pitch
     ## Amount of pitch angle randomization, in radians.
-    pitch: float = 0.0
+    pitch: float
 
     ## @var x
     ## Amount of x-axis position randomization, in meters.
-    x: float = 0.0
+    x: float
 
     ## @var z
     ## Amount of z-axis position randomization, in meters.
-    z: float = 0.0
+    z: float
 
     ## @var omega_x
     ## Amount of x-axis randomization on the angular-velocity vector, in rad/s.
-    omega_x: float = 0.0
+    omega_x: float
 
     ## @var omega_y
     ## Amount of y-axis randomization on the angular-velocity vector, in rad/s.
-    omega_y: float = 0.0
+    omega_y: float
 
-    ## @var v_x
-    ## Amount of x-axis randomization on the linear-velocity vector, in m/s.
-    v_x: float = 0.0
+    ## @var linear_velocity
+    ## Magnitude of linear velocity randomization, as a 3D vector in m/s.
+    linear_velocity: NDArray[float]
 
-    ## @var v_z
-    ## Amount of z-axis randomization on the linear-velocity vector, in m/s.
-    v_z: float = 0.0
+    def __init__(
+        self,
+        roll: float = 0.0,
+        pitch: float = 0.0,
+        x: float = 0.0,
+        z: float = 0.0,
+        omega_x: float = 0.0,
+        omega_y: float = 0.0,
+        linear_velocity: Optional[NDArray[float]] = None,
+    ):
+        self.roll = roll
+        self.pitch = pitch
+        self.x = x
+        self.z = z
+        self.omega_x = omega_x
+        self.omega_y = omega_y
+        self.linear_velocity = (
+            linear_velocity if linear_velocity is not None else np.zeros(3)
+        )
 
     def update(
         self,
@@ -62,6 +80,7 @@ class RobotStateRandomization:
         z: Optional[float] = None,
         omega_x: Optional[float] = None,
         omega_y: Optional[float] = None,
+        linear_velocity: Optional[NDArray[float]] = None,
         v_x: Optional[float] = None,
         v_z: Optional[float] = None,
     ) -> None:
@@ -93,14 +112,14 @@ class RobotStateRandomization:
             self.x = x
         if z is not None:
             self.z = z
-        if v_x is not None:
-            self.v_x = v_x
-        if v_z is not None:
-            self.v_z = v_z
         if omega_x is not None:
             self.omega_x = omega_x
         if omega_y is not None:
             self.omega_y = omega_y
+        if v_x is not None:
+            self.linear_velocity[0] = v_x
+        if v_z is not None:
+            self.linear_velocity[2] = v_z
 
     def sample_orientation(self, np_random) -> ScipyRotation:
         yaw_pitch_roll_bounds = np.array([0.0, self.pitch, self.roll])
@@ -127,7 +146,7 @@ class RobotStateRandomization:
 
     def sample_linear_velocity(self, np_random) -> NDArray[float]:
         return np_random.uniform(
-            low=np.array([-self.v_x, 0.0, -self.v_z]),
-            high=np.array([+self.v_x, 0.0, +self.v_z]),
+            low=-self.linear_velocity,
+            high=self.linear_velocity,
             size=3,
         )
