@@ -24,14 +24,6 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
     """!
     Base class for Upkie environments.
 
-    ### Attributes
-
-    This base environment has the following attributes:
-
-    - ``fall_pitch``: Fall pitch angle, in radians.
-    - ``init_state``: Initial state for the floating base of the robot, which
-        may be randomized upon resets.
-
     @note This environment is made to run on a single CPU thread rather than on
     GPU/TPU. The downside for reinforcement learning is that computations are
     not massively parallel. The upside is that it simplifies deployment to the
@@ -44,7 +36,14 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
     __regulate_frequency: bool
     _spine: SpineInterface
     _spine_config: dict
+
+    ## @var fall_pitch
+    ## Fall pitch angle, in radians.
     fall_pitch: float
+
+    ## @var init_state
+    ## Initial state for the floating base of the robot, which may be
+    ## randomized upon resets.
     init_state: RobotState
 
     def __init__(
