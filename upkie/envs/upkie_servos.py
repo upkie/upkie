@@ -64,13 +64,6 @@ class UpkieServos(UpkieBaseEnv):
     As with all Upkie environments, full observations from the spine (detailed
     in @ref observations) are also available in the ``info`` dictionary
     returned by the reset and step functions.
-
-    ### Attributes
-
-    The environment has the following attributes:
-
-    - ``robot``: Pinocchio robot wrapper.
-    - ``version``: Environment version number.
     """
 
     ACTION_KEYS: Tuple[str, str, str, str, str, str] = (
@@ -91,7 +84,12 @@ class UpkieServos(UpkieBaseEnv):
         "right_wheel",
     )
 
+    ## @var robot
+    ## Pinocchio robot wrapper.
     robot: pin.RobotWrapper
+
+    ## @var version
+    ## Environment version number.
     version: int = 4
 
     def __init__(
