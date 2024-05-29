@@ -18,18 +18,40 @@ from scipy.spatial.transform import Rotation as ScipyRotation
 
 @dataclass
 class RobotStateRandomization:
-
     """!
     Domain randomization parameters for Upkie's state.
     """
 
+    ## @var roll
+    ## Amount of roll angle randomization, in radians.
     roll: float = 0.0
+
+    ## @var pitch
+    ## Amount of pitch angle randomization, in radians.
     pitch: float = 0.0
+
+    ## @var x
+    ## Amount of x-axis position randomization, in meters.
     x: float = 0.0
+
+    ## @var z
+    ## Amount of z-axis position randomization, in meters.
     z: float = 0.0
+
+    ## @var omega_x
+    ## Amount of x-axis randomization on the angular-velocity vector, in rad/s.
     omega_x: float = 0.0
+
+    ## @var omega_y
+    ## Amount of y-axis randomization on the angular-velocity vector, in rad/s.
     omega_y: float = 0.0
+
+    ## @var v_x
+    ## Amount of x-axis randomization on the linear-velocity vector, in m/s.
     v_x: float = 0.0
+
+    ## @var v_z
+    ## Amount of z-axis randomization on the linear-velocity vector, in m/s.
     v_z: float = 0.0
 
     def update(
