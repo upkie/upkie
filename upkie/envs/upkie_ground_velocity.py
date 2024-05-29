@@ -12,7 +12,6 @@ from typing import Dict, Optional, Tuple
 import numpy as np
 from gymnasium import spaces
 from numpy.typing import NDArray
-
 from upkie.observers.base_pitch import (
     compute_base_angular_velocity_from_imu,
     compute_base_pitch_from_imu,
@@ -202,6 +201,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
 
         self.leg_return_period = leg_return_period
         self.reward_weights = reward_weights
+        self.version = UpkieGroundVelocity.version  # for Doxygen...
         self.wheel_radius = wheel_radius
 
     def reset(

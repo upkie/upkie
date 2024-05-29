@@ -252,6 +252,7 @@ class UpkieServos(UpkieBaseEnv):
         self.__max_action = max_action
         self.__min_action = min_action
         self.robot = robot
+        self.version = UpkieServos.version  # for Doxygen...
 
     def get_neutral_action(self) -> dict:
         """!
