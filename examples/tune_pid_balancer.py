@@ -17,6 +17,7 @@ import numpy as np
 import valmix
 
 import upkie.envs
+from upkie.utils.raspi import configure_agent_process, on_raspi
 
 upkie.envs.register()
 
@@ -52,6 +53,9 @@ def main(pitch_kp, pitch_ki, position_kp, position_ki):
 
 
 if __name__ == "__main__":
+    if on_raspi():
+        configure_agent_process()
+
     # We wrap parameters we want to tune into multiprocessing values
     pitch_kp = mp.Value("f", 10.0)
     pitch_ki = mp.Value("f", 1.0)
