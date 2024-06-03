@@ -50,6 +50,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         self,
         fall_pitch: float = 1.0,
         frequency: Optional[float] = 200.0,
+        frequency_checks: bool = True,
         init_state: Optional[RobotState] = None,
         regulate_frequency: bool = True,
         shm_name: str = "/vulp",
@@ -63,6 +64,10 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         @param frequency Regulated frequency of the control loop, in Hz. Can be
             set even when `regulate_frequency` is false, as some environments
             make use of e.g. `self.dt` internally.
+        @param frequency_checks If `regulate_frequency` is set and this
+            parameter is true (default), a warning is issued every time the
+            control loop runs slower than the desired `frequency`. Set this
+            parameter to false to disable these warnings.
         @param init_state Initial state of the robot, only used in simulation.
         @param regulate_frequency Enables loop frequency regulation.
         @param shm_name Name of shared-memory file to exchange with the spine.
@@ -83,6 +88,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
             )
 
         self.__frequency = frequency
+        self.__frequency_checks = frequency_checks
         self.__log = {}
         self.__rate = None
         self.__regulate_frequency = regulate_frequency
@@ -161,7 +167,11 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
     def __reset_rate(self):
         if self.__regulate_frequency:
             rate_name = f"{self.__class__.__name__} rate limiter"
-            self.__rate = RateLimiter(self.__frequency, name=rate_name)
+            self.__rate = RateLimiter(
+                self.__frequency,
+                name=rate_name,
+                warn=self.__frequency_checks,
+            )
 
     def __reset_init_state(self):
         init_state, np_random = self.init_state, self.np_random

@@ -12,6 +12,7 @@ from typing import Dict, Optional, Tuple
 import numpy as np
 from gymnasium import spaces
 from numpy.typing import NDArray
+
 from upkie.observers.base_pitch import (
     compute_base_angular_velocity_from_imu,
     compute_base_pitch_from_imu,
@@ -117,6 +118,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
         self,
         fall_pitch: float = 1.0,
         frequency: float = 200.0,
+        frequency_checks: bool = True,
         init_state: Optional[RobotState] = None,
         leg_return_period: float = 1.0,
         max_ground_velocity: float = 1.0,
@@ -131,6 +133,10 @@ class UpkieGroundVelocity(UpkieBaseEnv):
 
         @param fall_pitch Fall detection pitch angle, in radians.
         @param frequency Regulated frequency of the control loop, in Hz.
+        @param frequency_checks If `regulate_frequency` is set and this
+            parameter is true (default), a warning is issued every time the
+            control loop runs slower than the desired `frequency`. Set this
+            parameter to false to disable these warnings.
         @param init_state Initial state of the robot, only used in simulation.
         @param leg_return_period Time constant for the legs (hips and knees) to
             revert to their neutral configuration.
@@ -146,6 +152,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
         super().__init__(
             fall_pitch=fall_pitch,
             frequency=frequency,
+            frequency_checks=frequency_checks,
             init_state=init_state,
             regulate_frequency=regulate_frequency,
             shm_name=shm_name,
