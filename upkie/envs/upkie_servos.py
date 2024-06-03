@@ -96,6 +96,7 @@ class UpkieServos(UpkieBaseEnv):
         self,
         fall_pitch: float = 1.0,
         frequency: float = 200.0,
+        frequency_checks: bool = True,
         init_state: Optional[RobotState] = None,
         regulate_frequency: bool = True,
         shm_name: str = "/vulp",
@@ -106,6 +107,10 @@ class UpkieServos(UpkieBaseEnv):
 
         @param fall_pitch Fall pitch angle, in radians.
         @param frequency Regulated frequency of the control loop, in Hz.
+        @param frequency_checks If `regulate_frequency` is set and this
+            parameter is true (default), a warning is issued every time the
+            control loop runs slower than the desired `frequency`. Set this
+            parameter to false to disable these warnings.
         @param init_state Initial state of the robot, only used in simulation.
         @param regulate_frequency Enables loop frequency regulation.
         @param shm_name Name of shared-memory file.
@@ -116,6 +121,7 @@ class UpkieServos(UpkieBaseEnv):
         super().__init__(
             fall_pitch=fall_pitch,
             frequency=frequency,
+            frequency_checks=frequency_checks,
             init_state=init_state,
             regulate_frequency=regulate_frequency,
             shm_name=shm_name,
