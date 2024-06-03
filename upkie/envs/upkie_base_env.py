@@ -221,6 +221,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         spine_action["env"] = {}
         if self.__log:
             spine_action["env"].update(self.__log)
+            self.__log = {}
         if self.__regulate_frequency:
             spine_action["env"]["rate"] = {"slack": self.__rate.slack}
         self._spine.set_action(spine_action)
@@ -283,10 +284,11 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         @returns Spine action dictionary.
         """
 
-    def log(self, new_log: dict) -> None:
+    def log(self, name: str, entry: dict) -> None:
         """!
-        Log anything to the action dictionary.
+        Log a new entry to the "env" key of the action dictionary.
 
-        @param new_log New log entry.
+        @param name Name of the entry.
+        @param entry Value of the new entry.
         """
-        self.__log = new_log
+        self.__log[name] = entry
