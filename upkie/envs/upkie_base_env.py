@@ -292,7 +292,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         @param name Name of the entry.
         @param entry Dictionary to log along with the actual action.
         """
-        self.__extras["log"][name] = entry
+        self.__extras["log"][name] = entry.copy()
 
     def prepare_bullet(self, bullet_action: dict) -> None:
         """!
@@ -303,4 +303,4 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
 
         @param action Action dictionary processed by the Bullet spine.
         """
-        self.__extras["bullet"] = bullet_action
+        self.__extras["bullet"] = bullet_action.copy()
