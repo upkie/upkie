@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- envs: Add the ``env.prepare_bullet`` function for magic actions in sim
+- envs: Add the ``env.bullet_extra`` function for magic actions in sim
 - envs: Parameter to disable frequency checks during frequency regulation
 - PID balancer: Monitor both tire contacts in simulation examples
 
