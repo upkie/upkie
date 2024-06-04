@@ -31,7 +31,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
     """
 
     __frequency: Optional[float]
-    __info: dict
+    __extras: dict
     __rate: Optional[RateLimiter]
     __regulate_frequency: bool
     _spine: SpineInterface
@@ -89,7 +89,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
 
         self.__frequency = frequency
         self.__frequency_checks = frequency_checks
-        self.__info = {}
+        self.__extras = {"bullet": {}, "info": {}}
         self.__rate = None
         self.__regulate_frequency = regulate_frequency
         self._spine = SpineInterface(shm_name, retries=spine_retries)
@@ -215,15 +215,16 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         """
         if self.__regulate_frequency:
             self.__rate.sleep()  # wait until clock tick to send the action
+            self.info("rate", {"slack": self.__rate.slack})
 
         # Act
         spine_action = self.get_spine_action(action)
-        spine_action["info"] = {}
-        if self.__info:
-            spine_action["info"].update(self.__info)
-            self.__info.clear()
-        if self.__regulate_frequency:
-            spine_action["info"]["rate"] = {"slack": self.__rate.slack}
+        for key in ("bullet", "info"):
+            if not self.__extras[key]:
+                continue
+            spine_action[key] = {}
+            spine_action[key].update(self.__extras[key])
+            self.__extras[key].clear()
         self._spine.set_action(spine_action)
 
         # Observe
@@ -289,6 +290,17 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         Log a new entry to the "info" key of the action dictionary.
 
         @param name Name of the entry.
-        @param entry Value of the new entry.
+        @param entry Dictionary to log along with the actual action.
         """
-        self.__info[name] = entry
+        self.__extras["info"][name] = entry
+
+    def prepare_bullet(self, bullet_action: dict) -> None:
+        """!
+        Prepend for the next step an extra action for the Bullet spine.
+
+        This extra action can be for instance a set of external forces applied
+        to some robot bodies.
+
+        @param action Action dictionary processed by the Bullet spine.
+        """
+        self.__extras["bullet"] = bullet_action
