@@ -89,7 +89,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
 
         self.__frequency = frequency
         self.__frequency_checks = frequency_checks
-        self.__extras = {"bullet": {}, "info": {}}
+        self.__extras = {"bullet": {}, "log": {}}
         self.__rate = None
         self.__regulate_frequency = regulate_frequency
         self._spine = SpineInterface(shm_name, retries=spine_retries)
@@ -215,11 +215,11 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         """
         if self.__regulate_frequency:
             self.__rate.sleep()  # wait until clock tick to send the action
-            self.info("rate", {"slack": self.__rate.slack})
+            self.log("rate", {"slack": self.__rate.slack})
 
         # Act
         spine_action = self.get_spine_action(action)
-        for key in ("bullet", "info"):
+        for key in ("bullet", "log"):
             if not self.__extras[key]:
                 continue
             spine_action[key] = {}
@@ -285,14 +285,14 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         @returns Spine action dictionary.
         """
 
-    def info(self, name: str, entry: dict) -> None:
+    def log(self, name: str, entry: dict) -> None:
         """!
-        Log a new entry to the "info" key of the action dictionary.
+        Log a new entry to the "log" key of the action dictionary.
 
         @param name Name of the entry.
         @param entry Dictionary to log along with the actual action.
         """
-        self.__extras["info"][name] = entry
+        self.__extras["log"][name] = entry
 
     def prepare_bullet(self, bullet_action: dict) -> None:
         """!
