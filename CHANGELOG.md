@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - dependencies: Update Vulp to 2.4.0
 - envs: Bump ``UpkieServos`` version number to 4
-- envs: Change API of logging function to ``env.info(name, entry)``
+- envs: Change API of logging function to ``env.log(name, entry)``
 - envs: Restrict observation space of ``UpkieServos`` to servos
 
 ### Fixed
