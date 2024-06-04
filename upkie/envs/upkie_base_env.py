@@ -31,7 +31,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
     """
 
     __frequency: Optional[float]
-    __log: dict
+    __info: dict
     __rate: Optional[RateLimiter]
     __regulate_frequency: bool
     _spine: SpineInterface
@@ -89,7 +89,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
 
         self.__frequency = frequency
         self.__frequency_checks = frequency_checks
-        self.__log = {}
+        self.__info = {}
         self.__rate = None
         self.__regulate_frequency = regulate_frequency
         self._spine = SpineInterface(shm_name, retries=spine_retries)
@@ -218,12 +218,12 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
 
         # Act
         spine_action = self.get_spine_action(action)
-        spine_action["env"] = {}
-        if self.__log:
-            spine_action["env"].update(self.__log)
-            self.__log = {}
+        spine_action["info"] = {}
+        if self.__info:
+            spine_action["info"].update(self.__info)
+            self.__info.clear()
         if self.__regulate_frequency:
-            spine_action["env"]["rate"] = {"slack": self.__rate.slack}
+            spine_action["info"]["rate"] = {"slack": self.__rate.slack}
         self._spine.set_action(spine_action)
 
         # Observe
@@ -284,11 +284,11 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         @returns Spine action dictionary.
         """
 
-    def log(self, name: str, entry: dict) -> None:
+    def info(self, name: str, entry: dict) -> None:
         """!
-        Log a new entry to the "env" key of the action dictionary.
+        Log a new entry to the "info" key of the action dictionary.
 
         @param name Name of the entry.
         @param entry Value of the new entry.
         """
-        self.__log[name] = entry
+        self.__info[name] = entry
