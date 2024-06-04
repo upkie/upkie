@@ -5,7 +5,7 @@
 # Copyright 2023 Inria
 
 import abc
-from typing import Optional, Tuple
+from typing import Any, Optional, Tuple
 
 import gymnasium
 import numpy as np
@@ -285,7 +285,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         @returns Spine action dictionary.
         """
 
-    def log(self, name: str, entry: dict) -> None:
+    def log(self, name: str, entry: Any) -> None:
         """!
         Log a new entry to the "log" key of the action dictionary.
 
@@ -294,7 +294,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         """
         self.__extras["log"][name] = entry.copy()
 
-    def prepare_bullet(self, bullet_action: dict) -> None:
+    def bullet_extra(self, bullet_action: dict) -> None:
         """!
         Prepend for the next step an extra action for the Bullet spine.
 
