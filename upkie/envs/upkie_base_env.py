@@ -292,7 +292,10 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         @param name Name of the entry.
         @param entry Dictionary to log along with the actual action.
         """
-        self.__extras["log"][name] = entry.copy()
+        if isinstance(entry, dict):
+            self.__extras["log"][name] = entry.copy()
+        else:  # logging values directly
+            self.__extras["log"][name] = entry
 
     def bullet_extra(self, bullet_action: dict) -> None:
         """!
