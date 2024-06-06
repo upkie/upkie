@@ -80,7 +80,6 @@ class RobotStateRandomization:
         z: Optional[float] = None,
         omega_x: Optional[float] = None,
         omega_y: Optional[float] = None,
-        linear_velocity: Optional[NDArray[float]] = None,
         v_x: Optional[float] = None,
         v_z: Optional[float] = None,
     ) -> None:
