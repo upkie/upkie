@@ -19,6 +19,14 @@ clean:  ## Clean up logs smaller than 100 KiB
 download:  ## Download logs from remote host
 	rsync -auvz --progress --exclude Makefile ${REMOTE_NAME}:${REMOTE_PATH}/ $(CURDIR)/
 
+.PHONY: compress
+compress:  ## Compress logs
+	@for i in *.mpack; do \
+		echo "Compressing $$i..."; \
+		tar jcf $$i.tar.bz2 $$i; \
+		rm -f $$i; \
+	done
+
 .PHONY: foxplot_last
 foxplot_last:  ## Plot latest log
 	foxplot $(shell ls *.mpack | tail -n 1)
