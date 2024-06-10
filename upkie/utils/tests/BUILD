@@ -14,6 +14,7 @@ cc_test(
     ]),
     deps = [
         "//upkie/utils:datetime_now_string",
+        "//upkie/utils:get_log_path",
         "@eigen",
         "@googletest//:main",
     ],

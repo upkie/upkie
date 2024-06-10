@@ -17,14 +17,13 @@ cc_binary(
     deps = [
         "//upkie/config:layout",
         "//upkie/observers",
-        "//upkie/utils:datetime_now_string",
+        "//upkie/utils:get_log_path",
         "//upkie:version",
         "@vulp//vulp/actuation:bullet_interface",
         "@vulp//vulp/observation",
         "@vulp//vulp/observation/sources",
         "@vulp//vulp/observation:history_observer",
         "@vulp//vulp/spine",
-        "@vulp//vulp/utils:get_log_path",
     ],
 )
 
@@ -36,12 +35,12 @@ cc_binary(
     deps = [
         "//upkie/config:layout",
         "//upkie/observers",
+        "//upkie/utils:get_log_path",
         "//upkie:version",
         "@vulp//vulp/actuation:mock_interface",
         "@vulp//vulp/observation",
         "@vulp//vulp/observation/sources",
         "@vulp//vulp/spine",
-        "@vulp//vulp/utils:get_log_path",
     ] + select({
         "//:pi64_config": [
             "@org_llvm_libcxx//:libcxx",
@@ -59,12 +58,11 @@ cc_binary(
     deps = [
         "//upkie/config:layout",
         "//upkie/observers",
-        "//upkie/utils:datetime_now_string",
+        "//upkie/utils:get_log_path",
         "//upkie:version",
         "@vulp//vulp/observation",
         "@vulp//vulp/observation/sources",
         "@vulp//vulp/spine",
-        "@vulp//vulp/utils:get_log_path",
     ] + select({
         "//:pi64_config": ["@vulp//vulp/actuation:pi3hat_interface"],
         "//conditions:default": [],
