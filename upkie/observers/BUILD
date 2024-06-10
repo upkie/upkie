@@ -7,6 +7,15 @@ load("//tools/lint:lint.bzl", "add_lint_tests")
 package(default_visibility = ["//visibility:public"])
 
 cc_library(
+    name = "base_orientation",
+    hdrs = ["BaseOrientation.h"],
+    srcs = ["BaseOrientation.cpp"],
+    deps = [
+        "@vulp//vulp/observation:observer",
+    ],
+)
+
+cc_library(
     name = "floor_contact",
     hdrs = ["FloorContact.h"],
     srcs = ["FloorContact.cpp"],
@@ -38,6 +47,7 @@ cc_library(
 cc_library(
     name = "observers",
     deps = [
+        ":base_orientation",
         ":floor_contact",
         ":wheel_contact",
         ":wheel_odometry",
