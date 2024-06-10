@@ -17,7 +17,9 @@ void BaseOrientation::read(const Dictionary& observation) {
   }
   auto quat_imu_in_ars =
       observation("imu").get<Eigen::Quaterniond>("orientation");
-  pitch_base_in_world_ = compute_base_pitch_from_imu(quat_imu_in_ars);
+  pitch_base_in_world_ =
+      compute_base_pitch_from_imu(quat_imu_in_ars, params_.rotation_base_to_imu,
+                                  params_.rotation_ars_to_world);
 }
 
 void BaseOrientation::write(Dictionary& observation) {
