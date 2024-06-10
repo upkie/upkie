@@ -19,6 +19,7 @@
 #include <vector>
 
 #include "upkie/config/layout.h"
+#include "upkie/observers/BaseOrientation.h"
 #include "upkie/observers/FloorContact.h"
 #include "upkie/observers/WheelOdometry.h"
 #include "upkie/utils/get_log_path.h"
@@ -27,6 +28,7 @@
 namespace spines::mock {
 
 using palimpsest::Dictionary;
+using upkie::observers::BaseOrientation;
 using upkie::observers::FloorContact;
 using upkie::observers::WheelOdometry;
 using vulp::actuation::MockInterface;
@@ -115,6 +117,12 @@ int main(const CommandLineArguments& args) {
   }
 
   ObserverPipeline observation;
+
+  // Observation: Base orientation
+  BaseOrientation::Parameters base_orientation_params;
+  auto base_orientation =
+      std::make_shared<BaseOrientation>(base_orientation_params);
+  observation.append_observer(base_orientation);
 
   // Observation: CPU temperature
   auto cpu_temperature = std::make_shared<CpuTemperature>();

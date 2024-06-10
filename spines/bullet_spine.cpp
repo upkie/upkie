@@ -23,6 +23,7 @@
 #include <vector>
 
 #include "upkie/config/layout.h"
+#include "upkie/observers/BaseOrientation.h"
 #include "upkie/observers/FloorContact.h"
 #include "upkie/observers/WheelOdometry.h"
 #include "upkie/utils/get_log_path.h"
@@ -31,6 +32,7 @@
 namespace spines::bullet {
 
 using palimpsest::Dictionary;
+using upkie::observers::BaseOrientation;
 using upkie::observers::FloorContact;
 using upkie::observers::WheelOdometry;
 using vulp::actuation::BulletInterface;
@@ -184,6 +186,12 @@ int main(const char* argv0, const CommandLineArguments& args) {
     return EXIT_FAILURE;
   }
 
+  // Observation: Base orientation
+  BaseOrientation::Parameters base_orientation_params;
+  auto base_orientation =
+      std::make_shared<BaseOrientation>(base_orientation_params);
+  observation.append_observer(base_orientation);
+
   // Observation: CPU temperature
   auto cpu_temperature = std::make_shared<CpuTemperature>();
   observation.connect_source(cpu_temperature);
@@ -232,7 +240,7 @@ int main(const char* argv0, const CommandLineArguments& args) {
   Spine::Parameters spine_params;
   spine_params.frequency = args.spine_frequency;
   spine_params.log_path =
-      vulp::utils::get_log_path(args.log_dir, "bullet_spine");
+      upkie::utils::get_log_path(args.log_dir, "bullet_spine");
   spine_params.shm_name = args.shm_name;
   spdlog::info("Spine data logged to {}", spine_params.log_path);
   Spine spine(spine_params, interface, observation);
