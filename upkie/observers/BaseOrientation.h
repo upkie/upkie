@@ -5,15 +5,27 @@
 
 #include <palimpsest/Dictionary.h>
 
-#include <limits>
-#include <string>
-#include <unordered_map>
-#include <vector>
-
-#include "upkie/observers/WheelContact.h"
 #include "vulp/observation/Observer.h"
 
 namespace upkie::observers {
+
+/*! Get pitch angle of the base frame relative to the world frame.
+ *
+ * \param[in] quat_imu_in_ars Quaternion representing the rotation matrix from
+ *     the IMU frame to the  attitude reference system (ARS) frame.
+ * \param[in] rotation_base_to_imu Rotation matrix from the base frame to the
+ *     IMU frame. When not specified, the default Upkie mounting orientation is
+ *     used.
+ * \return Angle from the world z-axis (unit vector opposite to gravity) to the
+ *     base z-axis. This angle is positive when the base leans forward.
+ */
+double compute_base_pitch_from_imu(Eigen::Quaterniond quat_imu_in_ars,
+                                   Eigen::Matrix3d rotation_base_to_imu) {
+  rotation_base_to_world =
+      compute_base_orientation_from_imu(quat_imu_in_ars, rotation_base_to_imu);
+  pitch_base_in_world = compute_pitch_frame_in_parent(rotation_base_to_world);
+  return pitch_base_in_world;
+}
 
 /*!
  */
