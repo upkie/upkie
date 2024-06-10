@@ -18,14 +18,14 @@ namespace upkie::utils {
 
 /*! Get path to a fresh log file.
  *
- * \param[in] spine_name Name of the spine.
  * \param[in] log_dir Path to the logging directory.
+ * \param[in] spine_name Name of the spine.
  * \return Path to a fresh log file.
  *
  * Uses the same format as the Python utility function.
  */
-inline const std::string get_log_path(const std::string& spine_name,
-                                      const std::string& log_dir) {
+inline const std::string get_log_path(const std::string& log_dir,
+                                      const std::string& spine_name) {
   const auto now = datetime_now_string();
   const std::string prefix = log_dir + "/" + now + "_" + spine_name;
 

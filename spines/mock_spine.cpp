@@ -158,7 +158,8 @@ int main(const CommandLineArguments& args) {
   Spine::Parameters spine_params;
   spine_params.cpu = args.spine_cpu;
   spine_params.frequency = args.spine_frequency;
-  spine_params.log_path = get_log_path(args.log_dir, "mock_spine");
+  spine_params.log_path =
+      upkie::utils::get_log_path(args.log_dir, "mock_spine");
   spdlog::info("Spine data logged to {}", spine_params.log_path);
   Spine spine(spine_params, actuation, observation);
   spine.run();
