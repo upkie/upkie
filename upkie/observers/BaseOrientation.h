@@ -37,11 +37,17 @@ class BaseOrientation : public Observer {
      * \param[in] config Global configuration dictionary.
      */
     void configure(const Dictionary& config) {
+      // Default rotation from base to IMU
+      rotation_base_to_imu.setZero();
+      rotation_base_to_imu.diagonal() << -1.0, 1.0, -1.0;
+
       if (!config.has("base_orientation")) {
         spdlog::debug("No \"base_orientation\" runtime configuration");
         return;
       }
     }
+
+    Eigen::Matrix3d rotation_base_to_imu;
   };
 
   /*! Initialize observer.
