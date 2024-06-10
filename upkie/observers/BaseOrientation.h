@@ -82,5 +82,8 @@ class BaseOrientation : public Observer {
  private:
   //! Observer parameters
   Parameters params_;
+
+  //! Pitch angle of the base frame in the world frame
+  double pitch_base_in_world_;
 }
 
