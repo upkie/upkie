@@ -42,6 +42,16 @@ TEST_F(BaseOrientationTest, ZeroPitch) {
   ASSERT_DOUBLE_EQ(imu_pitch, 0.0);
 }
 
+// Check that a pure rotation around the y-axis yields the correct pitch.
+TEST_F(BaseOrientationTest, CloseToZero) {
+  const double theta = 1e-3;
+  Eigen::Matrix3d orientation_imu_in_world;
+  orientation_imu_in_world << cos(theta), 0.0, sin(theta), 0.0, 1.0, 0.0,
+      -sin(theta), 0.0, cos(theta);
+  double imu_pitch = compute_pitch_frame_in_parent(orientation_imu_in_world);
+  ASSERT_NEAR(imu_pitch, theta, 1e-6);
+}
+
 TEST_F(BaseOrientationTest, BasePitchFromIMU) {
   Eigen::Quaterniond quat_imu_in_ars = {
       0.008472769239730098,   // w
