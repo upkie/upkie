@@ -874,7 +874,6 @@ INPUT                  = README.md \
                          upkie/config \
                          upkie/envs \
                          upkie/observers \
-                         upkie/observers/base_pitch \
                          upkie/utils
 
 # This tag can be used to specify the character encoding of the source files

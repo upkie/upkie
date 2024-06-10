@@ -14,7 +14,6 @@ py_library(
         "wheel_controller.py",
     ],
     deps = [
-        "//upkie/observers/base_pitch",
         "//upkie/utils:clamp",
         "//upkie/utils:filters",
     ],

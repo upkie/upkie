@@ -48,7 +48,6 @@ include = [
     "upkie/config/*.py",
     "upkie/config/*.yaml",
     "upkie/envs/*.py",
-    "upkie/observers/base_pitch/*.py",
     "upkie/utils/*.py",
 ]
 

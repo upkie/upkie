@@ -14,7 +14,6 @@ py_binary(
     srcs = ["lying_genuflection.py"],
     deps = [
         "//upkie/envs",
-        "//upkie/observers/base_pitch",
     ],
 )
 
@@ -23,7 +22,6 @@ py_binary(
     srcs = ["mpc_balancing.py"],
     deps = [
         "//upkie/envs",
-        "//upkie/observers/base_pitch",
         "//upkie/utils:clamp",
         "//upkie/utils:filters",
         "//upkie/utils:raspi",

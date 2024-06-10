@@ -13,7 +13,6 @@ import gin
 import numpy as np
 from numpy.typing import NDArray
 
-from upkie.observers.base_pitch import compute_base_pitch_from_imu
 from upkie.utils.clamp import clamp, clamp_abs
 from upkie.utils.filters import abs_bounded_derivative_filter, low_pass_filter
 
@@ -301,7 +300,7 @@ class WheelController:
         self.update_target_ground_velocity(observation, dt)
         self.update_target_yaw_velocity(observation, dt)
 
-        pitch = compute_base_pitch_from_imu(observation["imu"]["orientation"])
+        pitch = observation["base_orientation"]["pitch"]
         self.pitch = pitch
         if abs(pitch) > self.fall_pitch:
             self.integral_error_velocity = 0.0  # [m] / [s]

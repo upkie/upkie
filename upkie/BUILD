@@ -12,7 +12,6 @@ py_library(
     deps = [
         "//upkie/config",
         "//upkie/envs",
-        "//upkie/observers/base_pitch",
         "//upkie/utils",
     ],
 )
