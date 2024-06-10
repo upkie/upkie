@@ -13,7 +13,7 @@ py_library(
         "//upkie/config",
         "//upkie/envs",
         "//upkie/observers/base_pitch",
-        "//upkie/utils:python",
+        "//upkie/utils",
     ],
 )
 

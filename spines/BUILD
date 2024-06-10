@@ -24,6 +24,7 @@ cc_binary(
         "@vulp//vulp/observation/sources",
         "@vulp//vulp/observation:history_observer",
         "@vulp//vulp/spine",
+        "@vulp//vulp/utils:get_log_path",
     ],
 )
 
@@ -40,6 +41,7 @@ cc_binary(
         "@vulp//vulp/observation",
         "@vulp//vulp/observation/sources",
         "@vulp//vulp/spine",
+        "@vulp//vulp/utils:get_log_path",
     ] + select({
         "//:pi64_config": [
             "@org_llvm_libcxx//:libcxx",
@@ -62,6 +64,7 @@ cc_binary(
         "@vulp//vulp/observation",
         "@vulp//vulp/observation/sources",
         "@vulp//vulp/spine",
+        "@vulp//vulp/utils:get_log_path",
     ] + select({
         "//:pi64_config": ["@vulp//vulp/actuation:pi3hat_interface"],
         "//conditions:default": [],

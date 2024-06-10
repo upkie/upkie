@@ -231,8 +231,8 @@ int main(const char* argv0, const CommandLineArguments& args) {
   // Spine
   Spine::Parameters spine_params;
   spine_params.frequency = args.spine_frequency;
-  const auto now = upkie::utils::datetime_now_string();
-  spine_params.log_path = args.log_dir + "/" + now + "_bullet_spine.mpack";
+  spine_params.log_path =
+      vulp::utils::get_log_path(args.log_dir, "bullet_spine");
   spine_params.shm_name = args.shm_name;
   spdlog::info("Spine data logged to {}", spine_params.log_path);
   Spine spine(spine_params, interface, observation);

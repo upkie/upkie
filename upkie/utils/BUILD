@@ -6,11 +6,6 @@ load("//tools/lint:lint.bzl", "add_lint_tests")
 
 package(default_visibility = ["//visibility:public"])
 
-cc_library(
-    name = "datetime_now_string",
-    hdrs = ["datetime_now_string.h"],
-)
-
 py_library(
     name = "clamp",
     srcs = ["clamp.py"],
@@ -71,7 +66,7 @@ py_library(
 )
 
 py_library(
-    name = "python",
+    name = "utils",
     deps = [
         ":clamp",
         ":exceptions",
