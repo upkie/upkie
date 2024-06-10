@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - PID balancer: Monitor both tire contacts in simulation examples
+- observers: Base orientation observer
 - envs: Add the ``env.bullet_extra`` function for magic actions in sim
 - envs: Parameter to disable frequency checks during frequency regulation
 - utils: Factor ``get_log_path`` function
@@ -23,12 +24,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- envs: Stop the spine when deleting an environment instance
 - PID balancer: Fix shared-memory opening in standalone Bullet script
+- envs: Stop the spine when deleting an environment instance
 
 ### Removed
 
 - Optional dependencies for balancers that now have their own repositories
+- observers: Python version of the base orientation observer
 
 ## [3.4.0] - 2024-03-21
 
