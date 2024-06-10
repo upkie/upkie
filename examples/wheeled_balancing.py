@@ -19,5 +19,6 @@ if __name__ == "__main__":
             pitch = observation[0]
             action[0] = 10.0 * pitch  # 1D action: [ground_velocity]
             observation, reward, terminated, truncated, _ = env.step(action)
+            env.log("pitch", pitch)
             if terminated or truncated:
                 observation, _ = env.reset()
