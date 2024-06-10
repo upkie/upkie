@@ -7,8 +7,8 @@
 """Balancing using proportional control from base pitch to wheel torques."""
 
 import gymnasium as gym
+
 import upkie.envs
-from upkie.observers.base_pitch import compute_base_pitch_from_imu
 
 upkie.envs.register()
 
@@ -31,8 +31,7 @@ def run(env: upkie.envs.UpkieServos):
 
     _, info = env.reset()  # connects to the spine
     for step in range(1_000_000):
-        imu = info["spine_observation"]["imu"]
-        pitch = compute_base_pitch_from_imu(imu["orientation"])
+        pitch = info["base_orientation"]["pitch"]
         action["left_wheel"]["feedforward_torque"] = +GAIN * pitch
         action["right_wheel"]["feedforward_torque"] = -GAIN * pitch
         _, _, terminated, truncated, info = env.step(action)

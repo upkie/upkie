@@ -14,7 +14,6 @@ from numpy.typing import NDArray
 from vulp.spine import SpineInterface
 
 import upkie.config
-from upkie.observers.base_pitch import compute_base_pitch_from_imu
 from upkie.utils.exceptions import UpkieException
 from upkie.utils.nested_update import nested_update
 from upkie.utils.robot_state import RobotState
@@ -243,8 +242,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         @param spine_observation Observation dictionary with an "imu" key.
         @returns True if and only if a fall is detected.
         """
-        imu = spine_observation["imu"]
-        pitch = compute_base_pitch_from_imu(imu["orientation"])
+        pitch = spine_observation["base_orientation"]["pitch"]
         return abs(pitch) > self.fall_pitch
 
     def parse_first_observation(self, spine_observation: dict) -> None:

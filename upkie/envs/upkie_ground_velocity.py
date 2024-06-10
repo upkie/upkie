@@ -13,10 +13,7 @@ import numpy as np
 from gymnasium import spaces
 from numpy.typing import NDArray
 
-from upkie.observers.base_pitch import (
-    compute_base_angular_velocity_from_imu,
-    compute_base_pitch_from_imu,
-)
+from upkie.observers.base_pitch import compute_base_angular_velocity_from_imu
 from upkie.utils.exceptions import UpkieException
 from upkie.utils.filters import low_pass_filter
 from upkie.utils.robot_state import RobotState
@@ -248,8 +245,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
         @param spine_observation Spine observation dictionary.
         @returns Environment observation vector.
         """
-        imu = spine_observation["imu"]
-        pitch_base_in_world = compute_base_pitch_from_imu(imu["orientation"])
+        pitch_base_in_world = spine_observation["base_orientation"]["pitch"]
         angular_velocity_base_in_base = compute_base_angular_velocity_from_imu(
             spine_observation["imu"]["angular_velocity"]
         )
