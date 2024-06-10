@@ -17,6 +17,9 @@ using palimpsest::exceptions::KeyError;
 class BaseOrientationTest : public ::testing::Test {
  protected:
   void SetUp() override {
+    rotation_ars_to_world_.setZero();
+    rotation_ars_to_world_.diagonal() << 1.0, -1.0, -1.0;
+
     BaseOrientation::Parameters params;
     base_orientation_ = std::make_unique<BaseOrientation>(params);
   }
@@ -24,6 +27,9 @@ class BaseOrientationTest : public ::testing::Test {
  protected:
   //! Observer
   std::unique_ptr<BaseOrientation> base_orientation_;
+
+  //! Default rotation from ARS to world
+  Eigen::Matrix3d rotation_ars_to_world_;
 };
 
 TEST_F(BaseOrientationTest, Lateral) {
@@ -33,11 +39,13 @@ TEST_F(BaseOrientationTest, Lateral) {
       -0.09639792825405252,   // y
       -0.002443076206500708,  // z
   };
+
   Eigen::Matrix3d rotation_base_to_imu;
   rotation_base_to_imu << 0.0, -1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0;
-  double pitch_base_in_world =
-      compute_base_pitch_from_imu(quat_imu_in_ars, rotation_base_to_imu)
-          ASSERT_NEAR(pitch_base_in_world, -0.016, 1e-3);
+
+  double pitch_base_in_world = compute_base_pitch_from_imu(
+      quat_imu_in_ars, rotation_base_to_imu, rotation_ars_to_world_);
+  ASSERT_NEAR(pitch_base_in_world, -0.016, 1e-3);
 }
 
 }  // namespace upkie::observers::tests
