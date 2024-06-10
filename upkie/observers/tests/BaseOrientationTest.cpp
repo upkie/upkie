@@ -52,6 +52,18 @@ TEST_F(BaseOrientationTest, CloseToZero) {
   ASSERT_NEAR(imu_pitch, theta, 1e-6);
 }
 
+// As an extra, the function can handle a partially-normalized input. We
+// are going the extra mile here, this is not strictly necessary.
+TEST_F(BaseOrientationTest, OrientationNotNeatlyNormalized) {
+  const double theta = 1e-3;
+  Eigen::Matrix3d orientation_imu_in_world;
+  orientation_imu_in_world << cos(theta), 0.0, sin(theta), 0.0, 1.0, 0.0,
+      -sin(theta), 0.0, cos(theta);
+  orientation_imu_in_world.col(0) *= 1.0 - 1e-2;
+  double imu_pitch = compute_pitch_frame_in_parent(orientation_imu_in_world);
+  ASSERT_NEAR(imu_pitch, theta, 1e-6);
+}
+
 TEST_F(BaseOrientationTest, BasePitchFromIMU) {
   Eigen::Quaterniond quat_imu_in_ars = {
       0.008472769239730098,   // w
