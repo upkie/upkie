@@ -21,7 +21,8 @@
 #include "upkie/config/layout.h"
 #include "upkie/observers/FloorContact.h"
 #include "upkie/observers/WheelOdometry.h"
-#include "upkie/version.h"
+#include "upkie_version.h"
+#include "vulp/utils/get_log_path.h"
 
 namespace spines::mock {
 
