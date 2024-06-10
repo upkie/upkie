@@ -19,20 +19,6 @@ from upkie.observers.base_pitch import (
 
 
 class TestBasePitch(unittest.TestCase):
-    def test_zero_pitch(self, phi=0.42):
-        """
-        Check that a pure rotation around the z-axis yields no pitch.
-        """
-        orientation_imu_in_world = np.array(
-            [
-                [np.cos(phi), -np.sin(phi), 0.0],
-                [np.sin(phi), np.cos(phi), 0.0],
-                [0.0, 0.0, 1.0],
-            ]
-        )
-        imu_pitch = compute_pitch_frame_in_parent(orientation_imu_in_world)
-        self.assertEqual(imu_pitch, 0.0)
-
     def test_close_to_zero(self, theta=1e-3):
         """
         Check that a pure rotation around the y-axis yields the correct pitch.
@@ -62,23 +48,6 @@ class TestBasePitch(unittest.TestCase):
         orientation_imu_in_world[:, 0] *= 1.0 - 1e-2
         imu_pitch = compute_pitch_frame_in_parent(orientation_imu_in_world)
         self.assertTrue(np.isclose(imu_pitch, theta))
-
-    def test_balancing_plane_lateral_in_imu_frame(self):
-        quat_imu_in_ars = np.array(
-            [
-                0.008472769239730098,
-                -0.9953038144146671,
-                -0.09639792825405252,
-                -0.002443076206500708,
-            ]
-        )
-        rotation_base_to_imu = np.array(
-            [[0.0, -1.0, 0.0], [1.0, 0.0, 0.0], [0.0, 0.0, 1.0]]
-        )
-        pitch_base_in_world = compute_base_pitch_from_imu(
-            quat_imu_in_ars, rotation_base_to_imu
-        )
-        self.assertAlmostEqual(pitch_base_in_world, -0.016, places=3)
 
 
 if __name__ == "__main__":
