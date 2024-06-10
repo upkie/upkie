@@ -14,8 +14,7 @@ namespace upkie::observers {
 using palimpsest::Dictionary;
 using vulp::observation::Observer;
 
-/*!
- * Get the orientation of the base frame with respect to the world frame.
+/*! Get the orientation of the base frame with respect to the world frame.
 
  * @param quat_imu_in_ars Quaternion representing the rotation matrix from the
  *     IMU frame to the  attitude reference system (ARS) frame, in ``[w, x, y,
@@ -35,8 +34,7 @@ inline Eigen::Matrix3d compute_base_orientation_from_imu(
   return rotation_base_to_world;
 }
 
-/*!
- * Get pitch angle of a given frame relative to the parent vertical.
+/*! Get pitch angle of a given frame relative to the parent vertical.
  *
  * Figure:
  *
