@@ -6,7 +6,6 @@
 # Copyright 2023 Inria
 
 import math
-from dataclasses import dataclass
 from typing import Dict, Optional, Tuple
 
 import numpy as np
@@ -96,17 +95,40 @@ class UpkieGroundVelocity(UpkieBaseEnv):
     class RewardWeights:
         """Weights of the position and velocity terms in rewards."""
 
-        position: float = 1.0
-        velocity: float = 1.0
+        ## @var position
+        ## Weight of the position term.
+        position: float
+
+        ## @var velocity
+        ## Weight of the velocity term.
+        velocity: float
+
+        def __init__(self, position: float = 1.0, velocity: float = 1.0):
+            """!
+            Initialize reward weights.
+
+            @param position Weight of the position term.
+            @param velocity Weight of the velocity term.
+            """
+            self.position = position
+            self.velocity = velocity
+
+    ## @var action_space
+    ## Action space.
+    action_space: spaces.box.Box
 
     ## @var leg_return_period
     ## Time constant for the legs (hips and knees) to revert to their neutral
     ## configuration.
     leg_return_period: float
 
-    ## @var version
-    ## Environment version number.
-    version: int = 3
+    ## @var observation_space
+    ## Observation space.
+    observation_space: spaces.box.Box
+
+    ## @var reward_weights
+    ## Weights of the position and velocity terms in rewards.
+    reward_weights: "UpkieGroundVelocity.RewardWeights"
 
     ## @var wheel_radius
     ## Wheel radius in [m].
