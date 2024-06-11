@@ -302,6 +302,6 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         This extra action can be for instance a set of external forces applied
         to some robot bodies.
 
-        @param action Action dictionary processed by the Bullet spine.
+        @param bullet_action Action dictionary processed by the Bullet spine.
         """
         self.__extras["bullet"] = bullet_action.copy()

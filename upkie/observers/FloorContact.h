@@ -49,6 +49,7 @@ using vulp::observation::Observer;
  */
 class FloorContact : public Observer {
  public:
+  //! Parameters to the floor contact observer
   struct Parameters {
     /*! Configure from dictionary.
      *

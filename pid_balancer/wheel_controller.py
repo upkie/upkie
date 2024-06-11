@@ -25,45 +25,34 @@ class WheelController:
 
         body pitch error --(PD)--> wheel accelerations
 
-    Attributes:
-        air_return_period: Cutoff period for resetting integrators while the
-            robot is in the air, in [s].
-        error: Two-dimensional vector of ground position and base pitch errors.
-        gains: velocity controller gains.
-        ground_velocity: Sagittal velocity in [m] / [s].
-        integral_error_velocity: Integral term contributing to the sagittal
-            velocity, in [m] / [s].
-        max_ground_velocity: Maximum commanded ground velocity no matter what,
-            in [m] / [s].
-        max_integral_error_velocity: Maximum integral error velocity, in [m] /
-            [s].
-        max_target_accel: Maximum acceleration for the ground target, in
-            [m] / [s]². Does not affect the commanded ground velocity.
-        max_target_distance: Maximum distance from the current ground position
-            to the target, in [m].
-        max_target_velocity: Maximum velocity for the ground target, in
-            [m] / [s]. Indirectly affects the commanded ground velocity.
-        pitch: Current IMU pitch angle in [rad].
-        target_ground_position: Target ground sagittal position in [m].
-        target_ground_velocity: Target ground sagittal velocity in [m] / [s].
-        target_yaw_position: Target yaw position in [rad].
-        target_yaw_velocity: Target yaw velocity in [rad] / [s].
-        turning_deadband: Joystick axis value between 0.0 and 1.0 below which
-            legs stiffen but the turning motion doesn't start.
-        turning_probability: Probability that the user wants to turn based on
-            the joystick axis value.
-        turning_decision_time: Minimum duration in [s] for the turning
-            probability to switch from zero to one and converesly.
-        wheel_radius: Wheel radius in [m].
     """
 
     @gin.configurable
     class Gains:
         """Gains for the wheel controller."""
 
+        ## @var pitch_damping
+        ## Pitch error (normalized) damping gain. Corresponds to the
+        ## proportional term of the velocity PI controller, equivalent to the
+        ## derivative term of the acceleration PD controller.
         pitch_damping: float
+
+        ## @var pitch_stiffness
+        ## Pitch error (normalized) stiffness gain. Corresponds to the integral
+        ## term of the velocity PI controller, equivalent to the proportional
+        ## term of the acceleration PD controller.
         pitch_stiffness: float
+
+        ## @var position_damping
+        ## Position error (normalized) damping gain. Corresponds to the
+        ## proportional term of the velocity PI controller, equivalent to the
+        ## derivative term of the acceleration PD controller.
         position_damping: float
+
+        ## @var position_stiffness
+        ## Position error (normalized) stiffness gain. Corresponds to the
+        ## integral term of the velocity PI controller, equivalent to the
+        ## proportional term of the acceleration PD controller.
         position_stiffness: float
 
         def __init__(
@@ -73,6 +62,7 @@ class WheelController:
             position_damping: float,
             position_stiffness: float,
         ):
+            """Initialize gains."""
             self.pitch_damping = pitch_damping
             self.pitch_stiffness = pitch_stiffness
             self.position_damping = position_damping
@@ -111,6 +101,7 @@ class WheelController:
             self.position_stiffness = position_stiffness
 
         def __repr__(self):
+            """Represent gains as a readable string."""
             return (
                 "WheelController.Gains("
                 f"pitch_stiffness={self.pitch_stiffness}, "
@@ -119,24 +110,98 @@ class WheelController:
                 f"position_damping={self.position_damping})"
             )
 
+    ## @var air_return_period
+    ## Cutoff period for resetting integrators while the robot is in the air,
+    ## in [s].
     air_return_period: float
+
+    ## @var error
+    ## Two-dimensional vector of ground position and base pitch errors.
     error: NDArray[float]
+
+    ## @var fall_pitch
+    ## Fall pitch angle, in radians.
+    fall_pitch: float
+
+    ## @var gains
+    ## Velocity controller gains.
     gains: Gains
+
+    ## @var ground_velocity
+    ## Sagittal velocity in [m] / [s].
     ground_velocity: float
+
+    ## @var integral_error_velocity
+    ## Integral term contributing to the sagittal velocity, in [m] / [s].
     integral_error_velocity: float
+
+    ## @var max_ground_velocity
+    ## Maximum commanded ground velocity no matter what, in [m] / [s].
     max_ground_velocity: float
+
+    ## @var max_integral_error_velocity
+    ## Maximum integral error velocity, in [m] / [s].
     max_integral_error_velocity: float
+
+    ## @var max_target_accel
+    ## Maximum acceleration for the ground target, in [m] / [s]². Does not
+    ## affect the commanded ground velocity.
     max_target_accel: float
+
+    ## @var max_target_distance
+    ## Maximum distance from the current ground position to the target, in [m].
     max_target_distance: float
+
+    ## @var max_target_velocity
+    ## Maximum velocity for the ground target, in [m] / [s]. Indirectly affects
+    ## the commanded ground velocity.
     max_target_velocity: float
+
+    ## @var max_yaw_accel
+    ## Maximum yaw angular acceleration in [rad] / [s]².
+    max_yaw_accel: float
+
+    ## @var max_yaw_velocity
+    ## Maximum yaw angular velocity in [rad] / [s].
+    max_yaw_velocity: float
+
+    ## @var pitch
+    ## Current IMU pitch angle in [rad].
     pitch: float
+
+    ## @var target_ground_position
+    ## Target ground sagittal position in [m].
     target_ground_position: float
+
+    ## @var target_ground_velocity
+    ## Target ground sagittal velocity in [m] / [s].
     target_ground_velocity: float
+
+    ## @var target_yaw_position
+    ## Target yaw position in [rad].
     target_yaw_position: float
+
+    ## @var target_yaw_velocity
+    ## Target yaw velocity in [rad] / [s].
     target_yaw_velocity: float
+
+    ## @var turning_deadband
+    ## Joystick axis value between 0.0 and 1.0 below which legs stiffen but the
+    ## turning motion doesn't start.
     turning_deadband: float
+
+    ## @var turning_probability
+    ## Probability that the user wants to turn based on the joystick axis
+    ## value.
     turning_decision_time: float
+
+    ## @var turning_decision_time
+    ## Minimum duration in [s] for the turning probability to switch from zero
+    ## to one and converesly.
     turning_probability: float
+
+    ## @var wheel_radius
+    ## Wheel radius in [m].
     wheel_radius: float
 
     def __init__(
@@ -278,6 +343,11 @@ class WheelController:
             self.turning_probability = 1.0
 
     def process_joystick_buttons(self, observation: dict) -> None:
+        """!
+        Process joystick buttons.
+
+        @param observation Latest observation.
+        """
         ground_position = observation["wheel_odometry"]["position"]
         try:
             if observation["joystick"]["cross_button"]:
