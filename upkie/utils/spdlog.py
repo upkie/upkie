@@ -14,30 +14,38 @@ import logging
 
 
 class SpdlogFormatter(logging.Formatter):
-
     """!
     Custom logging formatter visually consistent with spdlog.
     """
 
-    BOLD_RED: str = "\033[31;1m"
-    BOLD_WHITE: str = "\033[37;1m"
-    BOLD_YELLOW: str = "\033[33;1m"
-    GREEN: str = "\033[32m"
-    ON_RED: str = "\033[41m"
-    RESET: str = "\033[0m"
+    def __init__(self):
+        """!
+        Initialize log formatter.
+        """
+        BOLD_RED: str = "\033[31;1m"
+        BOLD_WHITE: str = "\033[37;1m"
+        BOLD_YELLOW: str = "\033[33;1m"
+        GREEN: str = "\033[32m"
+        ON_RED: str = "\033[41m"
+        RESET: str = "\033[0m"
 
-    LEVEL_FORMAT: dict = {
-        logging.CRITICAL: f"[{ON_RED}{BOLD_WHITE}critical{RESET}]",
-        logging.DEBUG: "[debug]",
-        logging.ERROR: f"[{BOLD_RED}error{RESET}]",
-        logging.INFO: f"[{GREEN}info{RESET}]",
-        logging.WARNING: f"[{BOLD_YELLOW}warning{RESET}]",
-    }
+        self.level_format: dict = {
+            logging.CRITICAL: f"[{ON_RED}{BOLD_WHITE}critical{RESET}]",
+            logging.DEBUG: "[debug]",
+            logging.ERROR: f"[{BOLD_RED}error{RESET}]",
+            logging.INFO: f"[{GREEN}info{RESET}]",
+            logging.WARNING: f"[{BOLD_YELLOW}warning{RESET}]",
+        }
 
     def format(self, record):
+        r"""!
+        Format a given record.
+
+        \param record Record to format.
+        """
         custom_format = (
             "[%(asctime)s] "
-            + self.LEVEL_FORMAT.get(record.levelno, "[???]")
+            + self.level_format.get(record.levelno, "[???]")
             + " %(message)s (%(filename)s:%(lineno)d)"
         )
         formatter = logging.Formatter(custom_format)
