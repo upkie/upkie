@@ -46,12 +46,17 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
     ## randomized upon resets.
     init_state: RobotState
 
+    ## @var model
+    ## Model parameters for the Upkie wheeled biped.
+    model: Model
+
     def __init__(
         self,
         fall_pitch: float = 1.0,
         frequency: Optional[float] = 200.0,
         frequency_checks: bool = True,
         init_state: Optional[RobotState] = None,
+        model: Optional[Model] = None,
         regulate_frequency: bool = True,
         shm_name: str = "/vulp",
         spine_config: Optional[dict] = None,
@@ -69,6 +74,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
             control loop runs slower than the desired `frequency`. Set this
             parameter to false to disable these warnings.
         @param init_state Initial state of the robot, only used in simulation.
+        @param model Model parameters for the Upkie wheeled biped.
         @param regulate_frequency Enables loop frequency regulation.
         @param shm_name Name of shared-memory file to exchange with the spine.
         @param spine_config Additional spine configuration overriding the
@@ -86,16 +92,19 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
             init_state = RobotState(
                 position_base_in_world=np.array([0.0, 0.0, 0.6])
             )
+        if model is None:
+            model = Model()
 
+        self.__extras = {"bullet": {}, "log": {}}
         self.__frequency = frequency
         self.__frequency_checks = frequency_checks
-        self.__extras = {"bullet": {}, "log": {}}
         self.__rate = None
         self.__regulate_frequency = regulate_frequency
         self._spine = SpineInterface(shm_name, retries=spine_retries)
         self._spine_config = merged_spine_config
         self.fall_pitch = fall_pitch
         self.init_state = init_state
+        self.model = model
 
     def __del__(self):
         """!
