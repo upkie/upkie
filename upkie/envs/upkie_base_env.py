@@ -14,6 +14,7 @@ from numpy.typing import NDArray
 from vulp.spine import SpineInterface
 
 import upkie.config
+from upkie.model import Model
 from upkie.utils.exceptions import UpkieException
 from upkie.utils.nested_update import nested_update
 from upkie.utils.robot_state import RobotState
