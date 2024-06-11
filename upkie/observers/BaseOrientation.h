@@ -110,10 +110,10 @@ inline double compute_base_pitch_from_imu(
   return pitch_base_in_world;
 }
 
-/*!
- */
+//! Observe the orientation of the base frame relative to the world frame.
 class BaseOrientation : public Observer {
  public:
+  //! Parameters for the base orientation observer
   struct Parameters {
     /*! Configure from dictionary.
      *
