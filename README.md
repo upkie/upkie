@@ -61,7 +61,13 @@ pip install upkie
 
 ## Example
 
-You can develop your own agent using the Gymnasium environments distributed in ``upkie.envs``. For example, here is a simple proportional-feedback balancer:
+First, let's start a simulation:
+
+```console
+./start_simulation.sh
+```
+
+Once a spine (simulation or real robot) is running, you can control the robot in Python using one of the [Gymnasium environments](https://upkie.github.io/upkie/environments.html). For example, here is a proportional feedback balancer:
 
 ```python
 import gymnasium as gym
@@ -80,13 +86,7 @@ with gym.make("UpkieGroundVelocity-v3", frequency=200.0) as env:
         action[0] = 10.0 * pitch
 ```
 
-To run this agent, you will first need to start a simulation:
-
-```console
-./start_simulation.sh
-```
-
-Then execute the Python code above. To run the agent on the robot, do the same but running the [pi3hat spine](https://upkie.github.io/upkie/spines.html#pi3hat-spine) instead of the simulation.
+Executing the code above will balance the simulated Upkie. To run the agent on the robot, do the same but running the [pi3hat spine](https://upkie.github.io/upkie/spines.html#pi3hat-spine) instead of the simulation.
 
 ## Agents
 
