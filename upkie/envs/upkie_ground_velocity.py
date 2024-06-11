@@ -253,7 +253,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
 
         \param spine_observation First observation.
         """
-        for joint in self.LEG_JOINTS:
+        for joint in self.model.leg_joints:
             position = spine_observation["servo"][joint]["position"]
             self.__leg_servo_action[joint]["position"] = position
 
@@ -283,7 +283,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
 
         @returns Servo action dictionary.
         """
-        for joint in self.LEG_JOINTS:
+        for joint in self.model.leg_joints:
             prev_position = self.__leg_servo_action[joint]["position"]
             new_position = low_pass_filter(
                 prev_output=prev_position,
