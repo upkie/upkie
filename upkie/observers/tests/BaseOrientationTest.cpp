@@ -80,4 +80,32 @@ TEST_F(BaseOrientationTest, BasePitchFromIMU) {
   ASSERT_NEAR(pitch_base_in_world, -0.016, 1e-3);
 }
 
+TEST_F(BaseOrientationTest, PartialIMUObservation) {
+  Dictionary observation;
+  observation("imu").insert<Eigen::Quaterniond>("orientation",
+                                                Eigen::Quaterniond::Identity());
+  ASSERT_THROW(base_orientation_->read(observation), KeyError);
+}
+
+TEST_F(BaseOrientationTest, NeutralValues) {
+  Dictionary observation;
+  auto quat_imu_in_ars = Eigen::Quaterniond::Identity();
+  observation("imu").insert<Eigen::Quaterniond>("orientation", quat_imu_in_ars);
+  observation("imu").insert<Eigen::Vector3d>("angular_velocity",
+                                             Eigen::Vector3d::Zero());
+  base_orientation_->read(observation);
+  base_orientation_->write(observation);
+
+  // The angle is -pi/2 because the identity is the rotation from IMU to ARS,
+  // not from base to world (check out parameters for details)
+  ASSERT_DOUBLE_EQ(observation("base_orientation").get<double>("pitch"),
+                   -0.5 * M_PI);
+
+  auto angular_velocity_base_in_base =
+      observation("base_orientation").get<Eigen::Vector3d>("angular_velocity");
+  ASSERT_DOUBLE_EQ(angular_velocity_base_in_base.x(), 0.0);
+  ASSERT_DOUBLE_EQ(angular_velocity_base_in_base.y(), 0.0);
+  ASSERT_DOUBLE_EQ(angular_velocity_base_in_base.z(), 0.0);
+}
+
 }  // namespace upkie::observers::tests
