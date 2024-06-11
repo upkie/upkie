@@ -20,18 +20,18 @@ class DifferentiateAction(gymnasium.Wrapper):
         max_derivative: NDArray[float],
         action_penalty: float = 0.0,
     ):
-        """!
+        r"""!
         Act on the derivative of the action.
 
-        @param env Environment to wrap.
-        @param min_derivative Lower bound on the derivative of the original
+        \param env Environment to wrap.
+        \param min_derivative Lower bound on the derivative of the original
             action.
-        @param max_derivative Upper bound on the derivative of the original
+        \param max_derivative Upper bound on the derivative of the original
             action.
-        @param action_penalty Weight for an additional penalty on the
+        \param action_penalty Weight for an additional penalty on the
             differential action added to the reward.
 
-        @note We assume the original action lives in a vector space.
+        \note We assume the original action lives in a vector space.
         """
         super().__init__(env)
         self.action_space = spaces.Box(

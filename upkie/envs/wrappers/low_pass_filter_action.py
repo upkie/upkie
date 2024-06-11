@@ -25,11 +25,11 @@ class LowPassFilterAction(gymnasium.Wrapper):
     time_constant_box: Box
 
     def __init__(self, env, time_constant: Union[float, Box]):
-        """!
+        r"""!
         Initialize wrapper.
 
-        @param env Environment to wrap.
-        @param time_constant Cutoff period in seconds of a low-pass filter
+        \param env Environment to wrap.
+        \param time_constant Cutoff period in seconds of a low-pass filter
             applied to the action. If a Box is provided, couple of lower and
             upper bounds for the action: a new time constant is sampled
             uniformly at random between these bounds at every reset of the

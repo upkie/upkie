@@ -27,14 +27,14 @@ class ServoController:
         turning_gain_scale: float,
         wheel_distance: float,
     ):
-        """!
+        r"""!
         Create controller.
 
-        @param gain_scale PD gain scale for hip and knee joints.
-        @param turning_gain_scale Additional gain scale added when the robot is
+        \param gain_scale PD gain scale for hip and knee joints.
+        \param turning_gain_scale Additional gain scale added when the robot is
             turning to keep the legs stiff in spite of the ground pulling them
             apart.
-        @param wheel_distance Lateral distance between the two wheels in
+        \param wheel_distance Lateral distance between the two wheels in
             meters. This controller does not handle the case where the two
             wheels are not in the lateral plane.
         """
@@ -58,10 +58,10 @@ class ServoController:
         return self.__wheel_balancer.wheel_radius
 
     def initialize_servo_action(self, observation: dict) -> None:
-        """!
+        r"""!
         Initialize default servo action from initial observation.
 
-        @param observation Initial observation.
+        \param observation Initial observation.
         """
         self.__servo_action = {
             joint: {
@@ -87,12 +87,12 @@ class ServoController:
         )
 
     def cycle(self, observation: dict, dt: float) -> dict:
-        """!
+        r"""!
         Compute action for a new cycle.
 
-        @param observation Latest observation.
-        @param dt Duration in seconds until next cycle.
-        @return Dictionary with the new action and some internal state for
+        \param observation Latest observation.
+        \param dt Duration in seconds until next cycle.
+        \return Dictionary with the new action and some internal state for
             logging.
         """
         if self.__servo_action is None:

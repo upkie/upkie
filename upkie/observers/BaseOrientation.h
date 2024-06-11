@@ -65,7 +65,7 @@ inline Eigen::Matrix3d compute_base_orientation_from_imu(
  *     Equivalently, angle from the heading vector to the sagittal vector of
  *     the frame.
  *
- * @note Angle is positive in the trigonometric sense (CCW positive, CW
+ * \note Angle is positive in the trigonometric sense (CCW positive, CW
  * negative) in the heading-vertical plane directed by the lateral vector,
  * which is ``(x)`` in the above schematic (pointing away) and not ``(.)``
  * (poiting from screen to the reader).

@@ -20,7 +20,7 @@ from .upkie_base_env import UpkieBaseEnv
 
 
 class UpkieGroundVelocity(UpkieBaseEnv):
-    """!
+    r"""!
     Environment where Upkie is used as a wheeled inverted pendulum.
 
     The environment id is ``UpkieGroundVelocity-v3``. Model assumptions are
@@ -28,7 +28,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
     href="https://scaron.info/robotics/wheeled-inverted-pendulum-model.html">following
     note</a>.
 
-    @note For reinforcement learning with neural networks: the observation
+    \note For reinforcement learning with neural networks: the observation
     space and action space are not normalized.
 
     ### Action space
@@ -97,11 +97,11 @@ class UpkieGroundVelocity(UpkieBaseEnv):
         velocity: float
 
         def __init__(self, position: float = 1.0, velocity: float = 1.0):
-            """!
+            r"""!
             Initialize reward weights.
 
-            @param position Weight of the position term.
-            @param velocity Weight of the velocity term.
+            \param position Weight of the position term.
+            \param velocity Weight of the velocity term.
             """
             self.position = position
             self.velocity = velocity
@@ -141,26 +141,26 @@ class UpkieGroundVelocity(UpkieBaseEnv):
         spine_config: Optional[dict] = None,
         wheel_radius: float = 0.06,
     ):
-        """!
+        r"""!
         Initialize environment.
 
-        @param fall_pitch Fall detection pitch angle, in radians.
-        @param frequency Regulated frequency of the control loop, in Hz.
-        @param frequency_checks If `regulate_frequency` is set and this
+        \param fall_pitch Fall detection pitch angle, in radians.
+        \param frequency Regulated frequency of the control loop, in Hz.
+        \param frequency_checks If `regulate_frequency` is set and this
             parameter is true (default), a warning is issued every time the
             control loop runs slower than the desired `frequency`. Set this
             parameter to false to disable these warnings.
-        @param init_state Initial state of the robot, only used in simulation.
-        @param leg_return_period Time constant for the legs (hips and knees) to
+        \param init_state Initial state of the robot, only used in simulation.
+        \param leg_return_period Time constant for the legs (hips and knees) to
             revert to their neutral configuration.
-        @param max_ground_velocity Maximum commanded ground velocity in m/s.
-        @param regulate_frequency Enables loop frequency regulation.
-        @param reward_weights Coefficients before each reward term.
-        @param shm_name Name of shared-memory file.
-        @param spine_config Additional spine configuration overriding the
+        \param max_ground_velocity Maximum commanded ground velocity in m/s.
+        \param regulate_frequency Enables loop frequency regulation.
+        \param reward_weights Coefficients before each reward term.
+        \param shm_name Name of shared-memory file.
+        \param spine_config Additional spine configuration overriding the
             defaults from ``//config:spine.yaml``. The combined configuration
             dictionary is sent to the spine at every :func:`reset`.
-        @param wheel_radius Wheel radius in [m].
+        \param wheel_radius Wheel radius in [m].
         """
         super().__init__(
             fall_pitch=fall_pitch,
@@ -229,13 +229,13 @@ class UpkieGroundVelocity(UpkieBaseEnv):
         seed: Optional[int] = None,
         options: Optional[dict] = None,
     ) -> Tuple[NDArray[float], Dict]:
-        """!
+        r"""!
         Resets the environment and get an initial observation.
 
-        @param seed Number used to initialize the environment’s internal random
+        \param seed Number used to initialize the environment’s internal random
             number generator.
-        @param options Currently unused.
-        @returns
+        \param options Currently unused.
+        \return
             - ``observation``: Initial vectorized observation, i.e. an element
               of the environment's ``observation_space``.
             - ``info``: Dictionary with auxiliary diagnostic information. For
@@ -244,21 +244,21 @@ class UpkieGroundVelocity(UpkieBaseEnv):
         return super().reset(seed=seed)
 
     def parse_first_observation(self, spine_observation: dict) -> None:
-        """!
+        r"""!
         Parse first observation after the spine interface is initialized.
 
-        @param spine_observation First observation.
+        \param spine_observation First observation.
         """
         for joint in self.LEG_JOINTS:
             position = spine_observation["servo"][joint]["position"]
             self.__leg_servo_action[joint]["position"] = position
 
     def get_env_observation(self, spine_observation: dict) -> NDArray[float]:
-        """!
+        r"""!
         Extract environment observation from spine observation dictionary.
 
-        @param spine_observation Spine observation dictionary.
-        @returns Environment observation vector.
+        \param spine_observation Spine observation dictionary.
+        \return Environment observation vector.
         """
         base_orientation = spine_observation["base_orientation"]
         pitch_base_in_world = base_orientation["pitch"]
@@ -291,11 +291,11 @@ class UpkieGroundVelocity(UpkieBaseEnv):
         return self.__leg_servo_action.copy()
 
     def get_spine_action(self, action: NDArray[float]) -> dict:
-        """!
+        r"""!
         Convert environment action to a spine action dictionary.
 
-        @param action Environment action.
-        @returns Spine action dictionary.
+        \param action Environment action.
+        \return Spine action dictionary.
         """
         ground_velocity = action[0]
         wheel_velocity = ground_velocity / self.wheel_radius
@@ -322,12 +322,12 @@ class UpkieGroundVelocity(UpkieBaseEnv):
         observation: NDArray[float],
         action: NDArray[float],
     ) -> float:
-        """!
+        r"""!
         Get reward from observation and action.
 
-        @param observation Environment observation vector.
-        @param action Environment action vector.
-        @returns Reward.
+        \param observation Environment observation vector.
+        \param action Environment action vector.
+        \return Reward.
         """
         pitch = observation[0]
         ground_position = observation[1]

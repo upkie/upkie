@@ -110,19 +110,19 @@ class UpkieServos(UpkieBaseEnv):
         shm_name: str = "/vulp",
         spine_config: Optional[dict] = None,
     ):
-        """!
+        r"""!
         Initialize environment.
 
-        @param fall_pitch Fall pitch angle, in radians.
-        @param frequency Regulated frequency of the control loop, in Hz.
-        @param frequency_checks If `regulate_frequency` is set and this
+        \param fall_pitch Fall pitch angle, in radians.
+        \param frequency Regulated frequency of the control loop, in Hz.
+        \param frequency_checks If `regulate_frequency` is set and this
             parameter is true (default), a warning is issued every time the
             control loop runs slower than the desired `frequency`. Set this
             parameter to false to disable these warnings.
-        @param init_state Initial state of the robot, only used in simulation.
-        @param regulate_frequency Enables loop frequency regulation.
-        @param shm_name Name of shared-memory file.
-        @param spine_config Additional spine configuration overriding the
+        \param init_state Initial state of the robot, only used in simulation.
+        \param regulate_frequency Enables loop frequency regulation.
+        \param shm_name Name of shared-memory file.
+        \param spine_config Additional spine configuration overriding the
             defaults from ``//config:spine.yaml``. The combined configuration
             dictionary is sent to the spine at every :func:`reset`.
         """
@@ -277,11 +277,11 @@ class UpkieServos(UpkieBaseEnv):
         return self.__neutral_action.copy()
 
     def get_env_observation(self, spine_observation: dict):
-        """!
+        r"""!
         Extract environment observation from spine observation dictionary.
 
-        @param spine_observation Full observation dictionary from the spine.
-        @returns Environment observation.
+        \param spine_observation Full observation dictionary from the spine.
+        \return Environment observation.
         """
         # If creating a new object turns out to be too slow we can switch to
         # updating in-place.
@@ -297,11 +297,11 @@ class UpkieServos(UpkieBaseEnv):
         }
 
     def get_spine_action(self, env_action: dict) -> dict:
-        """!
+        r"""!
         Convert environment action to a spine action dictionary.
 
-        @param env_action Environment action.
-        @returns Spine action dictionary.
+        \param env_action Environment action.
+        \return Spine action dictionary.
         """
         spine_action = {"servo": {}}
         for joint in self.JOINT_NAMES:
@@ -322,11 +322,11 @@ class UpkieServos(UpkieBaseEnv):
         return spine_action
 
     def get_reward(self, observation: dict, action: dict) -> float:
-        """!
+        r"""!
         Get reward from observation and action.
 
-        @param observation Environment observation.
-        @param action Environment action.
-        @returns Reward.
+        \param observation Environment observation.
+        \param action Environment action.
+        \return Reward.
         """
         return 1.0

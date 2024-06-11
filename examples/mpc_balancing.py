@@ -23,13 +23,13 @@ def get_target_states(
     state: NDArray[float],
     target_vel: float = 0.0,
 ) -> NDArray[float]:
-    """!
+    r"""!
     Define the reference state trajectory over the receding horizon.
 
-    @param pendulum Instance from which we read receding-horizon properties.
-    @param state Initial state of the wheeled inverted pendulum system.
-    @param target_vel Target ground velocity in m/s.
-    @return Reference state trajectory over the horizon.
+    \param pendulum Instance from which we read receding-horizon properties.
+    \param state Initial state of the wheeled inverted pendulum system.
+    \param target_vel Target ground velocity in m/s.
+    \return Reference state trajectory over the horizon.
     """
     nx = WheeledInvertedPendulum.STATE_DIM
     target_states = np.zeros((pendulum.nb_timesteps + 1) * nx)
@@ -42,12 +42,12 @@ def get_target_states(
 
 
 def balance(env: gym.Env, nb_env_steps: int = 10_000) -> None:
-    """!
+    r"""!
     Balancer Upkie by closed-loop MPC on its gym environment.
 
-    @param env Gym environment to Upkie.
+    \param env Gym environment to Upkie.
 
-    @note This example rebuilds the QP problem at every step and does not
+    \note This example rebuilds the QP problem at every step and does not
     implement hot-starting, both of which impact performance. See the MPC
     balancer agent for a more complete example.
     """

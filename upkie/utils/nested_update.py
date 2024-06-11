@@ -6,7 +6,7 @@
 
 
 def nested_update(target_dict: dict, new_dict: dict) -> None:
-    """!
+    r"""!
     Update a target dictionary recursively.
 
     Consider the following example:
@@ -25,8 +25,8 @@ def nested_update(target_dict: dict, new_dict: dict) -> None:
         >>> d
         {'a': {'b': 1, 'c': 2}}
 
-    @param target_dict Output dictionary.
-    @param new_dict Input dictionary with new values to update.
+    \param target_dict Output dictionary.
+    \param new_dict Input dictionary with new values to update.
     """
     for key, value in new_dict.items():
         if (

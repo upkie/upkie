@@ -16,10 +16,10 @@ from scipy.spatial.transform import Rotation as ScipyRotation
 
 
 class RobotStateRandomization:
-    """!
+    r"""!
     Domain randomization parameters for Upkie's state.
 
-    @note The API for this class is likely to change. Initially all its
+    \note The API for this class is likely to change. Initially all its
     attributes where floating-point numbers due to a quick-and-dirty design
     decision.
     """
@@ -83,24 +83,24 @@ class RobotStateRandomization:
         v_x: Optional[float] = None,
         v_z: Optional[float] = None,
     ) -> None:
-        """!
+        r"""!
         Update some fields.
 
-        @param roll Roll angle for the rotation from the randomized frame to
+        \param roll Roll angle for the rotation from the randomized frame to
             the parent frame (Euler Z-Y-X convention).
-        @param pitch Pitch angle for the rotation from the randomized frame to
+        \param pitch Pitch angle for the rotation from the randomized frame to
             the parent frame (Euler Z-Y-X convention).
-        @param x Translation of the randomized frame along the x-axis of the
+        \param x Translation of the randomized frame along the x-axis of the
             parent frame.
-        @param z Translation of the randomized frame along the z-axis of the
+        \param z Translation of the randomized frame along the z-axis of the
             parent frame.
-        @param omega_x Angular velocity from the randomized frame to the parent
+        \param omega_x Angular velocity from the randomized frame to the parent
             frame, expressed in the randomized frame, along the x-axis.
-        @param omega_y Angular velocity from the randomized frame to the parent
+        \param omega_y Angular velocity from the randomized frame to the parent
             frame, expressed in the randomized frame, along the y-axis.
-        @param v_x Linear velocity from the randomized frame to the parent
+        \param v_x Linear velocity from the randomized frame to the parent
             frame, expressed in the parent frame and along the x-axis.
-        @param v_z Linear velocity from the randomized frame to the parent
+        \param v_z Linear velocity from the randomized frame to the parent
             frame, expressed in the parent frame and along the z-axis.
         """
         if roll is not None:

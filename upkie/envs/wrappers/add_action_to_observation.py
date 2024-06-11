@@ -25,10 +25,10 @@ class AddActionToObservation(gymnasium.ObservationWrapper):
     _last_action: NDArray[float]
 
     def __init__(self, env):
-        """!
+        r"""!
         Initialize wrapper.
 
-        @param env Wrapped environment.
+        \param env Wrapped environment.
 
         The initial action is set to zero.
         """
