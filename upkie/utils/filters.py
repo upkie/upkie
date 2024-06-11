@@ -16,16 +16,16 @@ def abs_bounded_derivative_filter(
     max_output: float,
     max_derivative: float,
 ) -> float:
-    """!
+    r"""!
     Filter signal so that the absolute values of its output and output
     derivative stay within bounds.
 
-    @param prev_output Previous filter output, or initial value.
-    @param new_input New filter input.
-    @param dt Sampling period in [s].
-    @param max_output Maximum absolute value of the output.
-    @param max_derivative Maximum absolute value of the output derivative.
-    @returns New filter output.
+    \param prev_output Previous filter output, or initial value.
+    \param new_input New filter input.
+    \param dt Sampling period in [s].
+    \param max_output Maximum absolute value of the output.
+    \param max_derivative Maximum absolute value of the output derivative.
+    \return New filter output.
     """
     return bounded_derivative_filter(
         prev_output,
@@ -43,15 +43,15 @@ def bounded_derivative_filter(
     output_bounds: Tuple[float, float],
     derivative_bounds: Tuple[float, float],
 ) -> float:
-    """!
+    r"""!
     Filter signal so that its output and output derivative stay within bounds.
 
-    @param prev_output Previous filter output, or initial value.
-    @param new_input New filter input.
-    @param dt Sampling period in [s].
-    @param output_bounds Min and max value for the output.
-    @param derivative_bounds Min and max value for the output derivative.
-    @returns New filter output.
+    \param prev_output Previous filter output, or initial value.
+    \param new_input New filter input.
+    \param dt Sampling period in [s].
+    \param output_bounds Min and max value for the output.
+    \param derivative_bounds Min and max value for the output derivative.
+    \return New filter output.
     """
     derivative = (new_input - prev_output) / dt
     derivative = clamp(derivative, *derivative_bounds)
@@ -65,13 +65,13 @@ def low_pass_filter(
     new_input: float,
     dt: float,
 ) -> float:
-    """!
+    r"""!
     Low-pass filter.
 
-    @param prev_output Previous filter output, or initial value.
-    @param cutoff_period Time constant of the filter in [s].
-    @param new_input New filter input.
-    @param dt Sampling period in [s].
+    \param prev_output Previous filter output, or initial value.
+    \param cutoff_period Time constant of the filter in [s].
+    \param new_input New filter input.
+    \param dt Sampling period in [s].
     @returns New filter output.
     """
     alpha = dt / cutoff_period

@@ -75,22 +75,22 @@ class WheelController:
             position_damping: float,
             position_stiffness: float,
         ) -> None:
-            """!
+            r"""!
             Set gains in one function call.
 
-            @param pitch_damping: Pitch error (normalized) damping gain.
+            \param pitch_damping: Pitch error (normalized) damping gain.
                 Corresponds to the proportional term of the velocity PI
                 controller, equivalent to the derivative term of the
                 acceleration PD controller.
-            @param pitch_stiffness: Pitch error (normalized) stiffness gain.
+            \param pitch_stiffness: Pitch error (normalized) stiffness gain.
                 Corresponds to the integral term of the velocity PI controller,
                 equivalent to the proportional term of the acceleration PD
                 controller.
-            @param position_damping: Position error (normalized) damping gain.
+            \param position_damping: Position error (normalized) damping gain.
                 Corresponds to the proportional term of the velocity PI
                 controller, equivalent to the derivative term of the
                 acceleration PD controller.
-            @param position_stiffness: Position error (normalized) stiffness
+            \param position_stiffness: Position error (normalized) stiffness
                 gain. Corresponds to the integral term of the velocity PI
                 controller, equivalent to the proportional term of the
                 acceleration PD controller.
@@ -219,31 +219,31 @@ class WheelController:
         turning_decision_time: float,
         wheel_radius: float,
     ):
-        """!
+        r"""!
         Initialize balancer.
 
-        @param air_return_period Cutoff period for resetting integrators while
+        \param air_return_period Cutoff period for resetting integrators while
             the robot is in the air, in [s].
-        @param fall_pitch Fall pitch angle, in radians.
-        @param max_ground_velocity Maximum commanded ground velocity no matter
+        \param fall_pitch Fall pitch angle, in radians.
+        \param max_ground_velocity Maximum commanded ground velocity no matter
             what, in [m] / [s].
-        @param max_integral_error_velocity Maximum integral error velocity, in
+        \param max_integral_error_velocity Maximum integral error velocity, in
             [m] / [s].
-        @param max_target_accel Maximum acceleration for the ground target, in
+        \param max_target_accel Maximum acceleration for the ground target, in
             [m] / [s]². This bound does not affect the commanded ground
             velocity.
-        @param max_target_distance Maximum distance from the current ground
+        \param max_target_distance Maximum distance from the current ground
             position to the target, in [m].
-        @param max_target_velocity Maximum velocity for the ground target, in
+        \param max_target_velocity Maximum velocity for the ground target, in
             [m] / [s]. This bound indirectly affects the commanded ground
             velocity.
-        @param max_yaw_accel Maximum yaw angular acceleration in [rad] / [s]².
-        @param max_yaw_velocity Maximum yaw angular velocity in [rad] / [s].
-        @param turning_deadband Joystick axis value between 0.0 and 1.0 below
+        \param max_yaw_accel Maximum yaw angular acceleration in [rad] / [s]².
+        \param max_yaw_velocity Maximum yaw angular velocity in [rad] / [s].
+        \param turning_deadband Joystick axis value between 0.0 and 1.0 below
             which legs stiffen but the turning motion doesn't start.
-        @param turning_decision_time Minimum duration in [s] for the turning
+        \param turning_decision_time Minimum duration in [s] for the turning
             probability to switch from zero to one and converesly.
-        @param wheel_radius Wheel radius in [m].
+        \param wheel_radius Wheel radius in [m].
         """
         assert 0.0 <= turning_deadband <= 1.0
         self.air_return_period = air_return_period
@@ -272,13 +272,13 @@ class WheelController:
     def update_target_ground_velocity(
         self, observation: dict, dt: float
     ) -> None:
-        """!
+        r"""!
         Update target ground velocity from joystick input.
 
-        @param observation Latest observation.
-        @param dt Time in [s] until next cycle.
+        \param observation Latest observation.
+        \param dt Time in [s] until next cycle.
 
-        @note The target ground velocity is commanded by both the left axis and
+        \note The target ground velocity is commanded by both the left axis and
         right trigger of the joystick. When the right trigger is unpressed, the
         commanded velocity is set from the left axis, interpolating from 0 to
         50% of its maximum configured value. Pressing the right trigger
@@ -301,11 +301,11 @@ class WheelController:
         )
 
     def update_target_yaw_velocity(self, observation: dict, dt: float) -> None:
-        """!
+        r"""!
         Update target yaw velocity from joystick input.
 
-        @param observation Latest observation.
-        @param dt Time in [s] until next cycle.
+        \param observation Latest observation.
+        \param dt Time in [s] until next cycle.
         """
         try:
             joystick_value = observation["joystick"]["right_axis"][0]
@@ -343,10 +343,10 @@ class WheelController:
             self.turning_probability = 1.0
 
     def process_joystick_buttons(self, observation: dict) -> None:
-        """!
+        r"""!
         Process joystick buttons.
 
-        @param observation Latest observation.
+        \param observation Latest observation.
         """
         ground_position = observation["wheel_odometry"]["position"]
         try:
@@ -361,11 +361,11 @@ class WheelController:
             pass
 
     def cycle(self, observation: dict, dt: float) -> None:
-        """!
+        r"""!
         Compute a new ground velocity.
 
-        @param observation Latest observation.
-        @param dt Time in [s] until next cycle.
+        \param observation Latest observation.
+        \param dt Time in [s] until next cycle.
         """
         self.process_joystick_buttons(observation)
         self.update_target_ground_velocity(observation, dt)
@@ -466,10 +466,10 @@ class WheelController:
         self,
         position_right_in_left: NDArray[float],
     ) -> Tuple[float, float]:
-        """!
+        r"""!
         Get left and right wheel velocities.
 
-        @param position_right_in_left: Translation from the left contact frame
+        \param position_right_in_left: Translation from the left contact frame
             to the right contact frame, expressed in the left contact frame.
             Equivalently, linear coordinates of the pose of the right contact
             frame with respect to the left contact frame.
@@ -477,7 +477,7 @@ class WheelController:
         @return Tuple with `left_wheel_velocity` (left wheel velocity in rad/s)
             and `right_wheel_velocity` (right wheel velocity in rad/s).
 
-        @note For now we assume that the two wheels are parallel to the ground,
+        \note For now we assume that the two wheels are parallel to the ground,
         so that the rotation from one frame to the other is the identity.
         """
         # Sagittal translation

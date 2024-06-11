@@ -21,7 +21,7 @@ def box_position_limits(
     q_{min} \leq q \leq q_{max}
     \f]
 
-    @param model Pinocchio model.
+    \param model Pinocchio model.
     @returns Tuple ``(q_min, q_max)`` of lower and upper position limits, with
     -infinity and +infinity where there is no limit.
     """
@@ -46,8 +46,8 @@ def box_velocity_limits(
     v_{min} \leq v \leq v_{max}
     \f]
 
-    @param model Pinocchio model.
-    @return Velocity limits, with -infinity and +infinity where there is no
+    \param model Pinocchio model.
+    \return Velocity limits, with -infinity and +infinity where there is no
     limit.
     """
     no_velocity_limit = np.logical_or(
@@ -69,8 +69,8 @@ def box_torque_limits(
     \tau_{min} \leq \tau \leq \tau_{max}
     \f]
 
-    @param model Pinocchio model.
-    @return Torque limits, with -infinity and +infinity where there is no
+    \param model Pinocchio model.
+    \return Torque limits, with -infinity and +infinity where there is no
     limit.
     """
     no_torque_limit = np.logical_or(

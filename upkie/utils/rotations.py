@@ -13,11 +13,11 @@ from numpy.typing import NDArray
 def rotation_matrix_from_quaternion(
     quat: Tuple[float, float, float, float]
 ) -> NDArray[float]:
-    """!
+    r"""!
     Convert a unit quaternion to the matrix representing the same rotation.
 
-    @param quat Unit quaternion to convert, in ``[w, x, y, z]`` format.
-    @return Rotation matrix corresponding to this quaternion.
+    \param quat Unit quaternion to convert, in ``[w, x, y, z]`` format.
+    \return Rotation matrix corresponding to this quaternion.
 
     See `Conversion between quaternions and rotation matrices`_.
 
