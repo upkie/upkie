@@ -6,6 +6,7 @@
 #include <palimpsest/Dictionary.h>
 
 #include <cmath>
+#include <string>
 
 #include "vulp/observation/Observer.h"
 
