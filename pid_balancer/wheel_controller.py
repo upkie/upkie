@@ -19,7 +19,6 @@ from upkie.utils.filters import abs_bounded_derivative_filter, low_pass_filter
 
 @gin.configurable
 class WheelController:
-
     """
     Balancing by proportional-derivative feedback of the body pitch error to
     wheel accelerations:
@@ -60,6 +59,8 @@ class WheelController:
 
     @gin.configurable
     class Gains:
+        """Gains for the wheel controller."""
+
         pitch_damping: float
         pitch_stiffness: float
         position_damping: float

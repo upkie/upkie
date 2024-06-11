@@ -95,6 +95,8 @@ class UpkieGroundVelocity(UpkieBaseEnv):
 
     @dataclass
     class RewardWeights:
+        """Weights of the position and velocity terms in rewards."""
+
         position: float = 1.0
         velocity: float = 1.0
 
