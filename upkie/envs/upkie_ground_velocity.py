@@ -221,7 +221,6 @@ class UpkieGroundVelocity(UpkieBaseEnv):
 
         self.leg_return_period = leg_return_period
         self.reward_weights = reward_weights
-        self.version = UpkieGroundVelocity.version  # for Doxygen...
         self.wheel_radius = wheel_radius
 
     def reset(
