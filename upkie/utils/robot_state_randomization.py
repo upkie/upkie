@@ -62,6 +62,20 @@ class RobotStateRandomization:
         omega_y: float = 0.0,
         linear_velocity: Optional[NDArray[float]] = None,
     ):
+        r"""!
+        Initialize sampler.
+
+        \param roll Amount of roll angle randomization, in radians.
+        \param pitch Amount of pitch angle randomization, in radians.
+        \param x Amount of x-axis position randomization, in meters.
+        \param z Amount of z-axis position randomization, in meters.
+        \param omega_x Amount of x-axis randomization on the angular-velocity
+            vector, in rad/s.
+        \param omega_y Amount of y-axis randomization on the angular-velocity
+            vector, in rad/s.
+        \param linear_velocity Magnitude of linear velocity randomization, as a
+            3D vector in m/s.
+        """
         self.roll = roll
         self.pitch = pitch
         self.x = x
@@ -120,7 +134,15 @@ class RobotStateRandomization:
         if v_z is not None:
             self.linear_velocity[2] = v_z
 
-    def sample_orientation(self, np_random) -> ScipyRotation:
+    def sample_orientation(
+        self, np_random: np.random.Generator
+    ) -> ScipyRotation:
+        r"""!
+        Sample an orientation within the given bounds.
+
+        \param[in] np_random NumPy random number generator.
+        \return Sampled rotation matrix.
+        """
         yaw_pitch_roll_bounds = np.array([0.0, self.pitch, self.roll])
         yaw_pitch_roll = np_random.uniform(
             low=-yaw_pitch_roll_bounds,
@@ -129,21 +151,45 @@ class RobotStateRandomization:
         )
         return ScipyRotation.from_euler("ZYX", yaw_pitch_roll)
 
-    def sample_position(self, np_random) -> NDArray[float]:
+    def sample_position(
+        self, np_random: np.random.Generator
+    ) -> NDArray[float]:
+        r"""!
+        Sample a position within the given bounds.
+
+        \param[in] np_random NumPy random number generator.
+        \return Sampled position vector.
+        """
         return np_random.uniform(
             low=np.array([-self.x, 0.0, 0.0]),
             high=np.array([+self.x, 0.0, self.z]),
             size=3,
         )
 
-    def sample_angular_velocity(self, np_random) -> NDArray[float]:
+    def sample_angular_velocity(
+        self, np_random: np.random.Generator
+    ) -> NDArray[float]:
+        r"""!
+        Sample an angular velocity within the given bounds.
+
+        \param[in] np_random NumPy random number generator.
+        \return Sampled angular-velocity vector.
+        """
         return np_random.uniform(
             low=np.array([-self.omega_x, -self.omega_y, 0.0]),
             high=np.array([+self.omega_x, +self.omega_y, 0.0]),
             size=3,
         )
 
-    def sample_linear_velocity(self, np_random) -> NDArray[float]:
+    def sample_linear_velocity(
+        self, np_random: np.random.Generator
+    ) -> NDArray[float]:
+        r"""!
+        Sample a linear velocity within the given bounds.
+
+        \param[in] np_random NumPy random number generator.
+        \return Sampled linear-velocity vector.
+        """
         return np_random.uniform(
             low=-self.linear_velocity,
             high=self.linear_velocity,
