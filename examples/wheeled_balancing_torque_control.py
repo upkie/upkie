@@ -31,7 +31,7 @@ def run(env: upkie.envs.UpkieServos):
 
     _, info = env.reset()  # connects to the spine
     for step in range(1_000_000):
-        pitch = info["base_orientation"]["pitch"]
+        pitch = info["spine_observation"]["base_orientation"]["pitch"]
         action["left_wheel"]["feedforward_torque"] = +GAIN * pitch
         action["right_wheel"]["feedforward_torque"] = -GAIN * pitch
         _, _, terminated, truncated, info = env.step(action)
