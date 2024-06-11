@@ -15,13 +15,17 @@ void BaseOrientation::read(const Dictionary& observation) {
   if (!observation.has("imu")) {
     return;
   }
+
+  // Pitch
   auto quat_imu_in_ars =
       observation("imu").get<Eigen::Quaterniond>("orientation");
-  auto angular_velocity_imu_in_imu =
-      observation("imu").get<Eigen::Vector3d>("angular_velocity");
   pitch_base_in_world_ =
       compute_base_pitch_from_imu(quat_imu_in_ars, params_.rotation_base_to_imu,
                                   params_.rotation_ars_to_world);
+
+  // Angular velocity
+  auto angular_velocity_imu_in_imu =
+      observation("imu").get<Eigen::Vector3d>("angular_velocity");
   angular_velocity_base_in_base_ = compute_base_angular_velocity_from_imu(
       angular_velocity_imu_in_imu, params_.rotation_base_to_imu);
 }
