@@ -110,6 +110,39 @@ inline double compute_base_pitch_from_imu(
   return pitch_base_in_world;
 }
 
+/*! Compute the body angular velocity of the base from IMU readings.
+ *
+ * \param[in] angular_velocity_imu_in_imu Angular velocity from the IMU.
+ * \param[in] rotation_base_to_imu Rotation matrix from base to IMU.
+ * \return Body angular velocity of the base frame.
+ *
+ * Calculation checks:
+ *
+ * - \f$I\f$: IMU frame
+ * - \f$B\f$: base frame
+ * - \f$W\f$: world (inertial) frame
+ *
+ * Our input is \f${}_I \omega_{WI}\f$, we seek \f${}_B \omega_{WB}\f$.
+ *
+ * \f$
+ * \begin{align*}
+ *     \dot{R}_{WI} & = R_{WI} ({}_I \omega_{WI} \times) \\
+ *     R_{WB} & = R_{WI} R_{IB} \\
+ *     \dot{R}_{WB} & = \dot{R}_{WI} R_{IB} \\
+ *     & = R_{WI} ({}_I \omega_{WI} \times) R_{IB} \\
+ *     & = R_{WI} R_{IB} ({}_B \omega_{WI} \times) \\
+ *     & = R_{WB} ({}_B \omega_{WI} \times) = R_{WB} ({}_B \omega_{WB} \times)
+ * \end{align*}
+ * \f$
+ *
+ * Thus \f${}_B \omega_{WB} = R_{BI} {}_I \omega_{WI}\f$.
+ */
+inline Eigen::Vector3d compute_base_angular_velocity_from_imu(
+    const Eigen::Vector3d& angular_velocity_imu_in_imu,
+    const Eigen::Matrix3d& rotation_base_to_imu) {
+  return rotation_base_to_imu.transpose() * angular_velocity_imu_in_imu;
+}
+
 //! Observe the orientation of the base frame relative to the world frame.
 class BaseOrientation : public Observer {
  public:
@@ -183,6 +216,9 @@ class BaseOrientation : public Observer {
 
   //! Pitch angle of the base frame in the world frame
   double pitch_base_in_world_;
+
+  //! Body angular velocity of the base frame in [rad] / [s]
+  Eigen::Vector3d angular_velocity_base_in_base_;
 };
 
 }  // namespace upkie::observers

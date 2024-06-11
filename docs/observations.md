@@ -4,6 +4,7 @@ Here is an index of observation dictionaries. Keys are a shorthand for nested di
 
 | Observation key | Description |
 |-----------------|-------------|
+| `base_orientation.angular_velocity` | Body angular velocity of the base frame in [rad] / [s] |
 | `base_orientation.pitch` | Pitch angle of the base frame relative to the world frame, in radians |
 | `imu` | Inertial measurement unit on the pi3hat. See also [`ImuData`](https://upkie.github.io/vulp/structvulp_1_1actuation_1_1ImuData.html) |
 | `imu.angular_velocity` | Body angular velocity of the IMU frame in [rad] / [s] |
