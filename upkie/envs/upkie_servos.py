@@ -84,13 +84,21 @@ class UpkieServos(UpkieBaseEnv):
         "right_wheel",
     )
 
+    ## @var action_space
+    ## Action space.
+    action_space: spaces.box.Box
+
+    ## @var observation_space
+    ## Observation space.
+    observation_space: spaces.box.Box
+
     ## @var robot
     ## Pinocchio robot wrapper.
     robot: pin.RobotWrapper
 
     ## @var version
     ## Environment version number.
-    version: int = 4
+    version: int
 
     def __init__(
         self,
@@ -258,7 +266,7 @@ class UpkieServos(UpkieBaseEnv):
         self.__max_action = max_action
         self.__min_action = min_action
         self.robot = robot
-        self.version = UpkieServos.version  # for Doxygen...
+        self.version = 4
 
     def get_neutral_action(self) -> dict:
         """!
