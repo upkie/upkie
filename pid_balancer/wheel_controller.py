@@ -101,7 +101,9 @@ class WheelController:
             self.position_stiffness = position_stiffness
 
         def __repr__(self):
-            """Represent gains as a readable string."""
+            """!
+            Represent gains as a readable string.
+            """
             return (
                 "WheelController.Gains("
                 f"pitch_stiffness={self.pitch_stiffness}, "
