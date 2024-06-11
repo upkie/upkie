@@ -123,6 +123,10 @@ class UpkieGroundVelocity(UpkieBaseEnv):
     ## Weights of the position and velocity terms in rewards.
     reward_weights: "UpkieGroundVelocity.RewardWeights"
 
+    ## @var version
+    ## Environment version number.
+    version = 3
+
     ## @var wheel_radius
     ## Wheel radius in [m].
     wheel_radius: float

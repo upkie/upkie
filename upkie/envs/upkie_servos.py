@@ -98,7 +98,7 @@ class UpkieServos(UpkieBaseEnv):
 
     ## @var version
     ## Environment version number.
-    version: int
+    version = 4
 
     def __init__(
         self,
@@ -266,7 +266,6 @@ class UpkieServos(UpkieBaseEnv):
         self.__max_action = max_action
         self.__min_action = min_action
         self.robot = robot
-        self.version = 4
 
     def get_neutral_action(self) -> dict:
         """!
