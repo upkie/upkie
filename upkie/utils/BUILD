@@ -16,6 +16,7 @@ cc_library(
     hdrs = ["get_log_path.h"],
     deps = [
         ":datetime_now_string",
+        "@spdlog",
     ],
     include_prefix = "vulp/utils",
 )
