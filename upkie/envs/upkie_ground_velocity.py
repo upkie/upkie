@@ -85,13 +85,6 @@ class UpkieGroundVelocity(UpkieBaseEnv):
     returned by the reset and step functions.
     """
 
-    LEG_JOINTS = [
-        f"{side}_{joint}"
-        for side in ("left", "right")
-        for joint in ("hip", "knee")
-    ]
-
-    @dataclass
     class RewardWeights:
         """Weights of the position and velocity terms in rewards."""
 
@@ -223,7 +216,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
                 "velocity": 0.0,
                 "maximum_torque": 10.0,  # qdd100 actuators
             }
-            for joint in self.LEG_JOINTS
+            for joint in self.model.leg_joints
         }
 
         self.leg_return_period = leg_return_period
