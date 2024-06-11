@@ -16,13 +16,15 @@ using vulp::observation::Observer;
 
 /*! Get the orientation of the base frame with respect to the world frame.
 
- * @param quat_imu_in_ars Quaternion representing the rotation matrix from the
+ * \param quat_imu_in_ars Quaternion representing the rotation matrix from the
  *     IMU frame to the  attitude reference system (ARS) frame, in ``[w, x, y,
  *     z]`` format.
- * @param rotation_base_to_imu Rotation matrix from the base frame to the IMU
+ * \param rotation_base_to_imu Rotation matrix from the base frame to the IMU
  *     frame. When not specified, the default Upkie mounting orientation is
  *     used.
- * @returns Rotation matrix from the base frame to the world frame.
+ * \param rotation_ars_to_world Rotation from the attitude reference system
+ *     (ARS) frame to the world frame.
+ * \return Rotation matrix from the base frame to the world frame.
  */
 inline Eigen::Matrix3d compute_base_orientation_from_imu(
     const Eigen::Quaterniond& quat_imu_in_ars,
@@ -56,10 +58,10 @@ inline Eigen::Matrix3d compute_base_orientation_from_imu(
  *           frame x
  * ```
  *
- * @param orientation_frame_in_parent Rotation matrix from the target frame to
+ * \param orientation_frame_in_parent Rotation matrix from the target frame to
  *     the parent frame.
  *
- * @returns Angle from the parent z-axis (gravity) to the frame z-axis.
+ * \return Angle from the parent z-axis (gravity) to the frame z-axis.
  *     Equivalently, angle from the heading vector to the sagittal vector of
  *     the frame.
  *
@@ -96,6 +98,8 @@ inline double compute_pitch_frame_in_parent(
  * \param[in] rotation_base_to_imu Rotation matrix from the base frame to the
  *     IMU frame. When not specified, the default Upkie mounting orientation is
  *     used.
+ * \param rotation_ars_to_world Rotation from the attitude reference system
+ *     (ARS) frame to the world frame.
  * \return Angle from the world z-axis (unit vector opposite to gravity) to the
  *     base z-axis. This angle is positive when the base leans forward.
  */

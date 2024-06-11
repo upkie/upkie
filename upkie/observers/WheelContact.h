@@ -48,6 +48,10 @@ class WheelContact {
  public:
   //! Observer parameters.
   struct Parameters {
+    /*! Read parameters from a configuration dictionary.
+     *
+     * \param[in] config Configuration dictionary.
+     */
     void configure(const Dictionary& config) {
       if (!config.has("wheel_contact")) {
         spdlog::debug("No \"wheel_contact\" runtime configuration");
