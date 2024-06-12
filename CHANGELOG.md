@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - PID balancer: Fix shared-memory opening in standalone Bullet script
+- dist: Exclude unnecessary files from Python packages
 - envs: Stop the spine when deleting an environment instance
 
 ### Removed
