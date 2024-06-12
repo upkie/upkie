@@ -11,6 +11,7 @@ py_library(
     srcs = ["upkie_base_env.py"],
     deps = [
         "//upkie/config",
+        "//upkie/model",
         "//upkie/utils:exceptions",
         "//upkie/utils:nested_update",
         "//upkie/utils:robot_state",
