@@ -8,6 +8,16 @@
 class MockSpine:
     def __init__(self):
         self.observation = {
+            "base_orientation": {
+                "pitch": 0.1,
+                "angular_velocity": [-2e-3, 3e4, 1e-8],
+                "linear_velocity": [1e3, 2e2, 3e1],
+            },
+            "imu": {
+                "orientation": [1.0, 0.0, 0.0, 0.0],
+                "angular_velocity": [0.0, 0.0, 0.0],
+                "linear_acceleration": [0.0, 0.0, 0.0],
+            },
             "number": 0,
             "servo": {
                 f"{side}_{joint}": {
@@ -19,11 +29,6 @@ class MockSpine:
                 }
                 for side in ("left", "right")
                 for joint in ("hip", "knee", "wheel")
-            },
-            "imu": {
-                "orientation": [1.0, 0.0, 0.0, 0.0],
-                "angular_velocity": [0.0, 0.0, 0.0],
-                "linear_acceleration": [0.0, 0.0, 0.0],
             },
             "wheel_odometry": {
                 "position": 0.0,
