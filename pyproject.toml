@@ -44,6 +44,25 @@ Tracker = "https://github.com/upkie/upkie/issues"
 Changelog = "https://github.com/upkie/upkie/blob/main/CHANGELOG.md"
 
 [tool.flit.sdist]
+exclude = [
+    "**/*.cpp",
+    "**/*.h",
+    "**/*.sh",
+    "**/BUILD",
+    "**/tests/*_test.py",
+    ".bazel*",
+    ".clang-format",
+    ".git*",
+    "CONTRIBUTING.md",
+    "CPPLINT.cfg",
+    "WORKSPACE",
+    "docs/",
+    "examples/",
+    "logs/",
+    "pid_balancer/",
+    "spines/",
+    "tools/",
+]
 include = [
     "upkie/config/*.py",
     "upkie/config/*.yaml",
