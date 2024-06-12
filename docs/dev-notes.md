@@ -2,7 +2,7 @@
 
 ## From newbie to sourcie
 
-While newcomers are expected to install the ``upkie`` package from conda-forge or PyPI, as you get acquainted with the robot and start developing your own features you will probably want to start compiling from source. Here is a short guide
+While newcomers will likely use the simulation script and the ``upkie`` Python package, as you get acquainted with the robot and develop your own agents (NB: by forking [upkie/new\_agent](https://github.com/upkie/new_agent)), you may want to contribute some features back to the upstream repository. Here is a short guide on compiling from source to do that.
 
 ### Simulation
 
