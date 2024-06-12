@@ -25,7 +25,7 @@ jobs:
               run: |
                   python -c "import upkie.config"
                   python -c "import upkie.envs; upkie.envs.register()"
-                  python -c "import upkie.observers"
+                  python -c "import upkie.model"
                   python -c "import upkie.utils"
 
     testpypi:
@@ -46,7 +46,7 @@ jobs:
               run: |
                   python -c "import upkie.config"
                   python -c "import upkie.envs; upkie.envs.register()"
-                  python -c "import upkie.observers"
+                  python -c "import upkie.model"
                   python -c "import upkie.utils"
 
     pypi_success:
