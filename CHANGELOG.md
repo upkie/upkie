@@ -10,9 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - PID balancer: Monitor both tire contacts in simulation examples
-- observers: Base orientation observer
+- docs: Developer notes
 - envs: Add the ``env.bullet_extra`` function for magic actions in sim
 - envs: Parameter to disable frequency checks during frequency regulation
+- observers: Base orientation observer
 - utils: Factor ``get_log_path`` function
 
 ### Changed
