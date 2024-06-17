@@ -11,8 +11,8 @@ jobs:
         name: "Artifacts"
         runs-on: ubuntu-latest
         env:
-            SPLINE: pi3hat_spine
-            SPLINE_PATH: ./bazel-out/aarch64-opt/bin/spines/
+            SPINE: pi3hat_spine
+            SPINE_PATH: ./bazel-out/aarch64-opt/bin/spines/
         steps:
             - name: "Checkout sources"
               uses: actions/checkout@v4
@@ -27,12 +27,12 @@ jobs:
 
             - name: "Prepare artifacts directory"
               run: |
-                  mkdir -p artifacts && mv ${{ env.SPLINE_PATH }}${{ env.SPLINE }} ./artifacts/
+                  mkdir -p artifacts && mv ${{ env.SPINE_PATH }}${{ env.SPINE }} ./artifacts/
 
             - name: "Upload artifacts"
               uses: actions/upload-artifact@v3
               with:
-                  name: ${{ env.SPLINE }}
+                  name: ${{ env.SPINE }}
                   path: ./artifacts
 
     build_linux:
@@ -54,7 +54,7 @@ jobs:
                   tools/bazelisk build --compilation_mode=fastbuild  //...
 
     build_darwin_arm64:
-        name: "Build on macOS (ARM)"
+        name: "Build on macOS (ARM64)"
         runs-on: macos-latest
         steps:
             - name: "Checkout sources"
