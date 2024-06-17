@@ -107,13 +107,6 @@ jobs:
               run: |
                   tools/bazelisk test --compilation_mode=fastbuild --config lint //...
 
-    lint_shell:
-        name: "Lint shell scripts"
-        runs-on: ubuntu-latest
-        steps:
-            - name: "Checkout sources"
-              uses: actions/checkout@v4
-
             - name: "Check shell scripts formatting"
               run: |
                   find . \
@@ -149,6 +142,6 @@ jobs:
     bazel_success:
         name: "Bazel success"
         runs-on: ubuntu-latest
-        needs: [artifacts, build_linux, build_darwin_arm64, coverage, lint, lint_shell, test]
+        needs: [artifacts, build_linux, build_darwin_arm64, coverage, lint, test]
         steps:
             - run: echo "Bazel workflow completed successfully"
