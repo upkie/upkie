@@ -117,8 +117,13 @@ jobs:
                       -exec shellcheck {} \;
 
     test:
-        name: "Test"
+        name: "Test on Linux with Python ${{ matrix.python-version }}"
         runs-on: ubuntu-latest
+
+        strategy:
+            matrix:
+                python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+
         steps:
             - name: "Checkout sources"
               uses: actions/checkout@v4
@@ -126,7 +131,7 @@ jobs:
             - name: "Set up Python"
               uses: actions/setup-python@v4
               with:
-                  python-version: "3.8"
+                  python-version: "${{ matrix.python-version }}"
 
             - name: "Install dependencies"
               run: |
