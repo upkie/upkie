@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- examples: Tuning the gains of a standard two-task PI balancer
+
 ## [4.0.0] - 2024-06-12
 
 ### Added
