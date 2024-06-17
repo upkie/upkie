@@ -13,6 +13,7 @@ import upkie.envs
 upkie.envs.register()
 
 GAIN = 10.0  # base pitch to wheel torque, in [N] * [m] / [rad]
+NB_STEPS = 1_000_000
 
 
 def run(env: upkie.envs.UpkieServos):
@@ -30,7 +31,7 @@ def run(env: upkie.envs.UpkieServos):
     action["right_wheel"]["kd_scale"] = 0.0
 
     _, info = env.reset()  # connects to the spine
-    for step in range(1_000_000):
+    for step in range(NB_STEPS):
         pitch = info["spine_observation"]["base_orientation"]["pitch"]
         action["left_wheel"]["feedforward_torque"] = +GAIN * pitch
         action["right_wheel"]["feedforward_torque"] = -GAIN * pitch
@@ -42,3 +43,4 @@ def run(env: upkie.envs.UpkieServos):
 if __name__ == "__main__":
     with gym.make("UpkieServos-v4", frequency=200.0) as env:
         run(env)
+    print(f"Example concluded after {NB_STEPS} steps")
