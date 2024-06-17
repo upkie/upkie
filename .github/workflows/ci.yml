@@ -53,7 +53,7 @@ jobs:
               run: |
                   tools/bazelisk build --compilation_mode=fastbuild  //...
 
-    bullet_darwin_arm64:
+    build_darwin_arm64:
         name: "Build on macOS (ARM)"
         runs-on: macos-latest
         steps:
