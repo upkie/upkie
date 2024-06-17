@@ -65,6 +65,11 @@ jobs:
           - name: "Checkout sources"
             uses: actions/checkout@v4
 
+          - name: "Set up Python"
+            uses: actions/setup-python@v4
+            with:
+                python-version: "3.11"
+
           - name: 'Set up latest Oracle JDK 21'
             uses: oracle-actions/setup-java@v1
             with:
@@ -115,6 +120,11 @@ jobs:
       steps:
           - name: "Checkout sources"
             uses: actions/checkout@v4
+
+          - name: "Set up Python"
+            uses: actions/setup-python@v4
+            with:
+                python-version: "3.11"
 
           - name: 'Set up zulu JDK 21'
             uses: actions/setup-java@v4
