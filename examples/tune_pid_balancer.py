@@ -21,6 +21,8 @@ from upkie.utils.raspi import configure_agent_process, on_raspi
 
 upkie.envs.register()
 
+NB_STEPS = 1_000_000
+
 
 def main(pitch_kp, pitch_ki, position_kp, position_ki):
     pitch_integrator = 0.0
@@ -29,7 +31,7 @@ def main(pitch_kp, pitch_ki, position_kp, position_ki):
         dt = env.unwrapped.dt
         observation, _ = env.reset()  # connects to the spine
         action = 0.0 * env.action_space.sample()  # 1D action: [velocity]
-        for step in range(1_000_000):
+        for _ in range(NB_STEPS):
             pitch = observation[0]
             position = observation[1]
             pitch_integrator += pitch * dt
@@ -82,3 +84,4 @@ if __name__ == "__main__":
     # We are now done, let's signal the main function to break its loop
     pitch_kp.value = -1.0  # that's our signal :p
     main_process.join()
+    print(f"Example concluded after {NB_STEPS} steps")
