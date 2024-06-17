@@ -5,7 +5,11 @@
 #include <vulp/actuation/MockInterface.h>
 #include <vulp/observation/ObserverPipeline.h>
 #include <vulp/observation/sources/CpuTemperature.h>
+
+#ifndef __APPLE__
 #include <vulp/observation/sources/Joystick.h>
+#endif
+
 #include <vulp/spine/Spine.h>
 #include <vulp/utils/realtime.h>
 
@@ -34,8 +38,11 @@ using upkie::observers::WheelOdometry;
 using vulp::actuation::MockInterface;
 using vulp::observation::ObserverPipeline;
 using vulp::observation::sources::CpuTemperature;
-using vulp::observation::sources::Joystick;
 using vulp::spine::Spine;
+
+#ifndef __APPLE__
+using vulp::observation::sources::Joystick;
+#endif
 
 //! Command-line arguments for the mock spine.
 class CommandLineArguments {
@@ -128,12 +135,14 @@ int main(const CommandLineArguments& args) {
   auto cpu_temperature = std::make_shared<CpuTemperature>();
   observation.connect_source(cpu_temperature);
 
+#ifndef __APPLE__
   // Observation: Joystick
   auto joystick = std::make_shared<Joystick>();
   if (joystick->present()) {
     spdlog::info("Joystick found");
     observation.connect_source(joystick);
   }
+#endif
 
   // Observation: Floor contact
   FloorContact::Parameters floor_contact_params;
