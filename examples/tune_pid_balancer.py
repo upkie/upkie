@@ -47,6 +47,17 @@ def main(pitch_kp, pitch_ki, position_kp, position_ki):
                 pitch_integrator = 0.0
                 position_integrator = 0.0
 
+            # Log gains for tuning with live plots (e.g. using  `mpackview`)
+            env.log(
+                "gains",
+                {
+                    "pitch_kp": pitch_kp.value,
+                    "pitch_ki": pitch_ki.value,
+                    "position_kp": position_kp.value,
+                    "position_ki": position_ki.value,
+                },
+            )
+
             # Our signal that the TUI has closed :p
             if pitch_kp.value < -0.5:
                 break
