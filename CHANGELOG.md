@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - examples: Tuning the gains of a standard two-task PI balancer
 - CICD: Build jobs for x86 and ARM64 macOS spines
+- PID balancer: Conda environment file
 
 ### Changed
 
