@@ -13,11 +13,11 @@ from os import path
 import gin
 import yaml
 from loop_rate_limiters import RateLimiter
-from servo_controller import ServoController
-from vulp.spine import SpineInterface
-
 from upkie.utils.raspi import configure_agent_process, on_raspi
 from upkie.utils.spdlog import logging
+from vulp.spine import SpineInterface
+
+from servo_controller import ServoController
 
 
 def parse_command_line_arguments() -> argparse.Namespace:
@@ -34,7 +34,6 @@ def parse_command_line_arguments() -> argparse.Namespace:
         metavar="config",
         help="Agent configuration to apply",
         type=str,
-        required=True,
     )
     return parser.parse_args()
 
@@ -93,8 +92,11 @@ if __name__ == "__main__":
 
     # Load gin configuration files
     load_gin_configuration(agent_dir, "config/common.gin")
-    if args.config == "hostname":
-        hostname = socket.gethostname().lower()
+    hostname = socket.gethostname().lower()
+    if args.config is None:
+        logging.warning(f"No configuration selected, trying '{hostname}'")
+        load_gin_configuration(agent_dir, f"config/{hostname}.gin")
+    elif args.config == "hostname":
         logging.info(f"Loading configuration from hostname '{hostname}'")
         load_gin_configuration(agent_dir, f"config/{hostname}.gin")
     elif args.config is not None:
