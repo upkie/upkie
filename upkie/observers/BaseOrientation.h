@@ -168,6 +168,13 @@ class BaseOrientation : public Observer {
         spdlog::debug("No \"base_orientation\" runtime configuration");
         return;
       }
+
+      observer_config = config("base_orientation");
+      if (observer_config.has("rotation_base_to_imu")) {
+        rotation_base_to_imu =
+            observer_config.get<Eigen::Matrix3d>("rotation_base_to_imu");
+        spdlog::info("- rotation_base_to_imu = {}", rotation_base_to_imu);
+      }
     }
 
     /*! Rotation matrix from the base frame to the IMU frame

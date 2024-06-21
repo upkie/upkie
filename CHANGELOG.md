@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - CICD: Release jobs for x86 and ARM64 macOS spines
+- observers: Read configuration matrix in base orientation observer
 
 ## [4.0.0] - 2024-06-12
 
