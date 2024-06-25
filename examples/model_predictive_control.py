@@ -4,15 +4,17 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Inria
 
-"""Wheel balancing using model predictive control of an LTV system."""
+"""Wheel balancing using model predictive control of an LTV system.
+
+See the MPC balancer for a more complete agent based on the same algorithm.
+"""
 
 import gymnasium as gym
 import numpy as np
+import upkie.envs
 from numpy.typing import NDArray
 from qpmpc import solve_mpc
 from qpmpc.systems import WheeledInvertedPendulum
-
-import upkie.envs
 from upkie.utils.clamp import clamp_and_warn
 
 upkie.envs.register()
