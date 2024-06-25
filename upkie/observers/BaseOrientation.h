@@ -169,7 +169,7 @@ class BaseOrientation : public Observer {
         return;
       }
 
-      observer_config = config("base_orientation");
+      auto& observer_config = config("base_orientation");
       if (observer_config.has("rotation_base_to_imu")) {
         rotation_base_to_imu =
             observer_config.get<Eigen::Matrix3d>("rotation_base_to_imu");
