@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2022 Stéphane Caron
 
-#include "upkie/utils/datetime_now_string.h"
+#include "upkie/cpp/utils/datetime_now_string.h"
 
 #include <string>
 
