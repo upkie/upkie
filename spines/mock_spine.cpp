@@ -20,13 +20,13 @@
 #include <vector>
 
 #include "upkie/config/layout.h"
+#include "upkie/cpp/observers/BaseOrientation.h"
+#include "upkie/cpp/observers/FloorContact.h"
+#include "upkie/cpp/observers/WheelOdometry.h"
 #include "upkie/cpp/spine/Spine.h"
+#include "upkie/cpp/utils/get_log_path.h"
 #include "upkie/cpp/utils/realtime.h"
-#include "upkie/observers/BaseOrientation.h"
-#include "upkie/observers/FloorContact.h"
-#include "upkie/observers/WheelOdometry.h"
-#include "upkie/utils/get_log_path.h"
-#include "upkie/version.h"
+#include "upkie/cpp/version.h"
 
 namespace spines::mock {
 
