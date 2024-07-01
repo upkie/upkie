@@ -242,7 +242,7 @@ TEST_F(BulletInterfaceTest, ObserveImuOrientation) {
   interface_->cycle([](const moteus::Output& output) {});
   interface_->observe(observation);
 
-  // See read_imu_data in bullet_utils.h
+  // See read_imu_data in bullet/utils.h
   Eigen::Matrix3d rotation_world_to_ars =
       Eigen::Vector3d{1.0, -1.0, -1.0}.asDiagonal();
 

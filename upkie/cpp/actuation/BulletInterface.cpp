@@ -8,9 +8,11 @@
 #include <string>
 
 #include "tools/cpp/runfiles/runfiles.h"
-#include "upkie/cpp/actuation/bullet_utils.h"
+#include "upkie/cpp/actuation/bullet/utils.h"
 
 using bazel::tools::cpp::runfiles::Runfiles;
+using bullet::bullet_from_eigen;
+using bullet::eigen_from_bullet;
 
 namespace upkie {
 
@@ -226,7 +228,8 @@ void BulletInterface::process_forces(const Dictionary& external_forces) {
       position_eigen.setZero();
     } else /* world frame */ {
       flags = EF_WORLD_FRAME;
-      position_eigen = get_position_link_in_world(bullet_, robot_, link_index);
+      position_eigen =
+          bullet::get_position_link_in_world(bullet_, robot_, link_index);
     }
     btVector3 position = bullet_from_eigen(position_eigen);
     btVector3 force = bullet_from_eigen(params.get<Eigen::Vector3d>("force"));

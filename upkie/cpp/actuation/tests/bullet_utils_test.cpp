@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2022 Stéphane Caron
 
-#include "upkie/cpp/actuation/bullet_utils.h"
-
 #include <map>
 #include <memory>
 #include <string>
@@ -11,6 +9,7 @@
 #include "gtest/gtest.h"
 #include "tools/cpp/runfiles/runfiles.h"
 #include "upkie/cpp/actuation/BulletImuData.h"
+#include "upkie/cpp/actuation/bullet/utils.h"
 
 namespace upkie {
 
