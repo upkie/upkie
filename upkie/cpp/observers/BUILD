@@ -42,22 +42,14 @@ cc_library(
 )
 
 cc_library(
-    name = "source",
-    hdrs = ["Source.h"],
-    deps = [
-        "@palimpsest",
-    ],
-)
-
-cc_library(
     name = "observer_pipeline",
     hdrs = ["ObserverPipeline.h"],
     srcs = [
         "ObserverPipeline.cpp",
     ],
     deps = [
-        "//sensors:sensor",
         "//upkie/cpp/exceptions:observer_error",
+        "//upkie/cpp/sensors:sensor",
         ":observer",
     ],
 )
@@ -69,7 +61,6 @@ cc_library(
         ":observe_time",
         ":observer",
         ":observer_pipeline",
-        ":source",
     ],
 )
 
