@@ -10,7 +10,7 @@
 namespace upkie {
 
 //! Exception-throwing observer
-class ThrowingObserver : public observation::Observer {
+class ThrowingObserver : public Observer {
  public:
   void read(const palimpsest::Dictionary& observation) override {
     throw std::runtime_error("could not get schwifty");

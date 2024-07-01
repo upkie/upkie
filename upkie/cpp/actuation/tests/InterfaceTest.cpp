@@ -38,10 +38,10 @@ class InterfaceTest : public ::testing::Test {
   std::unique_ptr<Interface> interface_;
 
   //! Servo commands placeholder
-  std::vector<actuation::moteus::ServoCommand> commands_;
+  std::vector<moteus::ServoCommand> commands_;
 
   //! Servo replies placeholder
-  std::vector<actuation::moteus::ServoReply> replies_;
+  std::vector<moteus::ServoReply> replies_;
 
   //! Data buffer to call interface_->cycle()
   moteus::Data data_;
@@ -62,11 +62,11 @@ TEST_F(InterfaceTest, DataIsInitialized) {
 
 TEST_F(InterfaceTest, WriteStopCommands) {
   for (auto& command : interface_->commands()) {
-    command.mode = actuation::moteus::Mode::kFault;
+    command.mode = moteus::Mode::kFault;
   }
   interface_->write_stop_commands();
   for (const auto& command : interface_->commands()) {
-    ASSERT_EQ(command.mode, actuation::moteus::Mode::kStopped);
+    ASSERT_EQ(command.mode, moteus::Mode::kStopped);
   }
 }
 
@@ -96,10 +96,10 @@ TEST_F(InterfaceTest, StopUnknownServos) {
   action("servo")("left_pump")("position") = 0.0;
   action("servo")("left_grinder")("position") = 0.0;
   interface_->write_position_commands(action);
-  ASSERT_EQ(interface_->commands()[0].mode, actuation::moteus::Mode::kPosition);
-  ASSERT_EQ(interface_->commands()[1].mode, actuation::moteus::Mode::kPosition);
-  ASSERT_EQ(interface_->commands()[2].mode, actuation::moteus::Mode::kStopped);
-  ASSERT_EQ(interface_->commands()[3].mode, actuation::moteus::Mode::kStopped);
+  ASSERT_EQ(interface_->commands()[0].mode, moteus::Mode::kPosition);
+  ASSERT_EQ(interface_->commands()[1].mode, moteus::Mode::kPosition);
+  ASSERT_EQ(interface_->commands()[2].mode, moteus::Mode::kStopped);
+  ASSERT_EQ(interface_->commands()[3].mode, moteus::Mode::kStopped);
 }
 
 TEST_F(InterfaceTest, ForwardPositionCommands) {
@@ -111,7 +111,7 @@ TEST_F(InterfaceTest, ForwardPositionCommands) {
 
   interface_->write_position_commands(action);
   for (const auto& command : interface_->commands()) {
-    ASSERT_EQ(command.mode, actuation::moteus::Mode::kPosition);
+    ASSERT_EQ(command.mode, moteus::Mode::kPosition);
   }
   const auto& commands = interface_->commands();
   ASSERT_DOUBLE_EQ(commands[0].position.position, 1.0);  // [rev]
@@ -123,14 +123,14 @@ TEST_F(InterfaceTest, ForwardPositionCommands) {
 TEST_F(InterfaceTest, StopServoIfNoAction) {
   Dictionary action;
   interface_->write_position_commands(action);
-  ASSERT_EQ(interface_->commands()[0].mode, actuation::moteus::Mode::kStopped);
+  ASSERT_EQ(interface_->commands()[0].mode, moteus::Mode::kStopped);
 }
 
 TEST_F(InterfaceTest, StopServoIfNoPosition) {
   Dictionary action;
   action("servo")("left_pump")("velocity") = 1.5;  // velocity but not position
   interface_->write_position_commands(action);
-  ASSERT_EQ(interface_->commands()[0].mode, actuation::moteus::Mode::kStopped);
+  ASSERT_EQ(interface_->commands()[0].mode, moteus::Mode::kStopped);
 }
 
 TEST_F(InterfaceTest, ForwardVelocityCommands) {
@@ -142,7 +142,7 @@ TEST_F(InterfaceTest, ForwardVelocityCommands) {
   }
   interface_->write_position_commands(action);
   for (const auto& command : interface_->commands()) {
-    ASSERT_EQ(command.mode, actuation::moteus::Mode::kPosition);
+    ASSERT_EQ(command.mode, moteus::Mode::kPosition);
     ASSERT_EQ(command.position.position, 1.0);
     ASSERT_EQ(command.position.velocity, 0.5);
   }

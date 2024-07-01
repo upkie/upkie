@@ -38,7 +38,7 @@ void Interface::initialize_action(Dictionary& action) {
 }
 
 void Interface::write_position_commands(const Dictionary& action) {
-  using Mode = actuation::moteus::Mode;
+  using Mode = moteus::Mode;
   if (!action.has("servo")) {
     spdlog::warn("No position command at key \"servo\" of action");
     return;

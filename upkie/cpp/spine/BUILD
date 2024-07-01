@@ -59,14 +59,4 @@ cc_library(
     ],
 )
 
-py_library(
-    name = "python",
-    srcs = [
-        "__init__.py",
-        "exceptions.py",
-        "request.py",
-        "spine_interface.py",
-    ],
-)
-
 add_lint_tests()

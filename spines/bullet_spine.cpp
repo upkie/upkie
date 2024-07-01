@@ -26,7 +26,7 @@
 #include "upkie/cpp/observers/WheelOdometry.h"
 #include "upkie/cpp/spine/Spine.h"
 #include "upkie/cpp/utils/get_log_path.h"
-#include "upkie/version.h"
+#include "upkie/cpp/version.h"
 
 namespace spines::bullet {
 

@@ -121,7 +121,7 @@ class Interface {
    */
   inline void write_stop_commands() noexcept {
     for (auto& command : commands_) {
-      command.mode = actuation::moteus::Mode::kStopped;
+      command.mode = moteus::Mode::kStopped;
     }
   }
 

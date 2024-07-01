@@ -69,8 +69,8 @@ class Spine {
    * \param[in, out] observers Pipeline of observers to run, in that order, at
    *     each cycle.
    */
-  Spine(const Parameters& params, actuation::Interface& interface,
-        observation::ObserverPipeline& observers);
+  Spine(const Parameters& params, Interface& interface,
+        ObserverPipeline& observers);
 
   /*! Reset the spine with a new configuration.
    *
@@ -143,22 +143,22 @@ class Spine {
    * The actuation interface communicates over the CAN-FD bus on real robots.
    * Otherwise, it can be for instance a mock or a simulator interface.
    */
-  actuation::Interface& actuation_;
+  Interface& actuation_;
 
   //! Shared memory mapping for inter-process communication
   AgentInterface agent_interface_;
 
   //! Future used to wait for moteus replies
-  std::future<actuation::moteus::Output> actuation_output_;
+  std::future<moteus::Output> actuation_output_;
 
   //! Latest servo replies. They are copied and thread-safe.
-  std::vector<actuation::moteus::ServoReply> latest_replies_;
+  std::vector<moteus::ServoReply> latest_replies_;
 
   //! All data from observation to action goes to this dictionary
   palimpsest::Dictionary working_dict_;
 
   //! Pipeline of observers, executed in that order
-  observation::ObserverPipeline observer_pipeline_;
+  ObserverPipeline observer_pipeline_;
 
   //! Logger for the \ref working_dict_ produced at each cycle
   mpacklog::Logger logger_;
