@@ -22,7 +22,7 @@ cc_binary(
         "//upkie/cpp/sensors",
         "//upkie/cpp/spine",
         "//upkie/cpp/utils:get_log_path",
-        "//upkie:version",
+        "//upkie/cpp:version",
     ],
 )
 
@@ -38,7 +38,7 @@ cc_binary(
         "//upkie/cpp/sensors",
         "//upkie/cpp/spine",
         "//upkie/cpp/utils:get_log_path",
-        "//upkie:version",
+        "//upkie/cpp:version",
     ] + select({
         "//:pi64_config": [
             "@org_llvm_libcxx//:libcxx",
@@ -59,7 +59,7 @@ cc_binary(
         "//upkie/cpp/sensors",
         "//upkie/cpp/spine",
         "//upkie/cpp/utils:get_log_path",
-        "//upkie:version",
+        "//upkie/cpp:version",
     ] + select({
         "//:pi64_config": ["//upkie/cpp/actuation:pi3hat_interface"],
         "//conditions:default": [],
