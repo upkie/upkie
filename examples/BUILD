@@ -18,8 +18,8 @@ py_binary(
 )
 
 py_binary(
-    name = "mpc_balancing",
-    srcs = ["mpc_balancing.py"],
+    name = "model_predictive_control",
+    srcs = ["model_predictive_control.py"],
     deps = [
         "//upkie/envs",
         "//upkie/utils:clamp",
