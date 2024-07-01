@@ -14,7 +14,7 @@ namespace upkie::cpp::observation {
 
 /*! Observer pipeline.
  *
- * An observer pipeline is a list of sources and observers, to be executed in
+ * An observer pipeline is a list of sensors and observers, to be executed in
  * that order. Observers further down the pipeline may depend on the results of
  * those that precede them, which are written to the observation dictionary.
  * The pipeline is thus assumed to be topologically sorted.
@@ -31,16 +31,16 @@ class ObserverPipeline {
    */
   void reset(const Dictionary& config);
 
-  /* Add a source at the beginning of the pipeline.
+  /* Add a sensor at the beginning of the pipeline.
    *
-   * \param source Source to append.
+   * \param sensor Sensor to append.
    *
-   * \note Contrary to observers, the order in which sources are executed is
-   * not guaranteed. If a source needs to run after another, consider splitting
-   * it into one source and one observer.
+   * \note Contrary to observers, the order in which sensors are executed is
+   * not guaranteed. If a sensor needs to run after another, consider splitting
+   * it into one sensor and one observer.
    */
-  void connect_source(std::shared_ptr<Source> source) {
-    sources_.push_back(std::shared_ptr<Source>(source));
+  void connect_sensor(std::shared_ptr<Sensor> sensor) {
+    sensors_.push_back(std::shared_ptr<Sensor>(sensor));
   }
 
   /* Append an observer at the end of the pipeline.
@@ -51,11 +51,11 @@ class ObserverPipeline {
     observers_.push_back(std::shared_ptr<Observer>(observer));
   }
 
-  //! Sources of the pipeline.
-  std::vector<std::shared_ptr<Sensor>>& sources() { return sources_; }
+  //! Sensors of the pipeline.
+  std::vector<std::shared_ptr<Sensor>>& sensors() { return sensors_; }
 
-  //! Number of sources in the pipeline.
-  size_t nb_sources() { return sources_.size(); }
+  //! Number of sensors in the pipeline.
+  size_t nb_sensors() { return sensors_.size(); }
 
   //! Observers of the pipeline. Order matters.
   std::vector<std::shared_ptr<Observer>>& observers() { return observers_; }
@@ -70,8 +70,8 @@ class ObserverPipeline {
   void run(Dictionary& observation);
 
  private:
-  //! Sources of the pipeline.
-  std::vector<std::shared_ptr<Sensor>> sources_;
+  //! Sensors of the pipeline.
+  std::vector<std::shared_ptr<Sensor>> sensors_;
 
   //! Observers of the pipeline. Order matters.
   std::vector<std::shared_ptr<Observer>> observers_;
