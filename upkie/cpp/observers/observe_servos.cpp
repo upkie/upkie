@@ -7,10 +7,6 @@
 #include <string>
 #include <vector>
 
-namespace moteus = upkie::cpp::actuation::moteus;
-
-using palimpsest::Dictionary;
-
 namespace upkie {
 
 void observe_servos(Dictionary& observation,

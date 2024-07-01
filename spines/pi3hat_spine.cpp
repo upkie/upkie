@@ -24,9 +24,9 @@
 #include "upkie/cpp/sensors/CpuTemperature.h"
 #include "upkie/cpp/sensors/Joystick.h"
 #include "upkie/cpp/spine/Spine.h"
+#include "upkie/cpp/utils/get_log_path.h"
 #include "upkie/cpp/utils/realtime.h"
-#include "upkie/utils/get_log_path.h"
-#include "upkie/version.h"
+#include "upkie/cpp/version.h"
 
 namespace spines::pi3hat {
 
@@ -152,7 +152,7 @@ int main(const CommandLineArguments& args) {
     spdlog::error("Calibration needed: did you run `upkie_tool rezero`?");
     return -3;
   }
-  if (!upkie::cpp::utils::lock_memory()) {
+  if (!upkie::lock_memory()) {
     spdlog::error("Could not lock process memory to RAM");
     return -4;
   }

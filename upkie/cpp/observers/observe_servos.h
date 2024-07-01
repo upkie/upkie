@@ -19,9 +19,8 @@ namespace upkie {
  * \param[in] servo_joint_map Map from servo ID to joint name.
  * \param[in] servo_replies List of servo replies from the CAN bus.
  */
-void observe_servos(
-    palimpsest::Dictionary& observation,
-    const std::map<int, std::string>& servo_joint_map,
-    const std::vector<actuation::moteus::ServoReply>& servo_replies);
+void observe_servos(palimpsest::Dictionary& observation,
+                    const std::map<int, std::string>& servo_joint_map,
+                    const std::vector<moteus::ServoReply>& servo_replies);
 
 }  // namespace upkie

@@ -13,7 +13,7 @@ namespace upkie {
 using palimpsest::exceptions::KeyError;
 
 //! An observer that gets schwifty
-class SchwiftyObserver : public observation::Observer {
+class SchwiftyObserver : public Observer {
  public:
   void write(palimpsest::Dictionary& observation) override {
     observation("schwifty") = true;

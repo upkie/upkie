@@ -10,10 +10,6 @@
 #include "gtest/gtest.h"
 #include "upkie/cpp/actuation/moteus/ServoReply.h"
 
-namespace moteus = upkie::cpp::actuation::moteus;
-
-using palimpsest::Dictionary;
-
 namespace upkie {
 
 TEST(Servo, ReadTorques) {

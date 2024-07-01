@@ -15,9 +15,9 @@ namespace upkie {
  * For now these settings are common to all interfaces but we can easily turn
  * them into parameters.
  */
-inline actuation::moteus::QueryCommand get_query_resolution() {
-  using actuation::moteus::Resolution;
-  actuation::moteus::QueryCommand query;
+inline moteus::QueryCommand get_query_resolution() {
+  using moteus::Resolution;
+  moteus::QueryCommand query;
   query.mode = Resolution::kInt16;
   query.position = Resolution::kInt32;
   query.velocity = Resolution::kInt32;
@@ -38,9 +38,9 @@ inline actuation::moteus::QueryCommand get_query_resolution() {
  * For now these settings are common to all interfaces but we can easily turn
  * them into parameters.
  */
-inline actuation::moteus::PositionResolution get_position_resolution() {
-  using actuation::moteus::Resolution;
-  actuation::moteus::PositionResolution resolution;
+inline moteus::PositionResolution get_position_resolution() {
+  using moteus::Resolution;
+  moteus::PositionResolution resolution;
   resolution.position = Resolution::kFloat;
   resolution.velocity = Resolution::kFloat;
   resolution.feedforward_torque = Resolution::kIgnore;

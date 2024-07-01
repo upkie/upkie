@@ -22,10 +22,6 @@
 
 namespace upkie {
 
-using actuation::MockInterface;
-using observation::ObserverPipeline;
-using observation::tests::SchwiftyObserver;
-using observation::tests::ThrowingObserver;
 using palimpsest::Dictionary;
 using spine::Spine;
 
@@ -43,7 +39,7 @@ class Spine : public upkie::Spine {
   //! Check whether all servo commands are stops.
   bool all_commands_are_stops() {
     for (const auto& command : actuation_.commands()) {
-      if (command.mode != actuation::moteus::Mode::kStopped) {
+      if (command.mode != moteus::Mode::kStopped) {
         return false;
       }
     }
@@ -81,7 +77,7 @@ class SpineTest : public ::testing::Test {
     params_.shm_name = std::string("/") + utils::random_string();
     params_.shm_size = 1024;
 
-    actuation::ServoLayout layout;
+    ServoLayout layout;
     layout.add_servo(1, 1, "bar");
     layout.add_servo(2, 1, "foo");
 

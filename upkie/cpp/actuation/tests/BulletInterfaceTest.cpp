@@ -59,10 +59,10 @@ class BulletInterfaceTest : public ::testing::Test {
   std::unique_ptr<BulletInterface> interface_;
 
   //! Servo commands placeholder
-  std::vector<actuation::moteus::ServoCommand> commands_;
+  std::vector<moteus::ServoCommand> commands_;
 
   //! Servo replies placeholder
-  std::vector<actuation::moteus::ServoReply> replies_;
+  std::vector<moteus::ServoReply> replies_;
 };
 
 TEST_F(BulletInterfaceTest, CycleCallsCallback) {

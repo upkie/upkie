@@ -20,8 +20,8 @@ namespace upkie {
 
 using palimpsest::Dictionary;
 
-Spine::Spine(const Parameters& params, actuation::Interface& actuation,
-             observation::ObserverPipeline& observers)
+Spine::Spine(const Parameters& params, Interface& actuation,
+             ObserverPipeline& observers)
     : frequency_(params.frequency),
       actuation_(actuation),
       agent_interface_(params.shm_name, params.shm_size),
@@ -50,7 +50,7 @@ Spine::Spine(const Parameters& params, actuation::Interface& actuation,
 
   // Initialize internal dictionary
   Dictionary& observation = working_dict_("observation");
-  observation::observe_time(observation);
+  observe_time(observation);
   working_dict_.insert<double>("time", observation.get<double>("time"));
 }
 
@@ -158,9 +158,8 @@ void Spine::cycle_actuation() {
   try {
     // 1. Observation
     Dictionary& observation = working_dict_("observation");
-    observation::observe_time(observation);
-    observation::observe_servos(observation, actuation_.servo_joint_map(),
-                                latest_replies_);
+    observe_time(observation);
+    observe_servos(observation, actuation_.servo_joint_map(), latest_replies_);
     actuation_.observe(observation);
     // Observers need configuration, so they cannot run at stop
     if (state_machine_.state() != State::kSendStops &&
@@ -217,8 +216,8 @@ void Spine::cycle_actuation() {
 
   // 4. Start a new cycle. Results have been copied, so actuation commands and
   // replies are available again to the actuation thread for writing.
-  auto promise = std::make_shared<std::promise<actuation::moteus::Output>>();
-  actuation_.cycle([promise](const actuation::moteus::Output& output) {
+  auto promise = std::make_shared<std::promise<moteus::Output>>();
+  actuation_.cycle([promise](const moteus::Output& output) {
     // This is called from an arbitrary thread, so we
     // just set the promise value here.
     promise->set_value(output);
