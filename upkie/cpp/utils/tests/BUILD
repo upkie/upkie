@@ -19,7 +19,7 @@ cc_test(
         ], exclude=["realtime_test.cpp"]),
     }),
     deps = [
-        "//vulp/utils",
+        "//upkie/cpp/utils",
         "@eigen",
         "@googletest//:main",
     ],
