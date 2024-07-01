@@ -12,6 +12,8 @@
 
 namespace upkie {
 
+namespace bullet {
+
 /*! Convert an Eigen quaternion to a Bullet one.
  *
  * \param[in] quat Eigen quaternion.
@@ -227,5 +229,7 @@ Eigen::Vector3d compute_position_com_in_world(b3RobotSimulatorClientAPI& bullet,
   }
   return weighted_sum / mass;
 }
+
+}  // namespace bullet
 
 }  // namespace upkie

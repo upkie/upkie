@@ -67,16 +67,12 @@ cc_library(
 )
 
 cc_library(
-    name = "bullet_utils",
+    name = "bullet_imu_data",
     hdrs = [
         "BulletImuData.h",
-        "bullet_utils.h",
     ],
     deps = [
         ":imu_data",
-        "@bullet",
-        "@eigen",
-        "@palimpsest",
     ],
 )
 
@@ -84,10 +80,8 @@ cc_library(
     name = "bullet_interface",
     hdrs = [
         "BulletContactData.h",
-        "BulletImuData.h",
         "BulletInterface.h",
         "BulletJointProperties.h",
-        "bullet_utils.h",
     ],
     srcs = [
         "BulletInterface.cpp",
@@ -96,8 +90,10 @@ cc_library(
         "//upkie/cpp/actuation/bullet/plane",
     ],
     deps = [
+        "//upkie/cpp/actuation/bullet:utils",
         "//upkie/cpp/actuation:interface",
         "//upkie/cpp/utils:synchronous_clock",
+        ":bullet_imu_data",
         "@bazel_tools//tools/cpp/runfiles",
         "@bullet",
         "@eigen",
