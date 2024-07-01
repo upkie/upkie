@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2023 Inria
 
-#include "upkie/cpp/observers/Source.h"
+#include "upkie/cpp/observers/Sensor.h"
 
 #include <palimpsest/Dictionary.h>
 
@@ -16,15 +16,15 @@ using palimpsest::Dictionary;
 
 namespace upkie::cpp::observation::tests {
 
-TEST(Source, UnknownPrefix) {
-  Source source;
-  ASSERT_EQ(source.prefix().rfind("unknown", 0), 0);
+TEST(Sensor, UnknownPrefix) {
+  Sensor sensor;
+  ASSERT_EQ(sensor.prefix().rfind("unknown", 0), 0);
 }
 
-TEST(Source, WritesNothing) {
-  Source source;
+TEST(Sensor, WritesNothing) {
+  Sensor sensor;
   Dictionary observation;
-  source.write(observation);
+  sensor.write(observation);
   ASSERT_TRUE(observation.is_empty());
 }
 
