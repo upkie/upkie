@@ -3,6 +3,8 @@
 
 #include "upkie/cpp/observers/observe_servos.h"
 
+#include <palimpsest/Dictionary.h>
+
 #include <map>
 #include <string>
 #include <vector>
@@ -13,7 +15,7 @@
 namespace upkie {
 
 TEST(Servo, ReadTorques) {
-  Dictionary observation;
+  palimpsest::Dictionary observation;
 
   std::map<int, std::string> servo_joint_map = {{0, "foo"}, {1, "bar"}};
   std::vector<moteus::ServoReply> servo_replies;

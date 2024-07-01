@@ -11,9 +11,6 @@
 
 namespace upkie {
 
-using spine::AgentInterface;
-using spine::StateMachine;
-
 class StateMachineTest : public ::testing::Test {
  protected:
   //! Prepare state machine for a new test
