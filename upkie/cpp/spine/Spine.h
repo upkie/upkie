@@ -1,0 +1,182 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2022 Stéphane Caron
+
+#pragma once
+
+#include <mpacklog/Logger.h>
+
+#include <algorithm>
+#include <future>
+#include <map>
+#include <memory>
+#include <string>
+#include <vector>
+
+#include "upkie/cpp/actuation/Interface.h"
+#include "upkie/cpp/observation/ObserverPipeline.h"
+#include "upkie/cpp/observation/observe_servos.h"
+#include "upkie/cpp/observation/observe_time.h"
+#include "upkie/cpp/spine/AgentInterface.h"
+#include "upkie/cpp/spine/StateMachine.h"
+#include "upkie/cpp/utils/SynchronousClock.h"
+#include "upkie/cpp/utils/handle_interrupts.h"
+#include "upkie/cpp/utils/realtime.h"
+
+namespace upkie::cpp::spine {
+
+constexpr size_t kMebibytes = 1 << 20;
+
+/*! Loop transmitting actions to the actuation and observations to the agent.
+ *
+ * The spine acts as the intermediary between the actuation interface (e.g.
+ * moteus servos connected to the CAN-FD bus) and an agent communicating over
+ * shared memory (the agent interface). It packs observations to the agent from
+ * actuation replies and commands to the actuation from agent actions.
+ *
+ * The spine processes requests at the beginning and end of each control cycle
+ * according to its StateMachine. The overall specification of the state
+ * machine is summarized in the following diagram:
+ *
+ * \image html state-machine.png
+ * \image latex state-machine.eps
+ *
+ * See StateMachine for more details.
+ */
+class Spine {
+ public:
+  //! Spine parameters.
+  struct Parameters {
+    //! CPUID for the spine thread (-1 to disable realtime).
+    int cpu = -1;
+
+    //! Frequency of the spine loop in [Hz].
+    unsigned frequency = 1000u;
+
+    //! Path to output log file
+    std::string log_path = "/dev/null";
+
+    //! Name of the shared memory object for inter-process communication
+    std::string shm_name = "/vulp";
+
+    //! Size of the shared memory object in bytes
+    size_t shm_size = 1 * kMebibytes;
+  };
+
+  /*! Initialize spine.
+   *
+   * \param[in] params Spine parameters.
+   * \param[in, out] interface Interface to actuators.
+   * \param[in, out] observers Pipeline of observers to run, in that order, at
+   *     each cycle.
+   */
+  Spine(const Parameters& params, actuation::Interface& interface,
+        observation::ObserverPipeline& observers);
+
+  /*! Reset the spine with a new configuration.
+   *
+   * \param[in] config New global configuration dictionary, used to derive the
+   *     servo layout (which servo is on which bus, corresponds to which joint)
+   *     and forwarded to other components (e.g. observers).
+   */
+  void reset(const palimpsest::Dictionary& config);
+
+  /*! Run the spine loop until termination.
+   *
+   * Each iteration of the loop runs observers, computes the action and cycles
+   * the actuation interface. Additionally, this function collects debug values
+   * and logs everything.
+   *
+   * \note The spine will catch keyboard interrupts once this function is
+   * called.
+   */
+  void run();
+
+  //! Spin one cycle of the spine loop.
+  void cycle();
+
+  /*! Alternative to \ref run where the actuation interface is cycled a fixed
+   * number of times, and communication cycles are not frequency-regulated.
+   *
+   * \param[in] nb_substeps Number of actuation cycles per action.
+   *
+   * Thus function assumes the agent alternates acting and observing.
+   * Simulation steps are triggered at startup (to construct the initial
+   * observation) and at each action request.
+   *
+   * \note As its name suggests, do not use this function on a real robot.
+   *
+   * Note that there is currently a delay of three substeps between observation
+   * and simulation. That is, the internal simulation state is always three
+   * substeps ahead compared to the values written to the observation
+   * dictionary in \ref cycle_actuation. This decision is discussed in
+   * https://github.com/orgs/upkie/discussions/238#discussioncomment-8984290
+   */
+  void simulate(unsigned nb_substeps);
+
+ private:
+  //! Begin cycle: check interrupts and read agent inputs
+  void begin_cycle();
+
+  /*! Spin one cycle of communications with the actuation interface.
+   *
+   * A cycle consists in:
+   *
+   * 1. Run the observer pipeline over the latest reply
+   * 2. Prepare servo commands
+   * 3. Wait to receive the reply from the previous cycle over the interface
+   * 4. If applicable, start the next cycle:
+   */
+  void cycle_actuation();
+
+  //! End cycle: write agent outputs, apply state machine transition
+  void end_cycle();
+
+  //! Log internal dictionary
+  void log_working_dict();
+
+ protected:
+  //! Frequency of the spine loop in [Hz].
+  const unsigned frequency_;
+
+  /*! Interface that communicates with actuators.
+   *
+   * The actuation interface communicates over the CAN-FD bus on real robots.
+   * Otherwise, it can be for instance a mock or a simulator interface.
+   */
+  actuation::Interface& actuation_;
+
+  //! Shared memory mapping for inter-process communication
+  AgentInterface agent_interface_;
+
+  //! Future used to wait for moteus replies
+  std::future<actuation::moteus::Output> actuation_output_;
+
+  //! Latest servo replies. They are copied and thread-safe.
+  std::vector<actuation::moteus::ServoReply> latest_replies_;
+
+  //! All data from observation to action goes to this dictionary
+  palimpsest::Dictionary working_dict_;
+
+  //! Pipeline of observers, executed in that order
+  observation::ObserverPipeline observer_pipeline_;
+
+  //! Logger for the \ref working_dict_ produced at each cycle
+  mpacklog::Logger logger_;
+
+  //! Buffer used to serialize/deserialize dictionaries in IPC.
+  std::vector<char> ipc_buffer_;
+
+  //! Boolean flag that becomes true when an interruption is caught.
+  const bool& caught_interrupt_;
+
+  //! Internal state machine.
+  StateMachine state_machine_;
+
+  //! State after the last Event::kCycleBeginning
+  State state_cycle_beginning_;
+
+  //! State after the last Event::kCycleEnd
+  State state_cycle_end_;
+};
+
+}  // namespace upkie::cpp::spine
