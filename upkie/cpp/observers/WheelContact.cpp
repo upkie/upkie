@@ -5,9 +5,7 @@
 
 #include "upkie/cpp/utils/low_pass_filter.h"
 
-namespace upkie::observers {
-
-using upkie::cpp::utils::low_pass_filter;
+namespace upkie {
 
 WheelContact::WheelContact(const Parameters& params)
     : params_(params),
@@ -48,4 +46,4 @@ void WheelContact::observe(const double torque, const double velocity,
   }
 }
 
-}  // namespace upkie::observers
+}  // namespace upkie

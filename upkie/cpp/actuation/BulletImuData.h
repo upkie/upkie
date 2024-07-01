@@ -8,11 +8,11 @@
 #include "RobotSimulator/b3RobotSimulatorClientAPI.h"
 #include "upkie/cpp/actuation/ImuData.h"
 
-namespace upkie::cpp::actuation {
+namespace upkie {
 
 struct BulletImuData : public ImuData {
   //! Spatial linear velocity in [m] / [s]², used to compute the acceleration
   Eigen::Vector3d linear_velocity_imu_in_world = Eigen::Vector3d::Zero();
 };
 
-}  // namespace upkie::cpp::actuation
+}  // namespace upkie

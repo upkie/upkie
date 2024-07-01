@@ -8,9 +8,7 @@
 
 #include "upkie/cpp/exceptions/FilterError.h"
 
-namespace upkie::cpp::utils {
-
-using upkie::cpp::exceptions::FilterError;
+namespace upkie {
 
 /*! Low-pass filter as an inline function.
  *
@@ -38,4 +36,4 @@ inline double low_pass_filter(double prev_output, double cutoff_period,
   return prev_output + alpha * (new_input - prev_output);
 }
 
-}  // namespace upkie::cpp::utils
+}  // namespace upkie

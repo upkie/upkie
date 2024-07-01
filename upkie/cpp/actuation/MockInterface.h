@@ -15,7 +15,7 @@
 #include "upkie/cpp/actuation/Interface.h"
 #include "upkie/cpp/actuation/moteus/protocol.h"
 
-namespace upkie::cpp::actuation {
+namespace upkie {
 
 class MockInterface : public Interface {
  public:
@@ -67,4 +67,4 @@ class MockInterface : public Interface {
   ImuData imu_data_;
 };
 
-}  // namespace upkie::cpp::actuation
+}  // namespace upkie

@@ -11,7 +11,7 @@ namespace moteus = upkie::cpp::actuation::moteus;
 
 using palimpsest::Dictionary;
 
-namespace upkie::cpp::observation {
+namespace upkie {
 
 void observe_servos(Dictionary& observation,
                     const std::map<int, std::string>& servo_joint_map,
@@ -46,4 +46,4 @@ void observe_servos(Dictionary& observation,
   }
 }
 
-}  // namespace upkie::cpp::observation
+}  // namespace upkie

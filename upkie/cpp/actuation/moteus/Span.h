@@ -10,7 +10,9 @@
 
 #pragma once
 
-namespace upkie::cpp::actuation::moteus {
+namespace upkie {
+
+namespace moteus {
 
 /*! Fixed-size array with runtime size information.
  *
@@ -64,4 +66,6 @@ class Span {
   size_t size_;
 };
 
-}  // namespace upkie::cpp::actuation::moteus
+}  // namespace moteus
+
+}  // namespace upkie

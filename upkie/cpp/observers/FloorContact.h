@@ -18,10 +18,9 @@
  * \image html observers.png
  * \image latex observers.eps
  */
-namespace upkie::observers {
+namespace upkie {
 
 using palimpsest::Dictionary;
-using upkie::cpp::observation::Observer;
 
 /*! Observe contact between the wheels and the floor.
  *
@@ -142,4 +141,4 @@ class FloorContact : public Observer {
   bool contact_;
 };
 
-}  // namespace upkie::observers
+}  // namespace upkie

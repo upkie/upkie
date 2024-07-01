@@ -12,10 +12,9 @@
 
 #include "upkie/cpp/observers/Observer.h"
 
-namespace upkie::observers {
+namespace upkie {
 
 using palimpsest::Dictionary;
-using upkie::cpp::observation::Observer;
 
 /*! Observe the relative motion of the floating base with respect to the floor.
  *
@@ -154,4 +153,4 @@ class WheelOdometry : public Observer {
   double velocity_;
 };
 
-}  // namespace upkie::observers
+}  // namespace upkie

@@ -12,13 +12,15 @@
 
 #include <limits>
 
-namespace upkie::cpp::actuation::moteus {
+namespace upkie {
+
+namespace moteus {
 
 /*! Position command.
  *
  * \note Default values here are also the initial joint values for the mock
  * interface. See the documentation at \ref
- * upkie::cpp::actuation::MockInterface::ServoState::step.
+ * upkie::MockInterface::ServoState::step.
  */
 struct PositionCommand {
   double position = 0.0;
@@ -31,4 +33,6 @@ struct PositionCommand {
   double watchdog_timeout = 0.0;
 };
 
-}  // namespace upkie::cpp::actuation::moteus
+}  // namespace moteus
+
+}  // namespace upkie

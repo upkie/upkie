@@ -5,7 +5,7 @@
 
 #include "gtest/gtest.h"
 
-namespace upkie::cpp::utils {
+namespace upkie {
 
 TEST(Realtime, ConfigureCPU) { ASSERT_NO_THROW(configure_cpu(0)); }
 
@@ -14,4 +14,4 @@ TEST(Realtime, ConfigureScheduler) {
   ASSERT_THROW(configure_scheduler(priority), std::runtime_error);
 }
 
-}  // namespace upkie::cpp::utils
+}  // namespace upkie

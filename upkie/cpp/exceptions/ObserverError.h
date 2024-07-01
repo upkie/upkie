@@ -5,7 +5,7 @@
 
 #include <string>
 
-namespace upkie::cpp::exceptions {
+namespace upkie {
 
 //! Exception thrown when an observer fails.
 class ObserverError : public std::runtime_error {
@@ -45,4 +45,4 @@ class ObserverError : public std::runtime_error {
   std::string message_;
 };
 
-}  // namespace upkie::cpp::exceptions
+}  // namespace upkie

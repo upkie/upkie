@@ -10,7 +10,9 @@
 
 #pragma once
 
-namespace upkie::cpp::actuation::moteus {
+namespace upkie {
+
+namespace moteus {
 
 //! Output information forwarded to an interface's callback function.
 struct Output {
@@ -18,4 +20,6 @@ struct Output {
   size_t query_result_size = 0;
 };
 
-}  // namespace upkie::cpp::actuation::moteus
+}  // namespace moteus
+
+}  // namespace upkie

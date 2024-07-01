@@ -16,10 +16,9 @@
 
 #include "upkie/cpp/exceptions/ObserverError.h"
 
-namespace upkie::cpp::spine {
+namespace upkie {
 
 using palimpsest::Dictionary;
-using upkie::cpp::exceptions::ObserverError;
 
 Spine::Spine(const Parameters& params, actuation::Interface& actuation,
              observation::ObserverPipeline& observers)
@@ -227,4 +226,4 @@ void Spine::cycle_actuation() {
   actuation_output_ = promise->get_future();
 }
 
-}  // namespace upkie::cpp::spine
+}  // namespace upkie

@@ -4,7 +4,7 @@
 #include "gtest/gtest.h"
 #include "upkie/cpp/utils/SynchronousClock.h"
 
-namespace upkie::cpp::utils {
+namespace upkie {
 
 TEST(SynchronousClock, GetsSomeSleep) {
   SynchronousClock clock(10 /* Hz */);  // 100 ms loop
@@ -29,4 +29,4 @@ TEST(SynchronousClock, NoMarginWhenSkippingCycles) {
   ASSERT_DOUBLE_EQ(clock.slack(), 0.);
 }
 
-}  // namespace upkie::cpp::utils
+}  // namespace upkie

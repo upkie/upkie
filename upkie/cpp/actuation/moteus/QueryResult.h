@@ -14,7 +14,9 @@
 
 #include "upkie/cpp/actuation/moteus/Mode.h"
 
-namespace upkie::cpp::actuation::moteus {
+namespace upkie {
+
+namespace moteus {
 
 struct QueryResult {
   //! Control mode
@@ -48,4 +50,6 @@ struct QueryResult {
   int fault = 0;
 };
 
-}  // namespace upkie::cpp::actuation::moteus
+}  // namespace moteus
+
+}  // namespace upkie

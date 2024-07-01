@@ -6,7 +6,7 @@
 using std::chrono::duration_cast;
 using std::chrono::microseconds;
 
-namespace upkie::cpp::actuation {
+namespace upkie {
 
 MockInterface::MockInterface(const ServoLayout& layout, const double dt)
     : Interface(layout), dt_(dt) {
@@ -67,4 +67,4 @@ void MockInterface::cycle(std::function<void(const moteus::Output&)> callback) {
   callback(output);
 }
 
-}  // namespace upkie::cpp::actuation
+}  // namespace upkie

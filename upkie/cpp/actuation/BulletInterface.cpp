@@ -12,7 +12,7 @@
 
 using bazel::tools::cpp::runfiles::Runfiles;
 
-namespace upkie::cpp::actuation {
+namespace upkie {
 
 std::string find_plane_urdf(const std::string argv0) {
   std::string error;
@@ -226,8 +226,7 @@ void BulletInterface::process_forces(const Dictionary& external_forces) {
       position_eigen.setZero();
     } else /* world frame */ {
       flags = EF_WORLD_FRAME;
-      position_eigen = upkie::cpp::actuation::get_position_link_in_world(
-          bullet_, robot_, link_index);
+      position_eigen = get_position_link_in_world(bullet_, robot_, link_index);
     }
     btVector3 position = bullet_from_eigen(position_eigen);
     btVector3 force = bullet_from_eigen(params.get<Eigen::Vector3d>("force"));
@@ -435,16 +434,15 @@ int BulletInterface::get_link_index(const std::string& link_name) {
 Eigen::Vector3d BulletInterface::get_position_link_in_world(
     const std::string& link_name) {
   int link_index = get_link_index(link_name);
-  return upkie::cpp::actuation::get_position_link_in_world(bullet_, robot_,
-                                                           link_index);
+  return get_position_link_in_world(bullet_, robot_, link_index);
 }
 
 double BulletInterface::compute_robot_mass() {
-  return upkie::cpp::actuation::compute_robot_mass(bullet_, robot_);
+  return compute_robot_mass(bullet_, robot_);
 }
 
 Eigen::Vector3d BulletInterface::compute_position_com_in_world() {
-  return upkie::cpp::actuation::compute_position_com_in_world(bullet_, robot_);
+  return compute_position_com_in_world(bullet_, robot_);
 }
 
-}  // namespace upkie::cpp::actuation
+}  // namespace upkie

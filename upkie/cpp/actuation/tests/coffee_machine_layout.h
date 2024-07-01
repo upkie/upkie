@@ -5,7 +5,7 @@
 
 #include "upkie/cpp/actuation/ServoLayout.h"
 
-namespace upkie::cpp::actuation {
+namespace upkie {
 
 /*! Get a sample servo layout.
  *
@@ -20,4 +20,4 @@ inline const ServoLayout get_coffee_machine_layout() noexcept {
   return layout;
 }
 
-}  // namespace upkie::cpp::actuation
+}  // namespace upkie

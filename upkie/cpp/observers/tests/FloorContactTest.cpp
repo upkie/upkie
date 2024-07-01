@@ -9,7 +9,7 @@
 #include "gtest/gtest.h"
 #include "upkie/cpp/observers/FloorContact.h"
 
-namespace upkie::cpp::observers::tests {
+namespace upkie {
 
 using palimpsest::Dictionary;
 using palimpsest::exceptions::KeyError;
@@ -145,4 +145,4 @@ TEST_F(FloorContactTest, BigLegTorqueMeansContact) {
   ASSERT_TRUE(observation("floor_contact").get<bool>("contact"));
 }
 
-}  // namespace upkie::cpp::observers::tests
+}  // namespace upkie

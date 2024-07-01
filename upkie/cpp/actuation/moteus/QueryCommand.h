@@ -12,7 +12,9 @@
 
 #include "upkie/cpp/actuation/moteus/Resolution.h"
 
-namespace upkie::cpp::actuation::moteus {
+namespace upkie {
+
+namespace moteus {
 
 struct QueryCommand {
   Resolution mode = Resolution::kInt16;
@@ -37,4 +39,6 @@ struct QueryCommand {
   }
 };
 
-}  // namespace upkie::cpp::actuation::moteus
+}  // namespace moteus
+
+}  // namespace upkie

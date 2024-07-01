@@ -6,7 +6,7 @@
 #include "upkie/cpp/actuation/moteus/PositionResolution.h"
 #include "upkie/cpp/actuation/moteus/QueryCommand.h"
 
-namespace upkie::cpp::actuation {
+namespace upkie {
 
 /*! Query resolution settings for all servo commands.
  *
@@ -52,4 +52,4 @@ inline actuation::moteus::PositionResolution get_position_resolution() {
   return resolution;
 }
 
-}  // namespace upkie::cpp::actuation
+}  // namespace upkie
