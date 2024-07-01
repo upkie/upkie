@@ -5,7 +5,7 @@
 
 #include <palimpsest/Dictionary.h>
 
-#include "upkie/cpp/observation/Observer.h"
+#include "upkie/cpp/observers/Observer.h"
 
 namespace upkie::cpp::observation::tests {
 

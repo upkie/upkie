@@ -17,9 +17,9 @@
 
 #include "upkie/config/layout.h"
 #include "upkie/cpp/actuation/Pi3HatInterface.h"
-#include "upkie/cpp/observation/ObserverPipeline.h"
-#include "upkie/cpp/observation/sources/CpuTemperature.h"
-#include "upkie/cpp/observation/sources/Joystick.h"
+#include "upkie/cpp/observers/ObserverPipeline.h"
+#include "upkie/cpp/sensors/CpuTemperature.h"
+#include "upkie/cpp/sensors/Joystick.h"
 #include "upkie/cpp/spine/Spine.h"
 #include "upkie/cpp/utils/realtime.h"
 #include "upkie/observers/BaseOrientation.h"

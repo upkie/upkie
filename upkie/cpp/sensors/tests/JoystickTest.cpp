@@ -6,7 +6,7 @@
 #include <fstream>
 
 #include "gtest/gtest.h"
-#include "upkie/cpp/observation/sources/Joystick.h"
+#include "upkie/cpp/sensors/Joystick.h"
 
 namespace upkie::cpp::observation::sources {
 

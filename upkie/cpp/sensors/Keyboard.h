@@ -15,7 +15,7 @@
 #include <iostream>
 #include <string>
 
-#include "upkie/cpp/observation/Source.h"
+#include "upkie/cpp/sensors/Sensor.h"
 
 using std::chrono::duration_cast;
 using std::chrono::milliseconds;
@@ -43,7 +43,7 @@ inline bool is_printable_ascii(unsigned char c) {
   return 0x20 <= c && c <= 0x7F;
 }
 
-namespace upkie::cpp::observation::sources {
+namespace upkie::cpp::sensors {
 enum class Key {
   UP,
   DOWN,
@@ -111,4 +111,4 @@ class Keyboard : public Source {
   system_clock::time_point last_key_poll_time_;
 };
 
-}  // namespace upkie::cpp::observation::sources
+}  // namespace upkie::cpp::sensors

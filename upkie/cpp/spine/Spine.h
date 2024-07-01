@@ -13,9 +13,9 @@
 #include <vector>
 
 #include "upkie/cpp/actuation/Interface.h"
-#include "upkie/cpp/observation/ObserverPipeline.h"
-#include "upkie/cpp/observation/observe_servos.h"
-#include "upkie/cpp/observation/observe_time.h"
+#include "upkie/cpp/observers/ObserverPipeline.h"
+#include "upkie/cpp/observers/observe_servos.h"
+#include "upkie/cpp/observers/observe_time.h"
 #include "upkie/cpp/spine/AgentInterface.h"
 #include "upkie/cpp/spine/StateMachine.h"
 #include "upkie/cpp/utils/SynchronousClock.h"

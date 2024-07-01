@@ -10,7 +10,7 @@
 
 #include <string>
 
-#include "upkie/cpp/observation/Source.h"
+#include "upkie/cpp/observers/Source.h"
 
 namespace upkie::cpp::observation::sources {
 

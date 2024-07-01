@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2022 Stéphane Caron
 
-#include "upkie/cpp/observation/sources/CpuTemperature.h"
+#include "upkie/cpp/sensors/CpuTemperature.h"
 
 namespace upkie::cpp::observation::sources {
 

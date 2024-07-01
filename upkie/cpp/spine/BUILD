@@ -30,7 +30,7 @@ cc_library(
     ],
     deps = [
         ":agent_interface",
-        "//vulp/utils:handle_interrupts",
+        "//upkie/cpp/utils:handle_interrupts",
     ],
 )
 
@@ -47,13 +47,13 @@ cc_library(
         "@//conditions:default": [],
     }),
     deps = [
-        "//vulp/actuation:interface",
-        "//vulp/exceptions",
-        "//vulp/observation:observe_servos",
-        "//vulp/observation:observe_time",
-        "//vulp/observation:observer_pipeline",
-        "//vulp/utils:realtime",
-        "//vulp/utils:synchronous_clock",
+        "//upkie/cpp/actuation:interface",
+        "//upkie/cpp/exceptions",
+        "//upkie/cpp/observers:observe_servos",
+        "//upkie/cpp/observers:observe_time",
+        "//upkie/cpp/observers:observer_pipeline",
+        "//upkie/cpp/utils:realtime",
+        "//upkie/cpp/utils:synchronous_clock",
         ":state_machine",
         "@mpacklog",
     ],

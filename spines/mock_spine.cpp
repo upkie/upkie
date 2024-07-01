@@ -3,11 +3,11 @@
 // Copyright 2023 Inria
 
 #include "upkie/cpp/actuation/MockInterface.h"
-#include "upkie/cpp/observation/ObserverPipeline.h"
-#include "upkie/cpp/observation/sources/CpuTemperature.h"
+#include "upkie/cpp/observers/ObserverPipeline.h"
+#include "upkie/cpp/sensors/CpuTemperature.h"
 
 #ifndef __APPLE__
-#include "upkie/cpp/observation/sources/Joystick.h"
+#include "upkie/cpp/sensors/Joystick.h"
 #endif
 
 #include <algorithm>

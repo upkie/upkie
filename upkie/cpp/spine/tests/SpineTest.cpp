@@ -14,9 +14,9 @@
 #include "gtest/gtest.h"
 #include "upkie/cpp/actuation/MockInterface.h"
 #include "upkie/cpp/actuation/ServoLayout.h"
-#include "upkie/cpp/observation/ObserverPipeline.h"
-#include "upkie/cpp/observation/tests/SchwiftyObserver.h"
-#include "upkie/cpp/observation/tests/ThrowingObserver.h"
+#include "upkie/cpp/observers/ObserverPipeline.h"
+#include "upkie/cpp/observers/tests/SchwiftyObserver.h"
+#include "upkie/cpp/observers/tests/ThrowingObserver.h"
 #include "upkie/cpp/spine/Spine.h"
 #include "upkie/cpp/utils/random_string.h"
 

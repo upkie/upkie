@@ -12,6 +12,7 @@ py_library(
     deps = [
         "//upkie/config",
         "//upkie/envs",
+        "//upkie/spine",
         "//upkie/utils",
     ],
 )

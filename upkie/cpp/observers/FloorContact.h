@@ -10,8 +10,8 @@
 #include <unordered_map>
 #include <vector>
 
-#include "upkie/cpp/observation/Observer.h"
-#include "upkie/observers/WheelContact.h"
+#include "upkie/cpp/observers/Observer.h"
+#include "upkie/cpp/observers/WheelContact.h"
 
 /*! Observers used by Upkie.
  *

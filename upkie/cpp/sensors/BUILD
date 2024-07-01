@@ -11,7 +11,7 @@ cc_library(
     hdrs = ["CpuTemperature.h"],
     srcs = ["CpuTemperature.cpp"],
     deps = [
-        "//vulp/observation:source",
+        ":sensor",
     ],
 )
 
@@ -26,7 +26,7 @@ cc_library(
         "@//conditions:default": [],
     }),
     deps = [
-        "//vulp/observation:source",
+        ":sensor",
     ],
 )
 
@@ -35,12 +35,12 @@ cc_library(
     hdrs = ["Keyboard.h"],
     srcs = ["Keyboard.cpp"],
     deps = [
-        "//vulp/observation:source",
+        ":sensor",
     ],
 )
 
 cc_library(
-    name = "sources",
+    name = "sensors",
     deps =  select({
         "@//:linux": [":joystick", ":cpu_temperature", ":keyboard"],
         "@//conditions:default": [":cpu_temperature", ":keyboard"],

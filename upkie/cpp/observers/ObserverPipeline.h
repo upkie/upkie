@@ -6,8 +6,8 @@
 #include <memory>
 #include <vector>
 
-#include "upkie/cpp/observation/Observer.h"
-#include "upkie/cpp/observation/Source.h"
+#include "upkie/cpp/observers/Observer.h"
+#include "upkie/cpp/observers/Source.h"
 
 //! State observation.
 namespace upkie::cpp::observation {
@@ -21,7 +21,7 @@ namespace upkie::cpp::observation {
  */
 class ObserverPipeline {
   using ObserverPtrVector = std::vector<std::shared_ptr<observation::Observer>>;
-  using SourcePtrVector = std::vector<std::shared_ptr<observation::Source>>;
+  using SourcePtrVector = std::vector<std::shared_ptr<Sensor>>;
   using Dictionary = palimpsest::Dictionary;
 
  public:

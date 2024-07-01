@@ -4,7 +4,7 @@
 #include <fstream>
 
 #include "gtest/gtest.h"
-#include "upkie/cpp/observation/sources/Keyboard.h"
+#include "upkie/cpp/sensors/Keyboard.h"
 
 namespace upkie::cpp::observation::sources {
 

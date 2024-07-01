@@ -11,16 +11,16 @@ namespace upkie::cpp::observation {
 
 using palimpsest::Dictionary;
 
-/*! Base class for sources.
+/*! Base class for sensors.
  *
- * Sources run before observers. They write their observations without reading
+ * Sensors run before observers. They write their observations without reading
  * other observations from the pipeline, although they may of course read data
  * from other media (such as the file system).
  */
-class Source {
+class Sensor {
  public:
   //! Destructor is virtual to deallocate lists of observers properly.
-  virtual ~Source() {}
+  virtual ~Sensor() {}
 
   /*! Prefix of output in the observation dictionary.
    *
@@ -28,7 +28,7 @@ class Source {
    * the \ref write function.
    */
   virtual inline std::string prefix() const noexcept {
-    return "unknown_source";
+    return "unknown_sensor";
   }
 
   /*! Write output to a dictionary.

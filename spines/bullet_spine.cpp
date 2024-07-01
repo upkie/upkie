@@ -3,11 +3,11 @@
 // Copyright 2023 Inria
 
 #include "upkie/cpp/actuation/BulletInterface.h"
-#include "upkie/cpp/observation/ObserverPipeline.h"
-#include "upkie/cpp/observation/sources/CpuTemperature.h"
+#include "upkie/cpp/observers/ObserverPipeline.h"
+#include "upkie/cpp/sensors/CpuTemperature.h"
 
 #ifndef __APPLE__
-#include "upkie/cpp/observation/sources/Joystick.h"
+#include "upkie/cpp/sensors/Joystick.h"
 #endif
 
 #include <algorithm>
@@ -32,8 +32,8 @@ namespace spines::bullet {
 
 using palimpsest::Dictionary;
 using upkie::cpp::actuation::BulletInterface;
-using upkie::cpp::observation::ObserverPipeline;
-using upkie::cpp::observation::sources::CpuTemperature;
+using upkie::cpp::observers::ObserverPipeline;
+using upkie::cpp::sensors::CpuTemperature;
 using upkie::observers::BaseOrientation;
 using upkie::observers::FloorContact;
 using upkie::observers::WheelOdometry;

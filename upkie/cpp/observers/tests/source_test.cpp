@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2023 Inria
 
-#include "upkie/cpp/observation/Source.h"
+#include "upkie/cpp/observers/Source.h"
 
 #include <palimpsest/Dictionary.h>
 
