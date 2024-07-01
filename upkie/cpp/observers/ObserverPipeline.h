@@ -20,12 +20,10 @@ namespace upkie::cpp::observation {
  * The pipeline is thus assumed to be topologically sorted.
  */
 class ObserverPipeline {
-  using ObserverPtrVector = std::vector<std::shared_ptr<observation::Observer>>;
-  using SourcePtrVector = std::vector<std::shared_ptr<Sensor>>;
   using Dictionary = palimpsest::Dictionary;
 
  public:
-  using iterator = ObserverPtrVector::iterator;
+  using iterator = std::vector<std::shared_ptr<Observer>>::iterator;
 
   /*! Reset observers.
    *
@@ -54,13 +52,13 @@ class ObserverPipeline {
   }
 
   //! Sources of the pipeline.
-  SourcePtrVector& sources() { return sources_; }
+  std::vector<std::shared_ptr<Sensor>>& sources() { return sources_; }
 
   //! Number of sources in the pipeline.
   size_t nb_sources() { return sources_.size(); }
 
   //! Observers of the pipeline. Order matters.
-  ObserverPtrVector& observers() { return observers_; }
+  std::vector<std::shared_ptr<Observer>>& observers() { return observers_; }
 
   //! Number of observers in the pipeline.
   size_t nb_observers() { return observers_.size(); }
@@ -73,10 +71,10 @@ class ObserverPipeline {
 
  private:
   //! Sources of the pipeline.
-  SourcePtrVector sources_;
+  std::vector<std::shared_ptr<Sensor>> sources_;
 
   //! Observers of the pipeline. Order matters.
-  ObserverPtrVector observers_;
+  std::vector<std::shared_ptr<Observer>> observers_;
 };
 
 }  // namespace upkie::cpp::observation
