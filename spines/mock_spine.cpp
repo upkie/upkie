@@ -2,16 +2,13 @@
 // Copyright 2022 Stéphane Caron
 // Copyright 2023 Inria
 
-#include <vulp/actuation/MockInterface.h>
-#include <vulp/observation/ObserverPipeline.h>
-#include <vulp/observation/sources/CpuTemperature.h>
+#include "upkie/cpp/actuation/MockInterface.h"
+#include "upkie/cpp/observation/ObserverPipeline.h"
+#include "upkie/cpp/observation/sources/CpuTemperature.h"
 
 #ifndef __APPLE__
-#include <vulp/observation/sources/Joystick.h>
+#include "upkie/cpp/observation/sources/Joystick.h"
 #endif
-
-#include <vulp/spine/Spine.h>
-#include <vulp/utils/realtime.h>
 
 #include <algorithm>
 #include <future>
@@ -23,6 +20,8 @@
 #include <vector>
 
 #include "upkie/config/layout.h"
+#include "upkie/cpp/spine/Spine.h"
+#include "upkie/cpp/utils/realtime.h"
 #include "upkie/observers/BaseOrientation.h"
 #include "upkie/observers/FloorContact.h"
 #include "upkie/observers/WheelOdometry.h"
@@ -32,16 +31,16 @@
 namespace spines::mock {
 
 using palimpsest::Dictionary;
+using upkie::cpp::actuation::MockInterface;
+using upkie::cpp::observation::ObserverPipeline;
+using upkie::cpp::observation::sources::CpuTemperature;
+using upkie::cpp::spine::Spine;
 using upkie::observers::BaseOrientation;
 using upkie::observers::FloorContact;
 using upkie::observers::WheelOdometry;
-using vulp::actuation::MockInterface;
-using vulp::observation::ObserverPipeline;
-using vulp::observation::sources::CpuTemperature;
-using vulp::spine::Spine;
 
 #ifndef __APPLE__
-using vulp::observation::sources::Joystick;
+using upkie::cpp::observation::sources::Joystick;
 #endif
 
 //! Command-line arguments for the mock spine.
@@ -118,7 +117,7 @@ class CommandLineArguments {
 };
 
 int main(const CommandLineArguments& args) {
-  if (!vulp::utils::lock_memory()) {
+  if (!upkie::cpp::utils::lock_memory()) {
     spdlog::error("could not lock process memory to RAM");
     return -4;
   }

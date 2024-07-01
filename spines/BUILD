@@ -19,11 +19,11 @@ cc_binary(
         "//upkie/observers",
         "//upkie/utils:get_log_path",
         "//upkie:version",
-        "@vulp//vulp/actuation:bullet_interface",
-        "@vulp//vulp/observation",
-        "@vulp//vulp/observation/sources",
-        "@vulp//vulp/observation:history_observer",
-        "@vulp//vulp/spine",
+        "//upkie/cpp/actuation:bullet_interface",
+        "//upkie/cpp/observation",
+        "//upkie/cpp/observation/sources",
+        "//upkie/cpp/observation:history_observer",
+        "//upkie/cpp/spine",
     ],
 )
 
@@ -37,10 +37,10 @@ cc_binary(
         "//upkie/observers",
         "//upkie/utils:get_log_path",
         "//upkie:version",
-        "@vulp//vulp/actuation:mock_interface",
-        "@vulp//vulp/observation",
-        "@vulp//vulp/observation/sources",
-        "@vulp//vulp/spine",
+        "//upkie/cpp/actuation:mock_interface",
+        "//upkie/cpp/observation",
+        "//upkie/cpp/observation/sources",
+        "//upkie/cpp/spine",
     ] + select({
         "//:pi64_config": [
             "@org_llvm_libcxx//:libcxx",
@@ -60,11 +60,11 @@ cc_binary(
         "//upkie/observers",
         "//upkie/utils:get_log_path",
         "//upkie:version",
-        "@vulp//vulp/observation",
-        "@vulp//vulp/observation/sources",
-        "@vulp//vulp/spine",
+        "//upkie/cpp/observation",
+        "//upkie/cpp/observation/sources",
+        "//upkie/cpp/spine",
     ] + select({
-        "//:pi64_config": ["@vulp//vulp/actuation:pi3hat_interface"],
+        "//:pi64_config": ["//upkie/cpp/actuation:pi3hat_interface"],
         "//conditions:default": [],
     }),
     target_compatible_with = select({
