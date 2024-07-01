@@ -40,6 +40,14 @@ cc_library(
 )
 
 cc_library(
+    name = "sensor",
+    hdrs = ["Sensor.h"],
+    deps = [
+        "@palimpsest",
+    ],
+)
+
+cc_library(
     name = "sensors",
     deps =  select({
         "@//:linux": [":joystick", ":cpu_temperature", ":keyboard"],
