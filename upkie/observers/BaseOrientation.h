@@ -4,6 +4,7 @@
 #pragma once
 
 #include <palimpsest/Dictionary.h>
+#include <spdlog/fmt/ostr.h>
 
 #include <cmath>
 #include <string>
