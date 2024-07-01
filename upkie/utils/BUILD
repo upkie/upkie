@@ -18,7 +18,6 @@ cc_library(
         ":datetime_now_string",
         "@spdlog",
     ],
-    include_prefix = "vulp/utils",
 )
 
 py_library(
@@ -70,9 +69,12 @@ py_library(
 
 py_library(
     name = "rotations",
-    srcs = [
-        "rotations.py",
-    ],
+    srcs = ["rotations.py"],
+)
+
+py_library(
+    name = "serialize",
+    srcs = ["serialize.py"],
 )
 
 py_library(
@@ -89,9 +91,10 @@ py_library(
         ":nested_update",
         ":pinocchio",
         ":raspi",
-        ":spdlog",
         ":robot_state",
         ":rotations",
+        ":serialize",
+        ":spdlog",
     ],
 )
 

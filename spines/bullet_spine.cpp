@@ -2,15 +2,13 @@
 // Copyright 2022 Stéphane Caron
 // Copyright 2023 Inria
 
-#include <vulp/actuation/BulletInterface.h>
-#include <vulp/observation/ObserverPipeline.h>
-#include <vulp/observation/sources/CpuTemperature.h>
+#include "upkie/cpp/actuation/BulletInterface.h"
+#include "upkie/cpp/observation/ObserverPipeline.h"
+#include "upkie/cpp/observation/sources/CpuTemperature.h"
 
 #ifndef __APPLE__
-#include <vulp/observation/sources/Joystick.h>
+#include "upkie/cpp/observation/sources/Joystick.h"
 #endif
-
-#include <vulp/spine/Spine.h>
 
 #include <algorithm>
 #include <cstdlib>
@@ -23,6 +21,7 @@
 #include <vector>
 
 #include "upkie/config/layout.h"
+#include "upkie/cpp/spine/Spine.h"
 #include "upkie/observers/BaseOrientation.h"
 #include "upkie/observers/FloorContact.h"
 #include "upkie/observers/WheelOdometry.h"
@@ -32,18 +31,18 @@
 namespace spines::bullet {
 
 using palimpsest::Dictionary;
+using upkie::cpp::actuation::BulletInterface;
+using upkie::cpp::observation::ObserverPipeline;
+using upkie::cpp::observation::sources::CpuTemperature;
 using upkie::observers::BaseOrientation;
 using upkie::observers::FloorContact;
 using upkie::observers::WheelOdometry;
-using vulp::actuation::BulletInterface;
-using vulp::observation::ObserverPipeline;
-using vulp::observation::sources::CpuTemperature;
 
 #ifndef __APPLE__
-using vulp::observation::sources::Joystick;
+using upkie::cpp::observation::sources::Joystick;
 #endif
 
-using vulp::spine::Spine;
+using upkie::cpp::spine::Spine;
 
 //! Command-line arguments for the Bullet spine.
 class CommandLineArguments {

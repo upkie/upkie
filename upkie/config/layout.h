@@ -3,10 +3,10 @@
 
 #pragma once
 
-#include <vulp/actuation/ServoLayout.h>
-
 #include <string>
 #include <vector>
+
+#include "upkie/cpp/actuation/ServoLayout.h"
 
 namespace upkie::config {
 
@@ -17,8 +17,8 @@ constexpr int kRightBusID = 3;  // JC3
  *
  * \return Upkie's servo layout.
  */
-inline const vulp::actuation::ServoLayout servo_layout() noexcept {
-  vulp::actuation::ServoLayout layout;
+inline const upkie::cpp::actuation::ServoLayout servo_layout() noexcept {
+  upkie::cpp::actuation::ServoLayout layout;
   layout.add_servo(1, kLeftBusID, "left_hip");
   layout.add_servo(2, kLeftBusID, "left_knee");
   layout.add_servo(3, kLeftBusID, "left_wheel");

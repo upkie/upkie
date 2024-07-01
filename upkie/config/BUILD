@@ -20,6 +20,6 @@ cc_library(
         "layout.h",
     ],
     deps = [
-        "@vulp//vulp/actuation:servo_layout",
+        "//upkie/cpp/actuation:servo_layout",
     ],
 )

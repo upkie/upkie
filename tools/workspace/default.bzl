@@ -3,9 +3,12 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2022 Stéphane Caron
 
+load("//tools/workspace/bullet:repository.bzl", "bullet_repository")
+load("//tools/workspace/mpacklog:repository.bzl", "mpacklog_repository")
+load("//tools/workspace/palimpsest:repository.bzl", "palimpsest_repository")
+load("//tools/workspace/pi3hat:repository.bzl", "pi3hat_repository")
 load("//tools/workspace/pycodestyle:repository.bzl", "pycodestyle_repository")
 load("//tools/workspace/upkie_description:repository.bzl", "upkie_description_repository")
-load("//tools/workspace/vulp:repository.bzl", "vulp_repository")
 
 def add_default_repositories():
     """
@@ -16,6 +19,9 @@ def add_default_repositories():
     your project depends on @upkie, you will need to call this function from
     its WORKSPACE.
     """
+    bullet_repository()
+    mpacklog_repository()
+    palimpsest_repository()
+    pi3hat_repository()
     pycodestyle_repository()
     upkie_description_repository()
-    vulp_repository()

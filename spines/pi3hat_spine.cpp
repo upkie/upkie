@@ -3,12 +3,6 @@
 // Copyright 2023-2024 Inria
 
 #include <unistd.h>
-#include <vulp/actuation/Pi3HatInterface.h>
-#include <vulp/observation/ObserverPipeline.h>
-#include <vulp/observation/sources/CpuTemperature.h>
-#include <vulp/observation/sources/Joystick.h>
-#include <vulp/spine/Spine.h>
-#include <vulp/utils/realtime.h>
 
 #include <algorithm>
 #include <cstdlib>
@@ -22,6 +16,12 @@
 #include <vector>
 
 #include "upkie/config/layout.h"
+#include "upkie/cpp/actuation/Pi3HatInterface.h"
+#include "upkie/cpp/observation/ObserverPipeline.h"
+#include "upkie/cpp/observation/sources/CpuTemperature.h"
+#include "upkie/cpp/observation/sources/Joystick.h"
+#include "upkie/cpp/spine/Spine.h"
+#include "upkie/cpp/utils/realtime.h"
 #include "upkie/observers/BaseOrientation.h"
 #include "upkie/observers/FloorContact.h"
 #include "upkie/observers/WheelOdometry.h"
@@ -32,14 +32,14 @@ namespace spines::pi3hat {
 
 using Pi3Hat = ::mjbots::pi3hat::Pi3Hat;
 using palimpsest::Dictionary;
+using upkie::cpp::actuation::Pi3HatInterface;
+using upkie::cpp::observation::ObserverPipeline;
+using upkie::cpp::observation::sources::CpuTemperature;
+using upkie::cpp::observation::sources::Joystick;
+using upkie::cpp::spine::Spine;
 using upkie::observers::BaseOrientation;
 using upkie::observers::FloorContact;
 using upkie::observers::WheelOdometry;
-using vulp::actuation::Pi3HatInterface;
-using vulp::observation::ObserverPipeline;
-using vulp::observation::sources::CpuTemperature;
-using vulp::observation::sources::Joystick;
-using vulp::spine::Spine;
 
 //! Command-line arguments for the Bullet spine.
 class CommandLineArguments {
@@ -152,7 +152,7 @@ int main(const CommandLineArguments& args) {
     spdlog::error("Calibration needed: did you run `upkie_tool rezero`?");
     return -3;
   }
-  if (!vulp::utils::lock_memory()) {
+  if (!upkie::cpp::utils::lock_memory()) {
     spdlog::error("Could not lock process memory to RAM");
     return -4;
   }
