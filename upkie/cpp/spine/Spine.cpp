@@ -27,7 +27,7 @@ Spine::Spine(const Parameters& params, Interface& actuation,
       agent_interface_(params.shm_name, params.shm_size),
       observer_pipeline_(observers),
       logger_(params.log_path),
-      caught_interrupt_(vulp::utils::handle_interrupts()),
+      caught_interrupt_(handle_interrupts()),
       state_machine_(agent_interface_),
       state_cycle_beginning_(State::kOver),
       state_cycle_end_(State::kOver) {
@@ -41,8 +41,8 @@ Spine::Spine(const Parameters& params, Interface& actuation,
   // Real-time configuration
   // NB: it is too late to lock memory here, this should be done by the caller
   if (params.cpu >= 0) {
-    utils::configure_cpu(params.cpu);
-    utils::configure_scheduler(10);
+    configure_cpu(params.cpu);
+    configure_scheduler(10);
   }
 
   // Inter-process communication
@@ -80,7 +80,7 @@ void Spine::log_working_dict() {
 
 void Spine::run() {
   Dictionary& spine = working_dict_("spine");
-  utils::SynchronousClock clock(frequency_);
+  SynchronousClock clock(frequency_);
   while (state_machine_.state() != State::kOver) {
     cycle();
     if (state_machine_.state() != State::kSendStops) {

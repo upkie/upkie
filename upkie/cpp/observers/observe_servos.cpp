@@ -9,7 +9,7 @@
 
 namespace upkie {
 
-void observe_servos(Dictionary& observation,
+void observe_servos(palimpsest::Dictionary& observation,
                     const std::map<int, std::string>& servo_joint_map,
                     const std::vector<moteus::ServoReply>& servo_replies) {
   for (const auto& reply : servo_replies) {
