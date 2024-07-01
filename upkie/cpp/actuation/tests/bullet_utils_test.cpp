@@ -11,9 +11,11 @@
 #include "upkie/cpp/actuation/BulletImuData.h"
 #include "upkie/cpp/actuation/bullet/utils.h"
 
+using bazel::tools::cpp::runfiles::Runfiles;
+
 namespace upkie {
 
-using bazel::tools::cpp::runfiles::Runfiles;
+namespace bullet {
 
 class BulletTest : public ::testing::Test {
  protected:
@@ -125,5 +127,7 @@ TEST_F(BulletTest, ComputeCenterOfMass) {
   ASSERT_NEAR(com.y(), 0.0, 1e-4);
   ASSERT_NEAR(com.z(), -0.2484, 1e-4);
 }
+
+}  // namespace bullet
 
 }  // namespace upkie

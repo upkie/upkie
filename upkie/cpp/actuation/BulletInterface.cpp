@@ -10,11 +10,11 @@
 #include "tools/cpp/runfiles/runfiles.h"
 #include "upkie/cpp/actuation/bullet/utils.h"
 
+namespace upkie {
+
 using bazel::tools::cpp::runfiles::Runfiles;
 using bullet::bullet_from_eigen;
 using bullet::eigen_from_bullet;
-
-namespace upkie {
 
 std::string find_plane_urdf(const std::string argv0) {
   std::string error;
@@ -247,7 +247,8 @@ void BulletInterface::cycle(
   }
 
   read_joint_sensors();
-  read_imu_data(imu_data_, bullet_, robot_, imu_link_index_, params_.dt);
+  bullet::read_imu_data(imu_data_, bullet_, robot_, imu_link_index_,
+                        params_.dt);
   read_contacts();
   send_commands(data);
   bullet_.stepSimulation();
@@ -429,7 +430,7 @@ int BulletInterface::get_link_index(const std::string& link_name) {
   if (link_index_.find(link_name) != link_index_.end()) {
     return link_index_[link_name];
   }
-  int link_index = find_link_index(bullet_, robot_, link_name);
+  int link_index = bullet::find_link_index(bullet_, robot_, link_name);
   link_index_[link_name] = link_index;
   return link_index;
 }
@@ -437,15 +438,15 @@ int BulletInterface::get_link_index(const std::string& link_name) {
 Eigen::Vector3d BulletInterface::get_position_link_in_world(
     const std::string& link_name) {
   int link_index = get_link_index(link_name);
-  return get_position_link_in_world(bullet_, robot_, link_index);
+  return bullet::get_position_link_in_world(bullet_, robot_, link_index);
 }
 
 double BulletInterface::compute_robot_mass() {
-  return compute_robot_mass(bullet_, robot_);
+  return bullet::compute_robot_mass(bullet_, robot_);
 }
 
 Eigen::Vector3d BulletInterface::compute_position_com_in_world() {
-  return compute_position_com_in_world(bullet_, robot_);
+  return bullet::compute_position_com_in_world(bullet_, robot_);
 }
 
 }  // namespace upkie
