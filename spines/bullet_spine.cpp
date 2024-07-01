@@ -192,14 +192,14 @@ int main(const char* argv0, const CommandLineArguments& args) {
 
   // Observation: CPU temperature
   auto cpu_temperature = std::make_shared<CpuTemperature>();
-  observation.connect_source(cpu_temperature);
+  observation.connect_sensor(cpu_temperature);
 
 #ifndef __APPLE__
   // Observation: Joystick
   auto joystick = std::make_shared<Joystick>();
   if (joystick->present()) {
     spdlog::info("Joystick found");
-    observation.connect_source(joystick);
+    observation.connect_sensor(joystick);
   }
 #endif
 
@@ -237,8 +237,7 @@ int main(const char* argv0, const CommandLineArguments& args) {
   // Spine
   Spine::Parameters spine_params;
   spine_params.frequency = args.spine_frequency;
-  spine_params.log_path =
-      upkie::utils::get_log_path(args.log_dir, "bullet_spine");
+  spine_params.log_path = upkie::get_log_path(args.log_dir, "bullet_spine");
   spine_params.shm_name = args.shm_name;
   spdlog::info("Spine data logged to {}", spine_params.log_path);
   Spine spine(spine_params, interface, observation);
