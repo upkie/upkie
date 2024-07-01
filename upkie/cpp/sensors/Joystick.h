@@ -12,19 +12,19 @@
 
 #include "upkie/cpp/sensors/Sensor.h"
 
-namespace upkie::cpp::sensors {
+namespace upkie {
 
 //! Deadband between 0.0 and 1.0.
 constexpr double kJoystickDeadband = 0.1;
 
-/*! Source for a joystick controller.
+/*! Sensor for a joystick controller.
  *
  * Axes are the same for PS4 and Xbox controllers, but buttons differ
  * slightly. See comments in \ref read for the exact mapping.
  *
- * \note This source only works on Linux.
+ * \note This sensor only works on Linux.
  */
-class Joystick : public Source {
+class Joystick : public Sensor {
  public:
   /*! Open the device file.
    *
@@ -89,4 +89,4 @@ class Joystick : public Source {
   bool triangle_button_ = false;
 };
 
-}  // namespace upkie::cpp::sensors
+}  // namespace upkie

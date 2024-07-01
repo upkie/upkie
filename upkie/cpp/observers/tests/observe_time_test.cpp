@@ -5,7 +5,7 @@
 
 #include "gtest/gtest.h"
 
-namespace upkie::cpp::observation::tests {
+namespace upkie {
 
 TEST(Time, ObserveTime) {
   Dictionary observation;
@@ -13,4 +13,4 @@ TEST(Time, ObserveTime) {
   ASSERT_GT(observation.get<double>("time"), 1634311511.42);
 }
 
-}  // namespace upkie::cpp::observation::tests
+}  // namespace upkie

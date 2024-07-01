@@ -22,7 +22,7 @@
 #include "upkie/cpp/actuation/moteus/Mode.h"
 #include "upkie/cpp/actuation/moteus/ServoCommand.h"
 
-namespace upkie::cpp::actuation {
+namespace upkie {
 
 void Interface::initialize_action(Dictionary& action) {
   for (const auto& id_joint : servo_layout_.servo_joint_map()) {
@@ -96,4 +96,4 @@ void Interface::write_position_commands(const Dictionary& action) {
   }
 }
 
-}  // namespace upkie::cpp::actuation
+}  // namespace upkie

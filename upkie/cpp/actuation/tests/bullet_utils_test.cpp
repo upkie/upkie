@@ -12,7 +12,7 @@
 #include "tools/cpp/runfiles/runfiles.h"
 #include "upkie/cpp/actuation/BulletImuData.h"
 
-namespace upkie::cpp::actuation {
+namespace upkie {
 
 using bazel::tools::cpp::runfiles::Runfiles;
 
@@ -127,4 +127,4 @@ TEST_F(BulletTest, ComputeCenterOfMass) {
   ASSERT_NEAR(com.z(), -0.2484, 1e-4);
 }
 
-}  // namespace upkie::cpp::actuation
+}  // namespace upkie

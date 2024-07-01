@@ -9,7 +9,7 @@
 #include "upkie/cpp/spine/StateMachine.h"
 #include "upkie/cpp/utils/random_string.h"
 
-namespace upkie::cpp::spine {
+namespace upkie {
 
 using spine::AgentInterface;
 using spine::StateMachine;
@@ -99,4 +99,4 @@ TEST_F(StateMachineTest, ObserveWhenSendingStopsFails) {
   ASSERT_EQ(request(), Request::kError);
 }
 
-}  // namespace upkie::cpp::spine
+}  // namespace upkie

@@ -20,7 +20,7 @@
 #include "upkie/cpp/spine/Spine.h"
 #include "upkie/cpp/utils/random_string.h"
 
-namespace upkie::cpp::spine {
+namespace upkie {
 
 using actuation::MockInterface;
 using observation::ObserverPipeline;
@@ -32,10 +32,10 @@ using spine::Spine;
 namespace testing {
 
 //! Testing version of the spine class
-class Spine : public upkie::cpp::spine::Spine {
+class Spine : public upkie::Spine {
  public:
   //! Parent constructor.
-  using upkie::cpp::spine::Spine::Spine;
+  using upkie::Spine::Spine;
 
   //! Get agent interface.
   const AgentInterface& agent_interface() { return agent_interface_; }
@@ -306,4 +306,4 @@ TEST_F(SpineTest, EnteringStopClearsRequest) {
   ASSERT_EQ(read_mmap_request(), Request::kNone);
 }
 
-}  // namespace upkie::cpp::spine
+}  // namespace upkie

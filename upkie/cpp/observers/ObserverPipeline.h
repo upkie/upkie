@@ -10,7 +10,7 @@
 #include "upkie/cpp/sensors/Sensor.h"
 
 //! State observation.
-namespace upkie::cpp::observation {
+namespace upkie {
 
 /*! Observer pipeline.
  *
@@ -77,4 +77,4 @@ class ObserverPipeline {
   std::vector<std::shared_ptr<Observer>> observers_;
 };
 
-}  // namespace upkie::cpp::observation
+}  // namespace upkie

@@ -12,9 +12,9 @@
 #include <sstream>
 #include <string>
 
-#include "upkie/utils/datetime_now_string.h"
+#include "upkie/cpp/utils/datetime_now_string.h"
 
-namespace upkie::utils {
+namespace upkie {
 
 /*! Get path to a fresh log file.
  *
@@ -38,4 +38,4 @@ inline const std::string get_log_path(const std::string& log_dir,
   return prefix + "_" + hostname + ".mpack";
 }
 
-}  // namespace upkie::utils
+}  // namespace upkie

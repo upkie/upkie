@@ -6,7 +6,7 @@
 #include <map>
 #include <string>
 
-namespace upkie::cpp::actuation {
+namespace upkie {
 
 //! Map between servos, their busses and the joints they actuate.
 class ServoLayout {
@@ -66,4 +66,4 @@ class ServoLayout {
   std::map<int, std::string> servo_joint_map_;
 };
 
-}  // namespace upkie::cpp::actuation
+}  // namespace upkie

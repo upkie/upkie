@@ -13,11 +13,9 @@
 #include "upkie/cpp/exceptions/TypeError.h"
 #include "upkie/cpp/observers/Observer.h"
 
-namespace upkie::cpp::observation {
+namespace upkie {
 
 using palimpsest::Dictionary;
-using upkie::cpp::exceptions::TypeError;
-using upkie::cpp::observation::Observer;
 
 /*! Report high-frequency history vectors to lower-frequency agents.
  *
@@ -118,4 +116,4 @@ class HistoryObserver : public Observer {
   std::vector<T> values_;
 };
 
-}  // namespace upkie::cpp::observation
+}  // namespace upkie

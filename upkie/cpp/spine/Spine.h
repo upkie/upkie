@@ -22,7 +22,7 @@
 #include "upkie/cpp/utils/handle_interrupts.h"
 #include "upkie/cpp/utils/realtime.h"
 
-namespace upkie::cpp::spine {
+namespace upkie {
 
 constexpr size_t kMebibytes = 1 << 20;
 
@@ -179,4 +179,4 @@ class Spine {
   State state_cycle_end_;
 };
 
-}  // namespace upkie::cpp::spine
+}  // namespace upkie

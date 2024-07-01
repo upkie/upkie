@@ -5,7 +5,7 @@
 
 #include <cstdint>
 
-namespace upkie::cpp::spine {
+namespace upkie {
 
 enum class Request : uint32_t {
   kNone = 0,  // no active request
@@ -16,4 +16,4 @@ enum class Request : uint32_t {
   kError = 5  // last request was invalid
 };
 
-}  // namespace upkie::cpp::spine
+}  // namespace upkie

@@ -9,7 +9,7 @@
 #include <algorithm>
 #include <limits>
 
-namespace upkie::observers {
+namespace upkie {
 
 using palimpsest::Dictionary;
 
@@ -142,4 +142,4 @@ class WheelContact {
   double velocity_;
 };
 
-}  // namespace upkie::observers
+}  // namespace upkie

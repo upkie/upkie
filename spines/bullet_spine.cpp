@@ -31,18 +31,17 @@
 namespace spines::bullet {
 
 using palimpsest::Dictionary;
-using upkie::cpp::actuation::BulletInterface;
-using upkie::cpp::observers::ObserverPipeline;
-using upkie::cpp::sensors::CpuTemperature;
-using upkie::observers::BaseOrientation;
-using upkie::observers::FloorContact;
-using upkie::observers::WheelOdometry;
+using upkie::BaseOrientation;
+using upkie::BulletInterface;
+using upkie::CpuTemperature;
+using upkie::FloorContact;
+using upkie::ObserverPipeline;
+using upkie::Spine;
+using upkie::WheelOdometry;
 
 #ifndef __APPLE__
-using upkie::cpp::observation::sources::Joystick;
+using upkie::Joystick;
 #endif
-
-using upkie::cpp::spine::Spine;
 
 //! Command-line arguments for the Bullet spine.
 class CommandLineArguments {

@@ -31,16 +31,16 @@
 namespace spines::mock {
 
 using palimpsest::Dictionary;
-using upkie::cpp::actuation::MockInterface;
-using upkie::cpp::observation::ObserverPipeline;
-using upkie::cpp::observation::sources::CpuTemperature;
-using upkie::cpp::spine::Spine;
-using upkie::observers::BaseOrientation;
-using upkie::observers::FloorContact;
-using upkie::observers::WheelOdometry;
+using upkie::BaseOrientation;
+using upkie::CpuTemperature;
+using upkie::FloorContact;
+using upkie::MockInterface;
+using upkie::ObserverPipeline;
+using upkie::Spine;
+using upkie::WheelOdometry;
 
 #ifndef __APPLE__
-using upkie::cpp::observation::sources::Joystick;
+using upkie::Joystick;
 #endif
 
 //! Command-line arguments for the mock spine.

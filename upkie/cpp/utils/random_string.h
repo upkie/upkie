@@ -7,7 +7,7 @@
 #include <random>
 #include <string>
 
-namespace upkie::cpp::utils {
+namespace upkie {
 
 /*! Generate a random string.
  *
@@ -28,4 +28,4 @@ inline std::string random_string(unsigned length = 16) {
   return alphanum.substr(0, length);
 }
 
-}  // namespace upkie::cpp::utils
+}  // namespace upkie

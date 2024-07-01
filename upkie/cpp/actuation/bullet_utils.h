@@ -10,7 +10,7 @@
 #include "RobotSimulator/b3RobotSimulatorClientAPI.h"
 #include "upkie/cpp/actuation/BulletImuData.h"
 
-namespace upkie::cpp::actuation {
+namespace upkie {
 
 /*! Convert an Eigen quaternion to a Bullet one.
  *
@@ -228,4 +228,4 @@ Eigen::Vector3d compute_position_com_in_world(b3RobotSimulatorClientAPI& bullet,
   return weighted_sum / mass;
 }
 
-}  // namespace upkie::cpp::actuation
+}  // namespace upkie

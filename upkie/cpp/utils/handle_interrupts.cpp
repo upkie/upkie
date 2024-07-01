@@ -3,7 +3,7 @@
 
 #include "upkie/cpp/utils/handle_interrupts.h"
 
-namespace upkie::cpp::utils {
+namespace upkie {
 
 namespace internal {
 
@@ -26,4 +26,4 @@ const bool& handle_interrupts() {
   return internal::interrupt_flag;
 }
 
-}  // namespace upkie::cpp::utils
+}  // namespace upkie

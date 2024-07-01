@@ -8,7 +8,7 @@
 #include <sstream>
 #include <string>
 
-namespace upkie::utils {
+namespace upkie {
 
 /*! Generate a date-time string.
  *
@@ -24,4 +24,4 @@ inline std::string datetime_now_string() {
   return output.str();
 }
 
-}  // namespace upkie::utils
+}  // namespace upkie

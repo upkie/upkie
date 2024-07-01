@@ -6,7 +6,7 @@
 #include <palimpsest/Dictionary.h>
 
 //! WIP: Process higher-level actions down to joint commands.
-namespace upkie::cpp::control {
+namespace upkie {
 
 using palimpsest::Dictionary;
 
@@ -21,4 +21,4 @@ class Controller {
   virtual void act(Dictionary& action, const Dictionary& observation) = 0;
 };
 
-}  // namespace upkie::cpp::control
+}  // namespace upkie

@@ -15,7 +15,7 @@
 #include "upkie/cpp/spine/AgentInterface.h"
 #include "upkie/cpp/utils/random_string.h"
 
-namespace upkie::cpp::spine {
+namespace upkie {
 
 class AgentInterfaceTest : public ::testing::Test {
  protected:
@@ -44,4 +44,4 @@ TEST_F(AgentInterfaceTest, ReadWriteData) {
   ASSERT_EQ(agent_interface_->size(), size);
 }
 
-}  // namespace upkie::cpp::spine
+}  // namespace upkie

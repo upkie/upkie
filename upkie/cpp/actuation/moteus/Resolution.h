@@ -10,7 +10,9 @@
 
 #pragma once
 
-namespace upkie::cpp::actuation::moteus {
+namespace upkie {
+
+namespace moteus {
 
 enum class Resolution {
   kInt8,
@@ -20,4 +22,6 @@ enum class Resolution {
   kIgnore,
 };
 
-}  // namespace upkie::cpp::actuation::moteus
+}
+
+}  // namespace upkie

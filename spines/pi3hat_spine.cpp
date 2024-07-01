@@ -32,14 +32,14 @@ namespace spines::pi3hat {
 
 using Pi3Hat = ::mjbots::pi3hat::Pi3Hat;
 using palimpsest::Dictionary;
-using upkie::cpp::actuation::Pi3HatInterface;
-using upkie::cpp::observation::ObserverPipeline;
-using upkie::cpp::observation::sources::CpuTemperature;
-using upkie::cpp::observation::sources::Joystick;
-using upkie::cpp::spine::Spine;
-using upkie::observers::BaseOrientation;
-using upkie::observers::FloorContact;
-using upkie::observers::WheelOdometry;
+using upkie::BaseOrientation;
+using upkie::CpuTemperature;
+using upkie::FloorContact;
+using upkie::Joystick;
+using upkie::ObserverPipeline;
+using upkie::Pi3HatInterface;
+using upkie::Spine;
+using upkie::WheelOdometry;
 
 //! Command-line arguments for the Bullet spine.
 class CommandLineArguments {

@@ -7,16 +7,16 @@
 
 #include "upkie/cpp/sensors/Sensor.h"
 
-namespace upkie::cpp::sensors {
+namespace upkie {
 
 //! Characters required to read the temperature in [mC] from the kernel.
 constexpr unsigned kCpuTemperatureBufferSize = 12;
 
-/*! Source for CPU temperature readings.
+/*! Sensor for CPU temperature readings.
  *
- * \note This source only works on Linux.
+ * \note This sensor only works on Linux.
  */
-class CpuTemperature : public Source {
+class CpuTemperature : public Sensor {
  public:
   /*! Open file to query temperature from the kernel.
    *
@@ -64,4 +64,4 @@ class CpuTemperature : public Source {
   bool has_warned_;
 };
 
-}  // namespace upkie::cpp::sensors
+}  // namespace upkie

@@ -43,7 +43,7 @@ inline bool is_printable_ascii(unsigned char c) {
   return 0x20 <= c && c <= 0x7F;
 }
 
-namespace upkie::cpp::sensors {
+namespace upkie {
 enum class Key {
   UP,
   DOWN,
@@ -58,9 +58,9 @@ enum class Key {
   UNKNOWN  // Map everything else to this key
 };
 
-/*! Source for reading Keyboard inputs.
+/*! Sensor for reading Keyboard inputs.
  *
- * \note This source reads from the standard input, and does
+ * \note This sensor reads from the standard input, and does
  * not listen to Keyboard events. It can only read one key at a time.
  *
  * \note Long key presses will yield an output boolean that goes to true, then
@@ -68,7 +68,7 @@ enum class Key {
  * to the key repetition delay of the keyboard:
  * https://github.com/upkie/upkie/cpp/issues/49
  */
-class Keyboard : public Source {
+class Keyboard : public Sensor {
  public:
   /*! Constructor sets up the terminal in non-canonical mode where
    * input is available immediately without waiting for a newline.
@@ -111,4 +111,4 @@ class Keyboard : public Source {
   system_clock::time_point last_key_poll_time_;
 };
 
-}  // namespace upkie::cpp::sensors
+}  // namespace upkie

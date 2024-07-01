@@ -14,7 +14,9 @@
 #include "upkie/cpp/actuation/moteus/ServoReply.h"
 #include "upkie/cpp/actuation/moteus/Span.h"
 
-namespace upkie::cpp::actuation::moteus {
+namespace upkie {
+
+namespace moteus {
 
 /*! Data for one control cycle.
  *
@@ -29,4 +31,6 @@ struct Data {
   Span<ServoReply> replies;
 };
 
-}  // namespace upkie::cpp::actuation::moteus
+}  // namespace moteus
+
+}  // namespace upkie

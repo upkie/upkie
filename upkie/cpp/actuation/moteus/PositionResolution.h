@@ -12,7 +12,9 @@
 
 #include "upkie/cpp/actuation/moteus/Resolution.h"
 
-namespace upkie::cpp::actuation::moteus {
+namespace upkie {
+
+namespace moteus {
 
 struct PositionResolution {
   Resolution position = Resolution::kFloat;
@@ -25,4 +27,6 @@ struct PositionResolution {
   Resolution watchdog_timeout = Resolution::kFloat;
 };
 
-}  // namespace upkie::cpp::actuation::moteus
+}  // namespace moteus
+
+}  // namespace upkie

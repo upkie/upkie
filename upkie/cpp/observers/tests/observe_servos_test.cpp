@@ -14,7 +14,7 @@ namespace moteus = upkie::cpp::actuation::moteus;
 
 using palimpsest::Dictionary;
 
-namespace upkie::cpp::observation::tests {
+namespace upkie {
 
 TEST(Servo, ReadTorques) {
   Dictionary observation;
@@ -35,4 +35,4 @@ TEST(Servo, ReadTorques) {
   ASSERT_DOUBLE_EQ(observation("servo")("bar")("torque"), -10.);
 }
 
-}  // namespace upkie::cpp::observation::tests
+}  // namespace upkie

@@ -8,7 +8,7 @@
 
 #include "upkie/cpp/actuation/ServoLayout.h"
 
-namespace upkie::config {
+namespace upkie {
 
 constexpr int kLeftBusID = 1;   // JC1
 constexpr int kRightBusID = 3;  // JC3
@@ -17,7 +17,7 @@ constexpr int kRightBusID = 3;  // JC3
  *
  * \return Upkie's servo layout.
  */
-inline const upkie::cpp::actuation::ServoLayout servo_layout() noexcept {
+inline const ServoLayout servo_layout() noexcept {
   upkie::cpp::actuation::ServoLayout layout;
   layout.add_servo(1, kLeftBusID, "left_hip");
   layout.add_servo(2, kLeftBusID, "left_knee");
@@ -44,4 +44,4 @@ inline const std::vector<std::string> wheel_joints() noexcept {
   return {"left_wheel", "right_wheel"};
 }
 
-}  // namespace upkie::config
+}  // namespace upkie

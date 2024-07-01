@@ -6,7 +6,7 @@
 #include <cstdint>
 
 //! Utility functions.
-namespace upkie::cpp::utils {
+namespace upkie {
 
 //! Mathematical functions.
 namespace math {
@@ -22,4 +22,4 @@ inline bool divides(uint32_t number, uint32_t divisor) {
 
 }  // namespace math
 
-}  // namespace upkie::cpp::utils
+}  // namespace upkie

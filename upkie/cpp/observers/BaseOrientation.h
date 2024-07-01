@@ -11,10 +11,9 @@
 
 #include "upkie/cpp/observers/Observer.h"
 
-namespace upkie::observers {
+namespace upkie {
 
 using palimpsest::Dictionary;
-using upkie::cpp::observation::Observer;
 
 /*! Get the orientation of the base frame with respect to the world frame.
 
@@ -234,4 +233,4 @@ class BaseOrientation : public Observer {
   Eigen::Vector3d angular_velocity_base_in_base_;
 };
 
-}  // namespace upkie::observers
+}  // namespace upkie

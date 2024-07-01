@@ -7,10 +7,9 @@
 
 #include "upkie/cpp/exceptions/ObserverError.h"
 
-namespace upkie::cpp::observation {
+namespace upkie {
 
 using palimpsest::exceptions::KeyError;
-using upkie::cpp::exceptions::ObserverError;
 
 void ObserverPipeline::reset(const Dictionary& config) {
   for (auto observer : observers_) {
@@ -36,4 +35,4 @@ void ObserverPipeline::run(Dictionary& observation) {
   }
 }
 
-}  // namespace upkie::cpp::observation
+}  // namespace upkie

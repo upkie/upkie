@@ -34,7 +34,9 @@
  * CAN-FD packets for the moteus brushless servo.
  */
 
-namespace upkie::cpp::actuation::moteus {
+namespace upkie {
+
+namespace moteus {
 
 enum {
   kCurrentRegisterMapVersion = 4,
@@ -651,4 +653,6 @@ inline QueryResult ParseQueryResult(const uint8_t* data, size_t size) {
   return result;
 }
 
-}  // namespace upkie::cpp::actuation::moteus
+}  // namespace moteus
+
+}  // namespace upkie

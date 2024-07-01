@@ -12,7 +12,7 @@
 #include <spdlog/spdlog.h>
 #endif
 
-namespace upkie::cpp::utils {
+namespace upkie {
 
 /*! Set the current thread to run on a given CPU core.
  *
@@ -64,4 +64,4 @@ inline bool lock_memory() {
   return (::mlockall(MCL_CURRENT | MCL_FUTURE) >= 0);
 }
 
-}  // namespace upkie::cpp::utils
+}  // namespace upkie

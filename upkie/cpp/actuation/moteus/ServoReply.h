@@ -12,7 +12,9 @@
 
 #include "upkie/cpp/actuation/moteus/QueryResult.h"
 
-namespace upkie::cpp::actuation::moteus {
+namespace upkie {
+
+namespace moteus {
 
 //! Reply from servo
 struct ServoReply {
@@ -23,4 +25,6 @@ struct ServoReply {
   QueryResult result;
 };
 
-}  // namespace upkie::cpp::actuation::moteus
+}  // namespace moteus
+
+}  // namespace upkie

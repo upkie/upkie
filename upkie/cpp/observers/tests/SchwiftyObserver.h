@@ -8,7 +8,7 @@
 
 #include "upkie/cpp/observers/Observer.h"
 
-namespace upkie::cpp::observation::tests {
+namespace upkie {
 
 using palimpsest::exceptions::KeyError;
 
@@ -31,4 +31,4 @@ class SchwiftyObserver : public observation::Observer {
   bool throw_key_error = false;
 };
 
-}  // namespace upkie::cpp::observation::tests
+}  // namespace upkie
