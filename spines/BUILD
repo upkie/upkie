@@ -16,14 +16,13 @@ cc_binary(
     ],
     deps = [
         "//upkie/config:layout",
-        "//upkie/observers",
-        "//upkie/utils:get_log_path",
-        "//upkie:version",
         "//upkie/cpp/actuation:bullet_interface",
         "//upkie/cpp/observers",
-        "//upkie/cpp/sensors",
         "//upkie/cpp/observers:history_observer",
+        "//upkie/cpp/sensors",
         "//upkie/cpp/spine",
+        "//upkie/utils:get_log_path",
+        "//upkie:version",
     ],
 )
 
@@ -34,13 +33,12 @@ cc_binary(
     ],
     deps = [
         "//upkie/config:layout",
-        "//upkie/observers",
-        "//upkie/utils:get_log_path",
-        "//upkie:version",
         "//upkie/cpp/actuation:mock_interface",
         "//upkie/cpp/observers",
         "//upkie/cpp/sensors",
         "//upkie/cpp/spine",
+        "//upkie/utils:get_log_path",
+        "//upkie:version",
     ] + select({
         "//:pi64_config": [
             "@org_llvm_libcxx//:libcxx",
@@ -57,12 +55,11 @@ cc_binary(
     ],
     deps = [
         "//upkie/config:layout",
-        "//upkie/observers",
-        "//upkie/utils:get_log_path",
-        "//upkie:version",
         "//upkie/cpp/observers",
         "//upkie/cpp/sensors",
         "//upkie/cpp/spine",
+        "//upkie/utils:get_log_path",
+        "//upkie:version",
     ] + select({
         "//:pi64_config": ["//upkie/cpp/actuation:pi3hat_interface"],
         "//conditions:default": [],
