@@ -20,10 +20,9 @@
 #include "upkie/cpp/spine/Spine.h"
 #include "upkie/cpp/utils/random_string.h"
 
-namespace upkie {
-
 using palimpsest::Dictionary;
-using spine::Spine;
+
+namespace upkie {
 
 namespace testing {
 

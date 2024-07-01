@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2023 Inria
 
-#include "upkie/cpp/observers/Sensor.h"
+#include "upkie/cpp/sensors/Sensor.h"
 
 #include <palimpsest/Dictionary.h>
 
