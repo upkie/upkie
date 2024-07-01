@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2022 Stéphane Caron
 
-#include "upkie/cpp/observation/ObserverPipeline.h"
+#include "upkie/cpp/observers/ObserverPipeline.h"
 
 #include <palimpsest/exceptions/KeyError.h>
 
@@ -19,8 +19,8 @@ void ObserverPipeline::reset(const Dictionary& config) {
 }
 
 void ObserverPipeline::run(Dictionary& observation) {
-  for (auto source : sources_) {
-    source->write(observation);
+  for (auto sensor : sensors_) {
+    sensor->write(observation);
   }
   for (auto observer : observers_) {
     try {

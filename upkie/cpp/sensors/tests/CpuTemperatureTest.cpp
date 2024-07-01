@@ -2,7 +2,7 @@
 // Copyright 2022 Stéphane Caron
 
 #include "gtest/gtest.h"
-#include "upkie/cpp/observation/sources/CpuTemperature.h"
+#include "upkie/cpp/sensors/CpuTemperature.h"
 
 namespace upkie::cpp::observation::sources {
 

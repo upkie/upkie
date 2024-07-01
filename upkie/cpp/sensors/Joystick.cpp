@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2022 Stéphane Caron
 
-#include "upkie/cpp/observation/sources/Joystick.h"
+#include "upkie/cpp/sensors/Joystick.h"
 
 namespace upkie::cpp::observation::sources {
 

@@ -19,7 +19,7 @@ cc_test(
         "InterfaceTest.cpp",
     ],
     deps = [
-        "//vulp/actuation:interface",
+        "//upkie/cpp/actuation:interface",
         ":test_common",
         "@googletest//:main",
     ],
@@ -31,7 +31,7 @@ cc_test(
         "MockInterfaceTest.cpp",
     ],
     deps = [
-        "//vulp/actuation:mock_interface",
+        "//upkie/cpp/actuation:mock_interface",
         ":test_common",
         "@googletest//:main",
     ],
@@ -46,7 +46,7 @@ cc_test(
         "@upkie_description",
     ],
     deps = [
-        "//vulp/actuation:bullet_utils",
+        "//upkie/cpp/actuation:bullet_utils",
         "@bazel_tools//tools/cpp/runfiles",
         "@googletest//:main",
     ],
@@ -61,7 +61,7 @@ cc_test(
         "@upkie_description",
     ],
     deps = [
-        "//vulp/actuation:bullet_interface",
+        "//upkie/cpp/actuation:bullet_interface",
         ":test_common",
         "@bazel_tools//tools/cpp/runfiles",
         "@googletest//:main",
@@ -75,7 +75,7 @@ cc_test(
         "//conditions:default": [],
     }),
     deps = [
-        "//vulp/actuation:pi3hat_interface",
+        "//upkie/cpp/actuation:pi3hat_interface",
         ":test_common",
         "@bazel_tools//tools/cpp/runfiles",
         "@googletest//:main",

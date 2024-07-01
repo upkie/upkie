@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2023 Inria
 
-#include "upkie/cpp/observation/sources/Keyboard.h"
+#include "upkie/cpp/sensors/Keyboard.h"
 
 namespace upkie::cpp::observation::sources {
 Keyboard::Keyboard() {

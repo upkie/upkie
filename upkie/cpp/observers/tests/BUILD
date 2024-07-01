@@ -14,9 +14,8 @@ cc_test(
         "*.h",
     ]),
     deps = [
-        "//vulp/actuation/moteus",
-        "//vulp/observation:history_observer",
-        "//vulp/observation",
+        "//upkie/cpp/actuation/moteus",
+        "//upkie/cpp/observers",
         "@eigen",
         "@googletest//:main",
     ],

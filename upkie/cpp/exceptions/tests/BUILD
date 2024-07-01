@@ -14,7 +14,7 @@ cc_test(
         "*.h",
     ]),
     deps = [
-        "//vulp/exceptions",
+        "//upkie/cpp/exceptions",
         "@eigen",
         "@googletest//:main",
     ],

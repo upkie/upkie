@@ -11,7 +11,7 @@ cc_library(
     hdrs = ["observe_servos.h"],
     srcs = ["observe_servos.cpp"],
     deps = [
-        "//vulp/actuation/moteus",
+        "//upkie/cpp/actuation/moteus",
         "@palimpsest",
     ],
 )
@@ -56,14 +56,14 @@ cc_library(
         "ObserverPipeline.cpp",
     ],
     deps = [
+        "//sensors:sensor",
         "//upkie/cpp/exceptions:observer_error",
         ":observer",
-        ":source",
     ],
 )
 
 cc_library(
-    name = "observation",
+    name = "observers",
     deps = [
         ":observe_servos",
         ":observe_time",

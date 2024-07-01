@@ -11,7 +11,7 @@ cc_library(
     hdrs = ["BaseOrientation.h"],
     srcs = ["BaseOrientation.cpp"],
     deps = [
-        "//upkie/cpp/observation:observer",
+        "//upkie/cpp/observers:observer",
     ],
 )
 
@@ -20,7 +20,7 @@ cc_library(
     hdrs = ["FloorContact.h"],
     srcs = ["FloorContact.cpp"],
     deps = [
-        "//upkie/cpp/observation:observer",
+        "//upkie/cpp/observers:observer",
         ":wheel_contact",
     ],
 )
@@ -30,7 +30,7 @@ cc_library(
     hdrs = ["WheelContact.h"],
     srcs = ["WheelContact.cpp"],
     deps = [
-        "//upkie/cpp/observation:observer",
+        "//upkie/cpp/observers:observer",
         "//upkie/cpp/utils:low_pass_filter",
     ],
 )
@@ -40,7 +40,7 @@ cc_library(
     hdrs = ["WheelOdometry.h"],
     srcs = ["WheelOdometry.cpp"],
     deps = [
-        "//upkie/cpp/observation:observer",
+        "//upkie/cpp/observers:observer",
     ],
 )
 

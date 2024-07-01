@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2022 Stéphane Caron
 
-#include "upkie/cpp/observation/observe_servos.h"
+#include "upkie/cpp/observers/observe_servos.h"
 
 #include <map>
 #include <string>

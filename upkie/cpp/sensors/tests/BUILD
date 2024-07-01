@@ -19,7 +19,7 @@ cc_test(
         ], exclude=["JoystickTest.cpp"]),
     }),
     deps = [
-        "//vulp/observation/sources",
+        "//upkie/cpp/sensors",
         "@googletest//:main",
     ],
 )

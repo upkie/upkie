@@ -10,7 +10,7 @@
 #include <vector>
 
 #include "gtest/gtest.h"
-#include "upkie/cpp/observation/HistoryObserver.h"
+#include "upkie/cpp/observers/HistoryObserver.h"
 
 namespace upkie::cpp::observation::tests {
 

@@ -29,7 +29,7 @@ cc_library(
         "resolution.h",
     ],
     deps = [
-        "//vulp/actuation/moteus",
+        "//upkie/cpp/actuation/moteus",
     ],
 )
 
@@ -43,7 +43,7 @@ cc_library(
         "Interface.cpp",
     ],
     deps = [
-        "//vulp/actuation/moteus",
+        "//upkie/cpp/actuation/moteus",
         ":imu_data",
         ":resolution",
         ":servo_layout",
@@ -60,8 +60,8 @@ cc_library(
         "MockInterface.cpp",
     ],
     deps = [
-        "//vulp/actuation:interface",
-        "//vulp/utils:synchronous_clock",
+        "//upkie/cpp/actuation:interface",
+        "//upkie/cpp/utils:synchronous_clock",
         "@eigen",
     ],
 )
@@ -93,11 +93,11 @@ cc_library(
         "BulletInterface.cpp",
     ],
     data = [
-        "//vulp/actuation/bullet/plane",
+        "//upkie/cpp/actuation/bullet/plane",
     ],
     deps = [
-        "//vulp/actuation:interface",
-        "//vulp/utils:synchronous_clock",
+        "//upkie/cpp/actuation:interface",
+        "//upkie/cpp/utils:synchronous_clock",
         "@bazel_tools//tools/cpp/runfiles",
         "@bullet",
         "@eigen",
@@ -115,7 +115,7 @@ cc_library(
         "//conditions:default": [],
     }),
     deps = [
-        "//vulp/utils:realtime",
+        "//upkie/cpp/utils:realtime",
         ":interface",
     ] + select({
         "//:pi64_config": [

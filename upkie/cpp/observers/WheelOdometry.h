@@ -10,7 +10,7 @@
 #include <string>
 #include <vector>
 
-#include "upkie/cpp/observation/Observer.h"
+#include "upkie/cpp/observers/Observer.h"
 
 namespace upkie::observers {
 
