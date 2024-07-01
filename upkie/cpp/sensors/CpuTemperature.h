@@ -5,9 +5,9 @@
 
 #include <string>
 
-#include "upkie/cpp/observers/Source.h"
+#include "upkie/cpp/sensors/Sensor.h"
 
-namespace upkie::cpp::observation::sources {
+namespace upkie::cpp::sensors {
 
 //! Characters required to read the temperature in [mC] from the kernel.
 constexpr unsigned kCpuTemperatureBufferSize = 12;
@@ -64,4 +64,4 @@ class CpuTemperature : public Source {
   bool has_warned_;
 };
 
-}  // namespace upkie::cpp::observation::sources
+}  // namespace upkie::cpp::sensors

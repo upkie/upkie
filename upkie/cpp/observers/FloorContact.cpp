@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2022 Stéphane Caron
 
-#include "upkie/observers/FloorContact.h"
+#include "upkie/cpp/observers/FloorContact.h"
 
 #include <palimpsest/exceptions/KeyError.h>
 
 #include "upkie/cpp/utils/low_pass_filter.h"
 
-namespace upkie::observers {
+namespace upkie::cpp::observers {
 
 using palimpsest::exceptions::KeyError;
 using upkie::cpp::utils::low_pass_filter;
@@ -101,4 +101,4 @@ void FloorContact::write(Dictionary& observation) {
   }
 }
 
-}  // namespace upkie::observers
+}  // namespace upkie::cpp::observers
