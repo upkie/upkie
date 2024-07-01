@@ -20,7 +20,7 @@
 #include <string>
 #include <vector>
 
-#include "upkie/config/layout.h"
+#include "upkie/cpp/config/layout.h"
 #include "upkie/cpp/observers/BaseOrientation.h"
 #include "upkie/cpp/observers/FloorContact.h"
 #include "upkie/cpp/observers/WheelOdometry.h"

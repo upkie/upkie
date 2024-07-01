@@ -15,8 +15,8 @@
 #include <string>
 #include <vector>
 
-#include "upkie/config/layout.h"
 #include "upkie/cpp/actuation/Pi3HatInterface.h"
+#include "upkie/cpp/config/layout.h"
 #include "upkie/cpp/observers/BaseOrientation.h"
 #include "upkie/cpp/observers/FloorContact.h"
 #include "upkie/cpp/observers/ObserverPipeline.h"
