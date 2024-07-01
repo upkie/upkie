@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2022 Stéphane Caron
 
-#include "upkie/observers/WheelOdometry.h"
+#include "upkie/cpp/observers/WheelOdometry.h"
 
 namespace upkie::observers {
 

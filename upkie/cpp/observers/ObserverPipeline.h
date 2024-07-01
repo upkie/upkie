@@ -7,7 +7,7 @@
 #include <vector>
 
 #include "upkie/cpp/observers/Observer.h"
-#include "upkie/cpp/observers/Source.h"
+#include "upkie/cpp/sensors/Sensor.h"
 
 //! State observation.
 namespace upkie::cpp::observation {

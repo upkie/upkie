@@ -7,9 +7,9 @@
 #include <memory>
 
 #include "gtest/gtest.h"
-#include "upkie/observers/WheelOdometry.h"
+#include "upkie/cpp/observers/WheelOdometry.h"
 
-namespace upkie::observers::tests {
+namespace upkie::cpp::observers::tests {
 
 using palimpsest::Dictionary;
 using palimpsest::exceptions::KeyError;
@@ -87,4 +87,4 @@ TEST_F(WheelOdometryTest, ZeroVelocityWhenNoContact) {
   ASSERT_DOUBLE_EQ(observation("wheel_odometry")("velocity"), 0.0);
 }
 
-}  // namespace upkie::observers::tests
+}  // namespace upkie::cpp::observers::tests

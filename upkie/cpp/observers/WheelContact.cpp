@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2022 Stéphane Caron
 
-#include "upkie/observers/WheelContact.h"
+#include "upkie/cpp/observers/WheelContact.h"
 
 #include "upkie/cpp/utils/low_pass_filter.h"
 
