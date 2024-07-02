@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - CICD: Release jobs for x86 and ARM64 macOS spines
+- Fix duplicate ``data_`` attribute in pi3hat actuation interface
 - observers: Read configuration matrix in base orientation observer
 
 ### Removed
