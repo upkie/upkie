@@ -162,9 +162,18 @@ class Pi3HatInterface : public Interface {
   //! Internal Pi3Hat interface. Only use from the CAN thread.
   std::unique_ptr<Pi3Hat> pi3hat_;
 
-  // These are kept persistently so that no memory allocation is
-  // required in steady state.
+  /*! TX CAN frames
+   *
+   * These are kept persistently so that no memory allocation is required in
+   * steady state.
+   */
   std::vector<::mjbots::pi3hat::CanFrame> tx_can_;
+
+  /*! RX CAN frames
+   *
+   * These are kept persistently so that no memory allocation is required in
+   * steady state.
+   */
   std::vector<::mjbots::pi3hat::CanFrame> rx_can_;
 
   //! Latest attitude read from the pi3hat
