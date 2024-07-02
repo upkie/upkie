@@ -22,6 +22,6 @@ enum class Resolution {
   kIgnore,
 };
 
-}
+}  // namespace moteus
 
 }  // namespace upkie
