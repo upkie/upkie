@@ -33,7 +33,7 @@ def clear_shared_memory():
     pre-existing file before the spine creates a new one.
     """
     try:
-        shm = shared_memory.SharedMemory("vulp", create=False, size=0)
+        shm = shared_memory.SharedMemory("upkie", create=False, size=0)
         shm.close()
         shm.unlink()
     except Exception:
