@@ -25,7 +25,7 @@ std::string find_plane_urdf(const std::string argv0) {
   }
   // "upkie/cpp/upkie/cpp" was "vulp/vulp"
   return runfiles->Rlocation(
-      "upkie/cpp/upkie/cpp/actuation/bullet/plane/plane.urdf");
+      "upkie/upkie/cpp/actuation/bullet/plane/plane.urdf");
 }
 
 BulletInterface::BulletInterface(const ServoLayout& layout,
