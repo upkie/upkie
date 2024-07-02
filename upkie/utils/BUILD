@@ -59,11 +59,6 @@ py_library(
 )
 
 py_library(
-    name = "serialize",
-    srcs = ["serialize.py"],
-)
-
-py_library(
     name = "spdlog",
     srcs = ["spdlog.py"],
 )
@@ -79,7 +74,6 @@ py_library(
         ":raspi",
         ":robot_state",
         ":rotations",
-        ":serialize",
         ":spdlog",
     ],
 )
