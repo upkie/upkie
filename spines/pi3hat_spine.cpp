@@ -129,7 +129,7 @@ class CommandLineArguments {
   std::string log_dir = "";
 
   //! Name for the shared memory file.
-  std::string shm_name = "/vulp";
+  std::string shm_name = "/upkie";
 
   //! CPUID for the spine thread (-1 to disable realtime).
   int spine_cpu = 1;

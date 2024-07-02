@@ -107,7 +107,7 @@ class UpkieServos(UpkieBaseEnv):
         frequency_checks: bool = True,
         init_state: Optional[RobotState] = None,
         regulate_frequency: bool = True,
-        shm_name: str = "/vulp",
+        shm_name: str = "/upkie",
         spine_config: Optional[dict] = None,
     ):
         r"""!

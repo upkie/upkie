@@ -67,7 +67,7 @@ class SpineInterface:
 
     def __init__(
         self,
-        shm_name: str = "/vulp",
+        shm_name: str = "/upkie",
         retries: int = 1,
         perf_checks: bool = True,
     ):

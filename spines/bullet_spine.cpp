@@ -132,7 +132,7 @@ class CommandLineArguments {
   unsigned nb_substeps = 0u;
 
   //! Name for the shared memory file
-  std::string shm_name = "/vulp";
+  std::string shm_name = "/upkie";
 
   //! Show Bullet GUI
   bool show = false;
