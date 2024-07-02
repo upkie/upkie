@@ -8,7 +8,7 @@
 Python library for an agent to interact with a spine.
 """
 
-from .exceptions import PerformanceIssue, SpineError, VulpException
+from .exceptions import PerformanceIssue, SpineError, UpkieException
 from .request import Request
 from .spine_interface import SpineInterface
 
@@ -17,5 +17,5 @@ __all__ = [
     "Request",
     "SpineError",
     "SpineInterface",
-    "VulpException",
+    "UpkieException",
 ]

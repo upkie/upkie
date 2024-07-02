@@ -12,6 +12,7 @@ py_library(
         "__init__.py",
         "exceptions.py",
         "request.py",
+        "serialize.py",
         "spine_interface.py",
     ],
 )

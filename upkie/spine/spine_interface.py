@@ -15,10 +15,9 @@ from time import perf_counter_ns
 
 import msgpack
 
-from vulp.utils import serialize
-
 from .exceptions import PerformanceIssue, SpineError
 from .request import Request
+from .serialize import serialize
 
 
 def wait_for_shared_memory(
@@ -58,7 +57,6 @@ def wait_for_shared_memory(
 
 
 class SpineInterface:
-
     """!
     Interface to interact with a spine from a Python agent.
     """
