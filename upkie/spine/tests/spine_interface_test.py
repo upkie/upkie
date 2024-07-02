@@ -14,8 +14,8 @@ from multiprocessing.shared_memory import SharedMemory
 
 import msgpack
 
-from vulp.spine import Request, SpineInterface
-from vulp.utils import serialize
+from upkie.spine import Request, SpineInterface
+from upkie.utils import serialize
 
 wait_pre_monkeypatch = SpineInterface._wait_for_spine
 
@@ -27,7 +27,7 @@ class TestSpineInterface(unittest.TestCase):
     next_observation: dict
     spine: SpineInterface
 
-    def setUp(self, shm_name="vulp", size=1024):
+    def setUp(self, shm_name="upkie", size=1024):
         """
         Initialize a new fixture instance.
 
