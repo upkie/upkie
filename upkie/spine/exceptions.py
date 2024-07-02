@@ -6,19 +6,19 @@
 # Copyright 2023 Inria
 
 
-class VulpException(Exception):
+class UpkieException(Exception):
     """!
-    Base class for exceptions raised by Vulp.
+    Base class for exceptions raised by Upkie.
     """
 
 
-class PerformanceIssue(VulpException):
+class PerformanceIssue(UpkieException):
     """!
     Exception raised when a performance issue is detected.
     """
 
 
-class SpineError(VulpException):
+class SpineError(UpkieException):
     """!
     Exception raised when the spine sets an error flag in the request field of
     the shared memory map.
