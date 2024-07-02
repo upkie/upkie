@@ -58,7 +58,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         init_state: Optional[RobotState] = None,
         model: Optional[Model] = None,
         regulate_frequency: bool = True,
-        shm_name: str = "/vulp",
+        shm_name: str = "/upkie",
         spine_config: Optional[dict] = None,
         spine_retries: int = 10,
     ) -> None:

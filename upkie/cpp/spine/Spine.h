@@ -56,7 +56,7 @@ class Spine {
     std::string log_path = "/dev/null";
 
     //! Name of the shared memory object for inter-process communication
-    std::string shm_name = "/vulp";
+    std::string shm_name = "/upkie";
 
     //! Size of the shared memory object in bytes
     size_t shm_size = 1 * kMebibytes;

@@ -141,7 +141,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
         max_ground_velocity: float = 1.0,
         regulate_frequency: bool = True,
         reward_weights: Optional[RewardWeights] = None,
-        shm_name: str = "/vulp",
+        shm_name: str = "/upkie",
         spine_config: Optional[dict] = None,
         wheel_radius: float = 0.06,
     ):
