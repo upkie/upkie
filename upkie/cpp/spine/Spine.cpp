@@ -30,7 +30,8 @@ Spine::Spine(const Parameters& params, Interface& actuation,
       caught_interrupt_(handle_interrupts()),
       state_machine_(agent_interface_),
       state_cycle_beginning_(State::kOver),
-      state_cycle_end_(State::kOver) {
+      state_cycle_end_(State::kOver),
+      rx_count_(0) {
 // Thread name as it appears in the `cmd` column of `ps`
 #ifdef __APPLE__
   pthread_setname_np("spine_thread");
@@ -63,11 +64,15 @@ void Spine::reset(const Dictionary& config) {
 }
 
 void Spine::log_working_dict() {
+  // Log spine entries to the working dictionary
   Dictionary& spine = working_dict_("spine");
-  spine("logger")("last_size") = static_cast<uint32_t>(logger_.last_size());
-  spine("state")("cycle_beginning") =
+  spine("logger_last_size") = static_cast<uint32_t>(logger_.last_size());
+  spine("rx_count") = static_cast<uint32_t>(rx_count_);
+  spine("state_cycle_beginning") =
       static_cast<uint32_t>(state_cycle_beginning_);
-  spine("state")("cycle_end") = static_cast<uint32_t>(state_cycle_end_);
+  spine("state_cycle_end") = static_cast<uint32_t>(state_cycle_end_);
+
+  // Log full working dictionary
   if (!logger_.put(working_dict_)) {
     spdlog::warn("Could not log spine dictionary, logger is full");
   }
@@ -199,10 +204,11 @@ void Spine::cycle_actuation() {
   // 3. Wait for the result of the last query and copy it
   if (actuation_output_.valid()) {
     const auto current_values = actuation_output_.get();  // may wait here
-    const auto rx_count = current_values.query_result_size;
-    latest_replies_.resize(rx_count);
+    rx_count_ = current_values.query_result_size;
+    latest_replies_.resize(rx_count_);
     std::copy(actuation_.replies().begin(),
-              actuation_.replies().begin() + rx_count, latest_replies_.begin());
+              actuation_.replies().begin() + rx_count_,
+              latest_replies_.begin());
   }
 
   // Now we are after the previous cycle (we called actuation_output_.get())

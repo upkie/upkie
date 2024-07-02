@@ -177,6 +177,9 @@ class Spine {
 
   //! State after the last Event::kCycleEnd
   State state_cycle_end_;
+
+  //! Number of actuation replies received during the latest cycle.
+  size_t rx_count_;
 };
 
 }  // namespace upkie

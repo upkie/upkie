@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - CICD: Build jobs for x86 and ARM64 macOS spines
 - Import and adapt C++ code from Vulp
+- Log received actuation replies in spine cycles
 - PID balancer: Conda environment file
 - examples: Tuning the gains of a standard two-task PI balancer
 - setup: Add micromamba installation script
