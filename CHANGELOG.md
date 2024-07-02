@@ -26,6 +26,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CICD: Release jobs for x86 and ARM64 macOS spines
 - observers: Read configuration matrix in base orientation observer
 
+### Removed
+
+- deps: Dependency on separate Vulp project
+
 ## [4.0.0] - 2024-06-12
 
 ### Added
@@ -39,7 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- dependencies: Update Vulp to 2.5.0
+- deps: Update Vulp to 2.5.0
 - envs: Bump ``UpkieServos`` version number to 4
 - envs: Change API of logging function to ``env.log(name, entry)``
 - envs: Restrict observation space of ``UpkieServos`` to servos
@@ -66,8 +70,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- dependencies: Update Upkie description to 1.5.0
-- dependencies: Update Vulp to 2.2.1
+- deps: Update Upkie description to 1.5.0
+- deps: Update Vulp to 2.2.1
 - Don't build simulation spine if execution fails
 - Move agents' ``requirements.txt`` files to optional project dependencies
 - palinode: Rename ``run_pid_balancer.sh`` to ``try_pid_balancer.sh`` 😊
@@ -93,8 +97,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- dependencies: Bump loop-rate-limiters to 1.0.0
-- dependencies: Replace posix-ipc by shared-memory from the standard library
+- deps: Bump loop-rate-limiters to 1.0.0
+- deps: Replace posix-ipc by shared-memory from the standard library
 - envs: Redirect logging to /env prefix
 - envs: Rename default action in UpkieServos to neutral, its position is NaN
 - Minimum Python version is now 3.8
@@ -117,7 +121,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - CICD: update release GH action to package simulation spines on various architectures
 - Code style: ignore E266 as Doxygen uses ## to document class attributes
-- dependencies: Bump Vulp to 2.1.0
+- deps: Bump Vulp to 2.1.0
 - envs: Default velocity in `UpkieServos` is now zero
 - envs: Observation and action values are `float` rather than `np.float32`
 - envs: Specify maximum torques in `UpkieGroundVelocity`
@@ -174,10 +178,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breaking:** envs: ``info`` dictionary does not repeat "action" any more
 - MPC balancer: Update height of control point to 58 cm
 - PPO balancer: Update height of control point to 58 cm
-- dependencies: Bump Gymnasium to 0.29.1
-- dependencies: Bump NumPy to 1.24.3
-- dependencies: Bump Vulp to 2.0.0
-- dependencies: Bump loop-rate-limiters to 0.6.1
+- deps: Bump Gymnasium to 0.29.1
+- deps: Bump NumPy to 1.24.3
+- deps: Bump Vulp to 2.0.0
+- deps: Bump loop-rate-limiters to 0.6.1
 - envs: Bump `UpkieGroundVelocity` to version 3
 - envs: Legs now return to their neutral configuration in `UpkieGroundVelocity`
 - envs: ``rate`` attribute from base environment is now internal
@@ -229,8 +233,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breaking:** ``async_step`` function and ``asyncio`` logic
 - **Breaking:** ``pi32_config`` as 64-bit is the new default
 - **Breaking:** ``upkie.utils.log_path`` submodule and its utility function
-- Dependency on mpacklog.cpp (already in Vulp)
-- Dependency on mpacklog.py
+- deps: Dependency on mpacklog.cpp (already in Vulp)
+- deps: Dependency on mpacklog.py
 
 ## [1.5.0] - 2023-09-29
 
