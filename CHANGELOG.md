@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breaking:** rename the default shared-memory file to ``/upkie``
 - Makefile: Separate rule to set the raspi date
 - PID balancer: default to hostname for the agent configuration
+- Put hostname before spine name in log file names
 - deps: Update Upkie description to 1.6.0
 
 ### Fixed
