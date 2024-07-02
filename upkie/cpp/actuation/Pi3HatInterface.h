@@ -156,9 +156,6 @@ class Pi3HatInterface : public Interface {
   //! Callback function called upon completion of a CAN cycle
   std::function<void(const moteus::Output&)> callback_;
 
-  //! Buffer to read commands from and write replies to.
-  moteus::Data data_;
-
   //! Thread for CAN communication cycles
   std::thread can_thread_;
 
