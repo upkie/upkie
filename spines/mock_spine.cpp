@@ -2,16 +2,13 @@
 // Copyright 2022 Stéphane Caron
 // Copyright 2023 Inria
 
-#include <vulp/actuation/MockInterface.h>
-#include <vulp/observation/ObserverPipeline.h>
-#include <vulp/observation/sources/CpuTemperature.h>
+#include "upkie/cpp/actuation/MockInterface.h"
+#include "upkie/cpp/observers/ObserverPipeline.h"
+#include "upkie/cpp/sensors/CpuTemperature.h"
 
 #ifndef __APPLE__
-#include <vulp/observation/sources/Joystick.h>
+#include "upkie/cpp/sensors/Joystick.h"
 #endif
-
-#include <vulp/spine/Spine.h>
-#include <vulp/utils/realtime.h>
 
 #include <algorithm>
 #include <future>
@@ -22,26 +19,28 @@
 #include <string>
 #include <vector>
 
-#include "upkie/config/layout.h"
-#include "upkie/observers/BaseOrientation.h"
-#include "upkie/observers/FloorContact.h"
-#include "upkie/observers/WheelOdometry.h"
-#include "upkie/utils/get_log_path.h"
-#include "upkie/version.h"
+#include "upkie/cpp/config/layout.h"
+#include "upkie/cpp/observers/BaseOrientation.h"
+#include "upkie/cpp/observers/FloorContact.h"
+#include "upkie/cpp/observers/WheelOdometry.h"
+#include "upkie/cpp/spine/Spine.h"
+#include "upkie/cpp/utils/get_log_path.h"
+#include "upkie/cpp/utils/realtime.h"
+#include "upkie/cpp/version.h"
 
 namespace spines::mock {
 
 using palimpsest::Dictionary;
-using upkie::observers::BaseOrientation;
-using upkie::observers::FloorContact;
-using upkie::observers::WheelOdometry;
-using vulp::actuation::MockInterface;
-using vulp::observation::ObserverPipeline;
-using vulp::observation::sources::CpuTemperature;
-using vulp::spine::Spine;
+using upkie::BaseOrientation;
+using upkie::CpuTemperature;
+using upkie::FloorContact;
+using upkie::MockInterface;
+using upkie::ObserverPipeline;
+using upkie::Spine;
+using upkie::WheelOdometry;
 
 #ifndef __APPLE__
-using vulp::observation::sources::Joystick;
+using upkie::Joystick;
 #endif
 
 //! Command-line arguments for the mock spine.
@@ -118,7 +117,7 @@ class CommandLineArguments {
 };
 
 int main(const CommandLineArguments& args) {
-  if (!vulp::utils::lock_memory()) {
+  if (!upkie::lock_memory()) {
     spdlog::error("could not lock process memory to RAM");
     return -4;
   }
@@ -133,22 +132,22 @@ int main(const CommandLineArguments& args) {
 
   // Observation: CPU temperature
   auto cpu_temperature = std::make_shared<CpuTemperature>();
-  observation.connect_source(cpu_temperature);
+  observation.connect_sensor(cpu_temperature);
 
 #ifndef __APPLE__
   // Observation: Joystick
   auto joystick = std::make_shared<Joystick>();
   if (joystick->present()) {
     spdlog::info("Joystick found");
-    observation.connect_source(joystick);
+    observation.connect_sensor(joystick);
   }
 #endif
 
   // Observation: Floor contact
   FloorContact::Parameters floor_contact_params;
   floor_contact_params.dt = 1.0 / args.spine_frequency;
-  floor_contact_params.upper_leg_joints = upkie::config::upper_leg_joints();
-  floor_contact_params.wheels = upkie::config::wheel_joints();
+  floor_contact_params.upper_leg_joints = upkie::upper_leg_joints();
+  floor_contact_params.wheels = upkie::wheel_joints();
   auto floor_contact = std::make_shared<FloorContact>(floor_contact_params);
   observation.append_observer(floor_contact);
 
@@ -159,7 +158,7 @@ int main(const CommandLineArguments& args) {
   observation.append_observer(odometry);
 
   // Mock actuators
-  const auto servo_layout = upkie::config::servo_layout();
+  const auto servo_layout = upkie::servo_layout();
   const double dt = 1.0 / args.spine_frequency;
   MockInterface actuation(servo_layout, dt);
 
@@ -167,8 +166,7 @@ int main(const CommandLineArguments& args) {
   Spine::Parameters spine_params;
   spine_params.cpu = args.spine_cpu;
   spine_params.frequency = args.spine_frequency;
-  spine_params.log_path =
-      upkie::utils::get_log_path(args.log_dir, "mock_spine");
+  spine_params.log_path = upkie::get_log_path(args.log_dir, "mock_spine");
   spdlog::info("Spine data logged to {}", spine_params.log_path);
   Spine spine(spine_params, actuation, observation);
   spine.run();

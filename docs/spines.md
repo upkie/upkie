@@ -1,6 +1,6 @@
 # Spines {#spines}
 
-Upkie's code is organized into *spines*, which communicate with the simulation or mjbots actuators, and *agents*, the programs that implement robot behaviors. We use [Bazel](https://bazel.build/) to build spines, both for simulation on your development computer or for running on the robot's Raspberry Pi. Bazel does not install anything on your system: it fetches dependencies with specific versions and builds them locally, making sure the code stays consistent over time. Check out [this introduction](https://github.com/upkie/vulp#readme) for more details.
+Upkie's code is organized into *spines*, which communicate with the simulation or mjbots actuators, and *agents*, the programs that implement robot behaviors. We use [Bazel](https://bazel.build/) to build spines, both for simulation on your development computer or for running on the robot's Raspberry Pi. Bazel does not install anything on your system: it fetches dependencies with specific versions and builds them locally, making sure the code stays consistent over time.
 
 ## Bullet spine {#bullet-spine}
 

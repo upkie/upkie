@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2022 Stéphane Caron
 
-#include "upkie/utils/datetime_now_string.h"
+#include "upkie/cpp/utils/datetime_now_string.h"
 
 #include <string>
 
 #include "gtest/gtest.h"
 
-namespace upkie::utils {
+namespace upkie {
 
 TEST(DatetimeNowString, IsADatetimeString) {
   auto now = datetime_now_string();
@@ -17,4 +17,4 @@ TEST(DatetimeNowString, IsADatetimeString) {
   ASSERT_EQ(now[10], '_');
 }
 
-}  // namespace upkie::utils
+}  // namespace upkie

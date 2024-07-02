@@ -17,7 +17,8 @@ import yaml
 from loop_rate_limiters import RateLimiter
 from rules_python.python.runfiles import runfiles
 from servo_controller import ServoController
-from vulp.spine import SpineInterface
+
+from upkie.spine import SpineInterface
 
 
 class CompilationModeError(Exception):
@@ -32,7 +33,7 @@ def clear_shared_memory():
     pre-existing file before the spine creates a new one.
     """
     try:
-        shm = shared_memory.SharedMemory("vulp", create=False, size=0)
+        shm = shared_memory.SharedMemory("upkie", create=False, size=0)
         shm.close()
         shm.unlink()
     except Exception:

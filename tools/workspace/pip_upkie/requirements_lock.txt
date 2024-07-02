@@ -6,4 +6,3 @@ msgpack==1.0.4
 numpy==1.24.3
 scipy==1.10.0
 upkie_description==1.5.0
-vulp==2.2.1

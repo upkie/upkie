@@ -13,13 +13,3 @@ py_library(
         "spine.yaml",
     ],
 )
-
-cc_library(
-    name = "layout",
-    hdrs = [
-        "layout.h",
-    ],
-    deps = [
-        "@vulp//vulp/actuation:servo_layout",
-    ],
-)

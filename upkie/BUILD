@@ -12,13 +12,7 @@ py_library(
     deps = [
         "//upkie/config",
         "//upkie/envs",
+        "//upkie/spine",
         "//upkie/utils",
-    ],
-)
-
-cc_library(
-    name = "version",
-    hdrs = [
-        "version.h",
     ],
 )

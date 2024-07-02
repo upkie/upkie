@@ -3,12 +3,6 @@
 // Copyright 2023-2024 Inria
 
 #include <unistd.h>
-#include <vulp/actuation/Pi3HatInterface.h>
-#include <vulp/observation/ObserverPipeline.h>
-#include <vulp/observation/sources/CpuTemperature.h>
-#include <vulp/observation/sources/Joystick.h>
-#include <vulp/spine/Spine.h>
-#include <vulp/utils/realtime.h>
 
 #include <algorithm>
 #include <cstdlib>
@@ -21,25 +15,31 @@
 #include <string>
 #include <vector>
 
-#include "upkie/config/layout.h"
-#include "upkie/observers/BaseOrientation.h"
-#include "upkie/observers/FloorContact.h"
-#include "upkie/observers/WheelOdometry.h"
-#include "upkie/utils/get_log_path.h"
-#include "upkie/version.h"
+#include "upkie/cpp/actuation/Pi3HatInterface.h"
+#include "upkie/cpp/config/layout.h"
+#include "upkie/cpp/observers/BaseOrientation.h"
+#include "upkie/cpp/observers/FloorContact.h"
+#include "upkie/cpp/observers/ObserverPipeline.h"
+#include "upkie/cpp/observers/WheelOdometry.h"
+#include "upkie/cpp/sensors/CpuTemperature.h"
+#include "upkie/cpp/sensors/Joystick.h"
+#include "upkie/cpp/spine/Spine.h"
+#include "upkie/cpp/utils/get_log_path.h"
+#include "upkie/cpp/utils/realtime.h"
+#include "upkie/cpp/version.h"
 
 namespace spines::pi3hat {
 
 using Pi3Hat = ::mjbots::pi3hat::Pi3Hat;
 using palimpsest::Dictionary;
-using upkie::observers::BaseOrientation;
-using upkie::observers::FloorContact;
-using upkie::observers::WheelOdometry;
-using vulp::actuation::Pi3HatInterface;
-using vulp::observation::ObserverPipeline;
-using vulp::observation::sources::CpuTemperature;
-using vulp::observation::sources::Joystick;
-using vulp::spine::Spine;
+using upkie::BaseOrientation;
+using upkie::CpuTemperature;
+using upkie::FloorContact;
+using upkie::Joystick;
+using upkie::ObserverPipeline;
+using upkie::Pi3HatInterface;
+using upkie::Spine;
+using upkie::WheelOdometry;
 
 //! Command-line arguments for the Bullet spine.
 class CommandLineArguments {
@@ -129,7 +129,7 @@ class CommandLineArguments {
   std::string log_dir = "";
 
   //! Name for the shared memory file.
-  std::string shm_name = "/vulp";
+  std::string shm_name = "/upkie";
 
   //! CPUID for the spine thread (-1 to disable realtime).
   int spine_cpu = 1;
@@ -152,7 +152,7 @@ int main(const CommandLineArguments& args) {
     spdlog::error("Calibration needed: did you run `upkie_tool rezero`?");
     return -3;
   }
-  if (!vulp::utils::lock_memory()) {
+  if (!upkie::lock_memory()) {
     spdlog::error("Could not lock process memory to RAM");
     return -4;
   }
@@ -167,7 +167,7 @@ int main(const CommandLineArguments& args) {
 
   // Observation: CPU temperature
   auto cpu_temperature = std::make_shared<CpuTemperature>();
-  observation.connect_source(cpu_temperature);
+  observation.connect_sensor(cpu_temperature);
 
   // Observation: Joystick
   auto joystick = std::make_shared<Joystick>();
@@ -182,13 +182,13 @@ int main(const CommandLineArguments& args) {
       return -6;
     }
   }
-  observation.connect_source(joystick);
+  observation.connect_sensor(joystick);
 
   // Observation: Floor contact
   FloorContact::Parameters floor_contact_params;
   floor_contact_params.dt = 1.0 / args.spine_frequency;
-  floor_contact_params.upper_leg_joints = upkie::config::upper_leg_joints();
-  floor_contact_params.wheels = upkie::config::wheel_joints();
+  floor_contact_params.upper_leg_joints = upkie::upper_leg_joints();
+  floor_contact_params.wheels = upkie::wheel_joints();
   auto floor_contact = std::make_shared<FloorContact>(floor_contact_params);
   observation.append_observer(floor_contact);
 
@@ -207,15 +207,14 @@ int main(const CommandLineArguments& args) {
     pi3hat_config.mounting_deg.yaw = 0.;
 
     // pi3hat interface
-    const auto servo_layout = upkie::config::servo_layout();
+    const auto servo_layout = upkie::servo_layout();
     Pi3HatInterface interface(servo_layout, args.can_cpu, pi3hat_config);
 
     // Spine
     Spine::Parameters spine_params;
     spine_params.cpu = args.spine_cpu;
     spine_params.frequency = args.spine_frequency;
-    spine_params.log_path =
-        upkie::utils::get_log_path(args.log_dir, "pi3hat_spine");
+    spine_params.log_path = upkie::get_log_path(args.log_dir, "pi3hat_spine");
     spdlog::info("Spine data logged to {}", spine_params.log_path);
     Spine spine(spine_params, interface, observation);
     spine.run();

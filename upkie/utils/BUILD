@@ -6,21 +6,6 @@ load("//tools/lint:lint.bzl", "add_lint_tests")
 
 package(default_visibility = ["//visibility:public"])
 
-cc_library(
-    name = "datetime_now_string",
-    hdrs = ["datetime_now_string.h"],
-)
-
-cc_library(
-    name = "get_log_path",
-    hdrs = ["get_log_path.h"],
-    deps = [
-        ":datetime_now_string",
-        "@spdlog",
-    ],
-    include_prefix = "vulp/utils",
-)
-
 py_library(
     name = "clamp",
     srcs = ["clamp.py"],
@@ -70,9 +55,7 @@ py_library(
 
 py_library(
     name = "rotations",
-    srcs = [
-        "rotations.py",
-    ],
+    srcs = ["rotations.py"],
 )
 
 py_library(
@@ -89,9 +72,9 @@ py_library(
         ":nested_update",
         ":pinocchio",
         ":raspi",
-        ":spdlog",
         ":robot_state",
         ":rotations",
+        ":spdlog",
     ],
 )
 

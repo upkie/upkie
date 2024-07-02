@@ -13,8 +13,8 @@ cc_test(
         "*.h",
     ]),
     deps = [
-        "//upkie/utils:datetime_now_string",
-        "//upkie/utils:get_log_path",
+        "//upkie/cpp/utils:datetime_now_string",
+        "//upkie/cpp/utils:get_log_path",
         "@eigen",
         "@googletest//:main",
     ],

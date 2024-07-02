@@ -36,7 +36,7 @@ py_binary(
         "//upkie/utils:exceptions",
         ":controllers",
         "@rules_python//python/runfiles",
-        "@vulp//:python",
+        "//upkie:python",
     ] + select({
         "//:pi64_config": [],
         "//conditions:default": [
@@ -67,7 +67,7 @@ py_binary(
         "//upkie/utils:raspi",
         "//upkie/utils:spdlog",
         ":controllers",
-        "@vulp//:python",
+        "//upkie:python",
     ],
 )
 
