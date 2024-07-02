@@ -145,22 +145,22 @@ class Spine {
    */
   Interface& actuation_;
 
-  //! Shared memory mapping for inter-process communication
+  //! Shared memory mapping for inter-process communication.
   AgentInterface agent_interface_;
 
-  //! Future used to wait for moteus replies
+  //! Future used to wait for moteus replies.
   std::future<moteus::Output> actuation_output_;
 
   //! Latest servo replies. They are copied and thread-safe.
   std::vector<moteus::ServoReply> latest_replies_;
 
-  //! All data from observation to action goes to this dictionary
+  //! All data from observation to action goes to this dictionary.
   palimpsest::Dictionary working_dict_;
 
-  //! Pipeline of observers, executed in that order
+  //! Pipeline of observers, executed in that order.
   ObserverPipeline observer_pipeline_;
 
-  //! Logger for the \ref working_dict_ produced at each cycle
+  //! Logger for the \ref working_dict_ produced at each cycle.
   mpacklog::Logger logger_;
 
   //! Buffer used to serialize/deserialize dictionaries in IPC.
@@ -172,10 +172,10 @@ class Spine {
   //! Internal state machine.
   StateMachine state_machine_;
 
-  //! State after the last Event::kCycleBeginning
+  //! State after the last Event::kCycleBeginning.
   State state_cycle_beginning_;
 
-  //! State after the last Event::kCycleEnd
+  //! State after the last Event::kCycleEnd.
   State state_cycle_end_;
 
   //! Number of actuation replies received during the latest cycle.
