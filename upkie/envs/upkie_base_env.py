@@ -18,6 +18,7 @@ from upkie.spine import SpineInterface
 from upkie.utils.exceptions import UpkieException
 from upkie.utils.nested_update import nested_update
 from upkie.utils.robot_state import RobotState
+from upkie.utils.spdlog import logging
 
 
 class UpkieBaseEnv(abc.ABC, gymnasium.Env):
@@ -253,7 +254,13 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         \return True if and only if a fall is detected.
         """
         pitch = spine_observation["base_orientation"]["pitch"]
-        return abs(pitch) > self.fall_pitch
+        if abs(pitch) > self.fall_pitch:
+            logging.warning(
+                "Fall detected (pitch=%.2f rad, fall_pitch=%.2f rad)",
+                abs(pitch),
+                self.fall_pitch,
+            )
+        return
 
     def parse_first_observation(self, spine_observation: dict) -> None:
         r"""!
