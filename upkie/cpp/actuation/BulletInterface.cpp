@@ -23,7 +23,6 @@ std::string find_plane_urdf(const std::string argv0) {
     throw std::runtime_error(
         "Could not retrieve the package path to plane.urdf: " + error);
   }
-  // "upkie/cpp/upkie/cpp" was "vulp/vulp"
   return runfiles->Rlocation(
       "upkie/upkie/cpp/actuation/bullet/plane/plane.urdf");
 }

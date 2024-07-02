@@ -17,7 +17,8 @@ import yaml
 from loop_rate_limiters import RateLimiter
 from rules_python.python.runfiles import runfiles
 from servo_controller import ServoController
-from vulp.spine import SpineInterface
+
+from upkie.spine import SpineInterface
 
 
 class CompilationModeError(Exception):

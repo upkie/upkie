@@ -11,10 +11,10 @@ import gymnasium
 import numpy as np
 from loop_rate_limiters import RateLimiter
 from numpy.typing import NDArray
-from vulp.spine import SpineInterface
 
 import upkie.config
 from upkie.model import Model
+from upkie.spine import SpineInterface
 from upkie.utils.exceptions import UpkieException
 from upkie.utils.nested_update import nested_update
 from upkie.utils.robot_state import RobotState
