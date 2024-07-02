@@ -23,17 +23,15 @@ class ObserverPipeline {
   using Dictionary = palimpsest::Dictionary;
 
  public:
-  using iterator = std::vector<std::shared_ptr<Observer>>::iterator;
-
   /*! Reset observers.
    *
    * \param[in] config Overall configuration dictionary.
    */
   void reset(const Dictionary& config);
 
-  /* Add a sensor at the beginning of the pipeline.
+  /*! Add a sensor at the beginning of the pipeline.
    *
-   * \param sensor Sensor to append.
+   * \param[in] sensor Sensor to append.
    *
    * \note Contrary to observers, the order in which sensors are executed is
    * not guaranteed. If a sensor needs to run after another, consider splitting
@@ -43,7 +41,7 @@ class ObserverPipeline {
     sensors_.push_back(std::shared_ptr<Sensor>(sensor));
   }
 
-  /* Append an observer at the end of the pipeline.
+  /*! Append an observer at the end of the pipeline.
    *
    * \param observer Observer to append.
    */

@@ -17,11 +17,13 @@
 
 namespace upkie {
 
+//! Interface whose internal state perfectly tracks commands.
 class MockInterface : public Interface {
  public:
   /*! Create mock actuator interface.
    *
-   * \param[in] params Interface parameters.
+   * \param[in] layout Servo layout.
+   * \param[in] dt Simultation timestep in [s].
    */
   MockInterface(const ServoLayout& layout, const double dt);
 
