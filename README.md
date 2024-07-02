@@ -6,7 +6,7 @@
 [![Documentation](https://img.shields.io/github/actions/workflow/status/upkie/upkie/docs.yml?branch=main&label=docs)](https://upkie.github.io/upkie/)
 [![Coverage](https://coveralls.io/repos/github/upkie/upkie/badge.svg?branch=main)](https://coveralls.io/github/upkie/upkie?branch=main)
 [![PyPI version](https://img.shields.io/pypi/v/upkie)](https://pypi.org/project/upkie/)
-[![Chat](https://img.shields.io/badge/matrix-chat-%234eb899)](https://app.element.io/#/room/#tasts-robots:matrix.org)
+[![Chat](https://img.shields.io/badge/matrix-chat-%234eb899)](https://app.element.io/#/room/#upkie:matrix.org)
 
 **Upkie** is a fully open source self-balancing wheeled biped robot. It has wheels for balancing and legs to negotiate uneven terrains. Upkies are designed to be buildable at home using only tools and components ordered online, like mjbots actuators. You can develop in Python or C++, on Linux or macOS, then deploy your software to the robot's Raspberry Pi.
 
@@ -25,7 +25,7 @@ This repository contains all the materials needed to build and animate an Upkie:
     - [More agents](https://github.com/upkie/upkie#agents)
     - [More examples](https://github.com/upkie/upkie/tree/main/examples)
 
-Questions are welcome in the [Chat](https://app.element.io/#/room/#tasts-robots:matrix.org) and [Discussions forum](https://github.com/upkie/upkie/discussions).
+Questions are welcome in the [Chat](https://app.element.io/#/room/#upkie:matrix.org) and [Discussions forum](https://github.com/upkie/upkie/discussions).
 
 ## Getting started
 
