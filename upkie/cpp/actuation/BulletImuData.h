@@ -10,6 +10,7 @@
 
 namespace upkie {
 
+//! IMU data with extra groundtruth observations from Bullet.
 struct BulletImuData : public ImuData {
   //! Spatial linear velocity in [m] / [s]², used to compute the acceleration
   Eigen::Vector3d linear_velocity_imu_in_world = Eigen::Vector3d::Zero();

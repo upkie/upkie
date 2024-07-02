@@ -128,8 +128,8 @@ class Interface {
  protected:
   /*! Pointers to the memory shared with the CAN thread.
    *
-   * This memory consists of \ref commands_ and \ref replies_. It is, by
-   * definition, not thread-safe.
+   * This memory consists of commands and replies. It is, by definition, not
+   * thread-safe.
    */
   moteus::Data data_;
 
