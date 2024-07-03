@@ -7,11 +7,13 @@
 #include <string>
 #include <vector>
 
-namespace upkie {
+namespace upkie::observers {
+
+using upkie::actuation::moteus::ServoReply;
 
 void observe_servos(palimpsest::Dictionary& observation,
                     const std::map<int, std::string>& servo_joint_map,
-                    const std::vector<moteus::ServoReply>& servo_replies) {
+                    const std::vector<ServoReply>& servo_replies) {
   for (const auto& reply : servo_replies) {
     const int servo_id = reply.id;
     auto it = servo_joint_map.find(servo_id);
@@ -42,4 +44,4 @@ void observe_servos(palimpsest::Dictionary& observation,
   }
 }
 
-}  // namespace upkie
+}  // namespace upkie::observers

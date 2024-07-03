@@ -15,7 +15,7 @@
 #include "upkie/cpp/actuation/moteus/PositionResolution.h"
 #include "upkie/cpp/actuation/moteus/QueryCommand.h"
 
-namespace upkie {
+namespace upkie::actuation {
 
 namespace moteus {
 
@@ -39,4 +39,4 @@ struct ServoCommand {
 
 }  // namespace moteus
 
-}  // namespace upkie
+}  // namespace upkie::actuation

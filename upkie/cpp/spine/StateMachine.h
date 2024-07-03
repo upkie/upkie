@@ -5,7 +5,7 @@
 
 #include "upkie/cpp/spine/AgentInterface.h"
 
-namespace upkie {
+namespace upkie::spine {
 
 //! When sending stop cycles, send at least that many.
 constexpr unsigned kNbStopCycles = 5;
@@ -131,4 +131,4 @@ class StateMachine {
   unsigned stop_cycles_;
 };
 
-}  // namespace upkie
+}  // namespace upkie::spine

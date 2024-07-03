@@ -15,19 +15,24 @@
 #include <limits>
 
 #include "upkie/cpp/exceptions/ObserverError.h"
+#include "upkie/cpp/observers/observe_servos.h"
+#include "upkie/cpp/observers/observe_time.h"
+#include "upkie/cpp/utils/handle_interrupts.h"
+#include "upkie/cpp/utils/realtime.h"
 
-namespace upkie {
+namespace upkie::spine {
 
 using palimpsest::Dictionary;
+using upkie::actuation::moteus::Output;
 
-Spine::Spine(const Parameters& params, Interface& actuation,
+Spine::Spine(const Parameters& params, actuation::Interface& actuation,
              ObserverPipeline& observers)
     : frequency_(params.frequency),
       actuation_(actuation),
       agent_interface_(params.shm_name, params.shm_size),
       observer_pipeline_(observers),
       logger_(params.log_path),
-      caught_interrupt_(handle_interrupts()),
+      caught_interrupt_(utils::handle_interrupts()),
       state_machine_(agent_interface_),
       state_cycle_beginning_(State::kOver),
       state_cycle_end_(State::kOver),
@@ -42,8 +47,8 @@ Spine::Spine(const Parameters& params, Interface& actuation,
   // Real-time configuration
   // NB: it is too late to lock memory here, this should be done by the caller
   if (params.cpu >= 0) {
-    configure_cpu(params.cpu);
-    configure_scheduler(10);
+    utils::configure_cpu(params.cpu);
+    utils::configure_scheduler(10);
   }
 
   // Inter-process communication
@@ -51,7 +56,7 @@ Spine::Spine(const Parameters& params, Interface& actuation,
 
   // Initialize internal dictionary
   Dictionary& observation = working_dict_("observation");
-  observe_time(observation);
+  observers::observe_time(observation);
   working_dict_.insert<double>("time", observation.get<double>("time"));
 }
 
@@ -85,7 +90,7 @@ void Spine::log_working_dict() {
 
 void Spine::run() {
   Dictionary& spine = working_dict_("spine");
-  SynchronousClock clock(frequency_);
+  utils::SynchronousClock clock(frequency_);
   while (state_machine_.state() != State::kOver) {
     cycle();
     if (state_machine_.state() != State::kSendStops) {
@@ -163,15 +168,16 @@ void Spine::cycle_actuation() {
   try {
     // 1. Observation
     Dictionary& observation = working_dict_("observation");
-    observe_time(observation);
-    observe_servos(observation, actuation_.servo_joint_map(), latest_replies_);
+    observers::observe_time(observation);
+    observers::observe_servos(observation, actuation_.servo_joint_map(),
+                              latest_replies_);
     actuation_.observe(observation);
     // Observers need configuration, so they cannot run at stop
     if (state_machine_.state() != State::kSendStops &&
         state_machine_.state() != State::kShutdown) {
       try {
         observer_pipeline_.run(observation);
-      } catch (const ObserverError& e) {
+      } catch (const exceptions::ObserverError& e) {
         spdlog::info("Key error from {}: key \"{}\" not found", e.prefix(),
                      e.key());
       }
@@ -222,8 +228,8 @@ void Spine::cycle_actuation() {
 
   // 4. Start a new cycle. Results have been copied, so actuation commands and
   // replies are available again to the actuation thread for writing.
-  auto promise = std::make_shared<std::promise<moteus::Output>>();
-  actuation_.cycle([promise](const moteus::Output& output) {
+  auto promise = std::make_shared<std::promise<Output>>();
+  actuation_.cycle([promise](const Output& output) {
     // This is called from an arbitrary thread, so we
     // just set the promise value here.
     promise->set_value(output);
@@ -231,4 +237,4 @@ void Spine::cycle_actuation() {
   actuation_output_ = promise->get_future();
 }
 
-}  // namespace upkie
+}  // namespace upkie::spine

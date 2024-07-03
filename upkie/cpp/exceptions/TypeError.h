@@ -7,7 +7,7 @@
 
 #include "upkie/cpp/exceptions/UpkieError.h"
 
-namespace upkie {
+namespace upkie::exceptions {
 
 class TypeError : public UpkieError {
  public:
@@ -32,4 +32,4 @@ class TypeError : public UpkieError {
   ~TypeError() throw() {}
 };
 
-}  // namespace upkie
+}  // namespace upkie::exceptions

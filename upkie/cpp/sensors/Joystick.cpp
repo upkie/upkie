@@ -3,7 +3,7 @@
 
 #include "upkie/cpp/sensors/Joystick.h"
 
-namespace upkie {
+namespace upkie::sensors {
 
 Joystick::Joystick(const std::string& device_path) {
   fd_ = ::open(device_path.c_str(), O_RDONLY | O_NONBLOCK);
@@ -127,4 +127,4 @@ void Joystick::write(Dictionary& observation) {
   output("triangle_button") = triangle_button_;
 }
 
-}  // namespace upkie
+}  // namespace upkie::sensors

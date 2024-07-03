@@ -10,7 +10,7 @@
 #include "tools/cpp/runfiles/runfiles.h"
 #include "upkie/cpp/actuation/bullet/utils.h"
 
-namespace upkie {
+namespace upkie::actuation {
 
 using bazel::tools::cpp::runfiles::Runfiles;
 using bullet::bullet_from_eigen;
@@ -448,4 +448,4 @@ Eigen::Vector3d BulletInterface::compute_position_com_in_world() {
   return bullet::compute_position_com_in_world(bullet_, robot_);
 }
 
-}  // namespace upkie
+}  // namespace upkie::actuation

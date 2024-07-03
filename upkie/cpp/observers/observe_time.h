@@ -5,7 +5,7 @@
 
 #include <palimpsest/Dictionary.h>
 
-namespace upkie {
+namespace upkie::observers {
 
 using palimpsest::Dictionary;
 
@@ -22,4 +22,4 @@ inline void observe_time(Dictionary& observation) {
   observation("time") = static_cast<double>(nb_us) / 1e6;
 }
 
-}  // namespace upkie
+}  // namespace upkie::observers

@@ -7,7 +7,7 @@
 
 #include <cstddef>
 
-namespace upkie {
+namespace upkie::utils {
 
 namespace internal {
 
@@ -26,4 +26,4 @@ void handle_interrupt(int _);
  */
 const bool& handle_interrupts();
 
-}  // namespace upkie
+}  // namespace upkie::utils

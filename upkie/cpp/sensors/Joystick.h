@@ -12,7 +12,7 @@
 
 #include "upkie/cpp/sensors/Sensor.h"
 
-namespace upkie {
+namespace upkie::sensors {
 
 //! Deadband between 0.0 and 1.0.
 constexpr double kJoystickDeadband = 0.1;
@@ -89,4 +89,4 @@ class Joystick : public Sensor {
   bool triangle_button_ = false;
 };
 
-}  // namespace upkie
+}  // namespace upkie::sensors

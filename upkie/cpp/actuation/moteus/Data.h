@@ -14,7 +14,7 @@
 #include "upkie/cpp/actuation/moteus/ServoReply.h"
 #include "upkie/cpp/actuation/moteus/Span.h"
 
-namespace upkie {
+namespace upkie::actuation {
 
 namespace moteus {
 
@@ -33,4 +33,4 @@ struct Data {
 
 }  // namespace moteus
 
-}  // namespace upkie
+}  // namespace upkie::actuation

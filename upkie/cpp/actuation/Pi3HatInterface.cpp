@@ -10,7 +10,7 @@
 
 #include "upkie/cpp/actuation/Pi3HatInterface.h"
 
-namespace upkie {
+namespace upkie::actuation {
 
 Pi3HatInterface::Pi3HatInterface(const ServoLayout& layout, const int can_cpu,
                                  const Pi3Hat::Configuration& pi3hat_config)
@@ -161,4 +161,4 @@ moteus::Output Pi3HatInterface::cycle_can_thread() {
   return result;
 }
 
-}  // namespace upkie
+}  // namespace upkie::actuation

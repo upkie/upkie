@@ -10,7 +10,7 @@
 
 #pragma once
 
-namespace upkie {
+namespace upkie::actuation {
 
 namespace moteus {
 
@@ -34,4 +34,4 @@ enum class Mode {
 
 }  // namespace moteus
 
-}  // namespace upkie
+}  // namespace upkie::actuation

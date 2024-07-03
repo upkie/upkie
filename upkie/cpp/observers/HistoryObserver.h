@@ -13,7 +13,7 @@
 #include "upkie/cpp/exceptions/TypeError.h"
 #include "upkie/cpp/observers/Observer.h"
 
-namespace upkie {
+namespace upkie::observers {
 
 using palimpsest::Dictionary;
 
@@ -82,7 +82,7 @@ class HistoryObserver : public Observer {
       return read_value(dict(key), key_index + 1);
     }
     if (!dict.is_value()) {
-      throw TypeError(
+      throw exceptions::TypeError(
           __FILE__, __LINE__,
           "Observation at " + concatenate_keys() + " is not a value");
     }
@@ -116,4 +116,4 @@ class HistoryObserver : public Observer {
   std::vector<T> values_;
 };
 
-}  // namespace upkie
+}  // namespace upkie::observers

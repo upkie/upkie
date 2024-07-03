@@ -5,7 +5,7 @@
 
 #include <string>
 
-namespace upkie {
+namespace upkie::exceptions {
 
 //! Exception for filter errors
 class FilterError : public std::runtime_error {
@@ -24,4 +24,4 @@ class FilterError : public std::runtime_error {
   const char* what() const throw() { return std::runtime_error::what(); }
 };
 
-}  // namespace upkie
+}  // namespace upkie::exceptions

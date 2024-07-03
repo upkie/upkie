@@ -10,7 +10,7 @@
 
 #pragma once
 
-namespace upkie {
+namespace upkie::actuation {
 
 namespace moteus {
 
@@ -24,4 +24,4 @@ enum class Resolution {
 
 }  // namespace moteus
 
-}  // namespace upkie
+}  // namespace upkie::actuation
