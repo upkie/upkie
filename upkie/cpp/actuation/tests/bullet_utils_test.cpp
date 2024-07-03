@@ -118,14 +118,14 @@ TEST_F(BulletTest, EigenFromBulletQuat) {
 }
 
 TEST_F(BulletTest, RobotMass) {
-  ASSERT_NEAR(compute_robot_mass(*bullet_, robot_), 5.39222, 1e-4);
+  ASSERT_NEAR(compute_robot_mass(*bullet_, robot_), 5.3382, 1e-4);
 }
 
 TEST_F(BulletTest, ComputeCenterOfMass) {
   Eigen::Vector3d com = compute_position_com_in_world(*bullet_, robot_);
   ASSERT_NEAR(com.x(), -0.0059, 1e-4);
   ASSERT_NEAR(com.y(), 0.0, 1e-4);
-  ASSERT_NEAR(com.z(), -0.2484, 1e-4);
+  ASSERT_NEAR(com.z(), -0.2455, 1e-4);
 }
 
 }  // namespace bullet
