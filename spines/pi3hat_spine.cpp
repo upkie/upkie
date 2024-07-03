@@ -16,6 +16,7 @@
 #include <vector>
 
 #include "upkie/cpp/actuation/Pi3HatInterface.h"
+#include "upkie/cpp/model/joints.h"
 #include "upkie/cpp/model/servo_layout.h"
 #include "upkie/cpp/observers/BaseOrientation.h"
 #include "upkie/cpp/observers/FloorContact.h"
@@ -152,7 +153,7 @@ int main(const CommandLineArguments& args) {
     spdlog::error("Calibration needed: did you run `upkie_tool rezero`?");
     return -3;
   }
-  if (!upkie::lock_memory()) {
+  if (!upkie::utils::lock_memory()) {
     spdlog::error("Could not lock process memory to RAM");
     return -4;
   }

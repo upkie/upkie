@@ -19,6 +19,7 @@
 #include <string>
 #include <vector>
 
+#include "upkie/cpp/model/joints.h"
 #include "upkie/cpp/model/servo_layout.h"
 #include "upkie/cpp/observers/BaseOrientation.h"
 #include "upkie/cpp/observers/FloorContact.h"
@@ -117,7 +118,7 @@ class CommandLineArguments {
 };
 
 int main(const CommandLineArguments& args) {
-  if (!upkie::lock_memory()) {
+  if (!upkie::utils::lock_memory()) {
     spdlog::error("could not lock process memory to RAM");
     return -4;
   }
