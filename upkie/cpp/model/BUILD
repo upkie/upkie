@@ -5,9 +5,10 @@
 package(default_visibility = ["//visibility:public"])
 
 cc_library(
-    name = "layout",
+    name = "model",
     hdrs = [
-        "layout.h",
+        "joints.h",
+        "servo_layout.h",
     ],
     deps = [
         "//upkie/cpp/actuation:servo_layout",

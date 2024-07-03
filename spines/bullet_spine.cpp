@@ -20,7 +20,8 @@
 #include <string>
 #include <vector>
 
-#include "upkie/cpp/config/layout.h"
+#include "upkie/cpp/model/joints.h"
+#include "upkie/cpp/model/servo_layout.h"
 #include "upkie/cpp/observers/BaseOrientation.h"
 #include "upkie/cpp/observers/FloorContact.h"
 #include "upkie/cpp/observers/WheelOdometry.h"
@@ -206,8 +207,8 @@ int main(const char* argv0, const CommandLineArguments& args) {
   // Observation: Floor contact
   FloorContact::Parameters floor_contact_params;
   floor_contact_params.dt = 1.0 / args.spine_frequency;
-  floor_contact_params.upper_leg_joints = upkie::config::upper_leg_joints();
-  floor_contact_params.wheels = upkie::config::wheel_joints();
+  floor_contact_params.upper_leg_joints = upkie::model::upper_leg_joints();
+  floor_contact_params.wheels = upkie::model::wheel_joints();
   auto floor_contact = std::make_shared<FloorContact>(floor_contact_params);
   observation.append_observer(floor_contact);
 
@@ -221,7 +222,7 @@ int main(const char* argv0, const CommandLineArguments& args) {
   // a "b3AlignedObjectArray reserve out-of-memory" error below.
 
   // Simulator
-  const auto servo_layout = upkie::config::servo_layout();
+  const auto servo_layout = upkie::model::servo_layout();
   const double base_altitude = args.space ? 0.0 : 0.6;  // [m]
   BulletInterface::Parameters bullet_params(Dictionary{});
   bullet_params.argv0 = argv0;

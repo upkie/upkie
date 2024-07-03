@@ -8,7 +8,7 @@
 
 #include "upkie/cpp/actuation/ServoLayout.h"
 
-namespace upkie::config {
+namespace upkie::model {
 
 using upkie::actuation::ServoLayout;
 
@@ -30,20 +30,4 @@ inline const ServoLayout servo_layout() noexcept {
   return layout;
 }
 
-/*! Get list of upper leg joints, i.e. hips and knees.
- *
- * \return Vector of upper leg joint names.
- */
-inline const std::vector<std::string> upper_leg_joints() noexcept {
-  return {"left_hip", "left_knee", "right_hip", "right_knee"};
-}
-
-/*! Get list of wheel joints.
- *
- * \return Vector of wheel joint names.
- */
-inline const std::vector<std::string> wheel_joints() noexcept {
-  return {"left_wheel", "right_wheel"};
-}
-
-}  // namespace upkie::config
+}  // namespace upkie::model

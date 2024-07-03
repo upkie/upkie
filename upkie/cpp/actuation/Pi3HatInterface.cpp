@@ -68,8 +68,8 @@ void Pi3HatInterface::cycle(
 }
 
 void Pi3HatInterface::run_can_thread() {
-  upkie::configure_cpu(can_cpu_);
-  upkie::configure_scheduler(10);
+  upkie::utils::configure_cpu(can_cpu_);
+  upkie::utils::configure_scheduler(10);
   pi3hat_.reset(new Pi3Hat({pi3hat_config_}));
   pthread_setname_np(pthread_self(), "can_thread");
   while (!done_) {
