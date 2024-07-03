@@ -55,7 +55,6 @@ void Pi3HatInterface::process_action(const Dictionary& action) {}
 
 void Pi3HatInterface::cycle(
     std::function<void(const moteus::Output&)> callback) {
-  const moteus::Data& data = this->data_;
   std::lock_guard<std::mutex> lock(mutex_);
   if (ongoing_can_cycle_) {
     throw std::logic_error(
@@ -64,7 +63,6 @@ void Pi3HatInterface::cycle(
 
   callback_ = std::move(callback);
   ongoing_can_cycle_ = true;
-  data_ = data;
 
   can_wait_condition_.notify_all();
 }
