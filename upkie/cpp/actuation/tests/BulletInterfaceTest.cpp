@@ -368,7 +368,7 @@ TEST_F(BulletInterfaceTest, FreeFallBasePosition) {
 }
 
 TEST_F(BulletInterfaceTest, ComputeRobotMass) {
-  ASSERT_NEAR(interface_->compute_robot_mass(), 5.39222, 1e-4);
+  ASSERT_NEAR(interface_->compute_robot_mass(), 5.3382, 1e-4);
 }
 
 TEST_F(BulletInterfaceTest, ApplyExternalForces) {
