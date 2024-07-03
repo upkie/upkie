@@ -7,7 +7,7 @@
 
 #include "upkie/cpp/sensors/Sensor.h"
 
-namespace upkie {
+namespace upkie::sensors {
 
 //! Characters required to read the temperature in [mC] from the kernel.
 constexpr unsigned kCpuTemperatureBufferSize = 12;
@@ -64,4 +64,4 @@ class CpuTemperature : public Sensor {
   bool has_warned_;
 };
 
-}  // namespace upkie
+}  // namespace upkie::sensors

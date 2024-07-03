@@ -10,7 +10,7 @@
 #include "upkie/cpp/sensors/Sensor.h"
 
 //! State observation.
-namespace upkie {
+namespace upkie::observers {
 
 /*! Observer pipeline.
  *
@@ -21,6 +21,7 @@ namespace upkie {
  */
 class ObserverPipeline {
   using Dictionary = palimpsest::Dictionary;
+  using Sensor = upkie::sensors::Sensor;
 
  public:
   /*! Reset observers.
@@ -75,4 +76,4 @@ class ObserverPipeline {
   std::vector<std::shared_ptr<Observer>> observers_;
 };
 
-}  // namespace upkie
+}  // namespace upkie::observers

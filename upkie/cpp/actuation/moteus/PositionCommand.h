@@ -12,7 +12,7 @@
 
 #include <limits>
 
-namespace upkie {
+namespace upkie::actuation {
 
 namespace moteus {
 
@@ -35,4 +35,4 @@ struct PositionCommand {
 
 }  // namespace moteus
 
-}  // namespace upkie
+}  // namespace upkie::actuation

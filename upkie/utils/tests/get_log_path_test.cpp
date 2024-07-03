@@ -7,7 +7,7 @@
 
 #include "gtest/gtest.h"
 
-namespace upkie {
+namespace upkie::utils {
 
 TEST(GetLogPath, StartsWithLogdir) {
   const std::string path = get_log_path("log_dir", "spine_name");
@@ -20,4 +20,4 @@ TEST(GetLogPath, EndsWithMpack) {
   ASSERT_EQ(path.rfind(suffix), path.size() - suffix.size());
 }
 
-}  // namespace upkie
+}  // namespace upkie::utils

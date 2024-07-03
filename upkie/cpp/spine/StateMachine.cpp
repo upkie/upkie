@@ -7,7 +7,7 @@
 
 #include "upkie/cpp/utils/handle_interrupts.h"
 
-namespace upkie {
+namespace upkie::spine {
 
 StateMachine::StateMachine(AgentInterface& interface) noexcept
     : interface_(interface), state_(State::kSendStops), stop_cycles_(0u) {
@@ -162,4 +162,4 @@ void StateMachine::enter_state(const State& next_state) noexcept {
   state_ = next_state;
 }
 
-}  // namespace upkie
+}  // namespace upkie::spine

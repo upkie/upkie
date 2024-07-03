@@ -8,7 +8,9 @@
 
 #include "upkie/cpp/actuation/ServoLayout.h"
 
-namespace upkie {
+namespace upkie::config {
+
+using upkie::actuation::ServoLayout;
 
 constexpr int kLeftBusID = 1;   // JC1
 constexpr int kRightBusID = 3;  // JC3
@@ -44,4 +46,4 @@ inline const std::vector<std::string> wheel_joints() noexcept {
   return {"left_wheel", "right_wheel"};
 }
 
-}  // namespace upkie
+}  // namespace upkie::config

@@ -3,7 +3,7 @@
 
 #pragma once
 
-namespace upkie {
+namespace upkie::actuation {
 
 namespace default_action {
 
@@ -15,4 +15,4 @@ constexpr double kMaximumTorque = 1.0;      // N.m
 
 }  // namespace default_action
 
-}  // namespace upkie
+}  // namespace upkie::actuation

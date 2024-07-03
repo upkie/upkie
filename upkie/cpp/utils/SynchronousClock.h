@@ -7,7 +7,7 @@
 
 #include <chrono>
 
-namespace upkie {
+namespace upkie::utils {
 
 /*! Synchronous (blocking) clock.
  *
@@ -78,4 +78,4 @@ class SynchronousClock {
   double slack_;
 };
 
-}  // namespace upkie
+}  // namespace upkie::utils

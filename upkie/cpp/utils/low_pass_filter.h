@@ -8,7 +8,7 @@
 
 #include "upkie/cpp/exceptions/FilterError.h"
 
-namespace upkie {
+namespace upkie::utils {
 
 /*! Low-pass filter as an inline function.
  *
@@ -28,7 +28,7 @@ inline double low_pass_filter(double prev_output, double cutoff_period,
         std::to_string(cutoff_period) +
         " s is less than 2 * dt = " + std::to_string(2.0 * dt) +
         " s, causing information loss (Nyquist–Shannon sampling theorem)";
-    throw FilterError(message);
+    throw exceptions::FilterError(message);
   }
 
   // Actual filtering ;)
@@ -36,4 +36,4 @@ inline double low_pass_filter(double prev_output, double cutoff_period,
   return prev_output + alpha * (new_input - prev_output);
 }
 
-}  // namespace upkie
+}  // namespace upkie::utils

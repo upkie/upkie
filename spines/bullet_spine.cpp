@@ -31,16 +31,16 @@
 namespace spines::bullet {
 
 using palimpsest::Dictionary;
-using upkie::BaseOrientation;
-using upkie::BulletInterface;
-using upkie::CpuTemperature;
-using upkie::FloorContact;
-using upkie::ObserverPipeline;
-using upkie::Spine;
-using upkie::WheelOdometry;
+using upkie::actuation::BulletInterface;
+using upkie::observers::BaseOrientation;
+using upkie::observers::FloorContact;
+using upkie::observers::ObserverPipeline;
+using upkie::observers::WheelOdometry;
+using upkie::sensors::CpuTemperature;
+using upkie::spine::Spine;
 
 #ifndef __APPLE__
-using upkie::Joystick;
+using upkie::sensors::Joystick;
 #endif
 
 //! Command-line arguments for the Bullet spine.
@@ -206,8 +206,8 @@ int main(const char* argv0, const CommandLineArguments& args) {
   // Observation: Floor contact
   FloorContact::Parameters floor_contact_params;
   floor_contact_params.dt = 1.0 / args.spine_frequency;
-  floor_contact_params.upper_leg_joints = upkie::upper_leg_joints();
-  floor_contact_params.wheels = upkie::wheel_joints();
+  floor_contact_params.upper_leg_joints = upkie::config::upper_leg_joints();
+  floor_contact_params.wheels = upkie::config::wheel_joints();
   auto floor_contact = std::make_shared<FloorContact>(floor_contact_params);
   observation.append_observer(floor_contact);
 
@@ -221,7 +221,7 @@ int main(const char* argv0, const CommandLineArguments& args) {
   // a "b3AlignedObjectArray reserve out-of-memory" error below.
 
   // Simulator
-  const auto servo_layout = upkie::servo_layout();
+  const auto servo_layout = upkie::config::servo_layout();
   const double base_altitude = args.space ? 0.0 : 0.6;  // [m]
   BulletInterface::Parameters bullet_params(Dictionary{});
   bullet_params.argv0 = argv0;
@@ -237,7 +237,8 @@ int main(const char* argv0, const CommandLineArguments& args) {
   // Spine
   Spine::Parameters spine_params;
   spine_params.frequency = args.spine_frequency;
-  spine_params.log_path = upkie::get_log_path(args.log_dir, "bullet_spine");
+  spine_params.log_path =
+      upkie::utils::get_log_path(args.log_dir, "bullet_spine");
   spine_params.shm_name = args.shm_name;
   spdlog::info("Spine data logged to {}", spine_params.log_path);
   Spine spine(spine_params, interface, observation);

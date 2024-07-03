@@ -14,15 +14,11 @@
 
 #include "upkie/cpp/actuation/Interface.h"
 #include "upkie/cpp/observers/ObserverPipeline.h"
-#include "upkie/cpp/observers/observe_servos.h"
-#include "upkie/cpp/observers/observe_time.h"
 #include "upkie/cpp/spine/AgentInterface.h"
 #include "upkie/cpp/spine/StateMachine.h"
 #include "upkie/cpp/utils/SynchronousClock.h"
-#include "upkie/cpp/utils/handle_interrupts.h"
-#include "upkie/cpp/utils/realtime.h"
 
-namespace upkie {
+namespace upkie::spine {
 
 constexpr size_t kMebibytes = 1 << 20;
 
@@ -43,6 +39,10 @@ constexpr size_t kMebibytes = 1 << 20;
  * See StateMachine for more details.
  */
 class Spine {
+  using ObserverPipeline = upkie::observers::ObserverPipeline;
+  using Output = upkie::actuation::moteus::Output;
+  using ServoReply = upkie::actuation::moteus::ServoReply;
+
  public:
   //! Spine parameters.
   struct Parameters {
@@ -69,7 +69,7 @@ class Spine {
    * \param[in, out] observers Pipeline of observers to run, in that order, at
    *     each cycle.
    */
-  Spine(const Parameters& params, Interface& interface,
+  Spine(const Parameters& params, actuation::Interface& interface,
         ObserverPipeline& observers);
 
   /*! Reset the spine with a new configuration.
@@ -143,16 +143,16 @@ class Spine {
    * The actuation interface communicates over the CAN-FD bus on real robots.
    * Otherwise, it can be for instance a mock or a simulator interface.
    */
-  Interface& actuation_;
+  actuation::Interface& actuation_;
 
   //! Shared memory mapping for inter-process communication.
   AgentInterface agent_interface_;
 
   //! Future used to wait for moteus replies.
-  std::future<moteus::Output> actuation_output_;
+  std::future<Output> actuation_output_;
 
   //! Latest servo replies. They are copied and thread-safe.
-  std::vector<moteus::ServoReply> latest_replies_;
+  std::vector<ServoReply> latest_replies_;
 
   //! All data from observation to action goes to this dictionary.
   palimpsest::Dictionary working_dict_;
@@ -182,4 +182,4 @@ class Spine {
   size_t rx_count_;
 };
 
-}  // namespace upkie
+}  // namespace upkie::spine

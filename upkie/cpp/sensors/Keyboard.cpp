@@ -3,7 +3,7 @@
 
 #include "upkie/cpp/sensors/Keyboard.h"
 
-namespace upkie {
+namespace upkie::sensors {
 Keyboard::Keyboard() {
   termios term;
   tcgetattr(STDIN_FILENO, &term);
@@ -112,4 +112,4 @@ void Keyboard::write(Dictionary& observation) {
   output("unknown") = key_code_ == Key::UNKNOWN;
 }
 
-}  // namespace upkie
+}  // namespace upkie::sensors

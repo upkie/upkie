@@ -12,7 +12,7 @@
 
 #include "upkie/cpp/actuation/moteus/Resolution.h"
 
-namespace upkie {
+namespace upkie::actuation {
 
 namespace moteus {
 
@@ -29,4 +29,4 @@ struct PositionResolution {
 
 }  // namespace moteus
 
-}  // namespace upkie
+}  // namespace upkie::actuation
