@@ -12,6 +12,7 @@ py_library(
     deps = [
         "//upkie/config",
         "//upkie/model",
+        "//upkie/spine",
         "//upkie/utils:exceptions",
         "//upkie/utils:nested_update",
         "//upkie/utils:robot_state",

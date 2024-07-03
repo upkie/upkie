@@ -10,6 +10,7 @@ Python library for an agent to interact with a spine.
 
 from .exceptions import PerformanceIssue, SpineError, UpkieException
 from .request import Request
+from .serialize import serialize
 from .spine_interface import SpineInterface
 
 __all__ = [
@@ -18,4 +19,5 @@ __all__ = [
     "SpineError",
     "SpineInterface",
     "UpkieException",
+    "serialize",
 ]
