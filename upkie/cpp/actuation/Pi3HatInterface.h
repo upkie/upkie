@@ -33,8 +33,6 @@
 
 namespace upkie::actuation {
 
-using Pi3Hat = ::mjbots::pi3hat::Pi3Hat;
-
 /*! Interface to moteus controllers.
  *
  * Internally it uses a background thread to operate the pi3hat, enabling the
@@ -49,7 +47,7 @@ class Pi3HatInterface : public Interface {
    * \param[in] pi3hat_config Configuration for the pi3hat.
    */
   Pi3HatInterface(const ServoLayout& layout, const int can_cpu,
-                  const Pi3Hat::Configuration& pi3hat_config);
+                  const mjbots::pi3hat::Pi3Hat::Configuration& pi3hat_config);
 
   //! Stop CAN thread
   ~Pi3HatInterface();
@@ -139,7 +137,7 @@ class Pi3HatInterface : public Interface {
   const int can_cpu_;
 
   // pi3hat configuration
-  const Pi3Hat::Configuration pi3hat_config_;
+  const mjbots::pi3hat::Pi3Hat::Configuration pi3hat_config_;
 
   //! Mutex associated with \ref can_wait_condition_
   std::mutex mutex_;
@@ -160,24 +158,24 @@ class Pi3HatInterface : public Interface {
   std::thread can_thread_;
 
   //! Internal Pi3Hat interface. Only use from the CAN thread.
-  std::unique_ptr<Pi3Hat> pi3hat_;
+  std::unique_ptr<mjbots::pi3hat::Pi3Hat> pi3hat_;
 
   /*! TX CAN frames
    *
    * These are kept persistently so that no memory allocation is required in
    * steady state.
    */
-  std::vector<::mjbots::pi3hat::CanFrame> tx_can_;
+  std::vector<mjbots::pi3hat::CanFrame> tx_can_;
 
   /*! RX CAN frames
    *
    * These are kept persistently so that no memory allocation is required in
    * steady state.
    */
-  std::vector<::mjbots::pi3hat::CanFrame> rx_can_;
+  std::vector<mjbots::pi3hat::CanFrame> rx_can_;
 
   //! Latest attitude read from the pi3hat
-  ::mjbots::pi3hat::Attitude attitude_;
+  mjbots::pi3hat::Attitude attitude_;
 };
 
 }  // namespace upkie::actuation

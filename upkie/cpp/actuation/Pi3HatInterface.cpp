@@ -12,8 +12,9 @@
 
 namespace upkie::actuation {
 
-Pi3HatInterface::Pi3HatInterface(const ServoLayout& layout, const int can_cpu,
-                                 const Pi3Hat::Configuration& pi3hat_config)
+Pi3HatInterface::Pi3HatInterface(
+    const ServoLayout& layout, const int can_cpu,
+    const mjbots::pi3hat::Pi3Hat::Configuration& pi3hat_config)
     : Interface(layout),
       can_cpu_(can_cpu),
       pi3hat_config_(pi3hat_config),
@@ -70,7 +71,7 @@ void Pi3HatInterface::cycle(
 void Pi3HatInterface::run_can_thread() {
   upkie::utils::configure_cpu(can_cpu_);
   upkie::utils::configure_scheduler(10);
-  pi3hat_.reset(new Pi3Hat({pi3hat_config_}));
+  pi3hat_.reset(new mjbots::pi3hat::Pi3Hat({pi3hat_config_}));
   pthread_setname_np(pthread_self(), "can_thread");
   while (!done_) {
     {
@@ -136,7 +137,7 @@ moteus::Output Pi3HatInterface::cycle_can_thread() {
 
   rx_can_.resize(data_.commands.size() * 2);
 
-  Pi3Hat::Input input;
+  mjbots::pi3hat::Pi3Hat::Input input;
   input.tx_can = {tx_can_.data(), tx_can_.size()};
   input.rx_can = {rx_can_.data(), rx_can_.size()};
   input.attitude = &attitude_;
