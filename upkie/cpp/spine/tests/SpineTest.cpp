@@ -27,10 +27,10 @@ namespace upkie::spine {
 namespace testing {
 
 //! Testing version of the spine class
-class Spine : public upkie::Spine {
+class Spine : public upkie::spine::Spine {
  public:
   //! Parent constructor.
-  using upkie::Spine::Spine;
+  using upkie::spine::Spine::Spine;
 
   //! Get agent interface.
   const AgentInterface& agent_interface() { return agent_interface_; }
@@ -38,7 +38,7 @@ class Spine : public upkie::Spine {
   //! Check whether all servo commands are stops.
   bool all_commands_are_stops() {
     for (const auto& command : actuation_.commands()) {
-      if (command.mode != moteus::Mode::kStopped) {
+      if (command.mode != actuation::moteus::Mode::kStopped) {
         return false;
       }
     }
@@ -76,14 +76,15 @@ class SpineTest : public ::testing::Test {
     params_.shm_name = std::string("/") + utils::random_string();
     params_.shm_size = 1024;
 
-    ServoLayout layout;
+    actuation::ServoLayout layout;
     layout.add_servo(1, 1, "bar");
     layout.add_servo(2, 1, "foo");
 
     const double dt = 1.0 / params_.frequency;
-    actuation_interface_ = std::make_unique<MockInterface>(layout, dt);
+    actuation_interface_ =
+        std::make_unique<actuation::MockInterface>(layout, dt);
 
-    schwifty_observer_ = std::make_unique<SchwiftyObserver>();
+    schwifty_observer_ = std::make_unique<observers::SchwiftyObserver>();
     observation_.append_observer(schwifty_observer_);
     spine_ = std::make_unique<testing::Spine>(params_, *actuation_interface_,
                                               observation_);
@@ -145,13 +146,13 @@ class SpineTest : public ::testing::Test {
   Spine::Parameters params_;
 
   //! Test actuator interface
-  std::unique_ptr<MockInterface> actuation_interface_;
+  std::unique_ptr<actuation::MockInterface> actuation_interface_;
 
   //! Test observer
-  std::shared_ptr<SchwiftyObserver> schwifty_observer_;
+  std::shared_ptr<observers::SchwiftyObserver> schwifty_observer_;
 
   //! Test observers
-  ObserverPipeline observation_;
+  observers::ObserverPipeline observation_;
 
   //! Test spine
   std::unique_ptr<testing::Spine> spine_;

@@ -12,13 +12,13 @@
 #include "gtest/gtest.h"
 #include "upkie/cpp/actuation/moteus/ServoReply.h"
 
-namespace upkie::observers::actuation {
+namespace upkie::observers {
 
 TEST(Servo, ReadTorques) {
   palimpsest::Dictionary observation;
 
   std::map<int, std::string> servo_joint_map = {{0, "foo"}, {1, "bar"}};
-  std::vector<moteus::ServoReply> servo_replies;
+  std::vector<actuation::moteus::ServoReply> servo_replies;
   servo_replies.push_back({1, {}});           // bar first
   servo_replies.back().result.torque = -10.;  // N.m
   servo_replies.push_back({0, {}});           // foo next
@@ -33,4 +33,4 @@ TEST(Servo, ReadTorques) {
   ASSERT_DOUBLE_EQ(observation("servo")("bar")("torque"), -10.);
 }
 
-}  // namespace upkie::observers::actuation
+}  // namespace upkie::observers
