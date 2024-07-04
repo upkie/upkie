@@ -16,6 +16,10 @@ using bazel::tools::cpp::runfiles::Runfiles;
 using bullet::bullet_from_eigen;
 using bullet::eigen_from_bullet;
 
+/*! Find ground plane URDF from Bazel runfiles.
+ *
+ * \param[in] argv0 Value of argv[0] used to locate runfiles.
+ */
 std::string find_plane_urdf(const std::string argv0) {
   std::string error;
   std::unique_ptr<Runfiles> runfiles(Runfiles::Create(argv0, &error));
