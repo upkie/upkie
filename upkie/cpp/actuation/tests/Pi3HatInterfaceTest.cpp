@@ -10,7 +10,7 @@
 #include "gtest/gtest.h"
 #include "upkie/cpp/actuation/Pi3HatInterface.h"
 
-namespace upkie {
+namespace upkie::actuation {
 
 TEST(Pi3HatInterface, Create) {
   ServoLayout layout;
@@ -31,4 +31,4 @@ TEST(Pi3HatInterface, Create) {
   Pi3HatInterface interface(layout, kCanCpu, pi3hat_config);
 }
 
-}  // namespace upkie
+}  // namespace upkie::actuation

@@ -7,7 +7,7 @@
 
 #include "gtest/gtest.h"
 
-namespace upkie {
+namespace upkie::utils {
 
 TEST(DatetimeNowString, IsADatetimeString) {
   auto now = datetime_now_string();
@@ -17,4 +17,4 @@ TEST(DatetimeNowString, IsADatetimeString) {
   ASSERT_EQ(now[10], '_');
 }
 
-}  // namespace upkie
+}  // namespace upkie::utils

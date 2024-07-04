@@ -22,7 +22,7 @@
 
 using palimpsest::Dictionary;
 
-namespace upkie {
+namespace upkie::spine {
 
 namespace testing {
 
@@ -301,4 +301,4 @@ TEST_F(SpineTest, EnteringStopClearsRequest) {
   ASSERT_EQ(read_mmap_request(), Request::kNone);
 }
 
-}  // namespace upkie
+}  // namespace upkie::spine

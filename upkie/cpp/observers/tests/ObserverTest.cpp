@@ -7,7 +7,7 @@
 #include "gtest/gtest.h"
 #include "upkie/cpp/observers/Observer.h"
 
-namespace upkie {
+namespace upkie::actuation {
 
 TEST(Observer, BaseClassObservesNothing) {
   Observer observer;
@@ -18,4 +18,4 @@ TEST(Observer, BaseClassObservesNothing) {
   ASSERT_TRUE(observation.is_empty());
 }
 
-}  // namespace upkie
+}  // namespace upkie::actuation
