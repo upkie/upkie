@@ -13,7 +13,8 @@ TEST(InlineLowPassFilter, InformationLoss) {
   const double prev_output = 0.0;
   const double dt = 1.23456789;
   const double input = 5.0;
-  ASSERT_THROW(low_pass_filter(prev_output, dt, input, dt), FilterError);
+  ASSERT_THROW(low_pass_filter(prev_output, dt, input, dt),
+               exceptions::FilterError);
 }
 
 TEST(InlineLowPassFilter, Converges) {
