@@ -5,7 +5,7 @@
 
 #include "gtest/gtest.h"
 
-namespace upkie {
+namespace upkie::utils {
 
 TEST(Math, Divides) {
   ASSERT_FALSE(math::divides(1000000u, 0u));
@@ -13,4 +13,4 @@ TEST(Math, Divides) {
   ASSERT_TRUE(math::divides(100u, 20u));
 }
 
-}  // namespace upkie
+}  // namespace upkie::utils

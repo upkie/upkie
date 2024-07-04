@@ -12,7 +12,7 @@
 #include "tools/cpp/runfiles/runfiles.h"
 #include "upkie/cpp/actuation/BulletInterface.h"
 
-namespace upkie {
+namespace upkie::actuation {
 
 using bazel::tools::cpp::runfiles::Runfiles;
 
@@ -411,4 +411,4 @@ TEST_F(BulletInterfaceTest, ApplyExternalForces) {
   }
 }
 
-}  // namespace upkie
+}  // namespace upkie::actuation

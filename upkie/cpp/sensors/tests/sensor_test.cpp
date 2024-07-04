@@ -14,7 +14,7 @@
 
 using palimpsest::Dictionary;
 
-namespace upkie {
+namespace upkie::sensors {
 
 TEST(Sensor, UnknownPrefix) {
   Sensor sensor;
@@ -28,4 +28,4 @@ TEST(Sensor, WritesNothing) {
   ASSERT_TRUE(observation.is_empty());
 }
 
-}  // namespace upkie
+}  // namespace upkie::sensors

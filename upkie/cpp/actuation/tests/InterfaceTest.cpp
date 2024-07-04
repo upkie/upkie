@@ -10,7 +10,7 @@
 #include "upkie/cpp/actuation/Interface.h"
 #include "upkie/cpp/actuation/tests/coffee_machine_layout.h"
 
-namespace upkie {
+namespace upkie::actuation {
 
 class SmallInterface : public Interface {
  public:
@@ -148,4 +148,4 @@ TEST_F(InterfaceTest, ForwardVelocityCommands) {
   }
 }
 
-}  // namespace upkie
+}  // namespace upkie::actuation

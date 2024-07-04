@@ -9,7 +9,7 @@
 #include "gtest/gtest.h"
 #include "upkie/cpp/observers/BaseOrientation.h"
 
-namespace upkie {
+namespace upkie::observers {
 
 using palimpsest::Dictionary;
 using palimpsest::exceptions::KeyError;
@@ -108,4 +108,4 @@ TEST_F(BaseOrientationTest, NeutralValues) {
   ASSERT_DOUBLE_EQ(angular_velocity_base_in_base.z(), 0.0);
 }
 
-}  // namespace upkie
+}  // namespace upkie::observers
