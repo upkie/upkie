@@ -47,7 +47,7 @@ class Pi3HatInterface : public Interface {
    * \param[in] pi3hat_config Configuration for the pi3hat.
    */
   Pi3HatInterface(const ServoLayout& layout, const int can_cpu,
-                  const mjbots::pi3hat::Pi3Hat::Configuration& pi3hat_config);
+                  const ::mjbots::pi3hat::Pi3Hat::Configuration& pi3hat_config);
 
   //! Stop CAN thread
   ~Pi3HatInterface();
@@ -137,7 +137,7 @@ class Pi3HatInterface : public Interface {
   const int can_cpu_;
 
   // pi3hat configuration
-  const mjbots::pi3hat::Pi3Hat::Configuration pi3hat_config_;
+  const ::mjbots::pi3hat::Pi3Hat::Configuration pi3hat_config_;
 
   //! Mutex associated with \ref can_wait_condition_
   std::mutex mutex_;
@@ -175,7 +175,7 @@ class Pi3HatInterface : public Interface {
   std::vector<mjbots::pi3hat::CanFrame> rx_can_;
 
   //! Latest attitude read from the pi3hat
-  mjbots::pi3hat::Attitude attitude_;
+  ::mjbots::pi3hat::Attitude attitude_;
 };
 
 }  // namespace upkie::actuation
