@@ -21,7 +21,7 @@ class AgentInterfaceTest : public ::testing::Test {
  protected:
   void SetUp() override {
     agent_interface_ =
-        std::make_unique<AgentInterface>("/" + random_string(), 1024);
+        std::make_unique<AgentInterface>("/" + utils::random_string(), 1024);
   }
 
   void TearDown() override {}

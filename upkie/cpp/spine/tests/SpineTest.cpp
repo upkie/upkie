@@ -73,7 +73,7 @@ class SpineTest : public ::testing::Test {
   void SetUp() override {
     params_.cpu = -1;         // no realtime scheduling
     params_.frequency = 400;  // Hz
-    params_.shm_name = std::string("/") + random_string();
+    params_.shm_name = std::string("/") + utils::random_string();
     params_.shm_size = 1024;
 
     ServoLayout layout;
