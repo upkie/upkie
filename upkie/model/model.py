@@ -6,9 +6,8 @@
 
 from xml.etree import ElementTree
 
-import numpy as np
-
-from .joints import JOINT_NAMES, NB_JOINTS
+from .joint import Joint
+from .joint_limit import JointLimit
 
 
 class Model:

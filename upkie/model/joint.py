@@ -8,13 +8,14 @@ from dataclasses import dataclass
 
 from .joint_limit import JointLimit
 
+
 @dataclass
 class Joint:
     """!
     Joint properties.
 
-    Some attributes in this class are provided as convenience for users
-    familiar with Pinocchio.
+    Extra indices in this class are provided as convenience for users familiar
+    with Pinocchio.
     """
 
     ## @var index
@@ -28,14 +29,6 @@ class Joint:
     ## @var idx_v
     ## Index of the joint in tangent (velocity, torque) vectors.
     idx_v: int
-
-    ## @var nq
-    ## Number of configuration coordinates (one for revolute joints).
-    nq: int = 1
-
-    ## @var nq
-    ## Number of tangent coordinates (one for revolute joints).
-    nv: int = 1
 
     ## @var name
     ## Name of the joint.
