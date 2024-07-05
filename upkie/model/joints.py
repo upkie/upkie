@@ -4,12 +4,28 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2024 Inria
 
-__UPPER_LEG_JOINTS = (
-    f"{side}_{joint}"
-    for side in ("left", "right")
-    for joint in ("hip", "knee")
+from typing import Tuple
+
+JOINT_NAMES: Tuple[str, str, str, str, str, str] = (
+    "left_hip",
+    "left_knee",
+    "left_wheel",
+    "right_hip",
+    "right_knee",
+    "right_wheel",
 )
 
+NB_JOINTS: int = 6
 
-def upper_leg_joints():
-    return __UPPER_LEG_JOINTS
+UPPER_LEG_JOINTS: Tuple[str, str, str, str] = (
+    "left_hip",
+    "left_knee",
+    "right_hip",
+    "right_knee",
+)
+
+__all__ = [
+    "JOINT_NAMES",
+    "NB_JOINTS",
+    "UPPER_LEG_JOINTS",
+]
