@@ -5,18 +5,11 @@
 package(default_visibility = ["//visibility:public"])
 
 py_library(
-    name = "joints",
-    srcs = [
-        "joints.py",
-    ],
-)
-
-py_library(
     name = "model",
-    deps = [
-        ":joints",
-    ],
     srcs = [
         "__init__.py",
+        "joint.py",
+        "joint_limit.py",
+        "model.py",
     ],
 )
