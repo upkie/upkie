@@ -22,7 +22,7 @@ SynchronousClock::SynchronousClock(double frequency)
       measured_period_(1.0 / frequency),
       skip_count_(0),
       slack_(0.0) {
-  assert(math::divides(1000000u, static_cast<unsigned>(frequency)));
+  assert(divides(1000000u, static_cast<unsigned>(frequency)));
   last_call_time_ = std::chrono::steady_clock::now();
   measured_period_ = 1. / frequency;
   next_tick_ = std::chrono::steady_clock::now() + period_us_;

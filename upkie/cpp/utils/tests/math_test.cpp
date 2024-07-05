@@ -8,9 +8,9 @@
 namespace upkie::utils {
 
 TEST(Math, Divides) {
-  ASSERT_FALSE(math::divides(1000000u, 0u));
-  ASSERT_FALSE(math::divides(100000u, 42u));
-  ASSERT_TRUE(math::divides(100u, 20u));
+  ASSERT_FALSE(divides(1000000u, 0u));
+  ASSERT_FALSE(divides(100000u, 42u));
+  ASSERT_TRUE(divides(100u, 20u));
 }
 
 }  // namespace upkie::utils

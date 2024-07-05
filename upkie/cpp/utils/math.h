@@ -8,9 +8,6 @@
 //! Utility functions.
 namespace upkie::utils {
 
-//! Mathematical functions.
-namespace math {
-
 //! True if and only if \p divisor divides \p number.
 inline bool divides(uint32_t number, uint32_t divisor) {
   if (divisor == 0) {
@@ -19,7 +16,5 @@ inline bool divides(uint32_t number, uint32_t divisor) {
   uint32_t k = number / divisor;
   return (number == k * divisor);
 }
-
-}  // namespace math
 
 }  // namespace upkie::utils
