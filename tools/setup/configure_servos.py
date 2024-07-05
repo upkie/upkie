@@ -40,6 +40,18 @@ ALL_SERVOS = (
     RIGHT_WHEEL,
 )
 
+UPPER_LEG_SERVOS = (
+    LEFT_HIP,
+    LEFT_KNEE,
+    RIGHT_HIP,
+    RIGHT_KNEE,
+)
+
+WHEEL_SERVOS = (
+    LEFT_WHEEL,
+    RIGHT_WHEEL,
+)
+
 PI3HAT_CFG = (
     f"{LEFT_BUS}={LEFT_HIP},{LEFT_KNEE},{LEFT_WHEEL}"
     ";"
@@ -146,3 +158,11 @@ if __name__ == "__main__":
 
     for servo in ALL_SERVOS:
         write_configuration(servo)
+
+    for servo in UPPER_LEG_SERVOS:
+        configure_servo(knee, "servo.pid_position.kp", 400.0)
+
+    for servo in WHEEL_SERVOS:
+        # Best value depends wheel radius (WR)
+        # Values that have worked well: kd=0.3 for WR=5 cm, kd=0.6 for WR=7 cm
+        configure_servo(knee, "servo.pid_position.kd", 0.6)
