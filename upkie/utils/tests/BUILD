@@ -29,14 +29,6 @@ py_test(
 )
 
 py_test(
-    name = "pinocchio_test",
-    srcs = ["pinocchio_test.py"],
-    deps = [
-        "//upkie/utils:pinocchio",
-    ],
-)
-
-py_test(
     name = "robot_state_test",
     srcs = ["robot_state_test.py"],
     deps = [

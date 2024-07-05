@@ -46,7 +46,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
-- utils: Remove Pinocchio utility functions
+- utils: Pinocchio utility functions
 - deps: Dependency on separate Vulp project
 - docs: Remove PID balancer from the documentation
 

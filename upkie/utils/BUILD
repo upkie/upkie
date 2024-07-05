@@ -33,11 +33,6 @@ py_library(
 )
 
 py_library(
-    name = "pinocchio",
-    srcs = ["pinocchio.py"],
-)
-
-py_library(
     name = "raspi",
     srcs = ["raspi.py"],
     deps = [
@@ -70,7 +65,6 @@ py_library(
         ":exceptions",
         ":filters",
         ":nested_update",
-        ":pinocchio",
         ":raspi",
         ":robot_state",
         ":rotations",
