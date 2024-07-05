@@ -21,7 +21,7 @@
 //! Main control loop between agents and actuators.
 namespace upkie::spine {
 
-//! One mebibyte in bytes.
+//! Number of bits in one mebibyte.
 constexpr size_t kMebibytes = 1 << 20;
 
 /*! Loop transmitting actions to the actuation and observations to the agent.
