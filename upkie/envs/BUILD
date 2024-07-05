@@ -26,6 +26,7 @@ py_library(
         "upkie_ground_velocity.py",
     ],
     deps = [
+        "//upkie/model:joints",
         "//upkie/utils:exceptions",
         "//upkie/utils:filters",
         "//upkie/utils:robot_state",
