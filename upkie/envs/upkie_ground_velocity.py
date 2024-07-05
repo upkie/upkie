@@ -221,7 +221,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
                 "velocity": 0.0,
                 "maximum_torque": 10.0,  # qdd100 actuators
             }
-            for joint in upkie.model.upper_leg_joints()
+            for joint in upkie.model.UPPER_LEG_JOINTS
         }
 
         self.leg_return_period = leg_return_period
@@ -254,7 +254,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
 
         \param spine_observation First observation.
         """
-        for joint in upkie.model.upper_leg_joints():
+        for joint in upkie.model.UPPER_LEG_JOINTS:
             position = spine_observation["servo"][joint]["position"]
             self.__leg_servo_action[joint]["position"] = position
 
@@ -284,7 +284,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
 
         \return Servo action dictionary.
         """
-        for joint in upkie.model.upper_leg_joints():
+        for joint in upkie.model.UPPER_LEG_JOINTS:
             prev_position = self.__leg_servo_action[joint]["position"]
             new_position = low_pass_filter(
                 prev_output=prev_position,
