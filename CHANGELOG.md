@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - bazelisk: Add support for ARM64 CPUs
 - envs: Warn when a fall is detected
 - examples: Tuning the gains of a standard two-task PI balancer
+- model: Add joints submodule
 - setup: Add micromamba installation script
 - setup: Automate process of building new system images
 - spine: Print out configuration dictionary upon reset
@@ -44,6 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+- **Breaking:** Remove ``upkie.model.Model`` class
 - deps: Dependency on separate Vulp project
 - docs: Remove PID balancer from the documentation
 
