@@ -45,7 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
-- **Breaking:** Remove ``upkie.model.Model`` class
+- utils: Remove Pinocchio utility functions
 - deps: Dependency on separate Vulp project
 - docs: Remove PID balancer from the documentation
 
@@ -435,13 +435,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Example: lying genuflections
-- Utils: base class and Upkie-specific exceptions
+- utils: base class and Upkie-specific exceptions
 
 ### Changed
 
-- Environment: ``UpkieServosEnv-v2`` with frequency regulation
-- Environment: ``UpkieWheelsEnv-v3`` with frequency regulation
-- Environment: regulate loop frequencies
+- envs: ``UpkieServosEnv-v2`` with frequency regulation
+- envs: ``UpkieWheelsEnv-v3`` with frequency regulation
+- envs: regulate loop frequencies
 - Rename ``ROBOT_NAME`` to ``ROBOT`` in the main Makefile
 - Rename main repository and project to just "upkie"
 - Update Vulp to v1.2.0
@@ -477,11 +477,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Environment: ``UpkieServosEnv-v1``
+- envs: ``UpkieServosEnv-v1``
 - PPO balancer: distribute sample policy
 - Pink balancer: ``--visualize`` argument
-- Spine: Air Bullet, same as Bullet but floating in the air
-- Utils: Pinocchio utility functions
+- spines: Air Bullet, same as Bullet but floating in the air
+- utils: Pinocchio utility functions
 
 ### Changed
 
@@ -517,7 +517,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Agent: PPO balancer
-- Environment: ``UpkieWheelsEnv-v1``
+- envs: ``UpkieWheelsEnv-v1``
 - Observers: Base pitch
 
 ### Changed
