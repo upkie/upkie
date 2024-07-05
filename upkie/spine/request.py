@@ -20,11 +20,11 @@ class Request(IntEnum):
     kNone = 0
 
     ## @var kObservation
-    ## Flag set to indicate an observation is ready to read.
+    ## Flag set to indicate an observation is requested.
     kObservation = 1
 
     ## @var kAction
-    ## Flag set to indicate an action is ready to read.
+    ## Flag set to indicate an action has been supplied.
     kAction = 2
 
     ## @var kStart

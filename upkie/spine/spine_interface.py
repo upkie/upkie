@@ -129,7 +129,7 @@ class SpineInterface:
 
     def set_action(self, action: dict) -> None:
         r"""!
-        Write an action to be read by the spine.
+        Set action for the spine to process.
 
         \param[in] action Action dictionary.
         """
