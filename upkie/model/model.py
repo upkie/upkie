@@ -22,21 +22,21 @@ class Model:
             for child in joint
             if child.tag == "limit"
         ]
-        q_max = np.full(NB_JOINTS, +np.inf)
-        q_min = np.full(NB_JOINTS, -np.inf)
-        tau_max = np.full(NB_JOINTS, +np.inf)
-        v_max = np.full(NB_JOINTS, +np.inf)
-        joint_names = []
-        for joint, limit in limits:
+        joints = []
+        for idx, (joint, limit) in enumerate(limits):
             joint_name = joint.attrib["name"]
-            joint_id = JOINT_NAMES.index(joint_name)
-            joint_names.append(joint_name)
-            q_max[joint_id] = limit.attrib["upper"]
-            q_min[joint_id] = limit.attrib["lower"]
-            tau_max[joint_id] = limit.attrib["effort"]
-            v_max[joint_id] = limit.attrib["velocity"]
-        self.joint_names = joint_names
-        self.q_max = q_max
-        self.q_min = q_min
-        self.tau_max = tau_max
-        self.v_max = v_max
+            joints.append(
+                Joint(
+                    index=idx + 1,
+                    idx_q=idx,
+                    idx_v=idx,
+                    name=joint_name,
+                    limit=JointLimit(
+                        lower=limit.attrib["lower"],
+                        upper=limit.attrib["upper"],
+                        effort=limit.attrib["effort"],
+                        velocity=limit.attrib["velocity"],
+                    ),
+                )
+            )
+        self.joints = joints
