@@ -6,11 +6,19 @@
 
 from xml.etree import ElementTree
 
+import numpy as np
+
 from .joint import Joint
 from .joint_limit import JointLimit
 
 
 class Model:
+    """!
+    Robot model parsed from its URDF description.
+    """
+
+    ## @var joints
+    ## Joints of the robot model.
 
     def __init__(self, urdf_path: str):
         tree = ElementTree.parse(urdf_path)
