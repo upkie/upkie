@@ -7,7 +7,6 @@
 from typing import Optional, Tuple
 
 import numpy as np
-import pinocchio as pin
 import upkie_description
 from gymnasium import spaces
 
@@ -92,10 +91,6 @@ class UpkieServos(UpkieBaseEnv):
     ## Observation space.
     observation_space: spaces.box.Box
 
-    ## @var robot
-    ## Pinocchio robot wrapper.
-    robot: pin.RobotWrapper
-
     ## @var version
     ## Environment version number.
     version = 4
@@ -136,8 +131,6 @@ class UpkieServos(UpkieBaseEnv):
             spine_config=spine_config,
         )
 
-        robot = upkie_description.load_in_pinocchio(root_joint=None)
-        model = robot.model
         q_min, q_max = box_position_limits(model)
         v_max = box_velocity_limits(model)
         tau_max = box_torque_limits(model)
@@ -265,7 +258,6 @@ class UpkieServos(UpkieBaseEnv):
         self.__neutral_action = neutral_action
         self.__max_action = max_action
         self.__min_action = min_action
-        self.robot = robot
 
     def get_neutral_action(self) -> dict:
         r"""!
