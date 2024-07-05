@@ -39,10 +39,10 @@ class Model:
                     idx_v=idx,
                     name=joint_name,
                     limit=JointLimit(
-                        lower=limit.attrib["lower"],
-                        upper=limit.attrib["upper"],
-                        effort=limit.attrib["effort"],
-                        velocity=limit.attrib["velocity"],
+                        lower=float(limit.attrib.get("lower", -np.inf)),
+                        upper=float(limit.attrib.get("upper", +np.inf)),
+                        effort=float(limit.attrib["effort"]),
+                        velocity=float(limit.attrib["velocity"]),
                     ),
                 )
             )
