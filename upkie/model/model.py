@@ -4,6 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2024 Inria
 
+from typing import List
 from xml.etree import ElementTree
 
 import numpy as np
@@ -19,6 +20,7 @@ class Model:
 
     ## @var joints
     ## Joints of the robot model.
+    joints: List[Joint]
 
     def __init__(self, urdf_path: str):
         tree = ElementTree.parse(urdf_path)
@@ -34,7 +36,7 @@ class Model:
             joint_name = joint.attrib["name"]
             joints.append(
                 Joint(
-                    index=idx + 1,
+                    index=idx + 1,  # starts from 1
                     idx_q=idx,
                     idx_v=idx,
                     name=joint_name,

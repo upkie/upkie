@@ -39,7 +39,7 @@ py_library(
         "upkie_servos.py",
     ],
     deps = [
-        "//upkie/utils:pinocchio",
+        "//upkie/model",
         "//upkie/utils:robot_state",
         ":upkie_base_env",
     ],
