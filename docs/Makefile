@@ -19,6 +19,9 @@ images/%.eps : figures/%.dot
 images/%.png : figures/%.dot
 	dot $< -Tpng -o $@
 
+images/%.svg : figures/%.dot
+	dot $< -Tsvg -o $@
+
 images/%.eps : figures/%.svg
 	inkscape --without-gui --file=$< --export-eps=$@
 
