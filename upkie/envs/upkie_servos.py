@@ -118,41 +118,31 @@ class UpkieServos(UpkieBaseEnv):
             spine_config=spine_config,
         )
 
-        q_min, q_max = box_position_limits(model)
-        v_max = box_velocity_limits(model)
-        tau_max = box_torque_limits(model)
-        joint_names = list(model.names)[1:]
-        if set(joint_names) != set(self.JOINT_NAMES):
-            raise ModelError(
-                "Upkie joints don't match:"
-                f"expected {self.JOINT_NAMES} "
-                f"got {joint_names}"
-            )
+        limits = Limits(upkie_description.urdf_path)
 
         action_space = {}
         neutral_action = {}
         max_action = {}
         min_action = {}
         servo_space = {}
-        for name in joint_names:
-            joint = model.joints[model.getJointId(name)]
-            action_space[name] = spaces.Dict(
+        for joint_id, joint_name in enumerate(JOINT_NAMES):
+            action_space[joint_name] = spaces.Dict(
                 {
                     "position": spaces.Box(
-                        low=q_min[joint.idx_q],
-                        high=q_max[joint.idx_q],
+                        low=limits.q_min[joint_id],
+                        high=limits.q_max[joint_id],
                         shape=(1,),
                         dtype=float,
                     ),
                     "velocity": spaces.Box(
-                        low=-v_max[joint.idx_v],
-                        high=+v_max[joint.idx_v],
+                        low=-limits.v_max[joint_id],
+                        high=+limits.v_max[joint_id],
                         shape=(1,),
                         dtype=float,
                     ),
                     "feedforward_torque": spaces.Box(
-                        low=-tau_max[joint.idx_v],
-                        high=+tau_max[joint.idx_v],
+                        low=-limits.tau_max[joint_id],
+                        high=+limits.tau_max[joint_id],
                         shape=(1,),
                         dtype=float,
                     ),
@@ -170,29 +160,29 @@ class UpkieServos(UpkieBaseEnv):
                     ),
                     "maximum_torque": spaces.Box(
                         low=0.0,
-                        high=tau_max[joint.idx_v],
+                        high=limits.tau_max[joint_id],
                         shape=(1,),
                         dtype=float,
                     ),
                 }
             )
-            servo_space[name] = spaces.Dict(
+            servo_space[joint_name] = spaces.Dict(
                 {
                     "position": spaces.Box(
-                        low=q_min[joint.idx_q],
-                        high=q_max[joint.idx_q],
+                        low=limits.q_min[joint_id],
+                        high=limits.q_max[joint_id],
                         shape=(1,),
                         dtype=float,
                     ),
                     "velocity": spaces.Box(
-                        low=-v_max[joint.idx_v],
-                        high=+v_max[joint.idx_v],
+                        low=-limits.v_max[joint_id],
+                        high=+limits.v_max[joint_id],
                         shape=(1,),
                         dtype=float,
                     ),
                     "torque": spaces.Box(
-                        low=-tau_max[joint.idx_v],
-                        high=+tau_max[joint.idx_v],
+                        low=-limits.tau_max[joint_id],
+                        high=+limits.tau_max[joint_id],
                         shape=(1,),
                         dtype=float,
                     ),
@@ -210,26 +200,26 @@ class UpkieServos(UpkieBaseEnv):
                     ),
                 }
             )
-            neutral_action[name] = {
+            neutral_action[joint_name] = {
                 "position": np.nan,
                 "velocity": 0.0,
                 "feedforward_torque": 0.0,
                 "kp_scale": 1.0,
                 "kd_scale": 1.0,
-                "maximum_torque": tau_max[joint.idx_v],
+                "maximum_torque": limits.tau_max[joint_id],
             }
-            max_action[name] = {
-                "position": q_max[joint.idx_q],
-                "velocity": v_max[joint.idx_v],
-                "feedforward_torque": tau_max[joint.idx_v],
+            max_action[joint_name] = {
+                "position": limits.q_max[joint_id],
+                "velocity": limits.v_max[joint_id],
+                "feedforward_torque": limits.tau_max[joint_id],
                 "kp_scale": 1.0,
                 "kd_scale": 1.0,
-                "maximum_torque": tau_max[joint.idx_v],
+                "maximum_torque": limits.tau_max[joint_id],
             }
-            min_action[name] = {
-                "position": q_min[joint.idx_q],
-                "velocity": -v_max[joint.idx_v],
-                "feedforward_torque": -tau_max[joint.idx_v],
+            min_action[joint_name] = {
+                "position": limits.q_min[joint_id],
+                "velocity": -limits.v_max[joint_id],
+                "feedforward_torque": -limits.tau_max[joint_id],
                 "kp_scale": 0.0,
                 "kd_scale": 0.0,
                 "maximum_torque": 0.0,
