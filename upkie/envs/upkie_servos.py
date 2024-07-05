@@ -253,14 +253,14 @@ class UpkieServos(UpkieBaseEnv):
         # If creating a new object turns out to be too slow we can switch to
         # updating in-place.
         return {
-            joint: {
+            joint.name: {
                 key: np.array(
                     [spine_observation["servo"][joint][key]],
                     dtype=float,
                 )
                 for key in self.observation_space[joint]
             }
-            for joint in self.joint.nameS
+            for joint in self.model.joints
         }
 
     def get_spine_action(self, env_action: dict) -> dict:
@@ -271,21 +271,21 @@ class UpkieServos(UpkieBaseEnv):
         \return Spine action dictionary.
         """
         spine_action = {"servo": {}}
-        for joint in self.joint.nameS:
+        for joint in self.joints:
             servo_action = {}
             for key in self.ACTION_KEYS:
                 action = (
-                    env_action[joint][key]
-                    if key in env_action[joint]
-                    else self.__neutral_action[joint][key]
+                    env_action[joint.name][key]
+                    if key in env_action[joint.name]
+                    else self.__neutral_action[joint.name][key]
                 )
                 servo_action[key] = clamp_and_warn(
                     action,
-                    self.__min_action[joint][key],
-                    self.__max_action[joint][key],
-                    label=f"{joint}: {key}",
+                    self.__min_action[joint.name][key],
+                    self.__max_action[joint.name][key],
+                    label=f"{joint.name}: {key}",
                 )
-            spine_action["servo"][joint] = servo_action
+            spine_action["servo"][joint.name] = servo_action
         return spine_action
 
     def get_reward(self, observation: dict, action: dict) -> float:
