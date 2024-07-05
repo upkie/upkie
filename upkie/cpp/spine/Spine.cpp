@@ -66,6 +66,7 @@ void Spine::reset(const Dictionary& config) {
   action.clear();
   actuation_.initialize_action(action);
   observer_pipeline_.reset(config);
+  spdlog::info("Spine configured with:\n\n{}\n", config);
 }
 
 void Spine::log_working_dict() {

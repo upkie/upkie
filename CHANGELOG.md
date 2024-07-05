@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - examples: Tuning the gains of a standard two-task PI balancer
 - setup: Add micromamba installation script
 - setup: Automate process of building new system images
+- spine: Print out configuration dictionary upon reset
 
 ### Changed
 

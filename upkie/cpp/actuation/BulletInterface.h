@@ -55,7 +55,7 @@ class BulletInterface : public Interface {
         const auto& monitor = bullet("monitor");
         if (monitor.has("contacts")) {
           for (const auto& body : monitor("contacts").keys()) {
-            spdlog::info("Adding body {} to contacts", body);
+            spdlog::debug("Adding body \"{}\" to contacts", body);
             monitor_contacts.push_back(body);
           }
         }
