@@ -11,7 +11,7 @@ import numpy as np
 from .joints import JOINT_NAMES, NB_JOINTS
 
 
-class Limits:
+class Model:
 
     def __init__(self, urdf_path: str):
         tree = ElementTree.parse(urdf_path)
@@ -26,13 +26,16 @@ class Limits:
         q_min = np.full(NB_JOINTS, -np.inf)
         tau_max = np.full(NB_JOINTS, +np.inf)
         v_max = np.full(NB_JOINTS, +np.inf)
+        joint_names = []
         for joint, limit in limits:
             joint_name = joint.attrib["name"]
             joint_id = JOINT_NAMES.index(joint_name)
+            joint_names.append(joint_name)
             q_max[joint_id] = limit.attrib["upper"]
             q_min[joint_id] = limit.attrib["lower"]
             tau_max[joint_id] = limit.attrib["effort"]
             v_max[joint_id] = limit.attrib["velocity"]
+        self.joint_names = joint_names
         self.q_max = q_max
         self.q_min = q_min
         self.tau_max = tau_max

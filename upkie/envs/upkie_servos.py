@@ -10,8 +10,7 @@ import numpy as np
 import upkie_description
 from gymnasium import spaces
 
-from upkie.model.joints import JOINT_NAMES
-from upkie.model.limits import Limits
+from upkie.model import Model
 from upkie.utils.clamp import clamp_and_warn
 from upkie.utils.robot_state import RobotState
 
@@ -118,31 +117,31 @@ class UpkieServos(UpkieBaseEnv):
             spine_config=spine_config,
         )
 
-        limits = Limits(upkie_description.urdf_path)
-
         action_space = {}
         neutral_action = {}
         max_action = {}
         min_action = {}
         servo_space = {}
-        for joint_id, joint_name in enumerate(JOINT_NAMES):
+
+        model = Model(upkie_description.urdf_path)
+        for joint_id, joint_name in enumerate(model.joint_names):
             action_space[joint_name] = spaces.Dict(
                 {
                     "position": spaces.Box(
-                        low=limits.q_min[joint_id],
-                        high=limits.q_max[joint_id],
+                        low=model.q_min[joint_id],
+                        high=model.q_max[joint_id],
                         shape=(1,),
                         dtype=float,
                     ),
                     "velocity": spaces.Box(
-                        low=-limits.v_max[joint_id],
-                        high=+limits.v_max[joint_id],
+                        low=-model.v_max[joint_id],
+                        high=+model.v_max[joint_id],
                         shape=(1,),
                         dtype=float,
                     ),
                     "feedforward_torque": spaces.Box(
-                        low=-limits.tau_max[joint_id],
-                        high=+limits.tau_max[joint_id],
+                        low=-model.tau_max[joint_id],
+                        high=+model.tau_max[joint_id],
                         shape=(1,),
                         dtype=float,
                     ),
@@ -160,7 +159,7 @@ class UpkieServos(UpkieBaseEnv):
                     ),
                     "maximum_torque": spaces.Box(
                         low=0.0,
-                        high=limits.tau_max[joint_id],
+                        high=model.tau_max[joint_id],
                         shape=(1,),
                         dtype=float,
                     ),
@@ -169,20 +168,20 @@ class UpkieServos(UpkieBaseEnv):
             servo_space[joint_name] = spaces.Dict(
                 {
                     "position": spaces.Box(
-                        low=limits.q_min[joint_id],
-                        high=limits.q_max[joint_id],
+                        low=model.q_min[joint_id],
+                        high=model.q_max[joint_id],
                         shape=(1,),
                         dtype=float,
                     ),
                     "velocity": spaces.Box(
-                        low=-limits.v_max[joint_id],
-                        high=+limits.v_max[joint_id],
+                        low=-model.v_max[joint_id],
+                        high=+model.v_max[joint_id],
                         shape=(1,),
                         dtype=float,
                     ),
                     "torque": spaces.Box(
-                        low=-limits.tau_max[joint_id],
-                        high=+limits.tau_max[joint_id],
+                        low=-model.tau_max[joint_id],
+                        high=+model.tau_max[joint_id],
                         shape=(1,),
                         dtype=float,
                     ),
@@ -206,20 +205,20 @@ class UpkieServos(UpkieBaseEnv):
                 "feedforward_torque": 0.0,
                 "kp_scale": 1.0,
                 "kd_scale": 1.0,
-                "maximum_torque": limits.tau_max[joint_id],
+                "maximum_torque": model.tau_max[joint_id],
             }
             max_action[joint_name] = {
-                "position": limits.q_max[joint_id],
-                "velocity": limits.v_max[joint_id],
-                "feedforward_torque": limits.tau_max[joint_id],
+                "position": model.q_max[joint_id],
+                "velocity": model.v_max[joint_id],
+                "feedforward_torque": model.tau_max[joint_id],
                 "kp_scale": 1.0,
                 "kd_scale": 1.0,
-                "maximum_torque": limits.tau_max[joint_id],
+                "maximum_torque": model.tau_max[joint_id],
             }
             min_action[joint_name] = {
-                "position": limits.q_min[joint_id],
-                "velocity": -limits.v_max[joint_id],
-                "feedforward_torque": -limits.tau_max[joint_id],
+                "position": model.q_min[joint_id],
+                "velocity": -model.v_max[joint_id],
+                "feedforward_torque": -model.tau_max[joint_id],
                 "kp_scale": 0.0,
                 "kd_scale": 0.0,
                 "maximum_torque": 0.0,
