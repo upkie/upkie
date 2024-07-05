@@ -9,7 +9,7 @@
 
 namespace upkie::exceptions {
 
-//! Exception raised when a dynamic type check fails
+//! Exception raised when a deserialized object does not have the right type.
 class TypeError : public UpkieError {
  public:
   /*! Create a type error.
