@@ -115,10 +115,6 @@ class Spine {
    */
   void simulate(unsigned nb_substeps);
 
- private:
-  //! Begin cycle: check interrupts and read agent inputs
-  void begin_cycle();
-
   /*! Spin one cycle of communications with the actuation interface.
    *
    * A cycle consists in:
@@ -129,6 +125,10 @@ class Spine {
    * 4. If applicable, start the next cycle:
    */
   void cycle_actuation();
+
+ private:
+  //! Begin cycle: check interrupts and read agent inputs
+  void begin_cycle();
 
   //! End cycle: write agent outputs, apply state machine transition
   void end_cycle();
