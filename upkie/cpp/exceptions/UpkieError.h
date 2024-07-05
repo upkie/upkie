@@ -5,6 +5,7 @@
 
 #include <string>
 
+//! Exceptions raised by this project.
 namespace upkie::exceptions {
 
 //! Error with file and line references to the calling code.

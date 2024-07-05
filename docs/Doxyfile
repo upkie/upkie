@@ -875,10 +875,13 @@ INPUT                  = README.md \
                          upkie/config \
                          upkie/cpp \
                          upkie/cpp/actuation \
+                         upkie/cpp/actuation/bullet \
                          upkie/cpp/exceptions \
+                         upkie/cpp/model \
                          upkie/cpp/observers \
                          upkie/cpp/sensors \
                          upkie/cpp/spine \
+                         upkie/cpp/utils \
                          upkie/envs \
                          upkie/model \
                          upkie/spine \
