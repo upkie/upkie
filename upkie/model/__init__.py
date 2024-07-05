@@ -4,8 +4,8 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2024 Inria
 
-from .joints import upper_leg_joints
+from .model import Model
 
 __all__ = [
-    "upper_leg_joints",
+    "Model",
 ]
