@@ -73,6 +73,10 @@ class UpkieServos(UpkieBaseEnv):
     ## Action space.
     action_space: spaces.box.Box
 
+    ## @var model
+    ## Robot model read from its URDF description.
+    model: Model
+
     ## @var observation_space
     ## Observation space.
     observation_space: spaces.box.Box
@@ -128,14 +132,14 @@ class UpkieServos(UpkieBaseEnv):
             action_space[joint.name] = spaces.Dict(
                 {
                     "position": spaces.Box(
-                        low=joint.lower_limit,
-                        high=joint.upper_limit,
+                        low=joint.limit.lower,
+                        high=joint.limit.upper,
                         shape=(1,),
                         dtype=float,
                     ),
                     "velocity": spaces.Box(
-                        low=-joint.velocity_limit,
-                        high=+joint.velocity_limit,
+                        low=-joint.limit.velocity,
+                        high=+joint.limit.velocity,
                         shape=(1,),
                         dtype=float,
                     ),
@@ -230,7 +234,8 @@ class UpkieServos(UpkieBaseEnv):
         # gymnasium.Env: observation_space
         self.observation_space = spaces.Dict(servo_space)
 
-        # Class members
+        # Class attributes
+        self.model = model
         self.__neutral_action = neutral_action
         self.__max_action = max_action
         self.__min_action = min_action
@@ -255,10 +260,10 @@ class UpkieServos(UpkieBaseEnv):
         return {
             joint.name: {
                 key: np.array(
-                    [spine_observation["servo"][joint][key]],
+                    [spine_observation["servo"][joint.name][key]],
                     dtype=float,
                 )
-                for key in self.observation_space[joint]
+                for key in self.observation_space[joint.name]
             }
             for joint in self.model.joints
         }
@@ -271,7 +276,7 @@ class UpkieServos(UpkieBaseEnv):
         \return Spine action dictionary.
         """
         spine_action = {"servo": {}}
-        for joint in self.joints:
+        for joint in self.model.joints:
             servo_action = {}
             for key in self.ACTION_KEYS:
                 action = (
