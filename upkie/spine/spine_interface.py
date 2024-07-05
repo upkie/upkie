@@ -139,9 +139,9 @@ class SpineInterface:
 
     def start(self, config: dict) -> None:
         r"""!
-        Reset the spine to a new configuration.
+                Reset the spine to a new configuration.
 
-        \param[in] config Configuration dictionary.
+                \param[in] config Configuration dictionary.
         """
         self._wait_for_spine()
         self._write_dict(config)
