@@ -10,13 +10,9 @@ import numpy as np
 import upkie_description
 from gymnasium import spaces
 
+from upkie.model.joints import JOINT_NAMES
+from upkie.model.limits import Limits
 from upkie.utils.clamp import clamp_and_warn
-from upkie.utils.exceptions import ModelError
-from upkie.utils.pinocchio import (
-    box_position_limits,
-    box_torque_limits,
-    box_velocity_limits,
-)
 from upkie.utils.robot_state import RobotState
 
 from .upkie_base_env import UpkieBaseEnv
