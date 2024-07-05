@@ -12,20 +12,25 @@ import numpy as np
 from gymnasium import spaces
 from numpy.typing import NDArray
 
-import upkie.model
 from upkie.utils.exceptions import UpkieException
 from upkie.utils.filters import low_pass_filter
 from upkie.utils.robot_state import RobotState
 
 from .upkie_base_env import UpkieBaseEnv
 
+UPPER_LEG_JOINTS: Tuple[str, str, str, str] = (
+    "left_hip",
+    "left_knee",
+    "right_hip",
+    "right_knee",
+)
+
 
 class UpkieGroundVelocity(UpkieBaseEnv):
     r"""!
     Environment where Upkie is used as a wheeled inverted pendulum.
 
-    The environment id is ``UpkieGroundVelocity-v3``. Model assumptions are
-    summarized in the <a
+    Model assumptions of the wheeled inverted pendulum are summarized in the <a
     href="https://scaron.info/robotics/wheeled-inverted-pendulum-model.html">following
     note</a>.
 
@@ -221,7 +226,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
                 "velocity": 0.0,
                 "maximum_torque": 10.0,  # qdd100 actuators
             }
-            for joint in upkie.model.UPPER_LEG_JOINTS
+            for joint in UPPER_LEG_JOINTS
         }
 
         self.leg_return_period = leg_return_period
@@ -254,7 +259,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
 
         \param spine_observation First observation.
         """
-        for joint in upkie.model.UPPER_LEG_JOINTS:
+        for joint in UPPER_LEG_JOINTS:
             position = spine_observation["servo"][joint]["position"]
             self.__leg_servo_action[joint]["position"] = position
 
@@ -284,7 +289,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
 
         \return Servo action dictionary.
         """
-        for joint in upkie.model.UPPER_LEG_JOINTS:
+        for joint in UPPER_LEG_JOINTS:
             prev_position = self.__leg_servo_action[joint]["position"]
             new_position = low_pass_filter(
                 prev_output=prev_position,
