@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - setup: Add micromamba installation script
 - setup: Automate process of building new system images
 - spine: Print out configuration dictionary upon reset
+- bazelisk: Add support for ARM64 CPUs
 
 ### Changed
 
@@ -26,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PID balancer: default to hostname for the agent configuration
 - Put hostname before spine name in log file names
 - deps: Update Upkie description to 1.6.0
+- bazelisk: Update bazelisk version to 1.18.0
 
 ### Fixed
 
