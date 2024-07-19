@@ -10,9 +10,17 @@ set -euo pipefail
 OS="$(uname -s | tr "[:upper:]" "[:lower:]")"
 readonly OS
 
+ARCH="$(uname -m)"
+if [ "${ARCH}" == "x86_64" ]; then
+    ARCH="amd64"
+fi
+readonly ARCH
+
+echo "Detected platform: ${OS} (${ARCH})"
+
 # Value of BAZELISK_GITHUB_TOKEN is set as a secret in the GitHub workflow.
-readonly BAZELISK_VERSION="v1.16.0"
-readonly BAZELISK_URL="https://github.com/bazelbuild/bazelisk/releases/download/${BAZELISK_VERSION}/bazelisk-${OS}-amd64"
+readonly BAZELISK_VERSION="v1.18.0"
+readonly BAZELISK_URL="https://github.com/bazelbuild/bazelisk/releases/download/${BAZELISK_VERSION}/bazelisk-${OS}-${ARCH}"
 
 CURDIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
 readonly CURDIR
