@@ -27,7 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PID balancer: default to hostname for the agent configuration
 - Put hostname before spine name in log file names
 - deps: Update Upkie description to 1.6.0
-- bazelisk: Update bazelisk version to 1.18.0
+- bazelisk: Update bazelisk version to 1.20.0
 
 ### Fixed
 
