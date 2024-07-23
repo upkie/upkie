@@ -164,11 +164,10 @@ def run(workspace: Workspace, target: str, subargs: List[str]) -> None:
 
     execution_path = (
         f"{workspace.bazel_bin}/{target_dir}/"
-        f"{target_name}.runfiles/{workspace.name}/{target_dir}"
     )
 
     os.chdir(execution_path)
-    os.execv(target_name, [target_name] + subargs)
+    os.execv(target_name, [f"{execution_path}/{target_name}"] + subargs)
 
 
 def get_argument_parser() -> argparse.ArgumentParser:
