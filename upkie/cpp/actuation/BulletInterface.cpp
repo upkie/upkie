@@ -201,8 +201,8 @@ void BulletInterface::observe(Dictionary& observation) const {
   // Observe the environnement urdf states
   for (int urdf_id : urdf_ids){ 
     Eigen::Matrix4d T = transform_extra_urdf_to_world(urdf_id);
-    monitor(std::to_string(urdf_id))("position") = Eigen::Vector3d(T(0, 3), T(1, 3), T(2, 3));  // [m]
-    monitor(std::to_string(urdf_id))("orientation") = Eigen::Quaterniond(T.block<3, 3>(0, 0));  // [w, x, y, z]
+    monitor("extra_urdf_"+std::to_string(urdf_id))("position") = Eigen::Vector3d(T(0, 3), T(1, 3), T(2, 3));  // [m]
+    monitor("extra_urdf_"+std::to_string(urdf_id))("orientation") = Eigen::Quaterniond(T.block<3, 3>(0, 0));  // [w, x, y, z]
   }
 }
 void BulletInterface::process_action(const Dictionary& action) {
