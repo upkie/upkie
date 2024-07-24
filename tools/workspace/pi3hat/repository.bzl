@@ -9,6 +9,6 @@ def pi3hat_repository():
     git_repository(
         name = "pi3hat",
         remote = "https://github.com/mjbots/pi3hat",
-        commit = "c82d6f1fa03d5a40630ff6bc522f69927339a797",
-        shallow_since = "1655469414 -0400"
+        commit = "4a3158c831da125fa9c96d64378515c1fdb2083f",
+        shallow_since = "1718203493 -0400"
     )
