@@ -67,16 +67,25 @@ check_upkie_name:
 		exit 1; \
 	fi
 
+# This rule is handy if the target Upkie is not connected to the Internet
 set_date:
 	ssh $(REMOTE) sudo date -s "$(CURDATE)"
 
 # Running ``raspunzel -s`` can create __pycache__ directories owned by root
 # that rsync is not allowed to remove. We therefore give permissions first.
 .PHONY: upload
-upload: check_upkie_name build  ## upload built targets to the Raspberry Pi
+upload: check_upkie_name build set_date  ## upload built targets to the Raspberry Pi
 	ssh $(REMOTE) mkdir -p $(PROJECT_NAME)
 	ssh $(REMOTE) sudo find $(PROJECT_NAME) -type d -name __pycache__ -user root -exec chmod go+wx {} "\;"
-	rsync -Lrtu --delete-after --delete-excluded --exclude bazel-out/ --exclude bazel-testlogs/ --exclude bazel-$(CURDIR_NAME) --exclude bazel-$(PROJECT_NAME)/ --exclude __pycache__ --exclude cache/ --progress $(CURDIR)/ $(REMOTE):$(PROJECT_NAME)/
+	rsync -Lrtu --delete-after --delete-excluded \
+		--exclude __pycache__ \
+		--exclude bazel-$(CURDIR_NAME) \
+		--exclude bazel-$(PROJECT_NAME)/ \
+		--exclude bazel-out/ \
+		--exclude bazel-testlogs/ \
+		--exclude cache/ \
+		--exclude tools/bazel \
+		--progress $(CURDIR)/ $(REMOTE):$(PROJECT_NAME)/
 
 # REMOTE SPINE TARGETS
 # ====================
