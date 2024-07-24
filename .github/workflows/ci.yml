@@ -78,7 +78,7 @@ jobs:
 
     build_darwin_x86:
         name: "Build on macOS (x86)"
-        runs-on: macos-latest
+        runs-on: macos-13
         steps:
             - name: "Checkout sources"
               uses: actions/checkout@v4
