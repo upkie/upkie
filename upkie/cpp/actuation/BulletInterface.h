@@ -209,6 +209,9 @@ class BulletInterface : public Interface {
    */
   void cycle(std::function<void(const moteus::Output&)> callback) final;
 
+  //! Get the groundtruth extra urdf transform.
+  Eigen::Matrix4d transform_extra_urdf_to_world(int urdf_id) const noexcept;
+
   //! Get the groundtruth floating base transform.
   Eigen::Matrix4d transform_base_to_world() const noexcept;
 
@@ -349,6 +352,9 @@ class BulletInterface : public Interface {
 
   //! Identifier of the robot model in the simulation
   int robot_;
+
+  //! Identifier of the environment urdf models in the simulation
+  std::vector<int> urdf_ids; 
 
   //! Maximum joint torques read from the URDF model
   std::map<std::string, BulletJointProperties> joint_properties_;

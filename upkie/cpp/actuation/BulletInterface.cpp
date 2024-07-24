@@ -96,15 +96,15 @@ BulletInterface::BulletInterface(const ServoLayout& layout,
           "No ground plane was loaded, but gravity is enabled. The robot will "
           "fall!");
     }
-  }
-
+  } 
   // Load environment URDFs
   for (const auto& urdf_path : params.env_urdf_paths) {
-    spdlog::info("Loading environment URDF: ", urdf_path);
-    if (bullet_.loadURDF(urdf_path) < 0) {
-      throw std::runtime_error("Could not load the environment URDF: " +
-                               urdf_path);
-    }
+      spdlog::info("Loading environment URDF: {}", urdf_path); 
+      int urdf_id = bullet_.loadURDF(urdf_path);
+      if (urdf_id < 0) {
+          throw std::runtime_error("Could not load the environment URDF: " + urdf_path);
+      }
+      urdf_ids.push_back(urdf_id);  // Store the URDF ID in the vector
   }
 
   // Start visualizer and configure simulation
@@ -196,8 +196,15 @@ void BulletInterface::observe(Dictionary& observation) const {
       Eigen::Vector3d(T(0, 3), T(1, 3), T(2, 3));  // [m]
   monitor("base")("orientation") =
       Eigen::Quaterniond(T.block<3, 3>(0, 0));  // [w, x, y, z]
-}
 
+
+  // Observe the environnement urdf states
+  for (int urdf_id : urdf_ids){ 
+    Eigen::Matrix4d T = transform_extra_urdf_to_world(urdf_id);
+    monitor(std::to_string(urdf_id))("position") = Eigen::Vector3d(T(0, 3), T(1, 3), T(2, 3));  // [m]
+    monitor(std::to_string(urdf_id))("orientation") = Eigen::Quaterniond(T.block<3, 3>(0, 0));  // [w, x, y, z]
+  }
+}
 void BulletInterface::process_action(const Dictionary& action) {
   if (!action.has("bullet")) {
     return;
@@ -367,6 +374,19 @@ double BulletInterface::compute_joint_torque(
   }
   torque = std::max(std::min(torque, tau_max), -tau_max);
   return torque;
+}
+
+Eigen::Matrix4d BulletInterface::transform_extra_urdf_to_world(int urdf_id) const noexcept {  
+  btVector3 position_base_in_world;
+  btQuaternion orientation_base_in_world;
+  bullet_.getBasePositionAndOrientation(urdf_id, position_base_in_world,
+                                        orientation_base_in_world);
+  auto quat = eigen_from_bullet(orientation_base_in_world);
+  Eigen::Matrix4d T = Eigen::Matrix4d::Identity();
+  T.block<3, 3>(0, 0) = quat.normalized().toRotationMatrix();
+  T.block<3, 1>(0, 3) = eigen_from_bullet(position_base_in_world);
+  return T;
+
 }
 
 Eigen::Matrix4d BulletInterface::transform_base_to_world() const noexcept {
