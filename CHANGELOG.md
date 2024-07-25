@@ -24,11 +24,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - **Breaking:** rename the default shared-memory file to ``/upkie``
+- bazelisk: Update bazelisk version to 1.20.0
+- deps: Update pi3hat dependency to latest commit
+- deps: Update Upkie description to 1.6.0
 - Makefile: Separate rule to set the raspi date
 - PID balancer: default to hostname for the agent configuration
 - Put hostname before spine name in log file names
-- deps: Update Upkie description to 1.6.0
-- bazelisk: Update bazelisk version to 1.20.0
 
 ### Fixed
 
