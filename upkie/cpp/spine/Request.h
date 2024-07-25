@@ -7,6 +7,7 @@
 
 namespace upkie::spine {
 
+//! Request flags for inter-process communication.
 enum class Request : uint32_t {
   kNone = 0,  // no active request
   kObservation = 1,

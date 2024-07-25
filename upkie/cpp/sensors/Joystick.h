@@ -19,8 +19,8 @@ constexpr double kJoystickDeadband = 0.1;
 
 /*! Sensor for a joystick controller.
  *
- * Axes are the same for PS4 and Xbox controllers, but buttons differ
- * slightly. See comments in \ref read for the exact mapping.
+ * Axes are the same for PS4 and Xbox controllers, but buttons differ slightly.
+ * See comments in the C++ code of the class for the exact mapping.
  *
  * \note This sensor only works on Linux.
  */

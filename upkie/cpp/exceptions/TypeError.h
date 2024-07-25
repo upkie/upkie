@@ -9,6 +9,7 @@
 
 namespace upkie::exceptions {
 
+//! Exception raised when a dynamic type check fails
 class TypeError : public UpkieError {
  public:
   /*! Create a type error.

@@ -20,6 +20,7 @@
 
 namespace upkie::spine {
 
+//! One mebibyte in bytes.
 constexpr size_t kMebibytes = 1 << 20;
 
 /*! Loop transmitting actions to the actuation and observations to the agent.
@@ -108,7 +109,7 @@ class Spine {
    * Note that there is currently a delay of three substeps between observation
    * and simulation. That is, the internal simulation state is always three
    * substeps ahead compared to the values written to the observation
-   * dictionary in \ref cycle_actuation. This decision is discussed in
+   * dictionary when cycling the actuation. This decision is discussed in
    * https://github.com/orgs/upkie/discussions/238#discussioncomment-8984290
    */
   void simulate(unsigned nb_substeps);

@@ -875,7 +875,10 @@ INPUT                  = README.md \
                          upkie/config \
                          upkie/envs \
                          upkie/cpp/actuation \
+                         upkie/cpp/exceptions \
                          upkie/cpp/observers \
+                         upkie/cpp/sensors \
+                         upkie/cpp/spine \
                          upkie/utils
 
 # This tag can be used to specify the character encoding of the source files
