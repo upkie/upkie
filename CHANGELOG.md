@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - setup: Automate process of building new system images
 - spine: Print out configuration dictionary upon reset
 - bazelisk: Add support for ARM64 CPUs
+- spine : Add extra URDFs position and orientation
 
 ### Changed
 

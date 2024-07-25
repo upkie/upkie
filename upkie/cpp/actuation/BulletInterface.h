@@ -354,7 +354,7 @@ class BulletInterface : public Interface {
   int robot_;
 
   //! Identifier of the environment urdf models in the simulation
-  std::vector<int> urdf_ids; 
+  std::vector<int> urdf_ids;
 
   //! Maximum joint torques read from the URDF model
   std::map<std::string, BulletJointProperties> joint_properties_;
