@@ -11,7 +11,7 @@ html: figures  ## build the documentation
 	(cd .. && $(DOXYGEN) $(CURDIR)/Doxyfile)
 
 .PHONY: figures
-figures: images/floor-contact.eps images/floor-contact.png images/observers.eps images/observers.png images/wheel-odometry.eps images/wheel-odometry.png
+figures: images/action-observation-loop.eps images/action-observation-loop.png images/floor-contact.eps images/floor-contact.png images/observers.eps images/observers.png images/wheel-odometry.eps images/wheel-odometry.png
 
 images/%.eps : figures/%.svg
 	inkscape --without-gui --file=$< --export-eps=$@

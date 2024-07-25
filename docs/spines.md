@@ -2,6 +2,15 @@
 
 Upkie's code is organized into *spines*, which communicate with the simulation or mjbots actuators, and *agents*, the programs that implement robot behaviors. We use [Bazel](https://bazel.build/) to build spines, both for simulation on your development computer or for running on the robot's Raspberry Pi. Bazel does not install anything on your system: it fetches dependencies with specific versions and builds them locally, making sure the code stays consistent over time.
 
+## Action-observation loop {#action-observation-loop}
+
+Upkie implements an action-observation loop to control robots from a standalone "agent" process, like this:
+
+\image html action-observation-loop.png
+\image latex action-observation-loop.eps
+
+The agent can be a simple Python script with few dependencies. This separation between agent and spine provides a robot/simulation switch to train or test agents in a simulation spine (such as the \ref bullet-spine below) before running them on the real system.
+
 ## Bullet spine {#bullet-spine}
 
 The Bullet spine runs an agent in the [Bullet 3](https://github.com/bulletphysics/bullet3) simulator. We can start this spine as a standalone process and let it run waiting for agents to connect:
