@@ -19,7 +19,7 @@ The Bullet spine runs an agent in the [Bullet 3](https://github.com/bulletphysic
 ./start_simulation.sh
 ```
 
-To build and run the simulation from source, [setup your build environment](\ref setup-bui;d) then call the equivalent Bazel instruction:
+To build and run the simulation from source, [setup your build environment](\ref setup-build) then call the equivalent Bazel instruction:
 
 ```console
 ./tools/bazelisk run //spines:bullet_spine -- --show
