@@ -41,21 +41,37 @@ source "arm" "raspios_oldstable_arm64" {
 build {
   sources = ["source.arm.raspios_oldstable_arm64"]
 
-  provisioner "shell" {
-    inline = [
-      "sudo apt-get update",
-      "sudo apt-get upgrade -y",
-      "sudo apt-get install -y python3-pip screen vim",
-    ]
+  provisioner "file" {
+    source = "local/configure_cpu_isolation.py"
+    destination = "/root/configure_cpu_isolation.py"
+  }
+
+  provisioner "file" {
+    source = "local/hard_rezero"
+    destination = "/usr/local/bin/hard_rezero"
+  }
+
+  provisioner "file" {
+    source = "local/micromamba"
+    destination = "/usr/local/bin/micromamba"
+  }
+
+  provisioner "file" {
+    source = "local/pi3hat_spine"
+    destination = "/usr/local/bin/pi3hat_spine"
+  }
+
+  provisioner "file" {
+    source = "local/stop_servos"
+    destination = "/usr/local/bin/stop_servos"
+  }
+
+  provisioner "file" {
+    source = "local/upkie_tool"
+    destination = "/usr/local/bin/upkie_tool"
   }
 
   provisioner "shell" {
-    script = "install_micromamba.sh"
-  }
-
-  provisioner "shell-local" {
-    script = "configure_cpu_isolation.py"
-    environment_vars = ["MY_ENV_VAR=my_value"]
-    execute_command = ["/bin/sh", "-c", "{{.Vars}} $(which python || which python3) {{.Script}}"]
+    script = "provision.sh"
   }
 }
