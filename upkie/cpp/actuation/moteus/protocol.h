@@ -34,7 +34,7 @@
  * CAN-FD packets for the moteus brushless servo.
  */
 
-namespace upkie::actuation {
+namespace upkie::cpp::actuation {
 
 namespace moteus {
 
@@ -655,4 +655,4 @@ inline QueryResult ParseQueryResult(const uint8_t* data, size_t size) {
 
 }  // namespace moteus
 
-}  // namespace upkie::actuation
+}  // namespace upkie::cpp::actuation

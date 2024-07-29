@@ -31,7 +31,7 @@
 #include "upkie/cpp/actuation/moteus/protocol.h"
 #include "upkie/cpp/utils/realtime.h"
 
-namespace upkie::actuation {
+namespace upkie::cpp::actuation {
 
 /*! Interface to moteus controllers.
  *
@@ -178,4 +178,4 @@ class Pi3HatInterface : public Interface {
   ::mjbots::pi3hat::Attitude attitude_;
 };
 
-}  // namespace upkie::actuation
+}  // namespace upkie::cpp::actuation

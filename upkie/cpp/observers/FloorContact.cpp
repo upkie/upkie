@@ -7,10 +7,10 @@
 
 #include "upkie/cpp/utils/low_pass_filter.h"
 
-namespace upkie::observers {
+namespace upkie::cpp::observers {
 
 using palimpsest::exceptions::KeyError;
-using upkie::utils::low_pass_filter;
+using upkie::cpp::utils::low_pass_filter;
 
 FloorContact::FloorContact(const Parameters& params)
     : params_(params), upper_leg_torque_(0.0), contact_(false) {
@@ -101,4 +101,4 @@ void FloorContact::write(Dictionary& observation) {
   }
 }
 
-}  // namespace upkie::observers
+}  // namespace upkie::cpp::observers

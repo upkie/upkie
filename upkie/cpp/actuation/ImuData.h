@@ -6,7 +6,7 @@
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 
-namespace upkie::actuation {
+namespace upkie::cpp::actuation {
 
 //! Data filtered from an onboard IMU such as the pi3hat's.
 struct ImuData {
@@ -39,4 +39,4 @@ struct ImuData {
   Eigen::Vector3d linear_acceleration_imu_in_imu = Eigen::Vector3d::Zero();
 };
 
-}  // namespace upkie::actuation
+}  // namespace upkie::cpp::actuation

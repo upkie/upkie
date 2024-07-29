@@ -15,7 +15,7 @@
 #include "upkie/cpp/actuation/Interface.h"
 #include "upkie/cpp/actuation/moteus/protocol.h"
 
-namespace upkie::actuation {
+namespace upkie::cpp::actuation {
 
 //! Interface whose internal state perfectly tracks commands.
 class MockInterface : public Interface {
@@ -69,4 +69,4 @@ class MockInterface : public Interface {
   ImuData imu_data_;
 };
 
-}  // namespace upkie::actuation
+}  // namespace upkie::cpp::actuation

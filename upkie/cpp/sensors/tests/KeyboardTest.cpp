@@ -6,7 +6,7 @@
 #include "gtest/gtest.h"
 #include "upkie/cpp/sensors/Keyboard.h"
 
-namespace upkie::sensors {
+namespace upkie::cpp::sensors {
 
 TEST(Keyboard, WriteOnce) {
   Keyboard keyboard;
@@ -90,4 +90,4 @@ TEST(Keyboard, ReadEmptySTDIN) {
   ASSERT_FALSE(output.get<bool>("x"));
 }
 
-}  // namespace upkie::sensors
+}  // namespace upkie::cpp::sensors

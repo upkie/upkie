@@ -7,7 +7,7 @@
 
 #include "gtest/gtest.h"
 
-namespace upkie::utils {
+namespace upkie::cpp::utils {
 
 TEST(RandomString, HasCorrectLength) {
   ASSERT_EQ(random_string(16).size(), 16);
@@ -26,4 +26,4 @@ TEST(RandomString, DoesNotRepeat) {
   ASSERT_NE(first_string, second_string);
 }
 
-}  // namespace upkie::utils
+}  // namespace upkie::cpp::utils

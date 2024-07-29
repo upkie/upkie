@@ -13,7 +13,7 @@
 #include "upkie/cpp/exceptions/TypeError.h"
 #include "upkie/cpp/observers/Observer.h"
 
-namespace upkie::observers {
+namespace upkie::cpp::observers {
 
 using palimpsest::Dictionary;
 
@@ -116,4 +116,4 @@ class HistoryObserver : public Observer {
   std::vector<T> values_;
 };
 
-}  // namespace upkie::observers
+}  // namespace upkie::cpp::observers

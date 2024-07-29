@@ -15,7 +15,7 @@
 
 #include "upkie/cpp/utils/math.h"
 
-namespace upkie::utils {
+namespace upkie::cpp::utils {
 
 SynchronousClock::SynchronousClock(double frequency)
     : period_us_(microseconds(static_cast<int64_t>(1e6 / frequency))),
@@ -59,4 +59,4 @@ void SynchronousClock::wait_for_next_tick() {
   measure_period(call_time);
 }
 
-}  // namespace upkie::utils
+}  // namespace upkie::cpp::utils

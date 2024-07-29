@@ -22,15 +22,15 @@
 
 using palimpsest::Dictionary;
 
-namespace upkie::spine {
+namespace upkie::cpp::spine {
 
 namespace testing {
 
 //! Testing version of the spine class
-class Spine : public upkie::spine::Spine {
+class Spine : public upkie::cpp::spine::Spine {
  public:
   //! Parent constructor.
-  using upkie::spine::Spine::Spine;
+  using upkie::cpp::spine::Spine::Spine;
 
   //! Get agent interface.
   const AgentInterface& agent_interface() { return agent_interface_; }
@@ -302,4 +302,4 @@ TEST_F(SpineTest, EnteringStopClearsRequest) {
   ASSERT_EQ(read_mmap_request(), Request::kNone);
 }
 
-}  // namespace upkie::spine
+}  // namespace upkie::cpp::spine

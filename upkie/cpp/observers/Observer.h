@@ -7,7 +7,7 @@
 
 #include <string>
 
-namespace upkie::observers {
+namespace upkie::cpp::observers {
 
 using palimpsest::Dictionary;
 
@@ -47,4 +47,4 @@ class Observer {
   virtual void write(Dictionary& observation) {}
 };
 
-}  // namespace upkie::observers
+}  // namespace upkie::cpp::observers

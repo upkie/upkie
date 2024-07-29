@@ -33,14 +33,14 @@ namespace spines::pi3hat {
 
 using Pi3Hat = ::mjbots::pi3hat::Pi3Hat;
 using palimpsest::Dictionary;
-using upkie::actuation::Pi3HatInterface;
-using upkie::observers::BaseOrientation;
-using upkie::observers::FloorContact;
-using upkie::observers::ObserverPipeline;
-using upkie::observers::WheelOdometry;
-using upkie::sensors::CpuTemperature;
-using upkie::sensors::Joystick;
-using upkie::spine::Spine;
+using upkie::cpp::actuation::Pi3HatInterface;
+using upkie::cpp::observers::BaseOrientation;
+using upkie::cpp::observers::FloorContact;
+using upkie::cpp::observers::ObserverPipeline;
+using upkie::cpp::observers::WheelOdometry;
+using upkie::cpp::sensors::CpuTemperature;
+using upkie::cpp::sensors::Joystick;
+using upkie::cpp::spine::Spine;
 
 //! Command-line arguments for the Bullet spine.
 class CommandLineArguments {
@@ -153,7 +153,7 @@ int main(const CommandLineArguments& args) {
     spdlog::error("Calibration needed: did you run `upkie_tool rezero`?");
     return -3;
   }
-  if (!upkie::utils::lock_memory()) {
+  if (!upkie::cpp::utils::lock_memory()) {
     spdlog::error("Could not lock process memory to RAM");
     return -4;
   }
@@ -188,8 +188,8 @@ int main(const CommandLineArguments& args) {
   // Observation: Floor contact
   FloorContact::Parameters floor_contact_params;
   floor_contact_params.dt = 1.0 / args.spine_frequency;
-  floor_contact_params.upper_leg_joints = upkie::model::upper_leg_joints();
-  floor_contact_params.wheels = upkie::model::wheel_joints();
+  floor_contact_params.upper_leg_joints = upkie::cpp::model::upper_leg_joints();
+  floor_contact_params.wheels = upkie::cpp::model::wheel_joints();
   auto floor_contact = std::make_shared<FloorContact>(floor_contact_params);
   observation.append_observer(floor_contact);
 
@@ -208,7 +208,7 @@ int main(const CommandLineArguments& args) {
     pi3hat_config.mounting_deg.yaw = 0.;
 
     // pi3hat interface
-    const auto servo_layout = upkie::model::servo_layout();
+    const auto servo_layout = upkie::cpp::model::servo_layout();
     Pi3HatInterface interface(servo_layout, args.can_cpu, pi3hat_config);
 
     // Spine
@@ -216,7 +216,7 @@ int main(const CommandLineArguments& args) {
     spine_params.cpu = args.spine_cpu;
     spine_params.frequency = args.spine_frequency;
     spine_params.log_path =
-        upkie::utils::get_log_path(args.log_dir, "pi3hat_spine");
+        upkie::cpp::utils::get_log_path(args.log_dir, "pi3hat_spine");
     spdlog::info("Spine data logged to {}", spine_params.log_path);
     Spine spine(spine_params, interface, observation);
     spine.run();
@@ -242,7 +242,7 @@ int main(int argc, char** argv) {
     args.print_usage(argv[0]);
     return EXIT_SUCCESS;
   } else if (args.version) {
-    std::cout << "Upkie pi3hat spine " << upkie::kVersion << "\n";
+    std::cout << "Upkie pi3hat spine " << upkie::cpp::kVersion << "\n";
     return EXIT_SUCCESS;
   }
   return spines::pi3hat::main(args);
