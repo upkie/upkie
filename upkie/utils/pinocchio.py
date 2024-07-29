@@ -22,7 +22,7 @@ def box_position_limits(
     \f]
 
     \param model Pinocchio model.
-    @returns Tuple ``(q_min, q_max)`` of lower and upper position limits, with
+    \return Tuple ``(q_min, q_max)`` of lower and upper position limits, with
     -infinity and +infinity where there is no limit.
     """
     no_position_limit = np.logical_or(

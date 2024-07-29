@@ -2,7 +2,7 @@
 
 Upkie has reinforcement learning environments following the [Gymnasium](https://gymnasium.farama.org/) API. All of them are single-threaded and run as-is in both simulation and on real robots.
 
-Each environment has its own observation and action spaces, but all of them provide access to full spine observation via the ``info`` dictionary returned by their ``reset`` and ``step`` functions. See @ref observations for details.
+Each environment has its own observation and action spaces, but all of them provide access to full spine observation via the ``info`` dictionary returned by their ``reset`` and ``step`` functions. See \ref observations for details.
 
 ## Ground velocity {#ground-velocity-env}
 
@@ -20,7 +20,7 @@ where we denote by:
 - \f$\theta\f$ the pitch angle of the base with respect to the world vertical, in radians.
 - \f$p\f$ the position of the average wheel contact point, in meters.
 
-Check out the [UpkieGroundVelocity](@ref upkie.envs.upkie_ground_velocity.UpkieGroundVelocity) documentation for more details.
+Check out the [UpkieGroundVelocity](\ref upkie.envs.upkie_ground_velocity.UpkieGroundVelocity) documentation for more details.
 
 ## Servos {#servos-env}
 
@@ -43,4 +43,4 @@ where for joint \f$i\f$ we denote by:
 
 Position and velocity gains \f$k_{p}\f$ and \f$k_{d}\f$ are configured in each moteus controller directly; we can update the overall feedback gains via the normalized parameters \f$k_{p}^{\mathit{scale}} \in [0, 1]\f$ and \f$k_{d}^{\mathit{scale}} \in [0, 1]\f$.
 
-Check out the [UpkieServos](@ref upkie.envs.upkie_servos.UpkieServos) documentation for more details.
+Check out the [UpkieServos](\ref upkie.envs.upkie_servos.UpkieServos) documentation for more details.

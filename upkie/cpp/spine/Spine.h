@@ -18,6 +18,7 @@
 #include "upkie/cpp/spine/StateMachine.h"
 #include "upkie/cpp/utils/SynchronousClock.h"
 
+//! Main control loop between agents and actuators.
 namespace upkie::spine {
 
 //! One mebibyte in bytes.

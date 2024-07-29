@@ -873,12 +873,15 @@ INPUT                  = README.md \
                          pid_balancer \
                          pid_balancer/README.markdown \
                          upkie/config \
-                         upkie/envs \
+                         upkie/cpp \
                          upkie/cpp/actuation \
                          upkie/cpp/exceptions \
                          upkie/cpp/observers \
                          upkie/cpp/sensors \
                          upkie/cpp/spine \
+                         upkie/envs \
+                         upkie/model \
+                         upkie/spine \
                          upkie/utils
 
 # This tag can be used to specify the character encoding of the source files

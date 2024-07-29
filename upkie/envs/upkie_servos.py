@@ -24,7 +24,7 @@ from .upkie_base_env import UpkieBaseEnv
 
 
 class UpkieServos(UpkieBaseEnv):
-    """!
+    r"""!
     Upkie with with action and observation for each servo.
 
     ### Action space
@@ -62,7 +62,7 @@ class UpkieServos(UpkieBaseEnv):
     - ``voltage": Power bus voltage of the servo, in [V].
 
     As with all Upkie environments, full observations from the spine (detailed
-    in @ref observations) are also available in the ``info`` dictionary
+    in \ref observations) are also available in the ``info`` dictionary
     returned by the reset and step functions.
     """
 
@@ -268,10 +268,10 @@ class UpkieServos(UpkieBaseEnv):
         self.robot = robot
 
     def get_neutral_action(self) -> dict:
-        """!
+        r"""!
         Get the neutral action where servos don't move.
 
-        @returns Neutral action where servos don't move.
+        \return Neutral action where servos don't move.
         """
         return self.__neutral_action.copy()
 

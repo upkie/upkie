@@ -18,7 +18,7 @@ Here is an index of observation dictionaries. Keys are a shorthand for nested di
 | `wheel_odometry.position` | Ground position in [m], see \ref upkie::observers::WheelOdometry |
 | `wheel_odometry.velocity` | Ground velocity in [m] / [s], see \ref upkie::observers::WheelOdometry |
 
-See also [Sensors](@ref sensors).
+See also [Sensors](\ref sensors).
 
 ## Observers {#observers}
 

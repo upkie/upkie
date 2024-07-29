@@ -69,7 +69,7 @@ class FloorContact : public Observer {
 
     /*! Check whether parameters are incomplete.
      *
-     * \returns True if some parameters are uninitialized.
+     * \return True if some parameters are uninitialized.
      */
     bool incomplete() { return (dt != dt); }
 

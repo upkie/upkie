@@ -476,7 +476,7 @@ class WheelController:
             Equivalently, linear coordinates of the pose of the right contact
             frame with respect to the left contact frame.
 
-        @return Tuple with `left_wheel_velocity` (left wheel velocity in rad/s)
+        \return Tuple with `left_wheel_velocity` (left wheel velocity in rad/s)
             and `right_wheel_velocity` (right wheel velocity in rad/s).
 
         \note For now we assume that the two wheels are parallel to the ground,
