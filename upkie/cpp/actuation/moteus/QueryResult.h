@@ -14,7 +14,7 @@
 
 #include "upkie/cpp/actuation/moteus/Mode.h"
 
-namespace upkie::actuation {
+namespace upkie::cpp::actuation {
 
 namespace moteus {
 
@@ -52,4 +52,4 @@ struct QueryResult {
 
 }  // namespace moteus
 
-}  // namespace upkie::actuation
+}  // namespace upkie::cpp::actuation

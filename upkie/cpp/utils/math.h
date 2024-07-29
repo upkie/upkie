@@ -6,7 +6,7 @@
 #include <cstdint>
 
 //! Utility functions.
-namespace upkie::utils {
+namespace upkie::cpp::utils {
 
 //! True if and only if \p divisor divides \p number.
 inline bool divides(uint32_t number, uint32_t divisor) {
@@ -17,4 +17,4 @@ inline bool divides(uint32_t number, uint32_t divisor) {
   return (number == k * divisor);
 }
 
-}  // namespace upkie::utils
+}  // namespace upkie::cpp::utils

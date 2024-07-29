@@ -12,7 +12,7 @@
 #include "gtest/gtest.h"
 #include "upkie/cpp/actuation/moteus/ServoReply.h"
 
-namespace upkie::observers {
+namespace upkie::cpp::observers {
 
 TEST(Servo, ReadTorques) {
   palimpsest::Dictionary observation;
@@ -33,4 +33,4 @@ TEST(Servo, ReadTorques) {
   ASSERT_DOUBLE_EQ(observation("servo")("bar")("torque"), -10.);
 }
 
-}  // namespace upkie::observers
+}  // namespace upkie::cpp::observers

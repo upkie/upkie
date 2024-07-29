@@ -19,7 +19,7 @@
 #include "upkie/cpp/utils/SynchronousClock.h"
 
 //! Main control loop between agents and actuators.
-namespace upkie::spine {
+namespace upkie::cpp::spine {
 
 //! Number of bits in one mebibyte.
 constexpr size_t kMebibytes = 1 << 20;
@@ -41,9 +41,9 @@ constexpr size_t kMebibytes = 1 << 20;
  * See StateMachine for more details.
  */
 class Spine {
-  using ObserverPipeline = upkie::observers::ObserverPipeline;
-  using Output = upkie::actuation::moteus::Output;
-  using ServoReply = upkie::actuation::moteus::ServoReply;
+  using ObserverPipeline = upkie::cpp::observers::ObserverPipeline;
+  using Output = upkie::cpp::actuation::moteus::Output;
+  using ServoReply = upkie::cpp::actuation::moteus::ServoReply;
 
  public:
   //! Spine parameters.
@@ -184,4 +184,4 @@ class Spine {
   size_t rx_count_;
 };
 
-}  // namespace upkie::spine
+}  // namespace upkie::cpp::spine

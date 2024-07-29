@@ -6,7 +6,7 @@
 #include <cstdint>
 
 //! Main control loop between agents and actuators.
-namespace upkie::spine {
+namespace upkie::cpp::spine {
 
 //! Request flag used for shared-memory inter-process communication.
 enum class Request : uint32_t {
@@ -29,4 +29,4 @@ enum class Request : uint32_t {
   kError = 5
 };
 
-}  // namespace upkie::spine
+}  // namespace upkie::cpp::spine

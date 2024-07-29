@@ -3,7 +3,7 @@
 
 #include "upkie/cpp/observers/BaseOrientation.h"
 
-namespace upkie::observers {
+namespace upkie::cpp::observers {
 
 BaseOrientation::BaseOrientation(const Parameters& params) : params_(params) {}
 
@@ -36,4 +36,4 @@ void BaseOrientation::write(Dictionary& observation) {
   output("angular_velocity") = angular_velocity_base_in_base_;
 }
 
-}  // namespace upkie::observers
+}  // namespace upkie::cpp::observers

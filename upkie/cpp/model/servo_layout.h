@@ -8,9 +8,9 @@
 
 #include "upkie/cpp/actuation/ServoLayout.h"
 
-namespace upkie::model {
+namespace upkie::cpp::model {
 
-using upkie::actuation::ServoLayout;
+using upkie::cpp::actuation::ServoLayout;
 
 constexpr int kLeftBusID = 1;   // JC1
 constexpr int kRightBusID = 3;  // JC3
@@ -30,4 +30,4 @@ inline const ServoLayout servo_layout() noexcept {
   return layout;
 }
 
-}  // namespace upkie::model
+}  // namespace upkie::cpp::model

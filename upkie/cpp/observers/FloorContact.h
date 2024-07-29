@@ -18,7 +18,7 @@
  * \image html observers.png
  * \image latex observers.eps
  */
-namespace upkie::observers {
+namespace upkie::cpp::observers {
 
 using palimpsest::Dictionary;
 
@@ -141,4 +141,4 @@ class FloorContact : public Observer {
   bool contact_;
 };
 
-}  // namespace upkie::observers
+}  // namespace upkie::cpp::observers

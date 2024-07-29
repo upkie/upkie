@@ -7,7 +7,7 @@
 
 #include "upkie/cpp/observers/Observer.h"
 
-namespace upkie::observers {
+namespace upkie::cpp::observers {
 
 //! Exception-throwing observer
 class ThrowingObserver : public Observer {
@@ -17,4 +17,4 @@ class ThrowingObserver : public Observer {
   }
 };
 
-}  // namespace upkie::observers
+}  // namespace upkie::cpp::observers

@@ -7,7 +7,7 @@
 
 #include "RobotSimulator/b3RobotSimulatorClientAPI.h"
 
-namespace upkie::actuation {
+namespace upkie::cpp::actuation {
 
 //! Properties for robot joints in the Bullet simulation.
 struct BulletJointProperties {
@@ -18,4 +18,4 @@ struct BulletJointProperties {
   double maximum_torque = 0.0;
 };
 
-}  // namespace upkie::actuation
+}  // namespace upkie::cpp::actuation

@@ -8,7 +8,7 @@
 
 #include "upkie/cpp/actuation/ServoLayout.h"
 
-namespace upkie::model {
+namespace upkie::cpp::model {
 
 /*! Get list of upper leg joints, i.e. hips and knees.
  *
@@ -26,4 +26,4 @@ inline const std::vector<std::string> wheel_joints() noexcept {
   return {"left_wheel", "right_wheel"};
 }
 
-}  // namespace upkie::model
+}  // namespace upkie::cpp::model

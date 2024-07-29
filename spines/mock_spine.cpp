@@ -32,16 +32,16 @@
 namespace spines::mock {
 
 using palimpsest::Dictionary;
-using upkie::actuation::MockInterface;
-using upkie::observers::BaseOrientation;
-using upkie::observers::FloorContact;
-using upkie::observers::ObserverPipeline;
-using upkie::observers::WheelOdometry;
-using upkie::sensors::CpuTemperature;
-using upkie::spine::Spine;
+using upkie::cpp::actuation::MockInterface;
+using upkie::cpp::observers::BaseOrientation;
+using upkie::cpp::observers::FloorContact;
+using upkie::cpp::observers::ObserverPipeline;
+using upkie::cpp::observers::WheelOdometry;
+using upkie::cpp::sensors::CpuTemperature;
+using upkie::cpp::spine::Spine;
 
 #ifndef __APPLE__
-using upkie::sensors::Joystick;
+using upkie::cpp::sensors::Joystick;
 #endif
 
 //! Command-line arguments for the mock spine.
@@ -118,7 +118,7 @@ class CommandLineArguments {
 };
 
 int main(const CommandLineArguments& args) {
-  if (!upkie::utils::lock_memory()) {
+  if (!upkie::cpp::utils::lock_memory()) {
     spdlog::error("could not lock process memory to RAM");
     return -4;
   }
@@ -147,8 +147,8 @@ int main(const CommandLineArguments& args) {
   // Observation: Floor contact
   FloorContact::Parameters floor_contact_params;
   floor_contact_params.dt = 1.0 / args.spine_frequency;
-  floor_contact_params.upper_leg_joints = upkie::model::upper_leg_joints();
-  floor_contact_params.wheels = upkie::model::wheel_joints();
+  floor_contact_params.upper_leg_joints = upkie::cpp::model::upper_leg_joints();
+  floor_contact_params.wheels = upkie::cpp::model::wheel_joints();
   auto floor_contact = std::make_shared<FloorContact>(floor_contact_params);
   observation.append_observer(floor_contact);
 
@@ -159,7 +159,7 @@ int main(const CommandLineArguments& args) {
   observation.append_observer(odometry);
 
   // Mock actuators
-  const auto servo_layout = upkie::model::servo_layout();
+  const auto servo_layout = upkie::cpp::model::servo_layout();
   const double dt = 1.0 / args.spine_frequency;
   MockInterface actuation(servo_layout, dt);
 
@@ -168,7 +168,7 @@ int main(const CommandLineArguments& args) {
   spine_params.cpu = args.spine_cpu;
   spine_params.frequency = args.spine_frequency;
   spine_params.log_path =
-      upkie::utils::get_log_path(args.log_dir, "mock_spine");
+      upkie::cpp::utils::get_log_path(args.log_dir, "mock_spine");
   spdlog::info("Spine data logged to {}", spine_params.log_path);
   Spine spine(spine_params, actuation, observation);
   spine.run();
@@ -186,7 +186,7 @@ int main(int argc, char** argv) {
     args.print_usage(argv[0]);
     return EXIT_SUCCESS;
   } else if (args.version) {
-    std::cout << "Upkie mock spine " << upkie::kVersion << "\n";
+    std::cout << "Upkie mock spine " << upkie::cpp::kVersion << "\n";
     return EXIT_SUCCESS;
   }
   return spines::mock::main(args);

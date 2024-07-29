@@ -7,7 +7,7 @@
 
 #include "upkie/cpp/exceptions/UpkieError.h"
 
-namespace upkie::exceptions {
+namespace upkie::cpp::exceptions {
 
 //! Exception raised when a deserialized object does not have the right type.
 class TypeError : public UpkieError {
@@ -33,4 +33,4 @@ class TypeError : public UpkieError {
   ~TypeError() throw() {}
 };
 
-}  // namespace upkie::exceptions
+}  // namespace upkie::cpp::exceptions

@@ -22,7 +22,7 @@
  * the cost of more complexity. We choose to go for the simpler (riskier)
  * version where both agent and spine directly manipulate the agenda.
  */
-namespace upkie::spine {
+namespace upkie::cpp::spine {
 
 /*! Memory map to shared memory.
  *
@@ -85,4 +85,4 @@ class AgentInterface {
   char* mmap_data_;
 };
 
-}  // namespace upkie::spine
+}  // namespace upkie::cpp::spine

@@ -3,7 +3,7 @@
 
 #include "upkie/cpp/sensors/CpuTemperature.h"
 
-namespace upkie::sensors {
+namespace upkie::cpp::sensors {
 
 CpuTemperature::CpuTemperature(const char* temp_path) : has_warned_(false) {
   fd_ = ::open(temp_path, O_RDONLY | O_NONBLOCK);
@@ -53,4 +53,4 @@ void CpuTemperature::check_temperature_warning(
   }
 }
 
-}  // namespace upkie::sensors
+}  // namespace upkie::cpp::sensors

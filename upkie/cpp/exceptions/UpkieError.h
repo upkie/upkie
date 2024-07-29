@@ -6,7 +6,7 @@
 #include <string>
 
 //! Exceptions raised by this project.
-namespace upkie::exceptions {
+namespace upkie::cpp::exceptions {
 
 //! Error with file and line references to the calling code.
 class UpkieError : public std::runtime_error {
@@ -44,4 +44,4 @@ class UpkieError : public std::runtime_error {
   std::string message_;
 };
 
-}  // namespace upkie::exceptions
+}  // namespace upkie::cpp::exceptions

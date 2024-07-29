@@ -13,7 +13,7 @@
 
 using bazel::tools::cpp::runfiles::Runfiles;
 
-namespace upkie::actuation {
+namespace upkie::cpp::actuation {
 
 namespace bullet {
 
@@ -130,4 +130,4 @@ TEST_F(BulletTest, ComputeCenterOfMass) {
 
 }  // namespace bullet
 
-}  // namespace upkie::actuation
+}  // namespace upkie::cpp::actuation

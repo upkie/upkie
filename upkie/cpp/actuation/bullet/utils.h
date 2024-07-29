@@ -10,7 +10,7 @@
 #include "RobotSimulator/b3RobotSimulatorClientAPI.h"
 #include "upkie/cpp/actuation/BulletImuData.h"
 
-namespace upkie::actuation {
+namespace upkie::cpp::actuation {
 
 namespace bullet {
 
@@ -232,4 +232,4 @@ Eigen::Vector3d compute_position_com_in_world(b3RobotSimulatorClientAPI& bullet,
 
 }  // namespace bullet
 
-}  // namespace upkie::actuation
+}  // namespace upkie::cpp::actuation

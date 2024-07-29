@@ -7,7 +7,7 @@
 
 #include <string>
 
-namespace upkie::sensors {
+namespace upkie::cpp::sensors {
 
 using palimpsest::Dictionary;
 
@@ -41,4 +41,4 @@ class Sensor {
   virtual void write(Dictionary& observation) {}
 };
 
-}  // namespace upkie::sensors
+}  // namespace upkie::cpp::sensors

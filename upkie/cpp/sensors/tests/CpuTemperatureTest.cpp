@@ -4,7 +4,7 @@
 #include "gtest/gtest.h"
 #include "upkie/cpp/sensors/CpuTemperature.h"
 
-namespace upkie::sensors {
+namespace upkie::cpp::sensors {
 
 TEST(CpuTemperature, NoWriteIfDisabled) {
   CpuTemperature cpu_temperature("/bogus/temp");
@@ -27,4 +27,4 @@ TEST(CpuTemperature, WriteOnce) {
   }
 }
 
-}  // namespace upkie::sensors
+}  // namespace upkie::cpp::sensors

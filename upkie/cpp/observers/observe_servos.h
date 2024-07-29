@@ -11,9 +11,9 @@
 
 #include "upkie/cpp/actuation/moteus/protocol.h"
 
-namespace upkie::observers {
+namespace upkie::cpp::observers {
 
-using upkie::actuation::moteus::ServoReply;
+using upkie::cpp::actuation::moteus::ServoReply;
 
 /*! Observe servo measurements.
  *
@@ -25,4 +25,4 @@ void observe_servos(palimpsest::Dictionary& observation,
                     const std::map<int, std::string>& servo_joint_map,
                     const std::vector<ServoReply>& servo_replies);
 
-}  // namespace upkie::observers
+}  // namespace upkie::cpp::observers
