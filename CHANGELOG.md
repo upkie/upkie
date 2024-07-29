@@ -41,6 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - deps: Dependency on separate Vulp project
+- docs: Remove PID balancer from the documentation
 
 ## [4.0.0] - 2024-06-12
 
