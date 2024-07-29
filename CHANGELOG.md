@@ -13,12 +13,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Import and adapt C++ code from Vulp
 - Log received actuation replies in spine cycles
 - PID balancer: Conda environment file
+- bazelisk: Add support for ARM64 CPUs
 - envs: Warn when a fall is detected
 - examples: Tuning the gains of a standard two-task PI balancer
 - setup: Add micromamba installation script
 - setup: Automate process of building new system images
 - spine: Print out configuration dictionary upon reset
-- bazelisk: Add support for ARM64 CPUs
+- tools: Configure servo gains during setup
 
 ### Changed
 
