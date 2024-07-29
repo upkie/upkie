@@ -55,10 +55,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Breaking:** envs: Change API of logging function to ``env.log(name, entry)``
+- **Breaking:** envs: Restrict observation space of ``UpkieServos`` to servos
 - deps: Update Vulp to 2.5.0
 - envs: Bump ``UpkieServos`` version number to 4
-- envs: Change API of logging function to ``env.log(name, entry)``
-- envs: Restrict observation space of ``UpkieServos`` to servos
 
 ### Fixed
 
@@ -68,8 +68,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+- **Breaking:** observers: Python version of the base orientation observer
 - Optional dependencies for balancers that now have their own repositories
-- observers: Python version of the base orientation observer
 
 ## [3.4.0] - 2024-03-21
 
