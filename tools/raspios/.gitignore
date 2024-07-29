@@ -1,2 +1,3 @@
 .packer_*
+local/*
 raspios_upkie.img
