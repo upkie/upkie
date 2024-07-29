@@ -23,6 +23,11 @@ class Model:
     joints: List[Joint]
 
     def __init__(self, urdf_path: str):
+        r"""!
+        Constructor for the robot model wrapper.
+
+        \param[in] urdf_path Path to the robot description.
+        """
         tree = ElementTree.parse(urdf_path)
         joints = [child for child in tree.getroot() if child.tag == "joint"]
         limits = [

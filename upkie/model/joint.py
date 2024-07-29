@@ -4,12 +4,9 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2024 Inria
 
-from dataclasses import dataclass
-
 from .joint_limit import JointLimit
 
 
-@dataclass
 class Joint:
     """!
     Joint properties.
@@ -37,3 +34,23 @@ class Joint:
     ## @var limit
     ## Joint limit in configuration and tangent spaces.
     limit: JointLimit
+
+    def __init__(
+        self,
+        index: int,
+        idx_q: int,
+        idx_v: int,
+        name: str,
+        limit: JointLimit,
+    ):
+        """!
+        Manual constructor for joint properties.
+
+        (We don't use a ``dataclass`` because Doxygen does not detect
+        attribute-only declarations in Python as of version 1.9.1.)
+        """
+        self.index = index
+        self.idx_q = idx_q
+        self.idx_v = idx_v
+        self.name = name
+        self.limit = limit
