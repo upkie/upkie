@@ -4,10 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2024 Inria
 
-from dataclasses import dataclass
 
-
-@dataclass
 class JointLimit:
     """!
     Joint limit in configuration and tangent spaces.
@@ -30,3 +27,21 @@ class JointLimit:
     ## @var effort
     ## Torque limit of the joint, in N.m.
     effort: float
+
+    def __init__(
+        self,
+        lower: float,
+        upper: float,
+        velocity: float,
+        effort: float,
+    ):
+        """!
+        Manual constructor for joint limits.
+
+        (We don't use a ``dataclass`` because Doxygen does not detect
+        attribute-only declarations in Python as of version 1.9.1.)
+        """
+        self.lower = lower
+        self.upper = upper
+        self.velocity = velocity
+        self.effort = effort
