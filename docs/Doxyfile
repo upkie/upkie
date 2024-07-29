@@ -865,11 +865,11 @@ WARN_LOGFILE           =
 # Note: If this tag is empty the current directory is searched.
 
 INPUT                  = README.md \
-                         docs/dev-notes.md \
                          docs/gym-environments.md \
-                         docs/observations.md \
                          docs/sensors.md \
                          docs/spines.md \
+                         docs/observations.md \
+                         docs/dev-notes.md \
                          upkie/config \
                          upkie/cpp \
                          upkie/cpp/actuation \
