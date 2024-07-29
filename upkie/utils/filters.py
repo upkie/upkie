@@ -72,7 +72,7 @@ def low_pass_filter(
     \param cutoff_period Time constant of the filter in [s].
     \param new_input New filter input.
     \param dt Sampling period in [s].
-    @returns New filter output.
+    \return New filter output.
     """
     alpha = dt / cutoff_period
     assert alpha < 0.5  # Nyquist-Shannon sampling theorem

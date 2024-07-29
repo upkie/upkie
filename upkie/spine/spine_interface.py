@@ -24,12 +24,12 @@ def wait_for_shared_memory(
     shm_name: str,
     retries: int,
 ) -> SharedMemory:
-    """!
+    r"""!
     Connect to the spine shared memory.
 
-    @param shm_name Name of the shared memory object.
-    @param retries Number of times to try opening the shared-memory file.
-    @raise SpineError If the spine did not respond after the prescribed number
+    \param shm_name Name of the shared memory object.
+    \param retries Number of times to try opening the shared-memory file.
+    \raise SpineError If the spine did not respond after the prescribed number
         of trials.
     """
     # Remove leading slash if present, as SharedMemory will prepend it
@@ -69,12 +69,12 @@ class SpineInterface:
         retries: int = 1,
         perf_checks: bool = True,
     ):
-        """!
+        r"""!
         Connect to the spine shared memory.
 
-        @param shm_name Name of the shared memory object.
-        @param retries Number of times to try opening the shared-memory file.
-        @param perf_checks If true, run performance checks after construction.
+        \param shm_name Name of the shared memory object.
+        \param retries Number of times to try opening the shared-memory file.
+        \param perf_checks If true, run performance checks after construction.
         """
         shared_memory = wait_for_shared_memory(shm_name, retries)
         self._mmap = shared_memory._mmap
@@ -103,13 +103,13 @@ class SpineInterface:
             self._shared_memory.close()
 
     def get_observation(self) -> dict:
-        """!
+        r"""!
         Ask the spine to write the latest observation to shared memory.
 
-        @returns Observation dictionary.
+        \return Observation dictionary.
 
-        @note In simulation, the first observation after a reset was collected
-        before that reset. Use @ref get_first_observation in that case to skip
+        \note In simulation, the first observation after a reset was collected
+        before that reset. Use \ref get_first_observation in that case to skip
         to the first post-reset observation.
         """
         self._wait_for_spine()
@@ -119,24 +119,29 @@ class SpineInterface:
         return observation
 
     def get_first_observation(self) -> dict:
-        """!
+        r"""!
         Get first observation after a reset.
 
-        @returns Observation dictionary.
+        \return Observation dictionary.
         """
         self.get_observation()  # pre-reset observation, skipped
         return self.get_observation()
 
     def set_action(self, action: dict) -> None:
+        r"""!
+        Write an action to be read by the spine.
+
+        \param[in] action Action dictionary.
+        """
         self._wait_for_spine()
         self._write_dict(action)
         self._write_request(Request.kAction)
 
     def start(self, config: dict) -> None:
-        """!
+        r"""!
         Reset the spine to a new configuration.
 
-        @param config Configuration dictionary.
+        \param[in] config Configuration dictionary.
         """
         self._wait_for_spine()
         self._write_dict(config)
@@ -157,10 +162,10 @@ class SpineInterface:
         return int.from_bytes(self._mmap.read(4), byteorder=sys.byteorder)
 
     def _read_dict(self) -> dict:
-        """!
+        r"""!
         Read dictionary from shared memory.
 
-        @returns Observation dictionary.
+        \return Observation dictionary.
         """
         assert self._read_request() == Request.kNone
         self._mmap.seek(0)
@@ -177,13 +182,13 @@ class SpineInterface:
         return last_dict
 
     def _wait_for_spine(self, timeout_ns: int = 100000000) -> None:
-        """!
+        r"""!
         Wait for the spine to signal itself as available, which it does by
         setting the current request to none in shared memory.
 
-        @param timeout_ns Don't wait for more than this duration in
+        \param timeout_ns Don't wait for more than this duration in
             nanoseconds.
-        @raise SpineError If the request read from spine has an error flag.
+        \raise SpineError If the request read from spine has an error flag.
         """
         stop = perf_counter_ns() + timeout_ns
         while self._read_request() not in self._stop_waiting:  # sets are fast
@@ -206,10 +211,10 @@ class SpineInterface:
         self._mmap.write(request.to_bytes(4, byteorder=sys.byteorder))
 
     def _write_dict(self, dictionary: dict) -> None:
-        """!
+        r"""!
         Set the shared memory to a given dictionary.
 
-        @param dictionary Dictionary to pack and write.
+        \param dictionary Dictionary to pack and write.
         """
         assert self._read_request() == Request.kNone
         data = self._packer.pack(dictionary)

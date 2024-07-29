@@ -81,7 +81,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
     </table>
 
     As with all Upkie environments, full observations from the spine (detailed
-    in @ref observations) are also available in the ``info`` dictionary
+    in \ref observations) are also available in the ``info`` dictionary
     returned by the reset and step functions.
     """
 
@@ -278,10 +278,10 @@ class UpkieGroundVelocity(UpkieBaseEnv):
         return obs
 
     def get_leg_servo_action(self) -> Dict[str, Dict[str, float]]:
-        """!
+        r"""!
         Get servo actions for both hip and knee joints.
 
-        @returns Servo action dictionary.
+        \return Servo action dictionary.
         """
         for joint in self.model.leg_joints:
             prev_position = self.__leg_servo_action[joint]["position"]

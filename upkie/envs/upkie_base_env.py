@@ -136,10 +136,10 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         return self.__frequency
 
     def update_init_rand(self, **kwargs) -> None:
-        """!
+        r"""!
         Update initial-state randomization.
 
-        Keyword arguments are forwarded as is to @ref
+        Keyword arguments are forwarded as is to \ref
         upkie.utils.robot_state_randomization.RobotStateRandomization.update.
         """
         self.init_state.randomization.update(**kwargs)
