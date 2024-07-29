@@ -127,7 +127,7 @@ class UpkieServos(UpkieBaseEnv):
         min_action = {}
         servo_space = {}
 
-        model = Model(upkie_description.urdf_path)
+        model = Model(upkie_description.URDF_PATH)
         for joint in model.joints:
             action_space[joint.name] = spaces.Dict(
                 {
