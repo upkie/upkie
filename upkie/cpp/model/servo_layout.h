@@ -12,8 +12,11 @@ namespace upkie::cpp::model {
 
 using upkie::cpp::actuation::ServoLayout;
 
-constexpr int kLeftBusID = 1;   // JC1
-constexpr int kRightBusID = 3;  // JC3
+//! Left leg is connected to bus JC1
+constexpr int kLeftBusID = 1;
+
+//! Right leg is connected to bus JC3
+constexpr int kRightBusID = 3;
 
 /*! Get Upkie's servo layout.
  *

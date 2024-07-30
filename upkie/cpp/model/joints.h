@@ -8,6 +8,7 @@
 
 #include "upkie/cpp/actuation/ServoLayout.h"
 
+//! Robot model properties.
 namespace upkie::cpp::model {
 
 /*! Get list of upper leg joints, i.e. hips and knees.

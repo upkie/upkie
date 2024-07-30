@@ -44,6 +44,8 @@ inline bool is_printable_ascii(unsigned char c) {
 }
 
 namespace upkie::cpp::sensors {
+
+//! Keys handled by the keyboard observer.
 enum class Key {
   UP,
   DOWN,

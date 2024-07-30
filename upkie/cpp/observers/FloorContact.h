@@ -13,7 +13,7 @@
 #include "upkie/cpp/observers/Observer.h"
 #include "upkie/cpp/observers/WheelContact.h"
 
-/*! Observers used by Upkie.
+/*! State observers available for Upkies.
  *
  * \image html observers.png
  * \image latex observers.eps

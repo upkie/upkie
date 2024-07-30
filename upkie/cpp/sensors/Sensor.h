@@ -7,6 +7,7 @@
 
 #include <string>
 
+//! Sensors (pure outputs) available for Upkies.
 namespace upkie::cpp::sensors {
 
 using palimpsest::Dictionary;
