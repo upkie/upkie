@@ -27,14 +27,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - **Breaking:** rename the default shared-memory file to ``/upkie``
-- bazelisk: Update bazelisk version to 1.20.0
-- deps: Update pi3hat dependency to latest commit
-- deps: Update Upkie description to 2.0.0
-- docs: Sort documentation pages by expected discovery steps
-- examples: Rename direct servo control example
+- CICD: Switch to Micromamba for unit testing
 - Makefile: Separate rule to set the raspi date
 - PID balancer: default to hostname for the agent configuration
 - Put hostname before spine name in log file names
+- bazelisk: Update bazelisk version to 1.20.0
+- deps: Update Upkie description to 2.0.0
+- deps: Update pi3hat dependency to latest commit
+- docs: Sort documentation pages by expected discovery steps
+- examples: Rename direct servo control example
 
 ### Fixed
 
