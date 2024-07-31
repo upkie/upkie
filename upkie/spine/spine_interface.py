@@ -33,7 +33,7 @@ def wait_for_shared_memory(
         of trials.
     """
     # Remove leading slash if present, as SharedMemory will prepend it
-    # See https://github.com/upkie/vulp/issues/92
+    # See https://github.com/upkie/upkie/issues/375
     shm_name = shm_name.lstrip("/")
 
     for trial in range(retries):
@@ -45,7 +45,7 @@ def wait_for_shared_memory(
             time.sleep(1.0)
         try:
             shared_memory = SharedMemory(shm_name, size=0, create=False)
-            # Why we unregister: https://github.com/upkie/vulp/issues/88
+            # Why we unregister: https://github.com/upkie/upkie/issues/376
             # Upstream issue: https://github.com/python/cpython/issues/82300
             resource_tracker.unregister(shared_memory._name, "shared_memory")
             return shared_memory
@@ -89,7 +89,7 @@ class SpineInterface:
         packer_cls = str(msgpack.Packer)
         unpacker_cls = str(msgpack.Unpacker)
         if "fallback" in packer_cls or "fallback" in unpacker_cls:
-            # See https://github.com/upkie/vulp/issues/74
+            # See https://github.com/upkie/upkie/issues/377
             raise PerformanceIssue("msgpack is running in pure Python")
 
     def __del__(self):
