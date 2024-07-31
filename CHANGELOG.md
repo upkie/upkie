@@ -10,9 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - CICD: Build jobs for x86 and ARM64 macOS spines
-- Import and adapt C++ code from Vulp
+- Import and adapt C++ code from Vulp (`vulp` namespace is now `upkie:cpp`)
 - Log received actuation replies in spine cycles
 - PID balancer: Conda environment file
+- bazelisk: Add support for ARM64 CPUs
 - envs: Warn when a fall is detected
 - examples: Tuning the gains of a standard two-task PI balancer
 - setup: Add micromamba installation script
@@ -21,13 +22,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - bazelisk: Add support for ARM64 CPUs
 - spine : Add extra URDFs position and orientation
 - envs : Add y axis position, z axis velocity and yaw randomization
+- tools: Configure servo gains during setup
 
 ### Changed
 
 - **Breaking:** rename the default shared-memory file to ``/upkie``
 - bazelisk: Update bazelisk version to 1.20.0
 - deps: Update pi3hat dependency to latest commit
-- deps: Update Upkie description to 1.6.0
+- deps: Update Upkie description to 2.0.0
+- docs: Sort documentation pages by expected discovery steps
 - Makefile: Separate rule to set the raspi date
 - PID balancer: default to hostname for the agent configuration
 - Put hostname before spine name in log file names
@@ -43,6 +46,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - deps: Dependency on separate Vulp project
+- docs: Remove PID balancer from the documentation
 
 ## [4.0.0] - 2024-06-12
 
@@ -57,10 +61,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Breaking:** envs: Change API of logging function to ``env.log(name, entry)``
+- **Breaking:** envs: Restrict observation space of ``UpkieServos`` to servos
 - deps: Update Vulp to 2.5.0
 - envs: Bump ``UpkieServos`` version number to 4
-- envs: Change API of logging function to ``env.log(name, entry)``
-- envs: Restrict observation space of ``UpkieServos`` to servos
 
 ### Fixed
 
@@ -70,8 +74,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+- **Breaking:** observers: Python version of the base orientation observer
 - Optional dependencies for balancers that now have their own repositories
-- observers: Python version of the base orientation observer
 
 ## [3.4.0] - 2024-03-21
 

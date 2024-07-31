@@ -20,10 +20,10 @@
 #include "upkie/cpp/utils/handle_interrupts.h"
 #include "upkie/cpp/utils/realtime.h"
 
-namespace upkie::spine {
+namespace upkie::cpp::spine {
 
 using palimpsest::Dictionary;
-using upkie::actuation::moteus::Output;
+using upkie::cpp::actuation::moteus::Output;
 
 Spine::Spine(const Parameters& params, actuation::Interface& actuation,
              ObserverPipeline& observers)
@@ -238,4 +238,4 @@ void Spine::cycle_actuation() {
   actuation_output_ = promise->get_future();
 }
 
-}  // namespace upkie::spine
+}  // namespace upkie::cpp::spine

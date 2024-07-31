@@ -2,21 +2,30 @@
 
 Upkie's code is organized into *spines*, which communicate with the simulation or mjbots actuators, and *agents*, the programs that implement robot behaviors. We use [Bazel](https://bazel.build/) to build spines, both for simulation on your development computer or for running on the robot's Raspberry Pi. Bazel does not install anything on your system: it fetches dependencies with specific versions and builds them locally, making sure the code stays consistent over time.
 
+## Action-observation loop {#action-observation-loop}
+
+Upkie implements an action-observation loop to control robots from a standalone "agent" process, like this:
+
+\image html action-observation-loop.png
+\image latex action-observation-loop.eps
+
+The agent can be a simple Python script with few dependencies. This separation between agent and spine provides a robot/simulation switch to train or test agents in a simulation spine (such as the \ref bullet-spine below) before running them on the real system.
+
 ## Bullet spine {#bullet-spine}
 
-The Bullet spine runs an agent in the [Bullet 3](https://github.com/bulletphysics/bullet3) simulator. We can start this spine as a standalone process and let it run waiting for agents to connect:
+The Bullet spine runs an agent in the [Bullet 3](https://github.com/bulletphysics/bullet3) simulator. We can start this spine as a standalone process and let it run waiting for agents to connect. The simulation script will run pre-compiled binaries if possible:
 
 ```console
 ./start_simulation.sh
 ```
 
-This script is just an alias for a Bazel ``run`` command:
+To build and run the simulation from source, [setup your build environment](\ref setup-build) then call the equivalent Bazel instruction:
 
 ```console
 ./tools/bazelisk run //spines:bullet_spine -- --show
 ```
 
-Check out simulation options (fly like an eagle!) with the help flag ``-h``.
+Bazel is the build system used in Upkie for spines. Check out simulation options by appending the help flag ``-h`` to the above command.
 
 ## pi3hat spine {#pi3hat-spine}
 

@@ -19,7 +19,7 @@
 #include "upkie/cpp/actuation/moteus/Output.h"
 #include "upkie/cpp/actuation/moteus/ServoReply.h"
 
-namespace upkie::actuation {
+namespace upkie::cpp::actuation {
 
 //! Actuation interface for the Bullet simulator.
 class BulletInterface : public Interface {
@@ -375,4 +375,4 @@ class BulletInterface : public Interface {
   std::map<std::string, BulletContactData> contact_data_;
 };
 
-}  // namespace upkie::actuation
+}  // namespace upkie::cpp::actuation

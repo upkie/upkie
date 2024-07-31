@@ -865,17 +865,24 @@ WARN_LOGFILE           =
 # Note: If this tag is empty the current directory is searched.
 
 INPUT                  = README.md \
-                         docs/dev-notes.md \
                          docs/gym-environments.md \
-                         docs/observations.md \
                          docs/sensors.md \
                          docs/spines.md \
-                         pid_balancer \
-                         pid_balancer/README.markdown \
+                         docs/observations.md \
+                         docs/dev-notes.md \
                          upkie/config \
-                         upkie/envs \
+                         upkie/cpp \
                          upkie/cpp/actuation \
+                         upkie/cpp/actuation/bullet \
+                         upkie/cpp/exceptions \
+                         upkie/cpp/model \
                          upkie/cpp/observers \
+                         upkie/cpp/sensors \
+                         upkie/cpp/spine \
+                         upkie/cpp/utils \
+                         upkie/envs \
+                         upkie/model \
+                         upkie/spine \
                          upkie/utils
 
 # This tag can be used to specify the character encoding of the source files
@@ -993,7 +1000,7 @@ EXCLUDE_PATTERNS       =
 # Note that the wildcards are matched against the file with absolute path, so to
 # exclude all test directories use the pattern */test/*
 
-EXCLUDE_SYMBOLS        =
+EXCLUDE_SYMBOLS        = internal
 
 # The EXAMPLE_PATH tag can be used to specify one or more files or directories
 # that contain example code fragments that are included (see the \include

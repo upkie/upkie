@@ -15,14 +15,14 @@
 
 #include "upkie/cpp/utils/math.h"
 
-namespace upkie::utils {
+namespace upkie::cpp::utils {
 
 SynchronousClock::SynchronousClock(double frequency)
     : period_us_(microseconds(static_cast<int64_t>(1e6 / frequency))),
       measured_period_(1.0 / frequency),
       skip_count_(0),
       slack_(0.0) {
-  assert(math::divides(1000000u, static_cast<unsigned>(frequency)));
+  assert(divides(1000000u, static_cast<unsigned>(frequency)));
   last_call_time_ = std::chrono::steady_clock::now();
   measured_period_ = 1. / frequency;
   next_tick_ = std::chrono::steady_clock::now() + period_us_;
@@ -59,4 +59,4 @@ void SynchronousClock::wait_for_next_tick() {
   measure_period(call_time);
 }
 
-}  // namespace upkie::utils
+}  // namespace upkie::cpp::utils

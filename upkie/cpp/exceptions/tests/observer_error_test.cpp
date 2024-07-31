@@ -9,7 +9,7 @@
 #include "gtest/gtest.h"
 #include "upkie/cpp/exceptions/ObserverError.h"
 
-namespace upkie::exceptions {
+namespace upkie::cpp::exceptions {
 
 TEST(ObserverError, NineteenSixtyWho) {
   const std::string prefix = "nineteen_sixty";
@@ -20,4 +20,4 @@ TEST(ObserverError, NineteenSixtyWho) {
   ASSERT_NE(msg.find(key), std::string::npos);
 }
 
-}  // namespace upkie::exceptions
+}  // namespace upkie::cpp::exceptions

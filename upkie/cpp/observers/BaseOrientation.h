@@ -11,7 +11,7 @@
 
 #include "upkie/cpp/observers/Observer.h"
 
-namespace upkie::observers {
+namespace upkie::cpp::observers {
 
 using palimpsest::Dictionary;
 
@@ -233,4 +233,4 @@ class BaseOrientation : public Observer {
   Eigen::Vector3d angular_velocity_base_in_base_;
 };
 
-}  // namespace upkie::observers
+}  // namespace upkie::cpp::observers

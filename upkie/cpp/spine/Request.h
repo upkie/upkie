@@ -5,15 +5,28 @@
 
 #include <cstdint>
 
-namespace upkie::spine {
+//! Main control loop between agents and actuators.
+namespace upkie::cpp::spine {
 
+//! Request flag used for shared-memory inter-process communication.
 enum class Request : uint32_t {
-  kNone = 0,  // no active request
+  //! Flag set when there is no active request.
+  kNone = 0,
+
+  //! Flag set to indicate an observation is requested.
   kObservation = 1,
+
+  //! Flag set to indicate an action has been supplied.
   kAction = 2,
+
+  //! Flag set to start the spine.
   kStart = 3,
+
+  //! Flag set to stop the spine.
   kStop = 4,
-  kError = 5  // last request was invalid
+
+  //! Flag set when the last request was invalid.
+  kError = 5
 };
 
-}  // namespace upkie::spine
+}  // namespace upkie::cpp::spine

@@ -6,7 +6,7 @@
 #include <spdlog/spdlog.h>
 #include <unistd.h>
 
-namespace upkie::spine {
+namespace upkie::cpp::spine {
 
 /*! Allocate file with some error handling.
  *
@@ -97,4 +97,4 @@ void AgentInterface::write(char* data, size_t size) {
   std::memcpy(mmap_data_, data, size);
 }
 
-}  // namespace upkie::spine
+}  // namespace upkie::cpp::spine

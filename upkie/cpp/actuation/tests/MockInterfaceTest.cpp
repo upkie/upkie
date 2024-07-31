@@ -8,7 +8,7 @@
 #include "upkie/cpp/actuation/moteus/protocol.h"
 #include "upkie/cpp/actuation/tests/coffee_machine_layout.h"
 
-namespace upkie::actuation {
+namespace upkie::cpp::actuation {
 
 TEST(MockInterfaceTest, CycleCallsCallback) {
   const auto layout = get_coffee_machine_layout();
@@ -22,4 +22,4 @@ TEST(MockInterfaceTest, CycleCallsCallback) {
   ASSERT_TRUE(callback_called);
 }
 
-}  // namespace upkie::actuation
+}  // namespace upkie::cpp::actuation

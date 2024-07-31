@@ -18,8 +18,10 @@
 #include "upkie/cpp/spine/StateMachine.h"
 #include "upkie/cpp/utils/SynchronousClock.h"
 
-namespace upkie::spine {
+//! Main control loop between agents and actuators.
+namespace upkie::cpp::spine {
 
+//! Number of bits in one mebibyte.
 constexpr size_t kMebibytes = 1 << 20;
 
 /*! Loop transmitting actions to the actuation and observations to the agent.
@@ -39,9 +41,9 @@ constexpr size_t kMebibytes = 1 << 20;
  * See StateMachine for more details.
  */
 class Spine {
-  using ObserverPipeline = upkie::observers::ObserverPipeline;
-  using Output = upkie::actuation::moteus::Output;
-  using ServoReply = upkie::actuation::moteus::ServoReply;
+  using ObserverPipeline = upkie::cpp::observers::ObserverPipeline;
+  using Output = upkie::cpp::actuation::moteus::Output;
+  using ServoReply = upkie::cpp::actuation::moteus::ServoReply;
 
  public:
   //! Spine parameters.
@@ -108,14 +110,10 @@ class Spine {
    * Note that there is currently a delay of three substeps between observation
    * and simulation. That is, the internal simulation state is always three
    * substeps ahead compared to the values written to the observation
-   * dictionary in \ref cycle_actuation. This decision is discussed in
+   * dictionary when cycling the actuation. This decision is discussed in
    * https://github.com/orgs/upkie/discussions/238#discussioncomment-8984290
    */
   void simulate(unsigned nb_substeps);
-
- private:
-  //! Begin cycle: check interrupts and read agent inputs
-  void begin_cycle();
 
   /*! Spin one cycle of communications with the actuation interface.
    *
@@ -127,6 +125,10 @@ class Spine {
    * 4. If applicable, start the next cycle:
    */
   void cycle_actuation();
+
+ private:
+  //! Begin cycle: check interrupts and read agent inputs
+  void begin_cycle();
 
   //! End cycle: write agent outputs, apply state machine transition
   void end_cycle();
@@ -182,4 +184,4 @@ class Spine {
   size_t rx_count_;
 };
 
-}  // namespace upkie::spine
+}  // namespace upkie::cpp::spine

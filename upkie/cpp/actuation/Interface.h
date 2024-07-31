@@ -16,7 +16,7 @@
 #include "upkie/cpp/actuation/resolution.h"
 
 //! Send actions to actuators or simulators.
-namespace upkie::actuation {
+namespace upkie::cpp::actuation {
 
 using palimpsest::Dictionary;
 
@@ -155,4 +155,4 @@ class Interface {
   std::vector<moteus::ServoReply> replies_;
 };
 
-}  // namespace upkie::actuation
+}  // namespace upkie::cpp::actuation

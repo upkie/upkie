@@ -7,9 +7,9 @@
 #include <string>
 #include <vector>
 
-namespace upkie::observers {
+namespace upkie::cpp::observers {
 
-using upkie::actuation::moteus::ServoReply;
+using upkie::cpp::actuation::moteus::ServoReply;
 
 void observe_servos(palimpsest::Dictionary& observation,
                     const std::map<int, std::string>& servo_joint_map,
@@ -44,4 +44,4 @@ void observe_servos(palimpsest::Dictionary& observation,
   }
 }
 
-}  // namespace upkie::observers
+}  // namespace upkie::cpp::observers

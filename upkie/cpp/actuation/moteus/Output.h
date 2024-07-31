@@ -10,7 +10,7 @@
 
 #pragma once
 
-namespace upkie::actuation {
+namespace upkie::cpp::actuation {
 
 namespace moteus {
 
@@ -22,4 +22,4 @@ struct Output {
 
 }  // namespace moteus
 
-}  // namespace upkie::actuation
+}  // namespace upkie::cpp::actuation

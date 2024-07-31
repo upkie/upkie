@@ -21,6 +21,10 @@ jobs:
                   sudo apt update
                   sudo apt install doxygen graphviz inkscape
 
+            - name: "Report Doxygen version"
+              run: |
+                  doxygen --version
+
             - name: "Make figures"
               run: |
                   cd ${{ github.workspace }}/docs/

@@ -5,26 +5,44 @@
 
 #include "upkie/cpp/spine/AgentInterface.h"
 
-namespace upkie::spine {
+namespace upkie::cpp::spine {
 
 //! When sending stop cycles, send at least that many.
 constexpr unsigned kNbStopCycles = 5;
 
 //! States of the state machine.
 enum class State : uint32_t {
+  //! Send stop commands to all actuators
   kSendStops = 0,
+
+  //! Reset all configured modules
   kReset = 1,
+
+  //! Do nothing
   kIdle = 2,
+
+  //! Write an observation to shared memory
   kObserve = 3,
+
+  //! Read a new action from shared memory
   kAct = 4,
+
+  //! Shut down the spine
   kShutdown = 5,
+
+  //! Final termination
   kOver = 6
 };
 
 //! Events that may trigger transitions between states.
 enum class Event : uint32_t {
+  //! Beginning of a spine cycle
   kCycleBeginning = 0,
+
+  //! End of a spine cycle
   kCycleEnd = 1,
+
+  //! Caught an interruption signal
   kInterrupt = 2,
 };
 
@@ -131,4 +149,4 @@ class StateMachine {
   unsigned stop_cycles_;
 };
 
-}  // namespace upkie::spine
+}  // namespace upkie::cpp::spine

@@ -7,7 +7,7 @@
 #include "gtest/gtest.h"
 #include "upkie/cpp/exceptions/FilterError.h"
 
-namespace upkie::utils {
+namespace upkie::cpp::utils {
 
 TEST(InlineLowPassFilter, InformationLoss) {
   const double prev_output = 0.0;
@@ -29,4 +29,4 @@ TEST(InlineLowPassFilter, Converges) {
   ASSERT_LT(output, target);
 }
 
-}  // namespace upkie::utils
+}  // namespace upkie::cpp::utils

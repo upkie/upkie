@@ -10,7 +10,7 @@
 
 #include "upkie/cpp/actuation/Pi3HatInterface.h"
 
-namespace upkie::actuation {
+namespace upkie::cpp::actuation {
 
 Pi3HatInterface::Pi3HatInterface(
     const ServoLayout& layout, const int can_cpu,
@@ -69,8 +69,8 @@ void Pi3HatInterface::cycle(
 }
 
 void Pi3HatInterface::run_can_thread() {
-  upkie::utils::configure_cpu(can_cpu_);
-  upkie::utils::configure_scheduler(10);
+  upkie::cpp::utils::configure_cpu(can_cpu_);
+  upkie::cpp::utils::configure_scheduler(10);
   pi3hat_.reset(new ::mjbots::pi3hat::Pi3Hat({pi3hat_config_}));
   pthread_setname_np(pthread_self(), "can_thread");
   while (!done_) {
@@ -162,4 +162,4 @@ moteus::Output Pi3HatInterface::cycle_can_thread() {
   return result;
 }
 
-}  // namespace upkie::actuation
+}  // namespace upkie::cpp::actuation

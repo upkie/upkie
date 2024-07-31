@@ -43,7 +43,9 @@ inline bool is_printable_ascii(unsigned char c) {
   return 0x20 <= c && c <= 0x7F;
 }
 
-namespace upkie::sensors {
+namespace upkie::cpp::sensors {
+
+//! Keys handled by the keyboard observer.
 enum class Key {
   UP,
   DOWN,
@@ -111,4 +113,4 @@ class Keyboard : public Sensor {
   system_clock::time_point last_key_poll_time_;
 };
 
-}  // namespace upkie::sensors
+}  // namespace upkie::cpp::sensors

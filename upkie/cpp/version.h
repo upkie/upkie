@@ -4,7 +4,7 @@
 
 #include <string>
 
-namespace upkie {
+namespace upkie::cpp {
 
 constexpr std::string_view kVersion = "4.0.0";
 

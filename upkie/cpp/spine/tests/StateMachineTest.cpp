@@ -9,7 +9,7 @@
 #include "upkie/cpp/spine/StateMachine.h"
 #include "upkie/cpp/utils/random_string.h"
 
-namespace upkie::spine {
+namespace upkie::cpp::spine {
 
 class StateMachineTest : public ::testing::Test {
  protected:
@@ -96,4 +96,4 @@ TEST_F(StateMachineTest, ObserveWhenSendingStopsFails) {
   ASSERT_EQ(request(), Request::kError);
 }
 
-}  // namespace upkie::spine
+}  // namespace upkie::cpp::spine

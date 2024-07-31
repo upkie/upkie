@@ -12,7 +12,7 @@
 
 #include "upkie/cpp/observers/Observer.h"
 
-namespace upkie::observers {
+namespace upkie::cpp::observers {
 
 using palimpsest::Dictionary;
 
@@ -153,4 +153,4 @@ class WheelOdometry : public Observer {
   double velocity_;
 };
 
-}  // namespace upkie::observers
+}  // namespace upkie::cpp::observers

@@ -12,7 +12,7 @@
 
 #include <limits>
 
-namespace upkie::actuation {
+namespace upkie::cpp::actuation {
 
 namespace moteus {
 
@@ -20,7 +20,7 @@ namespace moteus {
  *
  * \note Default values here are also the initial joint values for the mock
  * interface. See the documentation at \ref
- * upkie::MockInterface::ServoState::step.
+ * upkie::cpp::MockInterface::ServoState::step.
  */
 struct PositionCommand {
   double position = 0.0;
@@ -35,4 +35,4 @@ struct PositionCommand {
 
 }  // namespace moteus
 
-}  // namespace upkie::actuation
+}  // namespace upkie::cpp::actuation

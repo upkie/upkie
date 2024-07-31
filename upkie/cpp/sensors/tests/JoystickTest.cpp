@@ -8,7 +8,7 @@
 #include "gtest/gtest.h"
 #include "upkie/cpp/sensors/Joystick.h"
 
-namespace upkie::sensors {
+namespace upkie::cpp::sensors {
 
 TEST(Joystick, WriteOnce) {
   Joystick joystick;
@@ -152,4 +152,4 @@ TEST(Joystick, PartialInput) {
   ASSERT_TRUE(output.get<bool>("cross_button"));
 }
 
-}  // namespace upkie::sensors
+}  // namespace upkie::cpp::sensors

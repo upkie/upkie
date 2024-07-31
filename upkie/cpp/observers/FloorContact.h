@@ -13,12 +13,12 @@
 #include "upkie/cpp/observers/Observer.h"
 #include "upkie/cpp/observers/WheelContact.h"
 
-/*! Observers used by Upkie.
+/*! State observers available for Upkies.
  *
  * \image html observers.png
  * \image latex observers.eps
  */
-namespace upkie::observers {
+namespace upkie::cpp::observers {
 
 using palimpsest::Dictionary;
 
@@ -69,7 +69,7 @@ class FloorContact : public Observer {
 
     /*! Check whether parameters are incomplete.
      *
-     * \returns True if some parameters are uninitialized.
+     * \return True if some parameters are uninitialized.
      */
     bool incomplete() { return (dt != dt); }
 
@@ -141,4 +141,4 @@ class FloorContact : public Observer {
   bool contact_;
 };
 
-}  // namespace upkie::observers
+}  // namespace upkie::cpp::observers

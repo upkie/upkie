@@ -12,7 +12,7 @@
 #include "gtest/gtest.h"
 #include "upkie/cpp/observers/HistoryObserver.h"
 
-namespace upkie::observers {
+namespace upkie::cpp::observers {
 
 using palimpsest::Dictionary;
 
@@ -101,4 +101,4 @@ TEST(HistoryObserver, Vector3dReadThenWrite) {
   ASSERT_DOUBLE_EQ(values[2].z(), 3.2);
 }
 
-}  // namespace upkie::observers
+}  // namespace upkie::cpp::observers

@@ -23,9 +23,7 @@ cc_library(
 cc_library(
     name = "handle_interrupts",
     hdrs = ["handle_interrupts.h"],
-    srcs = [
-        "handle_interrupts.cpp",
-    ],
+    srcs = ["handle_interrupts.cpp"],
 )
 
 cc_library(
@@ -55,9 +53,7 @@ cc_library(
 cc_library(
     name = "synchronous_clock",
     hdrs = ["SynchronousClock.h"],
-    srcs = [
-        "SynchronousClock.cpp",
-    ],
+    srcs = ["SynchronousClock.cpp"],
     deps = [
         ":math",
         "@spdlog",
