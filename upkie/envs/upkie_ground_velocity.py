@@ -121,6 +121,12 @@ class UpkieGroundVelocity(UpkieBaseEnv):
     ## configuration.
     leg_return_period: float
 
+    ## @var left_wheeled
+    ## Set to True (default) if the robot is left wheeled, that is, a positive
+    ## turn of the left wheel results in forward motion. Set to False for a
+    ## right-wheeled variant.
+    left_wheeled: bool
+
     ## @var observation_space
     ## Observation space.
     observation_space: spaces.box.Box
@@ -144,6 +150,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
         frequency_checks: bool = True,
         init_state: Optional[RobotState] = None,
         leg_return_period: float = 1.0,
+        left_wheeled: bool = True,
         max_ground_velocity: float = 1.0,
         regulate_frequency: bool = True,
         reward_weights: Optional[RewardWeights] = None,
@@ -230,6 +237,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
         }
 
         self.leg_return_period = leg_return_period
+        self.left_wheeled = left_wheeled
         self.reward_weights = reward_weights
         self.wheel_radius = wheel_radius
 
@@ -309,17 +317,20 @@ class UpkieGroundVelocity(UpkieBaseEnv):
         """
         ground_velocity = action[0]
         wheel_velocity = ground_velocity / self.wheel_radius
+        left_wheel_sign = 1.0 if self.left_wheeled else -1.0
+        left_wheel_velocity = left_wheel_sign * wheel_velocity
+        right_wheel_velocity = -left_wheel_sign * wheel_velocity
         servo_dict = self.get_upper_leg_servo_action()
         servo_dict.update(
             {
                 "left_wheel": {
                     "position": math.nan,
-                    "velocity": +wheel_velocity,
+                    "velocity": left_wheel_velocity,
                     "maximum_torque": 1.0,  # mj5208 actuator
                 },
                 "right_wheel": {
                     "position": math.nan,
-                    "velocity": -wheel_velocity,
+                    "velocity": right_wheel_velocity,
                     "maximum_torque": 1.0,  # mj5208 actuator
                 },
             }
