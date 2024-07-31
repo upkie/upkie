@@ -383,10 +383,10 @@ double BulletInterface::compute_joint_torque(
 }
 
 Eigen::Matrix4d BulletInterface::transform_body_to_world(
-    int urdf_id) const noexcept {
+    int body_id) const noexcept {
   btVector3 position_base_in_world;
   btQuaternion orientation_base_in_world;
-  bullet_.getBasePositionAndOrientation(urdf_id, position_base_in_world,
+  bullet_.getBasePositionAndOrientation(body_id, position_base_in_world,
                                         orientation_base_in_world);
   auto quat = eigen_from_bullet(orientation_base_in_world);
   Eigen::Matrix4d T = Eigen::Matrix4d::Identity();
