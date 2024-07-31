@@ -167,12 +167,12 @@ jobs:
                   environment-name: myenv
                   create-args: >-
                       python=${{ matrix.python-version }}
-                      gymnasium>=0.29.1
-                      loop-rate-limiters>=1.0.0
-                      numpy>=1.24.3
-                      pyyaml>=6.0
-                      scipy>=1.10.0
-                      upkie_description>=1.4.0
+                      gymnasium
+                      loop-rate-limiters
+                      numpy
+                      pyyaml
+                      scipy
+                      upkie_description
                   cache-environment: true
                   post-cleanup: 'all'
 
