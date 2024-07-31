@@ -169,6 +169,7 @@ jobs:
                       python=${{ matrix.python-version }}
                       gymnasium
                       loop-rate-limiters
+                      msgpack-python
                       numpy
                       pinocchio
                       pyyaml
