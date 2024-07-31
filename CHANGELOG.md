@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - spine: Print out configuration dictionary upon reset
 - bazelisk: Add support for ARM64 CPUs
 - spine : Add extra URDFs position and orientation
+- envs : Add y axis position, z axis velocity and yaw randomization
 
 ### Changed
 
