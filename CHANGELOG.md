@@ -44,7 +44,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CICD: Update macOS x86 runner images (thanks to @ubgk)
 - Fix duplicate ``data_`` attribute in pi3hat actuation interface
 - observers: Read configuration matrix in base orientation observer
-- raspunzel: argv0 when executing the target is now the same as `bazel run`.
+- raspunzel: argv0 when executing the target is now the same as `bazel run`
+- setup: Fix configuration-write order in servo config script
 
 ### Removed
 
