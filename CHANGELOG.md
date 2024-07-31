@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - CICD: Build jobs for x86 and ARM64 macOS spines
+- CICD: Packaging job for conda-forge
 - Import and adapt C++ code from Vulp (`vulp` namespace is now `upkie:cpp`)
 - Log received actuation replies in spine cycles
 - PID balancer: Conda environment file
