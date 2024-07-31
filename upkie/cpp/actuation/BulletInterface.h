@@ -210,7 +210,7 @@ class BulletInterface : public Interface {
   void cycle(std::function<void(const moteus::Output&)> callback) final;
 
   /*! Get the groundtruth extra body transform.
-   * 
+   *
    * \param[in] body_id The body id as given when loading the body in bullet.
    */
   Eigen::Matrix4d transform_body_to_world(int body_id) const noexcept;
