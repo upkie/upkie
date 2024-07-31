@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Log received actuation replies in spine cycles
 - PID balancer: Conda environment file
 - bazelisk: Add support for ARM64 CPUs
+- envs: Add `left_wheeled` parameter to the `UpkieGroundVelocity` environment
 - envs: Warn when a fall is detected
 - examples: Tuning the gains of a standard two-task PI balancer
 - model: Add joints submodule
