@@ -21,7 +21,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - spine: Print out configuration dictionary upon reset
 - bazelisk: Add support for ARM64 CPUs
 - spines : Expose environment body poses in Bullet spine
-- envs : Add y axis position, z axis velocity and yaw randomization
 - tools: Configure servo gains during setup
 
 ### Changed
