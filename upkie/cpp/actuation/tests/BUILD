@@ -82,4 +82,20 @@ cc_test(
     ],
 )
 
+cc_test(
+    name = "bullet_with_env_bodies",
+    srcs = [
+        "BulletWithEnvBodies.cpp",
+    ],
+    data = [
+        "@upkie_description",
+    ],
+    deps = [
+        "//upkie/cpp/actuation:bullet_interface",
+        ":test_common",
+        "@bazel_tools//tools/cpp/runfiles",
+        "@googletest//:main",
+    ],
+)
+
 add_lint_tests()
