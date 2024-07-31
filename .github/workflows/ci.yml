@@ -6,6 +6,11 @@ on:
     pull_request:
         branches: [ main ]
 
+defaults:
+    run:
+        # See https://github.com/mamba-org/setup-micromamba?tab=readme-ov-file#about-login-shells
+        shell: bash -leo pipefail {0}
+
 jobs:
     artifacts:
         name: "Artifacts"
@@ -168,7 +173,6 @@ jobs:
                       pyyaml>=6.0
                       scipy>=1.10.0
                       upkie_description>=1.4.0
-                  init-shell: bash
                   cache-environment: true
                   post-cleanup: 'all'
 
