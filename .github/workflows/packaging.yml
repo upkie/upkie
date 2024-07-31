@@ -1,4 +1,4 @@
-name: PyPI
+name: Packaging
 
 on:
     push:
@@ -7,6 +7,29 @@ on:
         branches: [ main ]
 
 jobs:
+    conda:
+        name: "Install from conda-forge"
+        runs-on: ubuntu-latest
+        steps:
+            - name: "Install Conda environment with Micromamba"
+              uses: mamba-org/setup-micromamba@v1
+              with:
+                  cache-downloads: true
+                  environment-name: pypi
+                  create-args: >-
+                      python=3.11
+                      upkie
+
+            - name: "Test module import"
+              run: python -c "import upkie"
+
+            - name: "Test submodule imports"
+              run: |
+                  python -c "import upkie.config"
+                  python -c "import upkie.envs; upkie.envs.register()"
+                  python -c "import upkie.model"
+                  python -c "import upkie.utils"
+
     pypi:
         name: "Install from PyPI"
         runs-on: ubuntu-latest
