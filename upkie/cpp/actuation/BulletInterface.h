@@ -209,6 +209,12 @@ class BulletInterface : public Interface {
    */
   void cycle(std::function<void(const moteus::Output&)> callback) final;
 
+  /*! Get a groundtruth body transform.
+   *
+   * \param[in] body_id The body id as given when loading the body in bullet.
+   */
+  Eigen::Matrix4d transform_body_to_world(int body_id) const noexcept;
+
   //! Get the groundtruth floating base transform.
   Eigen::Matrix4d transform_base_to_world() const noexcept;
 
@@ -349,6 +355,9 @@ class BulletInterface : public Interface {
 
   //! Identifier of the robot model in the simulation
   int robot_;
+
+  //! Map from URDF link names to Bullet link indices
+  std::map<std::string, int> body_names;
 
   //! Maximum joint torques read from the URDF model
   std::map<std::string, BulletJointProperties> joint_properties_;

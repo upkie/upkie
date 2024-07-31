@@ -19,6 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - setup: Add micromamba installation script
 - setup: Automate process of building new system images
 - spine: Print out configuration dictionary upon reset
+- bazelisk: Add support for ARM64 CPUs
+- spines : Expose environment body poses in Bullet spine
 - tools: Configure servo gains during setup
 
 ### Changed
