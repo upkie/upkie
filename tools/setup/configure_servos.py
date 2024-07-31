@@ -18,7 +18,6 @@ import datetime
 import os
 import subprocess
 import sys
-import time
 from typing import Union
 
 LEFT_BUS = 1  # JC1
@@ -57,8 +56,6 @@ PI3HAT_CFG = (
     ";"
     f"{RIGHT_BUS}={RIGHT_HIP},{RIGHT_KNEE},{RIGHT_WHEEL}"
 )
-
-ORIG_SUFFIX = time.strftime(".orig-%Y%m%d-%H%M%S")
 
 logging_depth = 0
 
@@ -131,38 +128,53 @@ def write_configuration(id: int):
     run(shell_command)
 
 
-if __name__ == "__main__":
-    if os.geteuid() != 0:
-        args = ["sudo", "-E", sys.executable] + sys.argv + [os.environ]
-        os.execlpe("sudo", *args)
+def write_all_configurations():
+    for servo in ALL_SERVOS:
+        write_configuration(servo)
 
+
+def configure_position_limits():
     for hip in (LEFT_HIP, RIGHT_HIP):
         configure_servo(hip, "servopos.position_max", 0.2)
         configure_servo(hip, "servopos.position_min", -0.2)
-        configure_servo(hip, "servo.max_velocity", 2.0)
-
     for knee in (LEFT_KNEE, RIGHT_KNEE):
         configure_servo(knee, "servopos.position_max", 0.4)
         configure_servo(knee, "servopos.position_min", -0.4)
-        configure_servo(knee, "servo.max_velocity", 2.0)
-
-    for wheel in (LEFT_WHEEL, RIGHT_WHEEL):
+    for wheel in WHEEL_SERVOS:
         configure_servo(wheel, "servopos.position_max", "NaN")
         configure_servo(wheel, "servopos.position_min", "NaN")
+
+
+def configure_velocity_limits():
+    for hip_or_knee in UPPER_LEG_SERVOS:
+        configure_servo(hip_or_knee, "servo.max_velocity", 2.0)
+    for wheel in WHEEL_SERVOS:
         configure_servo(wheel, "servo.max_velocity", 8.0)
 
+
+def configure_default_limits():
     # https://github.com/mjbots/moteus/blob/38d688a933ce1584ee09f2628b5849d5e758ac21/docs/reference.md#servodefault_velocity_limit--servodefault_accel_limit
     for servo in ALL_SERVOS:
         configure_servo(servo, "servo.default_velocity_limit", "NaN")
         configure_servo(servo, "servo.default_accel_limit", "NaN")
 
-    for servo in ALL_SERVOS:
-        write_configuration(servo)
 
-    for servo in UPPER_LEG_SERVOS:
-        configure_servo(knee, "servo.pid_position.kp", 400.0)
-
-    for servo in WHEEL_SERVOS:
+def configure_gains():
+    for hip_or_knee in UPPER_LEG_SERVOS:
+        configure_servo(hip_or_knee, "servo.pid_position.kp", 400.0)
+    for wheel in WHEEL_SERVOS:
         # Best value depends wheel radius (WR)
         # Values that have worked well: kd=0.3 for WR=5 cm, kd=0.6 for WR=7 cm
-        configure_servo(knee, "servo.pid_position.kd", 0.6)
+        configure_servo(wheel, "servo.pid_position.kd", 0.6)
+
+
+if __name__ == "__main__":
+    if os.geteuid() != 0:
+        args = ["sudo", "-E", sys.executable] + sys.argv + [os.environ]
+        os.execlpe("sudo", *args)
+
+    configure_position_limits()
+    configure_velocity_limits()
+    configure_default_limits()
+    configure_gains()
+    write_all_configurations()
