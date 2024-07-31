@@ -50,23 +50,23 @@ class TestUpkieServos(unittest.TestCase):
     def test_reward(self):
         self.env.reset()
         action = {
-            servo: {
+            joint.name: {
                 "position": np.nan,
                 "velocity": 0.0,
             }
-            for servo in self.env.JOINT_NAMES
+            for joint in self.env.model.joints
         }
         _, reward, _, _, _ = self.env.step(action)
         self.assertAlmostEqual(reward, 1.0)  # survival reward
 
     def test_action_clamping(self):
         action = {
-            servo: {
+            joint.name: {
                 "position": np.nan,
                 "velocity": 0.0,
                 "feedforward_torque": 0.0,
             }
-            for servo in self.env.JOINT_NAMES
+            for joint in self.env.model.joints
         }
         not_wheel = "left_hip"  # wheels don't have position limits
         self.env.reset()
