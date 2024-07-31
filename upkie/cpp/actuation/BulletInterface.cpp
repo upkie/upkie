@@ -100,7 +100,7 @@ BulletInterface::BulletInterface(const ServoLayout& layout,
   // Load environment URDFs
   for (const auto& urdf_path : params.env_urdf_paths) {
     spdlog::info("Loading environment URDF: {}", urdf_path);
-    int urdf_id = bullet_.loadURDF(urdf_path);
+    int body_id = bullet_.loadURDF(urdf_path);
     if (urdf_id < 0) {
       throw std::runtime_error("Could not load the environment URDF: " +
                                urdf_path);
