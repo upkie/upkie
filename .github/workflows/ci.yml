@@ -156,12 +156,11 @@ jobs:
               uses: actions/checkout@v4
 
             - name: "Install Conda environment with Micromamba"
-              uses: mamba-org/provision-with-micromamba@main
+              uses: mamba-org/setup-micromamba@v1
               with:
-                  micromamba-version: '1.2.0'
-                  environment-file: false
+                  micromamba-version: '1.5.8-0'
                   environment-name: myenv
-                  extra-specs: |
+                  create-args: >-
                       python=${{ matrix.python-version }}
                       gymnasium>=0.29.1
                       loop-rate-limiters>=1.0.0
@@ -169,7 +168,9 @@ jobs:
                       pyyaml>=6.0
                       scipy>=1.10.0
                       upkie_description>=1.4.0
-                  channels: conda-forge
+                  init-shell: bash
+                  cache-environment: true
+                  post-cleanup: 'all'
 
             - name: "Check unit tests"
               env:
