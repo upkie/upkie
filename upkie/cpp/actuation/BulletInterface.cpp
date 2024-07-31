@@ -100,12 +100,14 @@ BulletInterface::BulletInterface(const ServoLayout& layout,
   // Load environment URDFs
   for (const auto& urdf_path : params.env_urdf_paths) {
     spdlog::info("Loading environment URDF: {}", urdf_path);
+    std::string body_name = (urdf_path.substr(urdf_path.find_last_of("/") + 1));
+    body_name = body_name.substr(0, body_name.find_last_of("."));
     int body_id = bullet_.loadURDF(urdf_path);
-    if (urdf_id < 0) {
+    if (body_id < 0) {
       throw std::runtime_error("Could not load the environment URDF: " +
                                urdf_path);
     }
-    urdf_ids.push_back(urdf_id);  // Store the URDF ID in the vector
+    body_names[body_name] = body_id;
   }
 
   // Start visualizer and configure simulation
@@ -199,11 +201,13 @@ void BulletInterface::observe(Dictionary& observation) const {
       Eigen::Quaterniond(T.block<3, 3>(0, 0));  // [w, x, y, z]
 
   // Observe the environnement urdf states
-  for (int urdf_id : urdf_ids) {
+for (const auto &key_child : body_names) {
+    const auto &body_name = key_child.first;
+    const auto &body_id = key_child.second;
     Eigen::Matrix4d T = transform_body_to_world(body_id);
     monitor(body_name)("position") =
         Eigen::Vector3d(T(0, 3), T(1, 3), T(2, 3));  // [m]
-    monitor("extra_urdf_" + std::to_string(urdf_id))("orientation") =
+    monitor(body_name)("orientation") =
         Eigen::Quaterniond(T.block<3, 3>(0, 0));  // [w, x, y, z]
   }
 }
@@ -378,7 +382,7 @@ double BulletInterface::compute_joint_torque(
   return torque;
 }
 
-Eigen::Matrix4d BulletInterface::transform_extra_urdf_to_world(
+Eigen::Matrix4d BulletInterface::transform_body_to_world(
     int urdf_id) const noexcept {
   btVector3 position_base_in_world;
   btQuaternion orientation_base_in_world;
