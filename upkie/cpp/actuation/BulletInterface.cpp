@@ -201,9 +201,9 @@ void BulletInterface::observe(Dictionary& observation) const {
       Eigen::Quaterniond(T.block<3, 3>(0, 0));  // [w, x, y, z]
 
   // Observe the environnement urdf states
-for (const auto &key_child : body_names) {
-    const auto &body_name = key_child.first;
-    const auto &body_id = key_child.second;
+  for (const auto& key_child : body_names) {
+    const auto& body_name = key_child.first;
+    const auto& body_id = key_child.second;
     Eigen::Matrix4d T = transform_body_to_world(body_id);
     monitor(body_name)("position") =
         Eigen::Vector3d(T(0, 3), T(1, 3), T(2, 3));  // [m]
