@@ -155,15 +155,21 @@ jobs:
             - name: "Checkout sources"
               uses: actions/checkout@v4
 
-            - name: "Set up Python"
-              uses: actions/setup-python@v4
+            - name: "Install Conda environment with Micromamba"
+              uses: mamba-org/provision-with-micromamba@main
               with:
-                  python-version: "${{ matrix.python-version }}"
-
-            - name: "Install dependencies"
-              run: |
-                  python -m pip install --upgrade pip
-                  python -m pip install PyYAML gymnasium loop-rate-limiters numpy pin pin-pink scipy setuptools six upkie_description
+                  micromamba-version: '1.2.0'
+                  environment-file: false
+                  environment-name: myenv
+                  extra-specs: |
+                      python=${{ matrix.python-version }}
+                      gymnasium>=0.29.1
+                      loop-rate-limiters>=1.0.0
+                      numpy>=1.24.3
+                      pyyaml>=6.0
+                      scipy>=1.10.0
+                      upkie_description>=1.4.0
+                  channels: conda-forge
 
             - name: "Check unit tests"
               env:
