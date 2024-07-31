@@ -168,6 +168,7 @@ class BaseOrientation : public Observer {
         spdlog::debug("No \"base_orientation\" runtime configuration");
         return;
       }
+      spdlog::info("Applying \"base_orientation\" runtime configuration...");
 
       auto& observer_config = config("base_orientation");
       if (observer_config.has("rotation_base_to_imu")) {

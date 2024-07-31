@@ -170,6 +170,9 @@ class UpkieGroundVelocity(UpkieBaseEnv):
         \param init_state Initial state of the robot, only used in simulation.
         \param leg_return_period Time constant for the legs (hips and knees) to
             revert to their neutral configuration.
+        \param left_wheeled Set to True (default) if the robot is left wheeled,
+            that is, a positive turn of the left wheel results in forward
+            motion. Set to False for a right-wheeled variant.
         \param max_ground_velocity Maximum commanded ground velocity in m/s.
         \param regulate_frequency Enables loop frequency regulation.
         \param reward_weights Coefficients before each reward term.
