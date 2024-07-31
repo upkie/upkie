@@ -209,7 +209,7 @@ class BulletInterface : public Interface {
    */
   void cycle(std::function<void(const moteus::Output&)> callback) final;
 
-  /*! Get the groundtruth extra body transform.
+  /*! Get a groundtruth body transform.
    *
    * \param[in] body_id The body id as given when loading the body in bullet.
    */
