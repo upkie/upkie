@@ -1,23 +1,34 @@
 // SPDX-License-Identifier: Apache-2.0
-// Copyright 2022 Stéphane Caron
+// Copyright 2024 Inria
 
 #include <map>
 #include <memory>
 #include <string>
 
 #include "gtest/gtest.h"
-#include "upkie/cpp/actuation/pi3hat/utils.h"
+#include "upkie/cpp/actuation/pi3hat/imu_eigen.h"
 
 namespace upkie::cpp::actuation::pi3hat {
 
-TEST(RawImuData, RawLinearAcceleration) {
-  auto attitude = Eigen::Quaterniond::Identity();
+TEST(IMU, RawLinearAcceleration1) {
+  auto orientation_imu_in_ars = Eigen::Quaterniond::Identity();
   Eigen::Vector3d accel_mps2 = {0.1, 0.2, 0.0};
   Eigen::Vector3d imu_accel_mps2 =
-      get_raw_linear_acceleration(attitude, accel_mps2);
-  ASSERT_DOUBLE_EQ(imu_accel_mps2.x(), 0.1);
-  ASSERT_DOUBLE_EQ(imu_accel_mps2.y(), 0.2);
-  ASSERT_DOUBLE_EQ(imu_accel_mps2.z(), -9.81);
+      get_raw_linear_acceleration(orientation_imu_in_ars, accel_mps2);
+  ASSERT_NEAR(imu_accel_mps2.x(), 0.1, 1e-12);
+  ASSERT_NEAR(imu_accel_mps2.y(), 0.2, 1e-12);
+  ASSERT_NEAR(imu_accel_mps2.z(), -9.81, 1e-12);
+}
+
+TEST(IMU, RawLinearAcceleration2) {
+  Eigen::Quaterniond orientation_imu_in_ars(
+      Eigen::AngleAxisd(-0.5 * M_PI, Eigen::Vector3d::UnitX()));
+  Eigen::Vector3d accel_mps2 = {0.1, 0.0, 0.2};
+  Eigen::Vector3d imu_accel_mps2 =
+      get_raw_linear_acceleration(orientation_imu_in_ars, accel_mps2);
+  ASSERT_NEAR(imu_accel_mps2.x(), 0.1, 1e-12);
+  ASSERT_NEAR(imu_accel_mps2.y(), 9.81, 1e-12);
+  ASSERT_NEAR(imu_accel_mps2.z(), 0.2, 1e-12);
 }
 
 }  // namespace upkie::cpp::actuation::pi3hat

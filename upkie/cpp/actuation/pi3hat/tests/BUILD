@@ -8,12 +8,8 @@ package(default_visibility = ["//visibility:public"])
 
 cc_test(
     name = "tests",
-    srcs = glob([
-        "*.cpp",
-        "*.h",
-    ]),
-    data = [
-        "@upkie_description",
+    srcs = [
+      "imu_test.cpp",
     ],
     deps = [
         "//upkie/cpp/actuation/pi3hat:utils",
