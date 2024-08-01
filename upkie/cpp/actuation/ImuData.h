@@ -21,22 +21,41 @@ struct ImuData {
 
   /*! Body angular velocity of the IMU frame in [rad] / [s].
    *
-   * \note The full name of the body angular vector would be "angular velocity
-   * IMU to world in IMU", but as for all body angular velocities, "angular
-   * velocity Body to X in Body" is the same for all inertial frames X (that
-   * have zero velocity relative to the world frame). See for instance
+   * The full name of the body angular vector would be "angular velocity IMU to
+   * world in IMU", but as for all body angular velocities, "angular velocity
+   * Body to X in Body" is the same for all inertial frames X (that have zero
+   * velocity relative to the world frame). See for instance
    * https://scaron.info/robotics/screw-theory.html#body-screws for the math.
    */
   Eigen::Vector3d angular_velocity_imu_in_imu = Eigen::Vector3d::Zero();
 
   /*! Body linear acceleration of the IMU, in [m] / [s]².
    *
-   * \note This quantity corresponds to SPI register 34 from the pi3hat
+   * This quantity corresponds to SPI register 34 from the pi3hat
    * https://github.com/mjbots/pi3hat/blob/master/docs/reference.md#imu-register-mapping
-   * from which gravity has been substracted out. Raw IMU data (including
-   * gravity) is returned in register 33.
+   * from which gravity has been substracted out
+   * https://github.com/mjbots/pi3hat/blob/4a3158c831da125fa9c96d64378515c1fdb2083f/fw/attitude_reference.h#L147.
    */
   Eigen::Vector3d linear_acceleration_imu_in_imu = Eigen::Vector3d::Zero();
+
+  /*! Raw angular velocity read by the IMU, in [rad] / [s].
+   *
+   * \note This raw angular velocity measurement has more bias than the
+   * filtered one.
+   */
+  Eigen::Vector3d raw_angular_velocity = Eigen::Vector3d::Zero();
+
+  /*! Raw linear acceleration read by the IMU, in [m] / [s]².
+   *
+   * The acceleration read by an accelerometer is:
+   * \f[
+   * {}_I a_{WI} - {}_I g
+   * \f]
+   * with \f${}_I a_{WI}\f$ the body linear acceleration of the IMU frame
+   * \f$I\f$, and \f${}_I g\f$ the standard acceleration of gravity in the IMU
+   * frame.
+   */
+  Eigen::Vector3d raw_linear_acceleration = Eigen::Vector3d::Zero();
 };
 
 }  // namespace upkie::cpp::actuation
