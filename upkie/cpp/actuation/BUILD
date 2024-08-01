@@ -111,6 +111,7 @@ cc_library(
         "//conditions:default": [],
     }),
     deps = [
+        "//upkie/cpp/actuation/pi3hat:utils",
         "//upkie/cpp/utils:realtime",
         ":interface",
     ] + select({
