@@ -87,6 +87,14 @@ class TestUpkieBaseEnv(unittest.TestCase):
         except ImportError:
             pass
 
+    def test_fall_detected(self):
+        spine_observation = {
+            "base_orientation": {
+                "pitch": 2.0 * self.env.fall_pitch,
+            }
+        }
+        self.assertTrue(self.env.detect_fall(spine_observation))
+
 
 if __name__ == "__main__":
     unittest.main()
