@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Removed
+
+- actuation: Remove unused IMU data from mock interface
+
 ## [5.0.1] - 2024-08-01
 
 ### Fixed

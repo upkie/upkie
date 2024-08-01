@@ -27,13 +27,9 @@ MockInterface::MockInterface(const ServoLayout& layout, const double dt)
 void MockInterface::reset(const Dictionary& config) {}
 
 void MockInterface::observe(Dictionary& observation) const {
-  // Eigen quaternions are serialized as [w, x, y, z]
-  // See include/palimpsest/mpack/eigen.h in palimpsest
-  observation("imu")("orientation") = imu_data_.orientation_imu_in_ars;
-  observation("imu")("angular_velocity") =
-      imu_data_.angular_velocity_imu_in_imu;
-  observation("imu")("linear_acceleration") =
-      imu_data_.linear_acceleration_imu_in_imu;
+  observation("imu")("orientation") = Eigen::Quaterniond::Identity();
+  observation("imu")("angular_velocity") = Eigen::Vector3d::Zero();
+  observation("imu")("linear_acceleration") = Eigen::Vector3d::Zero();
 }
 
 void MockInterface::process_action(const Dictionary& action) {}
