@@ -38,21 +38,6 @@ cc_test(
 )
 
 cc_test(
-    name = "bullet_utils_test",
-    srcs = [
-        "bullet_utils_test.cpp",
-    ],
-    data = [
-        "@upkie_description",
-    ],
-    deps = [
-        "//upkie/cpp/actuation/bullet:utils",
-        "@bazel_tools//tools/cpp/runfiles",
-        "@googletest//:main",
-    ],
-)
-
-cc_test(
     name = "bullet_interface_test",
     srcs = [
         "BulletInterfaceTest.cpp",
