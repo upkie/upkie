@@ -10,6 +10,8 @@ Here is an index of observation dictionaries. Keys are a shorthand for nested di
 | `imu.angular_velocity` | Body angular velocity of the IMU frame in [rad] / [s] |
 | `imu.linear_acceleration` | Body linear acceleration of the IMU in [m] / [s]² |
 | `imu.orientation` | Unit quaternion (``qw``, ``qx``, ``qy``, ``qz``) of the orientation from the IMU frame to the attitude reference system (ARS) frame |
+| `imu.raw_angular_velocity` | Raw value read from the gyroscope of the IMU, in [rad] / [s] |
+| `imu.raw_linear_acceleration` | Raw value read from the accelerometer of the IMU, in [m] / [s]² |
 | `servos` | Servo motor measurements |
 | `servos.X` | Observations for servo ``X`` in the servo layout |
 | `servos.X.position` | Angle between the stator and the rotor in [rad] |

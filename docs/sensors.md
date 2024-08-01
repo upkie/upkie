@@ -2,13 +2,18 @@
 
 ## Inertial measurement unit
 
-The inertial measurement unit (IMU) mounted on the [pi3hat](https://mjbots.com/products/mjbots-pi3hat-r4-5) produces the following measurements with respect to the attitude reference system (ARS) frame:
+The inertial measurement unit (IMU) mounted on the [pi3hat](https://mjbots.com/products/mjbots-pi3hat-r4-5) combines the following sensors and their corresponding measurements:
+
+- **Accelerometer:** linear acceleration of the IMU frame minus gravity
+- **Gyroscope:** body angular velocity of the IMU frame (that is, from the IMU frame to the ARS frame, expressed in the IMU frame) with bias
+
+These raw measurements are converted onboard by an unscented Kalman filter (based on a standard quasi-static assumption) that outputs observed quantities with respect to an attitude reference system (ARS) frame:
 
 - Linear acceleration of the IMU frame in the IMU frame
-- Body angular velocity of the IMU frame (that is, from the IMU frame to the ARS frame, expressed in the IMU frame)
+- Body angular velocity of the IMU frame, after bias reduction
 - Orientation of the IMU frame in the ARS frame
 
-These measurements are exposed by the spine in ``observation["imu"]``. Check out [Observations](\ref observations) for details.
+These observations are exposed by the spine in ``observation["imu"]``. Check out [ImuData](\ref upkie::cpp::actuation::ImuData) and [Observations](\ref observations) for more details.
 
 ## Actuators
 
@@ -18,4 +23,4 @@ Actuators on the robot are [qdd100 beta 3](https://mjbots.com/products/qdd100-be
 - Joint velocity, obtained by filtering joint angle measurements (not a direct measurement)
 - Joint torque, estimated from sensed phase currents (with a model that includes [stator magnetic saturation](https://jpieper.com/2020/07/31/dealing-with-stator-magnetic-saturation/)
 
-These measurements are exposed by the spine in ``observation["servos"]``. Check out [Observations](\ref observations) for details.
+These measurements are exposed by the spine in ``observation["servos"]``. Check out [Observations](\ref observations) for more details.
