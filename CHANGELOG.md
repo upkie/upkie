@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [5.0.0] - 2024-08-01
+
 ### Added
 
 - CICD: Build jobs for x86 and ARM64 macOS spines
@@ -16,7 +18,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PID balancer: Conda environment file
 - bazelisk: Add support for ARM64 CPUs
 - envs: Add `left_wheeled` parameter to the `UpkieGroundVelocity` environment
-- envs: Warn when a fall is detected
 - examples: Tuning the gains of a standard two-task PI balancer
 - model: Add joints submodule
 - setup: Add micromamba installation script
@@ -36,13 +37,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - deps: Update Upkie description to 2.1.0
 - deps: Update pi3hat dependency to latest commit
 - docs: Sort documentation pages by expected discovery steps
+- envs: Warn when a fall is detected
 - examples: Rename direct servo control example
 
 ### Fixed
 
 - CICD: Release jobs for x86 and ARM64 macOS spines
 - CICD: Update macOS x86 runner images (thanks to @ubgk)
-- Fix duplicate ``data_`` attribute in pi3hat actuation interface
+- actuation: Fix duplicate ``data_`` attribute in pi3hat actuation interface
 - observers: Read configuration matrix in base orientation observer
 - raspunzel: argv0 when executing the target is now the same as `bazel run`
 - setup: Fix configuration-write order in servo config script
@@ -538,7 +540,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Starting this changelog.
 
-[unreleased]: https://github.com/upkie/upkie/compare/v4.0.0...HEAD
+[unreleased]: https://github.com/upkie/upkie/compare/v5.0.0...HEAD
+[5.0.0]: https://github.com/upkie/upkie/compare/v4.0.0...v5.0.0
 [4.0.0]: https://github.com/upkie/upkie/compare/v3.4.0...v4.0.0
 [3.4.0]: https://github.com/upkie/upkie/compare/v3.3.0...v3.4.0
 [3.3.0]: https://github.com/upkie/upkie/compare/v3.2.0...v3.3.0
