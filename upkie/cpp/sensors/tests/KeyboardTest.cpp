@@ -17,7 +17,9 @@ TEST(Keyboard, WriteOnce) {
 TEST(Keyboard, ReadAlphabetical) {
   // We cannot write directly to STDIN, so we'll redirect a file to it
   char tmpfn[] = "/tmp/kbdXXXXXX";
-  ::mkstemp(tmpfn);
+  int return_code = ::mkstemp(tmpfn);
+  ASSERT_NE(return_code, -1);
+
   std::ofstream tmpf(tmpfn);
   tmpf << "A";
   tmpf.close();

@@ -45,11 +45,9 @@ Changelog = "https://github.com/upkie/upkie/blob/main/CHANGELOG.md"
 
 [tool.flit.sdist]
 exclude = [
-    "**/*.cpp",
-    "**/*.h",
     "**/*.sh",
     "**/BUILD",
-    "**/tests/*_test.py",
+    "**/tests/*",
     ".bazel*",
     ".clang-format",
     ".git*",
@@ -62,6 +60,7 @@ exclude = [
     "pid_balancer/",
     "spines/",
     "tools/",
+    "upkie/cpp",
 ]
 include = [
     "upkie/config/*.py",
