@@ -250,7 +250,8 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
                 abs(pitch),
                 self.fall_pitch,
             )
-        return
+            return True
+        return False
 
     def parse_first_observation(self, spine_observation: dict) -> None:
         r"""!
