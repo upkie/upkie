@@ -10,16 +10,7 @@
 
 #include "upkie/cpp/actuation/Pi3HatInterface.h"
 
-inline Eigen::Vector3d get_raw_linear_acceleration(
-    Eigen::Quaterniond& attitude, Eigen::Vector3d accel_mps2) const noexcept {
-  // https://github.com/mjbots/pi3hat/blob/4a3158c831da125fa9c96d64378515c1fdb2083f/fw/attitude_reference.h#L186-L187
-  Eigen::Vector3d downward_in_world = {0., 0., -1.};
-  Eigen::Vector3d downward_in_imu = attitude.conjugate() * downward_in_world;
-
-  // https://github.com/mjbots/pi3hat/blob/4a3158c831da125fa9c96d64378515c1fdb2083f/fw/attitude_reference.h#L147
-  Eigen::Vector3d current_accel_mps2_ = accel_mps2 + 9.81 * downward_in_imu;
-  return current_accel_mps2_;
-}
+#include "upkie/cpp/actuation/pi3hat/imu.h"
 
 namespace upkie::cpp::actuation {
 
@@ -51,16 +42,28 @@ void Pi3HatInterface::reset(const Dictionary& config) {}
 
 void Pi3HatInterface::observe(Dictionary& observation) const {
   ImuData imu_data;
-  imu_data.orientation_imu_in_ars = get_attitude();
-  imu_data.angular_velocity_imu_in_imu = get_angular_velocity();
-  imu_data.linear_acceleration_imu_in_imu = get_linear_acceleration();
+  imu_data.orientation_imu_in_ars =
+      pi3hat::get_orientation_imu_in_ars(attitude_);
+  imu_data.angular_velocity_imu_in_imu =
+      pi3hat::get_angular_velocity(attitude_);
+  imu_data.linear_acceleration_imu_in_imu =
+      pi3hat::get_linear_acceleration(attitude_);
 
-  // Eigen quaternions are serialized as [w, x, y, z]
-  // See include/palimpsest/mpack/eigen.h in palimpsest
+  // Extend IMU data with raw measurements
+  Eigen::Vector3d rate_dps = get_rate_dps(attitude);
+  Eigen::Vector3d bias_dps = get_bias_dps(attitude);
+  imu_data.raw_angular_velocity =
+      pi3hat::get_raw_angular_velocity(rate_dps, bias_dps);
+  imu_data.raw_linear_acceleration = pi3hat::get_raw_linear_acceleration(
+      imu_data.orientation_imu_in_ars, imu_data.linear_acceleration_imu_in_imu);
+
   observation("imu")("orientation") = imu_data.orientation_imu_in_ars;
   observation("imu")("angular_velocity") = imu_data.angular_velocity_imu_in_imu;
   observation("imu")("linear_acceleration") =
       imu_data.linear_acceleration_imu_in_imu;
+  observation("imu")("raw_angular_velocity") = imu_data.raw_angular_velocity;
+  observation("imu")("raw_linear_acceleration") =
+      imu_data.raw_linear_acceleration;
 }
 
 void Pi3HatInterface::process_action(const Dictionary& action) {}
