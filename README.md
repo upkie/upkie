@@ -114,7 +114,7 @@ If you built an Upkie or use parts of this project in your works, please cite it
   author = {Caron, St\'{e}phane and Perrin-Gilbert, Nicolas and Ledoux, Viviane and G\"{o}kbakan, \"{Umit} Bora and Raverdy, Pierre-Guillaume and Raffin, Antonin and Tordjman--Levavasseur, Valentin},
   license = {Apache-2.0},
   url = {https://github.com/upkie/upkie},
-  version = {5.0.0},
+  version = {5.0.1},
   year = {2024}
 }
 ```

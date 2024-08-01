@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [5.0.1] - 2024-08-01
+
 ### Fixed
 
 - envs: Fix missing return value in fall detection function
@@ -544,7 +546,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Starting this changelog.
 
-[unreleased]: https://github.com/upkie/upkie/compare/v5.0.0...HEAD
+[unreleased]: https://github.com/upkie/upkie/compare/v5.0.1...HEAD
+[5.0.1]: https://github.com/upkie/upkie/compare/v5.0.1...v5.0.1
 [5.0.0]: https://github.com/upkie/upkie/compare/v4.0.0...v5.0.0
 [4.0.0]: https://github.com/upkie/upkie/compare/v3.4.0...v4.0.0
 [3.4.0]: https://github.com/upkie/upkie/compare/v3.3.0...v3.4.0
