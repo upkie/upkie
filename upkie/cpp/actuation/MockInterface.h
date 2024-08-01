@@ -64,9 +64,6 @@ class MockInterface : public Interface {
 
   //! Mock servo replies, laid out as a servo_id -> query_result map
   std::map<int, moteus::QueryResult> query_results_;
-
-  //! Mock IMU data
-  ImuData imu_data_;
 };
 
 }  // namespace upkie::cpp::actuation
