@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- actuation: Extend ImuData with raw measurements
+
 ### Removed
 
 - actuation: Remove unused IMU data from mock interface
