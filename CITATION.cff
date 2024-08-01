@@ -1,8 +1,8 @@
 cff-version: 1.2.0
 message: "If you find this code helpful, please cite it as below."
 title: "Upkie open source wheeled biped robot"
-version: 4.0.0
-date-released: 2024-06-12
+version: 5.0.0
+date-released: 2024-08-01
 url: "https://github.com/upkie/upkie"
 license: "Apache-2.0"
 authors:
@@ -22,3 +22,5 @@ authors:
 - family-names: "Raffin"
   given-names: "Antonin"
   orcid: "https://orcid.org/0000-0001-6036-6950"
+- family-names: "Tordjman--Levavasseur"
+  given-names: "Valentin"
