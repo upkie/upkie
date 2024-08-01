@@ -22,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - setup: Add micromamba installation script
 - setup: Automate process of building new system images
 - spine: Print out configuration dictionary upon reset
-- spines : Expose environment body poses in Bullet spine
+- spines: Expose environment body poses in Bullet spine (thanks to @Tordjx)
 - tools: Configure servo gains during setup
 
 ### Changed
@@ -33,7 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PID balancer: default to hostname for the agent configuration
 - Put hostname before spine name in log file names
 - bazelisk: Update bazelisk version to 1.20.0
-- deps: Update Upkie description to 2.0.0
+- deps: Update Upkie description to 2.1.0
 - deps: Update pi3hat dependency to latest commit
 - docs: Sort documentation pages by expected discovery steps
 - examples: Rename direct servo control example
