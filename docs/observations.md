@@ -10,7 +10,7 @@ Here is an index of observation dictionaries computed from [Sensors](\ref sensor
 | `imu.angular_velocity` | Body angular velocity of the IMU frame in [rad] / [s] |
 | `imu.linear_acceleration` | Linear acceleration of the IMU, with gravity filtered out, in [m] / [s]² |
 | `imu.orientation` | Unit quaternion (``qw``, ``qx``, ``qy``, ``qz``) of the orientation from the IMU frame to the [ARS](\ref ars) frame |
-| `imu.raw_angular_velocity` | Raw value read from the gyroscope of the IMU, in [rad] / [s] |
+| `imu.raw_angular_velocity` | Raw measurement from the gyroscope of the IMU, in [rad] / [s] |
 | `imu.raw_linear_acceleration` | [Proper acceleration](https://en.wikipedia.org/wiki/Accelerometer#Physical_principles) measured by the accelerometer of the IMU, in [m] / [s]² |
 | `servos` | Servo motor measurements |
 | `servos.X` | Observations for servo ``X`` in the servo layout |
