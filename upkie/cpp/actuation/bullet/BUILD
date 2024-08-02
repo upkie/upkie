@@ -9,6 +9,7 @@ package(default_visibility = ["//visibility:public"])
 cc_library(
     name = "utils",
     hdrs = [
+        "imu.h",
         "utils.h",
     ],
     deps = [
