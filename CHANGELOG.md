@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - actuation: Extend ImuData with raw measurements
-- actuation: Report raw IMU measurements from pi3hat spine
+- actuation: Log raw IMU measurements from pi3hat interface
 
 ### Removed
 
