@@ -39,12 +39,11 @@ inline Eigen::Vector3d get_raw_linear_acceleration(
     const Eigen::Quaterniond& orientation_imu_in_ars,
     const Eigen::Vector3d& accel_mps2) noexcept {
   // https://github.com/mjbots/pi3hat/blob/4a3158c831da125fa9c96d64378515c1fdb2083f/fw/attitude_reference.h#L186-L187
-  Eigen::Vector3d downward_in_world = {0., 0., -1.};
-  Eigen::Vector3d downward_in_imu =
-      orientation_imu_in_ars.conjugate() * downward_in_world;
+  Eigen::Vector3d u_in_ars = {0., 0., -1.};  // downward in ARS, upward in world
+  Eigen::Vector3d u_in_imu = orientation_imu_in_ars.conjugate() * u_in_ars;
 
   // https://github.com/mjbots/pi3hat/blob/4a3158c831da125fa9c96d64378515c1fdb2083f/fw/attitude_reference.h#L147
-  Eigen::Vector3d current_accel_mps2 = accel_mps2 + 9.81 * downward_in_imu;
+  Eigen::Vector3d current_accel_mps2 = accel_mps2 + 9.81 * u_in_imu;
   return current_accel_mps2;
 }
 
