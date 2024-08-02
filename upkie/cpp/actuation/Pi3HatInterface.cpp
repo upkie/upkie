@@ -50,8 +50,8 @@ void Pi3HatInterface::observe(Dictionary& observation) const {
       pi3hat::get_linear_acceleration(attitude_);
 
   // Extend IMU data with raw measurements
-  Eigen::Vector3d rate_dps = get_rate_dps(attitude);
-  Eigen::Vector3d bias_dps = get_bias_dps(attitude);
+  Eigen::Vector3d rate_dps = pi3hat::get_rate_dps(attitude_);
+  Eigen::Vector3d bias_dps = pi3hat::get_bias_dps(attitude_);
   imu_data.raw_angular_velocity =
       pi3hat::get_raw_angular_velocity(rate_dps, bias_dps);
   imu_data.raw_linear_acceleration = pi3hat::get_raw_linear_acceleration(

@@ -9,7 +9,7 @@ Here is an index of observation dictionaries. Keys are a shorthand for nested di
 | `imu` | Inertial measurement unit on the pi3hat. See also \ref upkie::cpp::actuation::ImuData |
 | `imu.angular_velocity` | Body angular velocity of the IMU frame in [rad] / [s] |
 | `imu.linear_acceleration` | Body linear acceleration of the IMU in [m] / [s]² |
-| `imu.orientation` | Unit quaternion (``qw``, ``qx``, ``qy``, ``qz``) of the orientation from the IMU frame to the attitude reference system (ARS) frame |
+| `imu.orientation` | Unit quaternion (``qw``, ``qx``, ``qy``, ``qz``) of the orientation from the IMU frame to the [ARS](\ref ars) frame |
 | `imu.raw_angular_velocity` | Raw value read from the gyroscope of the IMU, in [rad] / [s] |
 | `imu.raw_linear_acceleration` | Raw value read from the accelerometer of the IMU, in [m] / [s]² |
 | `servos` | Servo motor measurements |
@@ -37,7 +37,7 @@ See also [Sensors](\ref sensors).
   <dd>Measure the relative motion of the floating base with respect to the floor. Wheel odometry is part of their secondary task (after keeping the head straight), which is to stay around the same spot on the floor.</dd>
 </dl>
 
-## Attitude reference system
+## Attitude reference system {#ars}
 
 The attitude reference system (ARS) frame that the IMU filter maps to has its x-axis pointing forward, y-axis pointing to the right and z-axis pointing down ([details](https://github.com/mjbots/pi3hat/blob/ab632c82bd501b9fcb6f8200df0551989292b7a1/docs/reference.md#orientation)). This is not the convention we use in the world frame, where the x-axis points forward, the y-axis points left and the z-axis points up. The rotation matrix from the ARS frame to the world frame is thus:
 
