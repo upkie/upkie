@@ -38,6 +38,7 @@ dependencies = [
 keywords = ["wheeled", "biped", "robot", "balance", "motion", "control", "robotics"]
 
 [project.urls]
+Homepage = "https://hackaday.io/project/185729-upkie-wheeled-biped-robots"
 Documentation = "https://upkie.github.io/upkie/"
 Source = "https://github.com/upkie/upkie"
 Tracker = "https://github.com/upkie/upkie/issues"
