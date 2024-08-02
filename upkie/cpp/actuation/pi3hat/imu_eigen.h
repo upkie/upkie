@@ -9,6 +9,13 @@
 
 namespace upkie::cpp::actuation::pi3hat {
 
+/*! Standard gravity constant used in ::mjbots::pi3hat
+ *
+ * We should use the same value to recover raw measurements from filter
+ * outputs.
+ */
+constexpr double kMjbotsGravity = 9.81;
+
 /*! Get raw angular velocity measurement from the gyroscope.
  *
  * \param[in] attitude Attitude object from the pi3hat library.
@@ -43,7 +50,7 @@ inline Eigen::Vector3d get_raw_linear_acceleration(
   Eigen::Vector3d u_in_imu = orientation_imu_in_ars.conjugate() * u_in_ars;
 
   // https://github.com/mjbots/pi3hat/blob/4a3158c831da125fa9c96d64378515c1fdb2083f/fw/attitude_reference.h#L147
-  Eigen::Vector3d current_accel_mps2 = accel_mps2 + 9.81 * u_in_imu;
+  Eigen::Vector3d current_accel_mps2 = accel_mps2 + kMjbotsGravity * u_in_imu;
   return current_accel_mps2;
 }
 

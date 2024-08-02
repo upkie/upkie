@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2024 Inria
 
+#include <Eigen/Core>
+#include <Eigen/Geometry>
 #include <map>
 #include <memory>
 #include <string>
@@ -31,7 +33,7 @@ TEST(IMU, RawLinearAccelerationAtRest) {
   // Note: gravity_imu = [0 0 +g] as the z-axis of the IMU frame is downward
   ASSERT_NEAR(imu_accel_mps2.x(), 0.0, 1e-12);
   ASSERT_NEAR(imu_accel_mps2.y(), 0.0, 1e-12);
-  ASSERT_NEAR(imu_accel_mps2.z(), -9.81, 1e-12);
+  ASSERT_NEAR(imu_accel_mps2.z(), -kMjbotsGravity, 1e-12);
 }
 
 TEST(IMU, RawLinearAccelerationQuarterXTurn) {
@@ -41,7 +43,7 @@ TEST(IMU, RawLinearAccelerationQuarterXTurn) {
   Eigen::Vector3d imu_accel_mps2 =
       get_raw_linear_acceleration(orientation_imu_in_ars, accel_mps2);
   ASSERT_NEAR(imu_accel_mps2.x(), 0.1, 1e-12);
-  ASSERT_NEAR(imu_accel_mps2.y(), 9.81, 1e-12);
+  ASSERT_NEAR(imu_accel_mps2.y(), kMjbotsGravity, 1e-12);
   ASSERT_NEAR(imu_accel_mps2.z(), 0.2, 1e-12);
 }
 
