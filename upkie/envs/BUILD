@@ -26,6 +26,7 @@ py_library(
         "upkie_ground_velocity.py",
     ],
     deps = [
+        "//upkie/envs/rewards",
         "//upkie/model",
         "//upkie/utils:exceptions",
         "//upkie/utils:filters",
@@ -46,6 +47,16 @@ py_library(
 )
 
 py_library(
+    name = "wheeled_inverted_pendulum",
+    srcs = [
+        "wheeled_inverted_pendulum.py",
+    ],
+    deps = [
+        "//upkie/envs/rewards",
+    ],
+)
+
+py_library(
     name = "envs",
     srcs = [
         "__init__.py",
@@ -54,6 +65,7 @@ py_library(
         ":upkie_base_env",
         ":upkie_ground_velocity",
         ":upkie_servos",
+        ":wheeled_inverted_pendulum",
     ],
 )
 

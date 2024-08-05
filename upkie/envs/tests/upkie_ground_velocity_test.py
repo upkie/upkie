@@ -39,7 +39,7 @@ class TestUpkieGroundVelocity(unittest.TestCase):
         observation, info = self.env.reset()
         action = np.zeros(self.env.action_space.shape)
         observation, reward, terminated, truncated, _ = self.env.step(action)
-        self.assertNotEqual(reward, 0.0)  # non-zero base velocities
+        self.assertNotEqual(reward, 0.0)  # non-zero base velocity
 
         base_orientation = self.env._spine.observation["base_orientation"]
         base_orientation["pitch"] = 0.0
