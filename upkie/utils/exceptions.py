@@ -6,12 +6,24 @@
 
 
 class UpkieException(Exception):
-    """Base class for exceptions raised by Upkie agents."""
+    """!
+    Base class for exceptions raised by Upkie agents.
+    """
 
 
 class FallDetected(UpkieException):
-    """Exception raised when a fall is detected."""
+    """!
+    Exception raised when a fall is detected.
+    """
 
 
 class ModelError(UpkieException):
-    """Error related to the robot model."""
+    """!
+    Error related to the robot model.
+    """
+
+
+class UpkieRuntimeError(UpkieException, RuntimeError):
+    """!
+    Runtime error, for instance an invalid call to a library function.
+    """

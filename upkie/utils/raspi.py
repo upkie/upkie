@@ -7,6 +7,7 @@
 import os
 import sys
 
+from .exceptions import UpkieRuntimeError
 from .spdlog import logging
 
 __AGENT_CPUID: int = 3
@@ -28,8 +29,15 @@ def on_raspi() -> bool:
 
 def configure_agent_process() -> None:
     """!
-    Configure a process to run as an agent on the Raspberry Pi.
+    Configure process to run as an agent on the Raspberry Pi.
+
+    \note This function assumes we are running an underlying script. It won't
+    work from an interpreter.
     """
+    if hasattr(sys, "ps1"):
+        raise UpkieRuntimeError(
+            "Cannot configure agent process from an interpreter"
+        )
     if os.geteuid() != 0:
         logging.info("Re-running as root to set the CPU affinity")
         args = ["sudo", "-E", sys.executable] + sys.argv + [os.environ]
