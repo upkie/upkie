@@ -136,6 +136,7 @@ class WheeledInvertedPendulum(gymnasium.Env):
               Upkie this is the full observation dictionary sent by the spine.
         """
         super().reset(seed=seed)
+        self.__state = np.zeros(4)
         observation = self.__state
         info = {}
         return observation, info
