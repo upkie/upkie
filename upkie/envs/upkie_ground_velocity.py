@@ -16,6 +16,7 @@ from upkie.utils.exceptions import UpkieException
 from upkie.utils.filters import low_pass_filter
 from upkie.utils.robot_state import RobotState
 
+from .rewards import WheeledInvertedPendulumReward
 from .upkie_base_env import UpkieBaseEnv
 
 UPPER_LEG_JOINTS: Tuple[str, str, str, str] = (
@@ -91,27 +92,6 @@ class UpkieGroundVelocity(UpkieBaseEnv):
     returned by the reset and step functions.
     """
 
-    class RewardWeights:
-        """Weights of the position and velocity terms in rewards."""
-
-        ## @var position
-        ## Weight of the position term.
-        position: float
-
-        ## @var velocity
-        ## Weight of the velocity term.
-        velocity: float
-
-        def __init__(self, position: float = 1.0, velocity: float = 1.0):
-            r"""!
-            Initialize reward weights.
-
-            \param position Weight of the position term.
-            \param velocity Weight of the velocity term.
-            """
-            self.position = position
-            self.velocity = velocity
-
     ## @var action_space
     ## Action space.
     action_space: spaces.box.Box
@@ -131,9 +111,9 @@ class UpkieGroundVelocity(UpkieBaseEnv):
     ## Observation space.
     observation_space: spaces.box.Box
 
-    ## @var reward_weights
-    ## Weights of the position and velocity terms in rewards.
-    reward_weights: "UpkieGroundVelocity.RewardWeights"
+    ## @var reward
+    ## Reward function of the environment.
+    reward: WheeledInvertedPendulumReward
 
     ## @var version
     ## Environment version number.
@@ -153,7 +133,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
         left_wheeled: bool = True,
         max_ground_velocity: float = 1.0,
         regulate_frequency: bool = True,
-        reward_weights: Optional[RewardWeights] = None,
+        reward: Optional[WheeledInvertedPendulumReward] = None,
         shm_name: str = "/upkie",
         spine_config: Optional[dict] = None,
         wheel_radius: float = 0.06,
@@ -175,7 +155,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
             motion. Set to False for a right-wheeled variant.
         \param max_ground_velocity Maximum commanded ground velocity in m/s.
         \param regulate_frequency Enables loop frequency regulation.
-        \param reward_weights Coefficients before each reward term.
+        \param reward Reward function of the environment.
         \param shm_name Name of shared-memory file.
         \param spine_config Additional spine configuration overriding the
             defaults from ``//config:spine.yaml``. The combined configuration
@@ -195,10 +175,8 @@ class UpkieGroundVelocity(UpkieBaseEnv):
         if self.dt is None:
             raise UpkieException("This environment needs a loop frequency")
 
-        reward_weights: UpkieGroundVelocity.RewardWeights = (
-            reward_weights
-            if reward_weights is not None
-            else UpkieGroundVelocity.RewardWeights()
+        reward: WheeledInvertedPendulumReward = (
+            reward if reward is not None else WheeledInvertedPendulumReward()
         )
 
         # gymnasium.Env: observation_space
@@ -241,7 +219,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
 
         self.leg_return_period = leg_return_period
         self.left_wheeled = left_wheeled
-        self.reward_weights = reward_weights
+        self.reward = reward
         self.wheel_radius = wheel_radius
 
     def reset(
@@ -353,22 +331,9 @@ class UpkieGroundVelocity(UpkieBaseEnv):
         \param action Environment action vector.
         \return Reward.
         """
-        pitch = observation[0]
-        ground_position = observation[1]
-        angular_velocity = observation[2]
-        ground_velocity = observation[3]
-
-        tip_height = 0.58  # [m]
-        tip_position = ground_position + tip_height * np.sin(pitch)
-        tip_velocity = (
-            ground_velocity + tip_height * angular_velocity * np.cos(pitch)
-        )
-
-        std_position = 0.05  # [m]
-        position_reward = np.exp(-((tip_position / std_position) ** 2))
-        velocity_penalty = -abs(tip_velocity)
-
-        return (
-            self.reward_weights.position * position_reward
-            + self.reward_weights.velocity * velocity_penalty
+        return self.reward.get(
+            pitch=observation[0],
+            ground_position=observation[1],
+            angular_velocity=observation[2],
+            ground_velocity=observation[3],
         )
