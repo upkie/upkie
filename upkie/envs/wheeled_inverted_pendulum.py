@@ -48,8 +48,17 @@ class WheeledInvertedPendulum(gymnasium.Env):
     ## Observation space.
     observation_space: spaces.box.Box
 
+    ## @var reward
+    ## Reward function of the environment.
+    reward: WheeledInvertedPendulumReward
+
+    ## @var version
+    ## Environment version number.
+    version = 1
+
     def __init__(
         self,
+        fall_pitch: float = 1.0,
         frequency: float = 200.0,
         length: float = 0.6,
         max_ground_accel: float = 10.0,
@@ -59,6 +68,7 @@ class WheeledInvertedPendulum(gymnasium.Env):
         r"""!
         Initialize a new environment.
 
+        \param[in] fall_pitch Fall detection pitch angle, in [rad].
         \param[in] frequency Regulated frequency of the control loop, in Hz.
         \param[in] length Length of the pole.
         \param max_ground_velocity Maximum commanded ground velocity in [m] /
@@ -96,7 +106,13 @@ class WheeledInvertedPendulum(gymnasium.Env):
             dtype=action_limit.dtype,
         )
 
-        self.dt = 1.0 / self.__frequency
+        reward: WheeledInvertedPendulumReward = (
+            reward if reward is not None else WheeledInvertedPendulumReward()
+        )
+
+        self.dt = 1.0 / frequency
+        self.fall_pitch = fall_pitch
+        self.reward = reward
         self.__max_ground_accel = max_ground_accel
         self.__omega = np.sqrt(GRAVITY / length)
         self.__state = np.zeros(4)
