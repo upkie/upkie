@@ -47,4 +47,13 @@ py_test(
     ],
 )
 
+py_test(
+    name = "wheeled_inverted_pendulum_test",
+    srcs = ["wheeled_inverted_pendulum_test.py"],
+    deps = [
+        "//upkie/envs",
+        ":mock_spine",
+    ],
+)
+
 add_lint_tests()
