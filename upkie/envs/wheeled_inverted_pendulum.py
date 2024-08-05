@@ -36,6 +36,52 @@ class WheeledInvertedPendulum(gymnasium.Env):
     upkie.envs.upkie_ground_velocity.UpkieGroundVelocity. Model assumptions and
     discretization are summed up in [this
     note](https://scaron.info/robotics/wheeled-inverted-pendulum-model.html).
+
+    ### Action space
+
+    The action corresponds to the ground velocity resulting from wheel
+    velocities. The action vector is simply:
+
+    <table>
+        <tr>
+            <td><strong>Index</strong></td>
+            <td><strong>Description</strong></td>
+            </tr>
+        <tr>
+            <td>``0``</td>
+            <td>Ground velocity in [m] / [s].</td>
+        </tr>
+    </table>
+
+    ### Observation space
+
+    Vectorized observations have the following structure:
+
+    <table>
+        <tr>
+            <td><strong>Index</strong></td>
+            <td><strong>Description</strong></td>
+        </tr>
+        <tr>
+            <td>0</td>
+            <td>Pitch angle of the base with respect to the world vertical, in
+            radians. This angle is positive when the robot leans forward.</td>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>Position of the average wheel contact point, in meters.</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>Body angular velocity of the base frame along its lateral axis,
+            in radians per seconds.</td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>Velocity of the average wheel contact point, in meters per
+            seconds.</td>
+        </tr>
+    </table>
     """
 
     ## @var action_space
@@ -107,7 +153,7 @@ class WheeledInvertedPendulum(gymnasium.Env):
         )
 
         # gymnasium.Env: action_space
-        action_limit = np.array([max_ground_accel], dtype=float)
+        action_limit = np.array([max_ground_velocity], dtype=float)
         self.action_space = spaces.Box(
             -action_limit,
             +action_limit,
@@ -131,6 +177,7 @@ class WheeledInvertedPendulum(gymnasium.Env):
         self.fall_pitch = fall_pitch
         self.reward = reward
         self.__max_ground_accel = max_ground_accel
+        self.__max_ground_velocity = max_ground_velocity
         self.__rate = rate
         self.__regulate_frequency = regulate_frequency
         self.__omega = np.sqrt(GRAVITY / length)
@@ -188,8 +235,15 @@ class WheeledInvertedPendulum(gymnasium.Env):
             self.__rate.sleep()  # wait until clock tick to send the action
 
         theta_0, r_0, thetad_0, rd_0 = self.__state
-        rdd_0 = clamp_and_warn(
+        rd_next = clamp_and_warn(
             action[0],
+            -self.__max_ground_velocity,
+            self.__max_ground_velocity,
+            "ground_velocity",
+        )
+        a = (rd_next - rd_0) / self.dt
+        rdd_0 = clamp_and_warn(
+            a,
             -self.__max_ground_accel,
             self.__max_ground_accel,
             "ground_acceleration",
