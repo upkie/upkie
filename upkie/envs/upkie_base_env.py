@@ -238,9 +238,12 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
 
     def detect_fall(self, spine_observation: dict) -> bool:
         r"""!
-        Detect a fall based on the body-to-world pitch angle.
+        Detect a fall based on the base-to-world pitch angle.
 
-        \param spine_observation Observation dictionary with an "imu" key.
+        \param spine_observation Observation dictionary with a
+            "base_orientation" key. This requires the \ref
+            upkie::cpp::observers::BaseOrientation observer in the spine's
+            observer pipeline.
         \return True if and only if a fall is detected.
         """
         pitch = spine_observation["base_orientation"]["pitch"]
