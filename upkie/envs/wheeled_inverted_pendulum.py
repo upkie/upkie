@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# Copyright 2023 Inria
+# Copyright 2024 Inria
 # SPDX-License-Identifier: Apache-2.0
 
 """Wheeled inverted pendulum."""
@@ -11,8 +11,10 @@ from typing import Optional, Tuple
 import gymnasium
 import numpy as np
 from gymnasium import spaces
+from loop_rate_limiters import RateLimiter
 from numpy.typing import NDArray
 
+from upkie.utils.clamp import clamp_and_warn
 from upkie.utils.spdlog import logging
 
 from .rewards import WheeledInvertedPendulumReward
@@ -60,9 +62,11 @@ class WheeledInvertedPendulum(gymnasium.Env):
         self,
         fall_pitch: float = 1.0,
         frequency: float = 200.0,
+        frequency_checks: bool = True,
         length: float = 0.6,
         max_ground_accel: float = 10.0,
         max_ground_velocity: float = 1.0,
+        regulate_frequency: bool = True,
         reward: Optional[WheeledInvertedPendulumReward] = None,
     ):
         r"""!
@@ -70,11 +74,16 @@ class WheeledInvertedPendulum(gymnasium.Env):
 
         \param[in] fall_pitch Fall detection pitch angle, in [rad].
         \param[in] frequency Regulated frequency of the control loop, in Hz.
+        \param frequency_checks If `regulate_frequency` is set and this
+            parameter is true (default), a warning is issued every time the
+            control loop runs slower than the desired `frequency`. Set this
+            parameter to false to disable these warnings.
         \param[in] length Length of the pole.
         \param max_ground_velocity Maximum commanded ground velocity in [m] /
             [s].
         \param[in] max_ground_accel  Maximum acceleration of the ground point,
             in [m] / [s]².
+        \param regulate_frequency Enables loop frequency regulation.
         \param reward Reward function of the environment.
         """
         # gymnasium.Env: observation_space
@@ -98,7 +107,7 @@ class WheeledInvertedPendulum(gymnasium.Env):
         )
 
         # gymnasium.Env: action_space
-        action_limit = np.array([max_ground_velocity], dtype=float)
+        action_limit = np.array([max_ground_accel], dtype=float)
         self.action_space = spaces.Box(
             -action_limit,
             +action_limit,
@@ -110,10 +119,20 @@ class WheeledInvertedPendulum(gymnasium.Env):
             reward if reward is not None else WheeledInvertedPendulumReward()
         )
 
+        rate = None
+        if regulate_frequency:
+            rate = RateLimiter(
+                frequency,
+                name=f"{self.__class__.__name__} rate limiter",
+                warn=frequency_checks,
+            )
+
         self.dt = 1.0 / frequency
         self.fall_pitch = fall_pitch
         self.reward = reward
         self.__max_ground_accel = max_ground_accel
+        self.__rate = rate
+        self.__regulate_frequency = regulate_frequency
         self.__omega = np.sqrt(GRAVITY / length)
         self.__state = np.zeros(4)
 
@@ -165,8 +184,16 @@ class WheeledInvertedPendulum(gymnasium.Env):
             - ``info``: Dictionary with auxiliary diagnostic information. For
               us this is the full observation dictionary coming from the spine.
         """
+        if self.__rate is not None:
+            self.__rate.sleep()  # wait until clock tick to send the action
+
         theta_0, r_0, thetad_0, rd_0 = self.__state
-        rdd_0 = action[0]
+        rdd_0 = clamp_and_warn(
+            action[0],
+            -self.__max_ground_accel,
+            self.__max_ground_accel,
+            "ground_acceleration",
+        )
         thetadd_0 = self.__omega**2 * (
             np.sin(theta_0) - (rdd_0 / GRAVITY) * np.cos(theta_0)
         )
