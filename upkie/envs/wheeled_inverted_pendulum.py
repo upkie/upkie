@@ -15,6 +15,8 @@ from numpy.typing import NDArray
 
 from upkie.utils.spdlog import logging
 
+from .rewards import WheeledInvertedPendulumReward
+
 GRAVITY: float = 9.81  # [m] / [s]²
 
 
@@ -52,6 +54,7 @@ class WheeledInvertedPendulum(gymnasium.Env):
         length: float = 0.6,
         max_ground_accel: float = 10.0,
         max_ground_velocity: float = 1.0,
+        reward: Optional[WheeledInvertedPendulumReward] = None,
     ):
         r"""!
         Initialize a new environment.
@@ -62,6 +65,7 @@ class WheeledInvertedPendulum(gymnasium.Env):
             [s].
         \param[in] max_ground_accel  Maximum acceleration of the ground point,
             in [m] / [s]².
+        \param reward Reward function of the environment.
         """
         # gymnasium.Env: observation_space
         MAX_BASE_PITCH: float = np.pi
@@ -155,7 +159,12 @@ class WheeledInvertedPendulum(gymnasium.Env):
         self.__state = np.array([r, theta, rd, thetad]).flatten()
 
         observation = self.__state
-        reward = self.get_reward(observation, action)
+        reward = self.reward(
+            pitch=theta,
+            ground_position=r,
+            angular_velocity=thetad,
+            ground_velocity=rd,
+        )
         terminated = self.detect_fall(theta)
         truncated = False
         info = {}
