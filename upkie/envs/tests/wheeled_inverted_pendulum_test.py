@@ -22,12 +22,18 @@ class TestWheeledInvertedPendulum(unittest.TestCase):
         )
 
     def test_reset(self):
-        observation, info = self.env.reset()
+        observation, _ = self.env.reset()
         self.assertEqual(observation.size, 4)
-        self.assertAlmostEqual(observation[0], 0.0)
-        self.assertAlmostEqual(observation[1], 0.0)
-        self.assertAlmostEqual(observation[2], 0.0)
-        self.assertAlmostEqual(observation[3], 0.0)
+        self.assertAlmostEqual(observation.dot(observation), 0.0)
+
+    def test_reset_after_steps(self):
+        observation, _ = self.env.reset()
+        action = np.ones(self.env.action_space.shape)
+        for step in range(10):
+            observation, _, _, _, _ = self.env.step(action)
+        self.assertGreater(observation.dot(observation), 1e-2)
+        observation, _ = self.env.reset()
+        self.assertAlmostEqual(observation.dot(observation), 0.0)
 
     def test_reward(self):
         observation, info = self.env.reset()
