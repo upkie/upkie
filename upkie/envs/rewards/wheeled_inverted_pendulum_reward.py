@@ -32,7 +32,7 @@ class WheeledInvertedPendulumReward:
         self.position_weight = position_weight
         self.velocity_weight = velocity_weight
 
-    def get(
+    def __call__(
         self,
         pitch: float,
         ground_position: float,

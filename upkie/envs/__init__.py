@@ -9,6 +9,7 @@ import gymnasium as gym
 from .upkie_base_env import UpkieBaseEnv
 from .upkie_ground_velocity import UpkieGroundVelocity
 from .upkie_servos import UpkieServos
+from .wheeled_inverted_pendulum import WheeledInvertedPendulum
 
 
 def register() -> None:
@@ -18,6 +19,7 @@ def register() -> None:
     envs = (
         ("UpkieGroundVelocity", UpkieGroundVelocity),
         ("UpkieServos", UpkieServos),
+        ("WheeledInvertedPendulum", WheeledInvertedPendulum),
     )
     for env_name, env_class in envs:
         gym.envs.registration.register(
@@ -31,4 +33,5 @@ __all__ = [
     "register",
     "UpkieGroundVelocity",
     "UpkieServos",
+    "WheeledInvertedPendulum",
 ]

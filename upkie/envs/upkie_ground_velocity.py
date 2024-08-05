@@ -331,7 +331,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
         \param action Environment action vector.
         \return Reward.
         """
-        return self.reward.get(
+        return self.reward(
             pitch=observation[0],
             ground_position=observation[1],
             angular_velocity=observation[2],
