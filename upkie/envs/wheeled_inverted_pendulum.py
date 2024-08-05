@@ -156,7 +156,7 @@ class WheeledInvertedPendulum(gymnasium.Env):
 
         r, rd = integrate_accel(r_0, rd_0, rdd_0, self.dt)
         theta, thetad = integrate_accel(theta_0, thetad_0, thetadd_0, self.dt)
-        self.__state = np.array([r, theta, rd, thetad]).flatten()
+        self.__state = np.array([theta, r, thetad, rd]).flatten()
 
         observation = self.__state
         reward = self.reward(
