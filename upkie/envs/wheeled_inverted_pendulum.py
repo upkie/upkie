@@ -230,6 +230,13 @@ class WheeledInvertedPendulum(gymnasium.Env):
             ylim=(-0.1, 0.1),
             ylim_right=(-0.5, 0.5),
         )
+        self.plot.add_left("pitch", "b-")
+        self.plot.left_axis.set_ylabel(r"Pitch angle (rad)", color="b")
+        self.plot.left_axis.tick_params(axis="y", labelcolor="b")
+        self.plot.add_right("ground_position", "g-")
+        self.plot.right_axis.set_ylabel(r"Position (m)", color="g")
+        self.plot.right_axis.tick_params(axis="y", labelcolor="g")
+        self.plot.redraw()
 
     @staticmethod
     def _integrate(x, v, a, dt):
