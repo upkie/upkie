@@ -94,7 +94,7 @@ class WheeledInvertedPendulum(gymnasium.Env):
 
     ## @var metadata
     ## Metadata of the environment containing rendering modes.
-    metadata = {"render_modes": ["human"]}
+    metadata = {"render_modes": ["plot"]}
 
     ## @var observation_space
     ## Observation space.
@@ -143,7 +143,7 @@ class WheeledInvertedPendulum(gymnasium.Env):
         \param max_ground_accel  Maximum acceleration of the ground point,
             in [m] / [s]².
         \param regulate_frequency Enables loop frequency regulation.
-        \param render_mode Rendering mode, set to "human" for live plotting.
+        \param render_mode Rendering mode, set to "plot" for live plotting.
         \param reward Reward function of the environment.
         """
         assert (
@@ -226,7 +226,7 @@ class WheeledInvertedPendulum(gymnasium.Env):
         self.__state = np.zeros(4)
         observation = self.__state
         info = {}
-        if self.render_mode == "human":
+        if self.render_mode == "plot":
             self._reset_plot()
         return observation, info
 
@@ -308,7 +308,7 @@ class WheeledInvertedPendulum(gymnasium.Env):
         theta, thetad = self._integrate(theta_0, thetad_0, thetadd_0, self.dt)
         self.__state = np.array([theta, r, thetad, rd]).flatten()
 
-        if self.render_mode == "human":
+        if self.render_mode == "plot":
             self._render_plot()
 
         observation = self.__state
@@ -343,7 +343,7 @@ class WheeledInvertedPendulum(gymnasium.Env):
         r"""!
         Render state to a live plot.
         """
-        if self.render_mode == "human":
+        if self.render_mode == "plot":
             return self._render_plot()
 
     def _render_plot(self):
