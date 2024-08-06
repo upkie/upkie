@@ -9,7 +9,7 @@ import numpy as np
 from gymnasium import spaces
 from numpy.typing import NDArray
 
-from upkie.utils.exceptions import UpkieException
+from upkie.exceptions import UpkieException
 
 
 class AddActionToObservation(gymnasium.ObservationWrapper):

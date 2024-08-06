@@ -17,8 +17,8 @@ py_library(
         "noisify_observation.py",
     ],
     deps = [
-        "//upkie/utils:exceptions",
         "//upkie/utils:filters",
+        "//upkie:exceptions",
     ],
 )
 

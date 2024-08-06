@@ -8,7 +8,7 @@ import gymnasium
 import numpy as np
 from numpy.typing import NDArray
 
-from upkie.utils.exceptions import UpkieException
+from upkie.exceptions import UpkieException
 
 
 class NoisifyAction(gymnasium.ActionWrapper):

@@ -15,11 +15,6 @@ py_library(
 )
 
 py_library(
-    name = "exceptions",
-    srcs = ["exceptions.py"],
-)
-
-py_library(
     name = "filters",
     srcs = ["filters.py"],
     deps = [
@@ -62,7 +57,6 @@ py_library(
     name = "utils",
     deps = [
         ":clamp",
-        ":exceptions",
         ":filters",
         ":nested_update",
         ":raspi",

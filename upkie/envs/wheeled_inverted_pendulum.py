@@ -14,6 +14,7 @@ from gymnasium import spaces
 from loop_rate_limiters import RateLimiter
 from numpy.typing import NDArray
 
+from upkie.exceptions import OptionalDependencyNotFound
 from upkie.utils.clamp import clamp_and_warn
 from upkie.utils.spdlog import logging
 

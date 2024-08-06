@@ -13,13 +13,19 @@ class UpkieException(Exception):
 
 class FallDetected(UpkieException):
     """!
-    Exception raised when a fall is detected.
+    Raised when a fall is detected.
+    """
+
+
+class MissingOptionalDependency(UpkieException):
+    """!
+    Raised when an optional feature lacks a corresponding optional dependency.
     """
 
 
 class ModelError(UpkieException):
     """!
-    Error related to the robot model.
+    Raised when something is wrong in the robot model.
     """
 
 

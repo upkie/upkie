@@ -5,7 +5,7 @@
 package(default_visibility = ["//visibility:public"])
 
 py_library(
-    name = "python",
+    name = "upkie",
     srcs = [
         "__init__.py",
     ],
@@ -14,5 +14,11 @@ py_library(
         "//upkie/envs",
         "//upkie/spine",
         "//upkie/utils",
+        ":exceptions",
     ],
+)
+
+py_library(
+    name = "exceptions",
+    srcs = ["exceptions.py"],
 )

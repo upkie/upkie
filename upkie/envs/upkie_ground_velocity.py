@@ -12,7 +12,7 @@ import numpy as np
 from gymnasium import spaces
 from numpy.typing import NDArray
 
-from upkie.utils.exceptions import UpkieException
+from upkie.exceptions import UpkieException
 from upkie.utils.filters import low_pass_filter
 from upkie.utils.robot_state import RobotState
 

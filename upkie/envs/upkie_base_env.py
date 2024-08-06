@@ -14,7 +14,7 @@ from numpy.typing import NDArray
 
 import upkie.config
 from upkie.spine import SpineInterface
-from upkie.utils.exceptions import UpkieException
+from upkie.exceptions import UpkieException
 from upkie.utils.nested_update import nested_update
 from upkie.utils.robot_state import RobotState
 from upkie.utils.spdlog import logging

@@ -25,11 +25,3 @@ config_setting(
         "cpu": "aarch64",
     }
 )
-
-py_library(
-    name = "python",
-    imports = ["."],
-    deps = [
-        "//upkie:python",
-    ],
-)
