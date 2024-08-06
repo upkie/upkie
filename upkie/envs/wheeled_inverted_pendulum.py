@@ -27,9 +27,10 @@ class WheeledInvertedPendulum(gymnasium.Env):
     r"""!
     Wheeled inverted pendulum model.
 
-    This environment has the same observation and action spaces as \ref
-    upkie.envs.upkie_ground_velocity.UpkieGroundVelocity. Model assumptions and
-    discretization are summed up in [this
+    This environment helps test and debug behaviors in a perfect or
+    noise-controlled setting. It has the same observation and action spaces as
+    \ref upkie.envs.upkie_ground_velocity.UpkieGroundVelocity. Model
+    assumptions and discretization are summed up in [this
     note](https://scaron.info/robotics/wheeled-inverted-pendulum-model.html).
 
     ### Action space
