@@ -13,10 +13,10 @@ py_library(
         "//upkie/config",
         "//upkie/model",
         "//upkie/spine",
-        "//upkie/utils:exceptions",
         "//upkie/utils:nested_update",
         "//upkie/utils:robot_state",
         "//upkie/utils:spdlog",
+        "//upkie:exceptions",
     ],
 )
 
@@ -28,9 +28,9 @@ py_library(
     deps = [
         "//upkie/envs/rewards",
         "//upkie/model",
-        "//upkie/utils:exceptions",
         "//upkie/utils:filters",
         "//upkie/utils:robot_state",
+        "//upkie:exceptions",
     ],
 )
 

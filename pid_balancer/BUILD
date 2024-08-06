@@ -33,10 +33,9 @@ py_binary(
         "//spines:bullet_spine",
     ],
     deps = [
-        "//upkie/utils:exceptions",
+        "//upkie",
         ":controllers",
         "@rules_python//python/runfiles",
-        "//upkie:python",
     ] + select({
         "//:pi64_config": [],
         "//conditions:default": [
@@ -63,11 +62,8 @@ py_binary(
         "//conditions:default": [],
     }),
     deps = [
-        "//upkie/utils:exceptions",
-        "//upkie/utils:raspi",
-        "//upkie/utils:spdlog",
+        "//upkie",
         ":controllers",
-        "//upkie:python",
     ],
 )
 

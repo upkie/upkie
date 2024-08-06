@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - envs: Refactor internal reward of `UpkieGroundVelocity` environment
+- exceptions: Move to the top-level Python module
 
 ### Removed
 

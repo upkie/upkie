@@ -12,7 +12,7 @@ py_test(
         "spine_interface_test.py",
     ],
     deps = [
-        "//upkie:python",
+        "//upkie/spine",
     ],
 )
 
