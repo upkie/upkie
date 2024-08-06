@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - envs: Refactor internal reward of `UpkieGroundVelocity` environment
+- examples: Make wheeled balancing example a bit more complex and more stable
+- examples: wheeled inverted pendulum model example
 - exceptions: Move to the top-level Python module
 
 ### Removed
