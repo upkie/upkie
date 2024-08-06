@@ -6,7 +6,7 @@
 
 """Wheeled inverted pendulum."""
 
-from typing import Optional, Tuple
+from typing import Any, Optional, Tuple
 
 import gymnasium
 import numpy as np
@@ -88,6 +88,10 @@ class WheeledInvertedPendulum(gymnasium.Env):
     ## Period of the control loop in seconds.
     dt: float
 
+    ## @var fall_pitch
+    ## Fall pitch angle, in radians.
+    fall_pitch: float
+
     ## @var metadata
     ## Metadata of the environment containing rendering modes.
     metadata = {"render_modes": ["human"]}
@@ -95,6 +99,14 @@ class WheeledInvertedPendulum(gymnasium.Env):
     ## @var observation_space
     ## Observation space.
     observation_space: spaces.box.Box
+
+    ## @var plot
+    ## Optional plot used for rendering.
+    plot: Optional[Any]
+
+    ## @var render_mode
+    ## Inherited from gymnasium.Env.
+    render_mode: Optional[str]
 
     ## @var reward
     ## Reward function of the environment.
@@ -119,18 +131,19 @@ class WheeledInvertedPendulum(gymnasium.Env):
         r"""!
         Initialize a new environment.
 
-        \param[in] fall_pitch Fall detection pitch angle, in [rad].
-        \param[in] frequency Regulated frequency of the control loop, in Hz.
+        \param fall_pitch Fall detection pitch angle, in [rad].
+        \param frequency Regulated frequency of the control loop, in Hz.
         \param frequency_checks If `regulate_frequency` is set and this
             parameter is true (default), a warning is issued every time the
             control loop runs slower than the desired `frequency`. Set this
             parameter to false to disable these warnings.
-        \param[in] length Length of the pole.
+        \param length Length of the pole.
         \param max_ground_velocity Maximum commanded ground velocity in [m] /
             [s].
-        \param[in] max_ground_accel  Maximum acceleration of the ground point,
+        \param max_ground_accel  Maximum acceleration of the ground point,
             in [m] / [s]².
         \param regulate_frequency Enables loop frequency regulation.
+        \param render_mode Rendering mode, set to "human" for live plotting.
         \param reward Reward function of the environment.
         """
         assert (
@@ -219,18 +232,18 @@ class WheeledInvertedPendulum(gymnasium.Env):
 
     def _reset_plot(self):
         try:
-            import matplotlive
+            from matplotlive import LivePlot
+
+            self.plot = LivePlot(
+                timestep=self.dt,
+                duration=1.0,
+                ylim=(-0.1, 0.1),
+                ylim_right=(-0.5, 0.5),
+            )
         except ImportError as exn:
             raise MissingOptionalDependency(
                 "matplotlive not found, run `pip install matplotlive`"
             ) from exn
-
-        self.plot = matplotlive.LivePlot(
-            timestep=self.dt,
-            duration=1.0,
-            ylim=(-0.1, 0.1),
-            ylim_right=(-0.5, 0.5),
-        )
         self.plot.add_left("pitch", "b-")
         self.plot.left_axis.set_ylabel(r"Pitch angle (rad)", color="b")
         self.plot.left_axis.tick_params(axis="y", labelcolor="b")
