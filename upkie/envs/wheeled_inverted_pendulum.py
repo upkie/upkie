@@ -14,19 +14,13 @@ from gymnasium import spaces
 from loop_rate_limiters import RateLimiter
 from numpy.typing import NDArray
 
-from upkie.exceptions import OptionalDependencyNotFound
+from upkie.exceptions import MissingOptionalDependency
 from upkie.utils.clamp import clamp_and_warn
 from upkie.utils.spdlog import logging
 
 from .rewards import WheeledInvertedPendulumReward
 
 GRAVITY: float = 9.81  # [m] / [s]²
-
-
-def integrate_accel(x, v, a, dt):
-    x2 = x + dt * (v + dt * (a / 2))
-    v2 = v + dt * a
-    return x2, v2
 
 
 class WheeledInvertedPendulum(gymnasium.Env):
@@ -93,6 +87,10 @@ class WheeledInvertedPendulum(gymnasium.Env):
     ## Period of the control loop in seconds.
     dt: float
 
+    ## @var metadata
+    ## Metadata of the environment containing rendering modes.
+    metadata = {"render_modes": ["human"]}
+
     ## @var observation_space
     ## Observation space.
     observation_space: spaces.box.Box
@@ -114,6 +112,7 @@ class WheeledInvertedPendulum(gymnasium.Env):
         max_ground_accel: float = 10.0,
         max_ground_velocity: float = 1.0,
         regulate_frequency: bool = True,
+        render_mode: Optional[str] = None,
         reward: Optional[WheeledInvertedPendulumReward] = None,
     ):
         r"""!
@@ -133,6 +132,10 @@ class WheeledInvertedPendulum(gymnasium.Env):
         \param regulate_frequency Enables loop frequency regulation.
         \param reward Reward function of the environment.
         """
+        assert (
+            render_mode is None or render_mode in self.metadata["render_modes"]
+        )
+
         # gymnasium.Env: observation_space
         MAX_BASE_PITCH: float = np.pi
         MAX_GROUND_POSITION: float = float("inf")
@@ -167,6 +170,7 @@ class WheeledInvertedPendulum(gymnasium.Env):
         )
 
         rate = None
+        dt = 1.0 / frequency
         if regulate_frequency:
             rate = RateLimiter(
                 frequency,
@@ -174,15 +178,17 @@ class WheeledInvertedPendulum(gymnasium.Env):
                 warn=frequency_checks,
             )
 
-        self.dt = 1.0 / frequency
-        self.fall_pitch = fall_pitch
-        self.reward = reward
         self.__max_ground_accel = max_ground_accel
         self.__max_ground_velocity = max_ground_velocity
+        self.__omega = np.sqrt(GRAVITY / length)
         self.__rate = rate
         self.__regulate_frequency = regulate_frequency
-        self.__omega = np.sqrt(GRAVITY / length)
         self.__state = np.zeros(4)
+        self.dt = dt
+        self.fall_pitch = fall_pitch
+        self.plot = None
+        self.render_mode = render_mode
+        self.reward = reward
 
     def reset(
         self,
@@ -206,7 +212,31 @@ class WheeledInvertedPendulum(gymnasium.Env):
         self.__state = np.zeros(4)
         observation = self.__state
         info = {}
+        if self.render_mode == "human":
+            self._reset_plot()
         return observation, info
+
+    def _reset_plot(self):
+        try:
+            import matplotlive
+        except ImportError as exn:
+            raise MissingOptionalDependency(
+                "matplotlive not found, run `pip install matplotlive`"
+            ) from exn
+
+        self.plot = matplotlive.LivePlot(
+            timestep=self.dt,
+            duration=1.0,
+            ylim=(-0.1, 0.1),
+            ylim_right=(-0.5, 0.5),
+        )
+
+    @staticmethod
+    def _integrate(x, v, a, dt):
+        """Explicit second-order Euler integration in a vector space."""
+        x2 = x + dt * (v + dt * (a / 2))
+        v2 = v + dt * a
+        return x2, v2
 
     def step(
         self,
@@ -253,9 +283,12 @@ class WheeledInvertedPendulum(gymnasium.Env):
             np.sin(theta_0) - (rdd_0 / GRAVITY) * np.cos(theta_0)
         )
 
-        r, rd = integrate_accel(r_0, rd_0, rdd_0, self.dt)
-        theta, thetad = integrate_accel(theta_0, thetad_0, thetadd_0, self.dt)
+        r, rd = self._integrate(r_0, rd_0, rdd_0, self.dt)
+        theta, thetad = self._integrate(theta_0, thetad_0, thetadd_0, self.dt)
         self.__state = np.array([theta, r, thetad, rd]).flatten()
+
+        if self.render_mode == "human":
+            self._render_plot()
 
         observation = self.__state
         reward = self.reward(
@@ -284,3 +317,15 @@ class WheeledInvertedPendulum(gymnasium.Env):
             )
             return True
         return False
+
+    def render(self):
+        r"""!
+        Render state to a live plot.
+        """
+        if self.render_mode == "human":
+            return self._render_plot()
+
+    def _render_plot(self):
+        self.plot.send("pitch", self.__state[0])
+        self.plot.send("ground_position", self.__state[1])
+        self.plot.update()
