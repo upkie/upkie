@@ -242,7 +242,7 @@ class WheeledInvertedPendulum(gymnasium.Env):
         super().reset(seed=seed)
         self.__state = np.zeros(4)
         observation = self.__state
-        info = {}
+        info = {"spine_observation": self._get_spine_observation()}
         if self.render_mode == "plot":
             self._reset_plot()
         return observation, info
@@ -341,7 +341,7 @@ class WheeledInvertedPendulum(gymnasium.Env):
         )
         terminated = self.detect_fall(theta)
         truncated = False
-        info = {}
+        info = {"spine_observation": self._get_spine_observation()}
         return observation, reward, terminated, truncated, info
 
     def detect_fall(self, pitch: float) -> bool:
@@ -371,3 +371,14 @@ class WheeledInvertedPendulum(gymnasium.Env):
         self.plot.send("pitch", self.__state[0])
         self.plot.send("ground_position", self.__state[1])
         self.plot.update()
+
+    def _get_spine_observation(self):
+        return {
+            "servo": {
+                joint: {
+                    "position": 0.0,
+                    "velocity": 0.0,
+                }
+                for joint in UPPER_LEG_JOINTS
+            }
+        }
