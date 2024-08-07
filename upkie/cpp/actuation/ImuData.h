@@ -8,10 +8,9 @@
 
 namespace upkie::cpp::actuation {
 
-//! Data filtered from an onboard IMU such as the pi3hat's.
+//! Data from an onboard IMU such as the pi3hat's.
 struct ImuData {
-  /*! Orientation from the IMU frame to the attitude reference system (ARS)
-   * frame.
+  /*! Rotation from the IMU frame to the ARS frame.
    *
    * The attitude reference system frame has +x forward, +y right and +z down,
    * whereas our world frame has +x forward, +y left and +z up:
@@ -29,7 +28,7 @@ struct ImuData {
    */
   Eigen::Vector3d angular_velocity_imu_in_imu = Eigen::Vector3d::Zero();
 
-  /*! Body linear acceleration of the IMU, in [m] / [s]².
+  /*! Linear acceleration of the IMU, with gravity filtered out, in [m] / [s]².
    *
    * This quantity corresponds to SPI register 34 from the pi3hat
    * https://github.com/mjbots/pi3hat/blob/master/docs/reference.md#imu-register-mapping
@@ -45,15 +44,21 @@ struct ImuData {
    */
   Eigen::Vector3d raw_angular_velocity = Eigen::Vector3d::Zero();
 
-  /*! Raw linear acceleration read by the IMU, in [m] / [s]².
+  /*! Proper linear acceleration read by the IMU, in [m] / [s]².
    *
    * The acceleration read by an accelerometer is:
    * \f[
    * {}_I a_{WI} - {}_I g
    * \f]
-   * with \f${}_I a_{WI}\f$ the body linear acceleration of the IMU frame
+   * with \f${}_I a_{WI}\f$ the *proper* linear acceleration of the IMU frame
    * \f$I\f$, and \f${}_I g\f$ the standard acceleration of gravity in the IMU
-   * frame.
+   * frame. Pay attention to the fact that
+   *
+   * \note Pay attention to the fact that proper acceleration is different from
+   * coordinate acceleration, which would be the acceleration of the IMU with
+   * respect to the mobile IMU frame in this case. (There is a gyroscopic term
+   * in the latter but not in the former.) See for instance the Wikipedia
+   * [Accelerometer](https://en.wikipedia.org/wiki/Accelerometer) article.
    */
   Eigen::Vector3d raw_linear_acceleration = Eigen::Vector3d::Zero();
 };
