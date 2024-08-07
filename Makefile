@@ -85,7 +85,7 @@ upload: check_upkie_name build set_date  ## upload built targets to the Raspberr
 		--exclude bazel-testlogs/ \
 		--exclude cache/ \
 		--exclude tools/bazel \
-		--exclude tools/logs \
+		--exclude tools/logs/\*.mpack \
 		--exclude tools/raspios \
 		--progress $(CURDIR)/ $(REMOTE):$(PROJECT_NAME)/
 
