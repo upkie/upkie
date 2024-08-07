@@ -213,7 +213,10 @@ class WheeledInvertedPendulum(gymnasium.Env):
                 "pitch": 0.0,
                 "angular_velocity": np.zeros(3),
             },
-            "imu": {},
+            "imu": {
+                "raw_angular_velocity": np.zeros(3),
+                "raw_linear_acceleration": np.zeros(3),
+            },
             "servo": {
                 joint: {
                     "position": 0.0,
@@ -227,6 +230,7 @@ class WheeledInvertedPendulum(gymnasium.Env):
             },
         }
 
+        self.__input = np.zeros(2)
         self.__length = length
         self.__max_ground_accel = max_ground_accel
         self.__max_ground_velocity = max_ground_velocity
@@ -333,20 +337,22 @@ class WheeledInvertedPendulum(gymnasium.Env):
             self.__max_ground_velocity,
             "ground_velocity",
         )
-        a = (rd_next - rd_0) / self.dt
-        rdd_0 = clamp_and_warn(
-            a,
+        rdd = clamp_and_warn(
+            (rd_next - rd_0) / self.dt,
             -self.__max_ground_accel,
             self.__max_ground_accel,
             "ground_acceleration",
         )
-        thetadd_0 = (
-            GRAVITY * sin(theta_0) - rdd_0 * cos(theta_0)
-        ) / self.__length
+        thetadd = (GRAVITY * sin(theta_0) - rdd * cos(theta_0)) / self.__length
+        r, rd = self._integrate(r_0, rd_0, rdd, self.dt)
+        theta, thetad = self._integrate(theta_0, thetad_0, thetadd, self.dt)
 
-        r, rd = self._integrate(r_0, rd_0, rdd_0, self.dt)
-        theta, thetad = self._integrate(theta_0, thetad_0, thetadd_0, self.dt)
-        self.__state = np.array([theta, r, thetad, rd]).flatten()
+        self.__state[0] = theta
+        self.__state[1] = r
+        self.__state[2] = thetad
+        self.__state[3] = rd
+        self.__input[0] = thetadd
+        self.__input[1] = rdd
 
         if self.observation_noise is not None:
             self.__noise = np.normal(scale=self.observation_noise)
@@ -397,6 +403,11 @@ class WheeledInvertedPendulum(gymnasium.Env):
         obs = self.__spine_observation  # reference, not a copy
         obs["base_orientation"]["angular_velocity"][1] = self.__state[2]
         obs["base_orientation"]["pitch"] = self.__state[0]
+
+        # Assumes the y-axis of the IMU is the same as that of the base frame
+        obs["imu"]["raw_angular_velocity"][1] = self.__state[3]
+        # obs["imu"]["raw_linear_acceleration"]
+
         obs["wheel_odometry"]["position"] = self.__state[1]
         obs["wheel_odometry"]["velocity"] = self.__state[3]
         return obs
