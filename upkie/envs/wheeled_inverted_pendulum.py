@@ -16,6 +16,7 @@ from numpy import cos, sin
 from numpy.typing import NDArray
 
 from upkie.exceptions import MissingOptionalDependency, UpkieRuntimeError
+from upkie.model.joints import UPPER_LEG_JOINTS
 from upkie.utils.clamp import clamp_and_warn
 from upkie.utils.spdlog import logging
 
