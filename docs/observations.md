@@ -1,10 +1,10 @@
 # Observations {#observations}
 
-Here is an index of observation dictionaries. Keys are a shorthand for nested dictionaries where ``a.b.c`` corresponds to ``observation["a"]["b"]["c"]``.
+Here is an index of observation dictionaries computed from [Sensors](\ref sensors) by the default observer pipeline. Keys are a shorthand for nested dictionaries, for example ``a.b.c`` corresponds to ``observation["a"]["b"]["c"]``.
 
 | Observation key | Description |
 |-----------------|-------------|
-| `base_orientation.angular_velocity` | Body angular velocity of the base frame in [rad] / [s] |
+| `base_orientation.angular_velocity` | Body angular velocity vector of the base frame in [rad] / [s] |
 | `base_orientation.pitch` | Pitch angle of the base frame relative to the world frame, in radians |
 | `imu` | Inertial measurement unit, see [ImuData](\ref upkie::cpp::actuation::ImuData) for more details |
 | `imu.angular_velocity` | Body angular velocity of the IMU frame in [rad] / [s] |
@@ -20,8 +20,6 @@ Here is an index of observation dictionaries. Keys are a shorthand for nested di
 | `wheel_odometry` | Wheel odometry, , see [WheelOdometry](\ref upkie::cpp::observers::WheelOdometry) for more details |
 | `wheel_odometry.position` | Ground position in [m] |
 | `wheel_odometry.velocity` | Ground velocity in [m] / [s] |
-
-See also [Sensors](\ref sensors).
 
 ## Attitude reference system {#ars}
 
