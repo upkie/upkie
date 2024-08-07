@@ -2,7 +2,7 @@
 name: 💡 Feature request
 about: Suggest an idea to improve Upkie
 title: ''
-labels: ''
+labels: 'enhancement'
 assignees: ''
 
 ---
