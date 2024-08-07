@@ -6,19 +6,20 @@ Here is an index of observation dictionaries. Keys are a shorthand for nested di
 |-----------------|-------------|
 | `base_orientation.angular_velocity` | Body angular velocity of the base frame in [rad] / [s] |
 | `base_orientation.pitch` | Pitch angle of the base frame relative to the world frame, in radians |
-| `imu` | Inertial measurement unit on the pi3hat. See also \ref upkie::cpp::actuation::ImuData |
+| `imu` | Inertial measurement unit, see [ImuData](\ref upkie::cpp::actuation::ImuData) for more details |
 | `imu.angular_velocity` | Body angular velocity of the IMU frame in [rad] / [s] |
-| `imu.linear_acceleration` | Body linear acceleration of the IMU in [m] / [s]² |
+| `imu.linear_acceleration` | Linear acceleration of the IMU, with gravity filtered out, in [m] / [s]² |
 | `imu.orientation` | Unit quaternion (``qw``, ``qx``, ``qy``, ``qz``) of the orientation from the IMU frame to the [ARS](\ref ars) frame |
 | `imu.raw_angular_velocity` | Raw value read from the gyroscope of the IMU, in [rad] / [s] |
-| `imu.raw_linear_acceleration` | Raw value read from the accelerometer of the IMU, in [m] / [s]² |
+| `imu.raw_linear_acceleration` | [Proper acceleration](https://en.wikipedia.org/wiki/Accelerometer#Physical_principles) measured by the accelerometer of the IMU, in [m] / [s]² |
 | `servos` | Servo motor measurements |
 | `servos.X` | Observations for servo ``X`` in the servo layout |
 | `servos.X.position` | Angle between the stator and the rotor in [rad] |
 | `servos.X.torque` | Joint torque in [N] * [m] |
 | `servos.X.velocity` | Angular velocity of the rotor w.r.t. stator in rotor, in [rad] / [s] |
-| `wheel_odometry.position` | Ground position in [m], see \ref upkie::cpp::observers::WheelOdometry |
-| `wheel_odometry.velocity` | Ground velocity in [m] / [s], see \ref upkie::cpp::observers::WheelOdometry |
+| `wheel_odometry` | Wheel odometry, , see [WheelOdometry](\ref upkie::cpp::observers::WheelOdometry) for more details |
+| `wheel_odometry.position` | Ground position in [m] |
+| `wheel_odometry.velocity` | Ground velocity in [m] / [s] |
 
 See also [Sensors](\ref sensors).
 
