@@ -21,6 +21,7 @@ if __name__ == "__main__":
     with gym.make(
         "WheeledInvertedPendulum-v1",
         frequency=200.0,
+        frequency_checks=False,
         render_mode="plot",
     ) as env:
         observation, _ = env.reset()  # connects to the spine

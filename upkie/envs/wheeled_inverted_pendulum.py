@@ -13,7 +13,6 @@ import numpy as np
 from gymnasium import spaces
 from loop_rate_limiters import RateLimiter
 from numpy.typing import NDArray
-
 from upkie.exceptions import MissingOptionalDependency, UpkieRuntimeError
 from upkie.utils.clamp import clamp_and_warn
 from upkie.utils.spdlog import logging
@@ -236,19 +235,21 @@ class WheeledInvertedPendulum(gymnasium.Env):
         return observation, info
 
     def _reset_plot(self):
-        try:
-            from matplotlive import LivePlot
+        if self.plot is None:
+            try:
+                from matplotlive import LivePlot
 
-            self.plot = LivePlot(
-                timestep=self.dt,
-                duration=1.0,
-                ylim=(-0.1, 0.1),
-                ylim_right=(-0.5, 0.5),
-            )
-        except ImportError as exn:
-            raise MissingOptionalDependency(
-                "matplotlive not found, run `pip install matplotlive`"
-            ) from exn
+                self.plot = LivePlot(
+                    timestep=self.dt,
+                    duration=1.0,
+                    ylim=(-0.01, 0.01),
+                    ylim_right=(-0.5, 0.5),
+                )
+            except ImportError as exn:
+                raise MissingOptionalDependency(
+                    "matplotlive not found, run `pip install matplotlive`"
+                ) from exn
+        self.plot.reset()
         self.plot.add_left("pitch", "b-")
         self.plot.left_axis.set_ylabel(r"Pitch angle (rad)", color="b")
         self.plot.left_axis.tick_params(axis="y", labelcolor="b")
