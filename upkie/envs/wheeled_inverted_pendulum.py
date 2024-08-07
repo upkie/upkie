@@ -208,12 +208,32 @@ class WheeledInvertedPendulum(gymnasium.Env):
                 warn=frequency_checks,
             )
 
+        spine_observation = {
+            "base_orientation": {
+                "pitch": 0.0,
+                "angular_velocity": np.zeros(3),
+            },
+            "imu": {},
+            "servo": {
+                joint: {
+                    "position": 0.0,
+                    "velocity": 0.0,
+                }
+                for joint in UPPER_LEG_JOINTS
+            },
+            "wheel_odometry": {
+                "position": 0.0,
+                "velocity": 0.0,
+            },
+        }
+
         self.__length = length
         self.__max_ground_accel = max_ground_accel
         self.__max_ground_velocity = max_ground_velocity
         self.__noise = np.zeros(4)
         self.__rate = rate
         self.__regulate_frequency = regulate_frequency
+        self.__spine_observation = spine_observation
         self.__state = np.zeros(4)
         self.dt = dt
         self.fall_pitch = fall_pitch
@@ -374,12 +394,9 @@ class WheeledInvertedPendulum(gymnasium.Env):
         self.plot.update()
 
     def _get_spine_observation(self):
-        return {
-            "servo": {
-                joint: {
-                    "position": 0.0,
-                    "velocity": 0.0,
-                }
-                for joint in UPPER_LEG_JOINTS
-            }
-        }
+        obs = self.__spine_observation  # reference, not a copy
+        obs["base_orientation"]["angular_velocity"][1] = self.__state[2]
+        obs["base_orientation"]["pitch"] = self.__state[0]
+        obs["wheel_odometry"]["position"] = self.__state[1]
+        obs["wheel_odometry"]["velocity"] = self.__state[3]
+        return obs
