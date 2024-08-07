@@ -32,7 +32,7 @@ All design decisions have their pros and cons. You can take a look at the featur
 - Soft rather than hard real-time guarantee: the code is empirically reliable by a large margin, that's it
 - Weakly-typed IPC: typing is used within agents and spines, but the interface between them is only checked at runtime
 
-## Available spines
+## Simulation spines
 
 ### Bullet spine {#bullet-spine}
 
@@ -49,6 +49,8 @@ To build and run the simulation from source, [setup your build environment](\ref
 ```
 
 Bazel is the build system used in Upkie for spines. Check out simulation options by appending the help flag ``-h`` to the above command.
+
+## Real-robot spines
 
 ### pi3hat spine {#pi3hat-spine}
 
