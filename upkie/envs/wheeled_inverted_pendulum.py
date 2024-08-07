@@ -94,6 +94,10 @@ class WheeledInvertedPendulum(gymnasium.Env):
     ## Fall pitch angle, in radians.
     fall_pitch: float
 
+    ## @var length
+    ## Length of the inverted pendulum.
+    length: float
+
     ## @var metadata
     ## Metadata of the environment containing rendering modes.
     metadata = {"render_modes": ["plot"]}
@@ -230,8 +234,7 @@ class WheeledInvertedPendulum(gymnasium.Env):
             },
         }
 
-        self.__input = np.zeros(2)
-        self.__length = length
+        self.__accel = np.zeros(2)
         self.__max_ground_accel = max_ground_accel
         self.__max_ground_velocity = max_ground_velocity
         self.__noise = np.zeros(4)
@@ -241,6 +244,7 @@ class WheeledInvertedPendulum(gymnasium.Env):
         self.__state = np.zeros(4)
         self.dt = dt
         self.fall_pitch = fall_pitch
+        self.length = length
         self.observation_noise = observation_noise
         self.plot = None
         self.render_mode = render_mode
@@ -343,7 +347,7 @@ class WheeledInvertedPendulum(gymnasium.Env):
             self.__max_ground_accel,
             "ground_acceleration",
         )
-        thetadd = (GRAVITY * sin(theta_0) - rdd * cos(theta_0)) / self.__length
+        thetadd = (GRAVITY * sin(theta_0) - rdd * cos(theta_0)) / self.length
         r, rd = self._integrate(r_0, rd_0, rdd, self.dt)
         theta, thetad = self._integrate(theta_0, thetad_0, thetadd, self.dt)
 
@@ -351,8 +355,8 @@ class WheeledInvertedPendulum(gymnasium.Env):
         self.__state[1] = r
         self.__state[2] = thetad
         self.__state[3] = rd
-        self.__input[0] = thetadd
-        self.__input[1] = rdd
+        self.__accel[0] = thetadd
+        self.__accel[1] = rdd
 
         if self.observation_noise is not None:
             self.__noise = np.normal(scale=self.observation_noise)
