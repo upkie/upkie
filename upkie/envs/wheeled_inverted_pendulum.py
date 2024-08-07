@@ -404,14 +404,30 @@ class WheeledInvertedPendulum(gymnasium.Env):
         self.plot.update()
 
     def _get_spine_observation(self):
+        theta, r, thetad, rd = self.__state
+        imu_accel = self._get_imu_acceleration()
+
         obs = self.__spine_observation  # reference, not a copy
-        obs["base_orientation"]["angular_velocity"][1] = self.__state[2]
-        obs["base_orientation"]["pitch"] = self.__state[0]
-
+        obs["base_orientation"]["angular_velocity"][1] = thetad
+        obs["base_orientation"]["pitch"] = theta
         # Assumes the y-axis of the IMU is the same as that of the base frame
-        obs["imu"]["raw_angular_velocity"][1] = self.__state[3]
-        # obs["imu"]["raw_linear_acceleration"]
-
-        obs["wheel_odometry"]["position"] = self.__state[1]
-        obs["wheel_odometry"]["velocity"] = self.__state[3]
+        obs["imu"]["raw_angular_velocity"][1] = thetad
+        obs["imu"]["raw_linear_acceleration"] = imu_accel
+        obs["wheel_odometry"]["position"] = r
+        obs["wheel_odometry"]["velocity"] = rd
         return obs
+
+    def _get_imu_acceleration(
+        self,
+        state: Optional[NDArray[float]] = None,
+        accel: Optional[NDArray[float]] = None,
+    ) -> NDArray[float]:
+        theta, r, thetad, rd = state if state is not None else self.__state
+        thetadd, rdd = accel if accel is not None else self.__accel
+        cos, sin = np.cos(theta), np.sin(theta)
+        R = np.array([[cos, -sin], [sin, cos]])
+        # pdd = [rdd, 0] + l * R @ [-thetad^2, thetadd]
+        # a = R.T @ (pdd - gravity)
+        u = np.array([rdd, +GRAVITY])
+        v = np.array([-(thetad**2), thetadd])
+        return R.T @ u + self.length * v
