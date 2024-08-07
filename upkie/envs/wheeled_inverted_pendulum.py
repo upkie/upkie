@@ -12,7 +12,9 @@ import gymnasium
 import numpy as np
 from gymnasium import spaces
 from loop_rate_limiters import RateLimiter
+from numpy import cos, sin
 from numpy.typing import NDArray
+
 from upkie.exceptions import MissingOptionalDependency, UpkieRuntimeError
 from upkie.utils.clamp import clamp_and_warn
 from upkie.utils.spdlog import logging
@@ -196,9 +198,10 @@ class WheeledInvertedPendulum(gymnasium.Env):
                 warn=frequency_checks,
             )
 
+        self.__length = length
         self.__max_ground_accel = max_ground_accel
         self.__max_ground_velocity = max_ground_velocity
-        self.__omega = np.sqrt(GRAVITY / length)
+        self.__noise = np.zeros(4)
         self.__rate = rate
         self.__regulate_frequency = regulate_frequency
         self.__state = np.zeros(4)
@@ -306,9 +309,9 @@ class WheeledInvertedPendulum(gymnasium.Env):
             self.__max_ground_accel,
             "ground_acceleration",
         )
-        thetadd_0 = self.__omega**2 * (
-            np.sin(theta_0) - (rdd_0 / GRAVITY) * np.cos(theta_0)
-        )
+        thetadd_0 = (
+            GRAVITY * sin(theta_0) - rdd_0 * cos(theta_0)
+        ) / self.__length
 
         r, rd = self._integrate(r_0, rd_0, rdd_0, self.dt)
         theta, thetad = self._integrate(theta_0, thetad_0, thetadd_0, self.dt)
