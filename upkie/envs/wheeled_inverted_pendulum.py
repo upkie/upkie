@@ -14,7 +14,7 @@ from gymnasium import spaces
 from loop_rate_limiters import RateLimiter
 from numpy.typing import NDArray
 
-from upkie.exceptions import MissingOptionalDependency
+from upkie.exceptions import MissingOptionalDependency, UpkieRuntimeError
 from upkie.utils.clamp import clamp_and_warn
 from upkie.utils.spdlog import logging
 
@@ -146,9 +146,14 @@ class WheeledInvertedPendulum(gymnasium.Env):
         \param render_mode Rendering mode, set to "plot" for live plotting.
         \param reward Reward function of the environment.
         """
-        assert (
-            render_mode is None or render_mode in self.metadata["render_modes"]
-        )
+        if (
+            render_mode is not None
+            and render_mode not in self.metadata["render_modes"]
+        ):
+            raise UpkieRuntimeError(
+                f"Render mode '{render_mode}' is not in "
+                f"{self.metadata['render_modes']}"
+            )
 
         # gymnasium.Env: observation_space
         MAX_BASE_PITCH: float = np.pi
