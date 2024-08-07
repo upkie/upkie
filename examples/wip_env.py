@@ -12,7 +12,6 @@ perfect or noise-controlled setting.
 
 import gymnasium as gym
 import numpy as np
-
 import upkie.envs
 
 upkie.envs.register()
@@ -22,10 +21,9 @@ if __name__ == "__main__":
     with gym.make(
         "WheeledInvertedPendulum-v1",
         frequency=200.0,
-        render_mode="human",
+        render_mode="plot",
     ) as env:
         observation, _ = env.reset()  # connects to the spine
-        action = env.action_space.sample()
         gain = np.array([10.0, 1.0, 0.0, 0.1])
         for step in range(1_000_000):
             # this is the same agent as in wheeled_balancing.py
