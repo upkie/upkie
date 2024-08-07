@@ -49,6 +49,10 @@ class TestWheeledInvertedPendulum(unittest.TestCase):
         except ImportError:
             pass
 
+    def test_get_spine_observation(self):
+        spine_observation = self.env._get_spine_observation()
+        self.assertTrue("servo" in spine_observation)
+
 
 if __name__ == "__main__":
     unittest.main()
