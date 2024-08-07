@@ -22,6 +22,18 @@ Here is an index of observation dictionaries. Keys are a shorthand for nested di
 
 See also [Sensors](\ref sensors).
 
+## Attitude reference system {#ars}
+
+The attitude reference system (ARS) frame that the IMU filter maps to has its x-axis pointing forward, y-axis pointing to the right and z-axis pointing down ([details](https://github.com/mjbots/pi3hat/blob/ab632c82bd501b9fcb6f8200df0551989292b7a1/docs/reference.md#orientation)). This is not the convention we use in the world frame, where the x-axis points forward, the y-axis points left and the z-axis points up. The rotation matrix from the ARS frame to the world frame is thus:
+
+\f$
+R_{WA} = \begin{bmatrix}
+    1 & 0 & 0 \\
+    0 & -1 & 0 \\
+    0 & 0 & -1 \\
+\end{bmatrix}
+\f$
+
 ## Observers {#observers}
 
 <img src="https://upkie.github.io/upkie/observers.png" align="right">
@@ -37,14 +49,27 @@ See also [Sensors](\ref sensors).
   <dd>Measure the relative motion of the floating base with respect to the floor. Wheel odometry is part of their secondary task (after keeping the head straight), which is to stay around the same spot on the floor.</dd>
 </dl>
 
-## Attitude reference system {#ars}
+### History observer {#history-observer}
 
-The attitude reference system (ARS) frame that the IMU filter maps to has its x-axis pointing forward, y-axis pointing to the right and z-axis pointing down ([details](https://github.com/mjbots/pi3hat/blob/ab632c82bd501b9fcb6f8200df0551989292b7a1/docs/reference.md#orientation)). This is not the convention we use in the world frame, where the x-axis points forward, the y-axis points left and the z-axis points up. The rotation matrix from the ARS frame to the world frame is thus:
+The history observer reports higher-frequency signals from the spine as vectors of observations to lower-frequency agents. It handles floating-point and vector-valued observations. For instance, to report the left-knee torque readings on an Upkie, create a shared-pointer as follows and add it to the observer pipeline of the spine:
 
-\f$
-R_{WA} = \begin{bmatrix}
-    1 & 0 & 0 \\
-    0 & -1 & 0 \\
-    0 & 0 & -1 \\
-\end{bmatrix}
-\f$
+```cpp
+auto left_knee_torque_history = std::make_shared<HistoryObserver<double> >(
+    /* keys = */ std::vector<std::string>{"servo", "left_knee", "torque"},
+    /* size = */ 10,
+    /* default_value = */ std::numeric_limits<double>::quiet_NaN());
+observer_pipeline.append_observer(left_knee_torque_history);
+```
+
+The same syntax can be used for a vector like the IMU linear acceleration:
+
+```cpp
+auto linear_acceleration_history =
+    std::make_shared<HistoryObserver<Eigen::Vector3d> >(
+        /* keys = */ std::vector<std::string>{"imu", "linear_acceleration"},
+        /* size = */ 10,
+        /* default_value = */ Eigen::Vector3d::Zero());
+observer_pipeline.append_observer(linear_acceleration_history);
+```
+
+Check out the API reference for details: \ref upkie::cpp::observers::HistoryObserver.
