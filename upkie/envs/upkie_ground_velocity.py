@@ -13,18 +13,12 @@ from gymnasium import spaces
 from numpy.typing import NDArray
 
 from upkie.exceptions import UpkieException
+from upkie.model.joints import UPPER_LEG_JOINTS
 from upkie.utils.filters import low_pass_filter
 from upkie.utils.robot_state import RobotState
 
 from .rewards import WheeledInvertedPendulumReward
 from .upkie_base_env import UpkieBaseEnv
-
-UPPER_LEG_JOINTS: Tuple[str, str, str, str] = (
-    "left_hip",
-    "left_knee",
-    "right_hip",
-    "right_knee",
-)
 
 
 class UpkieGroundVelocity(UpkieBaseEnv):
