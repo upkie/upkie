@@ -11,7 +11,30 @@ Upkie implements an action-observation loop to control robots from a standalone 
 
 The agent can be a simple Python script with few dependencies. This separation between agent and spine provides a robot/simulation switch to train or test agents in a simulation spine (such as the \ref bullet-spine below) before running them on the real system.
 
-## Bullet spine {#bullet-spine}
+### Inter-process communication
+
+More accurately, Upkie's software implements an inter-process communication (IPC) protocol implemented in the C++ and Python libraries. It is suitable for [real-time](https://en.wiktionary.org/wiki/real-time#English) but not high-frequency (> 1000 Hz) performance. This is fine for balancing and locomotion on Upkies, as there is [theoretical and empirical evidence](https://scaron.info/blog/balancing-is-a-low-frequency-task.html) suggesting they can balance themselves as leisurely as 20 Hz. And if you are wondering whether Python is suitable for real-time applications, we were too! Until we [tried it out](#performance).
+
+All design decisions have their pros and cons. You can take a look at the features and non-features below to decide if you'd rather use Upkie's software or talk to the actuators directly with another software:
+
+#### Features
+
+- Run the same Python code on simulated and real robots
+- Interfaces with to the [mjbots pi3hat](https://mjbots.com/products/mjbots-pi3hat-r4-4b) and mjbots actuators
+- Interfaces with to the [Bullet](http://bulletphysics.org/) simulator
+- Observer pipeline to extend observations
+- Soft real-time: spine-agent loop interactions are predictable and repeatable
+- Unit tested, and not only with end-to-end tests
+
+#### Non-features
+
+- Low frequency: designed for tasks that run in the 1–400 Hz range (like balancing)
+- Soft rather than hard real-time guarantee: the code is empirically reliable by a large margin, that's it
+- Weakly-typed IPC: typing is used within agents and spines, but the interface between them is only checked at runtime
+
+## Available spines
+
+### Bullet spine {#bullet-spine}
 
 The Bullet spine runs an agent in the [Bullet 3](https://github.com/bulletphysics/bullet3) simulator. We can start this spine as a standalone process and let it run waiting for agents to connect. The simulation script will run pre-compiled binaries if possible:
 
@@ -27,11 +50,11 @@ To build and run the simulation from source, [setup your build environment](\ref
 
 Bazel is the build system used in Upkie for spines. Check out simulation options by appending the help flag ``-h`` to the above command.
 
-## pi3hat spine {#pi3hat-spine}
+### pi3hat spine {#pi3hat-spine}
 
 The pi3hat spine is the one that runs on the real robot, where a [pi3hat r4.5](https://mjbots.com/products/mjbots-pi3hat-r4-5) is mounted on top of the onboard Raspberry Pi computer. To run this spine, we can either: download it from GitHub, or build it locally from source.
 
-### Download the latest release
+#### Download the latest release
 
 To get the latest pi3hat spine from GitHub, download the latest `pi3hat_spine` binary from [Continuous Integration build artifacts](https://github.com/upkie/upkie/actions/workflows/ci.yml), then `scp` it to the robot. TODO: make this more user-friendly ;)
 
@@ -47,7 +70,7 @@ Once the spine is running, you can run any agent in a separate shell on the robo
 foo@robot:upkie$ make run_pid_balancer
 ```
 
-### Build from source
+#### Build from source
 
 To build the pi3hat locally from source, then upload it to Raspberry Pi, use the Makefile at the root of the repository:
 
@@ -70,6 +93,6 @@ Once the spine is running, you can run any agent in a separate shell on the robo
 foo@robot:upkie$ make run_pid_balancer
 ```
 
-## Mock spine {#mock-spine}
+### Mock spine {#mock-spine}
 
 The mock spine is useful to run an agent on the robot without firing up the actuators. It works exactly as the pi3hat spine, replacing "pi3hat" with "mock" in all instructions above.
