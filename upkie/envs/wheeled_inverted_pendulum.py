@@ -97,6 +97,11 @@ class WheeledInvertedPendulum(gymnasium.Env):
     ## Metadata of the environment containing rendering modes.
     metadata = {"render_modes": ["plot"]}
 
+    ## @var observation_noise
+    ## Vector of standard deviations for white noise added to state
+    ## observations. It has the same shape and units as an observation vector.
+    observation_noise: Optional[NDArray[float]]
+
     ## @var observation_space
     ## Observation space.
     observation_space: spaces.box.Box
@@ -125,6 +130,7 @@ class WheeledInvertedPendulum(gymnasium.Env):
         length: float = 0.6,
         max_ground_accel: float = 10.0,
         max_ground_velocity: float = 1.0,
+        observation_noise: Optional[NDArray[float]] = None,
         regulate_frequency: bool = True,
         render_mode: Optional[str] = None,
         reward: Optional[WheeledInvertedPendulumReward] = None,
@@ -143,6 +149,9 @@ class WheeledInvertedPendulum(gymnasium.Env):
             [s].
         \param max_ground_accel  Maximum acceleration of the ground point,
             in [m] / [s]².
+        \param observation_noise Vector of standard deviations for white noise
+            added to state observations. It has the same shape and units as an
+            observation vector.
         \param regulate_frequency Enables loop frequency regulation.
         \param render_mode Rendering mode, set to "plot" for live plotting.
         \param reward Reward function of the environment.
@@ -207,6 +216,7 @@ class WheeledInvertedPendulum(gymnasium.Env):
         self.__state = np.zeros(4)
         self.dt = dt
         self.fall_pitch = fall_pitch
+        self.observation_noise = observation_noise
         self.plot = None
         self.render_mode = render_mode
         self.reward = reward
@@ -317,10 +327,12 @@ class WheeledInvertedPendulum(gymnasium.Env):
         theta, thetad = self._integrate(theta_0, thetad_0, thetadd_0, self.dt)
         self.__state = np.array([theta, r, thetad, rd]).flatten()
 
+        if self.observation_noise is not None:
+            self.__noise = np.normal(scale=self.observation_noise)
         if self.render_mode == "plot":
             self._render_plot()
 
-        observation = self.__state
+        observation = self.__state + self.__noise
         reward = self.reward(
             pitch=theta,
             ground_position=r,
