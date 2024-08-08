@@ -76,9 +76,9 @@ jobs:
                   python -c "import upkie.model"
                   python -c "import upkie.utils"
 
-    pypi_success:
-        name: "PyPI success"
+    packaging_success:
+        name: "Packaging success"
         runs-on: ubuntu-latest
-        needs: [pypi, testpypi]
+        needs: [conda, pypi, testpypi]
         steps:
-            - run: echo "PyPI workflow completed successfully"
+            - run: echo "Packaging workflow completed successfully"
