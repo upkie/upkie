@@ -14,7 +14,6 @@ from gymnasium import spaces
 from loop_rate_limiters import RateLimiter
 from numpy import cos, sin
 from numpy.typing import NDArray
-
 from upkie.exceptions import MissingOptionalDependency, UpkieRuntimeError
 from upkie.model.joints import UPPER_LEG_JOINTS
 from upkie.utils.clamp import clamp_and_warn
@@ -82,6 +81,10 @@ class WheeledInvertedPendulum(gymnasium.Env):
     </table>
     """
 
+    ## @var accelerometer_bias
+    ## Accelerometer bias in the IMU frame, in [m] / [s]².
+    accelerometer_bias: float | NDArray[float] | None
+
     ## @var action_space
     ## Action space.
     action_space: spaces.box.Box
@@ -129,6 +132,7 @@ class WheeledInvertedPendulum(gymnasium.Env):
 
     def __init__(
         self,
+        accelerometer_bias: float | NDArray[float] | None = None,
         fall_pitch: float = 1.0,
         frequency: float = 200.0,
         frequency_checks: bool = True,
@@ -143,6 +147,8 @@ class WheeledInvertedPendulum(gymnasium.Env):
         r"""!
         Initialize a new environment.
 
+        \param accelerometer_bias Accelerometer bias in the IMU frame,
+            in [m] / [s]².
         \param fall_pitch Fall detection pitch angle, in [rad].
         \param frequency Regulated frequency of the control loop, in Hz.
         \param frequency_checks If `regulate_frequency` is set and this
@@ -242,6 +248,7 @@ class WheeledInvertedPendulum(gymnasium.Env):
         self.__regulate_frequency = regulate_frequency
         self.__spine_observation = spine_observation
         self.__state = np.zeros(4)
+        self.accelerometer_bias = accelerometer_bias
         self.dt = dt
         self.fall_pitch = fall_pitch
         self.length = length
@@ -430,4 +437,7 @@ class WheeledInvertedPendulum(gymnasium.Env):
         # a = R.T @ (pdd - gravity)
         u = np.array([rdd, +GRAVITY])
         v = np.array([-(thetad**2), thetadd])
-        return R.T @ u + self.length * v
+        proper_accel = R.T @ u + self.length * v
+        if self.accelerometer_bias is not None:
+            return proper_accel + self.accelerometer_bias
+        return proper_accel
