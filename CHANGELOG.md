@@ -21,6 +21,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - examples: wheeled inverted pendulum model example
 - exceptions: Move to the top-level Python module
 
+### Fixed
+
+- spine: Handle deserialization exceptions when beginning a cycle
+
 ### Removed
 
 - actuation: Remove unused IMU data from mock interface
