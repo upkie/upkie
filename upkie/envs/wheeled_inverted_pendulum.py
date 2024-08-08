@@ -359,7 +359,7 @@ class WheeledInvertedPendulum(gymnasium.Env):
         self.__accel[1] = rdd
 
         if self.observation_noise is not None:
-            self.__noise = np.normal(scale=self.observation_noise)
+            self.__noise = np.random.normal(scale=self.observation_noise)
         if self.render_mode == "plot":
             self._render_plot()
 
