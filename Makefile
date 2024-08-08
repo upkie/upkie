@@ -89,6 +89,12 @@ upload: check_upkie_name build set_date  ## upload built targets to the Raspberr
 		--exclude tools/raspios \
 		--progress $(CURDIR)/ $(REMOTE):$(PROJECT_NAME)/
 
+# HOST TARGETS
+# ============
+
+run_bullet_spine:  ## run the Bullet simulation spine
+	$(BAZEL) run //spines:bullet_spine -- --show
+
 # REMOTE SPINE TARGETS
 # ====================
 
