@@ -284,8 +284,13 @@ class UpkieServos(UpkieBaseEnv):
                     if key in env_action[joint.name]
                     else self.__neutral_action[joint.name][key]
                 )
+                action_value = (
+                    action.item()
+                    if isinstance(action, np.ndarray)
+                    else float(action)
+                )
                 servo_action[key] = clamp_and_warn(
-                    action,
+                    action_value,
                     self.__min_action[joint.name][key],
                     self.__max_action[joint.name][key],
                     label=f"{joint.name}: {key}",
