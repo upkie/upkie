@@ -6,6 +6,7 @@
 
 """Wheeled inverted pendulum."""
 
+from dataclasses import dataclass
 from typing import Any, Optional, Tuple
 
 import gymnasium
@@ -14,6 +15,7 @@ from gymnasium import spaces
 from loop_rate_limiters import RateLimiter
 from numpy import cos, sin
 from numpy.typing import NDArray
+
 from upkie.exceptions import MissingOptionalDependency, UpkieRuntimeError
 from upkie.model.joints import UPPER_LEG_JOINTS
 from upkie.utils.clamp import clamp_and_warn
@@ -105,11 +107,6 @@ class WheeledInvertedPendulum(gymnasium.Env):
     ## Metadata of the environment containing rendering modes.
     metadata = {"render_modes": ["plot"]}
 
-    ## @var observation_noise
-    ## Vector of standard deviations for white noise added to state
-    ## observations. It has the same shape and units as an observation vector.
-    observation_noise: Optional[NDArray[float]]
-
     ## @var observation_space
     ## Observation space.
     observation_space: spaces.box.Box
@@ -130,19 +127,52 @@ class WheeledInvertedPendulum(gymnasium.Env):
     ## Environment version number.
     version = 1
 
+    @dataclass
+    class Uncertainty:
+        ## @var accelerometer_bias
+        ## Bias vector added to IMU accelerometer measurements.
+        accelerometer_bias: NDArray[float] | float = 0.0
+
+        ## @var accelerometer_noise
+        ## Vector of standard deviations for white noise added to IMU
+        ## accelerometer measurements.
+        accelerometer_noise: NDArray[float] | float = 0.0
+
+        ## @var observation_noise
+        ## Bias vector added to state observations.
+        observation_bias: NDArray[float] | float = 0.0
+
+        ## @var observation_noise
+        ## Vector of standard deviations for white noise added to state
+        ## observations.
+        observation_noise: NDArray[float] | float = 0.0
+
+        def accelerometer(self) -> NDArray[float]:
+            return np.random.normal(
+                loc=self.accelerometer_bias,
+                scale=self.accelerometer_noise,
+                size=(2,),
+            )
+
+        def observation(self) -> NDArray[float]:
+            return np.random.normal(
+                loc=self.observation_bias,
+                scale=self.observation_noise,
+                size=(4,),
+            )
+
     def __init__(
         self,
-        accelerometer_bias: float | NDArray[float] | None = None,
         fall_pitch: float = 1.0,
         frequency: float = 200.0,
         frequency_checks: bool = True,
         length: float = 0.6,
         max_ground_accel: float = 10.0,
         max_ground_velocity: float = 1.0,
-        observation_noise: Optional[NDArray[float]] = None,
         regulate_frequency: bool = True,
         render_mode: Optional[str] = None,
         reward: Optional[WheeledInvertedPendulumReward] = None,
+        uncertainty: Optional["WheeledInvertedPendulum.Uncertainty"] = None,
     ):
         r"""!
         Initialize a new environment.
@@ -160,12 +190,10 @@ class WheeledInvertedPendulum(gymnasium.Env):
             [s].
         \param max_ground_accel  Maximum acceleration of the ground point,
             in [m] / [s]².
-        \param observation_noise Vector of standard deviations for white noise
-            added to state observations. It has the same shape and units as an
-            observation vector.
         \param regulate_frequency Enables loop frequency regulation.
         \param render_mode Rendering mode, set to "plot" for live plotting.
         \param reward Reward function of the environment.
+        \param uncertainty Uncertainty biases and noise magnitudes.
         """
         if (
             render_mode is not None
@@ -240,6 +268,9 @@ class WheeledInvertedPendulum(gymnasium.Env):
             },
         }
 
+        if uncertainty is None:
+            uncertainty = WheeledInvertedPendulum.Uncertainty()
+
         self.__accel = np.zeros(2)
         self.__max_ground_accel = max_ground_accel
         self.__max_ground_velocity = max_ground_velocity
@@ -248,14 +279,13 @@ class WheeledInvertedPendulum(gymnasium.Env):
         self.__regulate_frequency = regulate_frequency
         self.__spine_observation = spine_observation
         self.__state = np.zeros(4)
-        self.accelerometer_bias = accelerometer_bias
         self.dt = dt
         self.fall_pitch = fall_pitch
         self.length = length
-        self.observation_noise = observation_noise
         self.plot = None
         self.render_mode = render_mode
         self.reward = reward
+        self.uncertainty = uncertainty
 
     def reset(
         self,
@@ -365,12 +395,10 @@ class WheeledInvertedPendulum(gymnasium.Env):
         self.__accel[0] = thetadd
         self.__accel[1] = rdd
 
-        if self.observation_noise is not None:
-            self.__noise = np.random.normal(scale=self.observation_noise)
         if self.render_mode == "plot":
             self._render_plot()
 
-        observation = self.__state + self.__noise
+        observation = self.__state + self.uncertainty.observation()
         reward = self.reward(
             pitch=theta,
             ground_position=r,
@@ -438,6 +466,4 @@ class WheeledInvertedPendulum(gymnasium.Env):
         u = np.array([rdd, +GRAVITY])
         v = np.array([-(thetad**2), thetadd])
         proper_accel = R.T @ u + self.length * v
-        if self.accelerometer_bias is not None:
-            return proper_accel + self.accelerometer_bias
-        return proper_accel
+        return proper_accel + self.uncertainty.accelerometer()
