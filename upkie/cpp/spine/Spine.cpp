@@ -136,19 +136,24 @@ void Spine::begin_cycle() {
   }
   state_cycle_beginning_ = state_machine_.state();
 
-  // Read input dictionary if applicable
-  if (state_machine_.state() == State::kReset) {
-    Dictionary& config = working_dict_("config");
-    const char* data = agent_interface_.data();
-    size_t size = agent_interface_.size();
-    config.clear();
-    config.update(data, size);
-    reset(config);
-  } else if (state_machine_.state() == State::kAct) {
-    Dictionary& action = working_dict_("action");
-    const char* data = agent_interface_.data();
-    size_t size = agent_interface_.size();
-    action.update(data, size);
+  try {
+    // Read input dictionary if applicable
+    if (state_machine_.state() == State::kReset) {
+      Dictionary& config = working_dict_("config");
+      const char* data = agent_interface_.data();
+      size_t size = agent_interface_.size();
+      config.clear();
+      config.update(data, size);
+      reset(config);
+    } else if (state_machine_.state() == State::kAct) {
+      Dictionary& action = working_dict_("action");
+      const char* data = agent_interface_.data();
+      size_t size = agent_interface_.size();
+      action.update(data, size);
+    }
+  } catch (const palimpsest::exceptions::PalimpsestError& exn) {
+    spdlog::error("Deserialization error: {}", exn.what());
+    state_machine_.process_event(Event::kInterrupt);
   }
 }
 
