@@ -6,7 +6,6 @@
 
 """Wheeled inverted pendulum."""
 
-from dataclasses import dataclass
 from typing import Any, Optional, Tuple
 
 import gymnasium
@@ -83,10 +82,6 @@ class WheeledInvertedPendulum(gymnasium.Env):
     </table>
     """
 
-    ## @var accelerometer_bias
-    ## Accelerometer bias in the IMU frame, in [m] / [s]².
-    accelerometer_bias: float | NDArray[float] | None
-
     ## @var action_space
     ## Action space.
     action_space: spaces.box.Box
@@ -123,31 +118,56 @@ class WheeledInvertedPendulum(gymnasium.Env):
     ## Reward function of the environment.
     reward: WheeledInvertedPendulumReward
 
+    ## @var uncertainty
+    ## Biases and noise levels on modeled system uncertainties.
+    uncertainty: "WheeledInvertedPendulum.Uncertainty"
+
     ## @var version
     ## Environment version number.
     version = 1
 
-    @dataclass
     class Uncertainty:
+        r"""!
+        Biases and noise levels on modeled system uncertainties.
+        """
+
         ## @var accelerometer_bias
         ## Bias vector added to IMU accelerometer measurements.
-        accelerometer_bias: NDArray[float] | float = 0.0
+        accelerometer_bias: NDArray[float] | float
 
         ## @var accelerometer_noise
         ## Vector of standard deviations for white noise added to IMU
         ## accelerometer measurements.
-        accelerometer_noise: NDArray[float] | float = 0.0
+        accelerometer_noise: NDArray[float] | float
 
-        ## @var observation_noise
+        ## @var observation_bias
         ## Bias vector added to state observations.
-        observation_bias: NDArray[float] | float = 0.0
+        observation_bias: NDArray[float] | float
 
         ## @var observation_noise
         ## Vector of standard deviations for white noise added to state
         ## observations.
-        observation_noise: NDArray[float] | float = 0.0
+        observation_noise: NDArray[float] | float
+
+        def __init__(
+            self,
+            accelerometer_bias: NDArray[float] | float = 0.0,
+            accelerometer_noise: NDArray[float] | float = 0.0,
+            observation_bias: NDArray[float] | float = 0.0,
+            observation_noise: NDArray[float] | float = 0.0,
+        ):
+            r"""!
+            Initialize uncertainties.
+            """
+            self.accelerometer_bias = accelerometer_bias
+            self.accelerometer_noise = accelerometer_noise
+            self.observation_bias = observation_bias
+            self.observation_noise = observation_noise
 
         def accelerometer(self) -> NDArray[float]:
+            r"""!
+            Get accelerometer uncertainty vector.
+            """
             return np.random.normal(
                 loc=self.accelerometer_bias,
                 scale=self.accelerometer_noise,
@@ -155,6 +175,9 @@ class WheeledInvertedPendulum(gymnasium.Env):
             )
 
         def observation(self) -> NDArray[float]:
+            r"""!
+            Get observation uncertainty vector.
+            """
             return np.random.normal(
                 loc=self.observation_bias,
                 scale=self.observation_noise,
@@ -177,8 +200,6 @@ class WheeledInvertedPendulum(gymnasium.Env):
         r"""!
         Initialize a new environment.
 
-        \param accelerometer_bias Accelerometer bias in the IMU frame,
-            in [m] / [s]².
         \param fall_pitch Fall detection pitch angle, in [rad].
         \param frequency Regulated frequency of the control loop, in Hz.
         \param frequency_checks If `regulate_frequency` is set and this
