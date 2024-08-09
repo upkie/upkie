@@ -486,7 +486,8 @@ class WheeledInvertedPendulum(gymnasium.Env):
         obs["base_orientation"]["pitch"] = theta
         # Assumes the y-axis of the IMU is the same as that of the base frame
         obs["imu"]["raw_angular_velocity"][1] = thetad
-        obs["imu"]["raw_linear_acceleration"] = imu_accel
+        obs["imu"]["raw_linear_acceleration"][0] = imu_accel[0]
+        obs["imu"]["raw_linear_acceleration"][2] = imu_accel[1]
         obs["wheel_odometry"]["position"] = r
         obs["wheel_odometry"]["velocity"] = rd
         return obs
