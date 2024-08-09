@@ -1,0 +1,6 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" title=" " alt="" coords="5,46,92,73"/>
+<area shape="rect" id="node2" href="$classupkie_1_1spine_1_1exceptions_1_1UpkieException.html" title="Base class for exceptions raised by Upkie." alt="" coords="140,39,355,80"/>
+<area shape="rect" id="node3" href="$classupkie_1_1spine_1_1exceptions_1_1PerformanceIssue.html" title="Exception raised when a performance issue is detected." alt="" coords="403,5,661,47"/>
+<area shape="rect" id="node4" href="$classupkie_1_1spine_1_1exceptions_1_1SpineError.html" title="Exception raised when the spine sets an error flag in the request field of the shared memory map." alt="" coords="426,71,638,112"/>
+</map>
