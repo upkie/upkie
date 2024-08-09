@@ -21,7 +21,7 @@ class LowPassFilterActionTestCase(unittest.TestCase):
         lpf_env = LowPassFilterAction(env, time_constant=1.0)
         action = np.array([1.0])
         inner_action, _, _, _, _ = lpf_env.step(action)
-        self.assertTrue(np.allclose(action * env.dt, inner_action))
+        self.assertTrue(np.allclose(action * env.unwrapped.dt, inner_action))
 
     def test_check_env(self):
         try:

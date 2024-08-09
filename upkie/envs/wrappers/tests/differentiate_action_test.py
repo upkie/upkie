@@ -25,7 +25,7 @@ class DifferentiateActionTestCase(unittest.TestCase):
         )
         action = np.array([1.0])
         inner_action, _, _, _, _ = diff_env.step(action)
-        self.assertTrue(np.allclose(action * env.dt, inner_action))
+        self.assertTrue(np.allclose(action * env.unwrapped.dt, inner_action))
 
     def test_check_env(self):
         try:
