@@ -459,20 +459,6 @@ class WheeledInvertedPendulum(gymnasium.Env):
         self.plot.send("ground_position", self.__state[1])
         self.plot.update()
 
-    def _get_spine_observation(self):
-        theta, r, thetad, rd = self.__state
-        imu_accel = self._get_imu_acceleration()
-
-        obs = self.__spine_observation  # reference, not a copy
-        obs["base_orientation"]["angular_velocity"][1] = thetad
-        obs["base_orientation"]["pitch"] = theta
-        # Assumes the y-axis of the IMU is the same as that of the base frame
-        obs["imu"]["raw_angular_velocity"][1] = thetad
-        obs["imu"]["raw_linear_acceleration"] = imu_accel
-        obs["wheel_odometry"]["position"] = r
-        obs["wheel_odometry"]["velocity"] = rd
-        return obs
-
     def _get_imu_acceleration(
         self,
         state: Optional[NDArray[float]] = None,
@@ -488,3 +474,20 @@ class WheeledInvertedPendulum(gymnasium.Env):
         v = np.array([-(thetad**2), thetadd])
         proper_accel = R.T @ u + self.length * v
         return proper_accel + self.uncertainty.accelerometer()
+
+    def _get_spine_observation(self):
+        theta, r, thetad, rd = self.__state
+        imu_accel = self._get_imu_acceleration()
+
+        obs = self.__spine_observation  # reference, not a copy
+        obs["base_orientation"]["angular_velocity"][1] = thetad
+        obs["base_orientation"]["pitch"] = theta
+        # Assumes the y-axis of the IMU is the same as that of the base frame
+        obs["imu"]["raw_angular_velocity"][1] = thetad
+        obs["imu"]["raw_linear_acceleration"] = imu_accel
+        obs["wheel_odometry"]["position"] = r
+        obs["wheel_odometry"]["velocity"] = rd
+        return obs
+
+    def _get_state(self) -> NDArray[float]:
+        return self.__state.copy()
