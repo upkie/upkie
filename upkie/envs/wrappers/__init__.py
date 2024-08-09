@@ -9,7 +9,7 @@ from .differentiate_action import DifferentiateAction
 from .low_pass_filter_action import LowPassFilterAction
 from .noisify_action import NoisifyAction
 from .noisify_observation import NoisifyObservation
-from .upkie_servos import DirectTorqueControl, AdmittanceControl
+from .servos_actions import DirectTorqueControl, AdmittanceControl
 
 __all__ = [
     "AddActionToObservation",
