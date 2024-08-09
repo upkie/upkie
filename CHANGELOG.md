@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - actuation: Log raw IMU measurements from pi3hat interface
 - envs: Start reward submodule with a wheeled inverted pendulum reward
 - utils: Raise an exception when trying to configure agent from an interpreter
+- envs: Added a direct torque control and an admittance control wrapper for UpkieServos
 
 ### Changed
 
