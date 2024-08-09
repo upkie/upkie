@@ -32,17 +32,44 @@ class UpkieServos(UpkieBaseEnv):
     - ``right_hip``: Right knee joint (qdd100)
     - ``right_hip``: Right wheel joint (mj5208)
 
-    The value for each dictionary is a dictionary with the following keys:
+    The value for each servo dictionary is itself a dictionary with the
+    following keys:
 
-    - ``position``: Joint angle in [rad] (NaN to disable) (required).
-    - ``velocity``: Joint velocity in [rad] / [s] (required).
-    - ``feedforward_torque``: Joint torque in [N] * [m].
-    - ``kp_scale``: Scaling factor applied to the position feedback gain,
-        between zero and one.
-    - ``kd_scale``: Scaling factor applied to the velocity feedback gain,
-        between zero and one.
-    - ``maximum_torque``: Maximum joint torque (feedforward + feedback) during
-        the whole actuation step, in [N] * [m].
+    - ``position``: Commanded joint angle \f$\theta^*\f$ in [rad] (NaN to
+        disable) (required).
+    - ``velocity``: Commanded joint velocity \f$\dot{\theta}^*\f$ in [rad] /
+        [s] (required).
+    - ``feedforward_torque``: Feedforward joint torque \f$\tau_{\mathit{ff}}\f$
+        in [N] * [m].
+    - ``kp_scale``: Scaling factor \f$k_{p}^{\mathit{scale}}\f$ applied to the
+        position feedback gain, between zero and one.
+    - ``kd_scale``: Scaling factor \f$k_{d}^{\mathit{scale}}\f$ applied to the
+        velocity feedback gain, between zero and one.
+    - ``maximum_torque``: Maximum joint torque \f$\tau_{\mathit{max}}\f$
+        (feedforward + feedback) enforced during the whole actuation step, in
+        [N] * [m].
+
+    The resulting torque applied by the servo is then:
+
+    \f[
+    \begin{align*}
+    \tau & = \underset{
+            [-\tau_{\mathit{max}}, +\tau_{\mathit{max}}]}{
+            \mathrm{clamp}
+        }
+        \left(
+            \tau_{\mathit{ff}} +
+            k_{p} k_{p}^{\mathit{scale}} (\theta^* - \theta) +
+            k_{d} k_{d}^{\mathit{scale}} (\dot{\theta}^* - \dot{\theta}))
+        \right)
+    \end{align*}
+    \f]
+
+    Note that the servo regulates the torque above at its own frequency, which
+    is higher (typically 40 kHz) than the agent and the spine frequencies. See
+    the [moteus
+    reference](https://github.com/mjbots/moteus/blob/13c171c697ce6f60a73c9385e6fe951957313d1d/docs/reference.md#theory-of-operation)
+    for more details.
 
     ### Observation space
 
