@@ -167,6 +167,8 @@ class WheeledInvertedPendulum(gymnasium.Env):
         def accelerometer(self) -> NDArray[float]:
             r"""!
             Get accelerometer uncertainty vector.
+
+            \return Acceleration uncertainty vector in the IMU frame.
             """
             return np.random.normal(
                 loc=self.accelerometer_bias,
@@ -467,13 +469,13 @@ class WheeledInvertedPendulum(gymnasium.Env):
         theta, r, thetad, rd = state if state is not None else self.__state
         thetadd, rdd = accel if accel is not None else self.__accel
         cos, sin = np.cos(theta), np.sin(theta)
-        R = np.array([[cos, -sin], [sin, cos]])
-        # pdd = [rdd, 0] + l * R @ [-thetad^2, thetadd]
-        # a = R.T @ (pdd - gravity)
+        R_theta = np.array([[cos, sin], [-sin, cos]])
         u = np.array([rdd, +GRAVITY])
-        v = np.array([-(thetad**2), thetadd])
-        proper_accel = R.T @ u + self.length * v
-        return proper_accel + self.uncertainty.accelerometer()
+        v = np.array([thetadd, -(thetad**2)])
+        proper_accel_world = u + R_theta @ (self.length * v)
+        R_world_to_imu = R_theta  # TODO: fix
+        proper_accel_imu = R_world_to_imu @ proper_accel_world
+        return proper_accel_imu + self.uncertainty.accelerometer()
 
     def _get_spine_observation(self):
         theta, r, thetad, rd = self.__state
