@@ -7,7 +7,8 @@
 import os
 import sys
 
-from .exceptions import UpkieRuntimeError
+from upkie.exceptions import UpkieRuntimeError
+
 from .spdlog import logging
 
 __AGENT_CPUID: int = 3

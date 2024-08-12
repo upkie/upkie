@@ -31,6 +31,7 @@ py_library(
     name = "raspi",
     srcs = ["raspi.py"],
     deps = [
+        "//upkie:exceptions",
         ":spdlog",
     ],
 )
