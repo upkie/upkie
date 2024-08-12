@@ -3,7 +3,13 @@ from gymnasium import spaces
 
 class UpkieServoPositions(UpkieServos):
     """!
-    TODO
+    Child class of UpkieServos that defines the action space as a dictionary of
+    joint names with the following keys:    
+    - "position": the desired position of the joint
+    - "kp_scale": the proportional gain of the joint
+    - "kd_scale": the derivative gain of the joint
+    Which simplifies the control of the robot by allowing to control the position
+    of the joints and the gains.
     """
     def __init__(self,**kwargs):
         super().__init__(**kwargs)
