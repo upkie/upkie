@@ -35,6 +35,26 @@ py_library(
 )
 
 py_library(
+    name = "upkie_servo_positions",
+    srcs = [
+        "upkie_servo_positions.py",
+    ],
+    deps = [
+        ":upkie_servos",
+    ],
+)
+
+py_library(
+    name = "upkie_servo_torques",
+    srcs = [
+        "upkie_servo_torques.py",
+    ],
+    deps = [
+        ":upkie_servos",
+    ],
+)
+
+py_library(
     name = "upkie_servos",
     srcs = [
         "upkie_servos.py",
@@ -64,6 +84,8 @@ py_library(
     deps = [
         ":upkie_base_env",
         ":upkie_ground_velocity",
+        ":upkie_servo_positions",
+        ":upkie_servo_torques",
         ":upkie_servos",
         ":wheeled_inverted_pendulum",
     ],
