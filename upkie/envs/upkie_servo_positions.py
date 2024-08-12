@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2024 Inria
 
-from typing import Optional
+from typing import Optional, Set
 
 from gymnasium import spaces
 
@@ -25,6 +25,8 @@ class UpkieServoPositions(UpkieServos):
     Which simplifies the control of the robot by allowing to control the
     position of the joints and the gains.
     """
+
+    ACTION_MASK: Set[str] = set(["position", "kp_scale", "kd_scale"])
 
     ## @var action_space
     ## Action space.
