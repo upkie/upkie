@@ -11,10 +11,9 @@ systemctl stop userconfig
 systemctl disable userconfig
 systemctl mask userconfig
 
-# Prepare pi user (no password) and its home directrory
-passwd -d pi
-rm -rf /home/pi/Bookshelf
+# Prepare pi user and its home directrory
 cp /root/WELCOME /home/pi/WELCOME && chown pi:pi /home/pi/WELCOME
+rm -rf /home/pi/Bookshelf
 
 # Install Debian packages
 export DEBIAN_FRONTEND=noninteractive
