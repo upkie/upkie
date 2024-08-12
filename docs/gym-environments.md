@@ -54,7 +54,7 @@ In short, we have:
 \end{align*}
 \f]
 
-The [UpkieServoTorques](\ref upkie.envs.upkie_servo_torques.UpkieServoTorques) has the same observation space as UpkieServos, but the action space is only composed of \f[tau_{\mathit{ff}}\f]. This makes the agent control directly the torques given to the servos.
+The [UpkieServoTorques](\ref upkie.envs.upkie_servo_torques.UpkieServoTorques) has the same observation space as UpkieServos, but the action space is only composed of \f$tau_{\mathit{ff}}\f$. This makes the agent control directly the torques given to the servos.
 In short, we have:
 
 \f[
