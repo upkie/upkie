@@ -173,7 +173,7 @@ class WheeledInvertedPendulum(gymnasium.Env):
             r"""!
             Get accelerometer uncertainty vector.
 
-            \return Acceleration uncertainty vector in the IMU frame.
+            \return Acceleration uncertainty vector in the base frame.
             """
             return np.random.normal(
                 loc=self.accelerometer_bias,
@@ -274,6 +274,7 @@ class WheeledInvertedPendulum(gymnasium.Env):
                 warn=frequency_checks,
             )
 
+        model = Model(upkie_description.URDF_PATH)
         spine_observation = {
             "base_orientation": {
                 "pitch": 0.0,
@@ -284,11 +285,11 @@ class WheeledInvertedPendulum(gymnasium.Env):
                 "raw_linear_acceleration": np.zeros(3),
             },
             "servo": {
-                joint: {
+                joint.name: {
                     "position": 0.0,
                     "velocity": 0.0,
                 }
-                for joint in UPPER_LEG_JOINTS
+                for joint in model.upper_leg_joints
             },
             "wheel_odometry": {
                 "position": 0.0,
@@ -310,6 +311,7 @@ class WheeledInvertedPendulum(gymnasium.Env):
         self.dt = dt
         self.fall_pitch = fall_pitch
         self.length = length
+        self.model = model
         self.plot = None
         self.render_mode = render_mode
         self.reward = reward
