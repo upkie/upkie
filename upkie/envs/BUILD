@@ -27,10 +27,8 @@ py_library(
     ],
     deps = [
         "//upkie/envs/rewards",
-        "//upkie/model",
         "//upkie/utils:filters",
-        "//upkie/utils:robot_state",
-        "//upkie:exceptions",
+        ":upkie_base_env",
     ],
 )
 
@@ -60,7 +58,6 @@ py_library(
         "upkie_servos.py",
     ],
     deps = [
-        "//upkie/model",
         "//upkie/utils:robot_state",
         ":upkie_base_env",
     ],
@@ -73,6 +70,7 @@ py_library(
     ],
     deps = [
         "//upkie/envs/rewards",
+        "//upkie/model",
     ],
 )
 

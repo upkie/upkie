@@ -9,12 +9,14 @@ from typing import Any, Optional, Tuple
 
 import gymnasium
 import numpy as np
+import upkie_description
 from loop_rate_limiters import RateLimiter
 from numpy.typing import NDArray
 
 import upkie.config
-from upkie.spine import SpineInterface
 from upkie.exceptions import UpkieException
+from upkie.model import Model
+from upkie.spine import SpineInterface
 from upkie.utils.nested_update import nested_update
 from upkie.utils.robot_state import RobotState
 from upkie.utils.spdlog import logging
@@ -45,6 +47,10 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
     ## Initial state for the floating base of the robot, which may be
     ## randomized upon resets.
     init_state: RobotState
+
+    ## @var model
+    ## Robot model read from its URDF description.
+    model: Model
 
     def __init__(
         self,
@@ -96,6 +102,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         self._spine_config = merged_spine_config
         self.fall_pitch = fall_pitch
         self.init_state = init_state
+        self.model = Model(upkie_description.URDF_PATH)
 
     def __del__(self):
         """!
