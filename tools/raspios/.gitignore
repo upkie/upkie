@@ -1,8 +1,11 @@
 .packer_*
 provision/configure_cpu_isolation.py
+provision/cpufreq_ondemand
+provision/cpufreq_performance
 provision/hard_rezero
 provision/micromamba
 provision/pi3hat_spine
 provision/stop_servos
 provision/upkie_tool
+provision/vcgenall
 raspios_upkie.img
