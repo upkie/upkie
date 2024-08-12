@@ -60,6 +60,23 @@ class TestWheeledInvertedPendulum(unittest.TestCase):
         self.assertAlmostEqual(imu_accel[0], 0.0)
         self.assertAlmostEqual(imu_accel[1], 9.81)
 
+    def test_get_imu_acceleration_rest_rotated(self):
+        state = np.array([np.pi / 2, 0.0, 0.0, 0.0])
+        accel = np.zeros(2)
+        imu_accel = self.env._get_imu_acceleration_in_base(state, accel)
+        self.assertAlmostEqual(imu_accel[0], -9.81)
+        self.assertAlmostEqual(imu_accel[1], 0.0)
+
+    def test_get_imu_acceleration_rest_independent_from_position(self):
+        state = np.zeros(4)
+        accel = np.zeros(2)
+        rest_accel = self.env._get_imu_acceleration_in_base(state, accel)
+        for r in (-0.2, 11.1, 5e4):
+            state[1] = r
+            imu_accel = self.env._get_imu_acceleration_in_base(state, accel)
+            self.assertAlmostEqual(imu_accel[0], rest_accel[0])
+            self.assertAlmostEqual(imu_accel[1], rest_accel[1])
+
     def test_get_imu_acceleration_pure_accel(self):
         state = np.zeros(4)
         accel = np.array([1.0, 2.0])
