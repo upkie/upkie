@@ -29,6 +29,7 @@ chmod 755 /usr/local/bin/micromamba
 chmod 755 /usr/local/bin/pi3hat_spine
 chmod 755 /usr/local/bin/stop_servos
 chmod 755 /usr/local/bin/upkie_tool
+chmod 755 /usr/local/bin/vcgenall
 
 # Configure micromamba
 /usr/local/bin/micromamba config append channels conda-forge

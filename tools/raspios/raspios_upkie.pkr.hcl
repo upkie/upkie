@@ -76,6 +76,11 @@ build {
     destination = "/usr/local/bin/upkie_tool"
   }
 
+  provisioner "file" {
+    source = "provision/vcgenall"
+    destination = "/usr/local/bin/vcgenall"
+  }
+
   provisioner "shell" {
     script = "provision.sh"
   }
