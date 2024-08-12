@@ -24,6 +24,10 @@ def configure_cpu_isolation(filename="/boot/firmware/cmdline.txt"):
 
     Args:
         filename: Path to the boot cmdline configuration file.
+
+    Note:
+        As an added action, disable the first-boot configuration assistant if
+        it is enabled.
     """
     keyword, value = "isolcpus", "1,2,3"
     file_content = [
@@ -33,6 +37,11 @@ def configure_cpu_isolation(filename="/boot/firmware/cmdline.txt"):
 
     new_item = "{}={}".format(keyword, value)
     items = [x.strip() for x in file_content[0].split(" ")]
+    items = [  # remove firstboot configuration
+        x
+        for x in items
+        if not x.startswith("init=") and not x.endswith("firstboot")
+    ]
     present = [x for x in items if x == keyword or x.startswith(keyword + "=")]
     if len(present) > 0:
         new_items = [
