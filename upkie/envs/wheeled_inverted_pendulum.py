@@ -468,7 +468,7 @@ class WheeledInvertedPendulum(gymnasium.Env):
         self.plot.send("ground_position", self.__state[1])
         self.plot.update()
 
-    def _get_imu_linear_acceleration_in_base(
+    def _get_imu_acceleration_in_base(
         self,
         state: Optional[NDArray[float]] = None,
         accel: Optional[NDArray[float]] = None,
@@ -488,7 +488,7 @@ class WheeledInvertedPendulum(gymnasium.Env):
 
     def _get_spine_observation(self):
         theta, r, thetad, rd = self.__state
-        accel_2d = self._get_imu_linear_acceleration_in_base()
+        accel_2d = self._get_imu_acceleration_in_base()
         accel_in_base = np.array([accel_2d[0], 0.0, accel_2d[1]])
         omega_in_base = np.array([0.0, thetad, 0.0])
         accel_in_imu = self.model.rotation_base_to_imu @ accel_in_base
