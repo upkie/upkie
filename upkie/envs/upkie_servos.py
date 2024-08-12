@@ -100,7 +100,7 @@ class UpkieServos(UpkieBaseEnv):
 
     ## @var action_space
     ## Action space.
-    action_space: spaces.box.Box
+    action_space: spaces.dict.Dict
 
     ## @var model
     ## Robot model read from its URDF description.
@@ -108,7 +108,7 @@ class UpkieServos(UpkieBaseEnv):
 
     ## @var observation_space
     ## Observation space.
-    observation_space: spaces.box.Box
+    observation_space: spaces.dict.Dict
 
     ## @var version
     ## Environment version number.
