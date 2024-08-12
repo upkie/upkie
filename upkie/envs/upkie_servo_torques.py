@@ -20,3 +20,4 @@ class UpkieServoTorques(UpkieServos):
                     ),
                 }) for joint in self.model.joints}
         self.action_space = spaces.Dict(action_space)
+

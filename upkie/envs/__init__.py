@@ -13,6 +13,7 @@ from .wheeled_inverted_pendulum import WheeledInvertedPendulum
 from .upkie_servo_positions import UpkieServoPositions
 from .upkie_servo_torques import UpkieServoTorques
 
+
 def register() -> None:
     """!
     Register Upkie environments with Gymnasium.
