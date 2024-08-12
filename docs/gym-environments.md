@@ -44,3 +44,21 @@ where for joint \f$i\f$ we denote by:
 Position and velocity gains \f$k_{p}\f$ and \f$k_{d}\f$ are configured in each moteus controller directly; we can update the overall feedback gains via the normalized parameters \f$k_{p}^{\mathit{scale}} \in [0, 1]\f$ and \f$k_{d}^{\mathit{scale}} \in [0, 1]\f$.
 
 Check out the [UpkieServos](\ref upkie.envs.upkie_servos.UpkieServos) documentation for more details.
+
+The [UpkieServoPositions](\ref upkie.envs.upkie_servo_positions.UpkieServoPositions) has the same observation space as UpkieServos, but the action space is only composed of \f$\theta\f$, $k_d$ and $k_p$. This makes the agent control the servos in a position manner.
+In short, we have:
+
+\f[
+\begin{align*}
+\tau & = k_{p} k_{p}^{\mathit{scale}} (\theta^* - \theta) + k_{d} k_{d}^{\mathit{scale}} (\dot{\theta})
+\end{align*}
+\f]
+
+The [UpkieServoTorques](\ref upkie.envs.upkie_servo_torques.UpkieServoTorques) has the same observation space as UpkieServos, but the action space is only composed of $\tau_{\mathit{ff}}$. This makes the agent control directly the torques given to the servos.
+In short, we have:
+
+\f[
+\begin{align*}
+\tau & = \tau_{\mathit{ff}}
+\end{align*}
+\f]
