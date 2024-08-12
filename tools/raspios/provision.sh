@@ -5,6 +5,12 @@
 # Configure CPU isolation
 python /root/configure_cpu_isolation.py
 
+# Disable the first-boot configuration assistant
+rmdir /home/rpi-first-boot-wizard
+systemctl stop userconfig
+systemctl disable userconfig
+systemctl mask userconfig
+
 # Install Debian packages
 export DEBIAN_FRONTEND=noninteractive
 apt-get update && apt-get install -y python3-pip tmux vim
