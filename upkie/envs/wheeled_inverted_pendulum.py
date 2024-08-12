@@ -6,7 +6,7 @@
 
 """Wheeled inverted pendulum."""
 
-from typing import Any, Optional, Tuple
+from typing import Any, Optional, Tuple, Union
 
 import gymnasium
 import numpy as np
@@ -138,28 +138,28 @@ class WheeledInvertedPendulum(gymnasium.Env):
 
         ## @var accelerometer_bias
         ## Bias vector added to accelerometer measurements in the base frame.
-        accelerometer_bias: NDArray[float] | float
+        accelerometer_bias: Union[NDArray[float], float]
 
         ## @var accelerometer_noise
         ## Vector of standard deviations for white noise added to accelerometer
         ## measurements in the base frame.
-        accelerometer_noise: NDArray[float] | float
+        accelerometer_noise: Union[NDArray[float], float]
 
         ## @var observation_bias
         ## Bias vector added to state observations.
-        observation_bias: NDArray[float] | float
+        observation_bias: Union[NDArray[float], float]
 
         ## @var observation_noise
         ## Vector of standard deviations for white noise added to state
         ## observations.
-        observation_noise: NDArray[float] | float
+        observation_noise: Union[NDArray[float], float]
 
         def __init__(
             self,
-            accelerometer_bias: NDArray[float] | float = 0.0,
-            accelerometer_noise: NDArray[float] | float = 0.0,
-            observation_bias: NDArray[float] | float = 0.0,
-            observation_noise: NDArray[float] | float = 0.0,
+            accelerometer_bias:  Union[NDArray[float], float] = 0.0,
+            accelerometer_noise: Union[NDArray[float], float] = 0.0,
+            observation_bias:    Union[NDArray[float], float] = 0.0,
+            observation_noise:   Union[NDArray[float], float] = 0.0,
         ):
             r"""!
             Initialize uncertainties.
