@@ -488,15 +488,17 @@ class WheeledInvertedPendulum(gymnasium.Env):
 
     def _get_spine_observation(self):
         theta, r, thetad, rd = self.__state
-        imu_accel = self._get_imu_acceleration()
+        accel_2d = self._get_imu_linear_acceleration_in_base()
+        accel_in_base = np.array([accel_2d[0], 0.0, accel_2d[1]])
+        omega_in_base = np.array([0.0, thetad, 0.0])
+        accel_in_imu = self.model.rotation_base_to_imu @ accel_in_base
+        omega_in_imu = self.model.rotation_base_to_imu @ omega_in_base
 
         obs = self.__spine_observation  # reference, not a copy
         obs["base_orientation"]["angular_velocity"][1] = thetad
         obs["base_orientation"]["pitch"] = theta
-        # Assumes the y-axis of the IMU is the same as that of the base frame
-        obs["imu"]["raw_angular_velocity"][1] = thetad
-        obs["imu"]["raw_linear_acceleration"][0] = imu_accel[0]
-        obs["imu"]["raw_linear_acceleration"][2] = imu_accel[1]
+        obs["imu"]["raw_angular_velocity"] = omega_in_imu
+        obs["imu"]["raw_linear_acceleration"] = accel_in_imu
         obs["wheel_odometry"]["position"] = r
         obs["wheel_odometry"]["velocity"] = rd
         return obs
