@@ -8,6 +8,7 @@ from typing import List
 from xml.etree import ElementTree
 
 import numpy as np
+from numpy.typing import NDArray
 
 from .joint import Joint
 from .joint_limit import JointLimit
@@ -22,6 +23,14 @@ class Model:
     ## Joints of the robot model.
     joints: List[Joint]
 
+    ## @var rotation_ars_to_world
+    ## Rotation matrix from the ARS frame to the world frame.
+    rotation_ars_to_world: NDArray[float]
+
+    ## @var rotation_base_to_imu
+    ## Rotation matrix from the base frame to the IMU frame.
+    rotation_base_to_imu: NDArray[float]
+
     def __init__(self, urdf_path: str):
         r"""!
         Constructor for the robot model wrapper.
@@ -29,10 +38,12 @@ class Model:
         \param[in] urdf_path Path to the robot description.
         """
         tree = ElementTree.parse(urdf_path)
-        joints = [child for child in tree.getroot() if child.tag == "joint"]
+        joint_tags = [
+            child for child in tree.getroot() if child.tag == "joint"
+        ]
         limits = [
             (joint, child)
-            for joint in joints
+            for joint in joint_tags
             for child in joint
             if child.tag == "limit"
         ]
@@ -54,3 +65,6 @@ class Model:
                 )
             )
         self.joints = joints
+        self.rotation_ars_to_world = np.diag([1.0, -1.0, -1.0])
+        self.rotation_base_to_imu = np.diag([-1.0, 1.0, -1.0])
+        self.upper_leg_joints = [joint for joint in joints if joint.name in ("left_hip", "left_knee", "right_hip", "right_knee")]
