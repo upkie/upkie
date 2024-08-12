@@ -1,10 +1,5 @@
 Welcome to your Upkie!
 
-The following spines and command-line utilities are installed, you can summon them right away:
-
-- hard_rezero
-- pi3hat_spine
-- stop_servos
-- upkie_tool
+The default spines and command-line utilities are installed in /usr/local/bin, feel free to take a look.
 
 Enjoy!
