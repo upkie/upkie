@@ -1,4 +1,4 @@
-from upkie.envs.upkie_servos import UpkieServos
+from .upkie_servos import UpkieServos
 from gymnasium import spaces
 
 class UpkieServoTorques(UpkieServos):
