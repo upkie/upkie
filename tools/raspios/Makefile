@@ -29,7 +29,7 @@ micromamba:
 pi3hat_spine:
 	$(CURL) "https://github.com/upkie/upkie/releases/latest/download/pi3hat_spine" -o provision/pi3hat_spine
 
-scripts: provision/configure_cpu_isolation.py provision/hard_rezero provision/stop_servos provision/upkie_tool provision/vcgenall
+scripts: provision/configure_cpu_isolation.py provision/cpufreq_ondemand provision/cpufreq_performance provision/hard_rezero provision/stop_servos provision/upkie_tool provision/vcgenall
 
 raspios_upkie.img: micromamba pi3hat_spine scripts
 	docker pull mkaczanowski/packer-builder-arm:latest

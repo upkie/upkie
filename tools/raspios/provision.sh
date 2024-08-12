@@ -11,7 +11,8 @@ systemctl stop userconfig
 systemctl disable userconfig
 systemctl mask userconfig
 
-# Prepare /home/pi
+# Prepare pi user and its home directrory
+passwd -d pi
 rm -rf /home/pi/Bookshelf
 cp /root/WELCOME /home/pi/WELCOME
 chown pi:pi /home/pi/WELCOME

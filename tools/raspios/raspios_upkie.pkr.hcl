@@ -52,6 +52,16 @@ build {
   }
 
   provisioner "file" {
+    source = "provision/cpufreq_ondemand"
+    destination = "/usr/local/bin/cpufreq_ondemand"
+  }
+
+  provisioner "file" {
+    source = "provision/cpufreq_performance"
+    destination = "/usr/local/bin/cpufreq_performance"
+  }
+
+  provisioner "file" {
     source = "provision/hard_rezero"
     destination = "/usr/local/bin/hard_rezero"
   }
