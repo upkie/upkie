@@ -1,19 +1,32 @@
-from .upkie_servos import UpkieServos
 from gymnasium import spaces
+
+from .upkie_servos import UpkieServos
+
 
 class UpkieServoPositions(UpkieServos):
     """!
     Child class of UpkieServos that defines the action space as a dictionary of
-    joint names with the following keys:    
+    joint names with the following keys:
     - "position": the desired position of the joint
     - "kp_scale": the proportional gain of the joint
     - "kd_scale": the derivative gain of the joint
     Which simplifies the control of the robot by allowing to control the position
     of the joints and the gains.
     """
-    def __init__(self,**kwargs):
+
+    ## @var action_space
+    ## Action space.
+    action_space: spaces.box.Box
+
+    def __init__(self, **kwargs):
+        """!
+        Initialize environment.
+
+        \param kwargs Fall detection pitch angle, in radians.
+        """
         super().__init__(**kwargs)
-        action_space = {joint.name: spaces.Dict(
+        action_space = {
+            joint.name: spaces.Dict(
                 {
                     "position": spaces.Box(
                         low=joint.limit.lower,
@@ -34,6 +47,7 @@ class UpkieServoPositions(UpkieServos):
                         dtype=float,
                     ),
                 }
-            ) for joint in self.model.joints}
+            )
+            for joint in self.model.joints
+        }
         self.action_space = spaces.Dict(action_space)
-
