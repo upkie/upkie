@@ -3,7 +3,11 @@ from gymnasium import spaces
 
 class UpkieServoTorques(UpkieServos):
     """!
-    TODO
+    Child class of UpkieServos that defines the action space as a dictionary of
+    joint names with the following key :
+    - "feedforward_torque": the desired feedforward torque of the joint
+    Which simplifies the control of the robot by allowing to control directly the
+    torque of the joints.
     """
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
