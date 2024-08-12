@@ -205,7 +205,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
             joint.name: {
                 "position": None,
                 "velocity": 0.0,
-                "maximum_torque": 10.0,  # qdd100 actuators
+                "maximum_torque": joint.limit.effort,
             }
             for joint in self.model.upper_leg_joints
         }
