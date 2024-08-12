@@ -137,12 +137,12 @@ class WheeledInvertedPendulum(gymnasium.Env):
         """
 
         ## @var accelerometer_bias
-        ## Bias vector added to IMU accelerometer measurements.
+        ## Bias vector added to accelerometer measurements in the base frame.
         accelerometer_bias: NDArray[float] | float
 
         ## @var accelerometer_noise
-        ## Vector of standard deviations for white noise added to IMU
-        ## accelerometer measurements.
+        ## Vector of standard deviations for white noise added to accelerometer
+        ## measurements in the base frame.
         accelerometer_noise: NDArray[float] | float
 
         ## @var observation_bias

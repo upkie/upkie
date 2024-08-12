@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - actuation: Extend ImuData with raw measurements
 - actuation: Log raw IMU measurements from pi3hat interface
-- envs: Add a ``model`` attribute to all Upkie environments
+- envs: Add a `model` attribute to all Upkie environments
 - envs: Added child environments UpkieServoPositions and UpkieServoTorques
 - envs: Start reward submodule with a wheeled inverted pendulum reward
 - envs: Wheeled inverted pendulum environment for reduced-model testing
@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - deps: Update to palimpsest 2.2.0
 - envs: Refactor internal reward of `UpkieGroundVelocity` environment
+- envs: Use torque limits from model in `UpkieGroundVelocity` environment
 - examples: Make wheeled balancing example a bit more complex and more stable
 - examples: wheeled inverted pendulum model example
 - exceptions: Move to the top-level Python module
@@ -62,7 +63,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- **Breaking:** rename the default shared-memory file to ``/upkie``
+- **Breaking:** rename the default shared-memory file to `/upkie`
 - CICD: Switch to Micromamba for unit testing
 - Makefile: Separate rule to set the raspi date
 - PID balancer: default to hostname for the agent configuration
@@ -78,7 +79,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - CICD: Release jobs for x86 and ARM64 macOS spines
 - CICD: Update macOS x86 runner images (thanks to @ubgk)
-- actuation: Fix duplicate ``data_`` attribute in pi3hat actuation interface
+- actuation: Fix duplicate `data_` attribute in pi3hat actuation interface
 - observers: Read configuration matrix in base orientation observer
 - raspunzel: argv0 when executing the target is now the same as `bazel run`
 - setup: Fix configuration-write order in servo config script
@@ -95,17 +96,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - PID balancer: Monitor both tire contacts in simulation examples
 - docs: Developer notes
-- envs: Add the ``env.bullet_extra`` function for magic actions in sim
+- envs: Add the `env.bullet_extra` function for magic actions in sim
 - envs: Parameter to disable frequency checks during frequency regulation
 - observers: Base orientation observer
-- utils: Factor ``get_log_path`` function
+- utils: Factor `get_log_path` function
 
 ### Changed
 
-- **Breaking:** envs: Change API of logging function to ``env.log(name, entry)``
-- **Breaking:** envs: Restrict observation space of ``UpkieServos`` to servos
+- **Breaking:** envs: Change API of logging function to `env.log(name, entry)`
+- **Breaking:** envs: Restrict observation space of `UpkieServos` to servos
 - deps: Update Vulp to 2.5.0
-- envs: Bump ``UpkieServos`` version number to 4
+- envs: Bump `UpkieServos` version number to 4
 
 ### Fixed
 
@@ -122,7 +123,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Add ``--build`` argument to the simulation script
+- Add `--build` argument to the simulation script
 - CICD: Run ShellCheck on scripts
 - Clear shared-memory when starting the Bullet spine
 - Script to dump all servo motor-driver configurations
@@ -132,15 +133,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - deps: Update Upkie description to 1.5.0
 - deps: Update Vulp to 2.2.1
 - Don't build simulation spine if execution fails
-- Move agents' ``requirements.txt`` files to optional project dependencies
-- palinode: Rename ``run_pid_balancer.sh`` to ``try_pid_balancer.sh`` 😊
-- Rename top-level run script to ``run_pid_balancer.sh``
+- Move agents' `requirements.txt` files to optional project dependencies
+- palinode: Rename `run_pid_balancer.sh` to `try_pid_balancer.sh` 😊
+- Rename top-level run script to `run_pid_balancer.sh`
 
 ### Fixed
 
 - Fix Gymnasium API in the readme example (thanks to @araffin)
 - Handle closing of GUI window in simulation script
-- Make sure all ``UpkieServos`` box observations are proper arrays
+- Make sure all `UpkieServos` box observations are proper arrays
 
 ### Removed
 
@@ -184,18 +185,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - envs: Default velocity in `UpkieServos` is now zero
 - envs: Observation and action values are `float` rather than `np.float32`
 - envs: Specify maximum torques in `UpkieGroundVelocity`
-- palinode: Rename ``try_pid_balancer.sh`` to ``start_pid_balancer.sh`` 😊
+- palinode: Rename `try_pid_balancer.sh` to `start_pid_balancer.sh` 😊
 - Simulation script downloads a binary if available, o/w compiles from source (thanks to @pgraverdy)
 
 ### Fixed
 
 - envs: typo in `UpkieServos` dictionary key
 - MPC balancer: add missing dependencies to requirements.txt
-- PPO balancer: add missing initial state randomization to ``--training`` mode
+- PPO balancer: add missing initial state randomization to `--training` mode
 
 ### Removed
 
-- Bazel: dependencies based on ``pip_parse`` from ``rules_python``
+- Bazel: dependencies based on `pip_parse` from `rules_python`
 - Pink balancer: moved to a separate repository
 
 ## [3.1.0] - 2023-12-22
@@ -209,7 +210,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Rename ``start_pid_balancer.sh`` to ``try_pid_balancer.sh``
+- Rename `start_pid_balancer.sh` to `try_pid_balancer.sh`
 - envs: Make parsing of first observation optional for non-base environments
 - envs: Rename info key to `"spine_observation"` in all environments
 - envs: Switch `UpkieServos` env to dictionary action and observation
@@ -234,7 +235,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Breaking:** Rename the "wheel" balancer agent to "PID balancer"
 - **Breaking:** envs: Rewards are now part of individual environments
-- **Breaking:** envs: ``info`` dictionary does not repeat "action" any more
+- **Breaking:** envs: `info` dictionary does not repeat "action" any more
 - MPC balancer: Update height of control point to 58 cm
 - PPO balancer: Update height of control point to 58 cm
 - deps: Bump Gymnasium to 0.29.1
@@ -243,7 +244,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - deps: Bump loop-rate-limiters to 0.6.1
 - envs: Bump `UpkieGroundVelocity` to version 3
 - envs: Legs now return to their neutral configuration in `UpkieGroundVelocity`
-- envs: ``rate`` attribute from base environment is now internal
+- envs: `rate` attribute from base environment is now internal
 - examples: Refactor lying genuflections
 - examples: Refactor wheeled balancing
 
@@ -268,14 +269,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - envs: Allow custom initial base velocity in Bullet config
 - examples: Closed-loop model predictive control
 - spines: Build and export the pi3hat spine binary in continuous integration (thanks to @pgraverdy)
-- spines: ``--version`` flag for all spine binaries
+- spines: `--version` flag for all spine binaries
 
 ### Changed
 
-- MPC balancer: Remove ``asyncio`` logic
-- PPO balancer: Remove ``asyncio`` logic
-- Pink balancer: Remove ``asyncio`` logic
-- Wheel balancer: Remove ``asyncio`` logic
+- MPC balancer: Remove `asyncio` logic
+- PPO balancer: Remove `asyncio` logic
+- Pink balancer: Remove `asyncio` logic
+- Wheel balancer: Remove `asyncio` logic
 - envs: Move reset state sampling to `InitRandomization` class
 - spines: Add `_spine` suffix to binary names, e.g. `pi3hat_spine`
 - spines: Allow pi3hat spine to run without joystick if user validates
@@ -289,9 +290,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
-- **Breaking:** ``async_step`` function and ``asyncio`` logic
-- **Breaking:** ``pi32_config`` as 64-bit is the new default
-- **Breaking:** ``upkie.utils.log_path`` submodule and its utility function
+- **Breaking:** `async_step` function and `asyncio` logic
+- **Breaking:** `pi32_config` as 64-bit is the new default
+- **Breaking:** `upkie.utils.log_path` submodule and its utility function
 - deps: Dependency on mpacklog.cpp (already in Vulp)
 - deps: Dependency on mpacklog.py
 
@@ -314,10 +315,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Breaking:** Environment rewards depend on both observation and action
 - **Breaking:** Rename `UpkieServosEnv` to `UpkieServos`
-- **Breaking:** Rename ``UpkieWheelsEnv`` to ``UpkieGroundVelocity``
+- **Breaking:** Rename `UpkieWheelsEnv` to `UpkieGroundVelocity`
 - **Breaking:** Use `regulate_frequency` env kwarg instead of `frequency=None`
 - Makefile: Default wheel balancer config to the output of `hostname`
-- Makefile: Rename ``ROBOT`` environment variable to ``UPKIE_NAME``
+- Makefile: Rename `ROBOT` environment variable to `UPKIE_NAME`
 - PPO balancer: Change training directory to `/tmp/ppo_balancer`
 - PPO balancer: Policy CLI argument becomes positional and optional
 - PPO balancer: Refactor agent settings
@@ -346,7 +347,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Makefile: Remove most agent targets to promote running their ``main.py``
+- Makefile: Remove most agent targets to promote running their `main.py`
 - PPO balancer: Can now be run both via Bazel or Python
 - Pink balancer: Can now be run both via Bazel or Python
 - Pink balancer: Remove unit tests
@@ -354,9 +355,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Wheel balancer: Can now be run both via Bazel or Python
 - envs: Default reward for all environments is now the survival reward
 - envs: Move `StandingReward` to the PPO balancer
-- examples: Remove CPU isolation example, now a ``utils.raspi`` function call
+- examples: Remove CPU isolation example, now a `utils.raspi` function call
 - tools: CPU scaling scripts don't need to be run as root any more
-- utils: Remove ``realtime`` submodule in favor of ``raspi``
+- utils: Remove `realtime` submodule in favor of `raspi`
 
 ### Fixed
 
@@ -379,8 +380,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- PyPI: add PyYAML to dependencies as it is needed by ``upkie.config``
-- envs: Export ``register`` from submodule
+- PyPI: add PyYAML to dependencies as it is needed by `upkie.config`
+- envs: Export `register` from submodule
 - envs: Overlay constructor spine configuration on top of default config
 
 ## [1.3.3] - 2023-08-07
@@ -394,13 +395,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- config: Distribute missing ``config`` submodule in PyPI package
+- config: Distribute missing `config` submodule in PyPI package
 
 ## [1.3.1] - 2023-07-28
 
 ### Fixed
 
-- config: Add missing ``config`` submodule to PyPI
+- config: Add missing `config` submodule to PyPI
 - Fix source code distribution of PyPI package
 
 ## [1.3.0] - 2023-07-26
@@ -416,13 +417,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - deps: Update loop-rate-limiters to 0.5.0
-- envs: Rename ``config`` parameter to a more explicit ``spine_config``
+- envs: Rename `config` parameter to a more explicit `spine_config`
 - envs: Update to the Gymnasium API (thanks to @perrin-isir)
 
 ### Fixed
 
 - PPO balancer: Fix time-limit import
-- envs: Add ``dt`` attribute to the base environment
+- envs: Add `dt` attribute to the base environment
 
 ## [1.2.1] - 2023-07-18
 
@@ -434,8 +435,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- tools: Add ``vcgencheck`` utility script
-- tools: Make ``hard_rezero`` search for ``upkie_tool`` and skip if not found
+- tools: Add `vcgencheck` utility script
+- tools: Make `hard_rezero` search for `upkie_tool` and skip if not found
 
 ### Changed
 
@@ -444,7 +445,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- build: Only run lint tests when ``--config lint`` is supplied
+- build: Only run lint tests when `--config lint` is supplied
 - envs: Make sure vectorized observations are float32
 
 ## [1.1.0] - 2023-07-07
@@ -459,8 +460,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - agents: Rename "test balancer" to "wheel balancer"
 - agents: Update Pink balancer to the latest version of the library
-- Makefile: Check that ``ROBOT`` environment variable is defined
-- tools: Automatically ``sudo`` when running ``upkie_tool``
+- Makefile: Check that `ROBOT` environment variable is defined
+- tools: Automatically `sudo` when running `upkie_tool`
 
 ### Fixed
 
@@ -468,7 +469,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - observers: Configure IMU orientation in the base pitch observer
 - spines: Fix joint IDs to left leg (1, 2, 3), right leg (4, 5, 6)
 - workspace: Update Vulp for IMU frame simulation fix
-- workspace: Update ``upkie_description`` for IMU orientation fix
+- workspace: Update `upkie_description` for IMU orientation fix
 
 ## [1.0.0] - 2023-06-12
 
@@ -479,10 +480,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- envs: ``UpkieServosEnv-v2`` with frequency regulation
-- envs: ``UpkieWheelsEnv-v3`` with frequency regulation
+- envs: `UpkieServosEnv-v2` with frequency regulation
+- envs: `UpkieWheelsEnv-v3` with frequency regulation
 - envs: regulate loop frequencies
-- Rename ``ROBOT_NAME`` to ``ROBOT`` in the main Makefile
+- Rename `ROBOT_NAME` to `ROBOT` in the main Makefile
 - Rename main repository and project to just "upkie"
 - Update Vulp to v1.2.0
 
@@ -494,11 +495,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Example: wheeled balancing with action-observation logging
 - Makefile to build, upload and run Raspberry Pi targets
 - Script to start a simulation directly from the repository
-- Specify Bazel version in ``.bazelversion``
+- Specify Bazel version in `.bazelversion`
 
 ### Changed
 
-- Remove ``utils.logging`` submodule, deprecated by mpacklog
+- Remove `utils.logging` submodule, deprecated by mpacklog
 - Rename "blue balancer" agent to "test balancer"
 - Simplify test balancer code
 - Update Bazelisk to v1.16.0
@@ -517,16 +518,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- envs: ``UpkieServosEnv-v1``
+- envs: `UpkieServosEnv-v1`
 - PPO balancer: distribute sample policy
-- Pink balancer: ``--visualize`` argument
+- Pink balancer: `--visualize` argument
 - spines: Air Bullet, same as Bullet but floating in the air
 - utils: Pinocchio utility functions
 
 ### Changed
 
 - Load description from local package rather than cloning a repository
-- Rename ``UpkieWheelsReward`` to ``StandingReward``
+- Rename `UpkieWheelsReward` to `StandingReward`
 
 ### Fixed
 
@@ -538,7 +539,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- UpkieWheelsEnv: return action and observation dicts in ``info``
+- UpkieWheelsEnv: return action and observation dicts in `info`
 
 ## [0.3.0] - 2023-03-13
 
@@ -557,13 +558,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Agent: PPO balancer
-- envs: ``UpkieWheelsEnv-v1``
+- envs: `UpkieWheelsEnv-v1`
 - Observers: Base pitch
 
 ### Changed
 
-- Promote ``utils.imu`` to a proper Python observer
-- Switch from ``aiorate`` to ``loop_rate_limiters``
+- Promote `utils.imu` to a proper Python observer
+- Switch from `aiorate` to `loop_rate_limiters`
 
 ### Fixed
 
