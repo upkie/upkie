@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - actuation: Extend ImuData with raw measurements
 - actuation: Log raw IMU measurements from pi3hat interface
 - envs: Start reward submodule with a wheeled inverted pendulum reward
+- utils: Add unit tests for Raspberry Pi utility functions
 - utils: Raise an exception when trying to configure agent from an interpreter
 - envs: Added child environments UpkieServoPositions and UpkieServoTorques 
 
