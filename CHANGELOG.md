@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - actuation: Extend ImuData with raw measurements
 - actuation: Log raw IMU measurements from pi3hat interface
+- envs: Add a ``model`` attribute to all Upkie environments
 - envs: Added child environments UpkieServoPositions and UpkieServoTorques
 - envs: Start reward submodule with a wheeled inverted pendulum reward
 - envs: Wheeled inverted pendulum environment for reduced-model testing

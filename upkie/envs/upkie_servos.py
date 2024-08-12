@@ -7,10 +7,8 @@
 from typing import Optional, Set, Tuple
 
 import numpy as np
-import upkie_description
 from gymnasium import spaces
 
-from upkie.model import Model
 from upkie.utils.clamp import clamp_and_warn
 from upkie.utils.robot_state import RobotState
 
@@ -102,10 +100,6 @@ class UpkieServos(UpkieBaseEnv):
     ## Action space.
     action_space: spaces.dict.Dict
 
-    ## @var model
-    ## Robot model read from its URDF description.
-    model: Model
-
     ## @var observation_space
     ## Observation space.
     observation_space: spaces.dict.Dict
@@ -156,8 +150,7 @@ class UpkieServos(UpkieBaseEnv):
         min_action = {}
         servo_space = {}
 
-        model = Model(upkie_description.URDF_PATH)
-        for joint in model.joints:
+        for joint in self.model.joints:
             action_space[joint.name] = spaces.Dict(
                 {
                     "position": spaces.Box(
@@ -264,7 +257,6 @@ class UpkieServos(UpkieBaseEnv):
         self.observation_space = spaces.Dict(servo_space)
 
         # Class attributes
-        self.model = model
         self.__neutral_action = neutral_action
         self.__max_action = max_action
         self.__min_action = min_action

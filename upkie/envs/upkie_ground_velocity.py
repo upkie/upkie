@@ -13,7 +13,6 @@ from gymnasium import spaces
 from numpy.typing import NDArray
 
 from upkie.exceptions import UpkieException
-from upkie.model.joints import UPPER_LEG_JOINTS
 from upkie.utils.filters import low_pass_filter
 from upkie.utils.robot_state import RobotState
 
@@ -203,12 +202,12 @@ class UpkieGroundVelocity(UpkieBaseEnv):
         )
 
         self.__leg_servo_action = {
-            joint: {
+            joint.name: {
                 "position": None,
                 "velocity": 0.0,
                 "maximum_torque": 10.0,  # qdd100 actuators
             }
-            for joint in UPPER_LEG_JOINTS
+            for joint in self.model.upper_leg_joints
         }
 
         self.leg_return_period = leg_return_period
@@ -242,9 +241,9 @@ class UpkieGroundVelocity(UpkieBaseEnv):
 
         \param spine_observation First observation.
         """
-        for joint in UPPER_LEG_JOINTS:
-            position = spine_observation["servo"][joint]["position"]
-            self.__leg_servo_action[joint]["position"] = position
+        for joint in self.model.upper_leg_joints:
+            position = spine_observation["servo"][joint.name]["position"]
+            self.__leg_servo_action[joint.name]["position"] = position
 
     def get_env_observation(self, spine_observation: dict) -> NDArray[float]:
         r"""!
@@ -272,15 +271,15 @@ class UpkieGroundVelocity(UpkieBaseEnv):
 
         \return Servo action dictionary.
         """
-        for joint in UPPER_LEG_JOINTS:
-            prev_position = self.__leg_servo_action[joint]["position"]
+        for joint in self.model.upper_leg_joints:
+            prev_position = self.__leg_servo_action[joint.name]["position"]
             new_position = low_pass_filter(
                 prev_output=prev_position,
                 cutoff_period=self.leg_return_period,
                 new_input=0.0,
                 dt=self.dt,
             )
-            self.__leg_servo_action[joint]["position"] = new_position
+            self.__leg_servo_action[joint.name]["position"] = new_position
         return self.__leg_servo_action.copy()
 
     def get_spine_action(self, action: NDArray[float]) -> dict:

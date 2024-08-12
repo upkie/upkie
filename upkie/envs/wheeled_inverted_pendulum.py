@@ -10,13 +10,14 @@ from typing import Any, Optional, Tuple
 
 import gymnasium
 import numpy as np
+import upkie_description
 from gymnasium import spaces
 from loop_rate_limiters import RateLimiter
 from numpy import cos, sin
 from numpy.typing import NDArray
 
 from upkie.exceptions import MissingOptionalDependency, UpkieRuntimeError
-from upkie.model.joints import UPPER_LEG_JOINTS
+from upkie.model import Model
 from upkie.utils.clamp import clamp_and_warn
 from upkie.utils.spdlog import logging
 
@@ -101,6 +102,10 @@ class WheeledInvertedPendulum(gymnasium.Env):
     ## @var metadata
     ## Metadata of the environment containing rendering modes.
     metadata = {"render_modes": ["plot"]}
+
+    ## @var model
+    ## Robot model read from its URDF description.
+    model: Model
 
     ## @var observation_space
     ## Observation space.
