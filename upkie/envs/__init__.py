@@ -8,10 +8,10 @@ import gymnasium as gym
 
 from .upkie_base_env import UpkieBaseEnv
 from .upkie_ground_velocity import UpkieGroundVelocity
-from .upkie_servos import UpkieServos
-from .wheeled_inverted_pendulum import WheeledInvertedPendulum
 from .upkie_servo_positions import UpkieServoPositions
 from .upkie_servo_torques import UpkieServoTorques
+from .upkie_servos import UpkieServos
+from .wheeled_inverted_pendulum import WheeledInvertedPendulum
 
 
 def register() -> None:
@@ -32,10 +32,10 @@ def register() -> None:
 
 __all__ = [
     "UpkieBaseEnv",
-    "register",
     "UpkieGroundVelocity",
-    "UpkieServos",
-    "WheeledInvertedPendulum",
     "UpkieServoPositions",
     "UpkieServoTorques",
+    "UpkieServos",
+    "WheeledInvertedPendulum",
+    "register",
 ]
