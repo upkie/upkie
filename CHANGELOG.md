@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - envs: Added child environments UpkieServoPositions and UpkieServoTorques
 - envs: Start reward submodule with a wheeled inverted pendulum reward
 - envs: Wheeled inverted pendulum environment for reduced-model testing
+- model: Add `rotation_ars_to_world` and `rotation_base_to_imu`
+- model: Add `upper_leg_joints` list
 - utils: Add unit tests for Raspberry Pi utility functions
 - utils: Raise an exception when trying to configure agent from an interpreter
 
