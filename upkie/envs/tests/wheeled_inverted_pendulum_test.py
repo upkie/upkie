@@ -54,19 +54,19 @@ class TestWheeledInvertedPendulum(unittest.TestCase):
         self.assertTrue("servo" in spine_observation)
 
     def test_get_imu_acceleration_rest(self):
-        x = np.zeros(4)
-        a = np.zeros(2)
-        imu_accel = self.env._get_imu_acceleration(x, a)
+        state = np.zeros(4)
+        accel = np.zeros(2)
+        imu_accel = self.env._get_imu_acceleration_in_base(state, accel)
         self.assertAlmostEqual(imu_accel[0], 0.0)
         self.assertAlmostEqual(imu_accel[1], 9.81)
 
     def test_get_imu_acceleration_pure_accel(self):
-        x = np.zeros(4)
-        a = np.array([1.0, 2.0])
-        thetadd, rdd = a
-        imu_accel = self.env._get_imu_acceleration(x, a)
-        self.assertAlmostEqual(imu_accel[0], rdd)
-        self.assertAlmostEqual(imu_accel[1], 9.81 + self.env.length * thetadd)
+        state = np.zeros(4)
+        accel = np.array([1.0, 2.0])
+        thetadd, rdd = accel
+        imu_accel = self.env._get_imu_acceleration_in_base(state, accel)
+        self.assertAlmostEqual(imu_accel[0], rdd + self.env.length * thetadd)
+        self.assertAlmostEqual(imu_accel[1], 9.81)
 
 
 if __name__ == "__main__":
