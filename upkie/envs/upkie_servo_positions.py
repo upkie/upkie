@@ -30,7 +30,7 @@ class UpkieServoPositions(UpkieServos):
 
     ## @var action_space
     ## Action space.
-    action_space: spaces.box.Box
+    action_space: spaces.dict.Dict
 
     def __init__(
         self,
