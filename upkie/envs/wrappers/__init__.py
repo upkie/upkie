@@ -9,7 +9,6 @@ from .differentiate_action import DifferentiateAction
 from .low_pass_filter_action import LowPassFilterAction
 from .noisify_action import NoisifyAction
 from .noisify_observation import NoisifyObservation
-from .servos_actions import DirectTorqueControl, AdmittanceControl
 
 __all__ = [
     "AddActionToObservation",
@@ -17,6 +16,4 @@ __all__ = [
     "LowPassFilterAction",
     "NoisifyAction",
     "NoisifyObservation",
-    "DirectTorqueControl",
-    "AdmittanceControl"
 ]
