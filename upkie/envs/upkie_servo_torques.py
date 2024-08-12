@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2024 Inria
 
-from typing import Optional
+from typing import Optional, Set
 
 from gymnasium import spaces
 
@@ -23,6 +23,8 @@ class UpkieServoTorques(UpkieServos):
     Which simplifies the control of the robot by allowing to control directly
     the torque of the joints.
     """
+
+    ACTION_MASK: Set[str] = set(["feedforward_torque"])
 
     ## @var action_space
     ## Action space.

@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Inria
 
-from typing import Optional, Tuple
+from typing import Optional, Set, Tuple
 
 import numpy as np
 import upkie_description
@@ -95,6 +95,8 @@ class UpkieServos(UpkieBaseEnv):
         "kd_scale",
         "maximum_torque",
     )
+
+    ACTION_MASK: Set[str] = set()
 
     ## @var action_space
     ## Action space.
@@ -309,6 +311,7 @@ class UpkieServos(UpkieBaseEnv):
                 action = (
                     env_action[joint.name][key]
                     if key in env_action[joint.name]
+                    and (not self.ACTION_MASK or key in self.ACTION_MASK)
                     else self.__neutral_action[joint.name][key]
                 )
                 action_value = (
