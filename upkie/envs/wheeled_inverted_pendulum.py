@@ -468,21 +468,23 @@ class WheeledInvertedPendulum(gymnasium.Env):
         self.plot.send("ground_position", self.__state[1])
         self.plot.update()
 
-    def _get_imu_acceleration(
+    def _get_imu_linear_acceleration_in_base(
         self,
         state: Optional[NDArray[float]] = None,
         accel: Optional[NDArray[float]] = None,
     ) -> NDArray[float]:
         theta, r, thetad, rd = state if state is not None else self.__state
         thetadd, rdd = accel if accel is not None else self.__accel
-        cos, sin = np.cos(theta), np.sin(theta)
-        R_theta = np.array([[cos, sin], [-sin, cos]])
+        rotation_base_to_world = np.array(
+            [[np.cos(theta), np.sin(theta)], [-np.sin(theta), np.cos(theta)]]
+        )
         u = np.array([rdd, +GRAVITY])
-        v = np.array([thetadd, -(thetad**2)])
-        proper_accel_world = u + R_theta @ (self.length * v)
-        R_world_to_imu = R_theta  # TODO: fix
-        proper_accel_imu = R_world_to_imu @ proper_accel_world
-        return proper_accel_imu + self.uncertainty.accelerometer()
+        v = self.length * np.array([thetadd, -(thetad**2)])
+        proper_accel_in_world = u + rotation_base_to_world @ v
+        rotation_world_to_base = rotation_base_to_world.T
+        proper_accel_in_base = rotation_world_to_base @ proper_accel_in_world
+        uncertainty_in_base = self.uncertainty.accelerometer()
+        return proper_accel_in_base + uncertainty_in_base
 
     def _get_spine_observation(self):
         theta, r, thetad, rd = self.__state
