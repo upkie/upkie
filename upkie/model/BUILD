@@ -9,7 +9,6 @@ py_library(
     srcs = [
         "__init__.py",
         "joint.py",
-        "joints.py",
         "joint_limit.py",
         "model.py",
     ],
