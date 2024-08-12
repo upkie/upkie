@@ -39,6 +39,15 @@ py_test(
 )
 
 py_test(
+    name = "upkie_servo_torques_test",
+    srcs = ["upkie_servo_torques_test.py"],
+    deps = [
+        "//upkie/envs",
+        ":mock_spine",
+    ],
+)
+
+py_test(
     name = "upkie_servos_test",
     srcs = ["upkie_servos_test.py"],
     deps = [
