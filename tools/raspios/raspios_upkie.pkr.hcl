@@ -42,52 +42,52 @@ build {
   sources = ["source.arm.raspios_oldstable_arm64"]
 
   provisioner "file" {
-    source = "provision/WELCOME"
+    source = "local/WELCOME"
     destination = "/root/WELCOME"
   }
 
   provisioner "file" {
-    source = "provision/configure_cpu_isolation.py"
+    source = "local/configure_cpu_isolation.py"
     destination = "/root/configure_cpu_isolation.py"
   }
 
   provisioner "file" {
-    source = "provision/cpufreq_ondemand"
+    source = "local/cpufreq_ondemand"
     destination = "/usr/local/bin/cpufreq_ondemand"
   }
 
   provisioner "file" {
-    source = "provision/cpufreq_performance"
+    source = "local/cpufreq_performance"
     destination = "/usr/local/bin/cpufreq_performance"
   }
 
   provisioner "file" {
-    source = "provision/hard_rezero"
+    source = "local/hard_rezero"
     destination = "/usr/local/bin/hard_rezero"
   }
 
   provisioner "file" {
-    source = "provision/micromamba"
+    source = "local/micromamba"
     destination = "/usr/local/bin/micromamba"
   }
 
   provisioner "file" {
-    source = "provision/pi3hat_spine"
+    source = "local/pi3hat_spine"
     destination = "/usr/local/bin/pi3hat_spine"
   }
 
   provisioner "file" {
-    source = "provision/stop_servos"
+    source = "local/stop_servos"
     destination = "/usr/local/bin/stop_servos"
   }
 
   provisioner "file" {
-    source = "provision/upkie_tool"
+    source = "local/upkie_tool"
     destination = "/usr/local/bin/upkie_tool"
   }
 
   provisioner "file" {
-    source = "provision/vcgenall"
+    source = "local/vcgenall"
     destination = "/usr/local/bin/vcgenall"
   }
 
