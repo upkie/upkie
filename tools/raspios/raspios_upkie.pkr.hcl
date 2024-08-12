@@ -42,32 +42,37 @@ build {
   sources = ["source.arm.raspios_oldstable_arm64"]
 
   provisioner "file" {
-    source = "local/configure_cpu_isolation.py"
+    source = "provision/WELCOME"
+    destination = "/root/WELCOME"
+  }
+
+  provisioner "file" {
+    source = "provision/configure_cpu_isolation.py"
     destination = "/root/configure_cpu_isolation.py"
   }
 
   provisioner "file" {
-    source = "local/hard_rezero"
+    source = "provision/hard_rezero"
     destination = "/usr/local/bin/hard_rezero"
   }
 
   provisioner "file" {
-    source = "local/micromamba"
+    source = "provision/micromamba"
     destination = "/usr/local/bin/micromamba"
   }
 
   provisioner "file" {
-    source = "local/pi3hat_spine"
+    source = "provision/pi3hat_spine"
     destination = "/usr/local/bin/pi3hat_spine"
   }
 
   provisioner "file" {
-    source = "local/stop_servos"
+    source = "provision/stop_servos"
     destination = "/usr/local/bin/stop_servos"
   }
 
   provisioner "file" {
-    source = "local/upkie_tool"
+    source = "provision/upkie_tool"
     destination = "/usr/local/bin/upkie_tool"
   }
 

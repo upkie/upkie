@@ -1,3 +1,8 @@
 .packer_*
-local/*
+provision/configure_cpu_isolation.py
+provision/hard_rezero
+provision/micromamba
+provision/pi3hat_spine
+provision/stop_servos
+provision/upkie_tool
 raspios_upkie.img

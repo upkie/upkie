@@ -7,23 +7,26 @@ CURL=curl -fsSL --compressed
 all: raspios_upkie.img
 
 clean:
-	rm -rf local *.img
+	rm -f provision/configure_cpu_isolation.py
+	rm -f provision/hard_rezero
+	rm -f provision/micromamba
+	rm -f provision/pi3hat_spine
+	rm -f provision/stop_servos
+	rm -f provision/upkie_tool
+	rm -f raspios_upkie.img
 
 rebuild: clean raspios_upkie.img
 
-local:
-	mkdir local
-
-local/%: ../% local
+provision/%: ../%
 	cp -f $(CURDIR)/$< $@
 
-micromamba: local
-	$(CURL) "https://github.com/mamba-org/micromamba-releases/releases/download/1.5.8-0/micromamba-linux-aarch64" -o local/micromamba
+micromamba:
+	$(CURL) "https://github.com/mamba-org/micromamba-releases/releases/download/1.5.8-0/micromamba-linux-aarch64" -o provision/micromamba
 
-pi3hat_spine: local
-	$(CURL) "https://github.com/upkie/upkie/releases/latest/download/pi3hat_spine" -o local/pi3hat_spine
+pi3hat_spine:
+	$(CURL) "https://github.com/upkie/upkie/releases/latest/download/pi3hat_spine" -o provision/pi3hat_spine
 
-scripts: local/configure_cpu_isolation.py local/hard_rezero local/stop_servos local/upkie_tool
+scripts: provision/configure_cpu_isolation.py provision/hard_rezero provision/stop_servos provision/upkie_tool
 
 raspios_upkie.img: micromamba pi3hat_spine scripts
 	docker pull mkaczanowski/packer-builder-arm:latest

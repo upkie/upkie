@@ -11,6 +11,11 @@ systemctl stop userconfig
 systemctl disable userconfig
 systemctl mask userconfig
 
+# Prepare /home/pi
+rm -rf /home/pi/Bookshelf
+cp /root/WELCOME /home/pi/WELCOME
+chown pi:pi /home/pi/WELCOME
+
 # Install Debian packages
 export DEBIAN_FRONTEND=noninteractive
 apt-get update && apt-get install -y python3-pip tmux vim
