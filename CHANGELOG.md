@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - actuation: Correct inline of two Bullet utility functions
+- actuation: Fix IMU acceleration in Bullet upon resets
 - envs: Make sure action values are floating-point numbers (thanks to @Tordjx)
 - spine: Handle deserialization exceptions when beginning a cycle
 

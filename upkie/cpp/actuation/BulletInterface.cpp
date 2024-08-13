@@ -146,6 +146,17 @@ void BulletInterface::reset_base_state(
   bullet_.resetBaseVelocity(
       robot_, bullet_from_eigen(linear_velocity_base_to_world_in_world),
       bullet_from_eigen(angular_velocity_base_in_world));
+
+  // Reset the extra velocity field used to compute IMU accelerations
+  b3LinkState link_state;
+  bullet_.getLinkState(robot_, imu_link_index_, /* computeVelocity = */ true,
+                       /* computeForwardKinematics = */ true, &link_state);
+  imu_data_.linear_velocity_imu_in_world[0] =
+      link_state.m_worldLinearVelocity[0];
+  imu_data_.linear_velocity_imu_in_world[1] =
+      link_state.m_worldLinearVelocity[1];
+  imu_data_.linear_velocity_imu_in_world[2] =
+      link_state.m_worldLinearVelocity[2];
 }
 
 void BulletInterface::reset_contact_data() {
