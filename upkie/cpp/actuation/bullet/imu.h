@@ -11,6 +11,7 @@
 
 #include "RobotSimulator/b3RobotSimulatorClientAPI.h"
 #include "upkie/cpp/actuation/BulletImuData.h"
+#include "upkie/cpp/actuation/bullet/gravity.h"
 
 //! Bullet utility functions used in the simulation interface.
 namespace upkie::cpp::actuation::bullet {
