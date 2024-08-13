@@ -8,6 +8,7 @@
 #include <string>
 
 #include "tools/cpp/runfiles/runfiles.h"
+#include "upkie/cpp/actuation/bullet/gravity.h"
 #include "upkie/cpp/actuation/bullet/utils.h"
 
 namespace upkie::cpp::actuation {
@@ -46,7 +47,7 @@ BulletInterface::BulletInterface(const ServoLayout& layout,
   bullet_.configureDebugVisualizer(COV_ENABLE_RENDERING, 0);
   bullet_.configureDebugVisualizer(COV_ENABLE_SHADOWS, 0);
   if (params.gravity) {
-    bullet_.setGravity(btVector3(0, 0, -9.81));
+    bullet_.setGravity(btVector3(0, 0, -bullet::kGravity));
   }
   bullet_.setRealTimeSimulation(false);  // making sure
 
@@ -211,6 +212,7 @@ void BulletInterface::observe(Dictionary& observation) const {
         Eigen::Quaterniond(T.block<3, 3>(0, 0));  // [w, x, y, z]
   }
 }
+
 void BulletInterface::process_action(const Dictionary& action) {
   if (!action.has("bullet")) {
     return;
