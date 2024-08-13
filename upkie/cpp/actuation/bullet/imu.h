@@ -69,13 +69,21 @@ inline void read_imu_data(BulletImuData& imu_data,
   auto rotation_world_to_imu = orientation_imu_in_world.normalized().inverse();
   Eigen::Vector3d angular_velocity_imu_in_imu =
       rotation_world_to_imu * angular_velocity_imu_to_world_in_world;
+
+  // Accelerometer readings (before and after filtering)
   Eigen::Vector3d linear_acceleration_imu_in_imu =
       rotation_world_to_imu * linear_acceleration_imu_in_world;
+  Eigen::Vector3d gravity_in_world = {0., 0., -9.81};
+  Eigen::Vector3d proper_acceleration_in_imu =
+      rotation_world_to_imu *
+      (linear_acceleration_imu_in_world - gravity_in_world);
 
   // Fill out regular IMU data
   imu_data.orientation_imu_in_ars = orientation_imu_in_ars;
   imu_data.angular_velocity_imu_in_imu = angular_velocity_imu_in_imu;
   imu_data.linear_acceleration_imu_in_imu = linear_acceleration_imu_in_imu;
+  imu_data.raw_angular_velocity = angular_velocity_imu_in_imu;
+  imu_data.raw_linear_acceleration = proper_acceleration_in_imu;
 
   // ... and the extra field for the Bullet interface
   imu_data.linear_velocity_imu_in_world = linear_velocity_imu_in_world;
