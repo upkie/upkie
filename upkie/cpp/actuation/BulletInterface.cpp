@@ -197,6 +197,9 @@ void BulletInterface::observe(Dictionary& observation) const {
       imu_data_.angular_velocity_imu_in_imu;
   observation("imu")("linear_acceleration") =
       imu_data_.linear_acceleration_imu_in_imu;
+  observation("imu")("raw_angular_velocity") = imu_data_.raw_angular_velocity;
+  observation("imu")("raw_linear_acceleration") =
+      imu_data_.raw_linear_acceleration;
 
   Dictionary& monitor = observation("bullet");
   monitor("imu")("linear_velocity") = imu_data_.linear_velocity_imu_in_world;
