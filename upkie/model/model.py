@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2024 Inria
 
-from typing import List
+from typing import List, Tuple
 from xml.etree import ElementTree
 
 import numpy as np
@@ -30,6 +30,10 @@ class Model:
     ## @var rotation_base_to_imu
     ## Rotation matrix from the base frame to the IMU frame.
     rotation_base_to_imu: NDArray[float]
+
+    ## @var upper_leg_joints
+    ## Upper-leg (hip and knee) joints.
+    upper_leg_joints: Tuple[float]
 
     def __init__(self, urdf_path: str):
         r"""!
@@ -67,4 +71,9 @@ class Model:
         self.joints = joints
         self.rotation_ars_to_world = np.diag([1.0, -1.0, -1.0])
         self.rotation_base_to_imu = np.diag([-1.0, 1.0, -1.0])
-        self.upper_leg_joints = [joint for joint in joints if joint.name in ("left_hip", "left_knee", "right_hip", "right_knee")]
+        self.upper_leg_joints = (
+            joint
+            for joint in joints
+            if joint.name
+            in ("left_hip", "left_knee", "right_hip", "right_knee")
+        )
