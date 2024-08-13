@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2022 Stéphane Caron
 
+#include "upkie/cpp/actuation/bullet/utils.h"
+
 #include <map>
 #include <memory>
 #include <string>
@@ -9,15 +11,12 @@
 #include "gtest/gtest.h"
 #include "tools/cpp/runfiles/runfiles.h"
 #include "upkie/cpp/actuation/BulletImuData.h"
-#include "upkie/cpp/actuation/bullet/utils.h"
 
 using bazel::tools::cpp::runfiles::Runfiles;
 
-namespace upkie::cpp::actuation {
+namespace upkie::cpp::actuation::bullet {
 
-namespace bullet {
-
-class BulletTest : public ::testing::Test {
+class BulletUtilsTest : public ::testing::Test {
  protected:
   void SetUp() override {
     std::string error;
@@ -41,7 +40,7 @@ class BulletTest : public ::testing::Test {
   int robot_;
 };
 
-TEST_F(BulletTest, WheelContactsHaveStiffnessDamping) {
+TEST_F(BulletUtilsTest, WheelContactsHaveStiffnessDamping) {
   b3DynamicsInfo info;
   b3JointInfo joint_info;
   int nb_joints = bullet_->getNumJoints(robot_);
@@ -59,12 +58,12 @@ TEST_F(BulletTest, WheelContactsHaveStiffnessDamping) {
   }
 }
 
-TEST_F(BulletTest, FindLinkIndex) {
+TEST_F(BulletUtilsTest, FindLinkIndex) {
   ASSERT_GE(find_link_index(*bullet_, robot_, "imu"), 0);
   ASSERT_EQ(find_link_index(*bullet_, robot_, "umi"), -1);
 }
 
-TEST_F(BulletTest, BulletFromEigenVector) {
+TEST_F(BulletUtilsTest, BulletFromEigenVector) {
   Eigen::Vector3d eigen_vec(1., 2., 3.);
   auto bullet_vec = bullet_from_eigen(eigen_vec);
   ASSERT_DOUBLE_EQ(bullet_vec.getX(), eigen_vec.x());
@@ -72,7 +71,7 @@ TEST_F(BulletTest, BulletFromEigenVector) {
   ASSERT_DOUBLE_EQ(bullet_vec.getZ(), eigen_vec.z());
 }
 
-TEST_F(BulletTest, EigenFromBulletVector) {
+TEST_F(BulletUtilsTest, EigenFromBulletVector) {
   btVector3 bullet_vec(1., 2., 3.);
   auto eigen_vec = eigen_from_bullet(bullet_vec);
   ASSERT_DOUBLE_EQ(eigen_vec.x(), bullet_vec.getX());
@@ -80,7 +79,7 @@ TEST_F(BulletTest, EigenFromBulletVector) {
   ASSERT_DOUBLE_EQ(eigen_vec.z(), bullet_vec.getZ());
 }
 
-TEST_F(BulletTest, EigenFromBulletQuat) {
+TEST_F(BulletUtilsTest, EigenFromBulletQuat) {
   btQuaternion bullet_quat(btVector3(1., 0., 0.), 0.7);
   auto eigen_quat = eigen_from_bullet(bullet_quat);
   ASSERT_DOUBLE_EQ(eigen_quat.w(), bullet_quat.getW());
@@ -89,17 +88,15 @@ TEST_F(BulletTest, EigenFromBulletQuat) {
   ASSERT_DOUBLE_EQ(eigen_quat.z(), bullet_quat.getZ());
 }
 
-TEST_F(BulletTest, RobotMass) {
+TEST_F(BulletUtilsTest, RobotMass) {
   ASSERT_NEAR(compute_robot_mass(*bullet_, robot_), 5.3382, 1e-4);
 }
 
-TEST_F(BulletTest, ComputeCenterOfMass) {
+TEST_F(BulletUtilsTest, ComputeCenterOfMass) {
   Eigen::Vector3d com = compute_position_com_in_world(*bullet_, robot_);
   ASSERT_NEAR(com.x(), -0.0059, 1e-4);
   ASSERT_NEAR(com.y(), 0.0, 1e-4);
   ASSERT_NEAR(com.z(), -0.2455, 1e-4);
 }
 
-}  // namespace bullet
-
-}  // namespace upkie::cpp::actuation
+}  // namespace upkie::cpp::actuation::bullet

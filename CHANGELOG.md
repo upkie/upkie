@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - actuation: Extend ImuData with raw measurements
 - actuation: Log raw IMU measurements from pi3hat interface
 - envs: Add a `model` attribute to all Upkie environments
-- envs: Added child environments UpkieServoPositions and UpkieServoTorques
+- envs: Added child environments UpkieServoPositions and UpkieServoTorques (thanks to @Tordjx)
 - envs: Start reward submodule with a wheeled inverted pendulum reward
 - envs: Wheeled inverted pendulum environment for reduced-model testing
 - model: Add `rotation_ars_to_world` and `rotation_base_to_imu`
@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- actuation: Correct inline of two Bullet utility functions
 - envs: Make sure action values are floating-point numbers (thanks to @Tordjx)
 - spine: Handle deserialization exceptions when beginning a cycle
 
