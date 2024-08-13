@@ -107,7 +107,7 @@ inline Eigen::Vector3d get_position_link_in_world(
  *
  * \return Total mass of the robot, in kilograms.
  */
-double compute_robot_mass(b3RobotSimulatorClientAPI& bullet, int robot) {
+inline double compute_robot_mass(b3RobotSimulatorClientAPI& bullet, int robot) {
   b3DynamicsInfo dynamics_info;
   double mass = 0;  // kg
   const int nb_joints = bullet.getNumJoints(robot);
@@ -127,8 +127,8 @@ double compute_robot_mass(b3RobotSimulatorClientAPI& bullet, int robot) {
  *
  * \note This function will recompute forward kinematics.
  */
-Eigen::Vector3d compute_position_com_in_world(b3RobotSimulatorClientAPI& bullet,
-                                              int robot) {
+inline Eigen::Vector3d compute_position_com_in_world(
+    b3RobotSimulatorClientAPI& bullet, int robot) {
   b3LinkState link_state;
   b3DynamicsInfo dynamics_info;
   double mass = 0.0;  // kg

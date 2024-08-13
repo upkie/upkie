@@ -15,7 +15,7 @@ using bazel::tools::cpp::runfiles::Runfiles;
 
 namespace upkie::cpp::actuation::bullet {
 
-class BulletTest : public ::testing::Test {
+class BulletIMUTest : public ::testing::Test {
  protected:
   void SetUp() override {
     std::string error;
@@ -39,7 +39,7 @@ class BulletTest : public ::testing::Test {
   int robot_;
 };
 
-TEST_F(BulletTest, IMULinearAccelerationSeesGravityInFreeFall) {
+TEST_F(BulletIMUTest, IMULinearAccelerationSeesGravityInFreeFall) {
   const int imu_link_index = find_link_index(*bullet_, robot_, "imu");
   const double dt = 1. / 240.;  // [s]
 
