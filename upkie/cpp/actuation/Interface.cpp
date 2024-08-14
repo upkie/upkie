@@ -21,6 +21,7 @@
 #include "upkie/cpp/actuation/default_action.h"
 #include "upkie/cpp/actuation/moteus/Mode.h"
 #include "upkie/cpp/actuation/moteus/ServoCommand.h"
+#include "upkie/cpp/model/joints.h"
 
 namespace upkie::cpp::actuation {
 
@@ -79,7 +80,7 @@ void Interface::write_position_commands(const Dictionary& action) {
         servo_action.get<double>("kd_scale", default_action::kKdScale);
     const double maximum_torque = servo_action.get<double>(
         "maximum_torque", default_action::kMaximumTorque);
-    if (maximum_torque < 0.0 || maximum_torque > upkie::model::kMaximumTorque) {
+    if (maximum_torque < 0.0 || maximum_torque > model::kMaximumTorque) {
       spdlog::error(
           "Unreasonable maximum torque ({} N m) for joint {} (servo ID={})",
           maximum_torque, joint, servo_id);
