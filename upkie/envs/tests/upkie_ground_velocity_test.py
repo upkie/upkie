@@ -36,7 +36,7 @@ class TestUpkieGroundVelocity(unittest.TestCase):
         self.assertGreaterEqual(spine_observation["number"], 1)
 
     def test_reward(self):
-        observation, info = self.env.reset()
+        observation, _ = self.env.reset()
         action = np.zeros(self.env.action_space.shape)
         observation, reward, terminated, truncated, _ = self.env.step(action)
         self.assertNotEqual(reward, 0.0)  # non-zero base velocity
@@ -55,6 +55,18 @@ class TestUpkieGroundVelocity(unittest.TestCase):
             check_env(self.env)
         except ImportError:
             pass
+
+    def test_maximum_torques(self):
+        _, _ = self.env.reset()
+        action = np.zeros(self.env.action_space.shape)
+        _, _, _, _, _ = self.env.step(action)
+        servo_action = self.env._spine.action["servo"]
+        for joint in self.env.model.upper_leg_joints:
+            maximum_torque = servo_action[joint.name]["maximum_torque"]
+            self.assertLess(maximum_torque, 20.0)
+        for wheel in self.env.model.wheel_joints:
+            maximum_torque = servo_action[wheel.name]["maximum_torque"]
+            self.assertLess(maximum_torque, 2.0)
 
 
 if __name__ == "__main__":
