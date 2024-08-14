@@ -6,20 +6,28 @@
 
 """Wheel balancing using model predictive control of an LTV system.
 
-See the MPC balancer for a more complete agent based on the same algorithm.
+This implementation is not efficient but more concise than the MPC balancer.
+Check out the full agent to go further: https://github.com/upkie/mpc_balancer
 """
 
 import gymnasium as gym
 import numpy as np
+
 import upkie.envs
-from qpmpc import solve_mpc
-from qpmpc.systems import WheeledInvertedPendulum
 from upkie.utils.clamp import clamp_and_warn
+
+try:
+    from qpmpc import solve_mpc
+    from qpmpc.systems import WheeledInvertedPendulum
+except ModuleNotFoundError:
+    raise ModuleNotFoundError(
+        "This example uses qpmpc: ``[conda|pip] install qpmpc``"
+    )
 
 upkie.envs.register()
 
 
-def get_target_states(
+def get_target_trajectory(
     pendulum: WheeledInvertedPendulum,
     state: np.ndarray,
     target_vel: float = 0.0,
@@ -42,7 +50,7 @@ def get_target_states(
     return target_states
 
 
-def balance(env: gym.Env, nb_env_steps: int = 10_000) -> None:
+def run(env: gym.Env, nb_env_steps: int = 10_000) -> None:
     r"""!
     Balancer Upkie by closed-loop MPC on its gym environment.
 
@@ -76,7 +84,7 @@ def balance(env: gym.Env, nb_env_steps: int = 10_000) -> None:
 
         theta, ground_pos, theta_dot, ground_vel = observation
         initial_state = np.array([ground_pos, theta, ground_vel, theta_dot])
-        target_states = get_target_states(pendulum, initial_state)
+        target_states = get_target_trajectory(pendulum, initial_state)
         mpc_problem.update_initial_state(initial_state)
         mpc_problem.update_goal_state(
             target_states[-WheeledInvertedPendulum.STATE_DIM :]
@@ -104,4 +112,4 @@ def balance(env: gym.Env, nb_env_steps: int = 10_000) -> None:
 
 if __name__ == "__main__":
     with gym.make("UpkieGroundVelocity-v3", frequency=200.0) as env:
-        balance(env),
+        run(env)
