@@ -15,7 +15,7 @@ Here is an index of observation dictionaries computed from [Sensors](\ref sensor
 | `servo` | Servo motor measurements |
 | `servo.X` | Observations for servo ``X`` in the servo layout |
 | `servo.X.position` | Angle between the stator and the rotor in [rad] |
-| `servo.X.torque` | Joint torque in [N] * [m] |
+| `servo.X.torque` | Joint torque in [N m] |
 | `servo.X.velocity` | Angular velocity of the rotor w.r.t. stator in rotor, in [rad] / [s] |
 | `wheel_odometry` | Wheel odometry, , see [WheelOdometry](\ref upkie::cpp::observers::WheelOdometry) for more details |
 | `wheel_odometry.position` | Ground position in [m] |

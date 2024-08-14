@@ -28,7 +28,7 @@ struct QueryResult {
   //! Angular velocity in [rev] / [s]
   double velocity = std::numeric_limits<double>::quiet_NaN();
 
-  //! Torque in [Nm]
+  //! Torque in [N m]
   double torque = std::numeric_limits<double>::quiet_NaN();
 
   //! Q-phase current in [A]
