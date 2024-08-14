@@ -8,21 +8,14 @@
 //! Exceptions raised by this project.
 namespace upkie::cpp::exceptions {
 
-//! Error with file and line references to the calling code.
+//! Base class for Upkie-related exceptions.
 class UpkieError : public std::runtime_error {
  public:
   /*! Create a new error.
    *
-   * \param[in] file Source file of the instruction that threw the error.
-   * \param[in] line Line of code in that file where the throw originates from.
    * \param[in] message Error message.
    */
-  UpkieError(const std::string& file, unsigned line, const std::string& message)
-      : std::runtime_error(message) {
-    std::ostringstream out;
-    out << "[" << file << ":" << line << "] " << message;
-    message_ = out.str();
-  }
+  UpkieError(const std::string& message) : std::runtime_error(message) {}
 
   /*! Copy an existing error, adding to the error message.
    *
@@ -39,7 +32,7 @@ class UpkieError : public std::runtime_error {
   //! Error message
   const char* what() const throw() { return message_.c_str(); }
 
- private:
+ protected:
   //! Complete error message
   std::string message_;
 };

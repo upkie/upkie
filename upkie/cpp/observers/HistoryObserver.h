@@ -15,6 +15,7 @@
 
 namespace upkie::cpp::observers {
 
+using exceptions::TypeError;
 using palimpsest::Dictionary;
 
 /*! Report high-frequency history vectors to lower-frequency agents.
@@ -82,7 +83,7 @@ class HistoryObserver : public Observer {
       return read_value(dict(key), key_index + 1);
     }
     if (!dict.is_value()) {
-      throw exceptions::TypeError(
+      throw TypeError(
           __FILE__, __LINE__,
           "Observation at " + concatenate_keys() + " is not a value");
     }
