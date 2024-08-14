@@ -21,9 +21,12 @@
 #include "upkie/cpp/actuation/default_action.h"
 #include "upkie/cpp/actuation/moteus/Mode.h"
 #include "upkie/cpp/actuation/moteus/ServoCommand.h"
+#include "upkie/cpp/exceptions/PositionCommandError.h"
 #include "upkie/cpp/model/joints.h"
 
 namespace upkie::cpp::actuation {
+
+using exceptions::PositionCommandError;
 
 void Interface::initialize_action(Dictionary& action) {
   for (const auto& id_joint : servo_layout_.servo_joint_map()) {
@@ -52,21 +55,17 @@ void Interface::write_position_commands(const Dictionary& action) {
     auto it = servo_joint_map.find(servo_id);
     if (it == servo_joint_map.end()) {
       spdlog::error("Unknown servo ID {} in CAN command", servo_id);
-      command.mode = Mode::kStopped;
-      continue;
+      throw PositionCommandError("Unknown servo ID", servo_id);
     }
     const auto& joint = it->second;
     if (!servo.has(joint)) {
-      spdlog::error("No action for joint {} (servo ID={})", joint, servo_id);
-      command.mode = Mode::kStopped;
-      continue;
+      spdlog::error("No action for joint {}", joint);
+      throw PositionCommandError("No action", servo_id);
     }
     const auto& servo_action = servo(joint);
     if (!servo_action.has("position")) {
-      spdlog::error("No position command for joint {} (servo ID={})", joint,
-                    servo_id);
-      command.mode = Mode::kStopped;
-      continue;
+      spdlog::error("No position command for joint {}", joint);
+      throw PositionCommandError("No position command", servo_id);
     }
 
     const double feedforward_torque = servo_action.get<double>(
@@ -81,11 +80,9 @@ void Interface::write_position_commands(const Dictionary& action) {
     const double maximum_torque = servo_action.get<double>(
         "maximum_torque", default_action::kMaximumTorque);
     if (maximum_torque < 0.0 || maximum_torque > model::kMaximumTorque) {
-      spdlog::error(
-          "Unreasonable maximum torque ({} N m) for joint {} (servo ID={})",
-          maximum_torque, joint, servo_id);
-      command.mode = Mode::kStopped;
-      continue;
+      spdlog::error("Unreasonable maximum torque ({} N m) for joint {}",
+                    maximum_torque, joint);
+      throw PositionCommandError("Invalid maximum torque", servo_id);
     }
 
     // The moteus convention is that positive angles correspond to clockwise
