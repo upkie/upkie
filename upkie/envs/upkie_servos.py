@@ -38,14 +38,14 @@ class UpkieServos(UpkieBaseEnv):
     - ``velocity``: Commanded joint velocity \f$\dot{\theta}^*\f$ in [rad] /
         [s] (required).
     - ``feedforward_torque``: Feedforward joint torque \f$\tau_{\mathit{ff}}\f$
-        in [N] * [m].
+        in [N m].
     - ``kp_scale``: Scaling factor \f$k_{p}^{\mathit{scale}}\f$ applied to the
         position feedback gain, between zero and one.
     - ``kd_scale``: Scaling factor \f$k_{d}^{\mathit{scale}}\f$ applied to the
         velocity feedback gain, between zero and one.
     - ``maximum_torque``: Maximum joint torque \f$\tau_{\mathit{max}}\f$
         (feedforward + feedback) enforced during the whole actuation step, in
-        [N] * [m].
+        [N m].
 
     The resulting torque applied by the servo is then:
 
@@ -76,7 +76,7 @@ class UpkieServos(UpkieBaseEnv):
 
     - ``position``: Joint angle in [rad].
     - ``velocity``: Joint velocity in [rad] / [s].
-    - ``torque``: Joint torque in [N] * [m].
+    - ``torque``: Joint torque in [N m].
     - ``temperature``: Servo temperature in degree Celsius.
     - ``voltage": Power bus voltage of the servo, in [V].
 

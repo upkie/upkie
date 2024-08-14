@@ -83,7 +83,7 @@ class WheelContact {
      */
     double min_touchdown_acceleration;
 
-    //! Skip touchdown detection below this torque, in [N] * [m].
+    //! Skip touchdown detection below this torque, in [N m].
     double min_touchdown_torque;
 
     /*! Hysteresis value of the apparent inertia that triggers touchdown
@@ -110,7 +110,7 @@ class WheelContact {
   //! Low-pass filtered absolute wheel acceleration, in [rad] / [s]²
   double abs_acceleration() const noexcept { return abs_acceleration_; }
 
-  //! Low-pass filtered absolute wheel torque, in [N] * [m]
+  //! Low-pass filtered absolute wheel torque, in [N m]
   double abs_torque() const noexcept { return abs_torque_; }
 
   //! Current contact state
@@ -129,7 +129,7 @@ class WheelContact {
   //! Low-pass filtered absolute wheel acceleration, in [rad] / [s]²
   double abs_acceleration_;
 
-  //! Low-pass filtered absolute wheel torque, in [N] * [m]
+  //! Low-pass filtered absolute wheel torque, in [N m]
   double abs_torque_;
 
   //! Observer contact state
