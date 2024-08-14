@@ -29,7 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Avoid using `numpy.typing` for compatibility with older versions of NumPy
 - PID balancer: Fix dependencies for running on conda-less systems
 - PID balancer: Update filenames of the two main scripts
-- actuation: Throw a PositionCommandError rather than stopping servos on error
+- actuation: Throw PositionCommandError rather than stopping a servo on error
 - deps: Update to palimpsest 2.2.0
 - envs: Refactor internal reward of `UpkieGroundVelocity` environment
 - envs: Use torque limits from model in `UpkieGroundVelocity` environment

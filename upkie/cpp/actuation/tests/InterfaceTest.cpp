@@ -89,21 +89,13 @@ TEST_F(InterfaceTest, ExpectFillsDictionaryKeys) {
   }
 }
 
-TEST_F(InterfaceTest, ThrowIfNoServoAction) {
-  Dictionary action;
-  ASSERT_THROW(interface_->write_position_commands(action),
-               PositionCommandError);
-}
-
-TEST_F(InterfaceTest, StopUnknownServos) {
+TEST_F(InterfaceTest, ThrowIfMissingServoAction) {
   Dictionary action;
   action("servo")("left_pump")("position") = 0.0;
   action("servo")("left_grinder")("position") = 0.0;
-  interface_->write_position_commands(action);
-  ASSERT_EQ(interface_->commands()[0].mode, moteus::Mode::kPosition);
-  ASSERT_EQ(interface_->commands()[1].mode, moteus::Mode::kPosition);
-  ASSERT_EQ(interface_->commands()[2].mode, moteus::Mode::kStopped);
-  ASSERT_EQ(interface_->commands()[3].mode, moteus::Mode::kStopped);
+  // nothing for "right_pump" and "right_grinder"
+  ASSERT_THROW(interface_->write_position_commands(action),
+               PositionCommandError);
 }
 
 TEST_F(InterfaceTest, ForwardPositionCommands) {
@@ -124,17 +116,24 @@ TEST_F(InterfaceTest, ForwardPositionCommands) {
   ASSERT_DOUBLE_EQ(commands[3].position.position, 0.5);  // [rev]
 }
 
-TEST_F(InterfaceTest, StopServoIfNoAction) {
+TEST_F(InterfaceTest, SkipIfNoActionAtAll) {
   Dictionary action;
-  interface_->write_position_commands(action);
+  ASSERT_NO_THROW(interface_->write_position_commands(action));
   ASSERT_EQ(interface_->commands()[0].mode, moteus::Mode::kStopped);
+  ASSERT_EQ(interface_->commands()[1].mode, moteus::Mode::kStopped);
+  ASSERT_EQ(interface_->commands()[2].mode, moteus::Mode::kStopped);
+  ASSERT_EQ(interface_->commands()[3].mode, moteus::Mode::kStopped);
 }
 
-TEST_F(InterfaceTest, StopServoIfNoPosition) {
+TEST_F(InterfaceTest, ThrowIfNoPosition) {
   Dictionary action;
-  action("servo")("left_pump")("velocity") = 1.5;  // velocity but not position
-  interface_->write_position_commands(action);
-  ASSERT_EQ(interface_->commands()[0].mode, moteus::Mode::kStopped);
+  // all servos, but without any position command
+  action("servo")("left_pump")("velocity") = 1.5;
+  action("servo")("left_grinder")("velocity") = 1.5;
+  action("servo")("right_pump")("velocity") = 1.5;
+  action("servo")("right_grinder")("velocity") = 1.5;
+  ASSERT_THROW(interface_->write_position_commands(action),
+               PositionCommandError);
 }
 
 TEST_F(InterfaceTest, ForwardVelocityCommands) {
