@@ -16,6 +16,9 @@ struct BulletJointProperties {
 
   //! Maximum torque, in [N m]
   double maximum_torque = 0.0;
+
+  //! Standard deviation of white noise added to joint torques, in [N m]
+  double noise = 0.0;
 };
 
 }  // namespace upkie::cpp::actuation
