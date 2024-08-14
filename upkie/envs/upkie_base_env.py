@@ -67,14 +67,17 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
 
         \param fall_pitch Fall detection pitch angle, in radians.
         \param frequency Regulated frequency of the control loop, in Hz. Can be
-            set even when `regulate_frequency` is false, as some environments
-            make use of e.g. `self.dt` internally.
+            prescribed even when `regulate_frequency` is unset, in which case
+            `self.dt` will be defined but the loop frequency will not be
+            regulated.
         \param frequency_checks If `regulate_frequency` is set and this
             parameter is true (default), a warning is issued every time the
             control loop runs slower than the desired `frequency`. Set this
             parameter to false to disable these warnings.
         \param init_state Initial state of the robot, only used in simulation.
-        \param regulate_frequency Enables loop frequency regulation.
+        \param regulate_frequency If set (default), the environment will
+            regulate the control loop frequency to the value prescribed in
+            `frequency`.
         \param shm_name Name of shared-memory file to exchange with the spine.
         \param spine_config Additional spine configuration overriding the
             defaults from ``//config:spine.yaml``. The combined configuration
