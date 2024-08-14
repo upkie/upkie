@@ -50,6 +50,14 @@ class BulletInterface : public Interface {
       follower_camera = bullet.get<bool>("follower_camera", follower_camera);
       gui = bullet.get<bool>("gui", gui);
 
+      joint_properties.clear();
+      if (bullet.has("joint_properties")) {
+        for (const auto& joint : bullet("joint_properties").keys()) {
+          const auto& props = bullet("joint_properties")(joint);
+          joint_properties.try_emplace(joint, BulletJointProperties(props));
+        }
+      }
+
       monitor_contacts.clear();
       if (bullet.has("monitor")) {
         const auto& monitor = bullet("monitor");
@@ -57,16 +65,6 @@ class BulletInterface : public Interface {
           for (const auto& body : monitor("contacts").keys()) {
             spdlog::debug("Adding body \"{}\" to contacts", body);
             monitor_contacts.push_back(body);
-          }
-        }
-      }
-
-      joint_friction.clear();
-      if (bullet.has("joint_properties")) {
-        for (const auto& joint : bullet("joint_properties").keys()) {
-          const auto& props = bullet("joint_properties")(joint);
-          if (props.has("friction")) {
-            joint_friction.try_emplace(joint, props.get<double>("friction"));
           }
         }
       }
@@ -158,7 +156,7 @@ class BulletInterface : public Interface {
     Eigen::Vector3d angular_velocity_base_in_base = Eigen::Vector3d::Zero();
 
     //! Joint friction parameters
-    std::map<std::string, double> joint_friction;
+    std::map<std::string, BulletJointProperties> joint_properties;
   };
 
   /*! Initialize interface.
@@ -271,12 +269,12 @@ class BulletInterface : public Interface {
       const Eigen::Vector3d& linear_velocity_base_to_world_in_world,
       const Eigen::Vector3d& angular_velocity_base_in_base);
 
-  //! Joint properties (accessor used for testing)
+  //! Joint properties (getter used for testing)
   const std::map<std::string, BulletJointProperties>& joint_properties() {
     return joint_properties_;
   }
 
-  //! Internal map of servo replies (accessor used for testing)
+  //! Internal map of servo replies (getter used for testing)
   const std::map<std::string, moteus::ServoReply>& servo_reply() {
     return servo_reply_;
   }

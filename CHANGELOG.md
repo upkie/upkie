@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## Added
+
+- BulletInterface: add torque noise to joint-property configuration
+
 ### Fixed
 
 - envs: Register UpkieServoPositions and UpkieServoTorques environments
@@ -15,9 +19,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- actuation: Additional check on maximum torques for each command
+- Pi3HatInterface: Additional check on maximum torques for each command
+- Pi3HatInterface: Log raw IMU measurements from pi3hat interface
 - actuation: Extend ImuData with raw measurements
-- actuation: Log raw IMU measurements from pi3hat interface
 - envs: Add UpkieServoPositions child environment (thanks to @Tordjx)
 - envs: Add UpkieServoTorques child environment (thanks to @Tordjx)
 - envs: Add a `model` attribute to all Upkie environments
@@ -46,8 +50,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- actuation: Correct inline of two Bullet utility functions
-- actuation: Fix IMU acceleration in Bullet upon resets
+- BulletInterface: Correct inline of two Bullet utility functions
+- BulletInterface: Fix IMU acceleration in Bullet upon resets
 - envs: Make sure action values are floating-point numbers (thanks to @Tordjx)
 - exceptions: Make all exceptions derive from UpkieError
 - model: Fix type of upper-leg and wheel joint lists
@@ -55,7 +59,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
-- actuation: Remove unused IMU data from mock interface
+- MockInterface: Remove unused IMU data from mock interface
 
 ## [5.0.1] - 2024-08-01
 
@@ -100,7 +104,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - CICD: Release jobs for x86 and ARM64 macOS spines
 - CICD: Update macOS x86 runner images (thanks to @ubgk)
-- actuation: Fix duplicate `data_` attribute in pi3hat actuation interface
+- Pi3HatInterface: Fix duplicate `data_` attribute
 - observers: Read configuration matrix in base orientation observer
 - raspunzel: argv0 when executing the target is now the same as `bazel run`
 - setup: Fix configuration-write order in servo config script
