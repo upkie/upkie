@@ -11,10 +11,10 @@
 
 namespace upkie::cpp::actuation {
 
+using palimpsest::Dictionary;
+
 //! Properties for robot joints in the Bullet simulation.
 struct BulletJointProperties {
-  using palimpsest::Dictionary;
-
   //! Kinetic friction, in [N m].
   double friction = 0.0;
 
@@ -23,6 +23,9 @@ struct BulletJointProperties {
 
   //! Standard deviation of white noise added to joint torques, in [N m].
   double torque_noise = 0.0;
+
+  //! Default constructor for properties initialized to default values.
+  BulletJointProperties() = default;
 
   /*! Initialize configurable properties from a dictionary.
    *
