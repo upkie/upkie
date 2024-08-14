@@ -21,13 +21,10 @@ py_library(
 
 py_binary(
     name = "bullet",
-    srcs = ["bullet.py"],
+    srcs = [
+        "bullet.py"
+    ],
     main = "bullet.py",
-
-    # Enable `from X import y` rather than `from agents.agent_name.X import y`
-    # so that the agent can be run indifferently via Python or Bazel.
-    imports = ["."],
-
     data = [
         ":config",
         "//spines:bullet_spine",
@@ -36,11 +33,12 @@ py_binary(
         "//upkie",
         ":controllers",
         "@rules_python//python/runfiles",
+        requirement("PyYAML"),
+        requirement("gin-config"),
+        requirement("loop-rate-limiters"),
     ] + select({
         "//:pi64_config": [],
         "//conditions:default": [
-            requirement("gin-config"),
-            requirement("loop-rate-limiters"),
             requirement("numpy"),
         ],
     }),
@@ -48,13 +46,10 @@ py_binary(
 
 py_binary(
     name = "pid_balancer",
-    srcs = ["main.py"],
+    srcs = [
+        "main.py",
+    ],
     main = "main.py",
-
-    # Enable `from X import y` rather than `from agents.agent_name.X import y`
-    # so that the agent can be run indifferently via Python or Bazel.
-    imports = ["."],
-
     data = [
         "//pid_balancer/config",
     ] + select({
@@ -64,7 +59,15 @@ py_binary(
     deps = [
         "//upkie",
         ":controllers",
-    ],
+        requirement("PyYAML"),
+        requirement("gin-config"),
+        requirement("loop-rate-limiters"),
+    ] + select({
+        "//:pi64_config": [],
+        "//conditions:default": [
+            requirement("numpy"),
+        ],
+    }),
 )
 
 add_lint_tests()
