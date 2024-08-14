@@ -4,12 +4,13 @@
 # Copyright 2022 Stéphane Caron
 # Copyright 2023 Inria
 
-"""
-Command-line script to communicate with Upkie's servos.
-"""
+"""Command-line script to communicate with Upkie's servos."""
+
+import requests
 
 import argparse
 import asyncio
+import subprocess
 import math
 import os
 import sys
@@ -20,18 +21,35 @@ from pathlib import Path
 import moteus
 import moteus_pi3hat
 
-COMMANDS = ["rezero", "stats", "stop"]
+INSTALL_PREFIX = Path("/usr/local/bin/")
 PI3HAT_CFG = "1=1,2,3;3=4,5,6"
+
+
+def parse_command_line_arguments() -> argparse.Namespace:
+    """
+    Parse command-line arguments.
+
+    Returns:
+        Namespace resulting from parsing command-line arguments.
+    """
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "command",
+        help="Command to execute",
+        choices=("rezero", "stats", "stop", "update"),
+    )
+    return parser.parse_args()
 
 
 @dataclass
 class Servo:
+    """Servo identifiers."""
+
     id: int
     bus: int
 
 
 class UpkieTool:
-
     """
     Interface to send the same command to all servos in a given layout.
 
@@ -40,8 +58,8 @@ class UpkieTool:
         transport: pi3hat transport.
     """
 
-    transport: moteus_pi3hat.Pi3HatRouter
     controllers: List[moteus.Controller]
+    transport: moteus_pi3hat.Pi3HatRouter
 
     def __init__(self):
         """Initialize servo tool."""
@@ -56,8 +74,7 @@ class UpkieTool:
         self.transport = transport
 
     def __get_servos(self) -> List[Servo]:
-        """
-        Get list of servos from a pi3hat config string.
+        """Get list of servos from a pi3hat config string.
 
         Returns:
             List of servos.
@@ -90,16 +107,14 @@ class UpkieTool:
 
     async def set_stop(self) -> None:
         """Send stop commands to moteus controllers."""
-        print("Sending stop commands to all motors... ", end='')
+        print("Sending stop commands to all motors... ", end="")
         await self.transport.cycle(
             [controller.make_stop() for controller in self.controllers]
         )
         print("done")
 
     async def set_rezero(self) -> None:
-        """
-        Send rezero commands to moteus controllers.
-        """
+        """Send rezero commands to moteus controllers."""
         print("Sending rezero commands to all motors... ", end="")
         await self.transport.cycle(
             [controller.make_rezero() for controller in self.controllers]
@@ -107,9 +122,7 @@ class UpkieTool:
         print("done")
 
     async def print_stats(self) -> None:
-        """
-        Query controllers for their current stats.
-        """
+        """Query controllers for their current stats."""
 
         def get_result_id(result) -> int:  # help mypy
             result_id: int = result.id
@@ -127,7 +140,7 @@ class UpkieTool:
             f"{'Mode':6} "
             f"{'Position (rad)':14} "
             f"{'Velocity (rad / s)':18} "
-            f"{'Torque (N * m)':14}"
+            f"{'Torque (N m)':14}"
         )
         print(
             f"{'--':2} "
@@ -153,6 +166,65 @@ class UpkieTool:
             )
 
 
+def get_upkie_asset(name: str) -> dict:
+    """Find an asset in the latest release of the upkie repository on GitHub.
+
+    Args:
+        name: Name of the asset.
+
+    Returns:
+        Asset, if found.
+
+    Raises:
+        ValueError: if the asset is not found.
+    """
+    url = "https://api.github.com/repos/upkie/upkie/releases/latest"
+    response = requests.get(url)
+    response.raise_for_status()
+    assets = response.json()["assets"]
+    for asset in assets:
+        if asset["name"] == name:
+            return asset
+    raise ValueError(f'asset "{name}" not found')
+
+
+def get_pi3hat_spine_version() -> str:
+    call = subprocess.run(
+        [INSTALL_PREFIX / "pi3hat_spine", "--version"],
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    return call.stdout.strip()
+
+
+def update_pi3hat_spine() -> None:
+    """Update the pi3hat spine."""
+    print("Updating the pi3hat spine...")
+    spine_path = INSTALL_PREFIX / "pi3hat_spine"
+
+    if os.path.exists(spine_path):
+        backup_path = INSTALL_PREFIX / "pi3hat_spine.bak"
+        print(f"- Backing up previous spine to '{backup_path}'...")
+        os.rename(spine_path, backup_path)
+
+    spine_url = get_upkie_asset("pi3hat_spine")["url"]
+    print(f"- Downloading latest spine from {spine_url}...")
+    response = requests.get(
+        spine_url,
+        headers={"Accept": "application/octet-stream"},
+    )
+    response.raise_for_status()
+
+    print(f"- Updating '{spine_path}'...")
+    with open(spine_path, "wb") as f:
+        f.write(response.content)
+    os.chmod(spine_path, 2418 + 123)
+    version = get_pi3hat_spine_version()
+    print("- Spine updated successfully!")
+    print(f"Spine version is now {version}")
+
+
 async def main(upkie_tool: UpkieTool, command: str) -> None:
     """
     Query controllers then make sure they are stopped. Clears any fault.
@@ -161,11 +233,13 @@ async def main(upkie_tool: UpkieTool, command: str) -> None:
         upkie_tool: Instance of the UpkieTool class.
         command: Command keyword.
     """
+    if command == "update":
+        return update_pi3hat_spine()
     await upkie_tool.set_stop()
     try:
         if command == "rezero":
             await upkie_tool.set_rezero()
-            Path('/tmp/rezero_success').touch()
+            Path("/tmp/rezero_success").touch()
         if command == "stats":
             await upkie_tool.print_stats()
         if command == "stop":
@@ -173,22 +247,6 @@ async def main(upkie_tool: UpkieTool, command: str) -> None:
     except Exception as e:
         print(f"Ignoring exception: {e}")
     await upkie_tool.set_stop()
-
-
-def parse_command_line_arguments() -> argparse.Namespace:
-    """
-    Parse command-line arguments.
-
-    Returns:
-        Namespace resulting from parsing command-line arguments.
-    """
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument(
-        "command",
-        help="Command to execute",
-        choices=COMMANDS,
-    )
-    return parser.parse_args()
 
 
 if __name__ == "__main__":
