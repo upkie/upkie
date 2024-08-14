@@ -51,7 +51,7 @@ The [UpkieServoPositions](\ref upkie.envs.upkie_servo_positions.UpkieServoPositi
 
 \f[
 \begin{align*}
-\tau & = k_{p} k_{p}^{\mathit{scale}} (\theta^* - \theta) + k_{d} k_{d}^{\mathit{scale}} (\dot{\theta})
+\tau & = k_{p} k_{p}^{\mathit{scale}} (\theta^* - \theta) - k_{d} k_{d}^{\mathit{scale}} \dot{\theta}
 \end{align*}
 \f]
 
