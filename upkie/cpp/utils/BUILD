@@ -30,7 +30,7 @@ cc_library(
     name = "low_pass_filter",
     hdrs = ["low_pass_filter.h"],
     deps = [
-        "//upkie/cpp/exceptions:filter_error",
+        "//upkie/cpp/exceptions",
         "@eigen",
     ],
 )
