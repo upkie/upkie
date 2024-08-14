@@ -9,8 +9,11 @@
 #include "gtest/gtest.h"
 #include "upkie/cpp/actuation/Interface.h"
 #include "upkie/cpp/actuation/tests/coffee_machine_layout.h"
+#include "upkie/cpp/exceptions/PositionCommandError.h"
 
 namespace upkie::cpp::actuation {
+
+using exceptions::PositionCommandError;
 
 class SmallInterface : public Interface {
  public:
@@ -86,9 +89,10 @@ TEST_F(InterfaceTest, ExpectFillsDictionaryKeys) {
   }
 }
 
-TEST_F(InterfaceTest, DontThrowIfNoServoAction) {
+TEST_F(InterfaceTest, ThrowIfNoServoAction) {
   Dictionary action;
-  ASSERT_NO_THROW(interface_->write_position_commands(action));
+  ASSERT_THROW(interface_->write_position_commands(action),
+               PositionCommandError);
 }
 
 TEST_F(InterfaceTest, StopUnknownServos) {

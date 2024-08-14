@@ -17,6 +17,7 @@ cc_library(
 cc_library(
     name = "exceptions",
     hdrs = [
+        "PositionCommandError.h",
         "TypeError.h",
         "UpkieError.h",
     ],

@@ -44,6 +44,7 @@ cc_library(
     ],
     deps = [
         "//upkie/cpp/actuation/moteus",
+        "//upkie/cpp/exceptions",
         "//upkie/cpp/model",
         ":imu_data",
         ":resolution",

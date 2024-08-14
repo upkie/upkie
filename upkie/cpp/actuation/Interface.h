@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2022 Stéphane Caron
+// Copyright 2024 Inria
 
 #pragma once
 
@@ -109,6 +110,7 @@ class Interface {
   /*! Write position commands from an action dictionary.
    *
    * \param[in] action Action to read commands from.
+   * \throw PositionCommandError If any position command is incorrect.
    */
   void write_position_commands(const Dictionary& action);
 
