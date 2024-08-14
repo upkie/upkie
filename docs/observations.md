@@ -71,4 +71,4 @@ auto linear_acceleration_history =
 observer_pipeline.append_observer(linear_acceleration_history);
 ```
 
-Check out the API reference for details: \ref upkie::cpp::observers::HistoryObserver.
+Check out the [HistoryObserver](\ref upkie::cpp::observers::HistoryObserver) API reference for details.

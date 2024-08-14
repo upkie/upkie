@@ -2,7 +2,7 @@
 
 ## From newbie to sourcie
 
-While newcomers will likely use the simulation script and the ``upkie`` Python package, as you get acquainted with the robot and develop your own agents (NB: by forking [upkie/new\_agent](https://github.com/upkie/new_agent)), you may want to contribute some features back to the upstream repository. Here is a short guide on compiling from source to do that.
+While newcomers will likely run `start_simulation.sh` and import the ``upkie`` package in Python, as you get acquainted with the robot and develop your own agents (by forking [upkie/new\_agent](https://github.com/upkie/new_agent)), you may want to contribute some features back to the upstream repository. Here is a short guide on compiling from source to do that.
 
 ### Build environment setup {#setup-build}
 
@@ -20,7 +20,13 @@ export UPKIE_NAME="michel-strogoff"
 
 An IP address will also work.
 
-To make sure your build environment works, try to run a [bullet spine](\ref bullet-spine) from source. Once the simulation builds and runs successfully, move onto building the [pi3hat spine](\ref pi3hat-spine) from source, upload it and run it on your robot.
+To make sure your build environment works, try to run a [bullet spine](\ref bullet-spine) from source:
+
+```
+make run_bullet_spine
+```
+
+Once the simulation builds and runs successfully, move onto building the [pi3hat spine](\ref pi3hat-spine) from source, upload it and run it on your robot.
 
 ### Using the local Python module
 

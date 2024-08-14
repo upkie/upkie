@@ -54,22 +54,27 @@ Bazel is the build system used in Upkie for spines. Check out simulation options
 
 ### pi3hat spine {#pi3hat-spine}
 
-The pi3hat spine is the one that runs on the real robot, where a [pi3hat r4.5](https://mjbots.com/products/mjbots-pi3hat-r4-5) is mounted on top of the onboard Raspberry Pi computer. To run this spine, we can either: download it from GitHub, or build it locally from source.
+The pi3hat spine is the one that runs on the real robot, where a [pi3hat r4.5](https://mjbots.com/products/mjbots-pi3hat-r4-5) is mounted on top of the onboard Raspberry Pi computer. To run this spine, you can either download it from GitHub, or build it locally from source.
 
 #### Download the latest release
 
-To get the latest pi3hat spine from GitHub, download the latest `pi3hat_spine` binary from [Continuous Integration build artifacts](https://github.com/upkie/upkie/actions/workflows/ci.yml), then `scp` it to the robot. TODO: make this more user-friendly ;)
+Assuming your robot is connected to the Internet, you can get the latest pi3hat spine from GitHub using the `upkie_tool` command-line utility:
 
 ```console
-$ scp pi3hat_spine foo@robot
-$ ssh foo@robot
-foo@robot:~$ ./pi3hat_spine
+$ ssh user@upkie
+user@upkie:~$ upkie_tool update
 ```
 
-Once the spine is running, you can run any agent in a separate shell on the robot, for example the wheel balancer:
+Once the spine is installed, start it from a command-line on the robot:
 
 ```console
-foo@robot:upkie$ make run_pid_balancer
+user@upkie:~$ pi3hat_spine
+```
+
+You can then run any agent in a separate shell on the robot, for example the wheel balancer:
+
+```console
+user@upkie:upkie$ make run_pid_balancer
 ```
 
 #### Build from source
@@ -84,15 +89,15 @@ make upload UPKIE_NAME=your_upkie
 Next, log into the Pi and run a pi3hat spine:
 
 ```console
-$ ssh foo@robot
-foo@robot:~$ cd upkie
-foo@robot:upkie$ make run_pi3hat_spine
+$ ssh user@upkie
+user@upkie:~$ cd upkie
+user@upkie:upkie$ make run_pi3hat_spine
 ```
 
 Once the spine is running, you can run any agent in a separate shell on the robot, for example the wheel balancer:
 
 ```console
-foo@robot:upkie$ make run_pid_balancer
+user@upkie:upkie$ make run_pid_balancer
 ```
 
 ### Mock spine {#mock-spine}
