@@ -11,18 +11,21 @@ from multiprocessing.shared_memory import SharedMemory
 
 import gymnasium as gym
 
-from upkie.envs import register
+import upkie.envs
 
 
 class TestUpkieEnvs(unittest.TestCase):
-    def test_register(self, env_name: str = "UpkieServos"):
+    def test_registration(self):
         with self.assertRaises(gym.error.NameNotFound):
             # runs in the same test so that we make sure this is executed
             # before the call to ``register()``
-            gym.make(env_name)
+            gym.make("UpkieServos")
         shared_memory = SharedMemory(name=None, size=42, create=True)
-        register()
-        gym.make(env_name, shm_name=shared_memory._name)
+        upkie.envs.register()
+        for env_name in upkie.envs.__all__:
+            if env_name in ("register", "UpkieBaseEnv"):
+                continue
+            gym.make(env_name, shm_name=shared_memory._name)
         shared_memory.close()
 
 
