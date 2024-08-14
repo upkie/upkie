@@ -67,7 +67,7 @@ cc_library(
         "ObserverPipeline.cpp",
     ],
     deps = [
-        "//upkie/cpp/exceptions:observer_error",
+        "//upkie/cpp/exceptions",
         "//upkie/cpp/sensors:sensor",
         ":observer",
     ],

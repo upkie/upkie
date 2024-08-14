@@ -1,14 +1,17 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2022 Stéphane Caron
+// Copyright 2024 Inria
 
 #pragma once
 
 #include <string>
 
+#include "upkie/cpp/exceptions/UpkieError.h"
+
 namespace upkie::cpp::exceptions {
 
 //! Exception thrown when an observer fails.
-class ObserverError : public std::runtime_error {
+class ObserverError : public UpkieError {
  public:
   /*! Create an observer error.
    *
@@ -16,7 +19,7 @@ class ObserverError : public std::runtime_error {
    * \param[in] key Key that was not found.
    */
   ObserverError(const std::string& prefix, const std::string& key)
-      : std::runtime_error(key), prefix_(prefix), key_(key) {
+      : UpkieError(key), prefix_(prefix), key_(key) {
     std::ostringstream out;
     out << "Failed to update /observation/" << prefix << ": key \"" << key
         << "\" not found";
@@ -24,9 +27,6 @@ class ObserverError : public std::runtime_error {
   }
 
   ~ObserverError() throw() {}
-
-  //! Error message
-  const char* what() const throw() { return message_.c_str(); }
 
   //! Observer prefix in observation/
   const std::string& prefix() const throw() { return prefix_; }
@@ -40,9 +40,6 @@ class ObserverError : public std::runtime_error {
 
   //! Key that was not found
   std::string key_;
-
-  //! Complete error message
-  std::string message_;
 };
 
 }  // namespace upkie::cpp::exceptions
