@@ -8,8 +8,9 @@ load("@pip_upkie//:requirements.bzl", "requirement")
 package(default_visibility = ["//visibility:public"])
 
 py_library(
-    name = "controllers",
+    name = "modules",
     srcs = [
+        "imu_placement.py",
         "servo_controller.py",
         "wheel_controller.py",
     ],
@@ -31,7 +32,7 @@ py_binary(
     ],
     deps = [
         "//upkie",
-        ":controllers",
+        ":modules",
         "@rules_python//python/runfiles",
         requirement("PyYAML"),
         requirement("gin-config"),
@@ -58,7 +59,7 @@ py_binary(
     }),
     deps = [
         "//upkie",
-        ":controllers",
+        ":modules",
         requirement("PyYAML"),
         requirement("gin-config"),
         requirement("loop-rate-limiters"),

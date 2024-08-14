@@ -1,0 +1,25 @@
+# -*- python -*-
+#
+# SPDX-License-Identifier: Apache-2.0
+
+import imu_placement
+import wheel_controller
+
+# Cookie's IMU has a non-standard placement
+IMUPlacement.rotation_base_to_imu = [-1, 0, 0, 0, 0, 1, 0, 1, 0]
+
+# Hack: Cookie's wheels turn the other way round
+WheelController.wheel_radius = -0.0725  # [m]
+
+# Pitch gains: 2 is roughly the good damping value for a stiffness of 15; 1 is
+# too low, resulting in oscillations of increasing magnitude; 3 is too high,
+# resulting in permanent small oscillations as the robot rolls around.
+Gains.pitch_damping = 2.0
+Gains.pitch_stiffness = 15.0
+
+# Position gains: 2.5 is roughly a good value to match the (2, 15) in pitch;
+# 1.6 is also good on rough horizontal floor, 3.3 is too much and results in
+# oscillations of increasing magnitude. Going for 1.6 now because 2.5 feels a
+# bit more overshooty.
+Gains.position_damping = 0.8
+Gains.position_stiffness = 1.6
