@@ -17,7 +17,7 @@ rm -rf /home/pi/Bookshelf
 
 # Install Debian packages
 export DEBIAN_FRONTEND=noninteractive
-apt-get update && apt-get install -y python3-pip tmux vim
+apt-get update && apt-get install -y python3-numpy python3-pip tmux vim
 
 # Install packages from PyPI
 pip install moteus-pi3hat upkie

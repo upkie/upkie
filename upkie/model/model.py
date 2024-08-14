@@ -8,7 +8,6 @@ from typing import List, Tuple
 from xml.etree import ElementTree
 
 import numpy as np
-from numpy.typing import NDArray
 
 from .joint import Joint
 from .joint_limit import JointLimit
@@ -25,11 +24,11 @@ class Model:
 
     ## @var rotation_ars_to_world
     ## Rotation matrix from the ARS frame to the world frame.
-    rotation_ars_to_world: NDArray[float]
+    rotation_ars_to_world: np.ndarray
 
     ## @var rotation_base_to_imu
     ## Rotation matrix from the base frame to the IMU frame.
-    rotation_base_to_imu: NDArray[float]
+    rotation_base_to_imu: np.ndarray
 
     ## @var upper_leg_joints
     ## Upper-leg (hip and knee) joints.

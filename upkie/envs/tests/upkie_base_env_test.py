@@ -11,7 +11,6 @@ from multiprocessing.shared_memory import SharedMemory
 
 import numpy as np
 from gymnasium import spaces
-from numpy.typing import NDArray
 
 from upkie.envs import UpkieBaseEnv
 from upkie.envs.tests.mock_spine import MockSpine
@@ -36,15 +35,13 @@ class UpkieTestEnv(UpkieBaseEnv):
     def parse_first_observation(self, spine_observation: dict) -> None:
         pass
 
-    def get_env_observation(self, spine_observation: dict) -> NDArray[float]:
+    def get_env_observation(self, spine_observation: dict) -> np.ndarray:
         return np.full((1,), 0.5, dtype=self.observation_space.dtype)
 
-    def get_spine_action(self, action: NDArray[float]) -> dict:
+    def get_spine_action(self, action: np.ndarray) -> dict:
         return {"test": action}
 
-    def get_reward(
-        self, observation: NDArray[float], action: NDArray[float]
-    ) -> float:
+    def get_reward(self, observation: np.ndarray, action: np.ndarray) -> float:
         return 1.0
 
 

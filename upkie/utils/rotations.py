@@ -7,12 +7,11 @@
 from typing import Tuple
 
 import numpy as np
-from numpy.typing import NDArray
 
 
 def rotation_matrix_from_quaternion(
     quat: Tuple[float, float, float, float]
-) -> NDArray[float]:
+) -> np.ndarray:
     r"""!
     Convert a unit quaternion to the matrix representing the same rotation.
 

@@ -10,7 +10,6 @@ from typing import Dict, Optional, Tuple
 
 import numpy as np
 from gymnasium import spaces
-from numpy.typing import NDArray
 
 from upkie.exceptions import UpkieException
 from upkie.utils.filters import low_pass_filter
@@ -220,7 +219,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
         *,
         seed: Optional[int] = None,
         options: Optional[dict] = None,
-    ) -> Tuple[NDArray[float], Dict]:
+    ) -> Tuple[np.ndarray, Dict]:
         r"""!
         Resets the environment and get an initial observation.
 
@@ -245,7 +244,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
             position = spine_observation["servo"][joint.name]["position"]
             self.__leg_servo_action[joint.name]["position"] = position
 
-    def get_env_observation(self, spine_observation: dict) -> NDArray[float]:
+    def get_env_observation(self, spine_observation: dict) -> np.ndarray:
         r"""!
         Extract environment observation from spine observation dictionary.
 
@@ -306,7 +305,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
             servo_action[joint.name]["maximum_torque"] = joint.limit.effort
         return servo_action
 
-    def get_spine_action(self, action: NDArray[float]) -> dict:
+    def get_spine_action(self, action: np.ndarray) -> dict:
         r"""!
         Convert environment action to a spine action dictionary.
 
@@ -325,8 +324,8 @@ class UpkieGroundVelocity(UpkieBaseEnv):
 
     def get_reward(
         self,
-        observation: NDArray[float],
-        action: NDArray[float],
+        observation: np.ndarray,
+        action: np.ndarray,
     ) -> float:
         r"""!
         Get reward from observation and action.

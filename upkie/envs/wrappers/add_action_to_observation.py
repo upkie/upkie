@@ -7,13 +7,11 @@
 import gymnasium
 import numpy as np
 from gymnasium import spaces
-from numpy.typing import NDArray
 
 from upkie.exceptions import UpkieException
 
 
 class AddActionToObservation(gymnasium.ObservationWrapper):
-
     """!
     Append last action vector to the observation vector.
 
@@ -22,7 +20,7 @@ class AddActionToObservation(gymnasium.ObservationWrapper):
     wouldn't need this wrapper.)
     """
 
-    _last_action: NDArray[float]
+    _last_action: np.ndarray
 
     def __init__(self, env):
         r"""!
@@ -52,9 +50,9 @@ class AddActionToObservation(gymnasium.ObservationWrapper):
             env.action_space.shape, dtype=env.action_space.dtype
         )
 
-    def observation(self, observation: NDArray[float]) -> NDArray[float]:
+    def observation(self, observation: np.ndarray) -> np.ndarray:
         return np.concatenate([observation, self._last_action])
 
-    def step(self, action: NDArray[float]):
+    def step(self, action: np.ndarray):
         self._last_action = action
         return super().step(action)

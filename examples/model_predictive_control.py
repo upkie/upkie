@@ -12,7 +12,6 @@ See the MPC balancer for a more complete agent based on the same algorithm.
 import gymnasium as gym
 import numpy as np
 import upkie.envs
-from numpy.typing import NDArray
 from qpmpc import solve_mpc
 from qpmpc.systems import WheeledInvertedPendulum
 from upkie.utils.clamp import clamp_and_warn
@@ -22,9 +21,9 @@ upkie.envs.register()
 
 def get_target_states(
     pendulum: WheeledInvertedPendulum,
-    state: NDArray[float],
+    state: np.ndarray,
     target_vel: float = 0.0,
-) -> NDArray[float]:
+) -> np.ndarray:
     r"""!
     Define the reference state trajectory over the receding horizon.
 

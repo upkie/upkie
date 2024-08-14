@@ -11,7 +11,6 @@ import gymnasium
 import numpy as np
 import upkie_description
 from loop_rate_limiters import RateLimiter
-from numpy.typing import NDArray
 
 import upkie.config
 from upkie.exceptions import UpkieException
@@ -146,7 +145,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         *,
         seed: Optional[int] = None,
         options: Optional[dict] = None,
-    ) -> Tuple[NDArray[float], dict]:
+    ) -> Tuple[np.ndarray, dict]:
         r"""!
         Resets the spine and get an initial observation.
 
@@ -198,8 +197,8 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
 
     def step(
         self,
-        action: NDArray[float],
-    ) -> Tuple[NDArray[float], float, bool, bool, dict]:
+        action: np.ndarray,
+    ) -> Tuple[np.ndarray, float, bool, bool, dict]:
         r"""!
         Run one timestep of the environment's dynamics. When the end of the
         episode is reached, you are responsible for calling `reset()` to reset

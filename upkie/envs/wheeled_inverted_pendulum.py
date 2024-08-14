@@ -14,7 +14,6 @@ import upkie_description
 from gymnasium import spaces
 from loop_rate_limiters import RateLimiter
 from numpy import cos, sin
-from numpy.typing import NDArray
 
 from upkie.exceptions import MissingOptionalDependency, UpkieRuntimeError
 from upkie.model import Model
@@ -138,28 +137,28 @@ class WheeledInvertedPendulum(gymnasium.Env):
 
         ## @var accelerometer_bias
         ## Bias vector added to accelerometer measurements in the base frame.
-        accelerometer_bias: Union[NDArray[float], float]
+        accelerometer_bias: Union[np.ndarray, float]
 
         ## @var accelerometer_noise
         ## Vector of standard deviations for white noise added to accelerometer
         ## measurements in the base frame.
-        accelerometer_noise: Union[NDArray[float], float]
+        accelerometer_noise: Union[np.ndarray, float]
 
         ## @var observation_bias
         ## Bias vector added to state observations.
-        observation_bias: Union[NDArray[float], float]
+        observation_bias: Union[np.ndarray, float]
 
         ## @var observation_noise
         ## Vector of standard deviations for white noise added to state
         ## observations.
-        observation_noise: Union[NDArray[float], float]
+        observation_noise: Union[np.ndarray, float]
 
         def __init__(
             self,
-            accelerometer_bias:  Union[NDArray[float], float] = 0.0,
-            accelerometer_noise: Union[NDArray[float], float] = 0.0,
-            observation_bias:    Union[NDArray[float], float] = 0.0,
-            observation_noise:   Union[NDArray[float], float] = 0.0,
+            accelerometer_bias: Union[np.ndarray, float] = 0.0,
+            accelerometer_noise: Union[np.ndarray, float] = 0.0,
+            observation_bias: Union[np.ndarray, float] = 0.0,
+            observation_noise: Union[np.ndarray, float] = 0.0,
         ):
             r"""!
             Initialize uncertainties.
@@ -169,7 +168,7 @@ class WheeledInvertedPendulum(gymnasium.Env):
             self.observation_bias = observation_bias
             self.observation_noise = observation_noise
 
-        def accelerometer(self) -> NDArray[float]:
+        def accelerometer(self) -> np.ndarray:
             r"""!
             Get accelerometer uncertainty vector.
 
@@ -181,7 +180,7 @@ class WheeledInvertedPendulum(gymnasium.Env):
                 size=(2,),
             )
 
-        def observation(self) -> NDArray[float]:
+        def observation(self) -> np.ndarray:
             r"""!
             Get observation uncertainty vector.
             """
@@ -322,7 +321,7 @@ class WheeledInvertedPendulum(gymnasium.Env):
         *,
         seed: Optional[int] = None,
         options: Optional[dict] = None,
-    ) -> Tuple[NDArray[float], dict]:
+    ) -> Tuple[np.ndarray, dict]:
         r"""!
         Resets the spine and get an initial observation.
 
@@ -376,8 +375,8 @@ class WheeledInvertedPendulum(gymnasium.Env):
 
     def step(
         self,
-        action: NDArray[float],
-    ) -> Tuple[NDArray[float], float, bool, bool, dict]:
+        action: np.ndarray,
+    ) -> Tuple[np.ndarray, float, bool, bool, dict]:
         r"""!
         Run one timestep of the environment's dynamics. When the end of the
         episode is reached, you are responsible for calling `reset()` to reset
@@ -470,9 +469,9 @@ class WheeledInvertedPendulum(gymnasium.Env):
 
     def _get_imu_acceleration_in_base(
         self,
-        state: Optional[NDArray[float]] = None,
-        accel: Optional[NDArray[float]] = None,
-    ) -> NDArray[float]:
+        state: Optional[np.ndarray] = None,
+        accel: Optional[np.ndarray] = None,
+    ) -> np.ndarray:
         theta, r, thetad, rd = state if state is not None else self.__state
         thetadd, rdd = accel if accel is not None else self.__accel
         rotation_base_to_world = np.array(
@@ -503,5 +502,5 @@ class WheeledInvertedPendulum(gymnasium.Env):
         obs["wheel_odometry"]["velocity"] = rd
         return obs
 
-    def _get_state(self) -> NDArray[float]:
+    def _get_state(self) -> np.ndarray:
         return self.__state.copy()

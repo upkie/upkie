@@ -11,7 +11,6 @@ from typing import Tuple
 
 import gin
 import numpy as np
-from numpy.typing import NDArray
 
 from upkie.utils.clamp import clamp, clamp_abs
 from upkie.utils.filters import abs_bounded_derivative_filter, low_pass_filter
@@ -119,7 +118,7 @@ class WheelController:
 
     ## @var error
     ## Two-dimensional vector of ground position and base pitch errors.
-    error: NDArray[float]
+    error: np.ndarray
 
     ## @var fall_pitch
     ## Fall pitch angle, in radians.
@@ -466,7 +465,7 @@ class WheelController:
 
     def get_wheel_velocities(
         self,
-        position_right_in_left: NDArray[float],
+        position_right_in_left: np.ndarray,
     ) -> Tuple[float, float]:
         r"""!
         Get left and right wheel velocities.

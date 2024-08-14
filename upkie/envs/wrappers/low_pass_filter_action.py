@@ -9,18 +9,16 @@ from typing import Union
 import gymnasium
 import numpy as np
 from gymnasium.spaces import Box
-from numpy.typing import NDArray
 
 from upkie.utils.filters import low_pass_filter
 
 
 class LowPassFilterAction(gymnasium.Wrapper):
-
     """!
     Apply a low-pass filter to the action of an environment.
     """
 
-    filtered_action: NDArray[float]
+    filtered_action: np.ndarray
     time_constant: float
     time_constant_box: Box
 
