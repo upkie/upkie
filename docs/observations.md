@@ -12,11 +12,11 @@ Here is an index of observation dictionaries computed from [Sensors](\ref sensor
 | `imu.orientation` | Unit quaternion (``qw``, ``qx``, ``qy``, ``qz``) of the orientation from the IMU frame to the [ARS](\ref ars) frame |
 | `imu.raw_angular_velocity` | Raw measurement from the gyroscope of the IMU, in [rad] / [s] |
 | `imu.raw_linear_acceleration` | [Proper acceleration](https://en.wikipedia.org/wiki/Accelerometer#Physical_principles) measured by the accelerometer of the IMU, in [m] / [s]² |
-| `servos` | Servo motor measurements |
-| `servos.X` | Observations for servo ``X`` in the servo layout |
-| `servos.X.position` | Angle between the stator and the rotor in [rad] |
-| `servos.X.torque` | Joint torque in [N] * [m] |
-| `servos.X.velocity` | Angular velocity of the rotor w.r.t. stator in rotor, in [rad] / [s] |
+| `servo` | Servo motor measurements |
+| `servo.X` | Observations for servo ``X`` in the servo layout |
+| `servo.X.position` | Angle between the stator and the rotor in [rad] |
+| `servo.X.torque` | Joint torque in [N] * [m] |
+| `servo.X.velocity` | Angular velocity of the rotor w.r.t. stator in rotor, in [rad] / [s] |
 | `wheel_odometry` | Wheel odometry, , see [WheelOdometry](\ref upkie::cpp::observers::WheelOdometry) for more details |
 | `wheel_odometry.position` | Ground position in [m] |
 | `wheel_odometry.velocity` | Ground velocity in [m] / [s] |
