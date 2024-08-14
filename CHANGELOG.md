@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Added
 
 - BulletInterface: add torque noise to joint-property configuration
+- examples: Simulation with joint friction and noise
 
 ### Fixed
 
