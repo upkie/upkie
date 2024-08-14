@@ -99,12 +99,6 @@ The demo agent simply balances in place by [PID control](https://upkie.github.io
 
 Head over to the [new\_agent](https://github.com/upkie/new_agent) template to create your own.
 
-## Frequently Asked Questions
-
-- [Is the Python API fast enough for real-time control?](https://github.com/orgs/upkie/discussions/240)
-- [Can we step a Gym environment faster than real time?](https://github.com/orgs/upkie/discussions/79)
-- [How to pair a Bluetooth controller to the Raspberry Pi?](https://github.com/orgs/upkie/discussions/138)
-
 ## Citation
 
 If you built an Upkie or use parts of this project in your works, please cite it as follows:
