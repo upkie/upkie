@@ -7,6 +7,7 @@
 
 import gin
 import numpy as np
+from imu_placement import IMUPlacement
 from wheel_controller import WheelController
 
 from upkie.utils.clamp import clamp
@@ -52,10 +53,33 @@ class ServoController:
         self.__servo_action = None
         self.__wheel_balancer = WheelController()  # type: ignore
 
-    @property
-    def wheel_radius(self) -> float:
-        """!Wheel radius in [m]."""
-        return self.__wheel_balancer.wheel_radius
+    def update_spine_configuration(self, spine_config: dict) -> None:
+        r"""!
+        Update spine configuration dictionary from controller parameters.
+
+        \param spine_config Spine configuration dictionary.
+        """
+        imu_placement = IMUPlacement()
+        if imu_placement.rotation_base_to_imu is not None:
+            spine_config["base_orientation"] = {
+                "rotation_base_to_imu": np.array(
+                    imu_placement.rotation_base_to_imu,
+                    dtype=float,
+                ),
+            }
+        spine_config["bullet"]["monitor"] = {
+            "contacts": {
+                "left_wheel_tire": True,
+                "right_wheel_tire": True,
+            }
+        }
+        wheel_radius = self.__wheel_balancer.wheel_radius
+        spine_config["wheel_odometry"] = {
+            "signed_radius": {
+                "left_wheel": +wheel_radius,
+                "right_wheel": -wheel_radius,
+            },
+        }
 
     def initialize_servo_action(self, observation: dict) -> None:
         r"""!

@@ -7,7 +7,7 @@
 
 """Keep the robot up using its wheels."""
 
-from typing import Tuple
+from typing import List, Optional, Tuple
 
 import gin
 import numpy as np

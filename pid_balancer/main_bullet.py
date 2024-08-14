@@ -52,26 +52,14 @@ def run(
     \param spine_config Spine configuration dictionary.
     \param frequency Control frequency in Hz.
     """
-    controller = ServoController()
-    dt = 1.0 / frequency
     rate = RateLimiter(frequency, "controller")
-
-    wheel_radius = controller.wheel_radius
-    spine_config["bullet"]["monitor"] = {
-        "contacts": {"left_wheel_tire": True, "right_wheel_tire": True}
-    }
-    spine_config["wheel_odometry"] = {
-        "signed_radius": {
-            "left_wheel": +wheel_radius,
-            "right_wheel": -wheel_radius,
-        },
-    }
-
+    controller = ServoController()
+    controller.update_spine_configuration(spine_config)
     spine.start(spine_config)
     observation = spine.get_observation()  # pre-reset observation
     while True:
         observation = spine.get_observation()
-        action = controller.cycle(observation, dt)
+        action = controller.cycle(observation, rate.dt)
         spine.set_action(action)
         rate.sleep()
 
