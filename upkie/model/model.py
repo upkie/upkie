@@ -68,12 +68,19 @@ class Model:
                     ),
                 )
             )
-        self.joints = joints
-        self.rotation_ars_to_world = np.diag([1.0, -1.0, -1.0])
-        self.rotation_base_to_imu = np.diag([-1.0, 1.0, -1.0])
-        self.upper_leg_joints = (
+        upper_leg_joints = (
             joint
             for joint in joints
             if joint.name
             in ("left_hip", "left_knee", "right_hip", "right_knee")
         )
+        wheel_joints = (
+            joint
+            for joint in joints
+            if joint.name in ("left_wheel", "right_wheel")
+        )
+        self.joints = joints
+        self.rotation_ars_to_world = np.diag([1.0, -1.0, -1.0])
+        self.rotation_base_to_imu = np.diag([-1.0, 1.0, -1.0])
+        self.upper_leg_joints = upper_leg_joints
+        self.wheel_joints = wheel_joints

@@ -280,7 +280,31 @@ class UpkieGroundVelocity(UpkieBaseEnv):
                 dt=self.dt,
             )
             self.__leg_servo_action[joint.name]["position"] = new_position
-        return self.__leg_servo_action.copy()
+        return self.__leg_servo_action
+
+    def get_wheel_servo_action(
+        self, left_wheel_velocity: float
+    ) -> Dict[str, Dict[str, float]]:
+        r"""!
+        Get servo actions for wheel joints.
+
+        \param[in] left_wheel_velocity Left-wheel velocity, in [rad] / [s].
+        \return Servo action dictionary.
+        """
+        right_wheel_velocity = -left_wheel_velocity
+        servo_action = {
+            "left_wheel": {
+                "position": math.nan,
+                "velocity": left_wheel_velocity,
+            },
+            "right_wheel": {
+                "position": math.nan,
+                "velocity": right_wheel_velocity,
+            },
+        }
+        for joint in self.model.wheel_joints:
+            servo_action[joint.name]["maximum_torque"] = joint.limit.effort
+        return servo_action
 
     def get_spine_action(self, action: NDArray[float]) -> dict:
         r"""!
@@ -293,22 +317,9 @@ class UpkieGroundVelocity(UpkieBaseEnv):
         wheel_velocity = ground_velocity / self.wheel_radius
         left_wheel_sign = 1.0 if self.left_wheeled else -1.0
         left_wheel_velocity = left_wheel_sign * wheel_velocity
-        right_wheel_velocity = -left_wheel_sign * wheel_velocity
-        servo_dict = self.get_upper_leg_servo_action()
-        servo_dict.update(
-            {
-                "left_wheel": {
-                    "position": math.nan,
-                    "velocity": left_wheel_velocity,
-                    "maximum_torque": 1.0,  # mj5208 actuator
-                },
-                "right_wheel": {
-                    "position": math.nan,
-                    "velocity": right_wheel_velocity,
-                    "maximum_torque": 1.0,  # mj5208 actuator
-                },
-            }
-        )
+        servo_dict = {}
+        servo_dict.update(self.get_upper_leg_servo_action())
+        servo_dict.update(self.get_wheel_servo_action(left_wheel_velocity))
         spine_action = {"servo": servo_dict}
         return spine_action
 
