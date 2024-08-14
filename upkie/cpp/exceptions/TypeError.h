@@ -19,7 +19,11 @@ class TypeError : public UpkieError {
    * \param[in] message Error message.
    */
   TypeError(const std::string& file, unsigned line, const std::string& message)
-      : UpkieError(file, line, message) {}
+      : UpkieError(message) {
+    std::ostringstream out;
+    out << "[" << file << ":" << line << "] " << message;
+    message_ = out.str();
+  }
 
   /*! Copy an existing error, adding to the error message.
    *
