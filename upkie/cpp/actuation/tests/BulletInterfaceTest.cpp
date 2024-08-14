@@ -39,7 +39,9 @@ class BulletInterfaceTest : public ::testing::Test {
     params.dt = dt_;
     params.floor = false;   // wheels roll freely during testing
     params.gravity = true;  // default, just a reminder
-    params.joint_friction.try_emplace("left_wheel", kLeftWheelFriction);
+    BulletJointProperties left_wheel_props;
+    left_wheel_props.friction = kLeftWheelFriction;
+    params.joint_properties.try_emplace("left_wheel", left_wheel_props);
     params.robot_urdf_path =
         runfiles->Rlocation("upkie_description/urdf/upkie.urdf");
     interface_ = std::make_unique<BulletInterface>(layout, params);
