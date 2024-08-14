@@ -11,7 +11,6 @@ Domain randomization of robot states.
 from typing import Optional
 
 import numpy as np
-from numpy.typing import NDArray
 from scipy.spatial.transform import Rotation as ScipyRotation
 
 
@@ -50,7 +49,7 @@ class RobotStateRandomization:
 
     ## @var linear_velocity
     ## Magnitude of linear velocity randomization, as a 3D vector in m/s.
-    linear_velocity: NDArray[float]
+    linear_velocity: np.ndarray
 
     def __init__(
         self,
@@ -60,7 +59,7 @@ class RobotStateRandomization:
         z: float = 0.0,
         omega_x: float = 0.0,
         omega_y: float = 0.0,
-        linear_velocity: Optional[NDArray[float]] = None,
+        linear_velocity: Optional[np.ndarray] = None,
     ):
         r"""!
         Initialize sampler.
@@ -151,9 +150,7 @@ class RobotStateRandomization:
         )
         return ScipyRotation.from_euler("ZYX", yaw_pitch_roll)
 
-    def sample_position(
-        self, np_random: np.random.Generator
-    ) -> NDArray[float]:
+    def sample_position(self, np_random: np.random.Generator) -> np.ndarray:
         r"""!
         Sample a position within the given bounds.
 
@@ -168,7 +165,7 @@ class RobotStateRandomization:
 
     def sample_angular_velocity(
         self, np_random: np.random.Generator
-    ) -> NDArray[float]:
+    ) -> np.ndarray:
         r"""!
         Sample an angular velocity within the given bounds.
 
@@ -183,7 +180,7 @@ class RobotStateRandomization:
 
     def sample_linear_velocity(
         self, np_random: np.random.Generator
-    ) -> NDArray[float]:
+    ) -> np.ndarray:
         r"""!
         Sample a linear velocity within the given bounds.
 

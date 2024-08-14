@@ -9,15 +9,14 @@ from typing import Tuple
 import gymnasium
 import numpy as np
 from gymnasium import spaces
-from numpy.typing import NDArray
 
 
 class DifferentiateAction(gymnasium.Wrapper):
     def __init__(
         self,
         env,
-        min_derivative: NDArray[float],
-        max_derivative: NDArray[float],
+        min_derivative: np.ndarray,
+        max_derivative: np.ndarray,
         action_penalty: float = 0.0,
     ):
         r"""!
@@ -49,8 +48,8 @@ class DifferentiateAction(gymnasium.Wrapper):
 
     def step(
         self,
-        action: NDArray[float],
-    ) -> Tuple[NDArray[float], float, bool, bool, dict]:
+        action: np.ndarray,
+    ) -> Tuple[np.ndarray, float, bool, bool, dict]:
         self._integral = np.clip(
             self._integral + action * self.env.unwrapped.dt,
             self.env.action_space.low,

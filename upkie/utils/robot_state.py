@@ -11,7 +11,6 @@ Robot state with optional randomization.
 from typing import Optional
 
 import numpy as np
-from numpy.typing import NDArray
 from scipy.spatial.transform import Rotation as ScipyRotation
 
 from upkie.utils.robot_state_randomization import RobotStateRandomization
@@ -24,19 +23,19 @@ class RobotState:
 
     ## @var angular_velocity_base_in_base
     ## Angular velocity of the base in body coordinates, in rad/s.
-    angular_velocity_base_in_base: NDArray[float]
+    angular_velocity_base_in_base: np.ndarray
 
     ## @var joint_configuration
     ## Vector of joint angles in radians.
-    joint_configuration: NDArray[float]
+    joint_configuration: np.ndarray
 
     ## @var joint_velocity
     ## Vector of joint velocities, in rad/s.
-    joint_velocity: NDArray[float]
+    joint_velocity: np.ndarray
 
     ## @var linear_velocity_base_to_world_in_world
     ## Linear velocity of the base in world coordinates, in m/s.
-    linear_velocity_base_to_world_in_world: NDArray[float]
+    linear_velocity_base_to_world_in_world: np.ndarray
 
     ## @var orientation_base_in_world
     ## Orientation of the base frame with respect to the world frame.
@@ -44,7 +43,7 @@ class RobotState:
 
     ## @var position_base_in_world
     ## Position of the base frame in the world frame.
-    position_base_in_world: NDArray[float]
+    position_base_in_world: np.ndarray
 
     ## @var randomization
     ## Displacements and velocities added to the state when calling one of the
@@ -53,14 +52,14 @@ class RobotState:
 
     def __init__(
         self,
-        angular_velocity_base_in_base: Optional[NDArray[float]] = None,
-        joint_configuration: Optional[NDArray[float]] = None,
-        joint_velocity: Optional[NDArray[float]] = None,
+        angular_velocity_base_in_base: Optional[np.ndarray] = None,
+        joint_configuration: Optional[np.ndarray] = None,
+        joint_velocity: Optional[np.ndarray] = None,
         linear_velocity_base_to_world_in_world: Optional[
-            NDArray[float]
+            np.ndarray
         ] = None,
         orientation_base_in_world: Optional[ScipyRotation] = None,
-        position_base_in_world: Optional[NDArray[float]] = None,
+        position_base_in_world: Optional[np.ndarray] = None,
         randomization: Optional[RobotStateRandomization] = None,
     ):
         r"""!
@@ -116,7 +115,7 @@ class RobotState:
 
     def sample_angular_velocity(
         self, np_random: np.random.Generator
-    ) -> NDArray[float]:
+    ) -> np.ndarray:
         r"""!
         Sample an angular velocity around the one in this state.
 
@@ -136,7 +135,7 @@ class RobotState:
 
     def sample_linear_velocity(
         self, np_random: np.random.Generator
-    ) -> NDArray[float]:
+    ) -> np.ndarray:
         r"""!
         Sample a linear velocity around the one in this state.
 
@@ -168,7 +167,7 @@ class RobotState:
 
     def sample_position(
         self, np_random: np.random.Generator
-    ) -> NDArray[float]:
+    ) -> np.ndarray:
         r"""!
         Sample a position around the one in this state.
 
