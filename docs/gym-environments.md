@@ -45,8 +45,9 @@ Position and velocity gains \f$k_{p}\f$ and \f$k_{d}\f$ are configured in each m
 
 Check out the [UpkieServos](\ref upkie.envs.upkie_servos.UpkieServos) documentation for more details.
 
-The [UpkieServoPositions](\ref upkie.envs.upkie_servo_positions.UpkieServoPositions) has the same observation space as UpkieServos, but the action space is only composed of \f$\theta\f$, $k_d$ and $k_p$. This makes the agent control the servos in a position manner.
-In short, we have:
+### Servo positions
+
+The [UpkieServoPositions](\ref upkie.envs.upkie_servo_positions.UpkieServoPositions) has the same observation space as UpkieServos, but the action space is only composed of \f$\theta\f$, \f$k_d\f$ and \f$k_p\f$. This makes the agent command servo positions with velocity damping:
 
 \f[
 \begin{align*}
@@ -54,8 +55,9 @@ In short, we have:
 \end{align*}
 \f]
 
-The [UpkieServoTorques](\ref upkie.envs.upkie_servo_torques.UpkieServoTorques) has the same observation space as UpkieServos, but the action space is only composed of \f$tau_{\mathit{ff}}\f$. This makes the agent control directly the torques given to the servos.
-In short, we have:
+### Servo torques
+
+The [UpkieServoTorques](\ref upkie.envs.upkie_servo_torques.UpkieServoTorques) has the same observation space as UpkieServos, but the action space is only composed of \f$\tau_{\mathit{ff}}\f$. This makes the agent command joint torques directly:
 
 \f[
 \begin{align*}
