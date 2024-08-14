@@ -35,6 +35,10 @@ class Model:
     ## Upper-leg (hip and knee) joints.
     upper_leg_joints: Tuple[float]
 
+    ## @var wheel_joints
+    ## Wheel joints.
+    upper_leg_joints: Tuple[float]
+
     def __init__(self, urdf_path: str):
         r"""!
         Constructor for the robot model wrapper.
@@ -68,13 +72,13 @@ class Model:
                     ),
                 )
             )
-        upper_leg_joints = (
+        upper_leg_joints = tuple(
             joint
             for joint in joints
             if joint.name
             in ("left_hip", "left_knee", "right_hip", "right_knee")
         )
-        wheel_joints = (
+        wheel_joints = tuple(
             joint
             for joint in joints
             if joint.name in ("left_wheel", "right_wheel")
