@@ -10,6 +10,7 @@
 namespace upkie::cpp::observers {
 
 using palimpsest::exceptions::KeyError;
+using upkie::cpp::exceptions::ObserverError;
 
 void ObserverPipeline::reset(const Dictionary& config) {
   for (auto observer : observers_) {
@@ -26,7 +27,7 @@ void ObserverPipeline::run(Dictionary& observation) {
       observer->read(observation);
       observer->write(observation);
     } catch (const KeyError& e) {
-      throw exceptions::ObserverError(observer->prefix(), e.key());
+      throw ObserverError(observer->prefix(), e.key());
     } catch (const std::exception& e) {
       spdlog::error("[ObserverPipeline] Observer {} threw an exception: {}",
                     observer->prefix(), e.what());
