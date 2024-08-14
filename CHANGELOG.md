@@ -12,15 +12,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - actuation: Additional check on maximum torques for each command
 - actuation: Extend ImuData with raw measurements
 - actuation: Log raw IMU measurements from pi3hat interface
-- exceptions: Add PositionCommandError exception
 - envs: Add UpkieServoPositions child environment (thanks to @Tordjx)
 - envs: Add UpkieServoTorques child environment (thanks to @Tordjx)
 - envs: Add a `model` attribute to all Upkie environments
 - envs: Start reward submodule with a wheeled inverted pendulum reward
 - envs: Use wheel torque limits from model in UpkieGroundVelocity
 - envs: Wheeled inverted pendulum environment for reduced-model testing
+- exceptions: Add PositionCommandError exception
 - model: Add `rotation_ars_to_world` and `rotation_base_to_imu`
 - model: Add `upper_leg_joints` list
+- tools: Add `update` command to `upkie_tool`
 - utils: Add unit tests for Raspberry Pi utility functions
 - utils: Raise an exception when trying to configure agent from an interpreter
 
