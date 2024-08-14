@@ -79,6 +79,13 @@ void Interface::write_position_commands(const Dictionary& action) {
         servo_action.get<double>("kd_scale", default_action::kKdScale);
     const double maximum_torque = servo_action.get<double>(
         "maximum_torque", default_action::kMaximumTorque);
+    if (maximum_torque < 0.0 || maximum_torque > upkie::model::kMaximumTorque) {
+      spdlog::error(
+          "Unreasonable maximum torque ({} N m) for joint {} (servo ID={})",
+          maximum_torque, joint, servo_id);
+      command.mode = Mode::kStopped;
+      continue;
+    }
 
     // The moteus convention is that positive angles correspond to clockwise
     // rotations when looking at the rotor / back of the moteus board. See:
