@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - actuation: Additional check on maximum torques for each command
 - actuation: Extend ImuData with raw measurements
 - actuation: Log raw IMU measurements from pi3hat interface
+- exceptions: Add PositionCommandError exception
 - envs: Add UpkieServoPositions child environment (thanks to @Tordjx)
 - envs: Add UpkieServoTorques child environment (thanks to @Tordjx)
 - envs: Add a `model` attribute to all Upkie environments
