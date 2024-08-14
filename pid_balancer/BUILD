@@ -22,9 +22,9 @@ py_library(
 py_binary(
     name = "bullet",
     srcs = [
-        "bullet.py"
+        "main_bullet.py"
     ],
-    main = "bullet.py",
+    main = "main_bullet.py",
     data = [
         ":config",
         "//spines:bullet_spine",
@@ -47,9 +47,9 @@ py_binary(
 py_binary(
     name = "pid_balancer",
     srcs = [
-        "main.py",
+        "main_standalone.py",
     ],
-    main = "main.py",
+    main = "main_standalone.py",
     data = [
         "//pid_balancer/config",
     ] + select({
