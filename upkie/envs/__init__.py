@@ -20,6 +20,8 @@ def register() -> None:
     """
     envs = (
         ("UpkieGroundVelocity", UpkieGroundVelocity),
+        ("UpkieServoPositions", UpkieServoPositions),
+        ("UpkieServoTorques", UpkieServoTorques),
         ("UpkieServos", UpkieServos),
         ("WheeledInvertedPendulum", WheeledInvertedPendulum),
     )
