@@ -11,6 +11,7 @@
 #include "gtest/gtest.h"
 #include "tools/cpp/runfiles/runfiles.h"
 #include "upkie/cpp/actuation/BulletInterface.h"
+#include "upkie/cpp/actuation/bullet/gravity.h"
 
 namespace upkie::cpp::actuation {
 
@@ -310,7 +311,7 @@ TEST_F(BulletInterfaceTest, MonitorIMU) {
   ASSERT_TRUE(observation("bullet")("imu").has("linear_velocity"));
   Eigen::Vector3d linear_velocity_imu_in_imu =
       observation("bullet")("imu")("linear_velocity");
-  ASSERT_DOUBLE_EQ(linear_velocity_imu_in_imu.z(), -9.81 * dt_);
+  ASSERT_DOUBLE_EQ(linear_velocity_imu_in_imu.z(), -bullet::kGravity * dt_);
 }
 
 TEST_F(BulletInterfaceTest, MonitorBaseState) {
@@ -334,7 +335,8 @@ TEST_F(BulletInterfaceTest, MonitorBaseState) {
      it first updates velocities then integrates those to get positions
      (semi-implicit Euler method).
   */
-  ASSERT_NEAR(base_position.z(), 3 * -9.81 * std::pow(dt_, 2.0), 1e-6);
+  ASSERT_NEAR(base_position.z(), 3 * -bullet::kGravity * std::pow(dt_, 2.0),
+              1e-6);
 
   ASSERT_TRUE(observation("bullet")("base").has("orientation"));
   Eigen::Quaterniond base_orientation =
@@ -367,13 +369,13 @@ TEST_F(BulletInterfaceTest, FreeFallBasePosition) {
   base_position = interface_->transform_base_to_world().block<3, 1>(0, 3);
   ASSERT_NEAR(base_position.x(), 0.0, 1e-4);
   ASSERT_NEAR(base_position.y(), 0.0, 1e-4);
-  ASSERT_NEAR(base_position.z(), -0.5 * 9.81 * T * T, 1e-3);
+  ASSERT_NEAR(base_position.z(), -0.5 * bullet::kGravity * T * T, 1e-3);
 
   Eigen::Vector3d base_velocity =
       interface_->linear_velocity_base_to_world_in_world();
   ASSERT_NEAR(base_velocity.x(), 0.0 * T, 1e-4);
   ASSERT_NEAR(base_velocity.y(), 0.0 * T, 1e-4);
-  ASSERT_NEAR(base_velocity.z(), -9.81 * T, 1e-3);
+  ASSERT_NEAR(base_velocity.z(), -bullet::kGravity * T, 1e-3);
 }
 
 TEST_F(BulletInterfaceTest, ComputeRobotMass) {
@@ -392,7 +394,7 @@ TEST_F(BulletInterfaceTest, ApplyExternalForces) {
   const double mass = interface_->compute_robot_mass();
   Eigen::Vector3d init_com_position;
   for (int n_g = 0; n_g < 4; ++n_g) {
-    external_force.z() = n_g * 9.81 * mass;
+    external_force.z() = n_g * bullet::kGravity * mass;
     interface_->reset(config);
     init_com_position = interface_->compute_position_com_in_world();
     for (double t = 0.0; t < T; t += dt_) {
@@ -402,7 +404,7 @@ TEST_F(BulletInterfaceTest, ApplyExternalForces) {
 
     // Since there is no ground in this text fixture, the only forces exerted on
     // the robot during this test are gravity and the external force
-    const Eigen::Vector3d gravity = {0., 0., -9.81};
+    const Eigen::Vector3d gravity = {0., 0., -bullet::kGravity};
     const Eigen::Vector3d com_accel = gravity + external_force / mass;
     const Eigen::Vector3d Delta_com =
         interface_->compute_position_com_in_world() - init_com_position;

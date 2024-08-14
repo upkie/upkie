@@ -234,6 +234,8 @@ void BulletInterface::process_action(const Dictionary& action) {
   const Dictionary& bullet_action = action("bullet");
   if (bullet_action.has("external_forces")) {
     process_forces(bullet_action("external_forces"));
+  } else {
+    spdlog::info("no force");
   }
 }
 
@@ -265,6 +267,7 @@ void BulletInterface::process_forces(const Dictionary& external_forces) {
     }
     btVector3 position = bullet_from_eigen(position_eigen);
     btVector3 force = bullet_from_eigen(params.get<Eigen::Vector3d>("force"));
+    spdlog::info("force = {} {} {}", force[0], force[1], force[2]);
     bullet_.applyExternalForce(robot_, link_index, force, position, flags);
   }
 }
