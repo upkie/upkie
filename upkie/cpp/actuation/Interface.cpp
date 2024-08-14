@@ -42,7 +42,6 @@ void Interface::initialize_action(Dictionary& action) {
 }
 
 void Interface::write_position_commands(const Dictionary& action) {
-  using Mode = moteus::Mode;
   if (!action.has("servo")) {
     spdlog::warn("No position command at key \"servo\" of action");
     return;
@@ -91,7 +90,7 @@ void Interface::write_position_commands(const Dictionary& action) {
     const double position_rev = position_rad / (2.0 * M_PI);
     const double velocity_rev_s = velocity_rad_s / (2.0 * M_PI);
 
-    command.mode = Mode::kPosition;
+    command.mode = moteus::Mode::kPosition;
     command.position.feedforward_torque = feedforward_torque;
     command.position.position = position_rev;
     command.position.velocity = velocity_rev_s;
