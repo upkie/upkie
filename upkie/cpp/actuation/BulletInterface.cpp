@@ -179,11 +179,11 @@ void BulletInterface::reset_joint_properties() {
     bullet_.getJointInfo(robot_, joint_index, &joint_info);
     std::string joint_name = joint_info.m_jointName;
     if (joint_index_map_.find(joint_name) != joint_index_map_.end()) {
-      const auto friction_it = params_.joint_friction.find(joint_name);
-      if (friction_it != params_.joint_friction.end()) {
-        joint_properties_[joint_name].friction = friction_it->second;
-      } else {
-        joint_properties_[joint_name].friction = 0.0;
+      const auto params_it = params_.joint_properties.find(joint_name);
+      if (params_it != params_.joint_properties.end()) {
+        joint_properties_[joint_name].update_configurable(params_it->second);
+      } else /* no configuration for joint properties */ {
+        joint_properties_[joint_name].reset_configurable();
       }
     }
   }
