@@ -21,6 +21,8 @@ namespace upkie::cpp::utils {
  */
 inline double low_pass_filter(double prev_output, double cutoff_period,
                               double new_input, double dt) {
+  using exceptions::FilterError;
+
   // Make sure the cutoff period is not too small
   if (cutoff_period <= 2.0 * dt) {
     auto message =
@@ -28,7 +30,7 @@ inline double low_pass_filter(double prev_output, double cutoff_period,
         std::to_string(cutoff_period) +
         " s is less than 2 * dt = " + std::to_string(2.0 * dt) +
         " s, causing information loss (Nyquist–Shannon sampling theorem)";
-    throw exceptions::FilterError(message);
+    throw FilterError(message);
   }
 
   // Actual filtering ;)
