@@ -50,4 +50,6 @@ else
 fi
 unset __mamba_setup
 # <<< mamba initialize <<<
+
+alias conda="micromamba"
 EOF

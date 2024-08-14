@@ -30,7 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Avoid using `numpy.typing` for compatibility with older versions of NumPy
-- PID balancer: Fix dependencies for running on conda-less systems
+- PID balancer: Fix dependencies for running on systems without conda
 - PID balancer: Update filenames of the two main scripts
 - actuation: Throw PositionCommandError rather than stopping a servo on error
 - deps: Update to palimpsest 2.2.0
