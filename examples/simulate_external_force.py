@@ -17,8 +17,8 @@ upkie.envs.register()
 def get_vertical_force(
     step: int,
     start: int = 400,
-    lift_steps: int = 100,
-    delta: float = 0.2,
+    lift_steps: int = 400,
+    delta: float = 0.5,
     hold_steps: int = 200,
 ) -> float:
     lift: float = 0.0  # no unit
