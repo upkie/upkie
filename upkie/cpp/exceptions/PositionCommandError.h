@@ -33,4 +33,3 @@ class PositionCommandError : public UpkieError {
 };
 
 }  // namespace upkie::cpp::exceptions
-
