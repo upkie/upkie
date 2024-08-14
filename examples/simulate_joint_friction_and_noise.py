@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Inria
 
-"""Genuflect while lying on a horizontal floor."""
+"""Genuflect while lying on the floor despite joint friction and noise."""
 
 import gymnasium as gym
 import numpy as np
@@ -16,6 +16,10 @@ from upkie.utils.robot_state import RobotState
 NB_GENUFLECTIONS = 10
 GENUFLECTION_STEPS = 200
 AMPLITUDE = 1.0  # in radians
+
+# The following two values are completely arbitrary :)
+FRIC = 0.1  # kinetic joint friction in [N m]
+NOISE = 1.0  # standard deviation of torque white noise in [N m]
 
 if __name__ == "__main__":
     upkie.envs.register()
@@ -31,13 +35,12 @@ if __name__ == "__main__":
         spine_config={
             "bullet": {
                 "joint_properties": {
-                    # Values in this example are completely arbitrary
-                    "left_hip": {"friction": 0.4, "torque_noise": 1.1},
-                    "left_knee": {"friction": 0.4, "torque_noise": 0.1},
-                    "left_wheel": {"friction": 0.1, "torque_noise": 0.1},
-                    "right_hip": {"friction": 0.4, "torque_noise": 0.1},
-                    "right_knee": {"friction": 0.4, "torque_noise": 0.1},
-                    "right_wheel": {"friction": 0.1, "torque_noise": 0.1},
+                    "left_hip": {"friction": FRIC, "torque_noise": NOISE},
+                    "left_knee": {"friction": FRIC, "torque_noise": NOISE},
+                    "left_wheel": {"friction": FRIC, "torque_noise": NOISE},
+                    "right_hip": {"friction": FRIC, "torque_noise": 0.0},
+                    "right_knee": {"friction": FRIC, "torque_noise": 0.0},
+                    "right_wheel": {"friction": FRIC, "torque_noise": 0.0},
                 }
             }
         },
