@@ -8,6 +8,7 @@
 
 #include <limits>
 #include <map>
+#include <random>
 #include <string>
 #include <vector>
 
@@ -374,6 +375,9 @@ class BulletInterface : public Interface {
 
   //! Map from link name to link contact data
   std::map<std::string, BulletContactData> contact_data_;
+
+  //! Random number generator used to sample from probability distributions
+  std::mt19937 rng_;
 };
 
 }  // namespace upkie::cpp::actuation
