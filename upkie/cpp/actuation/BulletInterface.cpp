@@ -34,7 +34,7 @@ std::string find_plane_urdf(const std::string argv0) {
 
 BulletInterface::BulletInterface(const ServoLayout& layout,
                                  const Parameters& params)
-    : Interface(layout), params_(params) {
+    : Interface(layout), params_(params), rng_(std::random_device()()) {
   // Start simulator
   auto flag = (params.gui ? eCONNECT_GUI : eCONNECT_DIRECT);
   bool is_connected = bullet_.connect(flag);
