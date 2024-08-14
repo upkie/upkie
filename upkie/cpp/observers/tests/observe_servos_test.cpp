@@ -20,9 +20,9 @@ TEST(Servo, ReadTorques) {
   std::map<int, std::string> servo_joint_map = {{0, "foo"}, {1, "bar"}};
   std::vector<actuation::moteus::ServoReply> servo_replies;
   servo_replies.push_back({1, {}});           // bar first
-  servo_replies.back().result.torque = -10.;  // N.m
+  servo_replies.back().result.torque = -10.;  // [N m]
   servo_replies.push_back({0, {}});           // foo next
-  servo_replies.back().result.torque = 10.;   // N.m
+  servo_replies.back().result.torque = 10.;   // [N m]
 
   observe_servos(observation, servo_joint_map, servo_replies);
 
