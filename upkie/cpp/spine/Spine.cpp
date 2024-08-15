@@ -116,8 +116,8 @@ void Spine::simulate(unsigned nb_substeps) {
     begin_cycle();
     if (state_machine_.state() == State::kReset) {
       cycle_actuation();  // S1: cycle the simulator, promise actuation_output_
-      cycle_actuation();  // S2: fill latest_replies_ from actuation_output_
-      cycle_actuation();  // S3: fill observation dict from latest_replies_
+      cycle_actuation();  // S2: fill servo_replies_ from actuation_output_
+      cycle_actuation();  // S3: fill observation dict from servo_replies_
       // now the first observation is ready to be read by the agent
     } else if (state_machine_.state() == State::kAct) {
       for (unsigned substep = 0; substep < nb_substeps; ++substep) {
@@ -176,7 +176,7 @@ void Spine::cycle_actuation() {
     Dictionary& observation = working_dict_("observation");
     observers::observe_time(observation);
     observers::observe_servos(observation, actuation_.servo_joint_map(),
-                              latest_replies_);
+                              servo_replies_);
     actuation_.observe(observation);
     // Observers need configuration, so they cannot run at stop
     if (state_machine_.state() != State::kSendStops &&
@@ -217,10 +217,9 @@ void Spine::cycle_actuation() {
   if (actuation_output_.valid()) {
     const auto current_values = actuation_output_.get();  // may wait here
     rx_count_ = current_values.query_result_size;
-    latest_replies_.resize(rx_count_);
+    servo_replies_.resize(rx_count_);
     std::copy(actuation_.replies().begin(),
-              actuation_.replies().begin() + rx_count_,
-              latest_replies_.begin());
+              actuation_.replies().begin() + rx_count_, servo_replies_.begin());
   }
 
   // Now we are after the previous cycle (we called actuation_output_.get())
