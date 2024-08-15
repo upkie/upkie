@@ -154,7 +154,7 @@ class Spine {
   std::future<Output> actuation_output_;
 
   //! Latest servo replies. They are copied and thread-safe.
-  std::vector<ServoReply> latest_replies_;
+  std::vector<ServoReply> servo_replies_;
 
   //! All data from observation to action goes to this dictionary.
   palimpsest::Dictionary working_dict_;
