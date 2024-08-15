@@ -234,13 +234,12 @@ void BulletInterface::process_action(const Dictionary& action) {
   const Dictionary& bullet_action = action("bullet");
   if (bullet_action.has("external_forces")) {
     process_forces(bullet_action("external_forces"));
-  } else {
-    spdlog::info("no force");
   }
 }
 
 void BulletInterface::process_forces(const Dictionary& external_forces) {
   for (const auto& link_name : external_forces.keys()) {
+    // Check that link name is valid and get link index
     int link_index = get_link_index(link_name);
     if (link_index < 0) {
       if (link_name == "base") {
@@ -253,22 +252,16 @@ void BulletInterface::process_forces(const Dictionary& external_forces) {
         continue;
       }
     }
+
+    // Read external force from the dictionary
     const auto& params = external_forces(link_name);
     const bool local_frame = params.get<bool>("local_frame", false);
-    Eigen::Vector3d position_eigen;
-    int flags;
-    if (local_frame) {
-      flags = EF_LINK_FRAME;
-      position_eigen.setZero();
-    } else /* world frame */ {
-      flags = EF_WORLD_FRAME;
-      position_eigen =
-          bullet::get_position_link_in_world(bullet_, robot_, link_index);
-    }
-    btVector3 position = bullet_from_eigen(position_eigen);
-    btVector3 force = bullet_from_eigen(params.get<Eigen::Vector3d>("force"));
-    spdlog::info("force = {} {} {}", force[0], force[1], force[2]);
-    bullet_.applyExternalForce(robot_, link_index, force, position, flags);
+    Eigen::Vector3d force_eigen = params("force");
+
+    // Save external force, to be applied before stepSimulation()
+    bullet::ExternalForce& ext_force = external_forces_[link_index];
+    ext_force.flags = (local_frame) ? EF_LINK_FRAME : EF_WORLD_FRAME;
+    ext_force.force = bullet_from_eigen(force_eigen);
   }
 }
 
