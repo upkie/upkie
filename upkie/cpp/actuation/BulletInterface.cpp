@@ -508,8 +508,6 @@ void BulletInterface::apply_external_forces() {
           bullet::get_position_link_in_world(bullet_, robot_, link_index);
     }
     btVector3 position = bullet_from_eigen(position_eigen);
-    spdlog::info("applying force {} {} {} to link {}", force[0], force[1],
-                 force[2], link_index);
     bullet_.applyExternalForce(robot_, link_index, force, position, flags);
   }
 }
