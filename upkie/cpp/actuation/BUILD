@@ -92,7 +92,7 @@ cc_library(
         "//upkie/cpp/actuation/bullet/plane",
     ],
     deps = [
-        "//upkie/cpp/actuation/bullet:utils",
+        "//upkie/cpp/actuation/bullet",
         "//upkie/cpp/actuation:interface",
         "//upkie/cpp/utils:synchronous_clock",
         ":bullet_imu_data",
