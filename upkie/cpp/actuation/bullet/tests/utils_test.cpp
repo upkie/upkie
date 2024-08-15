@@ -10,7 +10,6 @@
 #include "RobotSimulator/b3RobotSimulatorClientAPI.h"
 #include "gtest/gtest.h"
 #include "tools/cpp/runfiles/runfiles.h"
-#include "upkie/cpp/actuation/bullet/ImuData.h"
 
 using bazel::tools::cpp::runfiles::Runfiles;
 

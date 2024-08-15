@@ -10,6 +10,7 @@
 
 #include "upkie/cpp/actuation/Pi3HatInterface.h"
 
+#include "upkie/cpp/actuation/ImuData.h"
 #include "upkie/cpp/actuation/pi3hat/imu.h"
 
 namespace upkie::cpp::actuation {
@@ -41,29 +42,22 @@ Pi3HatInterface::~Pi3HatInterface() {
 void Pi3HatInterface::reset(const Dictionary& config) {}
 
 void Pi3HatInterface::observe(Dictionary& observation) const {
-  ImuData imu_data;
-  imu_data.orientation_imu_in_ars =
+  imu_data_.orientation_imu_in_ars =
       pi3hat::get_orientation_imu_in_ars(attitude_);
-  imu_data.angular_velocity_imu_in_imu =
+  imu_data_.angular_velocity_imu_in_imu =
       pi3hat::get_angular_velocity(attitude_);
-  imu_data.linear_acceleration_imu_in_imu =
+  imu_data_.linear_acceleration_imu_in_imu =
       pi3hat::get_linear_acceleration(attitude_);
 
   // Extend IMU data with raw measurements
   Eigen::Vector3d rate_dps = pi3hat::get_rate_dps(attitude_);
   Eigen::Vector3d bias_dps = pi3hat::get_bias_dps(attitude_);
-  imu_data.raw_angular_velocity =
+  imu_data_.raw_angular_velocity =
       pi3hat::get_raw_angular_velocity(rate_dps, bias_dps);
-  imu_data.raw_linear_acceleration = pi3hat::get_raw_linear_acceleration(
-      imu_data.orientation_imu_in_ars, imu_data.linear_acceleration_imu_in_imu);
+  imu_data_.raw_linear_acceleration = pi3hat::get_raw_linear_acceleration(
+      orientation_imu_in_ars, linear_acceleration_imu_in_imu);
 
-  observation("imu")("orientation") = imu_data.orientation_imu_in_ars;
-  observation("imu")("angular_velocity") = imu_data.angular_velocity_imu_in_imu;
-  observation("imu")("linear_acceleration") =
-      imu_data.linear_acceleration_imu_in_imu;
-  observation("imu")("raw_angular_velocity") = imu_data.raw_angular_velocity;
-  observation("imu")("raw_linear_acceleration") =
-      imu_data.raw_linear_acceleration;
+  Interface::observe_imu(observation);
 }
 
 void Pi3HatInterface::process_action(const Dictionary& action) {}

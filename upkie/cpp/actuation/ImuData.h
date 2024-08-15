@@ -8,7 +8,7 @@
 
 namespace upkie::cpp::actuation {
 
-//! Data from an onboard IMU such as the pi3hat's.
+//! Data from the onboard inertian measurement unit (IMU).
 struct ImuData {
   /*! Rotation from the IMU frame to the ARS frame.
    *
@@ -39,8 +39,7 @@ struct ImuData {
 
   /*! Raw angular velocity read by the IMU, in [rad] / [s].
    *
-   * \note This raw angular velocity measurement has more bias than the
-   * filtered one.
+   * This raw angular velocity measurement has more bias than the filtered one.
    */
   Eigen::Vector3d raw_angular_velocity = Eigen::Vector3d::Zero();
 
@@ -54,13 +53,20 @@ struct ImuData {
    * \f$I\f$, and \f${}_I g\f$ the standard acceleration of gravity in the IMU
    * frame. Pay attention to the fact that
    *
-   * \note Pay attention to the fact that proper acceleration is different from
+   * Pay attention to the fact that proper acceleration is different from
    * coordinate acceleration, which would be the acceleration of the IMU with
    * respect to the mobile IMU frame in this case. (There is a gyroscopic term
    * in the latter but not in the former.) See for instance the Wikipedia
    * [Accelerometer](https://en.wikipedia.org/wiki/Accelerometer) article.
    */
   Eigen::Vector3d raw_linear_acceleration = Eigen::Vector3d::Zero();
+
+  /*! Spatial linear velocity in [m] / [s].
+   *
+   * This field is not an IMU measurement. It is used for instance in the
+   * Bullet spine to compute IMU accelerations by finite differences.
+   */
+  Eigen::Vector3d linear_velocity_imu_in_world = Eigen::Vector3d::Zero();
 };
 
 }  // namespace upkie::cpp::actuation

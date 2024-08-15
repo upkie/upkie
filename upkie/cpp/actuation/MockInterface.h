@@ -11,7 +11,6 @@
 #include <map>
 #include <string>
 
-#include "upkie/cpp/actuation/ImuData.h"
 #include "upkie/cpp/actuation/Interface.h"
 #include "upkie/cpp/actuation/moteus/protocol.h"
 
@@ -38,7 +37,7 @@ class MockInterface : public Interface {
 
   /*! Write actuation-interface observations to dictionary.
    *
-   * \param[out] observation Dictionary to write ot.
+   * \param[out] observation Dictionary to write to.
    */
   void observe(Dictionary& observation) const override;
 

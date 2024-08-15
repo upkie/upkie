@@ -26,7 +26,6 @@
 #include <utility>
 #include <vector>
 
-#include "upkie/cpp/actuation/ImuData.h"
 #include "upkie/cpp/actuation/Interface.h"
 #include "upkie/cpp/actuation/moteus/protocol.h"
 #include "upkie/cpp/utils/realtime.h"

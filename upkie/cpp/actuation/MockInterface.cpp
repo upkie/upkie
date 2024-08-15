@@ -27,11 +27,7 @@ MockInterface::MockInterface(const ServoLayout& layout, const double dt)
 void MockInterface::reset(const Dictionary& config) {}
 
 void MockInterface::observe(Dictionary& observation) const {
-  ImuData defaults;
-  observation("imu")("orientation") = defaults.orientation_imu_in_ars;
-  observation("imu")("angular_velocity") = defaults.angular_velocity_imu_in_imu;
-  observation("imu")("linear_acceleration") =
-      defaults.linear_acceleration_imu_in_imu;
+  Interface::observe_imu(observation);
 }
 
 void MockInterface::process_action(const Dictionary& action) {}

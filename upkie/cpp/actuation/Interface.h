@@ -65,7 +65,7 @@ class Interface {
 
   /*! Write servo and IMU observations to dictionary.
    *
-   * \param[out] observation Dictionary to write ot.
+   * \param[out] observation Dictionary to write to.
    */
   virtual void observe(Dictionary& observation) const = 0;
 
@@ -127,6 +127,21 @@ class Interface {
     }
   }
 
+  /*! Observe IMU measurements.
+   *
+   * \param[out] observation Dictionary to write observations to.
+   */
+  inline void observe_imu(Dictionary& observation) const {
+    observation("imu")("orientation") = imu_data_.orientation_imu_in_ars;
+    observation("imu")("angular_velocity") =
+        imu_data_.angular_velocity_imu_in_imu;
+    observation("imu")("linear_acceleration") =
+        imu_data_.linear_acceleration_imu_in_imu;
+    observation("imu")("raw_angular_velocity") = imu_data_.raw_angular_velocity;
+    observation("imu")("raw_linear_acceleration") =
+        imu_data_.raw_linear_acceleration;
+  }
+
  protected:
   /*! Pointers to the memory shared with the CAN thread.
    *
@@ -134,6 +149,9 @@ class Interface {
    * thread-safe.
    */
   moteus::Data data_;
+
+  //! IMU data.
+  ImuData imu_data_;
 
  private:
   //! Servo layout.

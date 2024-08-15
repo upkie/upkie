@@ -11,10 +11,9 @@ cc_library(
     hdrs = [
         "ContactData.h",
         "ExternalForce.h",
-        "ImuData.h",
         "JointProperties.h",
         "gravity.h",
-        "imu.h",
+        "read_imu_data.h",
         "utils.h",
     ],
     deps = [
