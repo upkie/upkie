@@ -10,7 +10,7 @@
 #include <string>
 
 #include "RobotSimulator/b3RobotSimulatorClientAPI.h"
-#include "upkie/cpp/actuation/BulletImuData.h"
+#include "upkie/cpp/actuation/bullet/ImuData.h"
 #include "upkie/cpp/actuation/bullet/imu.h"
 
 //! Bullet utility functions used in the simulation interface.
