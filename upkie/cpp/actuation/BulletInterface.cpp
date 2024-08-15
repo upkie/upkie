@@ -190,16 +190,7 @@ void BulletInterface::reset_joint_properties() {
 }
 
 void BulletInterface::observe(Dictionary& observation) const {
-  // Eigen quaternions are serialized as [w, x, y, z]
-  // See include/palimpsest/mpack/eigen.h in palimpsest
-  observation("imu")("orientation") = imu_data_.orientation_imu_in_ars;
-  observation("imu")("angular_velocity") =
-      imu_data_.angular_velocity_imu_in_imu;
-  observation("imu")("linear_acceleration") =
-      imu_data_.linear_acceleration_imu_in_imu;
-  observation("imu")("raw_angular_velocity") = imu_data_.raw_angular_velocity;
-  observation("imu")("raw_linear_acceleration") =
-      imu_data_.raw_linear_acceleration;
+  Interface::observe_imu(observation);
 
   Dictionary& monitor = observation("bullet");
   monitor("imu")("linear_velocity") = imu_data_.linear_velocity_imu_in_world;

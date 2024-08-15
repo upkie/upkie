@@ -8,7 +8,7 @@
 #include "RobotSimulator/b3RobotSimulatorClientAPI.h"
 #include "gtest/gtest.h"
 #include "tools/cpp/runfiles/runfiles.h"
-#include "upkie/cpp/actuation/bullet/ImuData.h"
+#include "upkie/cpp/actuation/ImuData.h"
 #include "upkie/cpp/actuation/bullet/utils.h"
 
 using bazel::tools::cpp::runfiles::Runfiles;
@@ -58,7 +58,7 @@ TEST_F(BulletIMUTest, IMULinearAccelerationSeesGravityInFreeFall) {
   bullet_->resetBasePositionAndOrientation(robot_, position_base_in_world,
                                            orientation_base_in_world);
 
-  bullet::ImuData imu_data;
+  ImuData imu_data;
   read_imu_data(imu_data, *bullet_, robot_, imu_link_index, dt);
   bullet_->stepSimulation();
   read_imu_data(imu_data, *bullet_, robot_, imu_link_index, dt);
@@ -86,7 +86,7 @@ TEST_F(BulletIMUTest, RawIMULinearAcceleration) {
   bullet_->resetBasePositionAndOrientation(robot_, position_base_in_world,
                                            orientation_base_in_world);
 
-  bullet::ImuData imu_data;
+  ImuData imu_data;
   read_imu_data(imu_data, *bullet_, robot_, imu_link_index, dt);
   bullet_->stepSimulation();
   read_imu_data(imu_data, *bullet_, robot_, imu_link_index, dt);

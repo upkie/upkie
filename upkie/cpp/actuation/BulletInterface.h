@@ -16,7 +16,6 @@
 #include "upkie/cpp/actuation/Interface.h"
 #include "upkie/cpp/actuation/bullet/ContactData.h"
 #include "upkie/cpp/actuation/bullet/ExternalForce.h"
-#include "upkie/cpp/actuation/bullet/ImuData.h"
 #include "upkie/cpp/actuation/bullet/JointProperties.h"
 #include "upkie/cpp/actuation/moteus/Output.h"
 #include "upkie/cpp/actuation/moteus/ServoReply.h"
@@ -181,7 +180,7 @@ class BulletInterface : public Interface {
 
   /*! Write actuation-interface observations to dictionary.
    *
-   * \param[out] observation Dictionary to write ot.
+   * \param[out] observation Dictionary to write to.
    */
   void observe(Dictionary& observation) const override;
 
@@ -364,12 +363,6 @@ class BulletInterface : public Interface {
 
   //! Link index of the IMU in Bullet
   int imu_link_index_;
-
-  //! IMU data
-  bullet::ImuData imu_data_;
-
-  //! Spatial linear velocity of the IMU link, used to compute its acceleration
-  Eigen::Vector3d linear_velocity_imu_in_world_;
 
   //! Map from link name to link index in Bullet
   std::map<std::string, int> link_index_;
