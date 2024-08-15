@@ -208,10 +208,9 @@ TEST_F(BulletInterfaceTest, ComputeJointTorquesWhileMoving) {
 }
 
 TEST_F(BulletInterfaceTest, ComputeJointFeedforwardTorque) {
-  const double no_position = std::numeric_limits<double>::quiet_NaN();
   for (auto& command : interface_->data().commands) {
     command.mode = moteus::Mode::kPosition;
-    command.position.position = no_position;
+    command.position.position = std::numeric_limits<double>::quiet_NaN();
     command.position.velocity = 0.0;  // [rev] / [s]
     command.position.kp_scale = 0.0;
     command.position.kd_scale = 0.0;

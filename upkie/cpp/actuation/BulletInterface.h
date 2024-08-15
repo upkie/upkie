@@ -334,11 +334,8 @@ class BulletInterface : public Interface {
   //! Read joint sensors from the simulator
   void read_joint_sensors();
 
-  /*! Send commands to simulated joints
-   *
-   * \param data Buffer to read commands from.
-   */
-  void send_commands(const moteus::Data& data);
+  //! Send commands to simulated joints
+  void send_commands();
 
   //! Convenience function to follow the base translation
   void translate_camera_to_robot();
