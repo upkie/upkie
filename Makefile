@@ -31,29 +31,11 @@ help:
 # HOST TARGETS
 # ============
 
-.PHONY: clean_broken_links
-clean_broken_links:
-	find -L $(CURDIR) -type l ! -exec test -e {} \; -delete
-
-.PHONY: clean
-clean: clean_broken_links  ## clean all local build and intermediate files
-	$(BAZEL) clean --expunge
-
 .PHONY: build
 build: clean_broken_links  ## build Raspberry Pi targets
 	$(BAZEL) build --config=pi64 //pid_balancer
 	$(BAZEL) build --config=pi64 //spines:mock_spine
 	$(BAZEL) build --config=pi64 //spines:pi3hat_spine
-
-.PHONY: coverage
-coverage:  ## check unit test coverage and open an HTML report in Firefox
-	$(BAZEL) coverage --combined_report=lcov --compilation_mode=fastbuild --instrument_test_targets //...
-	@if [ -z "$(shell which genhtml)" ]; then\
-		echo "Error: genhtml not found, is lcov installed?"; \
-	else \
-		genhtml $(COVERAGE_DIR)/_coverage_report.dat -o $(COVERAGE_DIR); \
-		firefox $(COVERAGE_DIR)/index.html; \
-	fi
 
 .PHONY: check_upkie_name
 check_upkie_name:
@@ -67,7 +49,30 @@ check_upkie_name:
 		exit 1; \
 	fi
 
+.PHONY: clean
+clean: clean_broken_links  ## clean all local build and intermediate files
+	$(BAZEL) clean --expunge
+
+.PHONY: clean_broken_links
+clean_broken_links:
+	find -L $(CURDIR) -type l ! -exec test -e {} \; -delete
+
+.PHONY: coverage
+coverage:  ## check unit test coverage and open an HTML report in Firefox
+	$(BAZEL) coverage --combined_report=lcov --compilation_mode=fastbuild --instrument_test_targets //...
+	@if [ -z "$(shell which genhtml)" ]; then\
+		echo "Error: genhtml not found, is lcov installed?"; \
+	else \
+		genhtml $(COVERAGE_DIR)/_coverage_report.dat -o $(COVERAGE_DIR); \
+		firefox $(COVERAGE_DIR)/index.html; \
+	fi
+
+.PHONY: run_bullet_spine
+run_bullet_spine:  ## run the Bullet simulation spine
+	$(BAZEL) run //spines:bullet_spine -- --show
+
 # This rule is handy if the target Upkie is not connected to the Internet
+.PHONY: set_date
 set_date:
 	ssh $(REMOTE) sudo date -s "$(CURDATE)"
 
@@ -90,14 +95,8 @@ upload: check_upkie_name build set_date  ## upload built targets to the Raspberr
 		--exclude tools/raspios/\*.img \
 		--progress $(CURDIR)/ $(REMOTE):$(PROJECT_NAME)/
 
-# HOST TARGETS
-# ============
-
-run_bullet_spine:  ## run the Bullet simulation spine
-	$(BAZEL) run //spines:bullet_spine -- --show
-
-# REMOTE SPINE TARGETS
-# ====================
+# REMOTE TARGETS
+# ==============
 
 run_mock_spine:  ### run the mock spine on the Raspberry Pi
 	$(RASPUNZEL) run -s //spines:mock_spine
@@ -106,15 +105,6 @@ run_mock_spine:  ### run the mock spine on the Raspberry Pi
 run_pi3hat_spine:  ### run the pi3hat spine on the Raspberry Pi
 	$(RASPUNZEL) run -s //spines:pi3hat_spine
 
-# REMOTE AGENT TARGETS
-# ====================
-
-# A specific gain config file can be loaded with the CONFIG variable
-# Example: ``make run_pid_balancer CONFIG=michel-strogoff``
-# where michel-strogoff.gin is a file in pid_balancer/config/
-# By default we detect the config file to load by running `hostname`.
-PID_BALANCER_CONFIG = $(or ${CONFIG}, hostname)
-
 # NB: run_pid_balancer is used in build instructions
 run_pid_balancer:  ### run the test balancer on the Raspberry Pi
-	$(RASPUNZEL) run -s //pid_balancer:pid_balancer -- --config $(PID_BALANCER_CONFIG)
+	$(RASPUNZEL) run -s //pid_balancer:pid_balancer
