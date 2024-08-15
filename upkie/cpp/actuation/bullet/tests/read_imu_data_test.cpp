@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2022 Stéphane Caron
 
+#include "upkie/cpp/actuation/bullet/read_imu_data.h"
+
 #include <map>
 #include <memory>
 #include <string>
@@ -15,7 +17,7 @@ using bazel::tools::cpp::runfiles::Runfiles;
 
 namespace upkie::cpp::actuation::bullet {
 
-class BulletIMUTest : public ::testing::Test {
+class BulletReadImuDataTest : public ::testing::Test {
  protected:
   void SetUp() override {
     std::string error;
@@ -39,7 +41,7 @@ class BulletIMUTest : public ::testing::Test {
   int robot_;
 };
 
-TEST_F(BulletIMUTest, IMULinearAccelerationSeesGravityInFreeFall) {
+TEST_F(BulletReadImuDataTest, IMULinearAccelerationSeesGravityInFreeFall) {
   const int imu_link_index = find_link_index(*bullet_, robot_, "imu");
   const double dt = 1. / 240.;  // [s]
 
@@ -67,7 +69,7 @@ TEST_F(BulletIMUTest, IMULinearAccelerationSeesGravityInFreeFall) {
   ASSERT_NEAR(imu_data.linear_acceleration_imu_in_imu.z(), 0.0, 1e-10);
 }
 
-TEST_F(BulletIMUTest, RawIMULinearAcceleration) {
+TEST_F(BulletReadImuDataTest, RawIMULinearAcceleration) {
   const int imu_link_index = find_link_index(*bullet_, robot_, "imu");
   const double dt = 1. / 220.;  // [s]
 

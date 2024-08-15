@@ -9,6 +9,7 @@
 
 #include "tools/cpp/runfiles/runfiles.h"
 #include "upkie/cpp/actuation/bullet/gravity.h"
+#include "upkie/cpp/actuation/bullet/read_imu_data.h"
 #include "upkie/cpp/actuation/bullet/utils.h"
 
 namespace upkie::cpp::actuation {
