@@ -17,6 +17,7 @@
 #include "upkie/cpp/actuation/BulletImuData.h"
 #include "upkie/cpp/actuation/BulletJointProperties.h"
 #include "upkie/cpp/actuation/Interface.h"
+#include "upkie/cpp/actuation/bullet/ExternalForce.h"
 #include "upkie/cpp/actuation/moteus/Output.h"
 #include "upkie/cpp/actuation/moteus/ServoReply.h"
 
@@ -378,6 +379,14 @@ class BulletInterface : public Interface {
 
   //! Random number generator used to sample from probability distributions
   std::mt19937 rng_;
+
+  /*! Map from link index to external force applied to it
+   *
+   * \note It is only possible to apply one external wrench (force, torque) on
+   * a given body at a given time. If you have multiple wrenches, sum them up
+   * to a net wrench.
+   */
+  std::map<int, bullet::ExternalForce> external_forces_;
 };
 
 }  // namespace upkie::cpp::actuation
