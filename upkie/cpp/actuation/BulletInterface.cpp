@@ -317,6 +317,10 @@ void BulletInterface::read_joint_sensors() {
     auto& result = servo_reply_[joint_name].result;
     result.position = sensor_state.m_jointPosition / (2.0 * M_PI);
     result.velocity = sensor_state.m_jointVelocity / (2.0 * M_PI);
+
+    // m_jointMotorTorque is set to a non-zero value when the joint is velocity
+    // controlled (command mode == moteus::Mode::kStopped), and is zero when
+    // the joint is torque controlled (command mode == moteus::Mode::kPosition)
     result.torque = sensor_state.m_jointMotorTorque;
   }
 }
