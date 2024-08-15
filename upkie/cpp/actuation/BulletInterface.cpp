@@ -267,8 +267,7 @@ void BulletInterface::process_forces(const Dictionary& external_forces) {
 
 void BulletInterface::cycle(
     std::function<void(const moteus::Output&)> callback) {
-  const moteus::Data& data = this->data_;
-  assert(data.commands.size() == data.replies.size());
+  assert(data_.commands.size() == data_.replies.size());
   assert(!std::isnan(params_.dt));
   if (!bullet_.isConnected()) {
     throw std::runtime_error("simulator is not running any more");
@@ -278,7 +277,7 @@ void BulletInterface::cycle(
   bullet::read_imu_data(imu_data_, bullet_, robot_, imu_link_index_,
                         params_.dt);
   read_contacts();
-  send_commands(data);
+  send_commands();
   apply_external_forces();
   bullet_.stepSimulation();
 
@@ -287,11 +286,11 @@ void BulletInterface::cycle(
   }
 
   moteus::Output output;
-  for (size_t i = 0; i < data.replies.size(); ++i) {
-    const auto servo_id = data.commands[i].id;
+  for (size_t i = 0; i < data_.replies.size(); ++i) {
+    const auto servo_id = data_.commands[i].id;
     const std::string& joint_name = servo_layout().joint_name(servo_id);
-    data.replies[i].id = servo_id;
-    data.replies[i].result = servo_reply_[joint_name].result;
+    data_.replies[i].id = servo_id;
+    data_.replies[i].result = servo_reply_[joint_name].result;
     output.query_result_size = i + 1;
   }
   callback(output);
@@ -322,10 +321,10 @@ void BulletInterface::read_joint_sensors() {
   }
 }
 
-void BulletInterface::send_commands(const moteus::Data& data) {
+void BulletInterface::send_commands() {
   b3RobotSimulatorJointMotorArgs motor_args(CONTROL_MODE_VELOCITY);
 
-  for (const auto& command : data.commands) {
+  for (const auto& command : data_.commands) {
     const auto servo_id = command.id;
     const std::string& joint_name = servo_layout().joint_name(servo_id);
     const int joint_index = joint_index_map_[joint_name];
