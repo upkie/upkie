@@ -2,14 +2,6 @@
 // Copyright 2022 Stéphane Caron
 // Copyright 2023 Inria
 
-#include "upkie/cpp/actuation/BulletInterface.h"
-#include "upkie/cpp/observers/ObserverPipeline.h"
-#include "upkie/cpp/sensors/CpuTemperature.h"
-
-#ifndef __APPLE__
-#include "upkie/cpp/sensors/Joystick.h"
-#endif
-
 #include <algorithm>
 #include <cstdlib>
 #include <future>
@@ -20,14 +12,21 @@
 #include <string>
 #include <vector>
 
+#include "upkie/cpp/actuation/BulletInterface.h"
 #include "upkie/cpp/model/joints.h"
 #include "upkie/cpp/model/servo_layout.h"
 #include "upkie/cpp/observers/BaseOrientation.h"
 #include "upkie/cpp/observers/FloorContact.h"
+#include "upkie/cpp/observers/ObserverPipeline.h"
 #include "upkie/cpp/observers/WheelOdometry.h"
+#include "upkie/cpp/sensors/CpuTemperature.h"
 #include "upkie/cpp/spine/Spine.h"
 #include "upkie/cpp/utils/get_log_path.h"
 #include "upkie/cpp/version.h"
+
+#ifndef __APPLE__
+#include "upkie/cpp/sensors/Joystick.h"
+#endif
 
 namespace spines::bullet {
 
