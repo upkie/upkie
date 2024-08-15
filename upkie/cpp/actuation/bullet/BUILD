@@ -7,7 +7,7 @@ load("//tools/lint:lint.bzl", "add_lint_tests")
 package(default_visibility = ["//visibility:public"])
 
 cc_library(
-    name = "utils",
+    name = "bullet",
     hdrs = [
         "ExternalForce.h",
         "gravity.h",

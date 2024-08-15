@@ -16,7 +16,7 @@ cc_test(
         "@upkie_description",
     ],
     deps = [
-        "//upkie/cpp/actuation/bullet:utils",
+        "//upkie/cpp/actuation/bullet",
         "@bazel_tools//tools/cpp/runfiles",
         "@googletest//:main",
     ],
