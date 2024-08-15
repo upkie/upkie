@@ -31,15 +31,8 @@ If this is a runtime issue, provide some minimal code to reproduce it:
 ...
 ```
 
-## Additional context
-
-Add any other context about the problem here.
-
-### Screenshots
-
-If applicable, add screenshots to help explain your problem.
-
-### System
+### Context
 
 - OS: [e.g. Ubuntu 20.04]
 - Upkie version: [e.g. 3.2.0]
+- If applicable, screenshot to help explain the issue?
