@@ -9,12 +9,12 @@
 
 #include "RobotSimulator/b3RobotSimulatorClientAPI.h"
 
-namespace upkie::cpp::actuation {
+namespace upkie::cpp::actuation::bullet {
 
 using palimpsest::Dictionary;
 
 //! Properties for robot joints in the Bullet simulation.
-struct BulletJointProperties {
+struct JointProperties {
   //! Kinetic friction, in [N m].
   double friction = 0.0;
 
@@ -25,13 +25,13 @@ struct BulletJointProperties {
   double torque_noise = 0.0;
 
   //! Default constructor for properties initialized to default values.
-  BulletJointProperties() = default;
+  JointProperties() = default;
 
   /*! Initialize configurable properties from a dictionary.
    *
    * \param[in] props Configuration dictionary.
    */
-  explicit BulletJointProperties(const Dictionary& props) {
+  explicit JointProperties(const Dictionary& props) {
     friction = props.get<double>("friction", friction);
     torque_noise = props.get<double>("torque_noise", torque_noise);
   }
@@ -40,7 +40,7 @@ struct BulletJointProperties {
    *
    * \param[in] other Properties to update from.
    */
-  void update_configurable(const BulletJointProperties& other) noexcept {
+  void update_configurable(const JointProperties& other) noexcept {
     friction = other.friction;
     torque_noise = other.torque_noise;
   }
@@ -52,4 +52,4 @@ struct BulletJointProperties {
   }
 };
 
-}  // namespace upkie::cpp::actuation
+}  // namespace upkie::cpp::actuation::bullet

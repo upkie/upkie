@@ -79,7 +79,7 @@ BulletInterface::BulletInterface(const ServoLayout& layout,
     if (joint_index_map_.find(joint_name) != joint_index_map_.end()) {
       joint_index_map_[joint_name] = joint_index;
 
-      BulletJointProperties props;
+      bullet::JointProperties props;
       props.maximum_torque = joint_info.m_jointMaxForce;
       joint_properties_.try_emplace(joint_name, props);
     }
@@ -375,7 +375,7 @@ double BulletInterface::compute_joint_torque(
     const double target_position, const double target_velocity,
     const double kp_scale, const double kd_scale, const double maximum_torque) {
   assert(!std::isnan(target_velocity));
-  const BulletJointProperties& joint_props = joint_properties_[joint_name];
+  const bullet::JointProperties& joint_props = joint_properties_[joint_name];
   const auto& measurements = servo_reply_[joint_name].result;
   const double measured_position = measurements.position * (2.0 * M_PI);
   const double measured_velocity = measurements.velocity * (2.0 * M_PI);

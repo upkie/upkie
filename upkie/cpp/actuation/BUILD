@@ -72,7 +72,6 @@ cc_library(
     name = "bullet_interface",
     hdrs = [
         "BulletInterface.h",
-        "BulletJointProperties.h",
     ],
     srcs = [
         "BulletInterface.cpp",

@@ -13,11 +13,11 @@
 #include <vector>
 
 #include "RobotSimulator/b3RobotSimulatorClientAPI.h"
-#include "upkie/cpp/actuation/BulletJointProperties.h"
 #include "upkie/cpp/actuation/Interface.h"
 #include "upkie/cpp/actuation/bullet/ContactData.h"
 #include "upkie/cpp/actuation/bullet/ExternalForce.h"
 #include "upkie/cpp/actuation/bullet/ImuData.h"
+#include "upkie/cpp/actuation/bullet/JointProperties.h"
 #include "upkie/cpp/actuation/moteus/Output.h"
 #include "upkie/cpp/actuation/moteus/ServoReply.h"
 
@@ -56,7 +56,7 @@ class BulletInterface : public Interface {
       if (bullet.has("joint_properties")) {
         for (const auto& joint : bullet("joint_properties").keys()) {
           const auto& props = bullet("joint_properties")(joint);
-          joint_properties.try_emplace(joint, BulletJointProperties(props));
+          joint_properties.try_emplace(joint, bullet::JointProperties(props));
         }
       }
 
@@ -158,7 +158,7 @@ class BulletInterface : public Interface {
     Eigen::Vector3d angular_velocity_base_in_base = Eigen::Vector3d::Zero();
 
     //! Joint friction parameters
-    std::map<std::string, BulletJointProperties> joint_properties;
+    std::map<std::string, bullet::JointProperties> joint_properties;
   };
 
   /*! Initialize interface.
@@ -272,7 +272,7 @@ class BulletInterface : public Interface {
       const Eigen::Vector3d& angular_velocity_base_in_base);
 
   //! Joint properties (getter used for testing)
-  const std::map<std::string, BulletJointProperties>& joint_properties() {
+  const std::map<std::string, bullet::JointProperties>& joint_properties() {
     return joint_properties_;
   }
 
@@ -363,7 +363,7 @@ class BulletInterface : public Interface {
   std::map<std::string, int> body_names;
 
   //! Maximum joint torques read from the URDF model
-  std::map<std::string, BulletJointProperties> joint_properties_;
+  std::map<std::string, bullet::JointProperties> joint_properties_;
 
   //! Link index of the IMU in Bullet
   int imu_link_index_;
