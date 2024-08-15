@@ -279,6 +279,7 @@ void BulletInterface::cycle(
                         params_.dt);
   read_contacts();
   send_commands(data);
+  apply_external_forces();
   bullet_.stepSimulation();
 
   if (params_.follower_camera) {
@@ -492,6 +493,25 @@ double BulletInterface::compute_robot_mass() {
 
 Eigen::Vector3d BulletInterface::compute_position_com_in_world() {
   return bullet::compute_position_com_in_world(bullet_, robot_);
+}
+
+void BulletInterface::apply_external_forces() {
+  for (auto& link_force : external_forces_) {
+    const int link_index = link_force.first;
+    const int flags = link_force.second.flags;
+    btVector3& force = link_force.second.force;
+    Eigen::Vector3d position_eigen;
+    if (flags == EF_LINK_FRAME) {
+      position_eigen.setZero();
+    } else /* (flags == EF_WORLD_FRAME) */ {
+      position_eigen =
+          bullet::get_position_link_in_world(bullet_, robot_, link_index);
+    }
+    btVector3 position = bullet_from_eigen(position_eigen);
+    spdlog::info("applying force {} {} {} to link {}", force[0], force[1],
+                 force[2], link_index);
+    bullet_.applyExternalForce(robot_, link_index, force, position, flags);
+  }
 }
 
 }  // namespace upkie::cpp::actuation

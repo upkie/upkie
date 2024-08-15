@@ -313,6 +313,9 @@ class BulletInterface : public Interface {
   Eigen::Vector3d get_position_link_in_world(const std::string& link_name);
 
  private:
+  //! Apply external forces.
+  void apply_external_forces();
+
   /*! Get index of a given robot link in Bullet
    *
    * \param[in] link_name Name of the searched link.
