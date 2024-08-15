@@ -161,7 +161,7 @@ void BulletInterface::reset_base_state(
 
 void BulletInterface::reset_contact_data() {
   for (const auto& link_name : params_.monitor_contacts) {
-    contact_data_.try_emplace(link_name, BulletContactData());
+    contact_data_.try_emplace(link_name, bullet::ContactData());
   }
 }
 

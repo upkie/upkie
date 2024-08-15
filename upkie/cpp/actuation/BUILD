@@ -81,7 +81,6 @@ cc_library(
 cc_library(
     name = "bullet_interface",
     hdrs = [
-        "BulletContactData.h",
         "BulletInterface.h",
         "BulletJointProperties.h",
     ],
