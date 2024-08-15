@@ -58,7 +58,7 @@ clean_broken_links:
 	find -L $(CURDIR) -type l ! -exec test -e {} \; -delete
 
 .PHONY: coverage
-coverage:  # (not documented in `make help`) check unit test coverage and open an HTML report in Firefox
+coverage:  # check unit test coverage and open an HTML report in Firefox (not documented in `make help`)
 	$(BAZEL) coverage --combined_report=lcov --compilation_mode=fastbuild --instrument_test_targets //...
 	@if [ -z "$(shell which genhtml)" ]; then\
 		echo "Error: genhtml not found, is lcov installed?"; \
