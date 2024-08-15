@@ -62,13 +62,13 @@ pip install upkie
 
 ## Example
 
-First, let's start a simulation:
+First, let's start a Bullet simulation spine:
 
 ```console
 ./start_simulation.sh
 ```
 
-Once a spine (simulation or real robot) is running, you can control the robot in Python using one of the [Gymnasium environments](https://upkie.github.io/upkie/environments.html). For example, here is a proportional feedback balancer:
+Once a (simulation or real-robot) spine is running, we can interact with it in Python using one of the [Gymnasium environments](https://upkie.github.io/upkie/environments.html). For example, here is a feedback balancer for ``UpkieGroundVelocity``:
 
 ```python
 import gymnasium as gym
@@ -78,26 +78,27 @@ upkie.envs.register()
 
 with gym.make("UpkieGroundVelocity-v3", frequency=200.0) as env:
     observation, _ = env.reset()
-    action = 0.0 * env.action_space.sample()
+    gain = np.array([10.0, 1.0, 0.0, 0.1])
     for step in range(1_000_000):
+        action = gain.dot(observation).reshape((1,))
         observation, reward, terminated, truncated, _ = env.step(action)
         if terminated or truncated:
             observation, _ = env.reset()
-        pitch = observation[0]
-        action[0] = 10.0 * pitch
 ```
 
-Executing the code above will balance the simulated Upkie. To run the agent on the robot, do the same but running the [pi3hat spine](https://upkie.github.io/upkie/spines.html#pi3hat-spine) instead of the simulation.
+The Python code is the same whether running a simulation spine or a real-robot [pi3hat spine](https://upkie.github.io/upkie/spines.html#pi3hat-spine).
+
+Head over to the [examples](https://github.com/upkie/upkie/tree/main/examples) directory for more examples.
 
 ## Agents
 
-The demo agent simply balances in place by [PID control](https://upkie.github.io/upkie/pid-balancer.html). There are more advanced Upkie agents distributed in their own repositories. Check out the ones you are interested in:
+This repository only distributes a [PID balancer](https://github.com/upkie/upkie/tree/main/pid_balancer) agent designed for testing. Actual Upkie agents are distributed in their own repositories:
 
 - [MPC balancer](https://github.com/upkie/mpc_balancer): balance in place using model predictive control.
 - [Pink balancer](https://github.com/upkie/pink_balancer): an extended PID balancer than can crouch and lift its legs.
 - [PPO balancer](https://github.com/upkie/ppo_balancer): balance in place with a policy trained by reinforcement learning.
 
-Head over to the [new\_agent](https://github.com/upkie/new_agent) template to create your own.
+Head over to the [new\_agent](https://github.com/upkie/new_agent) template to create your own, and feel free to open a PR to add it to the list above when it is ready.
 
 ## Citation
 
