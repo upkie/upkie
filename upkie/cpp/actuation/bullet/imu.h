@@ -10,7 +10,7 @@
 #include <string>
 
 #include "RobotSimulator/b3RobotSimulatorClientAPI.h"
-#include "upkie/cpp/actuation/BulletImuData.h"
+#include "upkie/cpp/actuation/bullet/ImuData.h"
 #include "upkie/cpp/actuation/bullet/gravity.h"
 
 //! Bullet utility functions used in the simulation interface.
@@ -24,7 +24,7 @@ namespace upkie::cpp::actuation::bullet {
  * \param[in] imu_link_index Index of the IMU link in the robot.
  * \param[in] dt Simulation timestep in [s].
  */
-inline void read_imu_data(BulletImuData& imu_data,
+inline void read_imu_data(bullet::ImuData& imu_data,
                           b3RobotSimulatorClientAPI& bullet, int robot,
                           const int imu_link_index, double dt) {
   b3LinkState link_state;

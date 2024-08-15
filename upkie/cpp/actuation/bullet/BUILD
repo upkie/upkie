@@ -11,12 +11,13 @@ cc_library(
     hdrs = [
         "ContactData.h",
         "ExternalForce.h",
+        "ImuData.h",
         "gravity.h",
         "imu.h",
         "utils.h",
     ],
     deps = [
-        "//upkie/cpp/actuation:bullet_imu_data",
+        "//upkie/cpp/actuation:imu_data",
         "@bullet",
         "@eigen",
         "@palimpsest",

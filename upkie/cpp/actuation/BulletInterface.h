@@ -13,11 +13,11 @@
 #include <vector>
 
 #include "RobotSimulator/b3RobotSimulatorClientAPI.h"
-#include "upkie/cpp/actuation/BulletImuData.h"
 #include "upkie/cpp/actuation/BulletJointProperties.h"
 #include "upkie/cpp/actuation/Interface.h"
 #include "upkie/cpp/actuation/bullet/ContactData.h"
 #include "upkie/cpp/actuation/bullet/ExternalForce.h"
+#include "upkie/cpp/actuation/bullet/ImuData.h"
 #include "upkie/cpp/actuation/moteus/Output.h"
 #include "upkie/cpp/actuation/moteus/ServoReply.h"
 
@@ -369,7 +369,7 @@ class BulletInterface : public Interface {
   int imu_link_index_;
 
   //! IMU data
-  BulletImuData imu_data_;
+  bullet::ImuData imu_data_;
 
   //! Spatial linear velocity of the IMU link, used to compute its acceleration
   Eigen::Vector3d linear_velocity_imu_in_world_;
