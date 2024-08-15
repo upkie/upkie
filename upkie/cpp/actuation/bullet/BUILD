@@ -12,6 +12,7 @@ cc_library(
         "ContactData.h",
         "ExternalForce.h",
         "ImuData.h",
+        "JointProperties.h",
         "gravity.h",
         "imu.h",
         "utils.h",
