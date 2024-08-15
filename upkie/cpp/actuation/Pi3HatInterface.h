@@ -60,7 +60,7 @@ class Pi3HatInterface : public Interface {
 
   /*! Write actuation-interface observations to dictionary.
    *
-   * \param[out] observation Dictionary to write ot.
+   * \param[out] observation Dictionary to write to.
    */
   void observe(Dictionary& observation) const override;
 
