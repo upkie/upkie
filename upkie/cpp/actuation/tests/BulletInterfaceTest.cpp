@@ -100,12 +100,19 @@ TEST_F(BulletInterfaceTest, JointProperties) {
   ASSERT_GT(joint_props.at("right_knee").maximum_torque, 5.0);
   ASSERT_GT(joint_props.at("right_wheel").maximum_torque, 0.5);
 
-  ASSERT_LT(joint_props.at("left_hip").torque_noise, 1e-5);
-  ASSERT_LT(joint_props.at("left_knee").torque_noise, 1e-5);
-  ASSERT_LT(joint_props.at("left_wheel").torque_noise, 1e-5);
-  ASSERT_LT(joint_props.at("right_hip").torque_noise, 1e-5);
-  ASSERT_LT(joint_props.at("right_knee").torque_noise, 1e-5);
-  ASSERT_LT(joint_props.at("right_wheel").torque_noise, 1e-5);
+  ASSERT_LT(joint_props.at("left_hip").torque_control_noise, 1e-5);
+  ASSERT_LT(joint_props.at("left_knee").torque_control_noise, 1e-5);
+  ASSERT_LT(joint_props.at("left_wheel").torque_control_noise, 1e-5);
+  ASSERT_LT(joint_props.at("right_hip").torque_control_noise, 1e-5);
+  ASSERT_LT(joint_props.at("right_knee").torque_control_noise, 1e-5);
+  ASSERT_LT(joint_props.at("right_wheel").torque_control_noise, 1e-5);
+
+  ASSERT_LT(joint_props.at("left_hip").torque_measurement_noise, 1e-5);
+  ASSERT_LT(joint_props.at("left_knee").torque_measurement_noise, 1e-5);
+  ASSERT_LT(joint_props.at("left_wheel").torque_measurement_noise, 1e-5);
+  ASSERT_LT(joint_props.at("right_hip").torque_measurement_noise, 1e-5);
+  ASSERT_LT(joint_props.at("right_knee").torque_measurement_noise, 1e-5);
+  ASSERT_LT(joint_props.at("right_wheel").torque_measurement_noise, 1e-5);
 }
 
 TEST_F(BulletInterfaceTest, CycleDoesntThrow) {

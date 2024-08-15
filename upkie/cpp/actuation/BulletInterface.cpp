@@ -391,8 +391,9 @@ double BulletInterface::compute_joint_torque(
   if (std::abs(measured_velocity) > kMaxStictionVelocity) {
     torque += joint_props.friction * ((measured_velocity > 0.0) ? -1.0 : +1.0);
   }
-  if (joint_props.torque_noise > 1e-10) {
-    std::normal_distribution<double> white_noise(0.0, joint_props.torque_noise);
+  if (joint_props.torque_control_noise > 1e-10) {
+    std::normal_distribution<double> white_noise(
+        0.0, joint_props.torque_control_noise);
     torque += white_noise(rng_);
   }
   torque = std::max(std::min(torque, tau_max), -tau_max);

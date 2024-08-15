@@ -18,8 +18,11 @@ GENUFLECTION_STEPS = 200
 AMPLITUDE = 1.0  # in radians
 
 # The following two values are completely arbitrary :)
-FRIC = 0.1  # kinetic joint friction in [N m]
-NOISE = 1.0  # standard deviation of torque white noise in [N m]
+JOINT_PROPS = {
+    "friction": 0.1,  # kinetic joint friction in [N m]
+    "torque_control_noise": 0.1,  # white noise in [N m]
+    "torque_measurement_noise": 0.5,  # white noise in [N m]
+}
 
 if __name__ == "__main__":
     upkie.envs.register()
@@ -35,12 +38,12 @@ if __name__ == "__main__":
         spine_config={
             "bullet": {
                 "joint_properties": {
-                    "left_hip": {"friction": FRIC, "torque_noise": NOISE},
-                    "left_knee": {"friction": FRIC, "torque_noise": NOISE},
-                    "left_wheel": {"friction": FRIC, "torque_noise": NOISE},
-                    "right_hip": {"friction": FRIC, "torque_noise": 0.0},
-                    "right_knee": {"friction": FRIC, "torque_noise": 0.0},
-                    "right_wheel": {"friction": FRIC, "torque_noise": 0.0},
+                    "left_hip": JOINT_PROPS,
+                    "left_knee": JOINT_PROPS,
+                    "left_wheel": JOINT_PROPS,
+                    "right_hip": JOINT_PROPS,
+                    "right_knee": JOINT_PROPS,
+                    "right_wheel": JOINT_PROPS,
                 }
             }
         },
