@@ -409,7 +409,6 @@ TEST_F(BulletInterfaceTest, ApplyExternalForces) {
     const Eigen::Vector3d Delta_com =
         interface_->compute_position_com_in_world() - init_com_position;
 
-    spdlog::info("n_g = {}", n_g);
     ASSERT_NEAR(Delta_com.x(), 0.5 * com_accel.x() * T * T, 5e-3);
     ASSERT_NEAR(Delta_com.y(), 0.5 * com_accel.y() * T * T, 5e-3);
     if (n_g != 1) {  // relative error check for the vertical coordinate
