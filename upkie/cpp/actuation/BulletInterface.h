@@ -13,10 +13,10 @@
 #include <vector>
 
 #include "RobotSimulator/b3RobotSimulatorClientAPI.h"
-#include "upkie/cpp/actuation/BulletContactData.h"
 #include "upkie/cpp/actuation/BulletImuData.h"
 #include "upkie/cpp/actuation/BulletJointProperties.h"
 #include "upkie/cpp/actuation/Interface.h"
+#include "upkie/cpp/actuation/bullet/ContactData.h"
 #include "upkie/cpp/actuation/bullet/ExternalForce.h"
 #include "upkie/cpp/actuation/moteus/Output.h"
 #include "upkie/cpp/actuation/moteus/ServoReply.h"
@@ -378,7 +378,7 @@ class BulletInterface : public Interface {
   std::map<std::string, int> link_index_;
 
   //! Map from link name to link contact data
-  std::map<std::string, BulletContactData> contact_data_;
+  std::map<std::string, bullet::ContactData> contact_data_;
 
   //! Random number generator used to sample from probability distributions
   std::mt19937 rng_;
