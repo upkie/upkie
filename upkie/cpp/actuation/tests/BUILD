@@ -68,9 +68,9 @@ cc_test(
 )
 
 cc_test(
-    name = "bullet_with_env_bodies",
+    name = "bullet_interface_env_bodies",
     srcs = [
-        "BulletWithEnvBodies.cpp",
+        "BulletInterfaceEnvBodies.cpp",
     ],
     data = [
         "@upkie_description",

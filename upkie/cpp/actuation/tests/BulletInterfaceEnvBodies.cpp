@@ -15,7 +15,7 @@ namespace upkie::cpp::actuation {
 
 using bazel::tools::cpp::runfiles::Runfiles;
 
-class BulletWithEnvBodies : public ::testing::Test {
+class BulletInterfaceEnvBodies : public ::testing::Test {
  protected:
   //! Set up a new test fixture
   void SetUp() override {
@@ -62,7 +62,7 @@ class BulletWithEnvBodies : public ::testing::Test {
   std::vector<moteus::ServoReply> replies_;
 };
 
-TEST_F(BulletWithEnvBodies, MonitorEnvBodies) {
+TEST_F(BulletInterfaceEnvBodies, MonitorEnvBodies) {
   Dictionary config;
   interface_->reset(config);
 
