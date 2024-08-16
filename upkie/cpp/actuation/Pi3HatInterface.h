@@ -92,6 +92,9 @@ class Pi3HatInterface : public Interface {
    */
   moteus::Output cycle_can_thread();
 
+  //! Update IMU data from pi3hat attitude readings.
+  void update_imu_data();
+
  private:
   //! CPUID of the core to run the CAN thread on.
   const int can_cpu_;
