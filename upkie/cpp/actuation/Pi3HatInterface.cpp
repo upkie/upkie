@@ -42,21 +42,6 @@ Pi3HatInterface::~Pi3HatInterface() {
 void Pi3HatInterface::reset(const Dictionary& config) {}
 
 void Pi3HatInterface::observe(Dictionary& observation) const {
-  imu_data_.orientation_imu_in_ars =
-      pi3hat::get_orientation_imu_in_ars(attitude_);
-  imu_data_.angular_velocity_imu_in_imu =
-      pi3hat::get_angular_velocity(attitude_);
-  imu_data_.linear_acceleration_imu_in_imu =
-      pi3hat::get_linear_acceleration(attitude_);
-
-  // Extend IMU data with raw measurements
-  Eigen::Vector3d rate_dps = pi3hat::get_rate_dps(attitude_);
-  Eigen::Vector3d bias_dps = pi3hat::get_bias_dps(attitude_);
-  imu_data_.raw_angular_velocity =
-      pi3hat::get_raw_angular_velocity(rate_dps, bias_dps);
-  imu_data_.raw_linear_acceleration = pi3hat::get_raw_linear_acceleration(
-      orientation_imu_in_ars, linear_acceleration_imu_in_imu);
-
   Interface::observe_imu(observation);
 }
 
@@ -166,8 +151,29 @@ moteus::Output Pi3HatInterface::cycle_can_thread() {
   }
   if (!pi3hat_output.attitude_present) {  // because we wait for attitude
     spdlog::warn("Missing attitude data!");
+  } else {
+    // Thread-safety issue here: https://github.com/upkie/upkie/issues/413
+    update_imu_data();
   }
   return result;
+}
+
+void Pi3HatInterface::update_imu_data() {
+  // UKF outputs
+  imu_data_.orientation_imu_in_ars =
+      pi3hat::get_orientation_imu_in_ars(attitude_);
+  imu_data_.angular_velocity_imu_in_imu =
+      pi3hat::get_angular_velocity(attitude_);
+  imu_data_.linear_acceleration_imu_in_imu =
+      pi3hat::get_linear_acceleration(attitude_);
+
+  // Raw measurements
+  Eigen::Vector3d rate_dps = pi3hat::get_rate_dps(attitude_);
+  Eigen::Vector3d bias_dps = pi3hat::get_bias_dps(attitude_);
+  imu_data_.raw_angular_velocity =
+      pi3hat::get_raw_angular_velocity(rate_dps, bias_dps);
+  imu_data_.raw_linear_acceleration = pi3hat::get_raw_linear_acceleration(
+      orientation_imu_in_ars, linear_acceleration_imu_in_imu);
 }
 
 }  // namespace upkie::cpp::actuation
