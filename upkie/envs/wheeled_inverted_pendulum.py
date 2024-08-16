@@ -279,6 +279,14 @@ class WheeledInvertedPendulum(gymnasium.Env):
                 "pitch": 0.0,
                 "angular_velocity": np.zeros(3),
             },
+            "groundtruth": {
+                "base": {
+                    "position": np.array([0.0, 0.0, length]),
+                    "orientation": np.array([1.0, 0.0, 0.0, 0.0]),
+                    "linear_velocity": np.zeros(3),
+                    "angular_velocity": np.zeros(3),
+                }
+            },
             "imu": {
                 "raw_angular_velocity": np.zeros(3),
                 "raw_linear_acceleration": np.zeros(3),
@@ -486,14 +494,22 @@ class WheeledInvertedPendulum(gymnasium.Env):
         return proper_accel_in_base + uncertainty_in_base
 
     def _get_spine_observation(self):
+        linear_to_3d = np.array([[1.0, 0.0], [0.0, 0.0], [0.0, 1.0]])
         theta, r, thetad, rd = self.__state
         accel_2d = self._get_imu_acceleration_in_base()
-        accel_in_base = np.array([accel_2d[0], 0.0, accel_2d[1]])
+        accel_in_base = linear_to_3d @ accel_2d
         omega_in_base = np.array([0.0, thetad, 0.0])
         accel_in_imu = self.model.rotation_base_to_imu @ accel_in_base
         omega_in_imu = self.model.rotation_base_to_imu @ omega_in_base
 
+        e = np.array([np.sin(theta), np.cos(theta)])
+        e_orth = np.array([np.cos(theta), -np.sin(theta)])
+        p = np.array([r, 0.0]) + self.length * e
+        v = np.array([rd, 0.0]) + self.length * thetad * e_orth
+
         obs = self.__spine_observation  # reference, not a copy
+        obs["groundtruth"]["base"]["position"] = linear_to_3d @ p
+        obs["groundtruth"]["base"]["linear_velocity"] = linear_to_3d @ v
         obs["base_orientation"]["angular_velocity"][1] = thetad
         obs["base_orientation"]["pitch"] = theta
         obs["imu"]["raw_angular_velocity"] = omega_in_imu
