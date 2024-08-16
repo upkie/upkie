@@ -12,12 +12,18 @@ namespace upkie::cpp::actuation {
 
 using palimpsest::Dictionary;
 
-inline void add_white_noise(Eigen::Vector3d& output, double std_dev,
+/*! Add white noise to a vector.
+ *
+ * \param[out] vector Vector to add noise to.
+ * \param[in] std_dev Standard deviation of white noise.
+ * \param[in,out] rng Random number generator.
+ */
+inline void add_white_noise(Eigen::Vector3d& vector, double std_dev,
                             std::mt19937& rng) {
   std::normal_distribution<double> uncertainty(0.0, std_dev);
-  output.x() += uncertainty(rng);
-  output.y() += uncertainty(rng);
-  output.z() += uncertainty(rng);
+  vector.x() += uncertainty(rng);
+  vector.y() += uncertainty(rng);
+  vector.z() += uncertainty(rng);
 }
 
 //! Uncertainty on IMU measurements.
@@ -53,6 +59,7 @@ struct ImuUncertainty {
    *     IMU frame.
    * \param[in,out] angular_velocity Angular velocity measurement, in the IMU
    *     frame.
+   * \param[in,out] rng Random number generator.
    */
   void apply(Eigen::Vector3d& linear_acceleration,
              Eigen::Vector3d& angular_velocity, std::mt19937& rng) const {
