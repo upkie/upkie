@@ -18,6 +18,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - examples: Simulation with joint friction
 - examples: Simulation with sensor noise
 
+### Changed
+
+- actuation: Log groundtruth quantities to observation["groundtruth"]
+
 ### Fixed
 
 - BulletInterface: Fix application of external forces
