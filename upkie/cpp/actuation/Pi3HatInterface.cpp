@@ -152,7 +152,7 @@ moteus::Output Pi3HatInterface::cycle_can_thread() {
   if (!pi3hat_output.attitude_present) {  // because we wait for attitude
     spdlog::warn("Missing attitude data!");
   } else {
-    // Thread-safety issue here: https://github.com/upkie/upkie/issues/413
+    // Thread-safety concern here: https://github.com/upkie/upkie/issues/413
     update_imu_data();
   }
   return result;

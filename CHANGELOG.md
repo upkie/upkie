@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - BulletInterface: add torque control noise to joint-property configuration
 - BulletInterface: add torque measurement noise to joint-property configuration
+- ImuData: add linear velocity field
 - examples: Apply an external force to lift an Upkie in sim
 - examples: Simulation with joint friction and noise
 
