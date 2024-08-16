@@ -5,8 +5,6 @@
 
 #include <palimpsest/Dictionary.h>
 
-#include <string>
-
 #include "RobotSimulator/b3RobotSimulatorClientAPI.h"
 
 namespace upkie::cpp::actuation::bullet {
@@ -32,14 +30,14 @@ struct JointProperties {
 
   /*! Initialize configurable properties from a dictionary.
    *
-   * \param[in] props Configuration dictionary.
+   * \param[in] config Configuration dictionary.
    */
-  explicit JointProperties(const Dictionary& props) {
-    friction = props.get<double>("friction", friction);
+  explicit JointProperties(const Dictionary& config) {
+    friction = config.get<double>("friction", friction);
     torque_control_noise =
-        props.get<double>("torque_control_noise", torque_control_noise);
-    torque_measurement_noise =
-        props.get<double>("torque_measurement_noise", torque_measurement_noise);
+        config.get<double>("torque_control_noise", torque_control_noise);
+    torque_measurement_noise = config.get<double>("torque_measurement_noise",
+                                                  torque_measurement_noise);
   }
 
   /*! Update configurable properties from another instance.
