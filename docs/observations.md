@@ -8,7 +8,7 @@ Spines compute observation dictionaries from [sensor measurements](\ref sensors)
 |-----------------|-------------|
 | `imu.angular_velocity` | Body angular velocity of the IMU frame in [rad] / [s] |
 | `imu.linear_acceleration` | Linear acceleration of the IMU, with gravity filtered out, in [m] / [s]² |
-| `imu.orientation` | Unit quaternion (``qw``, ``qx``, ``qy``, ``qz``) of the orientation from the IMU frame to the [ARS](\ref ars) frame |
+| `imu.orientation` | Unit quaternion (w, x, y, z) of the orientation of the IMU frame in the [ARS](\ref ars) frame |
 | `imu.raw_angular_velocity` | Raw measurement from the gyroscope of the IMU, in [rad] / [s] |
 | `imu.raw_linear_acceleration` | [Proper acceleration](https://en.wikipedia.org/wiki/Accelerometer#Physical_principles) measured by the accelerometer of the IMU, in [m] / [s]² |
 
@@ -93,3 +93,21 @@ observer_pipeline.append_observer(linear_acceleration_history);
 ```
 
 Check out the [HistoryObserver](\ref upkie::cpp::observers::HistoryObserver) API reference for details.
+
+## Simulation groundtruth
+
+Simulation spines may report the additional groundtruth observations:
+
+| Observation key | Description |
+|-----------------|-------------|
+| `groundtruth` | Groundtruth from the simulation |
+| `groundtruth.base` | Positions and velocities of the base frame |
+| `groundtruth.base.position` | Position of the base frame in the world frame, in [m] |
+| `groundtruth.base.orientation` | Unit quaternion (q, x, y, z) of the orientation of the base frame in the world frame |
+| `groundtruth.base.linear_velocity` | Linear velocity from base to world in world, in [m] / [s] |
+| `groundtruth.base.angular_velocity` | Angular velocity from base to world in world, in [rad] / [s] |
+| `groundtruth.imu` | Non-observables related to the IMU |
+| `groundtruth.imu.linear_velocity` | Linear velocity of the IMU frame in the world frame, in [m] / [s] |
+| `groundtruth.YYY` | Positions and velocities of the extra body YYY |
+| `groundtruth.YYY.position` | Position of YYY in the world frame, in [m] |
+| `groundtruth.YYY.orientation` | Unit quaternion (q, x, y, z) of the orientation of YYY in the world frame |
