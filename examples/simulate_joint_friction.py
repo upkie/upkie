@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Inria
 
-"""Genuflect while lying on the floor despite joint friction and noise."""
+"""Genuflect while lying on the floor despite joint friction."""
 
 import gymnasium as gym
 import numpy as np
@@ -17,11 +17,9 @@ NB_GENUFLECTIONS = 10
 GENUFLECTION_STEPS = 200
 AMPLITUDE = 1.0  # in radians
 
-# The following two values are completely arbitrary :)
 JOINT_PROPS = {
-    "friction": 0.1,  # kinetic joint friction in [N m]
-    "torque_control_noise": 0.1,  # white noise in [N m]
-    "torque_measurement_noise": 0.5,  # white noise in [N m]
+    # The following value is completely arbitrary :)
+    "friction": 0.1,  # kinetic joint friction in [N m], this value
 }
 
 if __name__ == "__main__":
