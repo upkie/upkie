@@ -98,6 +98,20 @@ jobs:
               run: |
                   tools/bazelisk build --compilation_mode=fastbuild --config=darwin_x86 //...
 
+    build_raspi:
+        name: "Cross-compile to the Raspberry Pi"
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: "Checkout sources"
+              uses: actions/checkout@v4
+
+            - name: "Build Raspberry Pi targets"
+              env:
+                  BAZELISK_GITHUB_TOKEN: ${{ secrets.BAZELISK_GITHUB_TOKEN }}
+              run: |
+                  make build
+
     coverage:
         name: "Coverage"
         runs-on: ubuntu-latest
