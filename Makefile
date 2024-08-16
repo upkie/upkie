@@ -57,16 +57,6 @@ clean: clean_broken_links  ## clean all local build and intermediate files
 clean_broken_links:
 	find -L $(CURDIR) -type l ! -exec test -e {} \; -delete
 
-.PHONY: coverage
-coverage:  # check unit test coverage and open an HTML report in Firefox (not documented in `make help`)
-	$(BAZEL) coverage --combined_report=lcov --compilation_mode=fastbuild --instrument_test_targets //...
-	@if [ -z "$(shell which genhtml)" ]; then\
-		echo "Error: genhtml not found, is lcov installed?"; \
-	else \
-		genhtml $(COVERAGE_DIR)/_coverage_report.dat -o $(COVERAGE_DIR); \
-		firefox $(COVERAGE_DIR)/index.html; \
-	fi
-
 .PHONY: run_bullet_spine
 run_bullet_spine:  ## run the Bullet simulation spine
 	$(BAZEL) run //spines:bullet_spine -- --show
@@ -108,3 +98,20 @@ run_pi3hat_spine:  ### run the pi3hat spine on the Raspberry Pi
 # NB: run_pid_balancer is used in build instructions
 run_pid_balancer:  ### run the test balancer on the Raspberry Pi
 	$(RASPUNZEL) run -s //pid_balancer:pid_balancer
+
+# DEV HELPERS
+# ===========
+
+.PHONY: coverage
+coverage:  # check unit test coverage and open an HTML report in Firefox (not documented in `make help`)
+	$(BAZEL) coverage --combined_report=lcov --instrument_test_targets //...
+	@if [ -z "$(shell which genhtml)" ]; then\
+		echo "Error: genhtml not found, is lcov installed?"; \
+	else \
+		genhtml $(COVERAGE_DIR)/_coverage_report.dat -o $(COVERAGE_DIR); \
+		firefox $(COVERAGE_DIR)/index.html; \
+	fi
+
+.PHONY: lint
+lint:
+	$(BAZEL) test --config lint //...
