@@ -30,7 +30,7 @@ struct ImuUncertainty {
   //! Default constructor for uncertainty initialized to default values.
   ImuUncertainty() = default;
 
-  /*! Initialize configurable properties from a dictionary.
+  /*! Configure uncertainty from a dictionary.
    *
    * \param[in] config Configuration dictionary.
    */
