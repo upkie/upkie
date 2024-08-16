@@ -31,13 +31,14 @@ TEST_F(ImuUncertaintyTest, NoBiasNoNoise) {
 
 TEST_F(ImuUncertaintyTest, PureBias) {
   ImuUncertainty imu_uncertainty;
-  imu_uncertainty.accelerometer_bias = 1.0;
-  imu_uncertainty.gyroscope_bias = 0.1;
+  imu_uncertainty.accelerometer_bias = Eigen::Vector3d{1.0, 2.0, 3.0};
+  imu_uncertainty.gyroscope_bias = Eigen::Vector3d{0.1, 0.2, 0.2};
   Eigen::Vector3d linear_acceleration = Eigen::Vector3d::Zero();
   Eigen::Vector3d angular_velocity = Eigen::Vector3d::Zero();
   imu_uncertainty.apply(linear_acceleration, angular_velocity, *rng_);
-  ASSERT_NEAR(linear_acceleration.y(), 1.0, 1e-10);
-  ASSERT_NEAR(angular_velocity.z(), 0.1, 1e-10);
+  ASSERT_LT((linear_acceleration - imu_uncertainty.accelerometer_bias).norm(),
+            1e-10);
+  ASSERT_LT((angular_velocity - imu_uncertainty.gyroscope_bias).norm(), 1e-10);
 }
 
 }  // namespace upkie::cpp::actuation
