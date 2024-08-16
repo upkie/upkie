@@ -104,7 +104,7 @@ run_pid_balancer:  ### run the test balancer on the Raspberry Pi
 
 .PHONY: coverage
 coverage:  # check unit test coverage and open an HTML report in Firefox (not documented in `make help`)
-	$(BAZEL) coverage --combined_report=lcov --instrument_test_targets //...
+	$(BAZEL) coverage --combined_report=lcov --compilation_mode=fastbuild --instrument_test_targets //...
 	@if [ -z "$(shell which genhtml)" ]; then\
 		echo "Error: genhtml not found, is lcov installed?"; \
 	else \
