@@ -14,6 +14,17 @@ cc_library(
 )
 
 cc_test(
+    name = "imu_uncertainty_test",
+    srcs = [
+        "ImuUncertaintyTest.cpp",
+    ],
+    deps = [
+        "//upkie/cpp/actuation:imu",
+        "@googletest//:main",
+    ],
+)
+
+cc_test(
     name = "interface_test",
     srcs = [
         "InterfaceTest.cpp",

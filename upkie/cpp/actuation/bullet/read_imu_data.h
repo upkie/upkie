@@ -16,7 +16,7 @@
 //! Bullet utility functions used in the simulation interface.
 namespace upkie::cpp::actuation::bullet {
 
-/*! Compute IMU readings from the IMU link state.
+/*! Compute groundtruth IMU quantities from the IMU link state.
  *
  * \param[out] imu_data IMU data to update.
  * \param[in] bullet Bullet client.
@@ -77,10 +77,12 @@ inline void read_imu_data(ImuData& imu_data, b3RobotSimulatorClientAPI& bullet,
       rotation_world_to_imu *
       (linear_acceleration_imu_in_world - gravity_in_world);
 
-  // Fill out regular IMU data
+  // UKF outputs
   imu_data.orientation_imu_in_ars = orientation_imu_in_ars;
   imu_data.angular_velocity_imu_in_imu = angular_velocity_imu_in_imu;
   imu_data.linear_acceleration_imu_in_imu = linear_acceleration_imu_in_imu;
+
+  // Raw measurements
   imu_data.raw_angular_velocity = angular_velocity_imu_in_imu;
   imu_data.raw_linear_acceleration = proper_acceleration_in_imu;
 
