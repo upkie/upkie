@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2024 Inria
 
+#include <memory>
 #include <vector>
 
 #include "gtest/gtest.h"
