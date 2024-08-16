@@ -338,6 +338,9 @@ class BulletInterface : public Interface {
   //! Read contact sensors from the simulator
   void read_contacts();
 
+  //! Read IMU data from the simulator
+  void read_imu();
+
   //! Read joint sensors from the simulator
   void read_joint_sensors();
 

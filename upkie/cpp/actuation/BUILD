@@ -14,6 +14,7 @@ cc_library(
     ],
     deps = [
         "@eigen",
+        "@palimpsest",
     ],
 )
 
