@@ -13,6 +13,7 @@
 #include <vector>
 
 #include "RobotSimulator/b3RobotSimulatorClientAPI.h"
+#include "upkie/cpp/actuation/ImuUncertainty.h"
 #include "upkie/cpp/actuation/Interface.h"
 #include "upkie/cpp/actuation/bullet/ContactData.h"
 #include "upkie/cpp/actuation/bullet/ExternalForce.h"
@@ -50,6 +51,10 @@ class BulletInterface : public Interface {
       const auto& bullet = config("bullet");
       follower_camera = bullet.get<bool>("follower_camera", follower_camera);
       gui = bullet.get<bool>("gui", gui);
+
+      if (bullet.has("imu_uncertainty")) {
+        imu_uncertainty.configure(bullet("imu_uncertainty"));
+      }
 
       joint_properties.clear();
       if (bullet.has("joint_properties")) {
@@ -158,6 +163,9 @@ class BulletInterface : public Interface {
 
     //! Joint friction parameters
     std::map<std::string, bullet::JointProperties> joint_properties;
+
+    //! Uncertainty on IMU measurements
+    ImuUncertainty imu_uncertainty;
   };
 
   /*! Initialize interface.

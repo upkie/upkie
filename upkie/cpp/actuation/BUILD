@@ -7,9 +7,10 @@ load("//tools/lint:lint.bzl", "add_lint_tests")
 package(default_visibility = ["//visibility:public"])
 
 cc_library(
-    name = "imu_data",
+    name = "imu",
     hdrs = [
         "ImuData.h",
+        "ImuUncertainty.h",
     ],
     deps = [
         "@eigen",
@@ -46,7 +47,7 @@ cc_library(
         "//upkie/cpp/actuation/moteus",
         "//upkie/cpp/exceptions",
         "//upkie/cpp/model",
-        ":imu_data",
+        ":imu",
         ":resolution",
         ":servo_layout",
         "@palimpsest",
