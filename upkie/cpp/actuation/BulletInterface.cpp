@@ -208,6 +208,17 @@ void BulletInterface::observe(Dictionary& observation) const {
   groundtruth("base")("orientation") =
       Eigen::Quaterniond(T.block<3, 3>(0, 0));  // [w, x, y, z]
 
+  // Observe base velocity
+  btVector3 linear_velocity_base_to_world_in_world;
+  btVector3 angular_velocity_base_to_world_in_world;
+  bullet_.getBaseVelocity(robot_, linear_velocity_base_to_world_in_world,
+                          angular_velocity_base_to_world_in_world);
+  Eigen::Vector3d v = eigen_from_bullet(linear_velocity_base_to_world_in_world);
+  Eigen::Vector3d omega =
+      eigen_from_bullet(angular_velocity_base_to_world_in_world);
+  groundtruth("base")("linear_velocity") = v;       // [m] / [s]
+  groundtruth("base")("angular_velocity") = omega;  // [rad] / [s]
+
   // Observe the environnement urdf states
   for (const auto& key_child : body_names) {
     const auto& body_name = key_child.first;
