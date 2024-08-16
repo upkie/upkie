@@ -193,18 +193,19 @@ void BulletInterface::reset_joint_properties() {
 void BulletInterface::observe(Dictionary& observation) const {
   Interface::observe_imu(observation);
 
-  Dictionary& monitor = observation("bullet");
-  monitor("imu")("linear_velocity") = imu_data_.linear_velocity_imu_in_world;
+  Dictionary& groundtruth = observation("groundtruth");
+  groundtruth("imu")("linear_velocity") =
+      imu_data_.linear_velocity_imu_in_world;
   for (const auto& link_name : params_.monitor_contacts) {
-    monitor("contact")(link_name)("num_contact_points") =
+    groundtruth("contact")(link_name)("num_contact_points") =
         contact_data_.at(link_name).num_contact_points;
   }
 
-  // Observe the base state
+  // Observe base pose
   Eigen::Matrix4d T = transform_base_to_world();
-  monitor("base")("position") =
+  groundtruth("base")("position") =
       Eigen::Vector3d(T(0, 3), T(1, 3), T(2, 3));  // [m]
-  monitor("base")("orientation") =
+  groundtruth("base")("orientation") =
       Eigen::Quaterniond(T.block<3, 3>(0, 0));  // [w, x, y, z]
 
   // Observe the environnement urdf states
@@ -212,9 +213,9 @@ void BulletInterface::observe(Dictionary& observation) const {
     const auto& body_name = key_child.first;
     const auto& body_id = key_child.second;
     Eigen::Matrix4d T = transform_body_to_world(body_id);
-    monitor(body_name)("position") =
+    groundtruth(body_name)("position") =
         Eigen::Vector3d(T(0, 3), T(1, 3), T(2, 3));  // [m]
-    monitor(body_name)("orientation") =
+    groundtruth(body_name)("orientation") =
         Eigen::Quaterniond(T.block<3, 3>(0, 0));  // [w, x, y, z]
   }
 }
