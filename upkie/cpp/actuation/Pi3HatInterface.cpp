@@ -173,7 +173,8 @@ void Pi3HatInterface::update_imu_data() {
   imu_data_.raw_angular_velocity =
       pi3hat::get_raw_angular_velocity(rate_dps, bias_dps);
   imu_data_.raw_linear_acceleration = pi3hat::get_raw_linear_acceleration(
-      orientation_imu_in_ars, linear_acceleration_imu_in_imu);
+      imu_data_.orientation_imu_in_ars,
+      imu_data_.linear_acceleration_imu_in_imu);
 }
 
 }  // namespace upkie::cpp::actuation
