@@ -290,6 +290,8 @@ void BulletInterface::cycle(
 void BulletInterface::read_imu() {
   bullet::read_imu_data(imu_data_, bullet_, robot_, imu_link_index_,
                         params_.dt);
+  params_.imu_uncertainty.apply(imu_data_.linear_acceleration_imu_in_imu,
+                                imu_data_.angular_velocity_imu_in_imu, rng_);
   params_.imu_uncertainty.apply(imu_data_.raw_linear_acceleration,
                                 imu_data_.raw_angular_velocity, rng_);
 }
