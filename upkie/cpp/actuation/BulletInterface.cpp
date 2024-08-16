@@ -266,8 +266,7 @@ void BulletInterface::cycle(
   }
 
   read_joint_sensors();
-  bullet::read_imu_data(imu_data_, bullet_, robot_, imu_link_index_,
-                        params_.dt);
+  read_imu();
   read_contacts();
   send_commands();
   apply_external_forces();
@@ -286,6 +285,13 @@ void BulletInterface::cycle(
     output.query_result_size = i + 1;
   }
   callback(output);
+}
+
+void BulletInterface::read_imu() {
+  bullet::read_imu_data(imu_data_, bullet_, robot_, imu_link_index_,
+                        params_.dt);
+  params_.imu_uncertainty.apply(imu_data_.raw_linear_acceleration,
+                                imu_data_.raw_angular_velocity, rng_);
 }
 
 void BulletInterface::read_contacts() {

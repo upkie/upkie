@@ -17,7 +17,7 @@ cc_library(
         "utils.h",
     ],
     deps = [
-        "//upkie/cpp/actuation:imu_data",
+        "//upkie/cpp/actuation:imu",
         "@bullet",
         "@eigen",
         "@palimpsest",
