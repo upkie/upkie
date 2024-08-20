@@ -43,7 +43,6 @@ class RandomPush(Wrapper):
         
         if np.random.binomial(1,self.push_prob):
             force = self.push_generator()
-            print("Pushing with force ", force ,"N")
             spine_action["bullet"] = {'external_forces':{"torso":{"force":force}}}
         else : #Reset the forces to zero
             spine_action["bullet"] = {'external_forces':{"torso":{"force":np.zeros(3)}}}
