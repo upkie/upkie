@@ -19,10 +19,10 @@ class RandomPush(Wrapper):
     push_generator: callable
     env_get_spine_action: callable
 
-    def __init__(self,env, 
-                 push_prob=0.01, 
+    def __init__(self, env,
+                 push_prob=0.01,
                  push_generator=lambda : np.random.normal(0, 400, 3)
-                 ): 
+                 ):
         r"""!
         Initialize wrapper.
 
@@ -36,16 +36,22 @@ class RandomPush(Wrapper):
         self.env = env
         self.push_prob = push_prob
         self.push_generator = push_generator
-        if not hasattr(self.env,"get_spine_action"): 
-            raise ValueError("The environment must have a method get_spine_action")
+        if not hasattr(self.env, "get_spine_action"):
+            raise ValueError(
+                "The environment must have a method get_spine_action"
+                )
         self.env_get_spine_action = self.env.get_spine_action
         self.env.get_spine_action = self.get_spine_action
 
-    def get_spine_action(self ,action): 
+    def get_spine_action(self, action):
         spine_action = self.env_get_spine_action(action)
-        if np.random.binomial(1, self.push_prob): 
+        if np.random.binomial(1, self.push_prob):
             force = self.push_generator()
-            spine_action["bullet"] = {'external_forces': {"torso": {"force": force}}}
-        else : #Reset the forces to zero
-            spine_action["bullet"] = {'external_forces': {"torso": {"force": np.zeros(3)}}}
+            spine_action["bullet"] = {'external_forces': 
+                                      {"torso": {"force": force}}
+                                      }
+        else :  # Reset the forces to zero
+            spine_action["bullet"] = {'external_forces': 
+                                      {"torso": {"force": np.zeros(3)}}
+                                      }
         return spine_action
