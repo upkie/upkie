@@ -20,14 +20,21 @@ from upkie.envs import UpkieGroundVelocity
 class RandomPushTestCase(unittest.TestCase):
     def test_wrapper(self):
         env = UpkieGroundVelocity()
-        wrapped_env = RandomPush(env, push_prob=1, push_generator=lambda: np.array([42,42,42]))
+        wrapped_env = RandomPush(
+            env, 
+            push_prob=1, 
+            push_generator=lambda: np.array([42, 42, 42])
+            )
         action = np.array([1.0])
         spine_action = wrapped_env.get_spine_action(action)
         assert "bullet" in spine_action
         assert "external_forces" in spine_action["bullet"]
         assert "torso" in spine_action["bullet"]["external_forces"]
         assert "force" in spine_action["bullet"]["external_forces"]["torso"]
-        assert np.allclose(spine_action["bullet"]["external_forces"]["torso"]["force"], np.array([42,42,42]))
+        assert np.allclose(
+            spine_action["bullet"]["external_forces"]["torso"]["force"], 
+            np.array([42, 42, 42])
+            )
 
 
 if __name__ == "__main__":
