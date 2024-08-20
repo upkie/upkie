@@ -15,6 +15,7 @@ py_library(
         "low_pass_filter_action.py",
         "noisify_action.py",
         "noisify_observation.py",
+        "random_push.py",
     ],
     deps = [
         "//upkie/utils:filters",
