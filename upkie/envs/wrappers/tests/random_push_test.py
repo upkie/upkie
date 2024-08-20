@@ -19,7 +19,7 @@ from upkie.envs.wrappers.tests.envs import ConstantObservationEnv
 
 class RandomPushTestCase(unittest.TestCase):
     def test_wrapper(self):
-        env = ConstantObservationEnv()
+        env = ConstantObservationEnv(1.0)
         env.get_spine_action = lambda action: {}
         wrapped_env = RandomPush(
             env,
