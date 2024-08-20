@@ -41,7 +41,7 @@ class RandomPush(Wrapper):
                 "The environment must have a method get_spine_action"
                 )
         self.env_get_spine_action = self.env.get_spine_action
-        self.env.get_spine_action = self.get_spine_action
+        self.env.unwrapped.get_spine_action = self.get_spine_action
 
     def get_spine_action(self, action):
         spine_action = self.env_get_spine_action(action)
