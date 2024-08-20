@@ -14,15 +14,16 @@ import numpy as np
 from upkie.envs.wrappers.random_push import (
     RandomPush,
 )
-from upkie.envs import UpkieGroundVelocity
+from upkie.envs.wrappers.tests.envs import ConstantObservationEnv
 
 
 class RandomPushTestCase(unittest.TestCase):
     def test_wrapper(self):
-        env = UpkieGroundVelocity()
+        env = ConstantObservationEnv()
+        env.get_spine_action = lambda action: {}
         wrapped_env = RandomPush(
-            env, 
-            push_prob=1, 
+            env,
+            push_prob=1,
             push_generator=lambda: np.array([42, 42, 42])
             )
         action = np.array([1.0])
@@ -32,9 +33,20 @@ class RandomPushTestCase(unittest.TestCase):
         assert "torso" in spine_action["bullet"]["external_forces"]
         assert "force" in spine_action["bullet"]["external_forces"]["torso"]
         assert np.allclose(
-            spine_action["bullet"]["external_forces"]["torso"]["force"], 
+            spine_action["bullet"]["external_forces"]["torso"]["force"],
             np.array([42, 42, 42])
             )
+
+    def test_check_env(self):
+        try:
+            from stable_baselines3.common.env_checker import check_env
+
+            env = gymnasium.make("Acrobot-v1")
+            env.get_spine_action = lambda action: {}
+            noisy_env = RandomPush(env, noise=np.full(6, 0.42))
+            check_env(noisy_env)
+        except ImportError:
+            pass
 
 
 if __name__ == "__main__":

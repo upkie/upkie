@@ -47,11 +47,11 @@ class RandomPush(Wrapper):
         spine_action = self.env_get_spine_action(action)
         if np.random.binomial(1, self.push_prob):
             force = self.push_generator()
-            spine_action["bullet"] = {'external_forces': 
+            spine_action["bullet"] = {'external_forces':
                                       {"torso": {"force": force}}
                                       }
         else :  # Reset the forces to zero
-            spine_action["bullet"] = {'external_forces': 
+            spine_action["bullet"] = {'external_forces':
                                       {"torso": {"force": np.zeros(3)}}
                                       }
         return spine_action
