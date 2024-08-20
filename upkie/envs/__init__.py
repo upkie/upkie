@@ -2,42 +2,19 @@
 # -*- coding: utf-8 -*-
 #
 # SPDX-License-Identifier: Apache-2.0
-# Copyright 2022 Stéphane Caron
+# Copyright 2023 Inria
 
-import gymnasium as gym
-
-from .upkie_base_env import UpkieBaseEnv
-from .upkie_ground_velocity import UpkieGroundVelocity
-from .upkie_servo_positions import UpkieServoPositions
-from .upkie_servo_torques import UpkieServoTorques
-from .upkie_servos import UpkieServos
-from .wheeled_inverted_pendulum import WheeledInvertedPendulum
-
-
-def register() -> None:
-    """!
-    Register Upkie environments with Gymnasium.
-    """
-    envs = (
-        ("UpkieGroundVelocity", UpkieGroundVelocity),
-        ("UpkieServoPositions", UpkieServoPositions),
-        ("UpkieServoTorques", UpkieServoTorques),
-        ("UpkieServos", UpkieServos),
-        ("WheeledInvertedPendulum", WheeledInvertedPendulum),
-    )
-    for env_name, env_class in envs:
-        gym.envs.registration.register(
-            id=f"{env_name}-v{env_class.version}",
-            entry_point=f"upkie.envs:{env_name}",
-        )
-
+from .add_action_to_observation import AddActionToObservation
+from .differentiate_action import DifferentiateAction
+from .low_pass_filter_action import LowPassFilterAction
+from .noisify_action import NoisifyAction
+from .noisify_observation import NoisifyObservation
 
 __all__ = [
-    "UpkieBaseEnv",
-    "UpkieGroundVelocity",
-    "UpkieServoPositions",
-    "UpkieServoTorques",
-    "UpkieServos",
-    "WheeledInvertedPendulum",
-    "register",
+    "AddActionToObservation",
+    "DifferentiateAction",
+    "LowPassFilterAction",
+    "NoisifyAction",
+    "NoisifyObservation",
+    "RandomPush"
 ]

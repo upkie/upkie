@@ -1,0 +1,51 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+#
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2024 Inria
+
+from gymnasium import Wrapper
+
+import numpy as np
+
+
+class RandomPush(Wrapper): 
+
+    """!
+    At each step, with a given probability, apply a random push to the robot.
+    """
+
+    push_prob: float
+    push_generator: callable
+    env_get_spine_action: callable
+    
+    def __init__(self,env, push_prob = 0.01,push_generator = lambda : np.random.normal(0,400,3)):
+        r"""!
+        Initialize wrapper.
+        
+        \param env Environment to wrap.
+        \param push_prob Probability of pushing at each step.
+        \param push_generator Function that generates the push force. It should
+            return a 3D numpy array.
+        """
+
+        super().__init__(env)
+        self.env = env
+        self.push_prob = push_prob
+        self.push_generator = push_generator
+        if not hasattr(self.env,"get_spine_action"):
+            raise ValueError("The environment must have a method get_spine_action")
+        self.env_get_spine_action = self.env.get_spine_action
+        self.env.get_spine_action  = self.get_spine_action
+
+    def get_spine_action(self ,action) :
+        spine_action = self.env_get_spine_action(action)
+        
+        if np.random.binomial(1,self.push_prob):
+            force = self.push_generator()
+            print("Pushing with force ", force ,"N")
+            spine_action["bullet"] = {'external_forces':{"torso":{"force":force}}}
+        else : #Reset the forces to zero
+            spine_action["bullet"] = {'external_forces':{"torso":{"force":np.zeros(3)}}}
+        
+        return spine_action
