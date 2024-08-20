@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - examples: Apply an external force to lift an Upkie in sim
 - examples: Simulation with joint friction
 - examples: Simulation with sensor noise
-
+- envs : Added a randomly pushing wrapper
 ### Fixed
 
 - BulletInterface: Fix application of external forces
