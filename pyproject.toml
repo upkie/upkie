@@ -86,6 +86,8 @@ select = [
     "D"
 ]
 ignore = [
+    "D100",  # we use ## Doxygen comments: https://stackoverflow.com/q/71380065
+    "D104",  # we use ## Doxygen comments: https://stackoverflow.com/q/71380065
     "D204",  # ruff does not know we use Doxygen docstrings
     "D205",  # ruff does not know we use Doxygen docstrings
     "D401",  # good for methods but not for class docstrings
