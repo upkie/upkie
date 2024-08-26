@@ -29,7 +29,7 @@ def on_raspi() -> bool:
 
 
 def configure_agent_process() -> None:
-    """!
+    r"""!
     Configure process to run as an agent on the Raspberry Pi.
 
     \note This function assumes we are running an underlying script. It won't
