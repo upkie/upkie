@@ -29,28 +29,41 @@ inline void add_white_noise(Eigen::Vector3d& vector, double std_dev,
 //! Uncertainty on IMU measurements.
 struct ImuUncertainty {
   //! Bias added to accelerometer measurements in the IMU frame.
-  Eigen::Vector3d accelerometer_bias = Eigen::Vector3d::Zero();
+  Eigen::Vector3d accelerometer_bias;
 
   //! Standard deviation of noise added to accelerations in the IMU frame.
-  double accelerometer_noise = 0.0;
+  double accelerometer_noise;
 
   //! Bias added to gyroscope measurements, in the IMU frame.
-  Eigen::Vector3d gyroscope_bias = Eigen::Vector3d::Zero();
+  Eigen::Vector3d gyroscope_bias;
 
   //! Standard deviation of noise added to angular velocities in the IMU frame.
-  double gyroscope_noise = 0.0;
+  double gyroscope_noise;
+
+  //! Initialize uncertainty.
+  ImuUncertainty() { reset(); }
+
+  //! Reset uncertainty to its default values.
+  void reset() {
+    accelerometer_bias.setZero();
+    accelerometer_noise = 0.0;
+    gyroscope_bias.setZero();
+    gyroscope_noise = 0.0;
+  }
 
   /*! Configure uncertainty from a dictionary.
    *
    * \param[in] config Configuration dictionary.
    */
   void configure(const Dictionary& config) {
-    accelerometer_bias = config.get<Eigen::Vector3d>("accelerometer_bias",
-                                                     Eigen::Vector3d::Zero());
-    accelerometer_noise = config.get<double>("accelerometer_noise", 0.0);
+    reset();
+    accelerometer_bias =
+        config.get<Eigen::Vector3d>("accelerometer_bias", accelerometer_bias);
+    accelerometer_noise =
+        config.get<double>("accelerometer_noise", accelerometer_noise);
     gyroscope_bias =
-        config.get<Eigen::Vector3d>("gyroscope_bias", Eigen::Vector3d::Zero());
-    gyroscope_noise = config.get<double>("gyroscope_noise", 0.0);
+        config.get<Eigen::Vector3d>("gyroscope_bias", gyroscope_bias);
+    gyroscope_noise = config.get<double>("gyroscope_noise", gyroscope_noise);
   }
 
   /*! Apply uncertainty to measurement vectors.
