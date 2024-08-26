@@ -4,6 +4,9 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Inria
 
+## \namespace upkie.exceptions
+## \brief Exceptions raised by the Python library.
+
 
 class UpkieException(Exception):
     """!

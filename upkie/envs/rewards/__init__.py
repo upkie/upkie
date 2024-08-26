@@ -4,6 +4,9 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2024 Inria
 
+## \namespace upkie.envs.rewards
+## \brief Reward functions used in Gym environments.
+
 from .wheeled_inverted_pendulum_reward import WheeledInvertedPendulumReward
 
 __all__ = [

@@ -4,7 +4,8 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Inria
 
-import os
+## \namespace upkie.config
+## \brief Static robot configuration.
 
 import yaml
 
