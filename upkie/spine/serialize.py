@@ -5,6 +5,9 @@
 # Copyright 2022 Stéphane Caron
 # Copyright 2023 Inria
 
+"""!
+Serialization function.
+"""
 
 def serialize(obj):
     r"""!

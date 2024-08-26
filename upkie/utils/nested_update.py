@@ -4,6 +4,9 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Inria
 
+"""!
+Functions to work with nested dictionaries.
+"""
 
 def nested_update(target_dict: dict, new_dict: dict) -> None:
     r"""!

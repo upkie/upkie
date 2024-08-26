@@ -4,6 +4,10 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2022 Stéphane Caron
 
+"""!
+Basic discrete-time filters.
+"""
+
 from typing import Tuple
 
 from .clamp import clamp
