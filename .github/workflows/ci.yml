@@ -147,11 +147,20 @@ jobs:
             - name: "Checkout sources"
               uses: actions/checkout@v4
 
+            - name: "Install dependencies"
+              run: |
+                  python -m pip install --upgrade pip
+                  python -m pip install ruff
+
             - name: "Check code formatting"
               env:
                   BAZELISK_GITHUB_TOKEN: ${{ secrets.BAZELISK_GITHUB_TOKEN }}
               run: |
                   tools/bazelisk test --compilation_mode=fastbuild --config lint //...
+
+            - name: "Check Python code formatting"
+              run: |
+                  ruff check upkie
 
             - name: "Check shell scripts formatting"
               run: |
