@@ -1,29 +1,26 @@
 # Observations {#observations}
 
-Here is an index of observation dictionaries computed from [Sensors](\ref sensors) by the default observer pipeline. Keys are a shorthand for nested dictionaries, for example ``a.b.c`` corresponds to ``observation["a"]["b"]["c"]``.
+Spines compute observation dictionaries from [sensor measurements](\ref sensors) by applying *observers* one after the other in a sequence called the *observer pipeline*. This page lists the outputs of available observers, using shorthands ``a.b.c`` for nested dictionary keys ``observation["a"]["b"]["c"]``.
+
+## IMU observations
 
 | Observation key | Description |
 |-----------------|-------------|
-| `base_orientation.angular_velocity` | Body angular velocity vector of the base frame in [rad] / [s] |
-| `base_orientation.pitch` | Pitch angle of the base frame relative to the world frame, in radians |
-| `imu` | Inertial measurement unit, see [ImuData](\ref upkie::cpp::actuation::ImuData) for more details |
 | `imu.angular_velocity` | Body angular velocity of the IMU frame in [rad] / [s] |
 | `imu.linear_acceleration` | Linear acceleration of the IMU, with gravity filtered out, in [m] / [s]² |
 | `imu.orientation` | Unit quaternion (``qw``, ``qx``, ``qy``, ``qz``) of the orientation from the IMU frame to the [ARS](\ref ars) frame |
 | `imu.raw_angular_velocity` | Raw measurement from the gyroscope of the IMU, in [rad] / [s] |
 | `imu.raw_linear_acceleration` | [Proper acceleration](https://en.wikipedia.org/wiki/Accelerometer#Physical_principles) measured by the accelerometer of the IMU, in [m] / [s]² |
-| `servo` | Servo motor measurements |
-| `servo.X` | Observations for servo ``X`` in the servo layout |
-| `servo.X.position` | Angle between the stator and the rotor in [rad] |
-| `servo.X.torque` | Joint torque in [N m] |
-| `servo.X.velocity` | Angular velocity of the rotor w.r.t. stator in rotor, in [rad] / [s] |
-| `wheel_odometry` | Wheel odometry, , see [WheelOdometry](\ref upkie::cpp::observers::WheelOdometry) for more details |
-| `wheel_odometry.position` | Ground position in [m] |
-| `wheel_odometry.velocity` | Ground velocity in [m] / [s] |
 
-## Attitude reference system {#ars}
+Upkie spines always report [IMU observations](\ref upkie::cpp::actuation::ImuData).
 
-The attitude reference system (ARS) frame that the IMU filter maps to has its x-axis pointing forward, y-axis pointing to the right and z-axis pointing down ([details](https://github.com/mjbots/pi3hat/blob/ab632c82bd501b9fcb6f8200df0551989292b7a1/docs/reference.md#orientation)). This is not the convention we use in the world frame, where the x-axis points forward, the y-axis points left and the z-axis points up. The rotation matrix from the ARS frame to the world frame is thus:
+### World frame {#world-frame}
+
+The world frame is an inertial frame of reference we refer to in various observers. It has an x-axis pointing forward, a y-axis pointing to the left and a z-axis vertical and pointing up (*i.e.*, against the gravity vector).
+
+### Attitude reference system {#ars}
+
+The attitude reference system (ARS) frame is an inertial frame of reference used by the the IMU filte. It has its x-axis pointing forward, y-axis pointing to the right and z-axis pointing down ([details](https://github.com/mjbots/pi3hat/blob/ab632c82bd501b9fcb6f8200df0551989292b7a1/docs/reference.md#orientation)). This is not the convention we use in the world frame, and the rotation matrix from the ARS frame to the world frame is:
 
 \f$
 R_{WA} = \begin{bmatrix}
@@ -33,20 +30,44 @@ R_{WA} = \begin{bmatrix}
 \end{bmatrix}
 \f$
 
+## Servo observations
+
+| Observation key | Description |
+|-----------------|-------------|
+| `servo.X` | Observations for servo ``X`` in the servo layout |
+| `servo.X.position` | Angle between the stator and the rotor in [rad] |
+| `servo.X.torque` | Joint torque in [N m] |
+| `servo.X.velocity` | Angular velocity of the rotor w.r.t. stator in rotor, in [rad] / [s] |
+
+Upkie spines always report servo observations.
+
 ## Observers {#observers}
+
+### Base orientation
+
+| Observation key | Description |
+|-----------------|-------------|
+| `base_orientation.angular_velocity` | Body angular velocity vector of the base frame in [rad] / [s] |
+| `base_orientation.pitch` | Pitch angle of the base frame relative to the world frame, in radians |
+
+The [BaseOrientation](\ref upkie::cpp::observers::BaseOrientation) observer estimates the orientation of the floating base with respect to the world frame.
 
 <img src="https://upkie.github.io/upkie/observers.png" align="right">
 
-<dl>
-  <dt><a href="https://upkie.github.io/upkie/classupkie_1_1observers_1_1FloorContact.html#details">Floor contact</a></dt>
-  <dd>Detect contact between the wheels and the floor. The pink and wheel balancers use contact as a reset flag for their integrators, to avoid over-spinning the wheels while the robot is in the air.</dd>
+### Floor and wheel contact
 
-  <dt><a href="https://upkie.github.io/upkie/classupkie_1_1observers_1_1WheelContact.html#details">Wheel contact</a></dt>
-  <dd>Detect contact between a given wheel and the floor.</dd>
+The [FloorContact](\ref upkie::cpp::observers::FloorContact) observer detects contact between the wheels and the floor. The PID balancer used for testing relies on this observer, for instance, to reset its integrator while the robot is in the air, to avoid fast-spinning wheels at touchdown.
 
-  <dt><a href="https://upkie.github.io/upkie/classupkie_1_1observers_1_1WheelOdometry.html#details">Wheel odometry</a></dt>
-  <dd>Measure the relative motion of the floating base with respect to the floor. Wheel odometry is part of their secondary task (after keeping the head straight), which is to stay around the same spot on the floor.</dd>
-</dl>
+Internally, the floor contact observer relies on two [WheelContact](\ref upkie::cpp::observers::WheelContact) observers, one for each wheel.
+
+### Wheel odometry
+
+| Observation key | Description |
+|-----------------|-------------|
+| `wheel_odometry.position` | Ground position in [m] |
+| `wheel_odometry.velocity` | Ground velocity in [m] / [s] |
+
+This observer measures the relative motion of the robot with respect to the floor, outputting ground position and velocity estimates. These quantities are used for instance in the PID balancer, which tries to stay around the same spot on the floor. Check out the [WheelOdometry](\ref upkie::cpp::observers::WheelOdometry) observer API for details.
 
 ### History observer {#history-observer}
 
