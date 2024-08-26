@@ -8,6 +8,7 @@
 Functions to work with nested dictionaries.
 """
 
+
 def nested_update(target_dict: dict, new_dict: dict) -> None:
     r"""!
     Update a target dictionary recursively.

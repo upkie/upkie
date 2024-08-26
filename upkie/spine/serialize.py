@@ -9,6 +9,7 @@
 Serialization function.
 """
 
+
 def serialize(obj):
     r"""!
     Serialize an object for message packing.
