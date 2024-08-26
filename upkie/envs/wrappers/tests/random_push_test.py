@@ -28,7 +28,7 @@ class RandomPushTestCase(unittest.TestCase):
             )
         action = np.array([1.0])
         spine_action = wrapped_env.get_spine_action(action)
-        assert "bullet" in spine_action
+        self.assertTrue("bullet" in spine_action)
         assert "external_forces" in spine_action["bullet"]
         assert "torso" in spine_action["bullet"]["external_forces"]
         assert "force" in spine_action["bullet"]["external_forces"]["torso"]
