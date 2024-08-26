@@ -4,6 +4,8 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Inria
 
+"""Add noise to the action of an environment."""
+
 import gymnasium
 import numpy as np
 
@@ -16,6 +18,12 @@ class NoisifyAction(gymnasium.ActionWrapper):
     """
 
     def __init__(self, env, noise: np.ndarray):
+        r"""!
+        Create wrapper.
+
+        \param env Environment to wrap.
+        \param noise Noise level.
+        """
         super().__init__(env)
         if noise.shape != env.action_space.shape:
             raise UpkieException(
@@ -25,7 +33,13 @@ class NoisifyAction(gymnasium.ActionWrapper):
         self.high = +np.abs(noise)
         self.low = -np.abs(noise)
 
-    def action(self, action):
+    def action(self, action: np.ndarray) -> np.ndarray:
+        r"""!
+        Get the noisy action.
+
+        \param action Original action.
+        \return Noisy action.
+        """
         noise = self.np_random.uniform(low=self.low, high=self.high)
         noisy_action = np.clip(
             action + noise,

@@ -15,6 +15,8 @@ from .upkie_servos import UpkieServos
 
 class UpkieServoTorques(UpkieServos):
     """!
+    Command servos by torque control.
+
     Child class of UpkieServos that defines the action space as a dictionary of
     joint names with the following key :
 
