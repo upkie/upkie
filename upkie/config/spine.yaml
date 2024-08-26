@@ -1,12 +1,3 @@
-bullet:
-    follower_camera: false
-    gui: true
-    reset:
-        orientation_base_in_world: [1.0, 0.0, 0.0, 0.0]
-        position_base_in_world: [0.0, 0.0, 0.6]
-    torque_control:
-        kp: 20.0
-        kd: 1.0
 floor_contact:
     upper_leg_torque_threshold: 10.0
 wheel_contact:

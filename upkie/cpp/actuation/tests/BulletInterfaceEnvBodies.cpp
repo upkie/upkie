@@ -35,6 +35,7 @@ class BulletInterfaceEnvBodies : public ::testing::Test {
     params.dt = dt_;
     params.floor = false;   // wheels roll freely during testing
     params.gravity = true;  // default, just a reminder
+    params.gui = false;     // no GUI when testing
     params.env_urdf_paths = {runfiles->Rlocation(
         "upkie/upkie/cpp/actuation/bullet/plane/plane.urdf")};
     params.robot_urdf_path =
@@ -63,9 +64,6 @@ class BulletInterfaceEnvBodies : public ::testing::Test {
 };
 
 TEST_F(BulletInterfaceEnvBodies, MonitorEnvBodies) {
-  Dictionary config;
-  interface_->reset(config);
-
   Dictionary observation;
   interface_->cycle([](const moteus::Output& output) {});
   interface_->observe(observation);

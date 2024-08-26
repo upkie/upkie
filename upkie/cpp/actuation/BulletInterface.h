@@ -40,13 +40,15 @@ class BulletInterface : public Interface {
       floor = true;
       follower_camera = false;
       gravity = true;
-      gui = false;
+      gui = true;
       imu_uncertainty.reset();
       joint_properties.clear();
       linear_velocity_base_to_world_in_world.setZero();
       monitor_contacts.clear();
       orientation_base_in_world.setIdentity();
-      position_base_in_world.setZero();
+      position_base_in_world.x() = 0.0;
+      position_base_in_world.y() = 0.0;
+      position_base_in_world.z() = 0.6;
       robot_urdf_path = "";
       torque_control_kd = 1.0;
       torque_control_kp = 20.0;
@@ -362,6 +364,9 @@ class BulletInterface : public Interface {
 
   //! Read joint sensors from the simulator
   void read_joint_sensors();
+
+  //! Reset interface from current parameters.
+  void reset_from_params();
 
   //! Send commands to simulated joints
   void send_commands();

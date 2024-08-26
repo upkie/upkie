@@ -114,13 +114,12 @@ BulletInterface::BulletInterface(const ServoLayout& layout,
 
   // Start visualizer and configure simulation
   bullet_.configureDebugVisualizer(COV_ENABLE_RENDERING, 1);
-  reset(Dictionary{});
+  reset_from_params();
 }
 
 BulletInterface::~BulletInterface() { bullet_.disconnect(); }
 
-void BulletInterface::reset(const Dictionary& config) {
-  params_.configure(config);
+void BulletInterface::reset_from_params() {
   bullet_.setTimeStep(params_.dt);
   reset_base_state(params_.position_base_in_world,
                    params_.orientation_base_in_world,
@@ -129,6 +128,11 @@ void BulletInterface::reset(const Dictionary& config) {
   reset_contact_data();
   reset_joint_angles();
   reset_joint_properties();
+}
+
+void BulletInterface::reset(const Dictionary& config) {
+  params_.configure(config);
+  reset_from_params();
 }
 
 void BulletInterface::reset_base_state(
