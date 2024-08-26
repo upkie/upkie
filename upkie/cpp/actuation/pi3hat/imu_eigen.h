@@ -9,7 +9,7 @@
 
 namespace upkie::cpp::actuation::pi3hat {
 
-/*! Standard gravity constant used in ::mjbots::pi3hat
+/*! Standard gravity constant used in the mjbots pi3hat firmware.
  *
  * We should use the same value to recover raw measurements from filter
  * outputs.
@@ -18,7 +18,8 @@ constexpr double kMjbotsGravity = 9.81;
 
 /*! Get raw angular velocity measurement from the gyroscope.
  *
- * \param[in] attitude Attitude object from the pi3hat library.
+ * \param[in] rate_dps Angular velocity in [deg] / [s] from the pi3hat.
+ * \param[in] bias_dps Gyroscope bias in [deg] / [s] from the pi3hat.
  * \return Raw angular velocity of the IMU in [rad] / [s].
  *
  * \note We reverse filter outputs for now as (1) it avoids an extra call to

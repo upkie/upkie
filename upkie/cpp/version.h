@@ -14,6 +14,7 @@
 //! C++ library to create new spines.
 namespace upkie::cpp {
 
+//! Software version number.
 constexpr std::string_view kVersion = "5.1.0";
 
-}
+}  // namespace upkie::cpp
