@@ -29,7 +29,28 @@ class BulletInterface : public Interface {
   //! Interface parameters.
   struct Parameters {
     //! Keep default constructor.
-    Parameters() = default;
+    Parameters() { reset(); }
+
+    //! Reset parameters to their default values
+    void reset() {
+      angular_velocity_base_in_base.setZero();
+      argv0 = "";
+      dt = std::numeric_limits<double>::quiet_NaN();
+      env_urdf_paths.clear();
+      floor = true;
+      follower_camera = false;
+      gravity = true;
+      gui = false;
+      imu_uncertainty.reset();
+      joint_properties.clear();
+      linear_velocity_base_to_world_in_world.setZero();
+      monitor_contacts.clear();
+      orientation_base_in_world.setIdentity();
+      position_base_in_world.setZero();
+      robot_urdf_path = "";
+      torque_control_kd = 1.0;
+      torque_control_kp = 20.0;
+    }
 
     /*! Initialize from global configuration.
      *
@@ -93,6 +114,9 @@ class BulletInterface : public Interface {
       }
     }
 
+    //! Body angular velocity of the base upon reset.
+    Eigen::Vector3d angular_velocity_base_in_base;
+
     /*! Value of argv[0] used to locate runfiles (e.g. plane.urdf) in Bazel.
      *
      * This value helps find runfiles because Bazel does not seem to set the
@@ -106,25 +130,43 @@ class BulletInterface : public Interface {
      * https://github.com/bazelbuild/bazel/issues/4586
      * https://github.com/bazelbuild/bazel/issues/7994
      */
-    std::string argv0 = "";
+    std::string argv0;
+
+    //! Simulation timestep in [s]
+    double dt;
+
+    //! Paths to environment URDFs to load.
+    std::vector<std::string> env_urdf_paths;
+
+    //! If true, load a floor plane.
+    bool floor;
+
+    //! Translate the camera to follow the robot
+    bool follower_camera;
+
+    //! If true, fire up the graphical user interface.
+    bool gui;
+
+    //! If true, set gravity to -9.81 m/s².
+    bool gravity;
+
+    //! Uncertainty on IMU measurements
+    ImuUncertainty imu_uncertainty;
+
+    //! Joint friction parameters
+    std::map<std::string, bullet::JointProperties> joint_properties;
+
+    //! Linear velocity of the base in the world frame upon reset
+    Eigen::Vector3d linear_velocity_base_to_world_in_world;
 
     //! Contacts to monitor and report along with observations
     std::vector<std::string> monitor_contacts;
 
-    //! Simulation timestep in [s]
-    double dt = std::numeric_limits<double>::quiet_NaN();
+    //! Orientation of the base in the world frame upon reset
+    Eigen::Quaterniond orientation_base_in_world;
 
-    //! Translate the camera to follow the robot
-    bool follower_camera = false;
-
-    //! If true, set gravity to -9.81 m/s².
-    bool gravity = true;
-
-    //! If true, load a floor plane.
-    bool floor = true;
-
-    //! If true, fire up the graphical user interface.
-    bool gui = false;
+    //! Position of the base in the world frame upon reset
+    Eigen::Vector3d position_base_in_world;
 
     /*! Path to the URDF model of the robot.
      *
@@ -138,34 +180,11 @@ class BulletInterface : public Interface {
      */
     std::string robot_urdf_path;
 
-    //! Paths to environment URDFs to load.
-    std::vector<std::string> env_urdf_paths;
-
     //! Gain for joint velocity control feedback
-    double torque_control_kd = 1.0;
+    double torque_control_kd;
 
     //! Gain for joint position control feedback
-    double torque_control_kp = 20.0;
-
-    //! Position of the base in the world frame upon reset
-    Eigen::Vector3d position_base_in_world = Eigen::Vector3d::Zero();
-
-    //! Orientation of the base in the world frame upon reset
-    Eigen::Quaterniond orientation_base_in_world =
-        Eigen::Quaterniond::Identity();
-
-    //! Linear velocity of the base in the world frame upon reset
-    Eigen::Vector3d linear_velocity_base_to_world_in_world =
-        Eigen::Vector3d::Zero();
-
-    //! Body angular velocity of the base upon reset
-    Eigen::Vector3d angular_velocity_base_in_base = Eigen::Vector3d::Zero();
-
-    //! Joint friction parameters
-    std::map<std::string, bullet::JointProperties> joint_properties;
-
-    //! Uncertainty on IMU measurements
-    ImuUncertainty imu_uncertainty;
+    double torque_control_kp;
   };
 
   /*! Initialize interface.
