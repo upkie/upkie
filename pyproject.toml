@@ -27,13 +27,13 @@ classifiers = [
     "Topic :: Scientific/Engineering",
 ]
 dependencies = [
-    "PyYAML >=6.0",
-    "gymnasium >=0.29.1",
-    "loop-rate-limiters >=1.0.0",
-    "msgpack >=1.0.2",
-    "numpy >=1.24.3",
-    "scipy >=1.10.0",
-    "upkie_description >=2.0.0",
+    "PyYAML >= 6.0",
+    "gymnasium >= 0.29.1",
+    "loop-rate-limiters >= 1.0.0",
+    "msgpack >= 1.0.2",
+    "numpy >= 1.24.3",
+    "scipy >= 1.10.0",
+    "upkie_description >= 2.1.0",
 ]
 keywords = ["wheeled", "biped", "robot", "balance", "motion", "control", "robotics"]
 
