@@ -12,6 +12,7 @@
 //! Utility functions used in the pi3hat interface.
 namespace upkie::cpp::actuation::pi3hat {
 
+//! Attitude data type from the mjbots library.
 using Attitude = ::mjbots::pi3hat::Attitude;
 
 /*! Get orientation from the IMU frame to the ARS frame.

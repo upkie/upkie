@@ -5,7 +5,7 @@
 # Copyright 2022 Stéphane Caron
 
 """!
-Basic discrete-time filters.
+Basic digital filters.
 """
 
 from typing import Tuple

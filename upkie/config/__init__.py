@@ -7,11 +7,13 @@
 ## \namespace upkie.config
 ## \brief Static robot configuration.
 
+from os.path import abspath, dirname
+
 import yaml
 
-PATH = os.path.abspath(os.path.dirname(__file__))
-
+## \var SPINE_CONFIG
+## Spine configuration dictionary used as defaults by Gym environments.
 SPINE_CONFIG = None
 
-with open(PATH + "/spine.yaml", "r") as fh:
+with open(abspath(dirname(__file__)) + "/spine.yaml", "r") as fh:
     SPINE_CONFIG = yaml.safe_load(fh)

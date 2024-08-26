@@ -5,7 +5,7 @@
 # Copyright 2022 Stéphane Caron
 # Copyright 2023 Inria
 
-"""!
+r"""!
 Temporary placeholder for spine exceptions (TODO: merge into upkie.exceptions).
 """
 

@@ -33,7 +33,7 @@ def wait_for_shared_memory(
 
     \param shm_name Name of the shared memory object.
     \param retries Number of times to try opening the shared-memory file.
-    \raise SpineError If the spine did not respond after the prescribed number
+    \throw SpineError If the spine did not respond after the prescribed number
         of trials.
     """
     # Remove leading slash if present, as SharedMemory will prepend it
