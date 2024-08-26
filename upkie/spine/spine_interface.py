@@ -5,6 +5,10 @@
 # Copyright 2022 Stéphane Caron
 # Copyright 2024 Inria
 
+"""!
+Inter-process communication interface.
+"""
+
 import logging
 import mmap
 import sys
