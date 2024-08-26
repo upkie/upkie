@@ -72,6 +72,8 @@ include = [
 
 [tool.ruff]
 line-length = 79
+
+[tool.ruff.lint]
 select = [
     # pyflakes
     "F",
@@ -79,14 +81,19 @@ select = [
     "E",
     "W",
     # isort
-    # "I001",
+    "I001",
     # pydocstyle
     "D"
 ]
 ignore = [
+    "D204",  # ruff does not know we use Doxygen docstrings
+    "D205",  # ruff does not know we use Doxygen docstrings
     "D401",  # good for methods but not for class docstrings
     "D405",  # British-style section names are also "proper"!
 ]
 
-[tool.ruff.pydocstyle]
+[tool.ruff.lint.per-file-ignores]
+"*/tests/*.py" = ["D"]
+
+[tool.ruff.lint.pydocstyle]
 convention = "numpy"
