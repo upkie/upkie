@@ -2,6 +2,8 @@
 // Copyright 2022 Stéphane Caron
 // Copyright 2023 Inria
 
+#pragma once
+
 #include <string>
 
 namespace upkie::cpp {
