@@ -63,6 +63,8 @@ class BulletInterface : public Interface {
      * \param[in] config Global configuration dictionary.
      */
     void configure(const Dictionary& config) {
+      reset();  // make sure we start from default values
+
       if (!config.has("bullet")) {
         spdlog::debug("No \"bullet\" runtime configuration");
         return;
@@ -77,7 +79,6 @@ class BulletInterface : public Interface {
         imu_uncertainty.configure(bullet("imu_uncertainty"));
       }
 
-      joint_properties.clear();
       if (bullet.has("joint_properties")) {
         for (const auto& joint : bullet("joint_properties").keys()) {
           const auto& props = bullet("joint_properties")(joint);
@@ -85,7 +86,6 @@ class BulletInterface : public Interface {
         }
       }
 
-      monitor_contacts.clear();
       if (bullet.has("monitor")) {
         const auto& monitor = bullet("monitor");
         if (monitor.has("contacts")) {
