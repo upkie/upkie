@@ -13,10 +13,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - BulletInterface: Torque measurement noise to joint-property configuration
 - BulletInterface: Uncertainty on IMU accelerometer and gyroscope measurements
 - ImuData: Add linear velocity field
+- envs: Add a random push wrapper (thanks to @Tordjx)
 - examples: Apply an external force to lift an Upkie in sim
 - examples: Simulation with joint friction
 - examples: Simulation with sensor noise
-- envs : Added a randomly pushing wrapper
+
 ### Fixed
 
 - BulletInterface: Fix application of external forces
