@@ -12,6 +12,19 @@ from gymnasium import spaces
 
 
 class DifferentiateAction(gymnasium.Wrapper):
+    r"""!
+    Act on the derivative of the action.
+    """
+
+    ## @var action_penalty
+    ## Weight for an additional penalty on the differential action added to the
+    ## reward.
+    action_penalty: float
+
+    ## @var action_space
+    ## Action space.
+    action_space: spaces.box.Box
+
     def __init__(
         self,
         env,
@@ -20,7 +33,7 @@ class DifferentiateAction(gymnasium.Wrapper):
         action_penalty: float = 0.0,
     ):
         r"""!
-        Act on the derivative of the action.
+        Initialize wrapper.
 
         \param env Environment to wrap.
         \param min_derivative Lower bound on the derivative of the original
@@ -43,6 +56,11 @@ class DifferentiateAction(gymnasium.Wrapper):
         self.action_penalty = action_penalty
 
     def reset(self, **kwargs):
+        r"""!
+        Reset the environment.
+
+        \param kwargs Keyword arguments forwarded to the wrapped environment.
+        """
         self._integral = np.zeros(self.action_space.shape)
         return self.env.reset(**kwargs)
 
@@ -50,6 +68,13 @@ class DifferentiateAction(gymnasium.Wrapper):
         self,
         action: np.ndarray,
     ) -> Tuple[np.ndarray, float, bool, bool, dict]:
+        r"""!
+        Step the environment.
+
+        \param action Action from the agent.
+        \return Tuple with (observation, reward, terminated, truncated,info).
+            See \ref upkie.envs.upkie_base_env.UpkieBaseEnv.step for details.
+        """
         self._integral = np.clip(
             self._integral + action * self.env.unwrapped.dt,
             self.env.action_space.low,

@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Inria
 
-from typing import Union
+from typing import Tuple, Union
 
 import gymnasium
 import numpy as np
@@ -18,8 +18,17 @@ class LowPassFilterAction(gymnasium.Wrapper):
     Apply a low-pass filter to the action of an environment.
     """
 
+    ## \var filtered_action
+    ## Wrapped action after low-pass filtering.
     filtered_action: np.ndarray
+
+    ## \var time_constant
+    ## Cutoff period in seconds of a low-pass filter applied to the action.
     time_constant: float
+
+    ## \var time_constant_box
+    ## Box space from which \ref time_constant is sampled at every reset of the
+    ## environment.
     time_constant_box: Box
 
     def __init__(self, env, time_constant: Union[float, Box]):
@@ -44,11 +53,25 @@ class LowPassFilterAction(gymnasium.Wrapper):
         self.time_constant_box = time_constant_box
 
     def reset(self, **kwargs):
+        r"""!
+        Reset the environment.
+
+        \param kwargs Keyword arguments forwarded to the wrapped environment.
+        """
         self.filtered_action = np.zeros(self.env.action_space.shape)
         self.time_constant = self.time_constant_box.sample()
         return self.env.reset(**kwargs)
 
-    def step(self, action):
+    def step(
+        self, action: np.ndarray
+    ) -> Tuple[np.ndarray, float, bool, bool, dict]:
+        r"""!
+        Step the environment.
+
+        \param action Action from the agent.
+        \return Tuple with (observation, reward, terminated, truncated,info).
+            See \ref upkie.envs.upkie_base_env.UpkieBaseEnv.step for details.
+        """
         dt = self.env.unwrapped.dt
         if self.time_constant <= 2.0 * dt:
             # Nyquist–Shannon sampling theorem

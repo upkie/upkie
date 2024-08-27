@@ -20,6 +20,10 @@ class AddActionToObservation(gymnasium.ObservationWrapper):
     wouldn't need this wrapper.)
     """
 
+    ## @var observation_space
+    ## Observation space.
+    observation_space: spaces.box.Box
+
     _last_action: np.ndarray
 
     def __init__(self, env):
@@ -51,8 +55,19 @@ class AddActionToObservation(gymnasium.ObservationWrapper):
         )
 
     def observation(self, observation: np.ndarray) -> np.ndarray:
+        r"""!
+        rGet wrapped observation.
+
+        \param observation Observation from the wrapped environment.
+        \return Wrapped observation.
+        """
         return np.concatenate([observation, self._last_action])
 
     def step(self, action: np.ndarray):
+        r"""!
+        Step the environment.
+
+        \param action Action from the agent.
+        """
         self._last_action = action
         return super().step(action)

@@ -203,9 +203,10 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         action: np.ndarray,
     ) -> Tuple[np.ndarray, float, bool, bool, dict]:
         r"""!
-        Run one timestep of the environment's dynamics. When the end of the
-        episode is reached, you are responsible for calling `reset()` to reset
-        the environment's state.
+        Run one timestep of the environment's dynamics.
+
+        When the end of the episode is reached, you are responsible for calling
+        `reset()` to reset the environment's state.
 
         \param action Action from the agent.
         \return
