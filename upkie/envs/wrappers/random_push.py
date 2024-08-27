@@ -4,9 +4,8 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2024 Inria
 
-from gymnasium import Wrapper
-
 import numpy as np
+from gymnasium import Wrapper
 
 
 class RandomPush(Wrapper):
@@ -42,6 +41,7 @@ class RandomPush(Wrapper):
         self.env.unwrapped.get_spine_action = self.get_spine_action
 
     def get_spine_action(self, action):
+        """Adds a random push to the action."""
         spine_action = self.env_get_spine_action(action)
         if np.random.binomial(1, self.push_prob):
             force = self.push_generator()
