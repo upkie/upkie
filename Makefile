@@ -115,3 +115,4 @@ coverage:  # check unit test coverage and open an HTML report in Firefox (not do
 .PHONY: lint
 lint:
 	$(BAZEL) test --config lint //...
+	ruff check $(CURDIR)/upkie

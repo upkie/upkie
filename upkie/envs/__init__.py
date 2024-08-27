@@ -4,6 +4,11 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2022 Stéphane Caron
 
+## \namespace upkie.envs
+## \brief Gym environments.
+##
+## See the [Gym environments](@ref environments) page for more details.
+
 import gymnasium as gym
 
 from .upkie_base_env import UpkieBaseEnv

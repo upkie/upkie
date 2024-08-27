@@ -8,7 +8,7 @@
 
 namespace upkie::cpp::actuation {
 
-//! Data from the onboard inertian measurement unit (IMU).
+//! Data from the onboard inertial measurement unit (IMU).
 struct ImuData {
   /*! Rotation from the IMU frame to the ARS frame.
    *

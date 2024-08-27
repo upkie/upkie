@@ -2,5 +2,5 @@ name: pid_balancer
 channels:
     - https://conda.anaconda.org/conda-forge
 dependencies:
-    - gin-config >=0.5.0
-    - upkie >=3.4.0
+    - gin-config >= 0.5.0
+    - upkie >= 3.4.0

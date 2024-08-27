@@ -4,9 +4,8 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2022 Stéphane Caron
 
-"""!
-Python library for an agent to interact with a spine.
-"""
+## \namespace upkie.spine
+## \brief Python interface for agents to interact with a spine.
 
 from .exceptions import PerformanceIssue, SpineError, UpkieException
 from .request import Request

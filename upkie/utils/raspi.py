@@ -4,6 +4,10 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Inria
 
+"""!
+Functions to work on the onboard Raspberry Pi.
+"""
+
 import os
 import sys
 
@@ -29,7 +33,7 @@ def on_raspi() -> bool:
 
 
 def configure_agent_process() -> None:
-    """!
+    r"""!
     Configure process to run as an agent on the Raspberry Pi.
 
     \note This function assumes we are running an underlying script. It won't

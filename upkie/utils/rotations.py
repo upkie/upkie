@@ -4,6 +4,10 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2022 Stéphane Caron
 
+"""!
+Convert between various rotation representations.
+"""
+
 from typing import Tuple
 
 import numpy as np

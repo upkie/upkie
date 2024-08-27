@@ -4,6 +4,10 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2022 Stéphane Caron
 
+"""!
+State-machine request identifiers.
+"""
+
 from enum import IntEnum
 
 
@@ -32,6 +36,7 @@ class Request(IntEnum):
     @var kError
     Flag set when the last request was invalid.
     """
+
     kNone = 0
     kObservation = 1
     kAction = 2

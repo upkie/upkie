@@ -14,7 +14,9 @@ from .upkie_servos import UpkieServos
 
 
 class UpkieServoPositions(UpkieServos):
-    """!
+    r"""!
+    Command servos by position control.
+
     Child class of UpkieServos that defines the action space as a dictionary of
     joint names with the following keys:
 
