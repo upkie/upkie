@@ -10,7 +10,6 @@ import numpy as np
 
 
 class RandomPush(Wrapper):
-
     """!
     At each step, with a given probability, apply a random push to the robot.
     """
@@ -31,7 +30,6 @@ class RandomPush(Wrapper):
         \param push_generator Function that generates the push force. It should
             return a 3D numpy array.
         """
-
         super().__init__(env)
         self.env = env
         self.push_prob = push_prob
