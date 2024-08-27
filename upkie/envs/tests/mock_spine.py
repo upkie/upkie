@@ -10,7 +10,7 @@ class MockSpine:
         self.observation = {
             "base_orientation": {
                 "pitch": 0.1,
-                "angular_velocity": [-2e-3, 3e4, 1e-8],
+                "angular_velocity": [-2e-3, 3e2, 1e-8],
                 "linear_velocity": [1e3, 2e2, 3e1],
             },
             "imu": {

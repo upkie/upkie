@@ -33,10 +33,8 @@ class RandomPushTestCase(unittest.TestCase):
         env = ConstantObservationEnv(1.0)
         env.get_spine_action = lambda action: {}
         wrapped_env = RandomPush(
-            env,
-            push_prob=1,
-            push_generator=lambda: np.array([42, 42, 42])
-            )
+            env, push_prob=1, push_generator=lambda: np.array([42, 42, 42])
+        )
         action = np.array([1.0])
         spine_action = wrapped_env.get_spine_action(action)
         self.assertTrue("bullet" in spine_action)
@@ -44,19 +42,20 @@ class RandomPushTestCase(unittest.TestCase):
         self.assertTrue("torso" in spine_action["bullet"]["external_forces"])
         self.assertTrue(
             "force" in spine_action["bullet"]["external_forces"]["torso"]
+        )
+        self.assertTrue(
+            np.allclose(
+                spine_action["bullet"]["external_forces"]["torso"]["force"],
+                np.array([42, 42, 42]),
             )
-        self.assertTrue(np.allclose(
-            spine_action["bullet"]["external_forces"]["torso"]["force"],
-            np.array([42, 42, 42])
-            ))
+        )
 
     def test_check_env(self):
         try:
             from stable_baselines3.common.env_checker import check_env
 
-            self.setUp()
-            self.env = RandomPush(self.env, noise=np.full(6, 0.42))
-            check_env(self.env)
+            wrapped_env = RandomPush(self.env)
+            check_env(wrapped_env)
         except ImportError:
             pass
 
