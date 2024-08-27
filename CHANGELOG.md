@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - BulletInterface: Fix application of external forces
 - docs: Add missing documentation pages
+- docs: Document Gym environment wrappers
 - envs: Register UpkieServoPositions and UpkieServoTorques environments
 
 ## [5.1.0] - 2024-08-14
