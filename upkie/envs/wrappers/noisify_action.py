@@ -17,6 +17,14 @@ class NoisifyAction(gymnasium.ActionWrapper):
     Add noise to the action of an environment.
     """
 
+    ## \var high
+    ## Upper bound on action noise.
+    high: np.ndarray
+
+    ## \var low
+    ## Lower bound on action noise.
+    low: np.ndarray
+
     def __init__(self, env, noise: np.ndarray):
         r"""!
         Create wrapper.

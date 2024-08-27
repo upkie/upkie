@@ -15,7 +15,21 @@ class NoisifyObservation(gymnasium.ObservationWrapper):
     Add noise to the observation of an environment.
     """
 
+    ## \var high
+    ## Upper bound on observation noise.
+    high: np.ndarray
+
+    ## \var low
+    ## Lower bound on observation noise.
+    low: np.ndarray
+
     def __init__(self, env, noise: np.ndarray):
+        r"""!
+        Create wrapper.
+
+        \param env Environment to wrap.
+        \param noise Noise level.
+        """
         super().__init__(env)
         if noise.shape != env.observation_space.shape:
             raise UpkieException(
@@ -25,7 +39,13 @@ class NoisifyObservation(gymnasium.ObservationWrapper):
         self.high = +np.abs(noise)
         self.low = -np.abs(noise)
 
-    def observation(self, observation):
+    def observation(self, observation: np.ndarray) -> np.ndarray:
+        r"""!
+        Get noisy observation.
+
+        \param observation Noise-less observation.
+        \return Noisy observation.
+        """
         noise = self.np_random.uniform(low=self.low, high=self.high)
         noisy_observation = np.clip(
             observation + noise,
