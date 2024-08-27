@@ -62,8 +62,6 @@ py_test(
     deps = [
         "//upkie/envs/wrappers",
         "//upkie/envs",
-        ":mock_spine",
-        ":envs",
     ],
 )
 
