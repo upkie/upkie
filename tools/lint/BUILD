@@ -11,7 +11,6 @@
 package(default_visibility = ["//visibility:public"])
 
 load("//tools/lint:lint.bzl", "add_lint_tests")
-load("//tools/lint:python_lint.bzl", "PYTHON_LINT_IGNORE_DEFAULT", "python_lint")
 load("@rules_python//python:defs.bzl", "py_binary", "py_library")
 
 py_binary(
