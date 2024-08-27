@@ -291,14 +291,14 @@ TEST_F(BulletInterfaceTest, MonitorContacts) {
   interface_->cycle([](const moteus::Output& output) {});
   interface_->observe(observation);
 
-  ASSERT_TRUE(observation.has("bullet"));
-  ASSERT_TRUE(observation("bullet").has("contact"));
-  ASSERT_TRUE(observation("bullet")("contact").has("left_wheel_tire"));
-  ASSERT_TRUE(observation("bullet")("contact").has("right_wheel_tire"));
-  ASSERT_EQ(observation("bullet")("contact")("left_wheel_tire")
+  ASSERT_TRUE(observation.has("groundtruth"));
+  ASSERT_TRUE(observation("groundtruth").has("contact"));
+  ASSERT_TRUE(observation("groundtruth")("contact").has("left_wheel_tire"));
+  ASSERT_TRUE(observation("groundtruth")("contact").has("right_wheel_tire"));
+  ASSERT_EQ(observation("groundtruth")("contact")("left_wheel_tire")
                 .get<int>("num_contact_points"),
             0);
-  ASSERT_EQ(observation("bullet")("contact")("right_wheel_tire")
+  ASSERT_EQ(observation("groundtruth")("contact")("right_wheel_tire")
                 .get<int>("num_contact_points"),
             0);
 }
@@ -312,11 +312,11 @@ TEST_F(BulletInterfaceTest, MonitorIMU) {
   interface_->cycle([](const moteus::Output& output) {});
   interface_->observe(observation);
 
-  ASSERT_TRUE(observation.has("bullet"));
-  ASSERT_TRUE(observation("bullet").has("imu"));
-  ASSERT_TRUE(observation("bullet")("imu").has("linear_velocity"));
+  ASSERT_TRUE(observation.has("groundtruth"));
+  ASSERT_TRUE(observation("groundtruth").has("imu"));
+  ASSERT_TRUE(observation("groundtruth")("imu").has("linear_velocity"));
   Eigen::Vector3d linear_velocity_imu_in_imu =
-      observation("bullet")("imu")("linear_velocity");
+      observation("groundtruth")("imu")("linear_velocity");
   ASSERT_DOUBLE_EQ(linear_velocity_imu_in_imu.z(), -bullet::kGravity * dt_);
 }
 
@@ -329,10 +329,11 @@ TEST_F(BulletInterfaceTest, MonitorBaseState) {
   interface_->cycle([](const moteus::Output& output) {});
   interface_->observe(observation);
 
-  ASSERT_TRUE(observation.has("bullet"));
-  ASSERT_TRUE(observation("bullet").has("base"));
-  ASSERT_TRUE(observation("bullet")("base").has("position"));
-  Eigen::Vector3d base_position = observation("bullet")("base")("position");
+  ASSERT_TRUE(observation.has("groundtruth"));
+  ASSERT_TRUE(observation("groundtruth").has("base"));
+  ASSERT_TRUE(observation("groundtruth")("base").has("position"));
+  Eigen::Vector3d base_position =
+      observation("groundtruth")("base")("position");
 
   ASSERT_NEAR(base_position.x(), 0.0, 1e-20);
   ASSERT_NEAR(base_position.y(), 0.0, 1e-20);
@@ -344,9 +345,9 @@ TEST_F(BulletInterfaceTest, MonitorBaseState) {
   ASSERT_NEAR(base_position.z(), 3 * -bullet::kGravity * std::pow(dt_, 2.0),
               1e-6);
 
-  ASSERT_TRUE(observation("bullet")("base").has("orientation"));
+  ASSERT_TRUE(observation("groundtruth")("base").has("orientation"));
   Eigen::Quaterniond base_orientation =
-      observation("bullet")("base")("orientation");
+      observation("groundtruth")("base")("orientation");
 
   // Rotation vector should be practically zero
   ASSERT_DOUBLE_EQ(base_orientation.w(), 1.0);
