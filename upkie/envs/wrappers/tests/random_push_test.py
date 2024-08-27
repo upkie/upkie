@@ -8,7 +8,6 @@
 
 import unittest
 import numpy as np
-import gymnasium
 from multiprocessing.shared_memory import SharedMemory
 from upkie.envs import UpkieGroundVelocity
 from upkie.envs.tests.mock_spine import MockSpine
@@ -42,13 +41,13 @@ class RandomPushTestCase(unittest.TestCase):
         action = np.array([1.0])
         spine_action = wrapped_env.get_spine_action(action)
         self.assertTrue("bullet" in spine_action)
-        assert "external_forces" in spine_action["bullet"]
-        assert "torso" in spine_action["bullet"]["external_forces"]
-        assert "force" in spine_action["bullet"]["external_forces"]["torso"]
-        assert np.allclose(
+        self.assertTrue("external_forces" in spine_action["bullet"])
+        self.assertTrue("torso" in spine_action["bullet"]["external_forces"])
+        self.assertTrue("force" in spine_action["bullet"]["external_forces"]["torso"])
+        self.assertTrue(np.allclose(
             spine_action["bullet"]["external_forces"]["torso"]["force"],
             np.array([42, 42, 42])
-            )
+            ))
 
     def test_check_env(self):
         try:
