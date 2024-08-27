@@ -26,6 +26,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - docs: Document Gym environment wrappers
 - envs: Register UpkieServoPositions and UpkieServoTorques environments
 
+### Removed
+
+- CICD: Remove pycodestyle as we now use ruff for Python linting
+
 ## [5.1.0] - 2024-08-14
 
 ### Added
