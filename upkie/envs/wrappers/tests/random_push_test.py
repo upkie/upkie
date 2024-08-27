@@ -7,9 +7,11 @@
 """Test RandomPush wrapper."""
 
 import unittest
-
-import gymnasium
 import numpy as np
+import gymnasium
+from multiprocessing.shared_memory import SharedMemory
+from upkie.envs import UpkieGroundVelocity
+from upkie.envs.tests.mock_spine import MockSpine
 
 from upkie.envs.wrappers.random_push import (
     RandomPush,
@@ -18,6 +20,17 @@ from upkie.envs.wrappers.tests.envs import ConstantObservationEnv
 
 
 class RandomPushTestCase(unittest.TestCase):
+    def setUp(self):
+        shared_memory = SharedMemory(name=None, size=42, create=True)
+        self.env = UpkieGroundVelocity(
+            fall_pitch=1.0,
+            frequency=100.0,
+            max_ground_velocity=1.0,
+            shm_name=shared_memory._name,
+        )
+        shared_memory.close()
+        self.env._spine = MockSpine()
+
     def test_wrapper(self):
         env = ConstantObservationEnv(1.0)
         env.get_spine_action = lambda action: {}
@@ -41,10 +54,9 @@ class RandomPushTestCase(unittest.TestCase):
         try:
             from stable_baselines3.common.env_checker import check_env
 
-            env = gymnasium.make("Acrobot-v1")
-            env.get_spine_action = lambda action: {}
-            noisy_env = RandomPush(env, noise=np.full(6, 0.42))
-            check_env(noisy_env)
+            self.setUp()
+            self.env = RandomPush(self.env, noise=np.full(6, 0.42))
+            check_env(self.env)
         except ImportError:
             pass
 
