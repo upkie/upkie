@@ -81,6 +81,7 @@ class TestUpkieBaseEnv(unittest.TestCase):
             from stable_baselines3.common.env_checker import check_env
 
             check_env(self.env)
+            self.assertFalse(True)  # quick check
         except ImportError:
             pass
 

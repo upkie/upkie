@@ -202,6 +202,7 @@ jobs:
                       pinocchio
                       pyyaml
                       scipy
+                      stable-baselines3  # for check_env unit tests
                       upkie_description
                   cache-environment: true
                   post-cleanup: 'all'
