@@ -43,7 +43,9 @@ class RandomPushTestCase(unittest.TestCase):
         self.assertTrue("bullet" in spine_action)
         self.assertTrue("external_forces" in spine_action["bullet"])
         self.assertTrue("torso" in spine_action["bullet"]["external_forces"])
-        self.assertTrue("force" in spine_action["bullet"]["external_forces"]["torso"])
+        self.assertTrue(
+            "force" in spine_action["bullet"]["external_forces"]["torso"]
+            )
         self.assertTrue(np.allclose(
             spine_action["bullet"]["external_forces"]["torso"]["force"],
             np.array([42, 42, 42])
