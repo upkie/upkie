@@ -883,6 +883,7 @@ INPUT                  = README.md \
                          upkie/cpp/spine \
                          upkie/cpp/utils \
                          upkie/envs \
+                         upkie/envs/wrappers \
                          upkie/model \
                          upkie/spine \
                          upkie/utils
