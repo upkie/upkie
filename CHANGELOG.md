@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - BulletInterface: Fix application of external forces
+- CICD: Enable stable-baselines3 environment-check unit tests
 - docs: Add missing documentation pages
 - docs: Document Gym environment wrappers
 - envs: Register UpkieServoPositions and UpkieServoTorques environments
