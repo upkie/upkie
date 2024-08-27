@@ -17,7 +17,6 @@ from upkie.envs.wrappers.random_push import RandomPush
 from upkie.envs.wrappers.tests.envs import ConstantObservationEnv
 
 
-
 class RandomPushTestCase(unittest.TestCase):
     def setUp(self):
         shared_memory = SharedMemory(name=None, size=42, create=True)
