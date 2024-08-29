@@ -70,31 +70,31 @@ TEST_F(BulletInterfaceEnvBodies, MonitorEnvBodies) {
   interface_->cycle([](const moteus::Output& output) {});
   interface_->observe(observation);
 
-  ASSERT_TRUE(observation.has("bullet"));
-  ASSERT_TRUE(observation("bullet").has("plane"));
-  ASSERT_TRUE(observation("bullet")("plane").has("position"));
-  ASSERT_TRUE(observation("bullet")("plane").has("orientation"));
+  ASSERT_TRUE(observation.has("sim"));
+  ASSERT_TRUE(observation("sim").has("plane"));
+  ASSERT_TRUE(observation("sim")("plane").has("position"));
+  ASSERT_TRUE(observation("sim")("plane").has("orientation"));
 
   // Plane was loaded at the origin
-  ASSERT_EQ(observation("bullet")("plane").get<Eigen::Vector3d>("position").x(),
+  ASSERT_EQ(observation("sim")("plane").get<Eigen::Vector3d>("position").x(),
             0.);
-  ASSERT_EQ(observation("bullet")("plane").get<Eigen::Vector3d>("position").y(),
+  ASSERT_EQ(observation("sim")("plane").get<Eigen::Vector3d>("position").y(),
             0.);
-  ASSERT_EQ(observation("bullet")("plane").get<Eigen::Vector3d>("position").z(),
+  ASSERT_EQ(observation("sim")("plane").get<Eigen::Vector3d>("position").z(),
             0.);
 
   // Plane orientation is the identity
   ASSERT_EQ(
-      observation("bullet")("plane").get<Eigen::Quaterniond>("orientation").w(),
+      observation("sim")("plane").get<Eigen::Quaterniond>("orientation").w(),
       1.);
   ASSERT_EQ(
-      observation("bullet")("plane").get<Eigen::Quaterniond>("orientation").x(),
+      observation("sim")("plane").get<Eigen::Quaterniond>("orientation").x(),
       0.);
   ASSERT_EQ(
-      observation("bullet")("plane").get<Eigen::Quaterniond>("orientation").y(),
+      observation("sim")("plane").get<Eigen::Quaterniond>("orientation").y(),
       0.);
   ASSERT_EQ(
-      observation("bullet")("plane").get<Eigen::Quaterniond>("orientation").z(),
+      observation("sim")("plane").get<Eigen::Quaterniond>("orientation").z(),
       0.);
 }
 

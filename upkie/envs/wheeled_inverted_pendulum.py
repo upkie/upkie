@@ -279,14 +279,6 @@ class WheeledInvertedPendulum(gymnasium.Env):
                 "pitch": 0.0,
                 "angular_velocity": np.zeros(3),
             },
-            "groundtruth": {
-                "base": {
-                    "position": np.array([0.0, 0.0, length]),
-                    "orientation": np.array([1.0, 0.0, 0.0, 0.0]),
-                    "linear_velocity": np.zeros(3),
-                    "angular_velocity": np.zeros(3),
-                }
-            },
             "imu": {
                 "raw_angular_velocity": np.zeros(3),
                 "raw_linear_acceleration": np.zeros(3),
@@ -297,6 +289,14 @@ class WheeledInvertedPendulum(gymnasium.Env):
                     "velocity": 0.0,
                 }
                 for joint in model.upper_leg_joints
+            },
+            "sim": {
+                "base": {
+                    "position": np.array([0.0, 0.0, length]),
+                    "orientation": np.array([1.0, 0.0, 0.0, 0.0]),
+                    "linear_velocity": np.zeros(3),
+                    "angular_velocity": np.zeros(3),
+                }
             },
             "wheel_odometry": {
                 "position": 0.0,
@@ -508,8 +508,8 @@ class WheeledInvertedPendulum(gymnasium.Env):
         v = np.array([rd, 0.0]) + self.length * thetad * e_orth
 
         obs = self.__spine_observation  # reference, not a copy
-        obs["groundtruth"]["base"]["position"] = linear_to_3d @ p
-        obs["groundtruth"]["base"]["linear_velocity"] = linear_to_3d @ v
+        obs["sim"]["base"]["position"] = linear_to_3d @ p
+        obs["sim"]["base"]["linear_velocity"] = linear_to_3d @ v
         obs["base_orientation"]["angular_velocity"][1] = thetad
         obs["base_orientation"]["pitch"] = theta
         obs["imu"]["raw_angular_velocity"] = omega_in_imu
