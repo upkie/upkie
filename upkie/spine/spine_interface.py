@@ -43,7 +43,7 @@ def wait_for_shared_memory(
     for trial in range(retries):
         if trial > 0:
             logging.info(
-                f"Waiting for spine {shm_name} to start "
+                f"Waiting for spine /{shm_name} to start "
                 f"(trial {trial} / {retries})..."
             )
             time.sleep(1.0)
