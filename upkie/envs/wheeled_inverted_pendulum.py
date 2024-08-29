@@ -506,4 +506,10 @@ class WheeledInvertedPendulum(gymnasium.Env):
         return self.__state.copy()
 
     def log(self, name: str, entry: Any):
+        r"""!
+        Log a new entry to the "log" key of the action dictionary.
+
+        \param name Name of the entry.
+        \param entry Dictionary to log along with the actual action.
+        """
         pass
