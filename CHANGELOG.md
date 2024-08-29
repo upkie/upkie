@@ -21,7 +21,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- actuation: Log groundtruth quantities to observation["groundtruth"]
+- actuation: Log simulation groundtruth to `sim`
+- BulletInterface: Move simulation body poses to `sim.bodies`
 
 ### Fixed
 

@@ -193,19 +193,17 @@ void BulletInterface::reset_joint_properties() {
 void BulletInterface::observe(Dictionary& observation) const {
   Interface::observe_imu(observation);
 
-  Dictionary& groundtruth = observation("groundtruth");
-  groundtruth("imu")("linear_velocity") =
-      imu_data_.linear_velocity_imu_in_world;
+  Dictionary& sim = observation("sim");
+  sim("imu")("linear_velocity") = imu_data_.linear_velocity_imu_in_world;
   for (const auto& link_name : params_.monitor_contacts) {
-    groundtruth("contact")(link_name)("num_contact_points") =
+    sim("contact")(link_name)("num_contact_points") =
         contact_data_.at(link_name).num_contact_points;
   }
 
   // Observe base pose
   Eigen::Matrix4d T = transform_base_to_world();
-  groundtruth("base")("position") =
-      Eigen::Vector3d(T(0, 3), T(1, 3), T(2, 3));  // [m]
-  groundtruth("base")("orientation") =
+  sim("base")("position") = Eigen::Vector3d(T(0, 3), T(1, 3), T(2, 3));  // [m]
+  sim("base")("orientation") =
       Eigen::Quaterniond(T.block<3, 3>(0, 0));  // [w, x, y, z]
 
   // Observe base velocity
@@ -216,17 +214,18 @@ void BulletInterface::observe(Dictionary& observation) const {
   Eigen::Vector3d v = eigen_from_bullet(linear_velocity_base_to_world_in_world);
   Eigen::Vector3d omega =
       eigen_from_bullet(angular_velocity_base_to_world_in_world);
-  groundtruth("base")("linear_velocity") = v;       // [m] / [s]
-  groundtruth("base")("angular_velocity") = omega;  // [rad] / [s]
+  sim("base")("linear_velocity") = v;       // [m] / [s]
+  sim("base")("angular_velocity") = omega;  // [rad] / [s]
 
   // Observe the environnement urdf states
+  Dictionary& bodies = sim("bodies");
   for (const auto& key_child : body_names) {
     const auto& body_name = key_child.first;
     const auto& body_id = key_child.second;
     Eigen::Matrix4d T = transform_body_to_world(body_id);
-    groundtruth(body_name)("position") =
+    bodies(body_name)("position") =
         Eigen::Vector3d(T(0, 3), T(1, 3), T(2, 3));  // [m]
-    groundtruth(body_name)("orientation") =
+    bodies(body_name)("orientation") =
         Eigen::Quaterniond(T.block<3, 3>(0, 0));  // [w, x, y, z]
   }
 }
