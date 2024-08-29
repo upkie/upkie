@@ -80,7 +80,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
             `frequency`.
         \param shm_name Name of shared-memory file to exchange with the spine.
         \param spine_config Additional spine configuration overriding the
-            defaults from ``//config:spine.yaml``. The combined configuration
+            defaults from `//config:spine.yaml`. The combined configuration
             dictionary is sent to the spine at every :func:`reset`.
         \param spine_retries Number of times to try opening the shared-memory
             file to communicate with the spine.
@@ -125,7 +125,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
     @property
     def dt(self) -> Optional[float]:
         """!
-        Regulated period of the control loop in seconds, or ``None`` if there
+        Regulated period of the control loop in seconds, or `None` if there
         is no loop frequency regulation.
         """
         return 1.0 / self.__frequency if self.__frequency is not None else None
@@ -133,7 +133,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
     @property
     def frequency(self) -> Optional[float]:
         """!
-        Regulated frequency of the control loop in Hz, or ``None`` if there is
+        Regulated frequency of the control loop in Hz, or `None` if there is
         no loop frequency regulation.
         """
         return self.__frequency
@@ -160,9 +160,9 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
             number generator.
         \param options Currently unused.
         \return
-            - ``observation``: Initial vectorized observation, i.e. an element
-              of the environment's ``observation_space``.
-            - ``info``: Dictionary with auxiliary diagnostic information. For
+            - `observation`: Initial vectorized observation, i.e. an element
+              of the environment's `observation_space`.
+            - `info`: Dictionary with auxiliary diagnostic information. For
               Upkie this is the full observation dictionary sent by the spine.
         """
         super().reset(seed=seed)
@@ -214,17 +214,17 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
 
         \param action Action from the agent.
         \return
-            - ``observation``: Observation of the environment, i.e. an element
-              of its ``observation_space``.
-            - ``reward``: Reward returned after taking the action.
-            - ``terminated``: Whether the agent reached a terminal state,
+            - `observation`: Observation of the environment, i.e. an element
+              of its `observation_space`.
+            - `reward`: Reward returned after taking the action.
+            - `terminated`: Whether the agent reached a terminal state,
               which can be a good or a bad thing. When true, the user needs to
               call :func:`reset()`.
-            - ``truncated'': Whether the episode is reaching max number of
+            - `truncated`: Whether the episode is reaching max number of
               steps. This boolean can signal a premature end of the episode,
               i.e. before a terminal state is reached. When true, the user
               needs to call :func:`reset()`.
-            - ``info``: Dictionary with auxiliary diagnostic information. For
+            - `info`: Dictionary with auxiliary diagnostic information. For
               us this is the full observation dictionary coming from the spine.
         """
         if self.__regulate_frequency:

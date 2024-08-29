@@ -48,7 +48,7 @@ AgentInterface::AgentInterface(const std::string& name, size_t size)
           name);
       spdlog::info(
           "If not other spine is running but a previous spine did not exit "
-          "properly, you can run ``sudo rm /dev/shm{}`` to clean this error.",
+          "properly, you can run `sudo rm /dev/shm{}` to clean this error.",
           name);
     } else {
       spdlog::error("Cannot open shared memory file: errno is {}", errno);

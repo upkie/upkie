@@ -74,7 +74,7 @@ if __name__ == "__main__":
 
     if "-opt" not in spine_path or "-fastbuild" in spine_path:
         raise CompilationModeError(
-            "This example is meant to be called by ``bazel run -c opt`` "
+            "This example is meant to be called by `bazel run -c opt` "
             "so that the simulator performs well, but it seems the "
             'compilation mode is "fastbuild"? Go to the code and comment out '
             "this check if you know what you are doing :)"

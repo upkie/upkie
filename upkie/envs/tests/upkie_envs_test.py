@@ -18,7 +18,7 @@ class TestUpkieEnvs(unittest.TestCase):
     def test_registration(self):
         with self.assertRaises(gym.error.NameNotFound):
             # runs in the same test so that we make sure this is executed
-            # before the call to ``register()``
+            # before the call to `register()`
             gym.make("UpkieServos")
         shared_memory = SharedMemory(name=None, size=42, create=True)
         upkie.envs.register()

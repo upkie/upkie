@@ -23,27 +23,27 @@ class UpkieServos(UpkieBaseEnv):
 
     The action space is a dictionary with one key for each servo:
 
-    - ``left_hip``: Left hip joint (qdd100)
-    - ``left_hip``: Left knee joint (qdd100)
-    - ``left_hip``: Left wheel joint (mj5208)
-    - ``right_hip``: Right hip joint (qdd100)
-    - ``right_hip``: Right knee joint (qdd100)
-    - ``right_hip``: Right wheel joint (mj5208)
+    - `left_hip`: Left hip joint (qdd100)
+    - `left_hip`: Left knee joint (qdd100)
+    - `left_hip`: Left wheel joint (mj5208)
+    - `right_hip`: Right hip joint (qdd100)
+    - `right_hip`: Right knee joint (qdd100)
+    - `right_hip`: Right wheel joint (mj5208)
 
     The value for each servo dictionary is itself a dictionary with the
     following keys:
 
-    - ``position``: Commanded joint angle \f$\theta^*\f$ in [rad] (NaN to
+    - `position`: Commanded joint angle \f$\theta^*\f$ in [rad] (NaN to
         disable) (required).
-    - ``velocity``: Commanded joint velocity \f$\dot{\theta}^*\f$ in [rad] /
+    - `velocity`: Commanded joint velocity \f$\dot{\theta}^*\f$ in [rad] /
         [s] (required).
-    - ``feedforward_torque``: Feedforward joint torque \f$\tau_{\mathit{ff}}\f$
+    - `feedforward_torque`: Feedforward joint torque \f$\tau_{\mathit{ff}}\f$
         in [N m].
-    - ``kp_scale``: Scaling factor \f$k_{p}^{\mathit{scale}}\f$ applied to the
+    - `kp_scale`: Scaling factor \f$k_{p}^{\mathit{scale}}\f$ applied to the
         position feedback gain, between zero and one.
-    - ``kd_scale``: Scaling factor \f$k_{d}^{\mathit{scale}}\f$ applied to the
+    - `kd_scale`: Scaling factor \f$k_{d}^{\mathit{scale}}\f$ applied to the
         velocity feedback gain, between zero and one.
-    - ``maximum_torque``: Maximum joint torque \f$\tau_{\mathit{max}}\f$
+    - `maximum_torque`: Maximum joint torque \f$\tau_{\mathit{max}}\f$
         (feedforward + feedback) enforced during the whole actuation step, in
         [N m].
 
@@ -74,14 +74,14 @@ class UpkieServos(UpkieBaseEnv):
     The observation space is a dictionary with one key for each servo. The
     value for each key is a dictionary with keys:
 
-    - ``position``: Joint angle in [rad].
-    - ``velocity``: Joint velocity in [rad] / [s].
-    - ``torque``: Joint torque in [N m].
-    - ``temperature``: Servo temperature in degree Celsius.
-    - ``voltage": Power bus voltage of the servo, in [V].
+    - `position`: Joint angle in [rad].
+    - `velocity`: Joint velocity in [rad] / [s].
+    - `torque`: Joint torque in [N m].
+    - `temperature`: Servo temperature in degree Celsius.
+    - `voltage`: Power bus voltage of the servo, in [V].
 
     As with all Upkie environments, full observations from the spine (detailed
-    in \ref observations) are also available in the ``info`` dictionary
+    in \ref observations) are also available in the `info` dictionary
     returned by the reset and step functions.
     """
 
@@ -131,7 +131,7 @@ class UpkieServos(UpkieBaseEnv):
         \param regulate_frequency Enables loop frequency regulation.
         \param shm_name Name of shared-memory file.
         \param spine_config Additional spine configuration overriding the
-            defaults from ``//config:spine.yaml``. The combined configuration
+            defaults from `//config:spine.yaml`. The combined configuration
             dictionary is sent to the spine at every :func:`reset`.
         """
         super().__init__(

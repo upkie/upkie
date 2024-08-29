@@ -46,7 +46,7 @@ class WheeledInvertedPendulum(gymnasium.Env):
             <td><strong>Description</strong></td>
             </tr>
         <tr>
-            <td>``0``</td>
+            <td>0</td>
             <td>Ground velocity in [m] / [s].</td>
         </tr>
     </table>
@@ -337,9 +337,9 @@ class WheeledInvertedPendulum(gymnasium.Env):
             number generator.
         \param options Currently unused.
         \return
-            - ``observation``: Initial vectorized observation, i.e. an element
-              of the environment's ``observation_space``.
-            - ``info``: Dictionary with auxiliary diagnostic information. For
+            - `observation`: Initial vectorized observation, i.e. an element
+              of the environment's `observation_space`.
+            - `info`: Dictionary with auxiliary diagnostic information. For
               Upkie this is the full observation dictionary sent by the spine.
         """
         super().reset(seed=seed)
@@ -392,17 +392,17 @@ class WheeledInvertedPendulum(gymnasium.Env):
 
         \param action Action from the agent.
         \return
-            - ``observation``: Observation of the environment, i.e. an element
-              of its ``observation_space``.
-            - ``reward``: Reward returned after taking the action.
-            - ``terminated``: Whether the agent reached a terminal state,
+            - `observation`: Observation of the environment, i.e. an element
+              of its `observation_space`.
+            - `reward`: Reward returned after taking the action.
+            - `terminated`: Whether the agent reached a terminal state,
               which can be a good or a bad thing. When true, the user needs to
               call :func:`reset()`.
-            - ``truncated'': Whether the episode is reaching max number of
+            - `truncated`: Whether the episode is reaching max number of
               steps. This boolean can signal a premature end of the episode,
               i.e. before a terminal state is reached. When true, the user
               needs to call :func:`reset()`.
-            - ``info``: Dictionary with auxiliary diagnostic information. For
+            - `info`: Dictionary with auxiliary diagnostic information. For
               us this is the full observation dictionary coming from the spine.
         """
         if self.__rate is not None:

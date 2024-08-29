@@ -80,7 +80,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
     </table>
 
     As with all Upkie environments, full observations from the spine (detailed
-    in \ref observations) are also available in the ``info`` dictionary
+    in \ref observations) are also available in the `info` dictionary
     returned by the reset and step functions.
     """
 
@@ -150,7 +150,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
         \param reward Reward function of the environment.
         \param shm_name Name of shared-memory file.
         \param spine_config Additional spine configuration overriding the
-            defaults from ``//config:spine.yaml``. The combined configuration
+            defaults from `//config:spine.yaml`. The combined configuration
             dictionary is sent to the spine at every :func:`reset`.
         \param wheel_radius Wheel radius in [m].
         """
@@ -227,9 +227,9 @@ class UpkieGroundVelocity(UpkieBaseEnv):
             number generator.
         \param options Currently unused.
         \return
-            - ``observation``: Initial vectorized observation, i.e. an element
-              of the environment's ``observation_space``.
-            - ``info``: Dictionary with auxiliary diagnostic information. For
+            - `observation`: Initial vectorized observation, i.e. an element
+              of the environment's `observation_space`.
+            - `info`: Dictionary with auxiliary diagnostic information. For
               Upkie this is the full observation dictionary sent by the spine.
         """
         return super().reset(seed=seed)
