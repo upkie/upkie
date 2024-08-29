@@ -84,6 +84,9 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
             dictionary is sent to the spine at every :func:`reset`.
         \param spine_retries Number of times to try opening the shared-memory
             file to communicate with the spine.
+
+        \throw SpineError If the spine did not respond after the prescribed
+            number of trials.
         """
         merged_spine_config = upkie.config.SPINE_CONFIG.copy()
         if spine_config is not None:
@@ -116,7 +119,8 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         """!
         Stop the spine properly.
         """
-        self._spine.stop()
+        if hasattr(self, "_spine"):  # in case SpineError was raised in ctor
+            self._spine.stop()
 
     @property
     def dt(self) -> Optional[float]:
