@@ -18,9 +18,8 @@ This repository contains all the materials needed to build and animate an Upkie:
     - [Build instructions](https://github.com/upkie/upkie/wiki)
     - [Project log](https://hackaday.io/project/185729-upkie-wheeled-biped-robots)
 - Software:
-    - [Getting started](https://github.com/upkie/upkie#getting-started)
     - [Installation](https://github.com/upkie/upkie#installation)
-    - [Example](https://github.com/upkie/upkie#example)
+    - [Getting started](https://github.com/upkie/upkie#getting-started)
     - [Documentation](https://upkie.github.io/upkie/)
 - Going further:
     - [More agents](https://github.com/upkie/upkie#agents)
@@ -28,25 +27,9 @@ This repository contains all the materials needed to build and animate an Upkie:
 
 Questions are welcome in the [Chat](https://app.element.io/#/room/#upkie:matrix.org) and [Discussions forum](https://github.com/upkie/upkie/discussions).
 
-## Getting started
-
-You can play with a balancing Upkie right away from your command line:
-
-<img src="https://user-images.githubusercontent.com/1189580/170496331-e1293dd3-b50c-40ee-9c2e-f75f3096ebd8.png" height="100" align="right" />
-
-```console
-git clone https://github.com/upkie/upkie.git
-cd upkie
-./try_pid_balancer.sh
-```
-
-Click on the robot in the simulator window to apply external forces. If you have a gaming controller connected to your computer, steer its joysticks to move the robot around 🎮
-
 ## Installation
 
 ### From conda-forge
-
-[![Conda version](https://img.shields.io/conda/vn/conda-forge/upkie.svg)](https://anaconda.org/conda-forge/upkie)
 
 ```console
 conda install -c conda-forge upkie
@@ -54,24 +37,25 @@ conda install -c conda-forge upkie
 
 ### From PyPI
 
-[![PyPI version](https://img.shields.io/pypi/v/upkie)](https://pypi.org/project/upkie)
-
 ```console
 pip install upkie
 ```
 
-## Example
+## Getting started
 
 First, let's start a Bullet simulation spine:
+
+<img src="https://user-images.githubusercontent.com/1189580/170496331-e1293dd3-b50c-40ee-9c2e-f75f3096ebd8.png" height="100" align="right" />
 
 ```console
 ./start_simulation.sh
 ```
 
-Once a (simulation or real-robot) spine is running, we can interact with it in Python using one of the [Gymnasium environments](https://upkie.github.io/upkie/environments.html). For example, here is a feedback balancer for ``UpkieGroundVelocity``:
+Click on the robot in the simulator window to apply external forces. Once the simulation spine is running, we can interact with it using one of the [Gymnasium environments](https://upkie.github.io/upkie/environments.html). For example, here is a linear-feedback balancer for ``UpkieGroundVelocity``:
 
 ```python
 import gymnasium as gym
+import numpy as np
 import upkie.envs
 
 upkie.envs.register()
@@ -86,19 +70,17 @@ with gym.make("UpkieGroundVelocity-v3", frequency=200.0) as env:
             observation, _ = env.reset()
 ```
 
-The Python code is the same whether running a simulation spine or a real-robot [pi3hat spine](https://upkie.github.io/upkie/spines.html#pi3hat-spine).
-
-Head over to the [examples](https://github.com/upkie/upkie/tree/main/examples) directory for more examples.
+The Python code is the same whether running a simulation or real-robot [spine](https://upkie.github.io/upkie/spines.html). Head over to the [examples](https://github.com/upkie/upkie/tree/main/examples) directory for more examples.
 
 ## Agents
 
-This repository only distributes a [PID balancer](https://github.com/upkie/upkie/tree/main/pid_balancer) agent designed for testing. Actual Upkie agents are distributed in their own repositories:
+This repository only distributes a [PID balancer](https://github.com/upkie/upkie/tree/main/pid_balancer) used for testing. Actual Upkie agents are distributed in their own repositories:
 
 - [MPC balancer](https://github.com/upkie/mpc_balancer): balance in place using model predictive control.
-- [Pink balancer](https://github.com/upkie/pink_balancer): an extended PID balancer than can crouch and lift its legs.
+- [Pink balancer](https://github.com/upkie/pink_balancer): a more advanced agent that can crouch and stand up while balancing.
 - [PPO balancer](https://github.com/upkie/ppo_balancer): balance in place with a policy trained by reinforcement learning.
 
-Head over to the [new\_agent](https://github.com/upkie/new_agent) template to create your own, and feel free to open a PR to add it to the list above when it is ready.
+Head over to the [new\_agent](https://github.com/upkie/new_agent) template to create your own, and feel free to open a PR here to add your agents to the list above.
 
 ## Citation
 
