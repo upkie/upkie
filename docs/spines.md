@@ -13,9 +13,9 @@ The agent can be a simple Python script with few dependencies. This separation b
 
 ### Inter-process communication
 
-More accurately, Upkie's software implements an inter-process communication (IPC) protocol implemented in the C++ and Python libraries. It is suitable for [real-time](https://en.wiktionary.org/wiki/real-time#English) but not high-frequency (> 1000 Hz) performance. This is fine for balancing and locomotion on Upkies, as there is [theoretical and empirical evidence](https://scaron.info/blog/balancing-is-a-low-frequency-task.html) suggesting they can balance themselves as leisurely as 20 Hz. And if you are wondering whether Python is suitable for real-time applications, we were too! Until we [tried it out](#performance).
+More accurately, Upkie's software implements an inter-process communication (IPC) protocol implemented in the C++ and Python libraries. It is suitable for [real-time](https://en.wiktionary.org/wiki/real-time#English) but not high-frequency (> 1000 Hz) performance. This is fine for balancing and locomotion on Upkies, as there is [theoretical and empirical evidence](https://scaron.info/blog/balancing-is-a-low-frequency-task.html) suggesting they can balance themselves as leisurely as 20 Hz. And if you are wondering whether Python is suitable for real-time applications, we were too! Until we [tried it out](https://github.com/orgs/upkie/discussions/240).
 
-All design decisions have their pros and cons. You can take a look at the features and non-features below to decide if you'd rather use Upkie's software or talk to the actuators directly with another software:
+All design decisions have their pros and cons. Here is a list of features and non-features to give you an overview of those we did in this project:
 
 #### Features
 
