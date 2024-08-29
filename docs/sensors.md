@@ -13,7 +13,7 @@ These raw measurements are converted onboard by an unscented Kalman filter (base
 - Body angular velocity of the IMU frame, after bias reduction
 - Orientation of the IMU frame in the ARS frame
 
-These observations are exposed by the spine in ``observation["imu"]``. Check out [ImuData](\ref upkie::cpp::actuation::ImuData) and [Observations](\ref observations) for more details.
+These observations are exposed by the spine in `observation["imu"]`. Check out [ImuData](\ref upkie::cpp::actuation::ImuData) and [Observations](\ref observations) for more details.
 
 ## Actuators
 
@@ -23,4 +23,4 @@ Actuators on the robot are [qdd100 beta 3](https://mjbots.com/products/qdd100-be
 - Joint velocity, obtained by filtering joint angle measurements (not a direct measurement)
 - Joint torque, estimated from sensed phase currents (with a model that includes [stator magnetic saturation](https://jpieper.com/2020/07/31/dealing-with-stator-magnetic-saturation/)
 
-These measurements are exposed by the spine in ``observation["servos"]``. Check out [Observations](\ref observations) for more details.
+These measurements are exposed by the spine in `observation["servos"]`. Check out [Observations](\ref observations) for more details.

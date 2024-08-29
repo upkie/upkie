@@ -18,8 +18,8 @@ using palimpsest::Dictionary;
 /*! Get the orientation of the base frame with respect to the world frame.
 
  * \param quat_imu_in_ars Quaternion representing the rotation matrix from the
- *     IMU frame to the  attitude reference system (ARS) frame, in ``[w, x, y,
- *     z]`` format.
+ *     IMU frame to the  attitude reference system (ARS) frame, in `[w, x, y,
+ *     z]` format.
  * \param rotation_base_to_imu Rotation matrix from the base frame to the IMU
  *     frame. When not specified, the default Upkie mounting orientation is
  *     used.
@@ -67,9 +67,9 @@ inline Eigen::Matrix3d compute_base_orientation_from_imu(
  *     the frame.
  *
  * \note Angle is positive in the trigonometric sense (CCW positive, CW
- * negative) in the heading-vertical plane directed by the lateral vector,
- * which is ``(x)`` in the above schematic (pointing away) and not ``(.)``
- * (poiting from screen to the reader).
+ *     negative) in the heading-vertical plane directed by the lateral vector,
+ *     which is `(x)` in the above schematic (pointing away) and not `(.)`
+ *     (pointing from screen to the reader).
  */
 inline double compute_pitch_frame_in_parent(
     const Eigen::Matrix3d& orientation_frame_in_parent) {

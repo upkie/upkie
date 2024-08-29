@@ -36,7 +36,7 @@ class AgentInterface {
    * \param[in] name Name of the shared memory file (e.g. "/upkie").
    * \param[in] size Size in bytes.
    *
-   * Shared memory objects are available as files in ``/dev/shm``.
+   * Shared memory objects are available as files in `/dev/shm`.
    */
   AgentInterface(const std::string& name, size_t size);
 

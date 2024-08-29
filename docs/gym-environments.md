@@ -1,10 +1,10 @@
 # Gym environments {#environments}
 
-Upkie has reinforcement learning environments following the [Gymnasium](https://gymnasium.farama.org/) API. All of them are single-threaded and run as-is in both simulation and on real robots. Each environment has its own observation and action spaces, but all of them provide access to full spine observation via ``info`` dictionaries. See \ref observations for details.
+Upkie has reinforcement learning environments following the [Gymnasium](https://gymnasium.farama.org/) API. All of them are single-threaded and run as-is in both simulation and on real robots. Each environment has its own observation and action spaces, but all of them provide access to full spine observation via `info` dictionaries. See \ref observations for details.
 
 ## Ground velocity {#ground-velocity-env}
 
-In the ``UpkieGroundVelocity`` environment, Upkie keeps its legs straight and actions only affect wheel velocities. This environment is used for instance by the [MPC balancer](https://github.com/upkie/mpc_balancer/) and [PPO balancer](https://github.com/upkie/ppo_balancer) agents. Its action consists of a 1D vector containing the commanded ground velocity, which is then internally converted to wheel velocity commands.
+In the `UpkieGroundVelocity` environment, Upkie keeps its legs straight and actions only affect wheel velocities. This environment is used for instance by the [MPC balancer](https://github.com/upkie/mpc_balancer/) and [PPO balancer](https://github.com/upkie/ppo_balancer) agents. Its action consists of a 1D vector containing the commanded ground velocity, which is then internally converted to wheel velocity commands.
 
 \f[
 \begin{align*}
@@ -22,7 +22,7 @@ Check out the [UpkieGroundVelocity](\ref upkie.envs.upkie_ground_velocity.UpkieG
 
 ## Servos {#servos-env}
 
-The ``UpkieServos`` environment has dictionary observation and action spaces. Observation dictionaries return position, velocity and torque for each servo. Action dictionaries specify target positions, target velocities and feedforward torque commands that are directly sent to the moteus controllers. Each motor controller will then apply a standard control law with feedforward torque and position-velocity feedback:
+The `UpkieServos` environment has dictionary observation and action spaces. Observation dictionaries return position, velocity and torque for each servo. Action dictionaries specify target positions, target velocities and feedforward torque commands that are directly sent to the moteus controllers. Each motor controller will then apply a standard control law with feedforward torque and position-velocity feedback:
 
 \f[
 \begin{align*}

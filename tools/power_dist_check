@@ -24,7 +24,7 @@ TYPECODES = {"int8": 0, "int16": 1, "int32": 2, "f32": 3}
 class Stream:
     """Stream class to decode data fields.
 
-    Source: ``utils/decode_can_frame.py`` in
+    Source: `utils/decode_can_frame.py` in
     [mjbots/moteus](https://github.com/mjbots/moteus/)."""
 
     def __init__(self, data):

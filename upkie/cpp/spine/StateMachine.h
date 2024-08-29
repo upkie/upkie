@@ -93,14 +93,14 @@ constexpr const char* state_name(const State& state) noexcept {
  *
  * There are three possible events:
  *
- * - ``begin``: beginning of a control cycle,
- * - ``end``: end of a control cycle.
- * - ``SIGINT``: the process received an interrupt signal.
+ * - `begin`: beginning of a control cycle,
+ * - `end`: end of a control cycle.
+ * - `SIGINT`: the process received an interrupt signal.
  *
  * Guards, indicated between brackets, may involve two variables:
  *
- * - ``req``: the current request from the agent.
- * - ``stop_cycles``: the number of stop commands cycled in the current state
+ * - `req`: the current request from the agent.
+ * - `stop_cycles`: the number of stop commands cycled in the current state
  *   (only available in "stop" and "shutdown" states).
  */
 class StateMachine {

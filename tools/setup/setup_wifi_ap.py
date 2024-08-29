@@ -16,7 +16,7 @@
 """Set up a Raspberry Pi 4b to operate a Wi-Fi access point.
 
 The base operating system should already be installed. This script is intended
-to be run as root, like: ``sudo ./setup-wifi-ap.py``.
+to be run as root, like: `sudo ./setup-wifi-ap.py`.
 """
 
 import argparse

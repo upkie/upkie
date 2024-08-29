@@ -3,8 +3,8 @@
 #
 # Convenience Makefile to synchronize Upkie log files
 #
-# Put this Makefile in the directory to synchronize and run ``make download``
-# to download the latest logs from the robot.
+# Put this Makefile in the directory to synchronize and run `make download` to
+# download the latest logs from the robot.
 
 # Hostname or IP address of the Raspberry Pi Uses the value from the UPKIE_NAME
 # environment variable, if defined.

@@ -5,7 +5,7 @@
 # Copyright 2023-2024 Inria
 
 # Hostname or IP address of the Raspberry Pi Uses the value from the UPKIE_NAME
-# environment variable, if defined. Valid usage: ``make upload UPKIE_NAME=foo``
+# environment variable, if defined. Valid usage: `make upload UPKIE_NAME=foo`
 REMOTE = ${UPKIE_NAME}
 
 # Project name needs to match the one in WORKSPACE
@@ -66,7 +66,7 @@ run_bullet_spine:  ## run the Bullet simulation spine
 set_date:
 	ssh $(REMOTE) sudo date -s "$(CURDATE)"
 
-# Running ``raspunzel -s`` can create __pycache__ directories owned by root
+# Running `raspunzel -s` can create __pycache__ directories owned by root
 # that rsync is not allowed to remove. We therefore give permissions first.
 .PHONY: upload
 upload: check_upkie_name build set_date  ## upload built targets to the Raspberry Pi

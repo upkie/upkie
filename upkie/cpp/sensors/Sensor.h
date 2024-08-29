@@ -25,7 +25,7 @@ class Sensor {
 
   /*! Prefix of output in the observation dictionary.
    *
-   * This prefix is looked up by the spine to feed ``observation(prefix)`` to
+   * This prefix is looked up by the spine to feed `observation(prefix)` to
    * the \ref write function.
    */
   virtual inline std::string prefix() const noexcept {

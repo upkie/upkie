@@ -55,7 +55,7 @@ class UpkieServoTorques(UpkieServos):
         \param regulate_frequency Enables loop frequency regulation.
         \param shm_name Name of shared-memory file.
         \param spine_config Additional spine configuration overriding the
-            defaults from ``//config:spine.yaml``. The combined configuration
+            defaults from `//config:spine.yaml`. The combined configuration
             dictionary is sent to the spine at every :func:`reset`.
         """
         super().__init__(

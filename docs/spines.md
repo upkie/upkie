@@ -48,7 +48,7 @@ To build and run the simulation from source, [setup your build environment](\ref
 ./tools/bazelisk run //spines:bullet_spine -- --show
 ```
 
-Bazel is the build system used in Upkie for spines. Check out simulation options by appending the help flag ``-h`` to the above command.
+Bazel is the build system used in Upkie for spines. Check out simulation options by appending the help flag `-h` to the above command.
 
 ## Real-robot spines {#real-robot-spines}
 

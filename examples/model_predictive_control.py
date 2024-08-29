@@ -21,7 +21,7 @@ try:
     from qpmpc.systems import WheeledInvertedPendulum
 except ModuleNotFoundError:
     raise ModuleNotFoundError(
-        "This example uses qpmpc: ``[conda|pip] install qpmpc``"
+        "This example uses qpmpc: `[conda|pip] install qpmpc`"
     )
 
 upkie.envs.register()

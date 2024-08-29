@@ -38,7 +38,7 @@ class JointLimit:
         """!
         Manual constructor for joint limits.
 
-        (We don't use a ``dataclass`` because Doxygen does not detect
+        (We don't use a `dataclass` because Doxygen does not detect
         attribute-only declarations in Python as of version 1.9.1.)
         """
         self.lower = lower

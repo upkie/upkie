@@ -7,7 +7,7 @@
 
 """Keep the robot up using its wheels."""
 
-from typing import List, Optional, Tuple
+from typing import Tuple
 
 import gin
 import numpy as np
@@ -431,9 +431,9 @@ class WheelController:
         )
 
         # Non-minimum phase trick: as per control theory's book, the proper
-        # feedforward velocity should be ``+self.target_ground_velocity``.
+        # feedforward velocity should be `+self.target_ground_velocity`.
         # However, it is with resolute purpose that it sends
-        # ``-self.target_ground_velocity`` instead!
+        # `-self.target_ground_velocity` instead!
         #
         # Try both on the robot, you will see the difference :)
         #
@@ -447,9 +447,9 @@ class WheelController:
         # velocity (or only a fraction of it, although 100% seems to do a good
         # job), Upkie will immediately start executing the desired non-minimum
         # phase behavior. The error will then grow and the integrator catch up
-        # so that ``upkie_trick_velocity - self.integral_error_velocity``
-        # converges to its proper steady state value (the same value ``0 -
-        # self.integral_error_velocity`` would have converged to if we had no
+        # so that `upkie_trick_velocity - self.integral_error_velocity``
+        # converges to its proper steady state value (the same value `0 -
+        # self.integral_error_velocity` would have converged to if we had no
         # feedforward).
         #
         # Unconvinced? Try it on the robot. You will feel Upkie's trick ;)
