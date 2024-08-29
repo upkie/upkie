@@ -55,7 +55,6 @@ exclude = [
     "CONTRIBUTING.md",
     "CPPLINT.cfg",
     "WORKSPACE",
-    "docs/",
     "examples/",
     "logs/",
     "pid_balancer/",
