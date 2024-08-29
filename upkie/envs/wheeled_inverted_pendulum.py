@@ -504,3 +504,6 @@ class WheeledInvertedPendulum(gymnasium.Env):
 
     def _get_state(self) -> np.ndarray:
         return self.__state.copy()
+
+    def log(self, name: str, entry: Any):
+        pass
