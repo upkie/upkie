@@ -96,18 +96,28 @@ Check out the [HistoryObserver](\ref upkie::cpp::observers::HistoryObserver) API
 
 ## Simulation groundtruth
 
-Simulation spines may report the additional groundtruth observations:
+Simulation spines may report additional observations:
+
+### Floating base
 
 | Observation key | Description |
 |-----------------|-------------|
-| `groundtruth` | Groundtruth from the simulation |
-| `groundtruth.base` | Positions and velocities of the base frame |
-| `groundtruth.base.position` | Position of the base frame in the world frame, in [m] |
-| `groundtruth.base.orientation` | Unit quaternion (q, x, y, z) of the orientation of the base frame in the world frame |
-| `groundtruth.base.linear_velocity` | Linear velocity from base to world in world, in [m] / [s] |
-| `groundtruth.base.angular_velocity` | Angular velocity from base to world in world, in [rad] / [s] |
-| `groundtruth.imu` | Non-observables related to the IMU |
-| `groundtruth.imu.linear_velocity` | Linear velocity of the IMU frame in the world frame, in [m] / [s] |
-| `groundtruth.YYY` | Positions and velocities of the extra body YYY |
-| `groundtruth.YYY.position` | Position of YYY in the world frame, in [m] |
-| `groundtruth.YYY.orientation` | Unit quaternion (q, x, y, z) of the orientation of YYY in the world frame |
+| `sim.base` | Positions and velocities of the base frame |
+| `sim.base.position` | Position of the base frame in the world frame, in [m] |
+| `sim.base.orientation` | Unit quaternion (q, x, y, z) of the orientation of the base frame in the world frame |
+| `sim.base.linear_velocity` | Linear velocity from base to world in world, in [m] / [s] |
+| `sim.base.angular_velocity` | Angular velocity from base to world in world, in [rad] / [s] |
+
+### IMU
+
+| Observation key | Description |
+|-----------------|-------------|
+| `sim.imu` | Non-observables related to the IMU |
+| `sim.imu.linear_velocity` | Linear velocity of the IMU frame in the world frame, in [m] / [s] |
+
+### Rigid bodies
+
+| `sim.bodies` | Coordinates of rigid bodies in the world frame |
+| `sim.bodies.YYY` | Positions and velocities of the extra body YYY |
+| `sim.bodies.YYY.position` | Position of YYY in the world frame, in [m] |
+| `sim.bodies.YYY.orientation` | Unit quaternion (q, x, y, z) of the orientation of YYY in the world frame |
