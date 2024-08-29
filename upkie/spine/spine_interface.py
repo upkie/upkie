@@ -56,7 +56,7 @@ def wait_for_shared_memory(
         except FileNotFoundError:
             pass
     raise SpineError(
-        f"spine {shm_name} did not respond after {retries} attempts"
+        f"spine /{shm_name} did not respond after {retries} attempts"
     )
 
 
