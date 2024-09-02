@@ -6,11 +6,11 @@ Spines compute observation dictionaries from [sensor measurements](\ref sensors)
 
 | Observation key | Description |
 |-----------------|-------------|
-| `imu.angular_velocity` | Body angular velocity of the IMU frame in [rad] / [s] |
-| `imu.linear_acceleration` | Linear acceleration of the IMU, with gravity filtered out, in [m] / [s]² |
-| `imu.orientation` | Unit quaternion (w, x, y, z) of the orientation of the IMU frame in the [ARS](\ref ars) frame |
-| `imu.raw_angular_velocity` | Raw measurement from the gyroscope of the IMU, in [rad] / [s] |
-| `imu.raw_linear_acceleration` | [Proper acceleration](https://en.wikipedia.org/wiki/Accelerometer#Physical_principles) measured by the accelerometer of the IMU, in [m] / [s]² |
+| `imu.angular_velocity` | [Body angular velocity](\ref upkie::cpp::actuation::ImuData::angular_velocity_imu_in_imu) of the IMU frame in [rad] / [s] |
+| `imu.linear_acceleration` | [Linear acceleration](\ref upkie::cpp::actuation::ImuData::linear_acceleration_imu_in_imu) of the IMU, with gravity filtered out, in [m] / [s]² |
+| `imu.orientation` | [Orientation of the IMU frame](\ref upkie::cpp::actuation::ImuData::orientation_imu_in_ars) in the [ARS](\ref ars) frame as a unit quaternion (w, x, y, z) |
+| `imu.raw_angular_velocity` | [Raw angular velocity](\ref upkie::cpp::actuation::ImuData::raw_angular_velocity) measured by the gyroscope of the IMU, in [rad] / [s] |
+| `imu.raw_linear_acceleration` | [Raw linear acceleration](\ref upkie::cpp::actuation::ImuData::raw_linear_acceleration) measured by the accelerometer of the IMU, in [m] / [s]² |
 
 Upkie spines always report [IMU observations](\ref upkie::cpp::actuation::ImuData).
 

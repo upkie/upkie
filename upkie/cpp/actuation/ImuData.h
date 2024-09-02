@@ -39,7 +39,9 @@ struct ImuData {
 
   /*! Raw angular velocity read by the IMU, in [rad] / [s].
    *
-   * This raw angular velocity measurement has more bias than the filtered one.
+   * This raw angular velocity measurement may differ from the filtered one
+   * (although as of writing this the UKF angular-velocity bias is always
+   * zero).
    */
   Eigen::Vector3d raw_angular_velocity = Eigen::Vector3d::Zero();
 
