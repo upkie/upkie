@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## Added
+### Added
 
 - BulletInterface: Report velocity of the base link in groundtruth
 - BulletInterface: Torque control noise to joint-property configuration
