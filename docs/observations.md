@@ -1,8 +1,8 @@
 # Observations {#observations}
 
-Spines compute observation dictionaries from [sensor measurements](\ref sensors) by applying *observers* one after the other in a sequence called the *observer pipeline*. This page lists the outputs of available observers, using shorthands `a.b.c` for nested dictionary keys `observation["a"]["b"]["c"]`.
+Spines compute observation dictionaries from sensor measurements by applying *observers* one after the other in a sequence called the *observer pipeline*. This page lists the outputs of available observers, using shorthands `a.b.c` for nested dictionary keys `observation["a"]["b"]["c"]`.
 
-## IMU observations
+## Inertial measurement unit
 
 | Observation key | Description |
 |-----------------|-------------|
@@ -11,6 +11,8 @@ Spines compute observation dictionaries from [sensor measurements](\ref sensors)
 | `imu.orientation` | [Orientation of the IMU frame](\ref upkie::cpp::actuation::ImuData::orientation_imu_in_ars) in the [ARS](\ref ars) frame as a unit quaternion (w, x, y, z) |
 | `imu.raw_angular_velocity` | [Raw angular velocity](\ref upkie::cpp::actuation::ImuData::raw_angular_velocity) measured by the gyroscope of the IMU, in [rad] / [s] |
 | `imu.raw_linear_acceleration` | [Raw linear acceleration](\ref upkie::cpp::actuation::ImuData::raw_linear_acceleration) measured by the accelerometer of the IMU, in [m] / [s]² |
+
+The inertial measurement unit (IMU) mounted on the [pi3hat](https://mjbots.com/products/mjbots-pi3hat-r4-5) combines an accelerometer and a gyroscope. These raw measurements are converted onboard by an unscented Kalman filter (based on a standard quasi-static assumption) that outputs observed quantities with respect to an attitude reference system (ARS) frame.
 
 Upkie spines always report [IMU observations](\ref upkie::cpp::actuation::ImuData).
 
@@ -30,7 +32,7 @@ R_{WA} = \begin{bmatrix}
 \end{bmatrix}
 \f$
 
-## Servo observations
+## Servo actuators
 
 | Observation key | Description |
 |-----------------|-------------|
@@ -38,6 +40,12 @@ R_{WA} = \begin{bmatrix}
 | `servo.X.position` | Angle between the stator and the rotor in [rad] |
 | `servo.X.torque` | Joint torque in [N m] |
 | `servo.X.velocity` | Angular velocity of the rotor w.r.t. stator in rotor, in [rad] / [s] |
+
+Actuators on the robot are [qdd100 beta 3](https://mjbots.com/products/qdd100-beta-3) (hips and knees) and [mj5208 brushless motors](https://mjbots.com/products/mj5208) (wheels). All of them have [moteus](https://mjbots.com/products/moteus-r4-11) controller boards that provide the above measurements. They are estimated as follows:
+
+- Joint angle, sensed by two orthogonal Hall-effect sensors at the back of the moteus controller board (each measuring the magnetic field in one direction; the output angle is then the arc-tangent of the ratio between these two values)
+- Joint velocity, obtained by filtering joint angle measurements (not a direct measurement)
+- Joint torque, estimated from sensed phase currents (with a model that includes [stator magnetic saturation](https://jpieper.com/2020/07/31/dealing-with-stator-magnetic-saturation/))
 
 Upkie spines always report servo observations.
 
@@ -94,7 +102,7 @@ observer_pipeline.append_observer(linear_acceleration_history);
 
 Check out the [HistoryObserver](\ref upkie::cpp::observers::HistoryObserver) API reference for details.
 
-## Simulation groundtruth
+## Simulation
 
 Simulation spines may report additional observations:
 
