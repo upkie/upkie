@@ -71,31 +71,23 @@ TEST_F(BulletInterfaceEnvBodies, MonitorEnvBodies) {
   interface_->observe(observation);
 
   ASSERT_TRUE(observation.has("sim"));
-  ASSERT_TRUE(observation("sim").has("plane"));
-  ASSERT_TRUE(observation("sim")("plane").has("position"));
-  ASSERT_TRUE(observation("sim")("plane").has("orientation"));
+  ASSERT_TRUE(observation("sim").has("bodies"));
+
+  const auto& bodies = observation("sim")("bodies");
+  ASSERT_TRUE(bodies.has("plane"));
+  ASSERT_TRUE(bodies("plane").has("position"));
+  ASSERT_TRUE(bodies("plane").has("orientation"));
 
   // Plane was loaded at the origin
-  ASSERT_EQ(observation("sim")("plane").get<Eigen::Vector3d>("position").x(),
-            0.);
-  ASSERT_EQ(observation("sim")("plane").get<Eigen::Vector3d>("position").y(),
-            0.);
-  ASSERT_EQ(observation("sim")("plane").get<Eigen::Vector3d>("position").z(),
-            0.);
+  ASSERT_EQ(bodies("plane").get<Eigen::Vector3d>("position").x(), 0.);
+  ASSERT_EQ(bodies("plane").get<Eigen::Vector3d>("position").y(), 0.);
+  ASSERT_EQ(bodies("plane").get<Eigen::Vector3d>("position").z(), 0.);
 
   // Plane orientation is the identity
-  ASSERT_EQ(
-      observation("sim")("plane").get<Eigen::Quaterniond>("orientation").w(),
-      1.);
-  ASSERT_EQ(
-      observation("sim")("plane").get<Eigen::Quaterniond>("orientation").x(),
-      0.);
-  ASSERT_EQ(
-      observation("sim")("plane").get<Eigen::Quaterniond>("orientation").y(),
-      0.);
-  ASSERT_EQ(
-      observation("sim")("plane").get<Eigen::Quaterniond>("orientation").z(),
-      0.);
+  ASSERT_EQ(bodies("plane").get<Eigen::Quaterniond>("orientation").w(), 1.);
+  ASSERT_EQ(bodies("plane").get<Eigen::Quaterniond>("orientation").x(), 0.);
+  ASSERT_EQ(bodies("plane").get<Eigen::Quaterniond>("orientation").y(), 0.);
+  ASSERT_EQ(bodies("plane").get<Eigen::Quaterniond>("orientation").z(), 0.);
 }
 
 }  // namespace upkie::cpp::actuation
