@@ -117,6 +117,8 @@ Simulation spines may report additional observations:
 
 ### Rigid bodies
 
+| Observation key | Description |
+|-----------------|-------------|
 | `sim.bodies` | Coordinates of rigid bodies in the world frame |
 | `sim.bodies.YYY` | Positions and velocities of the extra body YYY |
 | `sim.bodies.YYY.position` | Position of YYY in the world frame, in [m] |
