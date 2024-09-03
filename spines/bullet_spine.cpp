@@ -77,6 +77,9 @@ class CommandLineArguments {
       } else if (arg == "--spine-frequency") {
         spine_frequency = std::stol(args.at(++i));
         spdlog::info("Command line: spine_frequency = {} Hz", spine_frequency);
+      } else if (arg == "--robot-variant") {
+        robot_variant = args.at(++i);
+        spdlog::info("Command line: robot_variant = {}", robot_variant);
       } else {
         spdlog::error("Unknown argument: {}", arg);
         error = true;
@@ -113,6 +116,8 @@ class CommandLineArguments {
               << "    Load extra URDFs into the environment.\n";
     std::cout << "--spine-frequency <frequency>\n"
               << "    Spine frequency in Hertz (default: 1000 Hz).\n";
+    std::cout << "--robot-variant <variant>\n"
+              << "    Robot variant (default: '').\n";
     std::cout << "-v, --version\n"
               << "    Print out the spine version number.\n";
     std::cout << "\n";
@@ -142,6 +147,9 @@ class CommandLineArguments {
 
   //! Extra URDF paths
   std::vector<std::string> extra_urdf_paths;
+
+  //! Robot variant
+  std::string robot_variant;
 
   //! Spine frequency in Hz.
   unsigned spine_frequency = 1000u;
@@ -230,7 +238,13 @@ int main(const char* argv0, const CommandLineArguments& args) {
   bullet_params.gravity = !args.space;
   bullet_params.gui = args.show;
   bullet_params.position_base_in_world = Eigen::Vector3d(0., 0., base_altitude);
-  bullet_params.robot_urdf_path = "external/upkie_description/urdf/upkie.urdf";
+  if (args.robot_variant.empty()) {
+    bullet_params.robot_urdf_path =
+        "external/upkie_description/urdf/upkie.urdf";
+  } else {
+    bullet_params.robot_urdf_path =
+        "external/upkie_description/urdf/upkie_" + args.robot_variant + ".urdf";
+  }
   bullet_params.env_urdf_paths = args.extra_urdf_paths;
   BulletInterface interface(servo_layout, bullet_params);
 

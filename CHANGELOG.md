@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - examples: Apply an external force to lift an Upkie in sim
 - examples: Simulation with joint friction
 - examples: Simulation with sensor noise
-
+- spines: Add variant argument to BulletSpine
 ### Changed
 
 - actuation: Log simulation groundtruth to `sim`
