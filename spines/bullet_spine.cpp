@@ -239,11 +239,11 @@ int main(const char* argv0, const CommandLineArguments& args) {
   bullet_params.gui = args.show;
   bullet_params.position_base_in_world = Eigen::Vector3d(0., 0., base_altitude);
   if (std::empty(args.robot_variant)) {
-    bullet_params.robot_urdf_path = 
-      "external/upkie_description/urdf/upkie.urdf";
+    bullet_params.robot_urdf_path =
+        "external/upkie_description/urdf/upkie.urdf";
   } else {
-    bullet_params.robot_urdf_path = 
-      "external/upkie_description/urdf/upkie_" + args.robot_variant + ".urdf";
+    bullet_params.robot_urdf_path =
+        "external/upkie_description/urdf/upkie_" + args.robot_variant + ".urdf";
   }
   bullet_params.env_urdf_paths = args.extra_urdf_paths;
   BulletInterface interface(servo_layout, bullet_params);
