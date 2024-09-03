@@ -53,19 +53,21 @@ class WheelContact {
      * \param[in] config Configuration dictionary.
      */
     void configure(const Dictionary& config) {
-      if (!config.has("wheel_contact")) {
-        spdlog::debug("No \"wheel_contact\" runtime configuration");
-        return;
+      if (config.has("wheel_contact")) {
+        spdlog::info("Applying \"wheel_contact\" runtime configuration");
       }
 
-      spdlog::info("Applying \"wheel_contact\" runtime configuration");
-      const Dictionary& wheel_contact = config("wheel_contact");
-      liftoff_inertia = wheel_contact.get<double>("liftoff_inertia");
+      Dictionary empty;
+      const Dictionary& wheel_contact =
+          (config.has("wheel_contact")) ? config("wheel_contact") : empty;
+
+      cutoff_period = wheel_contact.get<double>("cutoff_period", 0.2);
+      liftoff_inertia = wheel_contact.get<double>("liftoff_inertia", 0.001);
       min_touchdown_acceleration =
-          wheel_contact.get<double>("min_touchdown_acceleration");
-      min_touchdown_torque = wheel_contact.get<double>("min_touchdown_torque");
-      cutoff_period = wheel_contact.get<double>("cutoff_period");
-      touchdown_inertia = wheel_contact.get<double>("touchdown_inertia");
+          wheel_contact.get<double>("min_touchdown_acceleration", 2.0);
+      min_touchdown_torque =
+          wheel_contact.get<double>("min_touchdown_torque", 0.015);
+      touchdown_inertia = wheel_contact.get<double>("touchdown_inertia", 0.004);
     }
 
     /*! Hysteresis value of the apparent inertia that triggers liftoff
