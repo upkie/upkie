@@ -190,8 +190,11 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         linear_velocity = init_state.sample_linear_velocity(np_random)
         omega = init_state.sample_angular_velocity(np_random)
 
-        bullet_config = self._spine_config["bullet"]
-        reset = bullet_config["reset"]
+        if "bullet" not in self._spine_config:
+            self._spine_config["bullet"] = {}
+        if "reset" not in self._spine_config["bullet"]:
+            self._spine_config["bullet"]["reset"] = {}
+        reset = self._spine_config["bullet"]["reset"]
         reset["orientation_base_in_world"] = orientation_quat
         reset["position_base_in_world"] = position
         reset["linear_velocity_base_to_world_in_world"] = linear_velocity
