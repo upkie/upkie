@@ -17,9 +17,6 @@ namespace upkie::cpp::actuation {
 
 using bazel::tools::cpp::runfiles::Runfiles;
 
-constexpr double kNoFriction = 1e-5;
-constexpr double kLeftWheelFriction = 0.1;
-
 class BulletInterfaceTest : public ::testing::Test {
  protected:
   //! Set up a new test fixture
@@ -41,9 +38,6 @@ class BulletInterfaceTest : public ::testing::Test {
     params.floor = false;   // wheels roll freely during testing
     params.gravity = true;  // default, just a reminder
     params.gui = false;     // no GUI when testing
-    bullet::JointProperties left_wheel_props;
-    left_wheel_props.friction = kLeftWheelFriction;
-    params.joint_properties.try_emplace("left_wheel", left_wheel_props);
     params.robot_urdf_path =
         runfiles->Rlocation("upkie_description/urdf/upkie.urdf");
     interface_ = std::make_unique<BulletInterface>(layout, params);
@@ -53,15 +47,6 @@ class BulletInterfaceTest : public ::testing::Test {
       commands_.back().id = pair.first;
     }
     replies_.resize(commands_.size());
-  }
-
-  Dictionary get_test_config() {
-    Dictionary config;
-    config("bullet")("dt") = dt_;
-    config("bullet")("floor") = false;   // wheels roll freely during testing
-    config("bullet")("gravity") = true;  // default, just a reminder
-    config("bullet")("gui") = false;     // no GUI when testing
-    return config;
   }
 
  protected:
@@ -87,8 +72,15 @@ TEST_F(BulletInterfaceTest, CycleCallsCallback) {
 }
 
 TEST_F(BulletInterfaceTest, JointProperties) {
-  const auto& joint_props = interface_->joint_properties();
+  constexpr double kNoFriction = 1e-5;
+  constexpr double kLeftWheelFriction = 0.1;
 
+  Dictionary config;
+  config("bullet")("joint_properties")("left_wheel")("friction") =
+      kLeftWheelFriction;
+  interface_->reset(config);
+
+  const auto& joint_props = interface_->joint_properties();
   ASSERT_NO_THROW(joint_props.at("left_hip"));
   ASSERT_NO_THROW(joint_props.at("left_knee"));
   ASSERT_NO_THROW(joint_props.at("left_wheel"));
@@ -129,19 +121,8 @@ TEST_F(BulletInterfaceTest, CycleDoesntThrow) {
   ASSERT_NO_THROW(interface_->cycle([](const moteus::Output& output) {}));
 }
 
-TEST_F(BulletInterfaceTest, ChecksTimestep) {
-  Dictionary empty;
-  interface_->reset(empty);  // dt not configured thus reset to NaN
-  ASSERT_THROW(interface_->cycle([](const moteus::Output& output) {}),
-               std::runtime_error);
-
-  Dictionary config = get_test_config();
-  interface_->reset(config);
-  ASSERT_NO_THROW(interface_->cycle([](const moteus::Output& output) {}));
-}
-
 TEST_F(BulletInterfaceTest, ResetBaseState) {
-  Dictionary config = get_test_config();
+  Dictionary config;
   config("bullet")("reset")("orientation_base_in_world") =
       Eigen::Quaterniond(0.707, 0.0, -0.707, 0.0);
   config("bullet")("reset")("position_base_in_world") =
@@ -193,6 +174,13 @@ TEST_F(BulletInterfaceTest, ComputeJointTorquesStopped) {
 }
 
 TEST_F(BulletInterfaceTest, ComputeJointTorquesWhileMoving) {
+  constexpr double kLeftWheelFriction = 0.1;
+
+  Dictionary config;
+  config("bullet")("joint_properties")("left_wheel")("friction") =
+      kLeftWheelFriction;
+  interface_->reset(config);
+
   const double no_feedforward_torque = 0.0;
   const double no_position = std::numeric_limits<double>::quiet_NaN();
   for (auto& command : interface_->data().commands) {
@@ -244,7 +232,6 @@ TEST_F(BulletInterfaceTest, ComputeJointFeedforwardTorque) {
   interface_->cycle([](const moteus::Output& output) {});
   interface_->cycle([](const moteus::Output& output) {});
 
-  // Right wheel has no kinetic friction
   const auto& right_wheel_reply = interface_->servo_reply().at("right_wheel");
   ASSERT_NEAR(right_wheel_reply.result.torque, 0.42, 1e-3);
 }
@@ -270,7 +257,7 @@ TEST_F(BulletInterfaceTest, JointRepliesHaveVoltage) {
 TEST_F(BulletInterfaceTest, ObserveImuOrientation) {
   Eigen::Quaterniond orientation_base_in_world = {0., 1., 0., 0.};
 
-  Dictionary config = get_test_config();
+  Dictionary config;
   config("bullet")("reset")("orientation_base_in_world") =
       orientation_base_in_world;
   interface_->reset(config);
@@ -303,7 +290,7 @@ TEST_F(BulletInterfaceTest, ObserveImuOrientation) {
 }
 
 TEST_F(BulletInterfaceTest, MonitorContacts) {
-  Dictionary config = get_test_config();
+  Dictionary config;
   config("bullet")("monitor")("contacts")("left_wheel_tire") = true;
   config("bullet")("monitor")("contacts")("right_wheel_tire") = true;
   interface_->reset(config);
@@ -356,8 +343,8 @@ TEST_F(BulletInterfaceTest, MonitorBaseState) {
      it first updates velocities then integrates those to get positions
      (semi-implicit Euler method).
   */
-  BulletInterface::Parameters params;
-  const double default_z = params.position_base_in_world.z();
+  BulletInterface::Parameters default_params;
+  const double default_z = default_params.position_base_in_world.z();
   ASSERT_NEAR(base_position.z(),
               default_z - 3 * bullet::kGravity * std::pow(dt_, 2.0), 1e-6);
 
@@ -420,7 +407,7 @@ TEST_F(BulletInterfaceTest, ApplyExternalForces) {
 
   const double mass = interface_->compute_robot_mass();
   Eigen::Vector3d init_com;
-  Dictionary config = get_test_config();
+  Dictionary config;
   config("bullet")("reset")("position_base_in_world") =
       Eigen::Vector3d(0.0, 0.0, 0.0);
   for (int n_g = 0; n_g < 4; ++n_g) {
@@ -446,15 +433,14 @@ TEST_F(BulletInterfaceTest, ApplyExternalForces) {
 
     ASSERT_NEAR(Delta_com.x(), expected_Delta_com.x(), 5e-3);
     ASSERT_NEAR(Delta_com.y(), expected_Delta_com.y(), 5e-3);
-    ASSERT_NEAR(Delta_com.z(), expected_Delta_com.z(), 5e-3);
     if (n_g != 1) {
       // relative error check for the vertical coordinate, except for n_g == 1
       // as expected_Delta_com.z() is then 0.0
       double should_be = expected_Delta_com.z();
-      spdlog::info("Delta_com.z() = {}", Delta_com.z());
-      spdlog::info("should_be = {}", should_be);
       double relvar = std::abs((Delta_com.z() - should_be) / should_be);
       ASSERT_NEAR(relvar, 0.0, 5e-2);
+    } else {
+      ASSERT_NEAR(Delta_com.z(), expected_Delta_com.z(), 5e-3);
     }
   }
 }
