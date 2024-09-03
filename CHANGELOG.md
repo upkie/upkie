@@ -38,6 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - CICD: Remove pycodestyle as we now use ruff for Python linting
+- utils: Remove `nested_update` function
 
 ## [5.1.0] - 2024-08-14
 

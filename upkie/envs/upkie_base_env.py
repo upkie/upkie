@@ -12,11 +12,9 @@ import numpy as np
 import upkie_description
 from loop_rate_limiters import RateLimiter
 
-import upkie.config
 from upkie.exceptions import UpkieException
 from upkie.model import Model
 from upkie.spine import SpineInterface
-from upkie.utils.nested_update import nested_update
 from upkie.utils.robot_state import RobotState
 from upkie.utils.spdlog import logging
 

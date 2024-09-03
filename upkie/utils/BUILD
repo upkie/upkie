@@ -23,11 +23,6 @@ py_library(
 )
 
 py_library(
-    name = "nested_update",
-    srcs = ["nested_update.py"],
-)
-
-py_library(
     name = "raspi",
     srcs = ["raspi.py"],
     deps = [
@@ -59,7 +54,6 @@ py_library(
     deps = [
         ":clamp",
         ":filters",
-        ":nested_update",
         ":raspi",
         ":robot_state",
         ":rotations",
