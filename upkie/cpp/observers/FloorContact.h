@@ -50,6 +50,9 @@ class FloorContact : public Observer {
  public:
   //! Parameters to the floor contact observer
   struct Parameters {
+    //! Constructor with default configuration.
+    Parameters() { configure(Dictionary{}); }
+
     /*! Configure from dictionary.
      *
      * \param[in] config Global configuration dictionary.
