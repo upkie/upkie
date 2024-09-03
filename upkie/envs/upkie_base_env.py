@@ -86,9 +86,6 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         \throw SpineError If the spine did not respond after the prescribed
             number of trials.
         """
-        merged_spine_config = upkie.config.SPINE_CONFIG.copy()
-        if spine_config is not None:
-            nested_update(merged_spine_config, spine_config)
         if regulate_frequency and frequency is None:
             raise UpkieException(f"{regulate_frequency=} but {frequency=}")
         if init_state is None:
@@ -102,7 +99,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         self.__rate = None
         self.__regulate_frequency = regulate_frequency
         self._spine = SpineInterface(shm_name, retries=spine_retries)
-        self._spine_config = merged_spine_config
+        self._spine_config = spine_config or {}
         self.fall_pitch = fall_pitch
         self.init_state = init_state
         self.model = Model(upkie_description.URDF_PATH)
