@@ -78,19 +78,23 @@ class WheelOdometry : public Observer {
      * \param[in] config Global configuration dictionary.
      */
     void configure(const Dictionary& config) {
-      if (!config.has("wheel_odometry")) {
-        spdlog::debug("No \"wheel_odometry\" runtime configuration");
-        return;
+      if (config.has("wheel_odometry")) {
+        spdlog::info("Applying \"wheel_odometry\" runtime configuration");
       }
+      Dictionary empty;
+      const auto& wheel_odometry =
+          config.has("wheel_odometry") ? config("wheel_odometry") : empty;
 
-      spdlog::info("Applying \"wheel_odometry\" runtime configuration");
-      if (config("wheel_odometry").has("signed_radius")) {
+      signed_radius.clear();
+      if (wheel_odometry.has("signed_radius")) {
         const auto& signed_radius_dict =
             config("wheel_odometry")("signed_radius");
-        signed_radius.clear();
         for (const auto& key : signed_radius_dict.keys()) {
           signed_radius[key] = signed_radius_dict(key);
         }
+      } else /* default values */ {
+        signed_radius["left_wheel"] = +0.05;
+        signed_radius["right_wheel"] = -0.05;
       }
     }
 
