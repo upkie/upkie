@@ -12,6 +12,5 @@ def upkie_description_repository():
     git_repository(
         name = "upkie_description",
         remote = "https://github.com/upkie/upkie_description",
-        commit = "19a91ce69cab6742c613cab104986e3f8a18d6a5",
-        shallow_since = "1722418945 +0200"
+        commit = "b20251c71228e0d2f0016e45e227c427d8271063"
     )
