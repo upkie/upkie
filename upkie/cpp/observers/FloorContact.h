@@ -60,14 +60,15 @@ class FloorContact : public Observer {
     void configure(const Dictionary& config) {
       wheel_contact_params.configure(config);
 
-      if (!config.has("floor_contact")) {
-        spdlog::debug("No \"floor_contact\" runtime configuration");
-        return;
+      if (config.has("floor_contact")) {
+        spdlog::info("Applying \"floor_contact\" runtime configuration");
       }
+      Dictionary empty;
+      const auto& floor_contact =
+          config.has("floor_contact") ? config("floor_contact") : empty;
 
-      spdlog::info("Applying \"floor_contact\" runtime configuration");
       upper_leg_torque_threshold =
-          config("floor_contact")("upper_leg_torque_threshold");
+          floor_contact.get<double>("upper_leg_torque_threshold", 10.0);
     }
 
     /*! Check whether parameters are incomplete.
@@ -89,7 +90,7 @@ class FloorContact : public Observer {
     WheelContact::Parameters wheel_contact_params;
 
     //! Threshold for upper leg torques, in [N m]
-    double upper_leg_torque_threshold = 10.0;
+    double upper_leg_torque_threshold;
   };
 
   /*! Initialize observer.
