@@ -114,12 +114,13 @@ BulletInterface::BulletInterface(const ServoLayout& layout,
 
   // Start visualizer and configure simulation
   bullet_.configureDebugVisualizer(COV_ENABLE_RENDERING, 1);
-  reset_from_params();
+  reset(Dictionary{});
 }
 
 BulletInterface::~BulletInterface() { bullet_.disconnect(); }
 
-void BulletInterface::reset_from_params() {
+void BulletInterface::reset(const Dictionary& config) {
+  params_.configure(config);
   bullet_.setTimeStep(params_.dt);
   reset_base_state(params_.position_base_in_world,
                    params_.orientation_base_in_world,
@@ -128,11 +129,6 @@ void BulletInterface::reset_from_params() {
   reset_contact_data();
   reset_joint_angles();
   reset_joint_properties();
-}
-
-void BulletInterface::reset(const Dictionary& config) {
-  params_.configure(config);
-  reset_from_params();
 }
 
 void BulletInterface::reset_base_state(
@@ -275,9 +271,7 @@ void BulletInterface::process_forces(const Dictionary& external_forces) {
 void BulletInterface::cycle(
     std::function<void(const moteus::Output&)> callback) {
   assert(data_.commands.size() == data_.replies.size());
-  if (std::isnan(params_.dt)) {
-    throw std::runtime_error("simulation timestep is NaN");
-  }
+  assert(!std::isnan(params_.dt));
   if (!bullet_.isConnected()) {
     throw std::runtime_error("simulator is not running any more");
   }

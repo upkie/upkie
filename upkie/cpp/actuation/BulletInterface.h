@@ -28,31 +28,8 @@ class BulletInterface : public Interface {
  public:
   //! Interface parameters.
   struct Parameters {
-    //! Keep default constructor.
-    Parameters() { reset(); }
-
-    //! Reset parameters to their default values
-    void reset() {
-      angular_velocity_base_in_base.setZero();
-      argv0 = "";
-      dt = std::numeric_limits<double>::quiet_NaN();
-      env_urdf_paths.clear();
-      floor = true;
-      follower_camera = false;
-      gravity = true;
-      gui = true;
-      imu_uncertainty.reset();
-      joint_properties.clear();
-      linear_velocity_base_to_world_in_world.setZero();
-      monitor_contacts.clear();
-      orientation_base_in_world.setIdentity();
-      position_base_in_world.x() = 0.0;
-      position_base_in_world.y() = 0.0;
-      position_base_in_world.z() = 0.6;
-      robot_urdf_path = "";
-      torque_control_kd = 1.0;
-      torque_control_kp = 20.0;
-    }
+    //! Initialize from global configuration.
+    Parameters() { configure(Dictionary{}); }
 
     /*! Initialize from global configuration.
      *

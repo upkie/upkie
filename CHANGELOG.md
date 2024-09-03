@@ -22,9 +22,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- actuation: Log simulation groundtruth to `sim`
+- All `configure` functions now reset unspecified parameters to default values
 - BulletInterface: Move simulation body poses to `sim.bodies`
 - Move spine defaults from spine.yaml to C++ params
+- actuation: Log simulation groundtruth to `sim`
 
 ### Fixed
 
