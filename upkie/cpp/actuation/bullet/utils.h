@@ -3,8 +3,6 @@
 
 #pragma once
 
-#include <spdlog/spdlog.h>
-
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 #include <string>

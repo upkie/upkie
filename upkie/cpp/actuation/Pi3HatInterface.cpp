@@ -52,7 +52,7 @@ void Pi3HatInterface::cycle(
   std::lock_guard<std::mutex> lock(mutex_);
   if (ongoing_can_cycle_) {
     throw std::logic_error(
-        "Cycle cannot be called before the previous one has completed.");
+        "CAN cycle cannot be started before the previous one has completed.");
   }
 
   callback_ = std::move(callback);

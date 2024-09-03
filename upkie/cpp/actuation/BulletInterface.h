@@ -78,7 +78,7 @@ class BulletInterface : public Interface {
       gui = bullet.get<bool>("gui", gui);
 
       if (bullet.has("dt")) {
-        dt = bullet.get<float>("dt");
+        dt = bullet.get<double>("dt");
       }
 
       if (bullet.has("imu_uncertainty")) {
