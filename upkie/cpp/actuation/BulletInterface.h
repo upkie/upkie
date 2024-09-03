@@ -77,6 +77,10 @@ class BulletInterface : public Interface {
       follower_camera = bullet.get<bool>("follower_camera", follower_camera);
       gui = bullet.get<bool>("gui", gui);
 
+      if (bullet.has("dt")) {
+        dt = bullet.get<float>("dt");
+      }
+
       if (bullet.has("imu_uncertainty")) {
         imu_uncertainty.configure(bullet("imu_uncertainty"));
       }
