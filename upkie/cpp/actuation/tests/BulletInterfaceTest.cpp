@@ -129,6 +129,17 @@ TEST_F(BulletInterfaceTest, CycleDoesntThrow) {
   ASSERT_NO_THROW(interface_->cycle([](const moteus::Output& output) {}));
 }
 
+TEST_F(BulletInterfaceTest, ChecksTimestep) {
+  Dictionary empty;
+  interface_->reset(empty);  // dt not configured thus reset to NaN
+  ASSERT_THROW(interface_->cycle([](const moteus::Output& output) {}),
+               std::runtime_error);
+
+  Dictionary config = get_test_config();
+  interface_->reset(config);
+  ASSERT_NO_THROW(interface_->cycle([](const moteus::Output& output) {}));
+}
+
 TEST_F(BulletInterfaceTest, ResetBaseState) {
   Dictionary config = get_test_config();
   config("bullet")("reset")("orientation_base_in_world") =
