@@ -275,7 +275,9 @@ void BulletInterface::process_forces(const Dictionary& external_forces) {
 void BulletInterface::cycle(
     std::function<void(const moteus::Output&)> callback) {
   assert(data_.commands.size() == data_.replies.size());
-  assert(!std::isnan(params_.dt));
+  if (std::isnan(params_.dt)) {
+    throw std::runtime_error("simulation timestep is NaN");
+  }
   if (!bullet_.isConnected()) {
     throw std::runtime_error("simulator is not running any more");
   }
