@@ -19,10 +19,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - examples: Simulation with joint friction
 - examples: Simulation with sensor noise
 - spines: Add variant argument to BulletSpine
+
 ### Changed
 
 - actuation: Log simulation groundtruth to `sim`
 - BulletInterface: Move simulation body poses to `sim.bodies`
+- Move spine defaults from spine.yaml to C++ params
 
 ### Fixed
 
