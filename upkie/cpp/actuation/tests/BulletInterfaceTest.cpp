@@ -375,22 +375,28 @@ TEST_F(BulletInterfaceTest, MonitorBaseState) {
 }
 
 TEST_F(BulletInterfaceTest, FreeFallBasePosition) {
+  const BulletInterface::Parameters default_params;
   const double T = 0.05;  // trajectory duration in seconds
 
-  Eigen::Vector3d base_position;
-  base_position = interface_->transform_base_to_world().block<3, 1>(0, 3);
-  ASSERT_NEAR(base_position.x(), 0.0, 1e-4);
-  ASSERT_NEAR(base_position.y(), 0.0, 1e-4);
-  ASSERT_NEAR(base_position.z(), 0.0, 1e-4);
+  Eigen::Vector3d init_position;
+  init_position = interface_->transform_base_to_world().block<3, 1>(0, 3);
+  ASSERT_NEAR(init_position.x(), default_params.position_base_in_world.x(),
+              1e-4);
+  ASSERT_NEAR(init_position.y(), default_params.position_base_in_world.y(),
+              1e-4);
+  ASSERT_NEAR(init_position.z(), default_params.position_base_in_world.z(),
+              1e-4);
 
   for (double t = 0.0; t < T; t += dt_) {
     interface_->cycle([](const moteus::Output& output) {});
   }
 
-  base_position = interface_->transform_base_to_world().block<3, 1>(0, 3);
-  ASSERT_NEAR(base_position.x(), 0.0, 1e-4);
-  ASSERT_NEAR(base_position.y(), 0.0, 1e-4);
-  ASSERT_NEAR(base_position.z(), -0.5 * bullet::kGravity * T * T, 1e-3);
+  Eigen::Vector3d base_position =
+      interface_->transform_base_to_world().block<3, 1>(0, 3);
+  ASSERT_NEAR(base_position.x(), init_position.x(), 1e-4);
+  ASSERT_NEAR(base_position.y(), init_position.y(), 1e-4);
+  ASSERT_NEAR(base_position.z(),
+              init_position.z() - 0.5 * bullet::kGravity * T * T, 1e-3);
 
   Eigen::Vector3d base_velocity =
       interface_->linear_velocity_base_to_world_in_world();
@@ -413,36 +419,42 @@ TEST_F(BulletInterfaceTest, ApplyExternalForces) {
   torso_force.insert<bool>("local_frame", false);  // world frame
 
   const double mass = interface_->compute_robot_mass();
-  Eigen::Vector3d init_com_position;
+  Eigen::Vector3d init_com;
   Dictionary config = get_test_config();
+  config("bullet")("reset")("position_base_in_world") =
+      Eigen::Vector3d(0.0, 0.0, 0.0);
   for (int n_g = 0; n_g < 4; ++n_g) {
     external_force.z() = n_g * bullet::kGravity * mass;
     interface_->reset(config);
-    init_com_position = interface_->compute_position_com_in_world();
-    ASSERT_NEAR(init_com_position.x(), 0.00599, 1e-4);
-    ASSERT_NEAR(init_com_position.y(), 0.00599, 1e-4);
-    ASSERT_NEAR(init_com_position.z(), 0.60599, 1e-4);
+    init_com = interface_->compute_position_com_in_world();
+    ASSERT_NEAR(init_com.x(), -0.0059945073604985716, 1e-4);
+    ASSERT_NEAR(init_com.y(), -3.746554633515794e-07, 1e-4);
+    ASSERT_NEAR(init_com.z(), -0.24548593124863394, 1e-4);
 
     for (double t = 0.0; t < T; t += dt_) {
       interface_->process_action(action);  // forces are cleared at each cycle
       interface_->cycle([](const moteus::Output& output) {});
     }
 
-    // Since there is no ground in this text fixture, the only forces exerted on
+    // Since there is no ground in this test fixture, the only forces exerted on
     // the robot during this test are gravity and the external force
     const Eigen::Vector3d gravity = {0., 0., -bullet::kGravity};
     const Eigen::Vector3d com_accel = gravity + external_force / mass;
     const Eigen::Vector3d Delta_com =
-        interface_->compute_position_com_in_world() - init_com_position;
+        interface_->compute_position_com_in_world() - init_com;
+    const Eigen::Vector3d expected_Delta_com = 0.5 * com_accel * T * T;
 
-    ASSERT_NEAR(Delta_com.x(), 0.5 * com_accel.x() * T * T, 5e-3);
-    ASSERT_NEAR(Delta_com.y(), 0.5 * com_accel.y() * T * T, 5e-3);
-    if (n_g != 1) {  // relative error check for the vertical coordinate
-      double should_be = 0.5 * com_accel.z() * T * T;
+    ASSERT_NEAR(Delta_com.x(), expected_Delta_com.x(), 5e-3);
+    ASSERT_NEAR(Delta_com.y(), expected_Delta_com.y(), 5e-3);
+    ASSERT_NEAR(Delta_com.z(), expected_Delta_com.z(), 5e-3);
+    if (n_g != 1) {
+      // relative error check for the vertical coordinate, except for n_g == 1
+      // as expected_Delta_com.z() is then 0.0
+      double should_be = expected_Delta_com.z();
+      spdlog::info("Delta_com.z() = {}", Delta_com.z());
+      spdlog::info("should_be = {}", should_be);
       double relvar = std::abs((Delta_com.z() - should_be) / should_be);
       ASSERT_NEAR(relvar, 0.0, 5e-2);
-    } else /* n_g == 1 */ {
-      ASSERT_NEAR(Delta_com.z(), 0.5 * com_accel.z() * T * T, 5e-3);
     }
   }
 }
