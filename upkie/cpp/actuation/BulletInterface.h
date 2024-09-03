@@ -42,26 +42,20 @@ class BulletInterface : public Interface {
      * \param[in] config Global configuration dictionary.
      */
     void configure(const Dictionary& config) {
-      reset();  // make sure we start from default values
+      Dictionary empty;
 
-      if (!config.has("bullet")) {
-        spdlog::debug("No \"bullet\" runtime configuration");
-        return;
+      if (config.has("bullet")) {
+        spdlog::info("Applying \"bullet\" runtime configuration...");
       }
-      spdlog::info("Applying \"bullet\" runtime configuration...");
+      const auto& bullet = (config.has("bullet")) ? config("bullet") : empty;
 
-      const auto& bullet = config("bullet");
-      follower_camera = bullet.get<bool>("follower_camera", follower_camera);
-      gui = bullet.get<bool>("gui", gui);
+      follower_camera = bullet.get<bool>("follower_camera", false);
 
-      if (bullet.has("dt")) {
-        dt = bullet.get<double>("dt");
-      }
+      const auto& imu_uncertainty_config =
+          (bullet.has("imu_uncertainty")) ? bullet("imu_uncertainty") : empty;
+      imu_uncertainty.configure(imu_uncertainty_config);
 
-      if (bullet.has("imu_uncertainty")) {
-        imu_uncertainty.configure(bullet("imu_uncertainty"));
-      }
-
+      joint_properties.clear();
       if (bullet.has("joint_properties")) {
         for (const auto& joint : bullet("joint_properties").keys()) {
           const auto& props = bullet("joint_properties")(joint);
@@ -69,6 +63,7 @@ class BulletInterface : public Interface {
         }
       }
 
+      monitor_contacts.clear();
       if (bullet.has("monitor")) {
         const auto& monitor = bullet("monitor");
         if (monitor.has("contacts")) {
@@ -89,12 +84,17 @@ class BulletInterface : public Interface {
             "linear_velocity_base_to_world_in_world", Eigen::Vector3d::Zero());
         angular_velocity_base_in_base = reset.get<Eigen::Vector3d>(
             "angular_velocity_base_in_base", Eigen::Vector3d::Zero());
+      } else {
+        position_base_in_world = Eigen::Vector3d{0.0, 0.0, 0.6};
+        orientation_base_in_world.setIdentity();
+        linear_velocity_base_to_world_in_world.setZero();
+        angular_velocity_base_in_base.setZero();
       }
 
-      if (bullet.has("torque_control")) {
-        torque_control_kd = bullet("torque_control")("kd");
-        torque_control_kp = bullet("torque_control")("kp");
-      }
+      const auto& torque_control =
+          bullet.has("torque_control") ? bullet("torque_control") : empty;
+      torque_control_kd = torque_control.get<float>("kd", 1.0);
+      torque_control_kp = torque_control.get<float>("kp", 20.0);
     }
 
     //! Body angular velocity of the base upon reset.
@@ -113,25 +113,25 @@ class BulletInterface : public Interface {
      * https://github.com/bazelbuild/bazel/issues/4586
      * https://github.com/bazelbuild/bazel/issues/7994
      */
-    std::string argv0;
+    std::string argv0 = "";
 
     //! Simulation timestep in [s]
-    double dt;
+    double dt = std::numeric_limits<double>::quiet_NaN();
 
     //! Paths to environment URDFs to load.
     std::vector<std::string> env_urdf_paths;
 
     //! If true, load a floor plane.
-    bool floor;
+    bool floor = true;
 
     //! Translate the camera to follow the robot
-    bool follower_camera;
+    bool follower_camera = false;
 
     //! If true, fire up the graphical user interface.
-    bool gui;
+    bool gui = true;
 
     //! If true, set gravity to -9.81 m/s².
-    bool gravity;
+    bool gravity = true;
 
     //! Uncertainty on IMU measurements
     ImuUncertainty imu_uncertainty;
@@ -345,9 +345,6 @@ class BulletInterface : public Interface {
 
   //! Read joint sensors from the simulator
   void read_joint_sensors();
-
-  //! Reset interface from current parameters.
-  void reset_from_params();
 
   //! Send commands to simulated joints
   void send_commands();
