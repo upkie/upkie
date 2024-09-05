@@ -15,6 +15,13 @@ VERSION=$(awk '/^PROJECT_NUMBER/{print $3}' docs/Doxyfile)
 SYSTEM=$(uname -s)
 ARCH=$(uname -m)
 
+SPINE_ARGS=()
+if [ $# -eq 0 ]; then
+    SPINE_ARGS=("--show")
+else
+    SPINE_ARGS=("$@")
+fi
+
 for arg in "$@"; do
     if [ "$arg" == "--build" ]; then
         BUILD=1
@@ -50,7 +57,7 @@ fi
 
 if [[ -z "$SPINE_ARCHIVE" ]] || [ -v BUILD ]; then
     echo "Building the simulation spine locally...";
-    (cd "${SCRIPTDIR}" && "${SCRIPTDIR}"/tools/bazelisk run //spines:bullet_spine -- --show)
+    (cd "${SCRIPTDIR}" && "${SCRIPTDIR}"/tools/bazelisk run //spines:bullet_spine -- "${SPINE_ARGS[@]}")
 else
     CURL_TAR_RC=0
     if [ ! -f cache/bullet_spine ]; then
@@ -64,7 +71,7 @@ else
     if [[ $CURL_TAR_RC -eq 0 ]]; then
         echo "Simulation spine downloaded successfully or already in cache, let's roll!";
         cd cache || exit
-        ./bullet_spine --show
+        ./bullet_spine "${SPINE_ARGS[@]}"
         SPINE_RC=$?
         # Return code 0 is from Ctrl-C (normal exit)
         # Return code 1 is from closing the simulation GUI
@@ -74,6 +81,6 @@ else
         fi
     else
         echo "Could not download a simulation spine, let's build one locally...";
-        (cd "${SCRIPTDIR}" && "${SCRIPTDIR}"/tools/bazelisk run //spines:bullet_spine -- --show)
+        (cd "${SCRIPTDIR}" && "${SCRIPTDIR}"/tools/bazelisk run //spines:bullet_spine -- "${SPINE_ARGS[@]}")
     fi
 fi
