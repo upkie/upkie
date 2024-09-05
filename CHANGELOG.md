@@ -13,12 +13,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - BulletInterface: Torque control noise to joint-property configuration
 - BulletInterface: Torque measurement noise to joint-property configuration
 - BulletInterface: Uncertainty on IMU accelerometer and gyroscope measurements
+- Forward command-line arguments to the spine in `start_simulation.sh`
 - ImuData: Add linear velocity field
 - envs: Add a random push wrapper (thanks to @Tordjx)
 - examples: Apply an external force to lift an Upkie in sim
 - examples: Simulation with joint friction
 - examples: Simulation with sensor noise
 - spines: Add variant argument to BulletSpine
+
 ### Changed
 
 - actuation: Log simulation groundtruth to `sim`
