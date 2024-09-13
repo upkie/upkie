@@ -202,7 +202,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
 
         self.__leg_servo_action = {
             joint.name: {
-                "position": None,
+                "position": init_state.joint_configuration[joint.idx_q],
                 "velocity": 0.0,
                 "maximum_torque": joint.limit.effort,
             }
@@ -223,7 +223,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
         r"""!
         Resets the environment and get an initial observation.
 
-        \param seed Number used to initialize the environment’s internal random
+        \param seed Number used to initialize the environment's internal random
             number generator.
         \param options Currently unused.
         \return
@@ -275,7 +275,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
             new_position = low_pass_filter(
                 prev_output=prev_position,
                 cutoff_period=self.leg_return_period,
-                new_input=0.0,
+                new_input=self.init_state.joint_configuration[joint.idx_q],
                 dt=self.dt,
             )
             self.__leg_servo_action[joint.name]["position"] = new_position
