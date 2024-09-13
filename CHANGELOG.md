@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - actuation: Log simulation groundtruth to `sim`
 - BulletInterface: Move simulation body poses to `sim.bodies`
+- envs: UpkieGroundVelocity tracks the joint configuration specified in `init_state`.
 
 ### Fixed
 
