@@ -48,7 +48,7 @@ def main(pitch_kp, pitch_ki, position_kp, position_ki):
                 position_integrator = 0.0
 
             # Log gains for tuning with live plots (e.g. using  `mpackview`)
-            env.log(
+            env.unwrapped.log(
                 "gains",
                 {
                     "pitch_kp": pitch_kp.value,

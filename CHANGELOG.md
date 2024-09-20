@@ -152,7 +152,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- **Breaking:** envs: Change API of logging function to `env.log(name, entry)`
+- **Breaking:** envs: Change API of logging function to `log(name, entry)`
 - **Breaking:** envs: Restrict observation space of `UpkieServos` to servos
 - deps: Update Vulp to 2.5.0
 - envs: Bump `UpkieServos` version number to 4

@@ -23,6 +23,6 @@ if __name__ == "__main__":
             v = 10.0 * pitch + 1.0 * ground_position + 0.1 * ground_velocity
             action[0] = v  # action is the next commanded ground velocity
             observation, reward, terminated, truncated, _ = env.step(action)
-            env.log("pitch", pitch)
+            env.unwrapped.log("pitch", pitch)
             if terminated or truncated:
                 observation, _ = env.reset()
