@@ -201,6 +201,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         reset["position_base_in_world"] = position
         reset["linear_velocity_base_to_world_in_world"] = linear_velocity
         reset["angular_velocity_base_in_base"] = omega
+        reset["joint_configuration"] = init_state.joint_configuration
 
     def step(
         self,

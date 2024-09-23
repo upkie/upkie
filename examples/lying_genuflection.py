@@ -27,6 +27,7 @@ if __name__ == "__main__":
                 [0.0, -0.707, 0.0, 0.707]  # SciPy convention: (x, y, z, w)
             ),
             position_base_in_world=np.array([0.0, 0.0, 0.1]),
+            joint_configuration=np.array([1., 2.]),
         ),
     ) as env:
         action = env.get_neutral_action()

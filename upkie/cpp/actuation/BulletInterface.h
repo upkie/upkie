@@ -85,6 +85,11 @@ class BulletInterface : public Interface {
             "linear_velocity_base_to_world_in_world", Eigen::Vector3d::Zero());
         angular_velocity_base_in_base = reset.get<Eigen::Vector3d>(
             "angular_velocity_base_in_base", Eigen::Vector3d::Zero());
+        joint_configuration.resize(0);
+        if (reset.has("joint_configuration")) {
+          joint_configuration =
+              reset.get<Eigen::VectorXd>("joint_configuration");
+        }
       }
 
       if (bullet.has("torque_control")) {
@@ -166,6 +171,9 @@ class BulletInterface : public Interface {
 
     //! Uncertainty on IMU measurements
     ImuUncertainty imu_uncertainty;
+
+    //! Initial joint configuration vector
+    Eigen::VectorXd joint_configuration;
   };
 
   /*! Initialize interface.
