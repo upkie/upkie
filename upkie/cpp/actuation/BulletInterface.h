@@ -256,8 +256,11 @@ class BulletInterface : public Interface {
   //! Reset contact data.
   void reset_contact_data();
 
-  //! Reset joint angles to zero.
-  void reset_joint_angles();
+  /*! Reset joint angles.
+   *
+   * \param[in] joint_configuration Joint configuration vector.
+   */
+  void reset_joint_angles(const Eigen::VectorXd& joint_configuration);
 
   //! Reset joint properties to defaults.
   void reset_joint_properties();

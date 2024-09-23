@@ -127,7 +127,7 @@ void BulletInterface::reset(const Dictionary& config) {
                    params_.linear_velocity_base_to_world_in_world,
                    params_.angular_velocity_base_in_base);
   reset_contact_data();
-  reset_joint_angles();
+  reset_joint_angles(params_.joint_configuration);
   reset_joint_properties();
 }
 
@@ -166,7 +166,8 @@ void BulletInterface::reset_contact_data() {
   }
 }
 
-void BulletInterface::reset_joint_angles() {
+void BulletInterface::reset_joint_angles(
+    const Eigen::VectorXd& joint_configuration) {
   const int nb_joints = bullet_.getNumJoints(robot_);
   for (int joint_index = 0; joint_index < nb_joints; ++joint_index) {
     bullet_.resetJointState(robot_, joint_index, 0.0);
