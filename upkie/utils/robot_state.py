@@ -55,9 +55,7 @@ class RobotState:
         angular_velocity_base_in_base: Optional[np.ndarray] = None,
         joint_configuration: Optional[np.ndarray] = None,
         joint_velocity: Optional[np.ndarray] = None,
-        linear_velocity_base_to_world_in_world: Optional[
-            np.ndarray
-        ] = None,
+        linear_velocity_base_to_world_in_world: Optional[np.ndarray] = None,
         orientation_base_in_world: Optional[ScipyRotation] = None,
         position_base_in_world: Optional[np.ndarray] = None,
         randomization: Optional[RobotStateRandomization] = None,
@@ -165,9 +163,7 @@ class RobotState:
         rotation_base_to_world = self.orientation_base_in_world
         return rotation_base_to_world * rotation_rand_to_base
 
-    def sample_position(
-        self, np_random: np.random.Generator
-    ) -> np.ndarray:
+    def sample_position(self, np_random: np.random.Generator) -> np.ndarray:
         r"""!
         Sample a position around the one in this state.
 

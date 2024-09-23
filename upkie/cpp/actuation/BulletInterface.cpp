@@ -169,8 +169,16 @@ void BulletInterface::reset_contact_data() {
 void BulletInterface::reset_joint_angles(
     const Eigen::VectorXd& joint_configuration) {
   const int nb_joints = bullet_.getNumJoints(robot_);
+  const size_t nq = joint_configuration.size();
+  if (0 < nq && nq < nb_joints) {
+    throw std::runtime_error(
+        "Invalid joint configuration: vector has dimension " +
+        std::to_string(nq) + " whereas the robot has " +
+        std::to_string(nb_joints) + " joints");
+  }
   for (int joint_index = 0; joint_index < nb_joints; ++joint_index) {
-    bullet_.resetJointState(robot_, joint_index, 0.0);
+    double joint_angle = (nq > 0) ? joint_configuration(joint_index) : 0.0;
+    bullet_.resetJointState(robot_, joint_index, joint_angle);
   }
 }
 
