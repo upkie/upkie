@@ -145,12 +145,12 @@ TEST_F(BulletInterfaceTest, ResetBaseState) {
   ASSERT_DOUBLE_EQ(p.z(), 1.0);
 
   const Eigen::Vector3d v =
-      interface_->linear_velocity_base_to_world_in_world();
+      interface_->get_linear_velocity_base_to_world_in_world();
   ASSERT_DOUBLE_EQ(v.x(), 4.0);
   ASSERT_DOUBLE_EQ(v.y(), 5.0);
   ASSERT_DOUBLE_EQ(v.z(), 6.0);
 
-  const Eigen::Vector3d omega = interface_->angular_velocity_base_in_base();
+  const Eigen::Vector3d omega = interface_->get_angular_velocity_base_in_base();
   ASSERT_NEAR(omega.x(), 7.0, 1e-3);
   ASSERT_NEAR(omega.y(), 8.0, 1e-3);
   ASSERT_NEAR(omega.z(), 9.0, 7e-3);
@@ -378,7 +378,7 @@ TEST_F(BulletInterfaceTest, FreeFallBasePosition) {
   ASSERT_NEAR(base_position.z(), -0.5 * bullet::kGravity * T * T, 1e-3);
 
   Eigen::Vector3d base_velocity =
-      interface_->linear_velocity_base_to_world_in_world();
+      interface_->get_linear_velocity_base_to_world_in_world();
   ASSERT_NEAR(base_velocity.x(), 0.0 * T, 1e-4);
   ASSERT_NEAR(base_velocity.y(), 0.0 * T, 1e-4);
   ASSERT_NEAR(base_velocity.z(), -bullet::kGravity * T, 1e-3);
