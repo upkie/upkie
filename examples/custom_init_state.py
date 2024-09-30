@@ -24,21 +24,16 @@ if __name__ == "__main__":
         frequency=200.0,
         init_state=RobotState(
             orientation_base_in_world=ScipyRotation.from_quat(
-                [0.0, -0.707, 0.0, 0.707]  # SciPy convention: (x, y, z, w)
+                [
+                    0.0,
+                    0.0,
+                    -0.707,
+                    0.707,
+                ]  # SciPy convention: (x, y, z, w)
             ),
-            position_base_in_world=np.array([0.0, 0.0, 0.1]),
+            position_base_in_world=np.array([0.1, 0.0, 0.7]),
             joint_configuration=np.array([1.0, 2.0, 3.0, 0.0, 0.0, 0.0]),
         ),
     ) as env:
-        action = env.get_neutral_action()
-        env.reset()  # connects to the spine
-        for step in range(NB_GENUFLECTIONS * GENUFLECTION_STEPS):
-            x = float(step % GENUFLECTION_STEPS) / GENUFLECTION_STEPS
-            y = 4.0 * x * (1.0 - x)  # in [0, 1]
-            q_0134 = AMPLITUDE * y * np.array([1.0, -2.0, -1.0, 2.0])
-            action["left_hip"]["position"] = q_0134[0]
-            action["left_knee"]["position"] = q_0134[1]
-            action["right_hip"]["position"] = q_0134[2]
-            action["right_knee"]["position"] = q_0134[3]
-            # env.step(action)
-            env.reset()
+        for step in range(10_000):
+            env.reset()  # keep resetting to show the initial state
