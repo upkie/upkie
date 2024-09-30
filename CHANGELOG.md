@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ImuData: Add linear velocity field
 - envs: Add a random push wrapper (thanks to @Tordjx)
 - examples: Apply an external force to lift an Upkie in sim
+- examples: Custom initial state with a non-zero joint configuration
 - examples: Simulation with joint friction
 - examples: Simulation with sensor noise
 - spines: Add variant argument to BulletSpine
