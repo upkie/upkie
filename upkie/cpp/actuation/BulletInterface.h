@@ -261,6 +261,13 @@ class BulletInterface : public Interface {
    */
   Eigen::Vector3d angular_velocity_base_in_base() const noexcept;
 
+  /*! Get the groundtruth vector of joint angles.
+   *
+   * \note This function is only used for testing and does not need to be
+   * optimized.
+   */
+  Eigen::VectorXd get_joint_angles() noexcept;
+
   //! Reset contact data.
   void reset_contact_data();
 

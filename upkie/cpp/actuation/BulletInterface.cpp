@@ -502,6 +502,22 @@ Eigen::Vector3d BulletInterface::angular_velocity_base_in_base()
          eigen_from_bullet(angular_velocity_base_to_world_in_world);
 }
 
+Eigen::VectorXd BulletInterface::get_joint_angles() noexcept {
+  Eigen::VectorXd joint_angles(6);
+  b3JointInfo joint_info;
+  b3JointSensorState joint_state;
+  const int nb_joints = bullet_.getNumJoints(robot_);
+  for (int joint_index = 0; joint_index < nb_joints; ++joint_index) {
+    bullet_.getJointInfo(robot_, joint_index, &joint_info);
+    if (joint_info.m_jointType == eRevoluteType) {
+      const int idx_q = joint_info.m_qIndex - 7;
+      bullet_.getJointState(robot_, joint_index, &joint_state);
+      joint_angles(idx_q) = joint_state.m_jointPosition;
+    }
+  }
+  return joint_angles;
+}
+
 void BulletInterface::translate_camera_to_robot() {
   b3OpenGLVisualizerCameraInfo camera_info;
   btVector3 position_base_in_world;
