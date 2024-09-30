@@ -25,8 +25,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- actuation: Log simulation groundtruth to `sim`
 - BulletInterface: Move simulation body poses to `sim.bodies`
+- BulletInterface: Rename internal unit-test getters
+- actuation: Log simulation groundtruth to `sim`
 
 ### Fixed
 
@@ -40,6 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - CICD: Remove pycodestyle as we now use ruff for Python linting
+- BulletInterface: Remove unused orientation/position unit-test getters
 
 ## [5.1.0] - 2024-08-14
 

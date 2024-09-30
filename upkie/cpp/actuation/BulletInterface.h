@@ -233,33 +233,19 @@ class BulletInterface : public Interface {
   //! Get the groundtruth floating base transform.
   Eigen::Matrix4d transform_base_to_world() const noexcept;
 
-  /*! Get the position of the floating base with respect to the world frame.
-   *
-   * \note Using \ref transform_base_to_world makes one less call to the Bullet
-   * API when getting both the base orientation and position at once.
-   */
-  Eigen::Vector3d position_base_in_world() const noexcept;
-
-  /*! Get the orientation of the floating base with respect to the world frame.
-   *
-   * \note Using \ref transform_base_to_world makes one less call to the Bullet
-   * API when getting both the base orientation and position at once.
-   */
-  Eigen::Matrix3d orientation_base_in_world() const noexcept;
-
   /*! Get the groundtruth floating base linear velocity.
    *
    * \note This function is only used for testing and does not need to be
    * optimized.
    */
-  Eigen::Vector3d linear_velocity_base_to_world_in_world() const noexcept;
+  Eigen::Vector3d get_linear_velocity_base_to_world_in_world() const noexcept;
 
   /*! Get the groundtruth floating base angular velocity.
    *
    * \note This function is only used for testing and does not need to be
    * optimized.
    */
-  Eigen::Vector3d angular_velocity_base_in_base() const noexcept;
+  Eigen::Vector3d get_angular_velocity_base_in_base() const noexcept;
 
   /*! Get the groundtruth vector of joint angles.
    *
