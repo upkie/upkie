@@ -429,7 +429,7 @@ TEST_F(BulletInterfaceTest, ApplyExternalForces) {
 
 TEST_F(BulletInterfaceTest, ResetJointConfiguration) {
   Eigen::VectorXd joint_configuration(6);
-  joint_configuration << 1.0, 2.0, 3.0, 0.0, 0.0, 0.0;
+  joint_configuration << 1.0, 2.0, 3.0, 4.0, 5.0, 6.0;
 
   Dictionary config;
   config("bullet")("reset")("joint_configuration") = joint_configuration;
@@ -438,12 +438,12 @@ TEST_F(BulletInterfaceTest, ResetJointConfiguration) {
   ASSERT_DOUBLE_EQ(q(0), 1.0);
   ASSERT_DOUBLE_EQ(q(1), 2.0);
   ASSERT_DOUBLE_EQ(q(2), 3.0);
-  ASSERT_DOUBLE_EQ(q(3), 0.0);
-  ASSERT_DOUBLE_EQ(q(4), 0.0);
-  ASSERT_DOUBLE_EQ(q(5), 0.0);
+  ASSERT_DOUBLE_EQ(q(3), 4.0);
+  ASSERT_DOUBLE_EQ(q(4), 5.0);
+  ASSERT_DOUBLE_EQ(q(5), 6.0);
 
   Eigen::VectorXd invalid_configuration(5);
-  invalid_configuration << 1.0, 2.0, 3.0, 4.0;
+  invalid_configuration << 1.0, 2.0, 3.0, 4.0, 5.0;
   config("bullet")("reset")("joint_configuration") = invalid_configuration;
   ASSERT_THROW(interface_->reset(config), std::runtime_error);  // exn
 }
