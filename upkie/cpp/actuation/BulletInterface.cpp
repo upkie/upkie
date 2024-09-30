@@ -177,8 +177,10 @@ void BulletInterface::reset_joint_angles(
     if (joint_info.m_jointType == eRevoluteType) {
       const int revolute_joint_index = nb_revolute_joints;
       nb_revolute_joints++;
-      double joint_angle =
-          (nq > 0) ? joint_configuration(revolute_joint_index) : 0.0;
+      double joint_angle = 0.0;
+      if (nq > 0 && revolute_joint_index < joint_configuration.size()) {
+        joint_angle = joint_configuration(revolute_joint_index);
+      }
       bullet_.resetJointState(robot_, joint_index, joint_angle);
     }
   }
