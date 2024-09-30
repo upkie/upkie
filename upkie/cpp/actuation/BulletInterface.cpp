@@ -168,17 +168,25 @@ void BulletInterface::reset_contact_data() {
 
 void BulletInterface::reset_joint_angles(
     const Eigen::VectorXd& joint_configuration) {
+  b3JointInfo joint_info;
   const int nb_joints = bullet_.getNumJoints(robot_);
   const size_t nq = joint_configuration.size();
-  if (0 < nq && nq < nb_joints) {
+  size_t nb_revolute_joints = 0;
+  for (int joint_index = 0; joint_index < nb_joints; ++joint_index) {
+    bullet_.getJointInfo(robot_, joint_index, &joint_info);
+    if (joint_info.m_jointType == eRevoluteType) {
+      const int revolute_joint_index = nb_revolute_joints;
+      nb_revolute_joints++;
+      double joint_angle =
+          (nq > 0) ? joint_configuration(revolute_joint_index) : 0.0;
+      bullet_.resetJointState(robot_, joint_index, joint_angle);
+    }
+  }
+  if (0 < nq && nq < nb_revolute_joints) {
     throw std::runtime_error(
         "Invalid joint configuration: vector has dimension " +
         std::to_string(nq) + " whereas the robot has " +
-        std::to_string(nb_joints) + " joints");
-  }
-  for (int joint_index = 0; joint_index < nb_joints; ++joint_index) {
-    double joint_angle = (nq > 0) ? joint_configuration(joint_index) : 0.0;
-    bullet_.resetJointState(robot_, joint_index, joint_angle);
+        std::to_string(nb_revolute_joints) + " revolute joints");
   }
 }
 
