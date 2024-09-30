@@ -27,6 +27,7 @@ if __name__ == "__main__":
                 [0.0, -0.707, 0.0, 0.707]  # SciPy convention: (x, y, z, w)
             ),
             position_base_in_world=np.array([0.0, 0.0, 0.1]),
+            joint_configuration=np.array([1.0, 2.0, 3.0, 0.0, 0.0, 0.0]),
         ),
     ) as env:
         action = env.get_neutral_action()
@@ -39,4 +40,5 @@ if __name__ == "__main__":
             action["left_knee"]["position"] = q_0134[1]
             action["right_hip"]["position"] = q_0134[2]
             action["right_knee"]["position"] = q_0134[3]
-            env.step(action)
+            # env.step(action)
+            env.reset()
