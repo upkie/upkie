@@ -224,14 +224,14 @@ class BulletInterface : public Interface {
    */
   void cycle(std::function<void(const moteus::Output&)> callback) final;
 
+  //! Get the groundtruth floating base transform.
+  Eigen::Matrix4d get_transform_base_to_world() const noexcept;
+
   /*! Get a groundtruth body transform.
    *
    * \param[in] body_id The body id as given when loading the body in bullet.
    */
-  Eigen::Matrix4d transform_body_to_world(int body_id) const noexcept;
-
-  //! Get the groundtruth floating base transform.
-  Eigen::Matrix4d transform_base_to_world() const noexcept;
+  Eigen::Matrix4d get_transform_body_to_world(int body_id) const noexcept;
 
   /*! Get the groundtruth floating base linear velocity.
    *

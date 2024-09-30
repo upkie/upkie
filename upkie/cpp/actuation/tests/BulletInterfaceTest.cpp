@@ -131,7 +131,7 @@ TEST_F(BulletInterfaceTest, ResetBaseState) {
       Eigen::Vector3d(7.0, 8.0, 9.0);
   interface_->reset(config);
 
-  const Eigen::Matrix4d T = interface_->transform_base_to_world();
+  const Eigen::Matrix4d T = interface_->get_transform_base_to_world();
   const Eigen::Matrix3d R = T.block<3, 3>(0, 0);
   EXPECT_NEAR(R(0, 0), 0.0, 1e-7);
   EXPECT_NEAR(R(0, 2), -1.0, 1e-7);
@@ -363,7 +363,7 @@ TEST_F(BulletInterfaceTest, FreeFallBasePosition) {
   Dictionary config;
   Eigen::Vector3d base_position;
   interface_->reset(config);
-  base_position = interface_->transform_base_to_world().block<3, 1>(0, 3);
+  base_position = interface_->get_transform_base_to_world().block<3, 1>(0, 3);
   ASSERT_NEAR(base_position.x(), 0.0, 1e-4);
   ASSERT_NEAR(base_position.y(), 0.0, 1e-4);
   ASSERT_NEAR(base_position.z(), 0.0, 1e-4);
@@ -372,7 +372,7 @@ TEST_F(BulletInterfaceTest, FreeFallBasePosition) {
     interface_->cycle([](const moteus::Output& output) {});
   }
 
-  base_position = interface_->transform_base_to_world().block<3, 1>(0, 3);
+  base_position = interface_->get_transform_base_to_world().block<3, 1>(0, 3);
   ASSERT_NEAR(base_position.x(), 0.0, 1e-4);
   ASSERT_NEAR(base_position.y(), 0.0, 1e-4);
   ASSERT_NEAR(base_position.z(), -0.5 * bullet::kGravity * T * T, 1e-3);
