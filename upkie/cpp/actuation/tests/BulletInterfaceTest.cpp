@@ -427,4 +427,25 @@ TEST_F(BulletInterfaceTest, ApplyExternalForces) {
   }
 }
 
+TEST_F(BulletInterfaceTest, ResetJointConfiguration) {
+  Eigen::VectorXd joint_configuration(6);
+  joint_configuration << 1.0, 2.0, 3.0, 0.0, 0.0, 0.0;
+
+  Dictionary config;
+  config("bullet")("reset")("joint_configuration") = joint_configuration;
+  interface_->reset(config);  // no exn
+  Eigen::VectorXd q = interface_->get_joint_angles();
+  ASSERT_DOUBLE_EQ(q(0), 1.0);
+  ASSERT_DOUBLE_EQ(q(1), 2.0);
+  ASSERT_DOUBLE_EQ(q(2), 3.0);
+  ASSERT_DOUBLE_EQ(q(3), 0.0);
+  ASSERT_DOUBLE_EQ(q(4), 0.0);
+  ASSERT_DOUBLE_EQ(q(5), 0.0);
+
+  Eigen::VectorXd invalid_configuration(5);
+  invalid_configuration << 1.0, 2.0, 3.0, 4.0;
+  config("bullet")("reset")("joint_configuration") = invalid_configuration;
+  ASSERT_THROW(interface_->reset(config), std::runtime_error);  // exn
+}
+
 }  // namespace upkie::cpp::actuation
