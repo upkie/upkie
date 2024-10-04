@@ -2,6 +2,9 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
+# Default user is "pi" with password "raspberry"
+echo "pi:raspberry" | chpasswd
+
 # Configure CPU isolation
 python /root/configure_cpu_isolation.py
 
