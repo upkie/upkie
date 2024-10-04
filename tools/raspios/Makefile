@@ -3,6 +3,8 @@
 # SPDX-License-Identifier: Apache-2.0
 
 CURL=curl -fsSL --compressed
+VERSION=$(shell curl -s https://api.github.com/repos/upkie/upkie/releases/latest | jq .tag_name | sed 's/^"v//; s/"$$//')
+IMAGE=raspios_upkie-$(VERSION).img
 
 all: raspios_upkie.img
 
