@@ -13,6 +13,7 @@ rmdir /home/rpi-first-boot-wizard
 systemctl stop userconfig
 systemctl disable userconfig
 systemctl mask userconfig
+rm /etc/xdg/autostart/piwiz.desktop
 
 # Prepare pi user and its home directrory
 cp /root/WELCOME /home/pi/WELCOME && chown pi:pi /home/pi/WELCOME
