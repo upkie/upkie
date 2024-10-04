@@ -6,7 +6,14 @@ CURL=curl -fsSL --compressed
 VERSION=$(shell curl -s https://api.github.com/repos/upkie/upkie/releases/latest | jq .tag_name | sed 's/^"v//; s/"$$//')
 IMAGE=raspios_upkie-$(VERSION).img
 
-all: raspios_upkie.img
+build: micromamba pi3hat_spine scripts
+	rm -f raspios_upkie.img
+	docker pull mkaczanowski/packer-builder-arm:latest
+	docker run --rm --privileged -v /dev:/dev -v $(CURDIR):/build mkaczanowski/packer-builder-arm:latest init .
+	docker run --rm --privileged -v /dev:/dev -v $(CURDIR):/build mkaczanowski/packer-builder-arm:latest build .
+	mv raspios_upkie.img $(IMAGE)
+	sha1sum $(IMAGE) $(IMAGE).sha1
+	sha256sum $(IMAGE) $(IMAGE).sha256
 
 clean:
 	rm -f local/configure_cpu_isolation.py
@@ -15,9 +22,9 @@ clean:
 	rm -f local/pi3hat_spine
 	rm -f local/stop_servos
 	rm -f local/upkie_tool
-	rm -f raspios_upkie.img
+	rm -f *.img
 
-rebuild: clean raspios_upkie.img
+rebuild: clean build
 
 local/%: ../%
 	cp -f $(CURDIR)/$< $@
@@ -32,8 +39,3 @@ pi3hat_spine:
 	$(CURL) "https://github.com/upkie/upkie/releases/latest/download/pi3hat_spine" -o local/pi3hat_spine
 
 scripts: local/configure_cpu_isolation.py local/cpufreq_ondemand local/cpufreq_performance local/hard_rezero local/stop_servos local/upkie_tool local/vcgenall
-
-raspios_upkie.img: micromamba pi3hat_spine scripts
-	docker pull mkaczanowski/packer-builder-arm:latest
-	docker run --rm --privileged -v /dev:/dev -v $(CURDIR):/build mkaczanowski/packer-builder-arm:latest init .
-	docker run --rm --privileged -v /dev:/dev -v $(CURDIR):/build mkaczanowski/packer-builder-arm:latest build .
