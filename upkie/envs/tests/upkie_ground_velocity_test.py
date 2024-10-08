@@ -68,6 +68,17 @@ class TestUpkieGroundVelocity(unittest.TestCase):
             maximum_torque = servo_action[wheel.name]["maximum_torque"]
             self.assertLess(maximum_torque, 2.0)
 
+    def test_max_ground_velocity(self):
+        _, _ = self.env.reset()
+        action = np.full(self.env.action_space.shape, 1111.1)
+        _, _, _, _, _ = self.env.step(action)
+        servo_action = self.env._spine.action["servo"]
+        max_ground_velocity = self.env.action_space.high[0]
+        for wheel in self.env.model.wheel_joints:
+            wheel_velocity = servo_action[wheel.name]["velocity"]  # rad/s
+            ground_velocity = np.abs(wheel_velocity / self.env.wheel_radius)
+            self.assertLess(ground_velocity, max_ground_velocity)
+
 
 if __name__ == "__main__":
     unittest.main()
