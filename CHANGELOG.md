@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Move Python spine exceptions to `upkie.exceptions`
 
+### Fixed
+
+- envs: Clamp ground velocity action in `UpkieGroundVelocity`
+
 ### Removed
 
 - Bazel: Remove legacy rules for PyPI dependencies
@@ -72,7 +76,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - envs: Add UpkieServoTorques child environment (thanks to @Tordjx)
 - envs: Add a `model` attribute to all Upkie environments
 - envs: Start reward submodule with a wheeled inverted pendulum reward
-- envs: Use wheel torque limits from model in UpkieGroundVelocity
+- envs: Use wheel torque limits from model in `UpkieGroundVelocity`
 - envs: Wheeled inverted pendulum environment for reduced-model testing
 - exceptions: Add PositionCommandError exception
 - model: Add `rotation_ars_to_world` and `rotation_base_to_imu`
@@ -335,9 +339,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PPO balancer: Allow re-training with the same policy name
 - PPO balancer: Low-pass filter action before acceleration clamping
 - PPO balancer: Update reward to penalize commanded accelerations
-- UpkieGroundVelocity: Augment observation with previous command
 - agents: Closed-loop model predictive control
 - envs: Allow custom initial base velocity in Bullet config
+- envs: Augment observation with previous command in `UpkieGroundVelocity`
 - examples: Closed-loop model predictive control
 - spines: Build and export the pi3hat spine binary in continuous integration (thanks to @pgraverdy)
 - spines: `--version` flag for all spine binaries
