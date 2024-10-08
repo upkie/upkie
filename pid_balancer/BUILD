@@ -34,7 +34,6 @@ py_binary(
         "//upkie",
         ":modules",
         "@rules_python//python/runfiles",
-        requirement("PyYAML"),
         requirement("gin-config"),
         requirement("loop-rate-limiters"),
     ] + select({
@@ -60,7 +59,6 @@ py_binary(
     deps = [
         "//upkie",
         ":modules",
-        requirement("PyYAML"),
         requirement("gin-config"),
         requirement("loop-rate-limiters"),
     ] + select({

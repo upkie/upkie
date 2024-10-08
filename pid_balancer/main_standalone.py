@@ -12,13 +12,36 @@ from os import path
 from typing import Optional
 
 import gin
-import yaml
 from loop_rate_limiters import RateLimiter
 from servo_controller import ServoController
 
 from upkie.spine import SpineInterface
 from upkie.utils.raspi import configure_agent_process, on_raspi
 from upkie.utils.spdlog import logging
+
+SPINE_CONFIG = {
+    "bullet": {
+        "follower_camera": False,
+        "gui": True,
+        "reset": {
+            "position_base_in_world": [0.0, 0.0, 0.6],
+        },
+        "torque_control": {
+            "kp": 20.0,
+            "kd": 1.0,
+        },
+    },
+    "floor_contact": {
+        "upper_leg_torque_threshold": 10.0,
+    },
+    "wheel_contact": {
+        "cutoff_period": 0.2,
+        "liftoff_inertia": 0.001,
+        "min_touchdown_acceleration": 2.0,
+        "min_touchdown_torque": 0.015,
+        "touchdown_inertia": 0.004,
+    },
+}
 
 
 def parse_command_line_arguments() -> argparse.Namespace:
@@ -41,20 +64,18 @@ def parse_command_line_arguments() -> argparse.Namespace:
 
 def run(
     spine: SpineInterface,
-    spine_config: dict,
     frequency: float = 200.0,
 ) -> None:
     r"""!
     Read observations and send actions to the spine.
 
     \param spine Interface to the spine.
-    \param spine_config Spine configuration dictionary.
     \param frequency Control frequency in Hz.
     """
     rate = RateLimiter(frequency, "controller")
     controller = ServoController()
-    controller.update_spine_configuration(spine_config)
-    spine.start(spine_config)
+    controller.update_spine_configuration(SPINE_CONFIG)
+    spine.start(SPINE_CONFIG)
     observation = spine.get_observation()  # pre-reset observation
     while True:
         observation = spine.get_observation()
@@ -93,13 +114,9 @@ if __name__ == "__main__":
     args = parse_command_line_arguments()
     load_gin_configuration(agent_dir, args.config)
 
-    # Spine configuration
-    with open(f"{agent_dir}/config/spine.yaml", "r") as fh:
-        spine_config = yaml.safe_load(fh)
-
     spine = SpineInterface()
     try:
-        run(spine, spine_config)
+        run(spine)
     except KeyboardInterrupt:
         logging.info("Caught a keyboard interrupt")
     except Exception:

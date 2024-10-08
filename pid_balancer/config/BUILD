@@ -8,6 +8,5 @@ filegroup(
     name = "config",
     srcs = glob([
         "*.gin",
-        "*.yaml",
     ]),
 )

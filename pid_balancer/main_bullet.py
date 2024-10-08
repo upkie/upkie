@@ -13,12 +13,35 @@ from multiprocessing import shared_memory
 from os import path
 
 import gin
-import yaml
 from loop_rate_limiters import RateLimiter
 from rules_python.python.runfiles import runfiles
 from servo_controller import ServoController
 
 from upkie.spine import SpineInterface
+
+SPINE_CONFIG = {
+    "bullet": {
+        "follower_camera": False,
+        "gui": True,
+        "reset": {
+            "position_base_in_world": [0.0, 0.0, 0.6],
+        },
+        "torque_control": {
+            "kp": 20.0,
+            "kd": 1.0,
+        },
+    },
+    "floor_contact": {
+        "upper_leg_torque_threshold": 10.0,
+    },
+    "wheel_contact": {
+        "cutoff_period": 0.2,
+        "liftoff_inertia": 0.001,
+        "min_touchdown_acceleration": 2.0,
+        "min_touchdown_torque": 0.015,
+        "touchdown_inertia": 0.004,
+    },
+}
 
 
 class CompilationModeError(Exception):
@@ -42,20 +65,18 @@ def clear_shared_memory():
 
 def run(
     spine: SpineInterface,
-    spine_config: dict,
     frequency: float = 200.0,
 ) -> None:
     r"""!
     Read observations and send actions to the spine.
 
     \param spine Interface to the spine.
-    \param spine_config Spine configuration dictionary.
     \param frequency Control frequency in Hz.
     """
     rate = RateLimiter(frequency, "controller")
     controller = ServoController()
-    controller.update_spine_configuration(spine_config)
-    spine.start(spine_config)
+    controller.update_spine_configuration(SPINE_CONFIG)
+    spine.start(SPINE_CONFIG)
     observation = spine.get_observation()  # pre-reset observation
     while True:
         observation = spine.get_observation()
@@ -84,10 +105,6 @@ if __name__ == "__main__":
     gin.parse_config_file(f"{agent_dir}/config/common.gin")
     gin.parse_config_file(f"{agent_dir}/config/bullet.gin")
 
-    # Spine configuration
-    with open(f"{agent_dir}/config/spine.yaml", "r") as fh:
-        config = yaml.safe_load(fh)
-
     clear_shared_memory()
     pid = os.fork()
     if pid == 0:  # child process: spine
@@ -97,7 +114,7 @@ if __name__ == "__main__":
         spine = None
         try:
             spine = SpineInterface(retries=10)
-            run(spine, config)
+            run(spine)
         except KeyboardInterrupt:
             logging.info("Caught a keyboard interrupt")
         except Exception:
