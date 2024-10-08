@@ -12,6 +12,7 @@ import numpy as np
 from gymnasium import spaces
 
 from upkie.exceptions import UpkieException
+from upkie.utils.clamp import clamp_and_warn
 from upkie.utils.filters import low_pass_filter
 from upkie.utils.robot_state import RobotState
 
@@ -312,7 +313,12 @@ class UpkieGroundVelocity(UpkieBaseEnv):
         \param action Environment action.
         \return Spine action dictionary.
         """
-        ground_velocity = action[0]
+        ground_velocity = clamp_and_warn(
+            action[0],
+            self.action_space.low[0],
+            self.action_space.high[0],
+            label="ground_velocity",
+        )
         wheel_velocity = ground_velocity / self.wheel_radius
         left_wheel_sign = 1.0 if self.left_wheeled else -1.0
         left_wheel_velocity = left_wheel_sign * wheel_velocity
