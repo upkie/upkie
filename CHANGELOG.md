@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - deps: Remove dependency on PyYAML
+- examples: Remove Bazel BUILD file
 
 ## [5.2.0] - 2024-09-30
 
