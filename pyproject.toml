@@ -56,7 +56,6 @@ exclude = [
     "WORKSPACE",
     "examples/",
     "logs/",
-    "pid_balancer/",
     "spines/",
     "tools/",
     "upkie/cpp",

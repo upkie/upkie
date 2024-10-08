@@ -33,7 +33,6 @@ help:
 
 .PHONY: build
 build: clean_broken_links  ## build Raspberry Pi targets
-	$(BAZEL) build --config=pi64 //pid_balancer
 	$(BAZEL) build --config=pi64 //spines:mock_spine
 	$(BAZEL) build --config=pi64 //spines:pi3hat_spine
 
@@ -94,10 +93,6 @@ run_mock_spine:  ### run the mock spine on the Raspberry Pi
 # NB: run_pi3hat_spine is used in build instructions
 run_pi3hat_spine:  ### run the pi3hat spine on the Raspberry Pi
 	$(RASPUNZEL) run -s //spines:pi3hat_spine
-
-# NB: run_pid_balancer is used in build instructions
-run_pid_balancer:  ### run the test balancer on the Raspberry Pi
-	$(RASPUNZEL) run -s //pid_balancer:pid_balancer
 
 # DEV HELPERS
 # ===========
