@@ -1,0 +1,8 @@
+#!/bin/sh
+#
+# Copyright 2024 Inria
+#
+# This command checks which threads are running on which CPUID. Useful to make
+# sure that spine and agent threads run where they should.
+
+exec ps -ao pcpu,cpuid,priority,pid,comm,command -T --sort=priority

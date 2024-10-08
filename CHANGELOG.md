@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Makefile: Conda environment packing and unpacking rules
 - Support Python 3.12
+- tools: Add `ps_thread` command
 
 ### Changed
 

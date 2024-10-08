@@ -45,9 +45,6 @@ compress:  ## Compress logs
 foxplot_last:  ## Plot latest log
 	foxplot $(shell ls *.mpack | tail -n 1)
 
-.PHONY: pp
-pp: pull foxplot_last  ## Shorthand for `pull` then `foxplot_last`
-
 .PHONY: pull
 pull: check_upkie_name  ## Download logs and remove them from the remote directory afterwards
 	rsync -auvz --progress --exclude Makefile ${UPKIE_NAME}:$(REMOTE_PATH)/ $(CURDIR)/
