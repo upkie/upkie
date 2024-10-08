@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+- Bazel: Remove legacy rules for PyPI dependencies
+- Move PID balancer to its own repository
 - deps: Remove dependency on PyYAML
 - examples: Remove Bazel BUILD file
 
@@ -110,12 +112,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Bazel: Add support for ARM64 CPUs
 - CICD: Build jobs for x86 and ARM64 macOS spines
 - CICD: Packaging job for conda-forge
 - Import and adapt C++ code from Vulp (`vulp` namespace is now `upkie:cpp`)
 - Log received actuation replies in spine cycles
 - PID balancer: Conda environment file
-- bazelisk: Add support for ARM64 CPUs
 - envs: Add `left_wheeled` parameter to the `UpkieGroundVelocity` environment
 - examples: Tuning the gains of a standard two-task PI balancer
 - model: Add joints submodule
@@ -128,11 +130,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - **Breaking:** rename the default shared-memory file to `/upkie`
+- Bazel: Update bazelisk version to 1.20.0
 - CICD: Switch to Micromamba for unit testing
 - Makefile: Separate rule to set the raspi date
 - PID balancer: default to hostname for the agent configuration
 - Put hostname before spine name in log file names
-- bazelisk: Update bazelisk version to 1.20.0
 - deps: Update Upkie description to 2.1.0
 - deps: Update pi3hat dependency to latest commit
 - docs: Sort documentation pages by expected discovery steps
