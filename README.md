@@ -69,17 +69,18 @@ with gym.make("UpkieGroundVelocity-v3", frequency=200.0) as env:
             observation, _ = env.reset()
 ```
 
-The Python code is the same whether running a simulation or real-robot [spine](https://upkie.github.io/upkie/spines.html). Head over to the [examples](https://github.com/upkie/upkie/tree/main/examples) directory for more examples.
+The Python code is the same whether running a simulation or real-robot [spine](https://upkie.github.io/upkie/spines.html).
 
 ## Agents
 
-This repository only distributes a [PID balancer](https://github.com/upkie/upkie/tree/main/pid_balancer) used for testing. Actual Upkie agents are distributed in their own repositories:
+This repository distributes standalone Python agents in the [examples](https://github.com/upkie/upkie/tree/main/examples) directory. Larger Upkie agents, some of them with custom C++ spines, are distributed in their own repositories:
 
 - [MPC balancer](https://github.com/upkie/mpc_balancer): balance in place using model predictive control.
 - [Pink balancer](https://github.com/upkie/pink_balancer): a more advanced agent that can crouch and stand up while balancing.
 - [PPO balancer](https://github.com/upkie/ppo_balancer): balance in place with a policy trained by reinforcement learning.
+- [PID balancer](https://github.com/upkie/pid_balancer): legacy agent used to test new Upkies with minimal dependencies.
 
-Head over to the [new\_agent](https://github.com/upkie/new_agent) template to create your own, and feel free to open a PR here to add your agents to the list above.
+Head over to the [new\_agent](https://github.com/upkie/new_agent) template to create your own, and feel free to open a PR here to add your agent to the list above.
 
 ## Citation
 
