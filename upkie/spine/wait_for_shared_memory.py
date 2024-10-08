@@ -1,7 +1,16 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+#
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2022 Stéphane Caron
+# Copyright 2024 Inria
+
 import logging
 import time
 from multiprocessing import resource_tracker
 from multiprocessing.shared_memory import SharedMemory
+
+from ..exceptions import SpineError
 
 
 def wait_for_shared_memory(
