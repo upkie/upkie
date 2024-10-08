@@ -1,6 +1,7 @@
 __pycache__
 bazel-*
 cache/
+conda_env.tar.gz
 dist/
 docs/html/
 examples/upkie

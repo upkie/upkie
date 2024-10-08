@@ -4,10 +4,6 @@
 # Copyright 2022 Stéphane Caron
 # Copyright 2023-2024 Inria
 
-# Hostname or IP address of the Raspberry Pi Uses the value from the UPKIE_NAME
-# environment variable, if defined. Valid usage: `make upload UPKIE_NAME=foo`
-REMOTE = ${UPKIE_NAME}
-
 # Project name needs to match the one in WORKSPACE
 PROJECT_NAME = upkie
 
@@ -51,6 +47,7 @@ check_upkie_name:
 .PHONY: clean
 clean: clean_broken_links  ## clean all local build and intermediate files
 	$(BAZEL) clean --expunge
+	rm -f conda_env.tar.gz
 
 .PHONY: clean_broken_links
 clean_broken_links:
@@ -62,15 +59,15 @@ run_bullet_spine:  ## run the Bullet simulation spine
 
 # This rule is handy if the target Upkie is not connected to the Internet
 .PHONY: set_date
-set_date:
-	ssh $(REMOTE) sudo date -s "$(CURDATE)"
+set_date: check_upkie_name
+	ssh ${UPKIE_NAME} sudo date -s "$(CURDATE)"
 
 # Running `raspunzel -s` can create __pycache__ directories owned by root
 # that rsync is not allowed to remove. We therefore give permissions first.
 .PHONY: upload
 upload: check_upkie_name build set_date  ## upload built targets to the Raspberry Pi
-	ssh $(REMOTE) mkdir -p $(PROJECT_NAME)
-	ssh $(REMOTE) sudo find $(PROJECT_NAME) -type d -name __pycache__ -user root -exec chmod go+wx {} "\;"
+	ssh ${UPKIE_NAME} mkdir -p $(PROJECT_NAME)
+	ssh ${UPKIE_NAME} sudo find $(PROJECT_NAME) -type d -name __pycache__ -user root -exec chmod go+wx {} "\;"
 	rsync -Lrtu --delete-after --delete-excluded \
 		--exclude __pycache__ \
 		--exclude bazel-$(CURDIR_NAME) \
@@ -82,7 +79,7 @@ upload: check_upkie_name build set_date  ## upload built targets to the Raspberr
 		--exclude tools/logs/\*.mpack \
 		--exclude tools/raspios/.packer_\* \
 		--exclude tools/raspios/\*.img \
-		--progress $(CURDIR)/ $(REMOTE):$(PROJECT_NAME)/
+		--progress $(CURDIR)/ ${UPKIE_NAME}:$(PROJECT_NAME)/
 
 # REMOTE TARGETS
 # ==============
@@ -115,3 +112,23 @@ lint:
 .PHONY: test
 test:
 	$(BAZEL) test //...
+
+# CONDA ENV PACKING
+# =================
+
+HOST_CONDA_PATH=~/.micromamba
+RASPI_CONDA_PATH=~/.micromamba
+
+conda_env.tar.gz:
+	conda env create -n raspios_$(PROJECT_NAME) upkie --platform linux-aarch64 -y
+	tar -zcf conda_env.tar.gz -C $(HOST_CONDA_PATH)/envs/raspios_$(PROJECT_NAME) .
+	conda env remove -n raspios_$(PROJECT_NAME) -y
+
+.PHONY: pack_conda_env
+pack_conda_env: conda_env.tar.gz  ## prepare conda environment to install it offline on your Upkie
+
+.PHONY: unpack_conda_env
+unpack_conda_env:  ### unpack conda environment to conda path
+	-micromamba env list | grep $(PROJECT_NAME) > /dev/null && micromamba env remove -n $(PROJECT_NAME) -y
+	mkdir -p $(RASPI_CONDA_PATH)/envs/$(PROJECT_NAME)
+	tar -zxf conda_env.tar.gz -C $(RASPI_CONDA_PATH)/envs/$(PROJECT_NAME)
