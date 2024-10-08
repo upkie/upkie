@@ -36,3 +36,16 @@ class UpkieRuntimeError(UpkieException, RuntimeError):
     """!
     Runtime error, for instance an invalid call to a library function.
     """
+
+
+class PerformanceIssue(UpkieException):
+    """!
+    Exception raised when a performance issue is detected.
+    """
+
+
+class SpineError(UpkieException):
+    """!
+    Exception raised when the spine sets an error flag in the request field of
+    the shared memory map.
+    """
