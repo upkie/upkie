@@ -15,6 +15,9 @@ py_library(
         "spine_interface.py",
         "wait_for_shared_memory.py",
     ],
+    deps = [
+        "//upkie:exceptions",
+    ],
 )
 
 add_lint_tests()
