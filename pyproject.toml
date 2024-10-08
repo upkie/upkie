@@ -27,7 +27,6 @@ classifiers = [
     "Topic :: Scientific/Engineering",
 ]
 dependencies = [
-    "PyYAML >= 6.0",
     "gymnasium >= 0.29.1",
     "loop-rate-limiters >= 1.0.0",
     "msgpack >= 1.0.2",
@@ -64,7 +63,6 @@ exclude = [
 ]
 include = [
     "upkie/config/*.py",
-    "upkie/config/*.yaml",
     "upkie/envs/*.py",
     "upkie/utils/*.py",
 ]

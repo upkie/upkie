@@ -150,7 +150,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
         \param reward Reward function of the environment.
         \param shm_name Name of shared-memory file.
         \param spine_config Additional spine configuration overriding the
-            defaults from `//config:spine.yaml`. The combined configuration
+            default `upkie.config.SPINE_CONFIG`. The combined configuration
             dictionary is sent to the spine at every :func:`reset`.
         \param wheel_radius Wheel radius in [m].
         """

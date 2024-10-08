@@ -80,7 +80,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
             `frequency`.
         \param shm_name Name of shared-memory file to exchange with the spine.
         \param spine_config Additional spine configuration overriding the
-            defaults from `//config:spine.yaml`. The combined configuration
+            default `upkie.config.SPINE_CONFIG`. The combined configuration
             dictionary is sent to the spine at every :func:`reset`.
         \param spine_retries Number of times to try opening the shared-memory
             file to communicate with the spine.

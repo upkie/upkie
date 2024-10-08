@@ -10,9 +10,7 @@ py_library(
     name = "config",
     srcs = [
         "__init__.py",
-    ],
-    data = [
-        "spine.yaml",
+        "spine_config.py",
     ],
 )
 
