@@ -4,11 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Inria
 
-"""Tune a pitch-position PI balancing controller from the command line.
-
-This example is a condensed version of what is otherwise implemented in the
-default "pid_balancer" agent.
-"""
+"""Tune a pitch-position PI balancing controller from the command line."""
 
 import multiprocessing as mp
 
