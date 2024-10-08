@@ -10,10 +10,10 @@ py_library(
     name = "spine",
     srcs = [
         "__init__.py",
-        "exceptions.py",
         "request.py",
         "serialize.py",
         "spine_interface.py",
+        "wait_for_shared_memory.py",
     ],
 )
 
