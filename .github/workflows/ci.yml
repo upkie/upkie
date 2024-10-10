@@ -157,7 +157,7 @@ jobs:
                 python-version: '3.12'
 
             - name: "Install dependencies"
-              run: pip install ruff
+              run: pip install ruff six
 
             - name: "Check code formatting"
               env:
