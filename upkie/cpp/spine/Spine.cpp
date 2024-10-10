@@ -130,7 +130,7 @@ void Spine::simulate(unsigned nb_substeps) {
       cycle_actuation();  //act
       end_cycle();
       bool stop = false;
-      //wait for python to ask for the observation
+      // Wait for the agent to ask for an observation
       while (!stop) {
         begin_cycle();
         if (state_machine_.state() == State::kObserve) {
