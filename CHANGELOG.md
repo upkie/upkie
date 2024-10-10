@@ -48,6 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - examples: Simulation with joint friction
 - examples: Simulation with sensor noise
 - spines: Add variant argument to BulletSpine
+- CI: add nightly builds
 
 ### Changed
 
