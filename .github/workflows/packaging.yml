@@ -38,10 +38,6 @@ jobs:
         name: "Install from PyPI"
         runs-on: ubuntu-latest
         steps:
-            - name: "Install dependencies"
-              run: |
-                  python -m pip install --upgrade pip
-
             - name: "Install package"
               run: python -m pip install upkie
 
