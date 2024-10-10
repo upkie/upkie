@@ -124,10 +124,14 @@ jobs:
             - name: "Checkout sources"
               uses: actions/checkout@v4
 
+            - name: "Setup Python environment"
+              uses: actions/setup-python@v5
+              with:
+                python-version: '3.12'
+
             - name: "Install dependencies"
               run: |
-                  python -m pip install --upgrade pip
-                  python -m pip install gymnasium loop-rate-limiters msgpack numpy scipy upkie_description
+                  pip install gymnasium loop-rate-limiters msgpack numpy scipy upkie_description
 
             - name: "Test coverage"
               run: |
@@ -147,10 +151,13 @@ jobs:
             - name: "Checkout sources"
               uses: actions/checkout@v4
 
+            - name: "Setup Python environment"
+              uses: actions/setup-python@v5
+              with:
+                python-version: '3.12'
+
             - name: "Install dependencies"
-              run: |
-                  python -m pip install --upgrade pip
-                  python -m pip install ruff
+              run: pip install ruff
 
             - name: "Check code formatting"
               env:
