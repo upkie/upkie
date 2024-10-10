@@ -136,6 +136,9 @@ void Spine::simulate(unsigned nb_substeps) {
         cycle();
       }
     }
+    else {
+      end_cycle();
+    }
   }
 }
 void Spine::begin_cycle() {
