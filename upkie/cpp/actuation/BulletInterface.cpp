@@ -236,7 +236,7 @@ void BulletInterface::observe(Dictionary& observation) const {
   sim("base")("linear_velocity") = v;       // [m] / [s]
   sim("base")("angular_velocity") = omega;  // [rad] / [s]
 
-  // Observe the environnement urdf states
+  // Observe the environment URDF states
   Dictionary& bodies = sim("bodies");
   for (const auto& key_child : body_names) {
     const auto& body_name = key_child.first;
