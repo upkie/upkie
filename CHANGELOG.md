@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - CICD: Install Doxygen with specific version from conda-forge
 - envs: Clamp ground velocity action in `UpkieGroundVelocity`
+- BulletInterface: typo fix
 
 ### Removed
 
