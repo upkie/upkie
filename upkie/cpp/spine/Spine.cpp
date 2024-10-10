@@ -111,23 +111,46 @@ void Spine::cycle() {
   end_cycle();        // output to agent
 }
 
+
 void Spine::simulate(unsigned nb_substeps) {
   while (state_machine_.state() != State::kOver) {
     begin_cycle();
+    
     if (state_machine_.state() == State::kReset) {
-      cycle_actuation();  // S1: cycle the simulator, promise actuation_output_
-      cycle_actuation();  // S2: fill servo_replies_ from actuation_output_
-      cycle_actuation();  // S3: fill observation dict from servo_replies_
-      // now the first observation is ready to be read by the agent
-    } else if (state_machine_.state() == State::kAct) {
-      for (unsigned substep = 0; substep < nb_substeps; ++substep) {
-        cycle_actuation();
+      // S1: Cycle the simulator, promise actuation_output_
+      cycle_actuation();  
+      // S2: Fill servo_replies_ from actuation_output_
+      cycle_actuation();  
+      // S3: Fill observation dict from servo_replies_
+      cycle_actuation();  
+      // Now the first observation is ready to be read by the agent
+    } 
+    
+    else if (state_machine_.state() == State::kAct) {
+      cycle_actuation();  //act
+      end_cycle();
+      bool stop = false;
+      //wait for python to ask for the observation
+      while (!stop) {
+        begin_cycle();
+        if (state_machine_.state() == State::kObserve) {
+          stop = true;
+          break;
+        }
+        end_cycle();
       }
+      cycle_actuation();  
+      end_cycle();
+      // Execute nb_substeps - 2, the state is idle
+      for (unsigned substep = 0; substep < nb_substeps - 2; ++substep) {
+        cycle();
+      }
+      begin_cycle();
+      cycle_actuation();
     }
     end_cycle();
   }
 }
-
 void Spine::begin_cycle() {
   if (caught_interrupt_) {
     state_machine_.process_event(Event::kInterrupt);
