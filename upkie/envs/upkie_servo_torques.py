@@ -28,7 +28,7 @@ class UpkieServoTorques(UpkieServos):
 
     ACTION_MASK: Set[str] = set(["feedforward_torque"])
 
-    ## @var action_space
+    ## \var action_space
     ## Action space.
     action_space: spaces.dict.Dict
 

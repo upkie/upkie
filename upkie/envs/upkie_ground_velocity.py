@@ -85,34 +85,34 @@ class UpkieGroundVelocity(UpkieBaseEnv):
     returned by the reset and step functions.
     """
 
-    ## @var action_space
+    ## \var action_space
     ## Action space.
     action_space: spaces.box.Box
 
-    ## @var leg_return_period
+    ## \var leg_return_period
     ## Time constant for the legs (hips and knees) to revert to their neutral
     ## configuration.
     leg_return_period: float
 
-    ## @var left_wheeled
+    ## \var left_wheeled
     ## Set to True (default) if the robot is left wheeled, that is, a positive
     ## turn of the left wheel results in forward motion. Set to False for a
     ## right-wheeled variant.
     left_wheeled: bool
 
-    ## @var observation_space
+    ## \var observation_space
     ## Observation space.
     observation_space: spaces.box.Box
 
-    ## @var reward
+    ## \var reward
     ## Reward function of the environment.
     reward: WheeledInvertedPendulumReward
 
-    ## @var version
+    ## \var version
     ## Environment version number.
     version = 3
 
-    ## @var wheel_radius
+    ## \var wheel_radius
     ## Wheel radius in [m].
     wheel_radius: float
 
