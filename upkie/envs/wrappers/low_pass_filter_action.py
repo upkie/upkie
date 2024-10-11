@@ -27,7 +27,7 @@ class LowPassFilterAction(gymnasium.Wrapper):
     time_constant: float
 
     ## \var time_constant_box
-    ## Box space from which \ref time_constant is sampled at every reset of the
+    ## Box space from which the time constant is sampled at every reset of the
     ## environment.
     time_constant_box: Box
 
