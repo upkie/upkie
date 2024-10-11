@@ -20,6 +20,10 @@ jobs:
             - name: "Checkout Git repository"
               uses: actions/checkout@v4
 
+            - name: "Install Inkscape for figures"
+              run: |
+                  sudo apt install inkscape
+
             - name: "Install Conda environment with Micromamba"
               uses: mamba-org/setup-micromamba@v1
               with:
