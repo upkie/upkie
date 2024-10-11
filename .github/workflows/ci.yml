@@ -9,7 +9,7 @@ on:
 jobs:
     artifacts:
         name: "Artifacts"
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-22.04
         env:
             SPINE: pi3hat_spine
             SPINE_PATH: ./bazel-out/aarch64-opt/bin/spines/
@@ -37,7 +37,7 @@ jobs:
 
     build_linux:
         name: "Build on Linux"
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-22.04
 
         steps:
             - name: "Checkout sources"
@@ -100,7 +100,7 @@ jobs:
 
     build_raspi:
         name: "Cross-compile to the Raspberry Pi"
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-22.04
 
         steps:
             - name: "Checkout sources"
@@ -119,7 +119,7 @@ jobs:
 
     coverage:
         name: "Coverage"
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-22.04
         steps:
             - name: "Checkout sources"
               uses: actions/checkout@v4
@@ -146,7 +146,7 @@ jobs:
 
     lint:
         name: "Lint code"
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-22.04
         steps:
             - name: "Checkout sources"
               uses: actions/checkout@v4
@@ -180,7 +180,7 @@ jobs:
 
     test:
         name: "Test on Linux with Python ${{ matrix.python-version }}"
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-22.04
 
         strategy:
             matrix:
@@ -221,7 +221,7 @@ jobs:
 
     ci_success:
         name: "CI success"
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-22.04
         needs:
             - artifacts
             - build_darwin_arm64
