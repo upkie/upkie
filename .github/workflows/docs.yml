@@ -23,7 +23,7 @@ jobs:
                   environment-name: upkie_docs
                   create-args: >-
                       python=${{ matrix.python-version }}
-                      doxygen
+                      doxygen=1.9.8
                       gymnasium
                       loop-rate-limiters
                       msgpack-python
