@@ -22,7 +22,7 @@ jobs:
 
             - name: "Install Inkscape for figures"
               run: |
-                  sudo apt install inkscape
+                  sudo apt install graphviz inkscape
 
             - name: "Install Conda environment with Micromamba"
               uses: mamba-org/setup-micromamba@v1
