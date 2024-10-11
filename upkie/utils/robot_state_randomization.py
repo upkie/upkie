@@ -23,31 +23,31 @@ class RobotStateRandomization:
     decision.
     """
 
-    ## @var roll
+    ## \var roll
     ## Amount of roll angle randomization, in radians.
     roll: float
 
-    ## @var pitch
+    ## \var pitch
     ## Amount of pitch angle randomization, in radians.
     pitch: float
 
-    ## @var x
+    ## \var x
     ## Amount of x-axis position randomization, in meters.
     x: float
 
-    ## @var z
+    ## \var z
     ## Amount of z-axis position randomization, in meters.
     z: float
 
-    ## @var omega_x
+    ## \var omega_x
     ## Amount of x-axis randomization on the angular-velocity vector, in rad/s.
     omega_x: float
 
-    ## @var omega_y
+    ## \var omega_y
     ## Amount of y-axis randomization on the angular-velocity vector, in rad/s.
     omega_y: float
 
-    ## @var linear_velocity
+    ## \var linear_velocity
     ## Magnitude of linear velocity randomization, as a 3D vector in m/s.
     linear_velocity: np.ndarray
 

@@ -30,7 +30,7 @@ class UpkieServoPositions(UpkieServos):
 
     ACTION_MASK: Set[str] = set(["position", "kp_scale", "kd_scale"])
 
-    ## @var action_space
+    ## \var action_space
     ## Action space.
     action_space: spaces.dict.Dict
 

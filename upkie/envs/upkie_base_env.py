@@ -38,16 +38,16 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
     _spine: SpineInterface
     _spine_config: dict
 
-    ## @var fall_pitch
-    ## Fall pitch angle, in radians.
+    ## \var fall_pitch
+    ## Fall detection pitch angle, in radians.
     fall_pitch: float
 
-    ## @var init_state
+    ## \var init_state
     ## Initial state for the floating base of the robot, which may be
     ## randomized upon resets.
     init_state: RobotState
 
-    ## @var model
+    ## \var model
     ## Robot model read from its URDF description.
     model: Model
 

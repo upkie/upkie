@@ -12,19 +12,19 @@ class JointLimit:
     Attributes of this class match the URDF specification.
     """
 
-    ## @var lower
+    ## \var lower
     ## Lower configuration limit of the joint, in radians.
     lower: float
 
-    ## @var upper
+    ## \var upper
     ## Upper configuration limit of the joint, in radians.
     upper: float
 
-    ## @var velocity
+    ## \var velocity
     ## Velocity limit of the joint, in [rad] / [s].
     velocity: float
 
-    ## @var effort
+    ## \var effort
     ## Torque limit of the joint, in [N m].
     effort: float
 

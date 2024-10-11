@@ -15,23 +15,23 @@ class Joint:
     with Pinocchio.
     """
 
-    ## @var index
+    ## \var index
     ## Index of the joint in the servo layout. Starts from 1 as in Pinocchio.
     index: int
 
-    ## @var idx_q
+    ## \var idx_q
     ## Index of the joint in configuration vectors.
     idx_q: int
 
-    ## @var idx_v
+    ## \var idx_v
     ## Index of the joint in tangent (velocity, torque) vectors.
     idx_v: int
 
-    ## @var name
+    ## \var name
     ## Name of the joint.
     name: str
 
-    ## @var limit
+    ## \var limit
     ## Joint limit in configuration and tangent spaces.
     limit: JointLimit
 

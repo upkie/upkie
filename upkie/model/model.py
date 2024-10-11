@@ -18,23 +18,23 @@ class Model:
     Robot model parsed from its URDF description.
     """
 
-    ## @var joints
+    ## \var joints
     ## Joints of the robot model.
     joints: List[Joint]
 
-    ## @var rotation_ars_to_world
+    ## \var rotation_ars_to_world
     ## Rotation matrix from the ARS frame to the world frame.
     rotation_ars_to_world: np.ndarray
 
-    ## @var rotation_base_to_imu
+    ## \var rotation_base_to_imu
     ## Rotation matrix from the base frame to the IMU frame.
     rotation_base_to_imu: np.ndarray
 
-    ## @var upper_leg_joints
+    ## \var upper_leg_joints
     ## Upper-leg (hip and knee) joints.
     upper_leg_joints: Tuple[float]
 
-    ## @var wheel_joints
+    ## \var wheel_joints
     ## Wheel joints.
     upper_leg_joints: Tuple[float]
 

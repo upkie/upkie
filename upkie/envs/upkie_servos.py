@@ -96,15 +96,15 @@ class UpkieServos(UpkieBaseEnv):
 
     ACTION_MASK: Set[str] = set()
 
-    ## @var action_space
+    ## \var action_space
     ## Action space.
     action_space: spaces.dict.Dict
 
-    ## @var observation_space
+    ## \var observation_space
     ## Observation space.
     observation_space: spaces.dict.Dict
 
-    ## @var version
+    ## \var version
     ## Environment version number.
     version = 4
 

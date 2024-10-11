@@ -12,11 +12,11 @@ class WheeledInvertedPendulumReward:
     Weights of the position and velocity terms in rewards.
     """
 
-    ## @var position_weight
+    ## \var position_weight
     ## Weight of the position term.
     position_weight: float
 
-    ## @var velocity_weight
+    ## \var velocity_weight
     ## Weight of the velocity term.
     velocity_weight: float
 

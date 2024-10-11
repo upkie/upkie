@@ -82,51 +82,51 @@ class WheeledInvertedPendulum(gymnasium.Env):
     </table>
     """
 
-    ## @var action_space
+    ## \var action_space
     ## Action space.
     action_space: spaces.box.Box
 
-    ## @var dt
+    ## \var dt
     ## Period of the control loop in seconds.
     dt: float
 
-    ## @var fall_pitch
+    ## \var fall_pitch
     ## Fall pitch angle, in radians.
     fall_pitch: float
 
-    ## @var length
+    ## \var length
     ## Length of the inverted pendulum.
     length: float
 
-    ## @var metadata
+    ## \var metadata
     ## Metadata of the environment containing rendering modes.
     metadata = {"render_modes": ["plot"]}
 
-    ## @var model
+    ## \var model
     ## Robot model read from its URDF description.
     model: Model
 
-    ## @var observation_space
+    ## \var observation_space
     ## Observation space.
     observation_space: spaces.box.Box
 
-    ## @var plot
+    ## \var plot
     ## Optional plot used for rendering.
     plot: Optional[Any]
 
-    ## @var render_mode
+    ## \var render_mode
     ## Inherited from gymnasium.Env.
     render_mode: Optional[str]
 
-    ## @var reward
+    ## \var reward
     ## Reward function of the environment.
     reward: WheeledInvertedPendulumReward
 
-    ## @var uncertainty
+    ## \var uncertainty
     ## Biases and noise levels on modeled system uncertainties.
     uncertainty: "WheeledInvertedPendulum.Uncertainty"
 
-    ## @var version
+    ## \var version
     ## Environment version number.
     version = 1
 
@@ -135,20 +135,20 @@ class WheeledInvertedPendulum(gymnasium.Env):
         Biases and noise levels on modeled system uncertainties.
         """
 
-        ## @var accelerometer_bias
+        ## \var accelerometer_bias
         ## Bias vector added to accelerometer measurements in the base frame.
         accelerometer_bias: Union[np.ndarray, float]
 
-        ## @var accelerometer_noise
+        ## \var accelerometer_noise
         ## Vector of standard deviations for white noise added to accelerometer
         ## measurements in the base frame.
         accelerometer_noise: Union[np.ndarray, float]
 
-        ## @var observation_bias
+        ## \var observation_bias
         ## Bias vector added to state observations.
         observation_bias: Union[np.ndarray, float]
 
-        ## @var observation_noise
+        ## \var observation_noise
         ## Vector of standard deviations for white noise added to state
         ## observations.
         observation_noise: Union[np.ndarray, float]
@@ -351,6 +351,9 @@ class WheeledInvertedPendulum(gymnasium.Env):
         return observation, info
 
     def _reset_plot(self):
+        r"""!
+        Reset plot, called when render mode is set to "plot".
+        """
         if self.plot is None:
             try:
                 from matplotlive import LivePlot
@@ -471,6 +474,9 @@ class WheeledInvertedPendulum(gymnasium.Env):
             return self._render_plot()
 
     def _render_plot(self):
+        r"""!
+        Render plot.
+        """
         self.plot.send("pitch", self.__state[0])
         self.plot.send("ground_position", self.__state[1])
         self.plot.update()
@@ -480,6 +486,13 @@ class WheeledInvertedPendulum(gymnasium.Env):
         state: Optional[np.ndarray] = None,
         accel: Optional[np.ndarray] = None,
     ) -> np.ndarray:
+        r"""!
+        Get IMU acceleration in the base frame.
+
+        \param state State vector.
+        \param accel Acceleration vector.
+        \return IMU acceleration in the base frame.
+        """
         theta, r, thetad, rd = state if state is not None else self.__state
         thetadd, rdd = accel if accel is not None else self.__accel
         rotation_base_to_world = np.array(
@@ -494,6 +507,9 @@ class WheeledInvertedPendulum(gymnasium.Env):
         return proper_accel_in_base + uncertainty_in_base
 
     def _get_spine_observation(self):
+        r"""!
+        Get spine observation.
+        """
         linear_to_3d = np.array([[1.0, 0.0], [0.0, 0.0], [0.0, 1.0]])
         theta, r, thetad, rd = self.__state
         accel_2d = self._get_imu_acceleration_in_base()
@@ -519,6 +535,9 @@ class WheeledInvertedPendulum(gymnasium.Env):
         return obs
 
     def _get_state(self) -> np.ndarray:
+        r"""!
+        Get a copy of the current internal state.
+        """
         return self.__state.copy()
 
     def log(self, name: str, entry: Any):
