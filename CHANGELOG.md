@@ -51,6 +51,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - BulletInterface: Move simulation body poses to `sim.bodies`
 - BulletInterface: Rename internal unit-test getters
 - actuation: Log simulation groundtruth to `sim`
+- CI: Do not install Python packages in the system environment on runners
 
 ### Fixed
 
