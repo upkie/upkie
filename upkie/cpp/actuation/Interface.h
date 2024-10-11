@@ -116,8 +116,6 @@ class Interface {
 
   /*! Stop all servos.
    *
-   * \param[out] commands Servo commands to set to stop.
-   *
    * This function does not and should not throw, as it will be called by
    * default if any exception is caught from the spine control loop.
    */
