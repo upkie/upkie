@@ -12,6 +12,7 @@ COVERAGE_DIR = $(CURDIR)/bazel-out/_coverage
 CURDATE = $(shell date -Iseconds)
 CURDIR_NAME = $(shell basename $(CURDIR))
 RASPUNZEL = $(CURDIR)/tools/raspunzel
+CONDA_ENV_FILE = conda_env.tar.gz
 
 # Help snippet adapted from:
 # http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
@@ -47,7 +48,7 @@ check_upkie_name:
 .PHONY: clean
 clean: clean_broken_links  ## clean all local build and intermediate files
 	$(BAZEL) clean --expunge
-	rm -f conda_env.tar.gz
+	rm -f $(CONDA_ENV_FILE)
 
 .PHONY: clean_broken_links
 clean_broken_links:
@@ -98,7 +99,7 @@ run_pi3hat_spine:  ### run the pi3hat spine on the Raspberry Pi
 coverage:  # check unit test coverage and open an HTML report in Firefox (not documented in `make help`)
 	$(BAZEL) coverage --combined_report=lcov --compilation_mode=fastbuild --instrument_test_targets //...
 	@if [ -z "$(shell which genhtml)" ]; then\
-		echo "Error: genhtml not found, is lcov installed?"; \
+		echo "ERROR: genhtml not found, is lcov installed?"; \
 	else \
 		genhtml $(COVERAGE_DIR)/_coverage_report.dat -o $(COVERAGE_DIR); \
 		firefox $(COVERAGE_DIR)/index.html; \
@@ -116,19 +117,23 @@ test:
 # CONDA ENV PACKING
 # =================
 
-HOST_CONDA_PATH=~/.micromamba
-RASPI_CONDA_PATH=~/.micromamba
-
-conda_env.tar.gz:
-	conda env create -n raspios_$(PROJECT_NAME) upkie --platform linux-aarch64 -y
-	tar -zcf conda_env.tar.gz -C $(HOST_CONDA_PATH)/envs/raspios_$(PROJECT_NAME) .
-	conda env remove -n raspios_$(PROJECT_NAME) -y
+.PHONY: check_mamba_setup
+check_mamba_setup:
+	@ if [ -z "${MAMBA_EXE}" ] || [ -z "${MAMBA_ROOT_PREFIX}" ]; then \
+		echo "ERROR: Either MAMBA_EXE or MAMBA_ROOT_PREFIX is not set."; \
+		echo "Is Micromamba installed?"; \
+		echo "See https://mamba.readthedocs.io/en/latest/installation/micromamba-installation.html"; \
+		exit 1; \
+	fi
 
 .PHONY: pack_conda_env
-pack_conda_env: conda_env.tar.gz  ## prepare conda environment to install it offline on your Upkie
+pack_conda_env: check_mamba_setup  ## prepare conda environment to install it offline on your Upkie
+	${MAMBA_EXE} env create -f environment.yaml -n raspios_$(PROJECT_NAME) --platform linux-aarch64 -y
+	tar -zcf $(CONDA_ENV_FILE) -C ${MAMBA_ROOT_PREFIX}/envs/raspios_$(PROJECT_NAME) .
+	${MAMBA_EXE} env remove -n raspios_$(PROJECT_NAME) -y
 
-.PHONY: unpack_conda_env
-unpack_conda_env:  ### unpack conda environment to conda path
-	-micromamba env list | grep $(PROJECT_NAME) > /dev/null && micromamba env remove -n $(PROJECT_NAME) -y
-	mkdir -p $(RASPI_CONDA_PATH)/envs/$(PROJECT_NAME)
-	tar -zxf conda_env.tar.gz -C $(RASPI_CONDA_PATH)/envs/$(PROJECT_NAME)
+.PHONY: check_mamba_setup unpack_conda_env
+unpack_conda_env:  ### unpack conda environment to remote conda path
+	-${MAMBA_EXE} env list | grep $(PROJECT_NAME) > /dev/null && ${MAMBA_EXE} env remove -n $(PROJECT_NAME) -y
+	mkdir -p ${MAMBA_ROOT_PREFIX}/envs/$(PROJECT_NAME)
+	tar -zxf $(CONDA_ENV_FILE) -C ${MAMBA_ROOT_PREFIX}/envs/$(PROJECT_NAME)
