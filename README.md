@@ -90,6 +90,10 @@ This repository distributes standalone Python agents in the [examples](https://g
 
 Head over to the [new\_agent](https://github.com/upkie/new_agent) template to create your own, and feel free to open a PR here to add your agent to the list above.
 
+## How can I participate?
+
+Contributions are welcome to both the hardware and software of Upkies! If you are a developer/maker with some robotics experience looking to hack on open source, check out the [contribution guidelines](CONTRIBUTING.md). On the software side, you can also report any bug you encounter in the [issue tracker](https://github.com/upkie/upkie/issues).
+
 ## Citation
 
 If you built an Upkie or use parts of this project in your works, please cite the project and its contributors:
@@ -104,3 +108,7 @@ If you built an Upkie or use parts of this project in your works, please cite th
   year = {2024}
 }
 ```
+
+## See also
+
+- [Awesome Open Source Robots](https://github.com/stephane-caron/awesome-open-source-robots): Upkies are one among many open-source open-hardware robot initiative: check out the others!
