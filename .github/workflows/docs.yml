@@ -31,7 +31,7 @@ jobs:
                   environment-name: upkie_docs
                   create-args: >-
                       python=3.12
-                      doxygen=1.9.8
+                      doxygen<=1.9.5
                       gymnasium
                       loop-rate-limiters
                       msgpack-python
