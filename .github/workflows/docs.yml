@@ -16,10 +16,24 @@ jobs:
             - name: "Checkout Git repository"
               uses: actions/checkout@v4
 
-            - name: "Install dependencies"
-              run: |
-                  sudo apt update
-                  sudo apt install doxygen graphviz inkscape
+            - name: "Install Conda environment with Micromamba"
+              uses: mamba-org/setup-micromamba@v1
+              with:
+                  micromamba-version: '1.5.8-0'
+                  environment-name: upkie_docs
+                  create-args: >-
+                      python=${{ matrix.python-version }}
+                      doxygen
+                      gymnasium
+                      loop-rate-limiters
+                      msgpack-python
+                      numpy
+                      pinocchio
+                      scipy
+                      stable-baselines3
+                      upkie_description
+                  cache-environment: true
+                  post-cleanup: 'all'
 
             - name: "Report Doxygen version"
               run: |
