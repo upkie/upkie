@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - CICD: Pin Ubuntu workflows to 22.04
 - Move Python spine exceptions to `upkie.exceptions`
+- tools: Make output directory an argument in dump_servo_configs
 
 ### Fixed
 
