@@ -125,7 +125,7 @@ void Spine::simulate(unsigned nb_substeps) {
       cycle_actuation();  //act
       end_cycle();
       begin_cycle();
-      while (state_machine_.state() != State::kObserve or state_machine_.state() != State::kOver) {
+      while (state_machine_.state() != State::kObserve or state_machine_.state() == State::kOver) {
         end_cycle();
         begin_cycle();
       }
