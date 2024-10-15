@@ -14,7 +14,6 @@
 
 """Configure all servos connected to an Upkie wheeled biped."""
 
-import datetime
 import os
 import subprocess
 import sys
@@ -57,80 +56,40 @@ PI3HAT_CFG = (
     f"{RIGHT_BUS}={RIGHT_HIP},{RIGHT_KNEE},{RIGHT_WHEEL}"
 )
 
-logging_depth = 0
 
-
-def log_message(message: str, indent: int = 0) -> None:
-    """Log a single message.
-
-    Args:
-        message: Message to log.
-        indent: Indentation level.
-    """
-    logging_indent = " | " * (logging_depth + indent)
-    now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
-    print(f"{now}: {logging_indent}{message}")
-
-
-def log_method(func):
-    """Decorator to log function calls."""
-
-    def wrapped_function(*args, **kwargs):
-        global logging_depth
-        try:
-            logging_depth += 1
-            args_repr = (
-                f"'{args[0]}'" + (", ..." if len(args) > 1 else "")
-                if args
-                else ""
-            )
-            log_message(f"{func.__name__}({args_repr})", indent=-1)
-            result = func(*args, **kwargs)
-            return result
-        finally:
-            logging_depth -= 1
-
-    return wrapped_function
-
-
-@log_method
-def run(*args, **kwargs):
+def run_shell_command(command: str):
     """Run a subprocess."""
-    subprocess.check_call(*args, shell=True, **kwargs)
+    print(f"* {command}")
+    subprocess.check_call(command, shell=True)
 
 
-def configure_servo(id: int, param: str, value: Union[float, str]):
+def configure_servo(servo_id: int, param: str, value: Union[float, str]):
     """Configure a moteus controller.
 
     Args:
-        id: Identifier of the servo.
+        servo_id: Identifier of the servo to configure.
         param: Parameter to configure.
         value: Value corresponding to the parameter.
     """
     moteus_command = f"conf set {param} {value}"
     shell_command = (
         f'echo "{moteus_command}" | '
-        f'sudo moteus_tool --pi3hat-cfg "{PI3HAT_CFG}" -t {id} -c'
+        f'sudo moteus_tool --pi3hat-cfg "{PI3HAT_CFG}" -t {servo_id} -c'
     )
-    run(shell_command)
+    run_shell_command(shell_command)
 
 
-def write_configuration(id: int):
+def write_servo_configuration(servo_id: int):
     """Write configuration to a moteus controller.
 
     Args:
-        id: Identifier of the servo that should write its configuration.
+        servo_id: Identifier of the servo that should write its configuration.
     """
     shell_command = (
         f'echo "conf write" | '
-        f'sudo moteus_tool --pi3hat-cfg "{PI3HAT_CFG}" -t {id} -c'
+        f'sudo moteus_tool --pi3hat-cfg "{PI3HAT_CFG}" -t {servo_id} -c'
     )
-    run(shell_command)
-
-
-def write_all_configurations():
-    for servo in ALL_SERVOS:
-        write_configuration(servo)
+    run_shell_command(shell_command)
 
 
 def configure_position_limits():
@@ -177,4 +136,5 @@ if __name__ == "__main__":
     configure_velocity_limits()
     configure_default_limits()
     configure_gains()
-    write_all_configurations()
+    for servo in ALL_SERVOS:
+        write_servo_configuration(servo)
