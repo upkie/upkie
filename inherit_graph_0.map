@@ -1,0 +1,10 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" title=" " alt="" coords="31,45,107,70"/>
+<area shape="rect" id="node2" href="$classupkie_1_1envs_1_1upkie__base__env_1_1UpkieBaseEnv.html" title="Base class for Upkie environments." alt="" coords="203,37,373,77"/>
+<area shape="rect" id="node3" href="$classupkie_1_1envs_1_1upkie__ground__velocity_1_1UpkieGroundVelocity.html" title="Environment where Upkie is used as a wheeled inverted pendulum." alt="" coords="444,5,664,45"/>
+<area shape="rect" id="node4" href="$classupkie_1_1envs_1_1upkie__servos_1_1UpkieServos.html" title="Upkie with with action and observation for each servo." alt="" coords="461,69,647,109"/>
+<area shape="rect" id="node5" href="$classupkie_1_1envs_1_1upkie__servo__positions_1_1UpkieServoPositions.html" title="Command servos by position control." alt="" coords="712,37,939,77"/>
+<area shape="rect" id="node6" href="$classupkie_1_1envs_1_1upkie__servo__torques_1_1UpkieServoTorques.html" title="Command servos by torque control." alt="" coords="722,101,929,141"/>
+<area shape="rect" id="node7" title=" " alt="" coords="5,105,132,130"/>
+<area shape="rect" id="node8" href="$classupkie_1_1envs_1_1wheeled__inverted__pendulum_1_1WheeledInvertedPendulum.html" title="Wheeled inverted pendulum model." alt="" coords="180,102,396,157"/>
+</map>
