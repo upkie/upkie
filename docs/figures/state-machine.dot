@@ -9,11 +9,11 @@ digraph spine_state_machine {
     node [shape=point, label=""] initial, terminal;
     node [shape=square];
 
-    kSendStops[label="Stop"];
-    kReset[label="Reset"];
-    kIdle[label="Idle"];
-    kAct[label="Act"];
-    kShutdown[label="Shutdown"];
+    kSendStops[label="stop"];
+    kReset[label="reset"];
+    kIdle[label="idle"];
+    kStep[label="step"];
+    kShutdown[label="shutdown"];
 
     initial->kSendStops[label="BEGIN"];
     kSendStops->kReset[label=<BEGIN <font color="blue">[req=start, stop_cycles≥5]</font><br/><font color="red">read(config)</font>>];
@@ -21,10 +21,10 @@ digraph spine_state_machine {
     kSendStops->kSendStops[label="END"];
     kSendStops->kShutdown[label="SIGINT", style=dashed];
     kReset->kIdle[label=<END <br/><font color="red">write(obs)</font>>];
-    kIdle->kAct[label=<BEGIN <font color="blue">[req=act]</font><br/><font color="red">read(action)</font>>];
+    kIdle->kStep[label=<BEGIN <font color="blue">[req=act]</font><br/><font color="red">read(action)</font>>];
     kIdle->kSendStops[label="BEGIN [req=stop]"];
     kIdle->kShutdown[label="SIGINT", style=dashed];
-    kAct->kIdle[label=<END <br/><font color="red">write(obs)</font>>];
-    kAct->kShutdown[label="SIGINT", style=dashed];
+    kStep->kIdle[label=<END <br/><font color="red">write(obs)</font>>];
+    kStep->kShutdown[label="SIGINT", style=dashed];
     kShutdown->terminal[label=<END <font color="blue">[stop_cycles≥5]</font>>];
 }
