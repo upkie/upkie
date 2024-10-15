@@ -80,28 +80,7 @@ constexpr const char* state_name(const State& state) noexcept {
  * \image html state-machine.png
  * \image latex state-machine.eps
  *
- * States have the following purposes:
- *
- * - Stop: do nothing, send stop commands to servos
- * - Reset: apply runtime configuration to actuation interface and observers
- *   - The reset state is not time-critical, *i.e.*, configuration can take
- *   time.
- * - Idle: do nothing
- * - Observe: write observation from the actuation interface
- * - Act: send action to the actuation interface
- * - Shutdown: terminal state, exit the control loop
- *
- * There are three possible events:
- *
- * - `begin`: beginning of a control cycle,
- * - `end`: end of a control cycle.
- * - `SIGINT`: the process received an interrupt signal.
- *
- * Guards, indicated between brackets, may involve two variables:
- *
- * - `req`: the current request from the agent.
- * - `stop_cycles`: the number of stop commands cycled in the current state
- *   (only available in "stop" and "shutdown" states).
+ * See \ref spine-state-machine for an overview of this state machine.
  */
 class StateMachine {
  public:

@@ -866,8 +866,9 @@ WARN_LOGFILE           =
 
 INPUT                  = README.md \
                          docs/gym-environments.md \
-                         docs/spines.md \
                          docs/observations.md \
+                         docs/simulation-spines.md \
+                         docs/real-robot-spines.md \
                          docs/dev-notes.md \
                          upkie \
                          upkie/config \
