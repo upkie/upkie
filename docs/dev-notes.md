@@ -71,19 +71,22 @@ Spines run a state machine depicted in the following diagram:
 States have the following purposes:
 
 - **Stop:** do nothing, send stop commands to servos.
-- **Reset:** apply runtime configuration to actuation interface and observers. The reset state is not time-critical, *i.e.*, configuration can take time.
+- **Reset:** apply runtime configuration to the spine's actuation interface and observers.
+    - The reset state is not time-critical, *i.e.*, configuration can take time.
+    - When exiting the reset state, the spine writes observations back to the agent.
 - **Idle:** do nothing.
-- **Observe:** write observation from the actuation interface.
-- **Act:** send action to the actuation interface.
+- **Act:** send action to the actuation interface and write observation back to the agent.
 - **Shutdown:** terminal state, exit the control loop.
 
 There are three possible events:
 
-- `begin`: beginning of a control cycle.
-- `end`: end of a control cycle.
+- `BEGIN`: beginning of a control cycle.
+- `END`: end of a control cycle.
 - `SIGINT`: the process received an interrupt signal.
 
-Guards, indicated between brackets, may involve two variables:
+Guards (in blue), *i.e.* conditions required to trigger a transition, may involve two variables:
 
 - `req`: the current [Request](\ref upkie::cpp::spine::Request) from the agent.
 - `stop_cycles`: the number of stop commands cycled in the current state (only available in "stop" and "shutdown" states).
+
+Read/write operations from/to the shared memory are indicated in red.
