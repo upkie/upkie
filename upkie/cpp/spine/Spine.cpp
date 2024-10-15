@@ -118,13 +118,17 @@ void Spine::simulate(unsigned nb_substeps) {
       cycle_actuation();  // S1: cycle the simulator, promise actuation_output_
       cycle_actuation();  // S2: fill servo_replies_ from actuation_output_
       cycle_actuation();  // S3: fill observation dict from servo_replies_
+      end_cycle();
       // now the first observation is ready to be read by the agent
     } else if (state_machine_.state() == State::kStep) {
-      for (unsigned substep = 0; substep < nb_substeps; ++substep) {
+      cycle_actuation();
+      end_cycle();  // important: writes observation of the first substep
+      for (unsigned substep = 1; substep < nb_substeps; ++substep) {
         cycle_actuation();
       }
+    } else {
+      end_cycle();
     }
-    end_cycle();
   }
 }
 
