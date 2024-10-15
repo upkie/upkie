@@ -67,15 +67,6 @@ class SpineInterface:
         if hasattr(self, "_shared_memory"):  # handle ctor exceptions
             self._shared_memory.close()
 
-    def get_first_observation(self) -> dict:
-        r"""!
-        Get first observation after a reset.
-
-        \return Observation dictionary.
-        """
-        self.get_observation()  # pre-reset observation, skipped
-        return self.get_observation()
-
     def set_action(self, action: dict) -> dict:
         r"""!
         Set action for the spine to process.
