@@ -67,22 +67,6 @@ class SpineInterface:
         if hasattr(self, "_shared_memory"):  # handle ctor exceptions
             self._shared_memory.close()
 
-    def get_observation(self) -> dict:
-        r"""!
-        Ask the spine to write the latest observation to shared memory.
-
-        \return Observation dictionary.
-
-        \note In simulation, the first observation after a reset was collected
-        before that reset. Use \ref get_first_observation in that case to skip
-        to the first post-reset observation.
-        """
-        self._wait_for_spine()
-        self._write_request(Request.kObservation)
-        self._wait_for_spine()
-        observation = self._read_dict()
-        return observation
-
     def get_first_observation(self) -> dict:
         r"""!
         Get first observation after a reset.
@@ -92,15 +76,19 @@ class SpineInterface:
         self.get_observation()  # pre-reset observation, skipped
         return self.get_observation()
 
-    def set_action(self, action: dict) -> None:
+    def set_action(self, action: dict) -> dict:
         r"""!
         Set action for the spine to process.
 
         \param[in] action Action dictionary.
+        \return Observation dictionary.
         """
         self._wait_for_spine()
         self._write_dict(action)
         self._write_request(Request.kAction)
+        self._wait_for_spine()
+        observation = self._read_dict()
+        return observation
 
     def start(self, config: dict) -> None:
         r"""!

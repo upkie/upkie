@@ -44,7 +44,5 @@ class MockSpine:
 
     def set_action(self, action) -> None:
         self.action = action
-
-    def get_observation(self) -> dict:
         self.observation["number"] += 1
         return self.observation
