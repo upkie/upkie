@@ -6,20 +6,19 @@
 
 """Command-line script to communicate with Upkie's servos."""
 
-import requests
-
 import argparse
 import asyncio
-import subprocess
 import math
 import os
+import subprocess
 import sys
 from dataclasses import dataclass
-from typing import Dict, List
 from pathlib import Path
+from typing import Dict, List
 
 import moteus
 import moteus_pi3hat
+import requests
 
 INSTALL_PREFIX = Path("/usr/local/bin/")
 PI3HAT_CFG = "1=1,2,3;3=4,5,6"
@@ -189,6 +188,11 @@ def get_upkie_asset(name: str) -> dict:
 
 
 def get_pi3hat_spine_version() -> str:
+    """Get pi3hat spine version from the command line.
+
+    Returns:
+        Pi3hat spine version.
+    """
     call = subprocess.run(
         [INSTALL_PREFIX / "pi3hat_spine", "--version"],
         capture_output=True,
