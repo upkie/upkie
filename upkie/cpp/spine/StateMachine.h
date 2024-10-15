@@ -21,17 +21,14 @@ enum class State : uint32_t {
   //! Do nothing
   kIdle = 2,
 
-  //! Write an observation to shared memory
-  kObserve = 3,
-
   //! Read a new action from shared memory
-  kAct = 4,
+  kAct = 3,
 
   //! Shut down the spine
-  kShutdown = 5,
+  kShutdown = 4,
 
   //! Final termination
-  kOver = 6
+  kOver = 5
 };
 
 //! Events that may trigger transitions between states.
@@ -58,8 +55,6 @@ constexpr const char* state_name(const State& state) noexcept {
       return "State::kReset";
     case State::kIdle:
       return "State::kIdle";
-    case State::kObserve:
-      return "State::kObserve";
     case State::kAct:
       return "State::kAct";
     case State::kShutdown:
