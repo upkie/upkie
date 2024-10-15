@@ -20,12 +20,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Move Python spine exceptions to `upkie.exceptions`
 - tools: Make output directory an argument in `dump_servo_configs`
 - tools: Simplify servo configuration script
+- **Breaking:** Spine and spine interface revisions:
+    - Observations are now returned upon reset and step
+    - Spine: Remove separate observation state and observation request
+    - SpineInterface: Setting an action now returns an observation
+    - SpineInterface: Starting the spine now returns an observation
+    - StateMachine: Rename spine FSM state from "act" to "step"
+    - docs: Update spine FSM specification in the documentation
+
 
 ### Fixed
 
+- BulletInterface: Fix typo in a comment
 - CICD: Install Doxygen with specific version from conda-forge
+- Spine: Fix observation consistency between `run` and `simulate`
 - envs: Clamp ground velocity action in `UpkieGroundVelocity`
-- BulletInterface: typo fix
 
 ### Removed
 

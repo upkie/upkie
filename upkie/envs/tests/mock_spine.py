@@ -36,15 +36,16 @@ class MockSpine:
             },
         }
 
-    def start(self, config: dict) -> None:
-        pass
+    def _next_observation(self) -> dict:
+        self.observation["number"] += 1
+        return self.observation
+
+    def start(self, config: dict) -> dict:
+        return self._next_observation()
 
     def stop(self) -> None:
         pass
 
-    def set_action(self, action) -> None:
+    def set_action(self, action) -> dict:
         self.action = action
-
-    def get_observation(self) -> dict:
-        self.observation["number"] += 1
-        return self.observation
+        return self._next_observation()

@@ -41,11 +41,8 @@ void StateMachine::process_cycle_beginning() {
       switch (request) {
         case Request::kNone:
           break;
-        case Request::kObservation:
-          enter_state(State::kObserve);
-          break;
         case Request::kAction:
-          enter_state(State::kAct);
+          enter_state(State::kStep);
           break;
         case Request::kStart:
           spdlog::warn(
@@ -66,18 +63,14 @@ void StateMachine::process_cycle_beginning() {
       spdlog::warn(
           "Event::kCycleBeginning should not happen from State::kReset");
       break;
-    case State::kObserve:
+    case State::kStep:
       spdlog::warn(
-          "Event::kCycleBeginning should not happen from State::kObserve");
-      break;
-    case State::kAct:
-      spdlog::warn("Event::kCycleBeginning should not happen from State::kAct");
+          "Event::kCycleBeginning should not happen from State::kStep");
       break;
     case State::kSendStops:
       switch (request) {
         case Request::kNone:
           break;
-        case Request::kObservation:
         case Request::kAction:
           interface_.set_request(Request::kError);
           break;
@@ -117,10 +110,7 @@ void StateMachine::process_cycle_end() {
         spdlog::info("Stop cycle {} / {}", stop_cycles_, kNbStopCycles);
       }
       break;
-    case State::kObserve:
-      enter_state(State::kIdle);
-      break;
-    case State::kAct:
+    case State::kStep:
       enter_state(State::kIdle);
       break;
     case State::kShutdown:
@@ -144,8 +134,7 @@ void StateMachine::enter_state(const State& next_state) noexcept {
       interface_.set_request(Request::kNone);
       break;
     case State::kReset:
-    case State::kObserve:
-    case State::kAct:
+    case State::kStep:
       break;
     case State::kSendStops:
     case State::kShutdown:
