@@ -86,10 +86,14 @@ class SpineInterface:
         Reset the spine to a new configuration.
 
         \param[in] config Configuration dictionary.
+        \return Observation dictionary.
         """
         self._wait_for_spine()
         self._write_dict(config)
         self._write_request(Request.kStart)
+        self._wait_for_spine()
+        observation = self._read_dict()
+        return observation
 
     def stop(self) -> None:
         """!
