@@ -237,7 +237,7 @@ TEST_F(SpineTest, SetObservationOnIdle) {
 
 TEST_F(SpineTest, WriteObservationOnRequest) {
   start_spine();
-  write_mmap_request(Request::kAct);
+  write_mmap_request(Request::kStep);
   spine_->cycle();
   const Dictionary& observation = spine_->working_dict()("observation");
   ASSERT_TRUE(observation.get<bool>("schwifty"));
@@ -246,7 +246,7 @@ TEST_F(SpineTest, WriteObservationOnRequest) {
 TEST_F(SpineTest, ObserverExceptionStopsRun) {
   start_spine();
   schwifty_observer_->throw_exception = true;
-  write_mmap_request(Request::kAct);
+  write_mmap_request(Request::kStep);
   spine_->cycle();
   ASSERT_TRUE(spine_->all_commands_are_stops());
   ASSERT_EQ(spine_->state(), State::kShutdown);

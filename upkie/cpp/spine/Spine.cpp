@@ -119,7 +119,7 @@ void Spine::simulate(unsigned nb_substeps) {
       cycle_actuation();  // S2: fill servo_replies_ from actuation_output_
       cycle_actuation();  // S3: fill observation dict from servo_replies_
       // now the first observation is ready to be read by the agent
-    } else if (state_machine_.state() == State::kAct) {
+    } else if (state_machine_.state() == State::kStep) {
       for (unsigned substep = 0; substep < nb_substeps; ++substep) {
         cycle_actuation();
       }
@@ -145,7 +145,7 @@ void Spine::begin_cycle() {
       config.clear();
       config.update(data, size);
       reset(config);
-    } else if (state_machine_.state() == State::kAct) {
+    } else if (state_machine_.state() == State::kStep) {
       Dictionary& action = working_dict_("action");
       const char* data = agent_interface_.data();
       size_t size = agent_interface_.size();
@@ -162,7 +162,7 @@ void Spine::end_cycle() {
   const Dictionary& observation = working_dict_("observation");
   working_dict_("time") = observation.get<double>("time");
   if (state_machine_.state() == State::kReset ||
-      state_machine_.state() == State::kAct) {
+      state_machine_.state() == State::kStep) {
     size_t size = observation.serialize(ipc_buffer_);
     agent_interface_.write(ipc_buffer_.data(), size);
   }
@@ -194,7 +194,7 @@ void Spine::cycle_actuation() {
     if (state_machine_.state() == State::kSendStops ||
         state_machine_.state() == State::kShutdown) {
       actuation_.write_stop_commands();
-    } else if (state_machine_.state() == State::kAct) {
+    } else if (state_machine_.state() == State::kStep) {
       const Dictionary& action = working_dict_("action");
       actuation_.process_action(action);
       actuation_.write_position_commands(action);
