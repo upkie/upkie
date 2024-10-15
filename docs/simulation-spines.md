@@ -4,6 +4,8 @@
 
 The Bullet spine runs an agent in the [Bullet 3](https://github.com/bulletphysics/bullet3) simulator. We can start this spine as a standalone process and let it run waiting for agents to connect. The simulation script will run pre-compiled binaries if possible:
 
+<img src="bullet-spine.png" height="100" align="right" />
+
 ```console
 ./start_simulation.sh
 ```

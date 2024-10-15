@@ -1,3 +1,6 @@
-# This file makes sure the images/ directory exists
 *.eps
-*.png
+action-observation-loop.png
+floor-contact.png
+observers.png
+state-machine.png
+wheel-odometry.png
