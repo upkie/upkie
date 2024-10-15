@@ -12,7 +12,6 @@ COVERAGE_DIR = $(CURDIR)/bazel-out/_coverage
 CURDATE = $(shell date -Iseconds)
 CURDIR_NAME = $(shell basename $(CURDIR))
 RASPUNZEL = $(CURDIR)/tools/raspunzel
-CONDA_ENV_FILE = conda_env.tar.gz
 
 # Help snippet adapted from:
 # http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
@@ -48,7 +47,6 @@ check_upkie_name:
 .PHONY: clean
 clean: clean_broken_links  ## clean all local build and intermediate files
 	$(BAZEL) clean --expunge
-	rm -f $(CONDA_ENV_FILE)
 
 .PHONY: clean_broken_links
 clean_broken_links:
@@ -113,27 +111,3 @@ lint:
 .PHONY: test
 test:
 	$(BAZEL) test //...
-
-# CONDA ENV PACKING
-# =================
-
-.PHONY: check_mamba_setup
-check_mamba_setup:
-	@ if [ -z "${MAMBA_EXE}" ] || [ -z "${MAMBA_ROOT_PREFIX}" ]; then \
-		echo "ERROR: Either MAMBA_EXE or MAMBA_ROOT_PREFIX is not set."; \
-		echo "Is Micromamba installed?"; \
-		echo "See https://mamba.readthedocs.io/en/latest/installation/micromamba-installation.html"; \
-		exit 1; \
-	fi
-
-.PHONY: pack_conda_env
-pack_conda_env: check_mamba_setup  ## prepare conda environment to install it offline on your Upkie
-	${MAMBA_EXE} env create -f environment.yaml -n raspios_$(PROJECT_NAME) --platform linux-aarch64 -y
-	tar -zcf $(CONDA_ENV_FILE) -C ${MAMBA_ROOT_PREFIX}/envs/raspios_$(PROJECT_NAME) .
-	${MAMBA_EXE} env remove -n raspios_$(PROJECT_NAME) -y
-
-.PHONY: check_mamba_setup unpack_conda_env
-unpack_conda_env:  ### unpack conda environment to remote conda path
-	-${MAMBA_EXE} env list | grep $(PROJECT_NAME) > /dev/null && ${MAMBA_EXE} env remove -n $(PROJECT_NAME) -y
-	mkdir -p ${MAMBA_ROOT_PREFIX}/envs/$(PROJECT_NAME)
-	tar -zxf $(CONDA_ENV_FILE) -C ${MAMBA_ROOT_PREFIX}/envs/$(PROJECT_NAME)
