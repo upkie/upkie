@@ -21,9 +21,6 @@ class Request(IntEnum):
     @var kNone
     Flag set when there is no active request.
 
-    @var kObservation
-    Flag set to indicate an observation is requested.
-
     @var kAction
     Flag set to indicate an action has been supplied.
 
@@ -38,8 +35,7 @@ class Request(IntEnum):
     """
 
     kNone = 0
-    kObservation = 1
-    kAction = 2
-    kStart = 3
-    kStop = 4
-    kError = 5
+    kAction = 1
+    kStart = 2
+    kStop = 3
+    kError = 4

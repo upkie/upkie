@@ -161,7 +161,8 @@ void Spine::end_cycle() {
   // Write observation if applicable
   const Dictionary& observation = working_dict_("observation");
   working_dict_("time") = observation.get<double>("time");
-  if (state_machine_.state() == State::kObserve) {
+  if (state_machine_.state() == State::kReset ||
+      state_machine_.state() == State::kAct) {
     size_t size = observation.serialize(ipc_buffer_);
     agent_interface_.write(ipc_buffer_.data(), size);
   }
