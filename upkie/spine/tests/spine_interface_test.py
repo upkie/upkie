@@ -57,10 +57,9 @@ class TestSpineInterface(unittest.TestCase):
             Args:
                 spine: The spine interface waiting for a free request slot.
             """
-            if self.__read_request() == Request.kObservation:
-                self.__write_observation(self.next_observation)
-            elif self.__read_request() == Request.kAction:
+            if self.__read_request() == Request.kAction:
                 self.last_action = self.__read_dict()
+                self.__write_observation(self.next_observation)
             elif self.__read_request() == Request.kStart:
                 self.last_config = self.__read_dict()
             self.assertEqual(self.__read_request(), Request.kNone)

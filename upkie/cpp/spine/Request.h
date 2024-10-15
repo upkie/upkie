@@ -13,20 +13,17 @@ enum class Request : uint32_t {
   //! Flag set when there is no active request.
   kNone = 0,
 
-  //! Flag set to indicate an observation is requested.
-  kObservation = 1,
-
   //! Flag set to indicate an action has been supplied.
-  kAction = 2,
+  kAction = 1,
 
   //! Flag set to start the spine.
-  kStart = 3,
+  kStart = 2,
 
   //! Flag set to stop the spine.
-  kStop = 4,
+  kStop = 3,
 
   //! Flag set when the last request was invalid.
-  kError = 5
+  kError = 4
 };
 
 }  // namespace upkie::cpp::spine
