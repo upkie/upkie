@@ -109,9 +109,6 @@ void StateMachine::process_cycle_end() {
         spdlog::info("Stop cycle {} / {}", stop_cycles_, kNbStopCycles);
       }
       break;
-    case State::kObserve:
-      enter_state(State::kIdle);
-      break;
     case State::kAct:
       enter_state(State::kIdle);
       break;
@@ -136,7 +133,6 @@ void StateMachine::enter_state(const State& next_state) noexcept {
       interface_.set_request(Request::kNone);
       break;
     case State::kReset:
-    case State::kObserve:
     case State::kAct:
       break;
     case State::kSendStops:
