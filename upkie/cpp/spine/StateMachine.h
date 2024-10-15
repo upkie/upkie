@@ -22,7 +22,7 @@ enum class State : uint32_t {
   kIdle = 2,
 
   //! Read a new action from shared memory
-  kAct = 3,
+  kStep = 3,
 
   //! Shut down the spine
   kShutdown = 4,
@@ -55,8 +55,8 @@ constexpr const char* state_name(const State& state) noexcept {
       return "State::kReset";
     case State::kIdle:
       return "State::kIdle";
-    case State::kAct:
-      return "State::kAct";
+    case State::kStep:
+      return "State::kStep";
     case State::kShutdown:
       return "State::kShutdown";
     case State::kOver:
