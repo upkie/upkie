@@ -129,19 +129,11 @@ class TestSpineInterface(unittest.TestCase):
         """
         config = {"foo": {"bar": {"land": 42.0}}}
         self.assertEqual(self.__read_request(), Request.kNone)
-        self.spine.start(config)
-        self.assertEqual(self.__read_request(), Request.kStart)
-        self.spine.get_observation()  # triggers wait_for_monkeypatch
+        observation = self.spine.start(config)
+        self.assertIsNotNone(observation)
+        self.assertIsInstance(observation, dict)
+        self.assertEqual(self.__read_request(), Request.kNone)
         self.assertEqual(self.last_config, config)
-
-    def test_get_observation(self):
-        """
-        Spine switches the request back to none and returns an observation.
-        """
-        self.assertEqual(self.__read_request(), Request.kNone)
-        observation = self.spine.get_observation()
-        self.assertEqual(self.__read_request(), Request.kNone)
-        self.assertEqual(observation, self.next_observation)
 
     def test_set_action(self):
         """
@@ -151,9 +143,8 @@ class TestSpineInterface(unittest.TestCase):
         action = {"servo": {"foo": {"position": 3.0}}}
         self.next_observation["servo"]["foo"]["position"] = 2.0
         self.assertEqual(self.__read_request(), Request.kNone)
-        self.spine.set_action(action)
-        self.assertEqual(self.__read_request(), Request.kAction)
-        observation = self.spine.get_observation()
+        observation = self.spine.set_action(action)
+        self.assertEqual(self.__read_request(), Request.kNone)
         self.assertEqual(self.last_action, action)
         self.assertEqual(observation, self.next_observation)
 
@@ -165,7 +156,7 @@ class TestSpineInterface(unittest.TestCase):
         SpineInterface._wait_for_spine = wait_pre_monkeypatch
         spine = SpineInterface(shm_name=self.shm_name, perf_checks=False)
         with self.assertRaises(TimeoutError):
-            spine.get_observation()
+            spine.start({"config": "empty"})
         with self.assertRaises(TimeoutError):
             spine.set_action({"foo": "bar"})
         with self.assertRaises(TimeoutError):
