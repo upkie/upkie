@@ -30,8 +30,8 @@ class AgentInterfaceTest : public ::testing::Test {
 };
 
 TEST_F(AgentInterfaceTest, GetSetRequest) {
-  agent_interface_->set_request(Request::kObservation);
-  ASSERT_EQ(agent_interface_->request(), Request::kObservation);
+  agent_interface_->set_request(Request::kReset);
+  ASSERT_EQ(agent_interface_->request(), Request::kReset);
   agent_interface_->set_request(Request::kAction);
   ASSERT_EQ(agent_interface_->request(), Request::kAction);
 }
