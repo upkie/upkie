@@ -87,10 +87,10 @@ TEST_F(StateMachineTest, Startup) {
   ASSERT_EQ(request(), Request::kNone);
 }
 
-TEST_F(StateMachineTest, SteppingWhenSendingStopsFails) {
+TEST_F(StateMachineTest, ActingWhenSendingStopsFails) {
   ASSERT_EQ(state(), State::kSendStops);
 
-  set_request(Request::kStep);
+  set_request(Request::kAction);
   state_machine_->process_event(Event::kCycleBeginning);
   ASSERT_EQ(state(), State::kSendStops);
   ASSERT_EQ(request(), Request::kError);
