@@ -1,6 +1,10 @@
 # Real-robot spines {#real-robot-spines}
 
-There are two real-robot spines: the mock spine, and the pi3hat spine. The mock spine is useful to run an agent on the robot without firing up the actuators. It works exactly as the pi3hat spine, replacing "pi3hat" with "mock" in all instructions.
+There are two real-robot spines: the mock spine, and the pi3hat spine.
+
+## mock spine {#mock-spine}
+
+The mock spine is useful to run an agent on the robot without firing up the actuators. It works exactly as the pi3hat spine, replacing "pi3hat" with "mock" in all instructions.
 
 ## pi3hat spine {#pi3hat-spine}
 
