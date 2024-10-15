@@ -85,5 +85,5 @@ There are three possible events:
 
 Guards, indicated between brackets, may involve two variables:
 
-- `req`: the current request from the agent.
+- `req`: the current [Request](\ref upkie::cpp::spine::Request) from the agent.
 - `stop_cycles`: the number of stop commands cycled in the current state (only available in "stop" and "shutdown" states).
