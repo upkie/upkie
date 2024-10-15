@@ -20,6 +20,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Move Python spine exceptions to `upkie.exceptions`
 - tools: Make output directory an argument in `dump_servo_configs`
 - tools: Simplify servo configuration script
+- **Breaking:** Spine and spine interface revisions:
+    - Internal: Rename spine FSM state from "act" to "step"
+    - Internal: Starting the spine returns an observation
+    - Remove separate observation state and observation request
+    - Specification: Observation is now returned upon resets
+    - Specification: Observation is now returned upon steps
+    - docs: Update spine FSM specification in the documentation
+
 
 ### Fixed
 

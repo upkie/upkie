@@ -169,9 +169,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         self._spine.stop()
         self.__reset_rate()
         self.__reset_init_state()
-        self._spine.start(self._spine_config)
-        self._spine.get_observation()  # might be a pre-reset observation
-        spine_observation = self._spine.get_observation()
+        spine_observation = self._spine.start(self._spine_config)
         self.parse_first_observation(spine_observation)
         observation = self.get_env_observation(spine_observation)
         info = {"spine_observation": spine_observation}
