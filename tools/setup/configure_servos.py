@@ -124,7 +124,7 @@ def configure_gains():
     for wheel in WHEEL_SERVOS:
         # Best value depends wheel radius (WR)
         # Values that have worked well: kd=0.3 for WR=5 cm, kd=0.6 for WR=7 cm
-        configure_servo(wheel, "servo.pid_position.kd", 0.6)
+        configure_servo(wheel, "servo.pid_position.kd", 0.3)
 
 
 if __name__ == "__main__":
