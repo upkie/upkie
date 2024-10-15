@@ -31,9 +31,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- BulletInterface: Fix typo in a comment
 - CICD: Install Doxygen with specific version from conda-forge
+- Spine: Fix observation consistency between `run` and `simulate`
 - envs: Clamp ground velocity action in `UpkieGroundVelocity`
-- BulletInterface: typo fix
 
 ### Removed
 
