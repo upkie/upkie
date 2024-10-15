@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2022 Stéphane Caron
+// Copyright 2024 Inria
 
 digraph spine_state_machine {
     bgcolor="transparent"
@@ -11,23 +12,19 @@ digraph spine_state_machine {
     kSendStops[label="Stop"];
     kReset[label="Reset"];
     kIdle[label="Idle"];
-    kObserve[label="Observe"];
     kAct[label="Act"];
     kShutdown[label="Shutdown"];
 
-    initial->kSendStops[label="Initialization"];
-    kSendStops->kReset[label="begin [req=start, stop_cycles>=5]"];
-    kSendStops->kSendStops[label="begin [req!=reset]"];
-    kSendStops->kSendStops[label="end"];
+    initial->kSendStops[label="BEGIN"];
+    kSendStops->kReset[label=<BEGIN <font color="blue">[req=start, stop_cycles≥5]</font><br/><font color="red">read(config)</font>>];
+    kSendStops->kSendStops[label=<BEGIN <font color="blue">[req!=reset]</font>>];
+    kSendStops->kSendStops[label="END"];
     kSendStops->kShutdown[label="SIGINT", style=dashed];
-    kReset->kIdle[label="end"];
-    kIdle->kObserve[label="begin [req=obs]"];
-    kIdle->kAct[label="begin [req=act]"];
-    kIdle->kSendStops[label="begin [req=stop]"];
+    kReset->kIdle[label=<END <br/><font color="red">write(obs)</font>>];
+    kIdle->kAct[label=<BEGIN <font color="blue">[req=act]</font><br/><font color="red">read(action)</font>>];
+    kIdle->kSendStops[label="BEGIN [req=stop]"];
     kIdle->kShutdown[label="SIGINT", style=dashed];
-    kObserve->kIdle[label="end"];
-    kObserve->kShutdown[label="SIGINT", style=dashed];
-    kAct->kIdle[label="end"];
+    kAct->kIdle[label=<END <br/><font color="red">write(obs)</font>>];
     kAct->kShutdown[label="SIGINT", style=dashed];
-    kShutdown->terminal[label="stop_cycles>=5"];
+    kShutdown->terminal[label=<END <font color="blue">[stop_cycles≥5]</font>>];
 }
