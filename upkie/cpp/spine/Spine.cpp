@@ -111,6 +111,7 @@ void Spine::cycle() {
   end_cycle();        // output to agent
 }
 
+
 void Spine::simulate(unsigned nb_substeps) {
   while (state_machine_.state() != State::kOver) {
     begin_cycle();
@@ -119,15 +120,27 @@ void Spine::simulate(unsigned nb_substeps) {
       cycle_actuation();  // S2: fill servo_replies_ from actuation_output_
       cycle_actuation();  // S3: fill observation dict from servo_replies_
       // now the first observation is ready to be read by the agent
+      end_cycle();
     } else if (state_machine_.state() == State::kAct) {
-      for (unsigned substep = 0; substep < nb_substeps; ++substep) {
-        cycle_actuation();
+      cycle_actuation();  //act
+      end_cycle();
+      begin_cycle();
+      while (state_machine_.state() != State::kObserve or state_machine_.state() == State::kOver) {
+        end_cycle();
+        begin_cycle();
+      }
+      cycle_actuation();  
+      end_cycle();
+      // Execute nb_substeps - 2, the state is idle
+      for (unsigned substep = 0; substep < nb_substeps - 2; ++substep) {
+        cycle();
       }
     }
-    end_cycle();
+    else {
+      end_cycle();
+    }
   }
 }
-
 void Spine::begin_cycle() {
   if (caught_interrupt_) {
     state_machine_.process_event(Event::kInterrupt);
