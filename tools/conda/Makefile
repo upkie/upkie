@@ -26,7 +26,7 @@ clean:  ## remove conda environment archive
 
 .PHONY: pack_conda_env
 pack_conda_env: check_mamba_setup  ## prepare conda environment to install it offline on your Upkie
-	${MAMBA_EXE} env create -f environment.yaml -n raspios_$(PROJECT_NAME) --platform linux-aarch64 -y
+	${MAMBA_EXE} env create -n raspios_$(PROJECT_NAME) upkie --platform linux-aarch64 -y
 	tar -zcf $(CONDA_ENV_FILE) -C ${MAMBA_ROOT_PREFIX}/envs/raspios_$(PROJECT_NAME) .
 	${MAMBA_EXE} env remove -n raspios_$(PROJECT_NAME) -y
 
