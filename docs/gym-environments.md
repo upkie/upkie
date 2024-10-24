@@ -6,11 +6,7 @@ Upkie has reinforcement learning environments following the [Gymnasium](https://
 
 In the `UpkieGroundVelocity` environment, Upkie keeps its legs straight and actions only affect wheel velocities. This environment is used for instance by the [MPC balancer](https://github.com/upkie/mpc_balancer/) and [PPO balancer](https://github.com/upkie/ppo_balancer) agents.
 
-Its action \f$a =\begin{bmatrix} \dot{p}^* \end{bmatrix}\f$ consists of:
-
-- \f$\dot{p}^*\f$ the commanded ground velocity, which is then internally converted to wheel velocity commands.
-
-Its observation \f$o\f$ consists of:
+**Observation:** The observation \f$o\f$ consists of:
 
 \f[
 \begin{align*}
@@ -23,19 +19,23 @@ where we denote by:
 - \f$\theta\f$ the pitch angle of the base with respect to the world vertical, in radians.
 - \f$p\f$ the position of the average wheel contact point, in meters.
 
+**Action:** The action \f$a =\begin{bmatrix} \dot{p}^* \end{bmatrix}\f$ consists of:
+
+- \f$\dot{p}^*\f$ the commanded ground velocity, which is then internally converted to wheel velocity commands.
+
 You can find more details about the environment in the [UpkieGroundVelocity](\ref upkie.envs.upkie_ground_velocity.UpkieGroundVelocity) class documentation.
 
 ## Servos {#servos-env}
 
 The `UpkieServos` environment has dictionary observation and action spaces.
 
-Observation dictionaries report, for each servo, the following keys:
+**Observation:** observation dictionaries report, for each servo, the following keys:
 
 - `position`: joint position in [rad].
 - `velocity`: joint velocity in [rad] / [s].
 - `torque`: joint torque in [N m].
 
-Action dictionaries specify servo targets:
+**Action:** Action dictionaries specify servo targets:
 
 - `position`: commanded joint angle in [rad].
 - `velocity`: commanded joint velocity in [rad] / [s].
