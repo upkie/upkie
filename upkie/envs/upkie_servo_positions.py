@@ -17,15 +17,32 @@ class UpkieServoPositions(UpkieServos):
     r"""!
     Command servos by position control.
 
-    Child class of UpkieServos that defines the action space as a dictionary of
-    joint names with the following keys:
+    \anchor upkie_servo_positions_description
 
-    - `position`: the desired position of the joint
-    - `kp_scale`: the proportional gain of the joint
-    - `kd_scale`: the derivative gain of the joint
+    ### Action space
 
-    Which simplifies the control of the robot by allowing to control the
-    position of the joints and the gains.
+    The action space is consists of the following targets for each joint:
+
+    - `position`: commanded joint angle \f$\theta^*\f$ in [rad] (NaN to
+       disable) (required).
+    - `kp_scale`: scaling factor \f$k_{p}^{\mathit{scale}}\f$ applied to the
+       position feedback gain, between zero and one.
+    - `kd_scale`: scaling factor \f$k_{d}^{\mathit{scale}}\f$ applied to the
+       velocity feedback gain, between zero and one.
+
+    This makes the agent command servo positions with velocity damping:
+
+    \f[
+    \begin{align*}
+    \tau & = k_{p} k_{p}^{\mathit{scale}} (\theta^* - \theta) - k_{d}
+    k_{d}^{\mathit{scale}} \dot{\theta}
+    \end{align*}
+    \f]
+
+    ### Observation space
+
+    This environment has the same observation space as [UpkieServos](\ref
+    upkie_servos_description).
     """
 
     ACTION_MASK: Set[str] = set(["position", "kp_scale", "kd_scale"])
