@@ -19,6 +19,8 @@ class UpkieServoTorques(UpkieServos):
 
     \anchor upkie_servo_torques_description
 
+    ### Action space
+
     The action space is consists of the following targets for each joint:
 
     - `feedforward_torque`: feedforward joint torque \f$\tau_{\mathit{ff}}\f$
