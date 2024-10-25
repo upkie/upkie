@@ -1,4 +1,4 @@
-# Simulation spines {#simulation-spines}
+# Simulation {#simulation}
 
 ## Bullet spine {#bullet-spine}
 
