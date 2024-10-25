@@ -80,7 +80,7 @@ Upkie has environments compatible with the [Gymnasium API](https://gymnasium.far
     - `UpkieServoPositions`: control joint positions.
     - `UpkieServoTorques`: control joint torques.
 
-Check out the full list of [Upkie Gymnasium environments](https://upkie.github.io/upkie/environments.html) for details.
+Check out the full [list of environments](https://upkie.github.io/upkie/environments.html) for details.
 
 ## Agents
 
