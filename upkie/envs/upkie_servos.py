@@ -19,6 +19,8 @@ class UpkieServos(UpkieBaseEnv):
     r"""!
     Upkie with with action and observation for each servo.
 
+    \anchor upkie_servos_description
+
     ### Action space
 
     The action space is a dictionary with one key for each servo:
@@ -63,9 +65,13 @@ class UpkieServos(UpkieBaseEnv):
     \end{align*}
     \f]
 
-    Note that the servo regulates the torque above at its own frequency, which
-    is higher (typically 40 kHz) than the agent and the spine frequencies. See
-    the [moteus
+    Position and velocity gains \f$k_{p}\f$ and \f$k_{d}\f$ are configured in
+    each moteus controller directly and don't change during execution. We can
+    rather modulate the overall feedback gains via the normalized parameters
+    \f$k_{p}^{\mathit{scale}} \in [0, 1]\f$ and \f$k_{d}^{\mathit{scale}} \in
+    [0, 1]\f$. Note that the servo regulates the torque above at its own
+    frequency, which is higher (typically 40 kHz) than the agent and the spine
+    frequencies. See the [moteus
     reference](https://github.com/mjbots/moteus/blob/13c171c697ce6f60a73c9385e6fe951957313d1d/docs/reference.md#theory-of-operation)
     for more details.
 

@@ -33,41 +33,6 @@ You can find more details about the environment in the [UpkieGroundVelocity](\re
 
 ## Servos {#servos-env}
 
-The `UpkieServos` environment has dictionary observation and action spaces.
-
-**Observation:** observation dictionaries report, for each servo, the following keys:
-
-- `position`: joint position in [rad].
-- `velocity`: joint velocity in [rad] / [s].
-- `torque`: joint torque in [N m].
-
-**Action:** Action dictionaries specify servo targets:
-
-- `position`: commanded joint angle in [rad].
-- `velocity`: commanded joint velocity in [rad] / [s].
-- `feedforward_torque`: feedforward joint torque in [N m].
-
-Those commands that are directly sent to the moteus controllers, which will in turn apply a standard control law with feedforward torque and position-velocity feedback:
-
-\f[
-\begin{align*}
-\tau & = \tau_{\mathit{ff}} + k_{p} k_{p}^{\mathit{scale}} (\theta^* - \theta) + k_{d} k_{d}^{\mathit{scale}} (\dot{\theta}^* - \dot{\theta})
-\end{align*}
-\f]
-
-where for joint \f$i\f$ we denote by:
-
-- \f$\tau\f$ is the commanded joint torque,
-- \f$\tau_{\mathit{ff}}\f$ the feedforward torque (set only this one for direct torque control),
-- \f$\theta\f$ the measured joint position,
-- \f$\dot{\theta}\f$ the measured joint velocity,
-- \f$\theta^*\f$ the target joint position,
-- \f$\dot{\theta}^*\f$ the target joint velocity.
-
-Position and velocity gains \f$k_{p}\f$ and \f$k_{d}\f$ are configured in each moteus controller directly and don't change during execution. We can rather modulate the overall feedback gains via the normalized parameters \f$k_{p}^{\mathit{scale}} \in [0, 1]\f$ and \f$k_{d}^{\mathit{scale}} \in [0, 1]\f$.
-
-Check out the [UpkieServos](\ref upkie.envs.upkie_servos.UpkieServos) documentation for more details.
-
 ### Servo positions
 
 The [UpkieServoPositions](\ref upkie.envs.upkie_servo_positions.UpkieServoPositions) has the same observation space as UpkieServos, but the action space is only composed of \f$\theta\f$, \f$k_d\f$ and \f$k_p\f$. This makes the agent command servo positions with velocity damping:
