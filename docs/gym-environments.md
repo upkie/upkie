@@ -1,6 +1,12 @@
 # Gym environments {#environments}
 
-Upkie has reinforcement learning environments following the [Gymnasium](https://gymnasium.farama.org/) API. All of them are single-threaded and run as-is in both simulation and on real robots. Each environment has its own observation and action spaces, but all of them provide access to full spine observation via `info` dictionaries. See \ref observations for details.
+Upkie has reinforcement learning environments following the [Gymnasium](https://gymnasium.farama.org/) API. All of them are single-threaded and run as-is in both simulation and on real robots.
+
+- [UpkieBaseEnv](\ref upkie.envs.upkie_base_env.UpkieBaseEnv)
+    - [UpkieGroundVelocity](\ref upkie_ground_velocity_description)
+    - [UpkieServos](\ref upkie_servos_description)
+
+Each environment has its own observation and action spaces, but all of them provide access to full spine observation via `info` dictionaries. See \ref observations for details.
 
 ## Ground velocity {#ground-velocity-env}
 
