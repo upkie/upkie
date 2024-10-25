@@ -45,7 +45,7 @@ pip install upkie
 Upkie implements an action-observation loop to control robots from a standalone "agent" process, like this:
 
 <p align="center">
-    <img alt="Action-observation loop" src="https://github.com/upkie/upkie/blob/main/docs/figures/action-observation-loop.svg" />
+    <img alt="Action-observation loop" src="https://raw.githubusercontent.com/upkie/upkie/refs/heads/main/docs/figures/action-observation-loop.svg" />
 </p>
 
 The agent can be a simple Python script with few dependencies. This separation between agent and spine provides a robot/simulation switch to train or test agents in a simulation spine before running them on a real robot.
