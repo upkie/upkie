@@ -50,7 +50,7 @@ Let's start a Bullet simulation spine:
 ./start_simulation.sh
 ```
 
-Click on the robot in the simulator window to apply external forces. Once the simulation spine is running, we can interact with it using one of the [Gymnasium environments](https://upkie.github.io/upkie/environments.html). For example, here is a linear-feedback balancer for ``UpkieGroundVelocity``:
+Click on the robot in the simulator window to apply external forces. Once the simulation spine is running, we can control the robot using one of its Gymnasium environments, for instance:
 
 ```python
 import gymnasium as gym
@@ -69,18 +69,18 @@ with gym.make("UpkieGroundVelocity-v3", frequency=200.0) as env:
             observation, _ = env.reset()
 ```
 
-The Python code is the same whether running a simulation or real-robot [spine](https://upkie.github.io/upkie/spines.html).
+The Python code stays the same whether we run a simulation or on a real Upkie. There are also many environments to pick from, check out the list of [Upkie Gymnasium environments](https://upkie.github.io/upkie/environments.html)
 
 ## Agents
 
-This repository distributes standalone Python agents in the [examples](https://github.com/upkie/upkie/tree/main/examples) directory. Larger Upkie agents, some of them with custom C++ spines, are distributed in their own repositories:
+This main repository distributes Gymnasium environments and [examples](https://github.com/upkie/upkie/tree/main/examples). Larger Upkie agents, some of them with custom C++ spines, have their own repositories:
 
 - [MPC balancer](https://github.com/upkie/mpc_balancer): balance in place using model predictive control.
 - [Pink balancer](https://github.com/upkie/pink_balancer): a more advanced agent that can crouch and stand up while balancing.
 - [PPO balancer](https://github.com/upkie/ppo_balancer): balance in place with a policy trained by reinforcement learning.
 - [PID balancer](https://github.com/upkie/pid_balancer): legacy agent used to test new Upkies with minimal dependencies.
 
-Head over to the [new\_agent](https://github.com/upkie/new_agent) template to create your own, and feel free to open a PR here to add your agent to the list above.
+Head over to the [new\_agent](https://github.com/upkie/new_agent) template to create your own, and feel free to open a PR here to add your agent to the list.
 
 ## How can I participate?
 
