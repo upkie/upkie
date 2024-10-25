@@ -24,9 +24,14 @@ class UpkieGroundVelocity(UpkieBaseEnv):
     r"""!
     Environment where Upkie is used as a wheeled inverted pendulum.
 
-    Model assumptions of the wheeled inverted pendulum are summarized in the <a
-    href="https://scaron.info/robotics/wheeled-inverted-pendulum-model.html">following
-    note</a>.
+    \anchor upkie_ground_velocity_description
+
+    In the `UpkieGroundVelocity` environment, Upkie keeps its legs straight and
+    actions only affect wheel velocities. This way, it behaves like a <a
+    href="https://scaron.info/robotics/wheeled-inverted-pendulum-model.html">wheeled
+    inverted pendulum</a>. This ground-velocity environment is used for
+    instance by the [MPC balancer](https://github.com/upkie/mpc_balancer/) and
+    [PPO balancer](https://github.com/upkie/ppo_balancer) agents.
 
     \note For reinforcement learning with neural networks: the observation
     space and action space are not normalized.
@@ -36,49 +41,35 @@ class UpkieGroundVelocity(UpkieBaseEnv):
     The action corresponds to the ground velocity resulting from wheel
     velocities. The action vector is simply:
 
-    <table>
-        <tr>
-            <td><strong>Index</strong></td>
-            <td><strong>Description</strong></td>
-            </tr>
-        <tr>
-            <td>``0``</td>
-            <td>Ground velocity in [m] / [s].</td>
-        </tr>
-    </table>
+    \f[
+    a =\begin{bmatrix} \dot{p}^* \end{bmatrix}
+    \f]
 
-    Note that, while this action is not normalized, [-1, 1] m/s is a reasonable
-    range for ground velocities.
+    where we denote by \f$\dot{p}^*\f$ the commanded ground velocity in [m] /
+    [s], which is internally converted into wheel velocity commands. Note that,
+    while this action is not normalized, [-1, 1] m/s is a reasonable range for
+    ground velocities.
 
     ### Observation space
 
     Vectorized observations have the following structure:
 
-    <table>
-        <tr>
-            <td><strong>Index</strong></td>
-            <td><strong>Description</strong></td>
-        </tr>
-        <tr>
-            <td>0</td>
-            <td>Pitch angle of the base with respect to the world vertical, in
-            radians. This angle is positive when the robot leans forward.</td>
-        </tr>
-        <tr>
-            <td>1</td>
-            <td>Position of the average wheel contact point, in meters.</td>
-        </tr>
-        <tr>
-            <td>2</td>
-            <td>Body angular velocity of the base frame along its lateral axis,
-            in radians per seconds.</td>
-        </tr>
-        <tr>
-            <td>3</td>
-            <td>Velocity of the average wheel contact point, in meters per
-            seconds.</td>
-        </tr>
-    </table>
+    \f[
+    \begin{align*}
+    o &= \begin{bmatrix} \theta \\ p \\ \dot{\theta} \\ \dot{p} \end{bmatrix}
+    \end{align*}
+    \f]
+
+    where we denote by:
+
+    - \f$\theta\f$ the pitch angle of the base with respect to the world
+      vertical, in radians. This angle is positive when the robot leans
+      forward.
+    - \f$p\f$ the position of the average wheel contact point, in meters.
+    - \f$\dot{\theta}\f$ the body angular velocity of the base frame along its
+      lateral axis, in radians per seconds.
+    - \f$\dot{p}\f$ the velocity of the average wheel contact point, in meters
+      per seconds.
 
     As with all Upkie environments, full observations from the spine (detailed
     in \ref observations) are also available in the `info` dictionary
