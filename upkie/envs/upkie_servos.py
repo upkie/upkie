@@ -25,29 +25,29 @@ class UpkieServos(UpkieBaseEnv):
 
     The action space is a dictionary with one key for each servo:
 
-    - `left_hip`: Left hip joint (qdd100)
-    - `left_hip`: Left knee joint (qdd100)
-    - `left_hip`: Left wheel joint (mj5208)
-    - `right_hip`: Right hip joint (qdd100)
-    - `right_hip`: Right knee joint (qdd100)
-    - `right_hip`: Right wheel joint (mj5208)
+    - `left_hip`: left hip joint (qdd100)
+    - `left_hip`: left knee joint (qdd100)
+    - `left_hip`: left wheel joint (mj5208)
+    - `right_hip`: right hip joint (qdd100)
+    - `right_hip`: right knee joint (qdd100)
+    - `right_hip`: right wheel joint (mj5208)
 
     The value for each servo dictionary is itself a dictionary with the
     following keys:
 
-    - `position`: Commanded joint angle \f$\theta^*\f$ in [rad] (NaN to
-        disable) (required).
-    - `velocity`: Commanded joint velocity \f$\dot{\theta}^*\f$ in [rad] /
-        [s] (required).
-    - `feedforward_torque`: Feedforward joint torque \f$\tau_{\mathit{ff}}\f$
-        in [N m].
-    - `kp_scale`: Scaling factor \f$k_{p}^{\mathit{scale}}\f$ applied to the
-        position feedback gain, between zero and one.
-    - `kd_scale`: Scaling factor \f$k_{d}^{\mathit{scale}}\f$ applied to the
-        velocity feedback gain, between zero and one.
-    - `maximum_torque`: Maximum joint torque \f$\tau_{\mathit{max}}\f$
-        (feedforward + feedback) enforced during the whole actuation step, in
-        [N m].
+    - `position`: commanded joint angle \f$\theta^*\f$ in [rad] (NaN to
+       disable) (required).
+    - `velocity`: commanded joint velocity \f$\dot{\theta}^*\f$ in [rad] /
+       [s] (required).
+    - `feedforward_torque`: feedforward joint torque \f$\tau_{\mathit{ff}}\f$
+       in [N m].
+    - `kp_scale`: scaling factor \f$k_{p}^{\mathit{scale}}\f$ applied to the
+       position feedback gain, between zero and one.
+    - `kd_scale`: scaling factor \f$k_{d}^{\mathit{scale}}\f$ applied to the
+       velocity feedback gain, between zero and one.
+    - `maximum_torque`: maximum joint torque \f$\tau_{\mathit{max}}\f$
+       (feedforward + feedback) enforced during the whole actuation step, in
+       [N m].
 
     The resulting torque applied by the servo is then:
 
