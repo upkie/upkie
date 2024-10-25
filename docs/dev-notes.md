@@ -46,7 +46,15 @@ ln -s ../upkie ./
 
 ## Inter-process communication
 
-Upkie's software implements an inter-process communication (IPC) protocol between spines and agents. This protocol is suitable for [real-time](https://en.wiktionary.org/wiki/real-time#English) but not high-frequency (> 1000 Hz) performance, which is fine for balancing and locomotion on Upkies. (If you are wondering whether Python is suitable for real-time applications, we were too, until we [tried it out](https://github.com/orgs/upkie/discussions/240).) All design decisions have their pros and cons. Some pros for this design are:
+Upkie implements an action-observation loop to control robot actuators from a standalone "agent" process. The inter-process communication (IPC) protocol between the agent and the "spine" process that talks to actuators looks like this:
+
+<p align="center">
+    <img alt="Action-observation loop" src="action-observation-loop.png" />
+</p>
+
+The agent can be a simple Python script with few dependencies. This separation between agent and spine provides a robot/simulation switch to train or test agents in a simulation spine before running them on a real robot.
+
+This protocol is suitable for [real-time](https://en.wiktionary.org/wiki/real-time#English) but not high-frequency (> 1000 Hz) performance, which is fine for balancing and locomotion on Upkies. (If you are wondering whether Python is suitable for real-time applications, we were too, until we [tried it out](https://github.com/orgs/upkie/discussions/240).) All design decisions have their pros and cons. Some pros for this design are:
 
 - Run the same Python code on simulated and real robots
 - Interfaces with to the [mjbots pi3hat](https://mjbots.com/products/mjbots-pi3hat-r4-4b) and mjbots actuators
