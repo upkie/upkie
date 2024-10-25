@@ -21,8 +21,9 @@ This repository contains all the materials needed to build and animate an Upkie:
     - [Getting started](https://github.com/upkie/upkie#getting-started)
     - [Documentation](https://upkie.github.io/upkie/)
 - Going further:
-    - [More agents](https://github.com/upkie/upkie#agents)
-    - [More examples](https://github.com/upkie/upkie/tree/main/examples)
+    - [Examples](https://github.com/upkie/upkie/tree/main/examples)
+    - [Gymnasium environments](https://upkie.github.io/upkie/environments.html)
+    - [Agents](https://github.com/upkie/upkie#agents)
 
 Questions are welcome in the [Chat](https://app.element.io/#/room/#upkie:matrix.org) and [Discussions forum](https://github.com/upkie/upkie/discussions).
 
@@ -69,7 +70,7 @@ with gym.make("UpkieGroundVelocity-v3", frequency=200.0) as env:
             observation, _ = env.reset()
 ```
 
-The Python code stays the same whether we run a simulation or on a real Upkie. Head over to the [examples](https://github.com/upkie/upkie/tree/main/examples) directory for more use cases.
+The Python code is the same whether we run in simulation or on a real Upkie. Head over to the [examples](https://github.com/upkie/upkie/tree/main/examples) directory for more use cases.
 
 ## Gymnasium environments
 
