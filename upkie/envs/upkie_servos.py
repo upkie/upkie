@@ -17,7 +17,7 @@ from .upkie_base_env import UpkieBaseEnv
 
 class UpkieServos(UpkieBaseEnv):
     r"""!
-    Upkie with with action and observation for each servo.
+    Upkie with actions and observations corresponding to the moteus servo API.
 
     \anchor upkie_servos_description
 

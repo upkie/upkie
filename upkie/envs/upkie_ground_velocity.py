@@ -26,8 +26,8 @@ class UpkieGroundVelocity(UpkieBaseEnv):
 
     \anchor upkie_ground_velocity_description
 
-    In the `UpkieGroundVelocity` environment, Upkie keeps its legs straight and
-    actions only affect wheel velocities. This way, it behaves like a <a
+    With this environment, Upkie keeps its legs straight and actions only
+    affect wheel velocities. This way, it behaves like a <a
     href="https://scaron.info/robotics/wheeled-inverted-pendulum-model.html">wheeled
     inverted pendulum</a>. This ground-velocity environment is used for
     instance by the [MPC balancer](https://github.com/upkie/mpc_balancer/) and
