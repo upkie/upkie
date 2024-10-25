@@ -25,10 +25,26 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
     r"""!
     Base class for Upkie environments.
 
-    \note This environment is made to run on a single CPU thread rather than on
-    GPU/TPU. The downside for reinforcement learning is that computations are
-    not massively parallel. The upside is that it simplifies deployment to the
-    real robot, as it relies on the same spine interface that runs on Upkie.
+    \anchor upkie_base_env_description
+
+    This environment base class provides a number of features:
+
+    - Communication with the spine process.
+    - Fall detection.
+    - Initial state randomization (e.g. when training a policy).
+    - Loop frequency regulation (optional).
+
+    It otherwise defines three abstract methods to be defined by derived
+    environments to:
+
+    - Convert environment action to spine action.
+    - Convert spine to environment observations.
+    - Get reward for the current observation and action.
+
+    \note Upkie environments are made to run on a single CPU thread. The
+    downside for reinforcement learning is that computations are not massively
+    parallel. The upside is that it simplifies deployment to the real robot, as
+    it relies on the same spine interface that runs on Upkie.
     """
 
     __frequency: Optional[float]

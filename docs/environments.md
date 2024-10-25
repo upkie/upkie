@@ -2,7 +2,7 @@
 
 Upkie has environments compatible with the [Gymnasium API](https://gymnasium.farama.org/):
 
-- [UpkieBaseEnv](\ref upkie.envs.upkie_base_env.UpkieBaseEnv): base class for all Upkie environments.
+- [UpkieBaseEnv](\ref upkie_base_env_description): base class for all Upkie environments.
     - [UpkieGroundVelocity](\ref upkie_ground_velocity_description): behave like a wheeled inverted pendulum.
     - [UpkieServos](\ref upkie_servos_description): action and observation correspond to the full servo API.
         - [UpkieServoPositions](\ref upkie_servo_positions_description): joint position control only.
