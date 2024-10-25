@@ -400,11 +400,11 @@ class WheeledInvertedPendulum(gymnasium.Env):
             - `reward`: Reward returned after taking the action.
             - `terminated`: Whether the agent reached a terminal state,
               which can be a good or a bad thing. When true, the user needs to
-              call :func:`reset()`.
+              call `reset()`.
             - `truncated`: Whether the episode is reaching max number of
               steps. This boolean can signal a premature end of the episode,
               i.e. before a terminal state is reached. When true, the user
-              needs to call :func:`reset()`.
+              needs to call `reset()`.
             - `info`: Dictionary with auxiliary diagnostic information. For
               us this is the full observation dictionary coming from the spine.
         """

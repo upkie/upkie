@@ -70,7 +70,7 @@ class UpkieServoTorques(UpkieServos):
         \param shm_name Name of shared-memory file.
         \param spine_config Additional spine configuration overriding the
             default `upkie.config.SPINE_CONFIG`. The combined configuration
-            dictionary is sent to the spine at every :func:`reset`.
+            dictionary is sent to the spine at every reset.
         """
         super().__init__(
             fall_pitch=fall_pitch,

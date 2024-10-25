@@ -97,7 +97,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         \param shm_name Name of shared-memory file to exchange with the spine.
         \param spine_config Additional spine configuration overriding the
             default `upkie.config.SPINE_CONFIG`. The combined configuration
-            dictionary is sent to the spine at every :func:`reset`.
+            dictionary is sent to the spine at every reset.
         \param spine_retries Number of times to try opening the shared-memory
             file to communicate with the spine.
 
@@ -233,12 +233,12 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
               of its `observation_space`.
             - `reward`: Reward returned after taking the action.
             - `terminated`: Whether the agent reached a terminal state,
-              which can be a good or a bad thing. When true, the user needs to
-              call :func:`reset()`.
+              which may be a good or a bad thing. When true, the user needs to
+              call `reset()`.
             - `truncated`: Whether the episode is reaching max number of
               steps. This boolean can signal a premature end of the episode,
               i.e. before a terminal state is reached. When true, the user
-              needs to call :func:`reset()`.
+              needs to call `reset()`.
             - `info`: Dictionary with auxiliary diagnostic information. For
               us this is the full observation dictionary coming from the spine.
         """
