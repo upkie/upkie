@@ -69,11 +69,22 @@ with gym.make("UpkieGroundVelocity-v3", frequency=200.0) as env:
             observation, _ = env.reset()
 ```
 
-The Python code stays the same whether we run a simulation or on a real Upkie. There are also many environments to pick from, check out the list of [Upkie Gymnasium environments](https://upkie.github.io/upkie/environments.html)
+The Python code stays the same whether we run a simulation or on a real Upkie. Head over to the [examples](https://github.com/upkie/upkie/tree/main/examples) directory for more use cases.
+
+## Gymnasium environments
+
+Upkie has environments compatible with the [Gymnasium API](https://gymnasium.farama.org/), for instance:
+
+- `UpkieGroundVelocity`: keep legs straight and balance with the wheels.
+- `UpkieServos`: control joint servos directly (position, velocity, torque)
+    - `UpkieServoPositions`: control joint positions.
+    - `UpkieServoTorques`: control joint torques.
+
+Check out the full list of [Upkie Gymnasium environments](https://upkie.github.io/upkie/environments.html) for details.
 
 ## Agents
 
-This main repository distributes Gymnasium environments and [examples](https://github.com/upkie/upkie/tree/main/examples). Larger Upkie agents, some of them with custom C++ spines, have their own repositories:
+Larger Upkie agents have their own repositories:
 
 - [MPC balancer](https://github.com/upkie/mpc_balancer): balance in place using model predictive control.
 - [Pink balancer](https://github.com/upkie/pink_balancer): a more advanced agent that can crouch and stand up while balancing.
@@ -104,3 +115,4 @@ If you built an Upkie or use parts of this project in your works, please cite th
 ## See also
 
 - [Awesome Open Source Robots](https://github.com/stephane-caron/awesome-open-source-robots): Upkies are one among many open-source open-hardware robot initiative: check out the others!
+- [Open Dynamic Robot Initiative](https://open-dynamic-robot-initiative.github.io/): Low-cost actuators, fully open source quadrupeds and bipeds.

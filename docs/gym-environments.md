@@ -1,6 +1,6 @@
 # Gym environments {#environments}
 
-Upkie has reinforcement learning environments following the [Gymnasium API](https://gymnasium.farama.org/).
+Upkie has environments compatible with the [Gymnasium API](https://gymnasium.farama.org/).
 
 - [UpkieBaseEnv](\ref upkie.envs.upkie_base_env.UpkieBaseEnv): base class for all Upkie environments.
     - [UpkieGroundVelocity](\ref upkie_ground_velocity_description): behave like a wheeled inverted pendulum.
