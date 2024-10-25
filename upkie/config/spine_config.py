@@ -5,7 +5,7 @@
 # Copyright 2023 Inria
 
 ## \var SPINE_CONFIG
-## Spine configuration dictionary used as defaults by Gym environments.
+## Spine configuration dictionary used as defaults by Gymnasium environments.
 SPINE_CONFIG = {
     "bullet": {
         "follower_camera": False,

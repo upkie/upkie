@@ -5,7 +5,7 @@
 # Copyright 2024 Inria
 
 ## \namespace upkie.envs.rewards
-## \brief Reward functions used in Gym environments.
+## \brief Reward functions used in Gymnasium environments.
 
 from .wheeled_inverted_pendulum_reward import WheeledInvertedPendulumReward
 

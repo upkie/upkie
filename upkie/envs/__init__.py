@@ -5,9 +5,9 @@
 # Copyright 2022 Stéphane Caron
 
 ## \namespace upkie.envs
-## \brief Gym environments.
+## \brief Gymnasium environments.
 ##
-## See the [Gym environments](@ref environments) page for more details.
+## See the [list of environments](\ref environments) for more details.
 
 import gymnasium as gym
 

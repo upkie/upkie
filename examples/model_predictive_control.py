@@ -54,7 +54,7 @@ def run(env: gym.Env, nb_env_steps: int = 10_000) -> None:
     r"""!
     Balancer Upkie by closed-loop MPC on its gym environment.
 
-    \param env Gym environment to Upkie.
+    \param env Gymnasium environment to Upkie.
 
     \note This example rebuilds the QP problem at every step and does not
     implement hot-starting, both of which impact performance. See the MPC
