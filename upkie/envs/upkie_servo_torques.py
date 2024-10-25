@@ -14,16 +14,28 @@ from .upkie_servos import UpkieServos
 
 
 class UpkieServoTorques(UpkieServos):
-    """!
+    r"""!
     Command servos by torque control.
 
-    Child class of UpkieServos that defines the action space as a dictionary of
-    joint names with the following key :
+    \anchor upkie_servo_torques_description
 
-    - `feedforward_torque`: the desired feedforward torque of the joint
+    The action space is consists of the following targets for each joint:
 
-    Which simplifies the control of the robot by allowing to control directly
-    the torque of the joints.
+    - `feedforward_torque`: feedforward joint torque \f$\tau_{\mathit{ff}}\f$
+       in [N m].
+
+    This makes the agent command joint torques directly:
+
+    \f[
+    \begin{align*}
+    \tau & = \tau_{\mathit{ff}}
+    \end{align*}
+    \f]
+
+    ### Observation space
+
+    This environment has the same observation space as [UpkieServos](\ref
+    upkie_servos_description).
     """
 
     ACTION_MASK: Set[str] = set(["feedforward_torque"])
