@@ -20,10 +20,10 @@ class AddLagToAction(gymnasium.Wrapper):
     Note that there is a difference between "delay" and "lag":
 
     - Delay is a fixed time interval corresponding to the time it takes the
-      input to affect the output, e.g. `input[t] = output[t + delay]`.
+      input to affect the output, e.g. `output(t + delay) = input(t)`.
     - Lag is a phase shift in the system's response. It can be thought of as a
       gradual response to input changes where the output does not immediately
-      match the input.
+      match the input, e.g. `d/dt{output}(t) = lag * (input(t) - output(t))`.
 
     In this wrapper, we model lag where the output (action forward to the
     wrapped environment) is a low-pass filtered version of the input (action
