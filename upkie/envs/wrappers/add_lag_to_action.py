@@ -25,7 +25,7 @@ class AddLagToAction(gymnasium.Wrapper):
       gradual response to input changes where the output does not immediately
       match the input, e.g. `d/dt{output}(t) = lag * (input(t) - output(t))`.
 
-    In this wrapper, we model lag where the output (action forward to the
+    In this wrapper, we model *lag* where the output (action forward to the
     wrapped environment) is a low-pass filtered version of the input (action
     passed to `step`).
     """
