@@ -6,16 +6,16 @@
 
 from .add_action_to_observation import AddActionToObservation
 from .differentiate_action import DifferentiateAction
-from .low_pass_filter_action import LowPassFilterAction
+from .add_lag_to_action import AddLagToAction
 from .noisify_action import NoisifyAction
 from .noisify_observation import NoisifyObservation
 from .random_push import RandomPush
 
 __all__ = [
     "AddActionToObservation",
+    "AddLagToAction",
     "DifferentiateAction",
-    "LowPassFilterAction",
     "NoisifyAction",
     "NoisifyObservation",
-    "RandomPush"
+    "RandomPush",
 ]

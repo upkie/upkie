@@ -13,9 +13,21 @@ from gymnasium.spaces import Box
 from upkie.utils.filters import low_pass_filter
 
 
-class LowPassFilterAction(gymnasium.Wrapper):
+class AddLagToAction(gymnasium.Wrapper):
     """!
-    Apply a low-pass filter to the action of an environment.
+    Model lag by applying a low-pass filter to the action of an environment.
+
+    Note that there is a difference between "delay" and "lag":
+
+    - Delay is a fixed time interval corresponding to the time it takes the
+      input to affect the output, e.g. `input[t] = output[t + delay]`.
+    - Lag is a phase shift in the system's response. It can be thought of as a
+      gradual response to input changes where the output does not immediately
+      match the input.
+
+    In this wrapper, we model lag where the output (action forward to the
+    wrapped environment) is a low-pass filtered version of the input (action
+    passed to `step`).
     """
 
     ## \var filtered_action
@@ -36,7 +48,7 @@ class LowPassFilterAction(gymnasium.Wrapper):
         Initialize wrapper.
 
         \param env Environment to wrap.
-        \param time_constant Cutoff period in seconds of a low-pass filter
+        \param time_constant Cutoff period in seconds of the low-pass filter
             applied to the action. If a Box is provided, couple of lower and
             upper bounds for the action: a new time constant is sampled
             uniformly at random between these bounds at every reset of the
