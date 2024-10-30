@@ -11,8 +11,8 @@ py_library(
     srcs = [
         "__init__.py",
         "add_action_to_observation.py",
+        "add_lag_to_action.py",
         "differentiate_action.py",
-        "low_pass_filter_action.py",
         "noisify_action.py",
         "noisify_observation.py",
         "random_push.py",
