@@ -80,6 +80,7 @@ void StateMachine::process_cycle_beginning() {
           }
           break;
         case Request::kStop:
+          spdlog::info("Stop requested by agent");
           enter_state(State::kSendStops);
           break;
         default:

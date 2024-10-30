@@ -129,7 +129,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         """!
         Stop the spine when deleting the environment instance.
         """
-        self.close()
+        self.close()  # we may close twice but that's OK
 
     def close(self) -> None:
         """!
