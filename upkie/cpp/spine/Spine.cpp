@@ -218,7 +218,17 @@ void Spine::cycle_actuation() {
   // Whatever exceptions were thrown around, we caught them and at this
   // point every actuation command is either a stop or a position one.
 
-  // 3. Wait for the result of the last query and copy it
+  // 3. Start actuation cycle. Results have been copied, so actuation commands
+  // and replies are available again to the actuation thread for writing.
+  auto promise = std::make_shared<std::promise<Output>>();
+  actuation_.cycle([promise](const Output& output) {
+    // This is called from an arbitrary thread,
+    // so we just set the promise value here.
+    promise->set_value(output);
+  });
+  actuation_output_ = promise->get_future();
+
+  // 4. Wait for the actuation cycle to complete, then copy results
   if (actuation_output_.valid()) {
     const auto current_values = actuation_output_.get();  // may wait here
     rx_count_ = current_values.query_result_size;
@@ -226,25 +236,6 @@ void Spine::cycle_actuation() {
     std::copy(actuation_.replies().begin(),
               actuation_.replies().begin() + rx_count_, servo_replies_.begin());
   }
-
-  // Now we are after the previous cycle (we called actuation_output_.get())
-  // and before the next one. This is a good time to break out of loop of
-  // communication cycles. Otherwise, the interface may warn that it is waiting
-  // for the last actuation cycle to finish.
-  if (state_machine_.is_over_after_this_cycle()) {
-    spdlog::info("Wrapping up last communication cycle");
-    return;
-  }
-
-  // 4. Start a new cycle. Results have been copied, so actuation commands and
-  // replies are available again to the actuation thread for writing.
-  auto promise = std::make_shared<std::promise<Output>>();
-  actuation_.cycle([promise](const Output& output) {
-    // This is called from an arbitrary thread, so we
-    // just set the promise value here.
-    promise->set_value(output);
-  });
-  actuation_output_ = promise->get_future();
 }
 
 }  // namespace upkie::cpp::spine

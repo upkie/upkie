@@ -94,11 +94,6 @@ class StateMachine {
   //! Get current state.
   const State& state() const noexcept { return state_; }
 
-  //! Whether we transition to the terminal state at the next end-cycle event.
-  bool is_over_after_this_cycle() const noexcept {
-    return (state_ == State::kShutdown && stop_cycles_ + 1u == kNbStopCycles);
-  }
-
  private:
   /*! Go to a target state, triggering entry instructions if applicable.
    *
