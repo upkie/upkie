@@ -30,8 +30,8 @@ py_test(
 )
 
 py_test(
-    name = "low_pass_filter_action_test",
-    srcs = ["low_pass_filter_action_test.py"],
+    name = "add_lag_to_action_test",
+    srcs = ["add_lag_to_action_test.py"],
     deps = [
         "//upkie/envs/wrappers",
         ":envs",
