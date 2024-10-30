@@ -5,8 +5,8 @@
 # Copyright 2023 Inria
 
 from .add_action_to_observation import AddActionToObservation
-from .differentiate_action import DifferentiateAction
 from .add_lag_to_action import AddLagToAction
+from .differentiate_action import DifferentiateAction
 from .noisify_action import NoisifyAction
 from .noisify_observation import NoisifyObservation
 from .random_push import RandomPush
