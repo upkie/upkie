@@ -26,7 +26,7 @@
 
 namespace upkie::cpp::actuation {
 
-constexpr double kWarningTorque = 10.0;  // [N m]
+constexpr double kLeastReasonableMaximumTorque = 16.0;  // [N m]
 
 using exceptions::PositionCommandError;
 
@@ -80,7 +80,8 @@ void Interface::write_position_commands(const Dictionary& action) {
         servo_action.get<double>("kd_scale", default_action::kKdScale);
     const double maximum_torque = servo_action.get<double>(
         "maximum_torque", default_action::kMaximumTorque);
-    if (maximum_torque < 0.0 || maximum_torque > kWarningTorque) {
+    if (maximum_torque < 0.0 ||
+        maximum_torque > kLeastReasonableMaximumTorque) {
       spdlog::error("Unreasonable maximum torque ({} N m) for joint {}",
                     maximum_torque, joint);
       throw PositionCommandError("Invalid maximum torque", servo_id);
