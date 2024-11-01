@@ -26,9 +26,6 @@
 
 namespace upkie::cpp::actuation {
 
-//! Temporary constant for maximum-torque checks
-constexpr double kLeastReasonableMaximumTorque = 16.0;  // [N m]
-
 using exceptions::PositionCommandError;
 
 Interface::Interface() : servo_layout_(static_config::servo_layout()) {
@@ -75,19 +72,19 @@ void Interface::write_position_commands(const Dictionary& action) {
   const auto& servo = action("servo");
   for (auto& command : commands_) {
     const int servo_id = command.id;
-    auto it = servo_name_map_.find(servo_id);
-    if (it == servo_name_map_.end()) {
+    auto it = servo_layout_.servo_joint_map().find(servo_id);
+    if (it == servo_layout_.servo_joint_map().end()) {
       spdlog::error("Unknown servo ID {} in CAN command", servo_id);
       throw PositionCommandError("Unknown servo ID", servo_id);
     }
-    const std::string& joint_name = it->second;
-    if (!servo.has(joint_name)) {
-      spdlog::error("No action for joint {}", joint_name);
+    const model::Joint& joint = it->second;
+    if (!servo.has(joint.name)) {
+      spdlog::error("No action for joint {}", joint.name);
       throw PositionCommandError("No action", servo_id);
     }
-    const auto& servo_action = servo(joint_name);
+    const auto& servo_action = servo(joint.name);
     if (!servo_action.has("position")) {
-      spdlog::error("No position command for joint {}", joint_name);
+      spdlog::error("No position command for joint {}", joint.name);
       throw PositionCommandError("No position command", servo_id);
     }
 
@@ -102,10 +99,11 @@ void Interface::write_position_commands(const Dictionary& action) {
         servo_action.get<double>("kd_scale", default_action::kKdScale);
     const double maximum_torque = servo_action.get<double>(
         "maximum_torque", default_action::kMaximumTorque);
-    if (maximum_torque < 0.0 ||
-        maximum_torque > kLeastReasonableMaximumTorque) {
-      spdlog::error("Unreasonable maximum torque ({} N m) for joint {}",
-                    maximum_torque, joint_name);
+    if (maximum_torque < 0.0 || maximum_torque > joint.maximum_torque) {
+      spdlog::error(
+          "Maximum torque ({} N m) for joint {} is larger than the joint's "
+          "maximum ({} N m)",
+          maximum_torque, joint.name, joint.maximum_torque);
       throw PositionCommandError("Invalid maximum torque", servo_id);
     }
 
