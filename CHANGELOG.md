@@ -19,6 +19,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- cpp: Define position, velocity and torque limits in static model
+
+### Added
+
 - Makefile: Conda environment packing and unpacking rules
 - Support Python 3.12
 - tools: Add `ps_thread` command

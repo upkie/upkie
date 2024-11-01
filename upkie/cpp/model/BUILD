@@ -9,7 +9,11 @@ package(default_visibility = ["//visibility:public"])
 cc_library(
     name = "model",
     hdrs = [
+        "Joint.h",
         "joints.h",
+    ],
+    deps = [
+        "//upkie/cpp/exceptions",
     ],
 )
 
