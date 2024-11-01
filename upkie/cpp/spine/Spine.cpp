@@ -180,7 +180,7 @@ void Spine::cycle_actuation() {
     // 1. Observation
     Dictionary& observation = working_dict_("observation");
     observers::observe_time(observation);
-    observers::observe_servos(observation, actuation_.servo_joint_map(),
+    observers::observe_servos(observation, actuation_.servo_name_map(),
                               servo_replies_);
     actuation_.observe(observation);
     // Observers need configuration, so they cannot run at stop
