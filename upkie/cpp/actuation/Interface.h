@@ -91,11 +91,11 @@ class Interface {
    */
   moteus::Data& data() { return data_; }
 
-  /*! Initialize action dictionary with keys corresponding to the servo layout.
+  /*! Reset action dictionary to the default action.
    *
    * \param[out] action Action dictionary.
    */
-  void initialize_action(Dictionary& action);
+  void reset_action(Dictionary& action);
 
   /*! Process a new action dictionary.
    *
