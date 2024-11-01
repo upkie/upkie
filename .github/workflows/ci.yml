@@ -208,7 +208,6 @@ jobs:
                       loop-rate-limiters
                       msgpack-python
                       numpy
-                      pinocchio
                       scipy
                       stable-baselines3
                       upkie_description
