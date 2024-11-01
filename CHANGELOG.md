@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Breaking:** Remove layout argument to actuation interfaces
 - CICD: Build release spines with Ubuntu 20.04 rather than 22.04
 - actuation: Rename `Interface::initialize_action` to `Interface::reset_action`
 - actuation: Rename `Interface::servo_joint_map` to `Interface::servo_name_map`
