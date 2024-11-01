@@ -19,14 +19,6 @@ class BulletInterfaceEnvBodies : public ::testing::Test {
  protected:
   //! Set up a new test fixture
   void SetUp() override {
-    ServoLayout layout;
-    layout.add_servo(1, 1, "right_hip");
-    layout.add_servo(2, 1, "right_knee");
-    layout.add_servo(3, 1, "right_wheel");
-    layout.add_servo(4, 2, "left_hip");
-    layout.add_servo(5, 2, "left_knee");
-    layout.add_servo(6, 2, "left_wheel");
-
     std::string error;
     std::unique_ptr<Runfiles> runfiles(Runfiles::CreateForTest(&error));
     ASSERT_NE(runfiles, nullptr);
@@ -39,9 +31,8 @@ class BulletInterfaceEnvBodies : public ::testing::Test {
         "upkie/upkie/cpp/actuation/bullet/plane/plane.urdf")};
     params.robot_urdf_path =
         runfiles->Rlocation("upkie_description/urdf/upkie.urdf");
-    interface_ = std::make_unique<BulletInterface>(layout, params);
-
-    for (const auto& pair : layout.servo_joint_map()) {
+    interface_ = std::make_unique<BulletInterface>(params);
+    for (const auto& pair : interface_->servo_name_map()) {
       commands_.push_back({});
       commands_.back().id = pair.first;
     }

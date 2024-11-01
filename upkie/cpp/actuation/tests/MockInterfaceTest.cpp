@@ -6,14 +6,12 @@
 #include "gtest/gtest.h"
 #include "upkie/cpp/actuation/MockInterface.h"
 #include "upkie/cpp/actuation/moteus/protocol.h"
-#include "upkie/cpp/actuation/tests/coffee_machine_layout.h"
 
 namespace upkie::cpp::actuation {
 
 TEST(MockInterfaceTest, CycleCallsCallback) {
-  const auto layout = get_coffee_machine_layout();
   const double dt = 1e-3;
-  MockInterface interface(layout, dt);
+  MockInterface interface(dt);
 
   bool callback_called = false;
   interface.cycle([&callback_called](const moteus::Output& output) {

@@ -8,7 +8,6 @@
 
 #include "gtest/gtest.h"
 #include "upkie/cpp/actuation/Interface.h"
-#include "upkie/cpp/actuation/tests/coffee_machine_layout.h"
 #include "upkie/cpp/exceptions/PositionCommandError.h"
 
 namespace upkie::cpp::actuation {
@@ -31,10 +30,7 @@ class SmallInterface : public Interface {
 class InterfaceTest : public ::testing::Test {
  protected:
   //! Set up a new test fixture
-  void SetUp() override {
-    const auto layout = get_coffee_machine_layout();
-    interface_ = std::make_unique<SmallInterface>(layout);
-  }
+  void SetUp() override { interface_ = std::make_unique<SmallInterface>(); }
 
  protected:
   //! Actuation interface
@@ -51,11 +47,11 @@ class InterfaceTest : public ::testing::Test {
 };
 
 TEST_F(InterfaceTest, CommandsAreInitialized) {
-  ASSERT_EQ(interface_->commands().size(), get_coffee_machine_layout().size());
+  ASSERT_EQ(interface_->commands().size(), 6);
 }
 
 TEST_F(InterfaceTest, RepliesAreInitialized) {
-  ASSERT_EQ(interface_->replies().size(), get_coffee_machine_layout().size());
+  ASSERT_EQ(interface_->replies().size(), 6);
 }
 
 TEST_F(InterfaceTest, DataIsInitialized) {

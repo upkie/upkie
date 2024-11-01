@@ -6,13 +6,6 @@ load("//tools/lint:lint.bzl", "add_lint_tests")
 
 package(default_visibility = ["//visibility:public"])
 
-cc_library(
-    name = "test_common",
-    hdrs = [
-        "coffee_machine_layout.h",
-    ],
-)
-
 cc_test(
     name = "imu_uncertainty_test",
     srcs = [
@@ -31,7 +24,6 @@ cc_test(
     ],
     deps = [
         "//upkie/cpp/actuation:interface",
-        ":test_common",
         "@googletest//:main",
     ],
 )
@@ -43,7 +35,6 @@ cc_test(
     ],
     deps = [
         "//upkie/cpp/actuation:mock_interface",
-        ":test_common",
         "@googletest//:main",
     ],
 )
@@ -58,7 +49,6 @@ cc_test(
     ],
     deps = [
         "//upkie/cpp/actuation:bullet_interface",
-        ":test_common",
         "@bazel_tools//tools/cpp/runfiles",
         "@googletest//:main",
     ],
@@ -72,7 +62,6 @@ cc_test(
     }),
     deps = [
         "//upkie/cpp/actuation:pi3hat_interface",
-        ":test_common",
         "@bazel_tools//tools/cpp/runfiles",
         "@googletest//:main",
     ],
@@ -88,7 +77,6 @@ cc_test(
     ],
     deps = [
         "//upkie/cpp/actuation:bullet_interface",
-        ":test_common",
         "@bazel_tools//tools/cpp/runfiles",
         "@googletest//:main",
     ],
