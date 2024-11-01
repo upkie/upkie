@@ -10,16 +10,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Handle GLIBC version incompatibility in `start_simulation.sh`
+- cpp: Static model for joints with position, velocity and torque limits
 
 ### Changed
 
 - CICD: Build release spines with Ubuntu 20.04 rather than 22.04
+- actuation: Rename `Interface::initialize_action` to `Interface::reset_action`
+- actuation: Rename `Interface::servo_joint_map` to `Interface::servo_name_map`
 
 ## [6.0.0] - 2024-11-01
-
-### Added
-
-- cpp: Define position, velocity and torque limits in static model
 
 ### Added
 
@@ -42,8 +41,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CICD: Pin Ubuntu workflows to 22.04
 - Default `kd` gain for wheel servos is now 0.3
 - Move Python spine exceptions to `upkie.exceptions`
-- actuation: Rename `Interface::initialize_action` to `Interface::reset_action`
-- actuation: Rename `Interface::servo_joint_map` to `Interface::servo_name_map`
 - docs: Turn environment page into an index
 - tools: Make output directory an argument in `dump_servo_configs`
 - tools: Simplify servo configuration script
