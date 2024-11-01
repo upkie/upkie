@@ -182,7 +182,7 @@ class BulletInterface : public Interface {
    *
    * \throw std::runtime_error If the simulator did not start properly.
    */
-  BulletInterface(const Parameters& params);
+  explicit BulletInterface(const Parameters& params);
 
   //! Disconnect interface.
   ~BulletInterface();

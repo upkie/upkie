@@ -28,7 +28,7 @@ class Interface {
    *
    * \param[in] servo_layout Servo layout.
    */
-  explicit Interface() : servo_layout_(static_config::servo_layout()) {
+  Interface() : servo_layout_(static_config::servo_layout()) {
     auto query_resolution = static_config::query_resolution();
     auto position_resolution = static_config::position_resolution();
     for (const auto& pair : servo_layout_.servo_bus_map()) {

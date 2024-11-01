@@ -23,7 +23,7 @@ class MockInterface : public Interface {
    *
    * \param[in] dt Simultation timestep in [s].
    */
-  MockInterface(const double dt);
+  explicit MockInterface(const double dt);
 
   //! Default destructor
   ~MockInterface() = default;
