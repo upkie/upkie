@@ -46,6 +46,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Move PID balancer to its own repository
 - deps: Remove dependency on PyYAML
 - examples: Remove Bazel BUILD file
+- model: Remove duplicate maximum torque constant
 
 ## [5.2.0] - 2024-09-30
 

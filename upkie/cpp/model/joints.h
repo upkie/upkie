@@ -11,9 +11,6 @@
 //! Robot model properties.
 namespace upkie::cpp::model {
 
-//! No servo can exert a torque higher than this value, in [N m]
-constexpr double kMaximumTorque = 16.0;
-
 /*! Get list of upper leg joints, i.e. hips and knees.
  *
  * \return Vector of upper leg joint names.
