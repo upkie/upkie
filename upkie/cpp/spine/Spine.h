@@ -76,9 +76,8 @@ class Spine {
 
   /*! Reset the spine with a new configuration.
    *
-   * \param[in] config New global configuration dictionary, used to derive the
-   *     servo layout (which servo is on which bus, corresponds to which joint)
-   *     and forwarded to other components (e.g. observers).
+   * \param[in] config New configuration dictionary forwarded to spine modules
+   *     (actuation interface, observers).
    */
   void reset(const palimpsest::Dictionary& config);
 
