@@ -9,7 +9,7 @@
 namespace upkie::cpp::model {
 
 //! Revolute joint properties.
-struct JointProperties {
+struct Joint {
   //! Maximum joint angle in radians.
   double maximum_position;
 
