@@ -24,10 +24,8 @@ using palimpsest::Dictionary;
 
 namespace upkie::cpp::spine {
 
-namespace testing {
-
 //! Testing version of the spine class
-class Spine : public upkie::cpp::spine::Spine {
+class TestSpine : public upkie::cpp::spine::Spine {
  public:
   //! Parent constructor.
   using upkie::cpp::spine::Spine::Spine;
@@ -65,8 +63,6 @@ class Spine : public upkie::cpp::spine::Spine {
   }
 };
 
-}  // namespace testing
-
 class SpineTest : public ::testing::Test {
  protected:
   //! Initialize spine for a new test
@@ -86,8 +82,8 @@ class SpineTest : public ::testing::Test {
 
     schwifty_observer_ = std::make_unique<observers::SchwiftyObserver>();
     observation_.append_observer(schwifty_observer_);
-    spine_ = std::make_unique<testing::Spine>(params_, *actuation_interface_,
-                                              observation_);
+    spine_ = std::make_unique<TestSpine>(params_, *actuation_interface_,
+                                         observation_);
     int file_descriptor =
         ::shm_open(params_.shm_name.c_str(), O_RDWR | O_CREAT, 0666);
     ASSERT_GE(file_descriptor, 0);
@@ -143,7 +139,7 @@ class SpineTest : public ::testing::Test {
   }
 
   //! Valid set of command-line arguments
-  Spine::Parameters params_;
+  TestSpine::Parameters params_;
 
   //! Test actuator interface
   std::unique_ptr<actuation::MockInterface> actuation_interface_;
@@ -155,7 +151,7 @@ class SpineTest : public ::testing::Test {
   observers::ObserverPipeline observation_;
 
   //! Test spine
-  std::unique_ptr<testing::Spine> spine_;
+  std::unique_ptr<TestSpine> spine_;
 
   //! Pointer to IPC shared memory
   void* mmap_;
