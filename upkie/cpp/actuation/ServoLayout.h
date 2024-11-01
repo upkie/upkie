@@ -23,16 +23,6 @@ class ServoLayout {
     servo_joint_map_[servo_id] = joint_name;
   }
 
-  /*! Get identifier of the CAN bus a servo is connected to.
-   *
-   * \param[in] servo_id Servo ID.
-   *
-   * \return CAN bus the servo is connected to.
-   *
-   * \throw std::out_of_range if the servo is not in the layout.
-   */
-  int bus(const int servo_id) const { return servo_bus_map_.at(servo_id); }
-
   /*! Get the name of the joint a servo actuates.
    *
    * \param[in] servo_id Servo ID.
