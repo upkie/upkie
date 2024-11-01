@@ -59,7 +59,7 @@ BulletInterface::BulletInterface(const Parameters& params)
   }
 
   // Read servo layout
-  for (const auto& id_joint : servo_joint_map()) {
+  for (const auto& id_joint : servo_name_map()) {
     const auto& servo_id = id_joint.first;
     const std::string& joint_name = id_joint.second;
     moteus::ServoReply reply;
@@ -308,7 +308,7 @@ void BulletInterface::cycle(
   moteus::Output output;
   for (size_t i = 0; i < data_.replies.size(); ++i) {
     const auto servo_id = data_.commands[i].id;
-    const std::string& joint_name = servo_layout().joint_name(servo_id);
+    const std::string& joint_name = servo_name_map().at(servo_id);
     data_.replies[i].id = servo_id;
     data_.replies[i].result = servo_reply_[joint_name].result;
     output.query_result_size = i + 1;
@@ -359,7 +359,7 @@ void BulletInterface::send_commands() {
 
   for (const auto& command : data_.commands) {
     const auto servo_id = command.id;
-    const std::string& joint_name = servo_layout().joint_name(servo_id);
+    const std::string& joint_name = servo_name_map().at(servo_id);
     const int joint_index = joint_index_map_[joint_name];
 
     const auto previous_mode = servo_reply_[joint_name].result.mode;

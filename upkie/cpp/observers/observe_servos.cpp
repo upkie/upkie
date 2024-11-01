@@ -12,16 +12,16 @@ namespace upkie::cpp::observers {
 using upkie::cpp::actuation::moteus::ServoReply;
 
 void observe_servos(palimpsest::Dictionary& observation,
-                    const std::map<int, std::string>& servo_joint_map,
+                    const std::map<int, std::string>& servo_name_map,
                     const std::vector<ServoReply>& servo_replies) {
   for (const auto& reply : servo_replies) {
     const int servo_id = reply.id;
-    auto it = servo_joint_map.find(servo_id);
-    if (it == servo_joint_map.end()) {
+    auto it = servo_name_map.find(servo_id);
+    if (it == servo_name_map.end()) {
       spdlog::error("Unknown servo ID {} in CAN reply", servo_id);
       continue;
     }
-    const auto& joint = it->second;
+    const auto& joint_name = it->second;
 
     // The moteus convention is that positive angles correspond to clockwise
     // rotations when looking at the rotor / back of the moteus board. See:
@@ -31,7 +31,7 @@ void observe_servos(palimpsest::Dictionary& observation,
     double position_rad = (2.0 * M_PI) * position_rev;
     double velocity_rad_s = (2.0 * M_PI) * velocity_rev_s;
 
-    auto& servo = observation("servo")(joint);
+    auto& servo = observation("servo")(joint_name);
     servo("d_current") = reply.result.d_current;
     servo("fault") = reply.result.fault;
     servo("mode") = static_cast<unsigned>(reply.result.mode);

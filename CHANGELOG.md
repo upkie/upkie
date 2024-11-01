@@ -39,6 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Default `kd` gain for wheel servos is now 0.3
 - Move Python spine exceptions to `upkie.exceptions`
 - actuation: Rename `Interface::initialize_action` to `Interface::reset_action`
+- actuation: Rename `Interface::servo_joint_map` to `Interface::servo_name_map`
 - docs: Turn environment page into an index
 - tools: Make output directory an argument in `dump_servo_configs`
 - tools: Simplify servo configuration script

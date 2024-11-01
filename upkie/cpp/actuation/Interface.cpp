@@ -55,7 +55,6 @@ Interface::Interface() : servo_layout_(static_config::servo_layout()) {
 
 void Interface::reset_action(Dictionary& action) {
   for (const auto& id_joint : servo_layout_.servo_joint_map()) {
-    const int joint_id = id_joint.first;
     const std::string& joint_name = id_joint.second.name;
     auto& servo_action = action("servo")(joint_name);
     servo_action("feedforward_torque") = default_action::kFeedforwardTorque;
@@ -74,22 +73,21 @@ void Interface::write_position_commands(const Dictionary& action) {
   }
 
   const auto& servo = action("servo");
-  const auto& servo_joint_map = servo_layout_.servo_joint_map();
   for (auto& command : commands_) {
     const int servo_id = command.id;
-    auto it = servo_joint_map.find(servo_id);
-    if (it == servo_joint_map.end()) {
+    auto it = servo_name_map_.find(servo_id);
+    if (it == servo_name_map_.end()) {
       spdlog::error("Unknown servo ID {} in CAN command", servo_id);
       throw PositionCommandError("Unknown servo ID", servo_id);
     }
-    const auto& joint = it->second;
-    if (!servo.has(joint)) {
-      spdlog::error("No action for joint {}", joint);
+    const std::string& joint_name = it->second;
+    if (!servo.has(joint_name)) {
+      spdlog::error("No action for joint {}", joint_name);
       throw PositionCommandError("No action", servo_id);
     }
-    const auto& servo_action = servo(joint);
+    const auto& servo_action = servo(joint_name);
     if (!servo_action.has("position")) {
-      spdlog::error("No position command for joint {}", joint);
+      spdlog::error("No position command for joint {}", joint_name);
       throw PositionCommandError("No position command", servo_id);
     }
 
@@ -107,7 +105,7 @@ void Interface::write_position_commands(const Dictionary& action) {
     if (maximum_torque < 0.0 ||
         maximum_torque > kLeastReasonableMaximumTorque) {
       spdlog::error("Unreasonable maximum torque ({} N m) for joint {}",
-                    maximum_torque, joint);
+                    maximum_torque, joint_name);
       throw PositionCommandError("Invalid maximum torque", servo_id);
     }
 

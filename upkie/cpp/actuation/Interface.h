@@ -25,20 +25,7 @@ using palimpsest::Dictionary;
 class Interface {
  public:
   //! Initialize actuation interface for a given servo layout.
-  Interface() : servo_layout_(static_config::servo_layout()) {
-    auto query_resolution = static_config::query_resolution();
-    auto position_resolution = static_config::position_resolution();
-    for (const auto& pair : servo_layout_.servo_bus_map()) {
-      commands_.push_back({});
-      commands_.back().id = pair.first;
-      commands_.back().resolution = position_resolution;
-      commands_.back().query = query_resolution;
-    }
-
-    replies_.resize(commands_.size());
-    data_.commands = {commands_.data(), commands_.size()};
-    data_.replies = {replies_.data(), replies_.size()};
-  }
+  Interface();
 
   //! Virtual destructor so that derived destructors are called properly.
   virtual ~Interface() = default;
@@ -74,8 +61,8 @@ class Interface {
   }
 
   //! Map from servo ID to joint name.
-  const std::map<int, std::string>& servo_joint_map() const noexcept {
-    return servo_layout_.servo_joint_map();
+  const std::map<int, std::string>& servo_name_map() const noexcept {
+    return servo_name_map_;
   }
 
   //! Get servo commands.
@@ -167,6 +154,9 @@ class Interface {
    * \note Not thread-safe. The variable name is tedious on purpose ;)
    */
   std::vector<moteus::ServoReply> replies_;
+
+  //! Map from servo ID to joint name.
+  std::map<int, std::string> servo_name_map_;
 };
 
 }  // namespace upkie::cpp::actuation

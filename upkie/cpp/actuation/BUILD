@@ -25,6 +25,7 @@ cc_library(
     ],
     deps = [
         "//upkie/cpp/actuation/moteus",
+        "//upkie/cpp/model",
     ],
 )
 

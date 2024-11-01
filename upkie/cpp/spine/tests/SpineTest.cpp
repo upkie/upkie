@@ -55,11 +55,6 @@ class TestSpine : public upkie::cpp::spine::Spine {
   const std::map<int, int>& servo_bus_map() {
     return actuation_.servo_bus_map();
   }
-
-  //! Get servo-joint name map.
-  const std::map<int, std::string>& servo_joint_map() {
-    return actuation_.servo_joint_map();
-  }
 };
 
 class SpineTest : public ::testing::Test {
