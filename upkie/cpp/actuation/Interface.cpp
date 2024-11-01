@@ -31,9 +31,32 @@ constexpr double kLeastReasonableMaximumTorque = 16.0;  // [N m]
 
 using exceptions::PositionCommandError;
 
-void Interface::initialize_action(Dictionary& action) {
+Interface::Interface() : servo_layout_(static_config::servo_layout()) {
   for (const auto& id_joint : servo_layout_.servo_joint_map()) {
-    const std::string& joint_name = id_joint.second;
+    const int joint_id = id_joint.first;
+    const std::string& joint_name = id_joint.second.name;
+    servo_name_map_.insert({joint_id, joint_name});
+    spdlog::info("Inserted {}, {}", joint_id, joint_name);
+  }
+
+  auto query_resolution = static_config::query_resolution();
+  auto position_resolution = static_config::position_resolution();
+  for (const auto& pair : servo_layout_.servo_bus_map()) {
+    commands_.push_back({});
+    commands_.back().id = pair.first;
+    commands_.back().resolution = position_resolution;
+    commands_.back().query = query_resolution;
+  }
+
+  replies_.resize(commands_.size());
+  data_.commands = {commands_.data(), commands_.size()};
+  data_.replies = {replies_.data(), replies_.size()};
+}
+
+void Interface::reset_action(Dictionary& action) {
+  for (const auto& id_joint : servo_layout_.servo_joint_map()) {
+    const int joint_id = id_joint.first;
+    const std::string& joint_name = id_joint.second.name;
     auto& servo_action = action("servo")(joint_name);
     servo_action("feedforward_torque") = default_action::kFeedforwardTorque;
     servo_action("position") = std::numeric_limits<double>::quiet_NaN();
