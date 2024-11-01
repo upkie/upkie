@@ -201,7 +201,7 @@ jobs:
               uses: mamba-org/setup-micromamba@v1
               with:
                   micromamba-version: '1.5.8-0'
-                  environment-name: myenv
+                  environment-name: upkie_test_env
                   create-args: >-
                       python=${{ matrix.python-version }}
                       gymnasium
@@ -209,7 +209,7 @@ jobs:
                       msgpack-python
                       numpy
                       scipy
-                      stable-baselines3
+                      stable-baselines3>2.3.0
                       upkie_description
                   cache-environment: true
                   post-cleanup: 'all'
