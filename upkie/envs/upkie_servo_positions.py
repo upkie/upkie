@@ -41,8 +41,8 @@ class UpkieServoPositions(UpkieServos):
 
     ### Observation space
 
-    This environment has the same observation space as [UpkieServos](\ref
-    upkie_servos_description).
+    This environment has the same observation space as
+    [UpkieServos](\ref upkie_servos_description).
     """
 
     ACTION_MASK: Set[str] = set(["position", "kp_scale", "kd_scale"])
