@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [6.0.0] - 2024-11-01
+
 ### Added
 
 - Makefile: Conda environment packing and unpacking rules
@@ -672,7 +674,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Starting this changelog.
 
-[unreleased]: https://github.com/upkie/upkie/compare/v5.2.0...HEAD
+[unreleased]: https://github.com/upkie/upkie/compare/v6.0.0...HEAD
+[6.0.0]: https://github.com/upkie/upkie/compare/v5.2.0...v6.0.0
 [5.2.0]: https://github.com/upkie/upkie/compare/v5.1.0...v5.2.0
 [5.1.0]: https://github.com/upkie/upkie/compare/v5.0.1...v5.1.0
 [5.0.1]: https://github.com/upkie/upkie/compare/v5.0.0...v5.0.1
