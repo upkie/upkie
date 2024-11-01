@@ -14,7 +14,7 @@
 #include "upkie/cpp/actuation/ServoLayout.h"
 #include "upkie/cpp/actuation/moteus/Data.h"
 #include "upkie/cpp/actuation/moteus/Output.h"
-#include "upkie/cpp/actuation/resolution.h"
+#include "upkie/cpp/actuation/static_config.h"
 
 //! Send actions to actuators or simulators.
 namespace upkie::cpp::actuation {
@@ -28,15 +28,14 @@ class Interface {
    *
    * \param[in] servo_layout Servo layout.
    */
-  explicit Interface(const ServoLayout& servo_layout)
-      : servo_layout_(servo_layout) {
-    auto query = get_query_resolution();
-    auto resolution = get_position_resolution();
-    for (const auto& pair : servo_layout.servo_bus_map()) {
+  explicit Interface() : servo_layout_(static_config::servo_layout()) {
+    auto query_resolution = static_config::query_resolution();
+    auto position_resolution = static_config::position_resolution();
+    for (const auto& pair : servo_layout_.servo_bus_map()) {
       commands_.push_back({});
       commands_.back().id = pair.first;
-      commands_.back().resolution = resolution;
-      commands_.back().query = query;
+      commands_.back().resolution = position_resolution;
+      commands_.back().query = query_resolution;
     }
 
     replies_.resize(commands_.size());
@@ -57,9 +56,9 @@ class Interface {
    */
   virtual void cycle(std::function<void(const moteus::Output&)> callback) = 0;
 
-  /*! Reset interface using a new servo layout.
+  /*! Reset interface.
    *
-   * \param[in] config Additional configuration dictionary.
+   * \param[in] config New configuration dictionary.
    */
   virtual void reset(const Dictionary& config) = 0;
 

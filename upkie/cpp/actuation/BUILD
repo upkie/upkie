@@ -23,15 +23,18 @@ cc_library(
     hdrs = [
         "ServoLayout.h",
     ],
+    deps = [
+        "//upkie/cpp/actuation/moteus",
+    ],
 )
 
 cc_library(
-    name = "resolution",
+    name = "static_config",
     hdrs = [
-        "resolution.h",
+        "static_config.h",
     ],
     deps = [
-        "//upkie/cpp/actuation/moteus",
+        ":servo_layout",
     ],
 )
 
@@ -49,8 +52,7 @@ cc_library(
         "//upkie/cpp/exceptions",
         "//upkie/cpp/model",
         ":imu",
-        ":resolution",
-        ":servo_layout",
+        ":static_config",
         "@palimpsest",
     ],
 )

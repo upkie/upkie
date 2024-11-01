@@ -16,9 +16,9 @@
 namespace upkie::cpp::actuation {
 
 Pi3HatInterface::Pi3HatInterface(
-    const ServoLayout& layout, const int can_cpu,
+    const int can_cpu,
     const ::mjbots::pi3hat::Pi3Hat::Configuration& pi3hat_config)
-    : Interface(layout),
+    : Interface(),
       can_cpu_(can_cpu),
       pi3hat_config_(pi3hat_config),
       can_thread_(std::bind(&Pi3HatInterface::run_can_thread, this)) {}

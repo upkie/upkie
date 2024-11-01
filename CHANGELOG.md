@@ -22,6 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - SpineInterface: Starting the spine now returns an observation
     - StateMachine: Rename spine FSM state from "act" to "step"
     - docs: Update spine FSM specification in the documentation
+- **Breaking:** actuation: Move resolution to static configuration
+- **Breaking:** actuation: Move servo layout to static configuration
 - **Breaking:** envs: Rename `LowPassFilterAction` to `AddLagToAction`
 - CICD: Pin Ubuntu workflows to 22.04
 - Default `kd` gain for wheel servos is now 0.3

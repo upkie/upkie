@@ -17,7 +17,6 @@
 
 #include "upkie/cpp/actuation/Pi3HatInterface.h"
 #include "upkie/cpp/model/joints.h"
-#include "upkie/cpp/model/servo_layout.h"
 #include "upkie/cpp/observers/BaseOrientation.h"
 #include "upkie/cpp/observers/FloorContact.h"
 #include "upkie/cpp/observers/ObserverPipeline.h"
@@ -208,8 +207,7 @@ int main(const CommandLineArguments& args) {
     pi3hat_config.mounting_deg.yaw = 0.;
 
     // pi3hat interface
-    const auto servo_layout = upkie::cpp::model::servo_layout();
-    Pi3HatInterface interface(servo_layout, args.can_cpu, pi3hat_config);
+    Pi3HatInterface interface(args.can_cpu, pi3hat_config);
 
     // Spine
     Spine::Parameters spine_params;

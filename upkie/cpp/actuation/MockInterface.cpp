@@ -8,10 +8,9 @@ using std::chrono::microseconds;
 
 namespace upkie::cpp::actuation {
 
-MockInterface::MockInterface(const ServoLayout& layout, const double dt)
-    : Interface(layout), dt_(dt) {
+MockInterface::MockInterface(const double dt) : Interface(), dt_(dt) {
   query_results_.clear();
-  for (const auto& id_bus : layout.servo_bus_map()) {
+  for (const auto& id_bus : servo_layout().servo_bus_map()) {
     const auto& servo_id = id_bus.first;
     moteus::QueryResult result;
     result.d_current = std::numeric_limits<double>::quiet_NaN();

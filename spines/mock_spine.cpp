@@ -13,7 +13,6 @@
 
 #include "upkie/cpp/actuation/MockInterface.h"
 #include "upkie/cpp/model/joints.h"
-#include "upkie/cpp/model/servo_layout.h"
 #include "upkie/cpp/observers/BaseOrientation.h"
 #include "upkie/cpp/observers/FloorContact.h"
 #include "upkie/cpp/observers/ObserverPipeline.h"
@@ -158,9 +157,8 @@ int main(const CommandLineArguments& args) {
   observation.append_observer(odometry);
 
   // Mock actuators
-  const auto servo_layout = upkie::cpp::model::servo_layout();
   const double dt = 1.0 / args.spine_frequency;
-  MockInterface actuation(servo_layout, dt);
+  MockInterface actuation(dt);
 
   // Spine
   Spine::Parameters spine_params;

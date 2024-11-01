@@ -178,12 +178,11 @@ class BulletInterface : public Interface {
 
   /*! Initialize interface.
    *
-   * \param[in] layout Servo layout.
    * \param[in] params Interface parameters.
    *
    * \throw std::runtime_error If the simulator did not start properly.
    */
-  BulletInterface(const ServoLayout& layout, const Parameters& params);
+  BulletInterface(const Parameters& params);
 
   //! Disconnect interface.
   ~BulletInterface();

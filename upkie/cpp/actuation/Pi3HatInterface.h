@@ -41,11 +41,10 @@ class Pi3HatInterface : public Interface {
  public:
   /*! Configure interface and spawn CAN thread.
    *
-   * \param[in] layout Servo layout.
    * \param[in] can_cpu CPUID of the core to run the CAN thread on.
    * \param[in] pi3hat_config Configuration for the pi3hat.
    */
-  Pi3HatInterface(const ServoLayout& layout, const int can_cpu,
+  Pi3HatInterface(const int can_cpu,
                   const ::mjbots::pi3hat::Pi3Hat::Configuration& pi3hat_config);
 
   //! Stop CAN thread
