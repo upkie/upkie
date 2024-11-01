@@ -10,10 +10,6 @@ cc_library(
     name = "model",
     hdrs = [
         "joints.h",
-        "servo_layout.h",
-    ],
-    deps = [
-        "//upkie/cpp/actuation:servo_layout",
     ],
 )
 
