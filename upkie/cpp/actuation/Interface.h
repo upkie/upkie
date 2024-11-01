@@ -24,10 +24,7 @@ using palimpsest::Dictionary;
 //! Base class for actuation interfaces.
 class Interface {
  public:
-  /*! Initialize actuation interface for a given servo layout.
-   *
-   * \param[in] servo_layout Servo layout.
-   */
+  //! Initialize actuation interface for a given servo layout.
   Interface() : servo_layout_(static_config::servo_layout()) {
     auto query_resolution = static_config::query_resolution();
     auto position_resolution = static_config::position_resolution();
