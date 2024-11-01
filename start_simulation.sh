@@ -6,8 +6,8 @@ SCRIPTDIR=$(dirname "${SCRIPT}")
 URL_ARCHIVE="https://github.com/upkie/upkie/releases/download"
 
 if [ ! -f docs/Doxyfile ]; then
-    echo "Unable to find file 'docs/Doxyfile' for version number";
-    exit;
+    echo "Unable to find file 'docs/Doxyfile' for version number"
+    exit
 fi
 # no v at start of version number here
 VERSION=$(awk '/^PROJECT_NUMBER/{print $3}' docs/Doxyfile)
@@ -55,32 +55,39 @@ else
     echo "Unsupported system: $SYSTEM"
 fi
 
-if [[ -z "$SPINE_ARCHIVE" ]] || [ -v BUILD ]; then
-    echo "Building the simulation spine locally...";
-    (cd "${SCRIPTDIR}" && "${SCRIPTDIR}"/tools/bazelisk run //spines:bullet_spine -- "${SPINE_ARGS[@]}")
-else
+if [[ -n "$SPINE_ARCHIVE" ]] && [ ! -v BUILD ]; then
     CURL_TAR_RC=0
     if [ ! -f cache/bullet_spine ]; then
         echo "Downloading the simulation spine from $SPINE_ARCHIVE..."
         mkdir -p cache
 
         # check that the full operation works - use pipefail as it works for bash/zsh
-        (set -o pipefail;  curl -s -L "$SPINE_ARCHIVE" | tar -C ./cache/ -zxf - ); CURL_TAR_RC=$?
+        (set -o pipefail; curl -s -L "$SPINE_ARCHIVE" | tar -C ./cache/ -zxf -)
+        CURL_TAR_RC=$?
     fi
 
     if [[ $CURL_TAR_RC -eq 0 ]]; then
-        echo "Simulation spine downloaded successfully or already in cache, let's roll!";
+        echo "Simulation spine downloaded successfully or already in cache, let's roll!"
         cd cache || exit
-        ./bullet_spine "${SPINE_ARGS[@]}"
+        OUTPUT=$(./bullet_spine "${SPINE_ARGS[@]}" 2>&1)
         SPINE_RC=$?
         # Return code 0 is from Ctrl-C (normal exit)
         # Return code 1 is from closing the simulation GUI
-        if [ $SPINE_RC -ne 0 ] && [ $SPINE_RC -ne 1 ]; then
-            echo "Simulation spine exited with code $SPINE_RC";
-            echo "If this was unexpected, you can also try \`$0 --build\`";
+        if [ $SPINE_RC -eq 1 ]; then
+            if echo "$OUTPUT" | grep -q "version.*GLIBC"; then
+                echo "It seems your GLIBC version is not compatible with the downloaded binary"
+                BUILD=1
+            fi
+        elif [ $SPINE_RC -ne 0 ] && [ $SPINE_RC -ne 1 ]; then
+            echo "Simulation spine exited with code $SPINE_RC"
+            echo "If this was unexpected, you can also try \`$0 --build\`"
         fi
     else
-        echo "Could not download a simulation spine, let's build one locally...";
-        (cd "${SCRIPTDIR}" && "${SCRIPTDIR}"/tools/bazelisk run //spines:bullet_spine -- "${SPINE_ARGS[@]}")
+        BUILD=1
     fi
+fi
+
+if [ -v BUILD ]; then
+    echo "Building the simulation spine from source..."
+    (cd "${SCRIPTDIR}" && "${SCRIPTDIR}"/tools/bazelisk run //spines:bullet_spine -- "${SPINE_ARGS[@]}")
 fi

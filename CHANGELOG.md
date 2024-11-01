@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Handle GLIBC version incompatibility in `start_simulation.sh`
+
 ### Changed
 
 - CICD: Build release spines with Ubuntu 20.04 rather than 22.04
