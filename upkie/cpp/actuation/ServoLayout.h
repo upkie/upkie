@@ -6,6 +6,9 @@
 #include <map>
 #include <string>
 
+#include "upkie/cpp/model/Joint.h"
+#include "upkie/cpp/model/joints.h"
+
 namespace upkie::cpp::actuation {
 
 //! Map between servos, their busses and the joints they actuate.
@@ -20,7 +23,7 @@ class ServoLayout {
   void add_servo(const int servo_id, const int bus_id,
                  const std::string& joint_name) {
     servo_bus_map_[servo_id] = bus_id;
-    servo_joint_map_[servo_id] = joint_name;
+    servo_joint_map_[servo_id] = model::get_joint(joint_name);
   }
 
   /*! Get the name of the joint a servo actuates.
@@ -31,7 +34,7 @@ class ServoLayout {
    *
    * \throw std::out_of_range if the servo is not in the layout.
    */
-  const std::string& joint_name(const int servo_id) const {
+  const model::Joint& joint(const int servo_id) const {
     return servo_joint_map_.at(servo_id);
   }
 
@@ -41,7 +44,7 @@ class ServoLayout {
   }
 
   //! Get the full servo-joint map
-  const std::map<int, std::string>& servo_joint_map() const noexcept {
+  const std::map<int, model::Joint>& servo_joint_map() const noexcept {
     return servo_joint_map_;
   }
 
@@ -53,7 +56,7 @@ class ServoLayout {
   std::map<int, int> servo_bus_map_;
 
   //! Map from servo ID to joint name.
-  std::map<int, std::string> servo_joint_map_;
+  std::map<int, model::Joint> servo_joint_map_;
 };
 
 }  // namespace upkie::cpp::actuation
