@@ -14,6 +14,9 @@ namespace upkie::cpp::model {
 
 /*! Get joint properties from joint name.
  *
+ * \note Joint limits are documented with the `upkie_description` package, on
+ * [this page](https://github.com/upkie/upkie_description/wiki/Joint-limits).
+ *
  * \param[in] joint_name Joint name.
  * \return Joint properties.
  * \throw UpkieError If there is no joint with this name in the model.
