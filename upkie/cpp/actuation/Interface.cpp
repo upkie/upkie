@@ -26,6 +26,7 @@
 
 namespace upkie::cpp::actuation {
 
+//! Temporary constant for maximum-torque checks
 constexpr double kLeastReasonableMaximumTorque = 16.0;  // [N m]
 
 using exceptions::PositionCommandError;
