@@ -32,7 +32,7 @@ class BulletInterfaceEnvBodies : public ::testing::Test {
     params.robot_urdf_path =
         runfiles->Rlocation("upkie_description/urdf/upkie.urdf");
     interface_ = std::make_unique<BulletInterface>(params);
-    for (const auto& pair : interface_->servo_joint_map()) {
+    for (const auto& pair : interface_->servo_name_map()) {
       commands_.push_back({});
       commands_.back().id = pair.first;
     }
