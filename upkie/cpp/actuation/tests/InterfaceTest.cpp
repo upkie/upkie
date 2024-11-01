@@ -74,8 +74,14 @@ TEST_F(InterfaceTest, ExpectFillsDictionaryKeys) {
   interface_->initialize_action(action);
   ASSERT_TRUE(action.has("servo"));
   const Dictionary& servo = action("servo");
-  for (const auto joint_name :
-       {"left_grinder", "left_pump", "right_grinder", "right_pump"}) {
+  for (const auto joint_name : {
+           "left_hip",
+           "left_knee",
+           "left_wheel",
+           "right_hip",
+           "right_knee",
+           "right_wheel",
+       }) {
     ASSERT_TRUE(servo.has(joint_name));
     ASSERT_TRUE(servo(joint_name).has("position"));
     ASSERT_TRUE(servo(joint_name).has("velocity"));
@@ -87,29 +93,33 @@ TEST_F(InterfaceTest, ExpectFillsDictionaryKeys) {
 
 TEST_F(InterfaceTest, ThrowIfMissingServoAction) {
   Dictionary action;
-  action("servo")("left_pump")("position") = 0.0;
-  action("servo")("left_grinder")("position") = 0.0;
-  // nothing for "right_pump" and "right_grinder"
+  action("servo")("left_hip")("position") = 0.0;
+  action("servo")("left_knee")("position") = 0.0;
+  // nothing for "right_hip" orr "right_knee"
   ASSERT_THROW(interface_->write_position_commands(action),
                PositionCommandError);
 }
 
 TEST_F(InterfaceTest, ForwardPositionCommands) {
   Dictionary action;
-  action("servo")("left_grinder")("position") = 2 * M_PI;   // [rad]
-  action("servo")("left_pump")("position") = M_PI;          // [rad]
-  action("servo")("right_grinder")("position") = 2 * M_PI;  // [rad]
-  action("servo")("right_pump")("position") = M_PI;         // [rad]
+  action("servo")("left_hip")("position") = M_PI;        // [rad]
+  action("servo")("left_knee")("position") = 2 * M_PI;   // [rad]
+  action("servo")("left_wheel")("position") = 0.0;       // [rad]
+  action("servo")("right_hip")("position") = M_PI;       // [rad]
+  action("servo")("right_knee")("position") = 2 * M_PI;  // [rad]
+  action("servo")("right_wheel")("position") = 0.0;      // [rad]
 
   interface_->write_position_commands(action);
   for (const auto& command : interface_->commands()) {
     ASSERT_EQ(command.mode, moteus::Mode::kPosition);
   }
   const auto& commands = interface_->commands();
-  ASSERT_DOUBLE_EQ(commands[0].position.position, 1.0);  // [rev]
-  ASSERT_DOUBLE_EQ(commands[1].position.position, 0.5);  // [rev]
-  ASSERT_DOUBLE_EQ(commands[2].position.position, 1.0);  // [rev]
+  ASSERT_DOUBLE_EQ(commands[0].position.position, 0.5);  // [rev]
+  ASSERT_DOUBLE_EQ(commands[1].position.position, 1.0);  // [rev]
+  ASSERT_DOUBLE_EQ(commands[2].position.position, 0.0);  // [rev]
   ASSERT_DOUBLE_EQ(commands[3].position.position, 0.5);  // [rev]
+  ASSERT_DOUBLE_EQ(commands[4].position.position, 1.0);  // [rev]
+  ASSERT_DOUBLE_EQ(commands[5].position.position, 0.0);  // [rev]
 }
 
 TEST_F(InterfaceTest, SkipIfNoActionAtAll) {
@@ -119,23 +129,33 @@ TEST_F(InterfaceTest, SkipIfNoActionAtAll) {
   ASSERT_EQ(interface_->commands()[1].mode, moteus::Mode::kStopped);
   ASSERT_EQ(interface_->commands()[2].mode, moteus::Mode::kStopped);
   ASSERT_EQ(interface_->commands()[3].mode, moteus::Mode::kStopped);
+  ASSERT_EQ(interface_->commands()[4].mode, moteus::Mode::kStopped);
+  ASSERT_EQ(interface_->commands()[5].mode, moteus::Mode::kStopped);
 }
 
 TEST_F(InterfaceTest, ThrowIfNoPosition) {
   Dictionary action;
   // all servos, but without any position command
-  action("servo")("left_pump")("velocity") = 1.5;
-  action("servo")("left_grinder")("velocity") = 1.5;
-  action("servo")("right_pump")("velocity") = 1.5;
-  action("servo")("right_grinder")("velocity") = 1.5;
+  action("servo")("left_hip")("velocity") = 1.5;
+  action("servo")("left_knee")("velocity") = 1.5;
+  action("servo")("left_wheel")("velocity") = 1.5;
+  action("servo")("right_hip")("velocity") = 1.5;
+  action("servo")("right_knee")("velocity") = 1.5;
+  action("servo")("right_wheel")("velocity") = 1.5;
   ASSERT_THROW(interface_->write_position_commands(action),
                PositionCommandError);
 }
 
 TEST_F(InterfaceTest, ForwardVelocityCommands) {
   Dictionary action;
-  for (auto servo_name :
-       {"left_pump", "left_grinder", "right_pump", "right_grinder"}) {
+  for (auto servo_name : {
+           "left_hip",
+           "left_knee",
+           "left_wheel",
+           "right_hip",
+           "right_knee",
+           "right_wheel",
+       }) {
     action("servo")(servo_name)("position") = 2 * M_PI;  // [rad]
     action("servo")(servo_name)("velocity") = M_PI;      // [rad] / [s]
   }

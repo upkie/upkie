@@ -13,7 +13,6 @@
 
 #include "gtest/gtest.h"
 #include "upkie/cpp/actuation/MockInterface.h"
-#include "upkie/cpp/actuation/ServoLayout.h"
 #include "upkie/cpp/observers/ObserverPipeline.h"
 #include "upkie/cpp/observers/tests/SchwiftyObserver.h"
 #include "upkie/cpp/observers/tests/ThrowingObserver.h"
@@ -70,15 +69,10 @@ class SpineTest : public ::testing::Test {
     params_.cpu = -1;         // no realtime scheduling
     params_.frequency = 400;  // Hz
     params_.shm_name = std::string("/") + utils::random_string();
-    params_.shm_size = 1024;
-
-    actuation::ServoLayout layout;
-    layout.add_servo(1, 1, "bar");
-    layout.add_servo(2, 1, "foo");
+    params_.shm_size = 2048;
 
     const double dt = 1.0 / params_.frequency;
-    actuation_interface_ =
-        std::make_unique<actuation::MockInterface>(layout, dt);
+    actuation_interface_ = std::make_unique<actuation::MockInterface>(dt);
 
     schwifty_observer_ = std::make_unique<observers::SchwiftyObserver>();
     observation_.append_observer(schwifty_observer_);
@@ -266,27 +260,31 @@ TEST_F(SpineTest, ResetInitializesAction) {
   const Dictionary& spine_dict = spine_->working_dict();
   ASSERT_TRUE(spine_dict.has("action"));
   ASSERT_TRUE(spine_dict("action").has("servo"));
-  ASSERT_TRUE(spine_dict("action")("servo").has("bar"));
-  ASSERT_TRUE(spine_dict("action")("servo").has("foo"));
+  ASSERT_TRUE(spine_dict("action")("servo").has("left_hip"));
+  ASSERT_TRUE(spine_dict("action")("servo").has("left_knee"));
+  ASSERT_TRUE(spine_dict("action")("servo").has("left_wheel"));
+  ASSERT_TRUE(spine_dict("action")("servo").has("right_hip"));
+  ASSERT_TRUE(spine_dict("action")("servo").has("right_knee"));
+  ASSERT_TRUE(spine_dict("action")("servo").has("right_wheel"));
 }
 
 TEST_F(SpineTest, SpineReadsAction) {
   start_spine();
 
-  // {"servo": {"bar": {"position": 1.0}}}
-  const char data[31] = {'\x81', '\xa5', 's',   'e',    'r',    'v',    'o',
-                         '\x81', '\xa3', 'b',   'a',    'r',    '\x81', '\xa8',
-                         'p',    'o',    's',   'i',    't',    'i',    'o',
-                         'n',    '\xcb', '?',   '\xf0', '\x00', '\x00', '\x00',
-                         '\x00', '\x00', '\x00'};
-  const size_t size = 31;
+  // {"servo": {"left_hip": {"position": 1.0}}}
+  const char data[36] = {
+      '\x81', '\xa5', 's',    'e',    'r',    'v',    'o',    '\x81', '\xa8',
+      'l',    'e',    'f',    't',    '_',    'h',    'i',    'p',    '\x81',
+      '\xa8', 'p',    'o',    's',    'i',    't',    'i',    'o',    'n',
+      '\xcb', '?',    '\xf0', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00'};
+  const size_t size = 36;
   write_mmap_data(data, size);
   const Dictionary& action = spine_->working_dict()("action");
   write_mmap_request(Request::kAction);
-  ASSERT_TRUE(std::isnan(action("servo")("bar").get<double>("position")));
+  ASSERT_TRUE(std::isnan(action("servo")("left_hip").get<double>("position")));
   ASSERT_EQ(spine_->state(), State::kIdle);
   spine_->cycle();
-  ASSERT_DOUBLE_EQ(action("servo")("bar")("position"), 1.0);
+  ASSERT_DOUBLE_EQ(action("servo")("left_hip")("position"), 1.0);
 }
 
 TEST_F(SpineTest, EnteringStopClearsRequest) {
