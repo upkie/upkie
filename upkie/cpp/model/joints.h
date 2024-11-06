@@ -54,6 +54,17 @@ inline Joint get_joint(const std::string& joint_name) {
   }
 }
 
+/*! Get list of joint names.
+ *
+ * \return Vector of joint names.
+ */
+inline const std::vector<std::string> joint_names() noexcept {
+  return {
+      "left_hip",  "left_knee",  "left_wheel",
+      "right_hip", "right_knee", "right_wheel",
+  };
+}
+
 /*! Get list of upper leg joints, i.e. hips and knees.
  *
  * \return Vector of upper leg joint names.

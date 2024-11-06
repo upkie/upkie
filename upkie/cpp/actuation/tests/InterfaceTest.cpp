@@ -74,14 +74,7 @@ TEST_F(InterfaceTest, ExpectFillsDictionaryKeys) {
   interface_->reset_action(action);
   ASSERT_TRUE(action.has("servo"));
   const Dictionary& servo = action("servo");
-  for (const auto joint_name : {
-           "left_hip",
-           "left_knee",
-           "left_wheel",
-           "right_hip",
-           "right_knee",
-           "right_wheel",
-       }) {
+  for (const auto joint_name : model::joint_names()) {
     ASSERT_TRUE(servo.has(joint_name));
     ASSERT_TRUE(servo(joint_name).has("position"));
     ASSERT_TRUE(servo(joint_name).has("velocity"));
@@ -148,14 +141,7 @@ TEST_F(InterfaceTest, ThrowIfNoPosition) {
 
 TEST_F(InterfaceTest, ForwardVelocityCommands) {
   Dictionary action;
-  for (auto servo_name : {
-           "left_hip",
-           "left_knee",
-           "left_wheel",
-           "right_hip",
-           "right_knee",
-           "right_wheel",
-       }) {
+  for (const auto servo_name : model::joint_names()) {
     action("servo")(servo_name)("position") = 2 * M_PI;  // [rad]
     action("servo")(servo_name)("velocity") = M_PI;      // [rad] / [s]
   }
@@ -164,6 +150,28 @@ TEST_F(InterfaceTest, ForwardVelocityCommands) {
     ASSERT_EQ(command.mode, moteus::Mode::kPosition);
     ASSERT_EQ(command.position.position, 1.0);
     ASSERT_EQ(command.position.velocity, 0.5);
+  }
+}
+
+TEST_F(InterfaceTest, MaximumTorques) {
+  Dictionary action;
+  constexpr double kFeasibleTorque = 0.5;        // [N m]
+  constexpr double kUnfeasisbleTorque = 1000.0;  // [N m]
+  for (auto servo_name : model::joint_names()) {
+    action("servo")(servo_name)("position") = 0.0;  // [rad]
+    action("servo")(servo_name)("maximum_torque") = kFeasibleTorque;
+  }
+  interface_->write_position_commands(action);
+  for (const auto& command : interface_->commands()) {
+    ASSERT_EQ(command.mode, moteus::Mode::kPosition);
+    ASSERT_EQ(command.position.maximum_torque, kFeasibleTorque);
+  }
+  for (auto servo_name : model::joint_names()) {
+    action("servo")(servo_name)("maximum_torque") = kUnfeasisbleTorque;
+    ASSERT_THROW(interface_->write_position_commands(action),
+                 PositionCommandError);
+    action("servo")(servo_name)("maximum_torque") = kFeasibleTorque;
+    ASSERT_NO_THROW(interface_->write_position_commands(action));
   }
 }
 

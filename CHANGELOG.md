@@ -10,7 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Handle GLIBC version incompatibility in `start_simulation.sh`
-- cpp: Static model for joints with position, velocity and torque limits
+- actuation: Unit test for maximum torques
+- model: Static model for joints with position, velocity and torque limits
 
 ### Changed
 
