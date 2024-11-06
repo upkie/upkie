@@ -76,12 +76,6 @@ class FloorContact : public Observer {
     //! Spine timestep, in [s]
     double dt = std::numeric_limits<double>::quiet_NaN();
 
-    //! List of upper leg (hip, knee, ...) joints
-    std::vector<std::string> upper_leg_joints;
-
-    //! List of wheel joint names
-    std::vector<std::string> wheels;
-
     //! Wheel contact observer configuration
     WheelContact::Parameters wheel_contact_params;
 
@@ -139,6 +133,12 @@ class FloorContact : public Observer {
 
   //! True if and only if the observer detects a contact.
   bool contact_;
+
+  //! List of hip and knee joint names.
+  const std::vector<std::string> upper_leg_joints_;
+
+  //! List of wheel joint names.
+  const std::vector<std::string> wheel_joints_;
 };
 
 }  // namespace upkie::cpp::observers

@@ -29,8 +29,6 @@ class FloorContactTest : public ::testing::Test {
 
     FloorContact::Parameters params;
     params.dt = dt_;
-    params.upper_leg_joints = {"hip"};
-    params.wheels = {"big_wheel", "small_wheel"};
 
     floor_contact_ = std::make_unique<FloorContact>(params);
   }
@@ -66,7 +64,7 @@ TEST_F(FloorContactTest, UnconfiguredDoesNotThrow) {
 
 TEST_F(FloorContactTest, PartialObservationDoesNotThrow) {
   Dictionary observation;
-  observation("servo")("big_wheel")("velocity") = 0.0;
+  observation("servo")("left_wheel")("velocity") = 0.0;
   ASSERT_NO_THROW(floor_contact_->read(observation));
 }
 
@@ -74,10 +72,10 @@ TEST_F(FloorContactTest, NoTorqueNoContact) {
   floor_contact_->reset(config_);
 
   Dictionary observation;
-  observation("servo")("big_wheel")("velocity") = 0.1;
-  observation("servo")("big_wheel")("torque") = 0.0;
-  observation("servo")("small_wheel")("velocity") = 0.1;
-  observation("servo")("small_wheel")("torque") = 0.0;
+  observation("servo")("left_wheel")("velocity") = 0.1;
+  observation("servo")("left_wheel")("torque") = 0.0;
+  observation("servo")("right_wheel")("velocity") = 0.1;
+  observation("servo")("right_wheel")("torque") = 0.0;
 
   floor_contact_->read(observation);
   floor_contact_->write(observation);
@@ -90,16 +88,16 @@ TEST_F(FloorContactTest, BigWheelAccelTorqueMeansContact) {
   Dictionary observation;
 
   const double vel = 10.0;  // rad/s
-  observation("servo")("big_wheel")("velocity") = vel;
-  observation("servo")("big_wheel")("torque") = 10.0;
-  observation("servo")("small_wheel")("velocity") = vel;
-  observation("servo")("small_wheel")("torque") = 10.0;
+  observation("servo")("left_wheel")("velocity") = vel;
+  observation("servo")("left_wheel")("torque") = 10.0;
+  observation("servo")("right_wheel")("velocity") = vel;
+  observation("servo")("right_wheel")("torque") = 10.0;
   floor_contact_->read(observation);
 
   // Increase velocity to produce accel > min_touchdown_acceleration
   const double new_vel = vel + 5.0 * dt_;
-  observation("servo")("big_wheel")("velocity") = new_vel;
-  observation("servo")("small_wheel")("velocity") = new_vel;
+  observation("servo")("left_wheel")("velocity") = new_vel;
+  observation("servo")("right_wheel")("velocity") = new_vel;
   floor_contact_->read(observation);
 
   floor_contact_->write(observation);
@@ -117,12 +115,18 @@ TEST_F(FloorContactTest, SmallLegTorqueNoContact) {
   floor_contact_->reset(config_);
 
   Dictionary observation;
-  observation("servo")("big_wheel")("velocity") = 0.0;
-  observation("servo")("big_wheel")("torque") = 0.0;
-  observation("servo")("small_wheel")("velocity") = 0.0;
-  observation("servo")("small_wheel")("torque") = 0.0;
-  observation("servo")("hip")("velocity") = 0.0;
-  observation("servo")("hip")("torque") = 1.0;
+  observation("servo")("left_hip")("velocity") = 0.0;
+  observation("servo")("left_hip")("velocity") = 0.0;
+  observation("servo")("left_knee")("velocity") = 0.0;
+  observation("servo")("left_knee")("velocity") = 0.0;
+  observation("servo")("left_wheel")("torque") = 0.0;
+  observation("servo")("left_wheel")("velocity") = 0.0;
+  observation("servo")("right_hip")("torque") = 1.0;
+  observation("servo")("right_hip")("torque") = 1.0;
+  observation("servo")("right_knee")("torque") = 1.0;
+  observation("servo")("right_knee")("torque") = 1.0;
+  observation("servo")("right_wheel")("torque") = 0.0;
+  observation("servo")("right_wheel")("velocity") = 0.0;
 
   floor_contact_->read(observation);
   floor_contact_->write(observation);
@@ -133,12 +137,18 @@ TEST_F(FloorContactTest, BigLegTorqueMeansContact) {
   floor_contact_->reset(config_);
 
   Dictionary observation;
-  observation("servo")("big_wheel")("velocity") = 0.0;
-  observation("servo")("big_wheel")("torque") = 0.0;
-  observation("servo")("small_wheel")("velocity") = 0.0;
-  observation("servo")("small_wheel")("torque") = 0.0;
-  observation("servo")("hip")("velocity") = 0.0;
-  observation("servo")("hip")("torque") = 100.0;
+  observation("servo")("left_hip")("torque") = 100.0;
+  observation("servo")("left_hip")("velocity") = 0.0;
+  observation("servo")("left_knee")("torque") = 100.0;
+  observation("servo")("left_knee")("velocity") = 0.0;
+  observation("servo")("left_wheel")("torque") = 0.0;
+  observation("servo")("left_wheel")("velocity") = 0.0;
+  observation("servo")("right_hip")("torque") = 100.0;
+  observation("servo")("right_hip")("velocity") = 0.0;
+  observation("servo")("right_knee")("torque") = 100.0;
+  observation("servo")("right_knee")("velocity") = 0.0;
+  observation("servo")("right_wheel")("torque") = 0.0;
+  observation("servo")("right_wheel")("velocity") = 0.0;
 
   floor_contact_->read(observation);
   floor_contact_->write(observation);

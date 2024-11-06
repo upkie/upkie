@@ -20,6 +20,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - actuation: Rename `Interface::initialize_action` to `Interface::reset_action`
 - actuation: Rename `Interface::servo_joint_map` to `Interface::servo_name_map`
 
+### Removed
+
+- model: Remove C++ `upkie::model` namespace
+- observers: Remove upper-leg and wheel joints from configurable parameters
+
 ## [6.0.0] - 2024-11-01
 
 ### Added

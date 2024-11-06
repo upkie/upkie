@@ -16,7 +16,6 @@
 #include <vector>
 
 #include "upkie/cpp/actuation/Pi3HatInterface.h"
-#include "upkie/cpp/model/joints.h"
 #include "upkie/cpp/observers/BaseOrientation.h"
 #include "upkie/cpp/observers/FloorContact.h"
 #include "upkie/cpp/observers/ObserverPipeline.h"
@@ -187,8 +186,6 @@ int main(const CommandLineArguments& args) {
   // Observation: Floor contact
   FloorContact::Parameters floor_contact_params;
   floor_contact_params.dt = 1.0 / args.spine_frequency;
-  floor_contact_params.upper_leg_joints = upkie::cpp::model::upper_leg_joints();
-  floor_contact_params.wheels = upkie::cpp::model::wheel_joints();
   auto floor_contact = std::make_shared<FloorContact>(floor_contact_params);
   observation.append_observer(floor_contact);
 
