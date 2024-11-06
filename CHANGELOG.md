@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Handle GLIBC version incompatibility in `start_simulation.sh`
-- actuation: Unit test for maximum torques
+- actuation: Check maximum torques before sending commands
 - model: Static model for joints with position, velocity and torque limits
 
 ### Changed
