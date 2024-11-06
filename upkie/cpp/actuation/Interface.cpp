@@ -22,18 +22,16 @@
 #include "upkie/cpp/actuation/moteus/Mode.h"
 #include "upkie/cpp/actuation/moteus/ServoCommand.h"
 #include "upkie/cpp/exceptions/PositionCommandError.h"
-#include "upkie/cpp/model/joints.h"
 
 namespace upkie::cpp::actuation {
 
 using exceptions::PositionCommandError;
 
 Interface::Interface() : servo_layout_(static_config::servo_layout()) {
-  for (const auto& id_joint : servo_layout_.servo_joint_map()) {
-    const int joint_id = id_joint.first;
-    const std::string& joint_name = id_joint.second.name;
-    servo_name_map_.insert({joint_id, joint_name});
-    spdlog::info("Inserted {}, {}", joint_id, joint_name);
+  for (const auto& id_props_pair : servo_layout_.servo_props_map()) {
+    const int servo_id = id_props_pair.first;
+    const ServoProperties& props = id_props_pair.second;
+    servo_name_map_.insert({servo_id, props.joint_name});
   }
 
   auto query_resolution = static_config::query_resolution();
@@ -51,9 +49,9 @@ Interface::Interface() : servo_layout_(static_config::servo_layout()) {
 }
 
 void Interface::reset_action(Dictionary& action) {
-  for (const auto& id_joint : servo_layout_.servo_joint_map()) {
-    const std::string& joint_name = id_joint.second.name;
-    auto& servo_action = action("servo")(joint_name);
+  for (const auto& id_name_pair : servo_name_map_) {
+    const std::string& name = id_name_pair.second;
+    auto& servo_action = action("servo")(name);
     servo_action("feedforward_torque") = default_action::kFeedforwardTorque;
     servo_action("position") = std::numeric_limits<double>::quiet_NaN();
     servo_action("velocity") = default_action::kVelocity;
@@ -72,19 +70,20 @@ void Interface::write_position_commands(const Dictionary& action) {
   const auto& servo = action("servo");
   for (auto& command : commands_) {
     const int servo_id = command.id;
-    auto it = servo_layout_.servo_joint_map().find(servo_id);
-    if (it == servo_layout_.servo_joint_map().end()) {
+    auto it = servo_layout_.servo_props_map().find(servo_id);
+    if (it == servo_layout_.servo_props_map().end()) {
       spdlog::error("Unknown servo ID {} in CAN command", servo_id);
       throw PositionCommandError("Unknown servo ID", servo_id);
     }
-    const model::Joint& joint = it->second;
-    if (!servo.has(joint.name)) {
-      spdlog::error("No action for joint {}", joint.name);
+    const ServoProperties& props = it->second;
+    const std::string& joint_name = props.joint_name;
+    if (!servo.has(joint_name)) {
+      spdlog::error("No action for joint {}", joint_name);
       throw PositionCommandError("No action", servo_id);
     }
-    const auto& servo_action = servo(joint.name);
+    const auto& servo_action = servo(joint_name);
     if (!servo_action.has("position")) {
-      spdlog::error("No position command for joint {}", joint.name);
+      spdlog::error("No position command for joint {}", joint_name);
       throw PositionCommandError("No position command", servo_id);
     }
 
@@ -100,14 +99,13 @@ void Interface::write_position_commands(const Dictionary& action) {
     const double maximum_torque = servo_action.get<double>(
         "maximum_torque", default_action::kMaximumTorque);
 
-    // Last checks before updating the command
-    // Note that we don't position and velocity limits are already checked by
-    // servos, see `tools/setup/configure_servos.py`.
-    if (maximum_torque < 0.0 || maximum_torque > joint.maximum_torque) {
+    // Last checks: only max torques, as position and velocity limits are
+    // already checked by servos, see `tools/setup/configure_servos.py`
+    if (maximum_torque < 0.0 || maximum_torque > props.maximum_torque) {
       spdlog::error(
           "Maximum torque ({} N m) for joint {} is larger than the joint's "
           "maximum ({} N m)",
-          maximum_torque, joint.name, joint.maximum_torque);
+          maximum_torque, joint_name, props.maximum_torque);
       throw PositionCommandError("Invalid maximum torque", servo_id);
     }
 

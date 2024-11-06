@@ -877,7 +877,6 @@ INPUT                  = README.md \
                          upkie/cpp/actuation/bullet \
                          upkie/cpp/actuation/pi3hat \
                          upkie/cpp/exceptions \
-                         upkie/cpp/model \
                          upkie/cpp/observers \
                          upkie/cpp/sensors \
                          upkie/cpp/spine \

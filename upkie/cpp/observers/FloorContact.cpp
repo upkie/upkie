@@ -13,8 +13,12 @@ using palimpsest::exceptions::KeyError;
 using upkie::cpp::utils::low_pass_filter;
 
 FloorContact::FloorContact(const Parameters& params)
-    : params_(params), upper_leg_torque_(0.0), contact_(false) {
-  for (const auto& wheel : params_.wheels) {
+    : params_(params),
+      upper_leg_torque_(0.0),
+      contact_(false),
+      upper_leg_joints_({"left_hip", "left_knee", "right_hip", "right_knee"}),
+      wheel_joints_({"left_wheel", "right_wheel"}) {
+  for (const auto& wheel : wheel_joints_) {
     wheel_contacts_.insert(
         {{wheel, WheelContact(params_.wheel_contact_params)}});
   }
@@ -25,7 +29,7 @@ void FloorContact::reset(const Dictionary& config) {
   upper_leg_torque_ = 0.0;
   contact_ = false;
   wheel_contacts_.clear();
-  for (const auto& wheel : params_.wheels) {
+  for (const auto& wheel : wheel_joints_) {
     wheel_contacts_.insert(
         {{wheel, WheelContact(params_.wheel_contact_params)}});
   }
@@ -48,7 +52,7 @@ void FloorContact::read(const Dictionary& observation) {
 bool FloorContact::check_wheel_contacts(const Dictionary& observation) {
   const auto& servo = observation("servo");
   bool at_least_one_contact = false;
-  for (const auto& wheel : params_.wheels) {
+  for (const auto& wheel : wheel_joints_) {
     auto it = wheel_contacts_.find(wheel);  // found by construction
     auto& wheel_contact = it->second;
     try {
@@ -72,7 +76,7 @@ bool FloorContact::check_wheel_contacts(const Dictionary& observation) {
 void FloorContact::update_upper_leg_torque(const Dictionary& observation) {
   const auto& servo = observation("servo");
   double squared_torques = 0.0;
-  for (const auto& joint : params_.upper_leg_joints) {
+  for (const auto& joint : upper_leg_joints_) {
     try {
       const double torque = servo(joint)("torque");
       squared_torques += torque * torque;
@@ -91,7 +95,7 @@ void FloorContact::write(Dictionary& observation) {
   auto& output = observation(prefix());
   output("contact") = contact_;
   output("upper_leg_torque") = upper_leg_torque_;
-  for (const auto& wheel : params_.wheels) {
+  for (const auto& wheel : wheel_joints_) {
     const auto it = wheel_contacts_.find(wheel);  // found by construction
     const auto& wheel_contact = it->second;
     output(wheel)("abs_acceleration") = wheel_contact.abs_acceleration();

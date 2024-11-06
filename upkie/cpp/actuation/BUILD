@@ -22,10 +22,11 @@ cc_library(
     name = "servo_layout",
     hdrs = [
         "ServoLayout.h",
+        "ServoProperties.h",
     ],
     deps = [
         "//upkie/cpp/actuation/moteus",
-        "//upkie/cpp/model",
+        "//upkie/cpp/exceptions",
     ],
 )
 
@@ -51,7 +52,6 @@ cc_library(
     deps = [
         "//upkie/cpp/actuation/moteus",
         "//upkie/cpp/exceptions",
-        "//upkie/cpp/model",
         ":imu",
         ":static_config",
         "@palimpsest",
