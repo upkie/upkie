@@ -99,6 +99,10 @@ void Interface::write_position_commands(const Dictionary& action) {
         servo_action.get<double>("kd_scale", default_action::kKdScale);
     const double maximum_torque = servo_action.get<double>(
         "maximum_torque", default_action::kMaximumTorque);
+
+    // Last checks before updating the command
+    // Note that we don't position and velocity limits are already checked by
+    // servos, see `tools/setup/configure_servos.py`.
     if (maximum_torque < 0.0 || maximum_torque > joint.maximum_torque) {
       spdlog::error(
           "Maximum torque ({} N m) for joint {} is larger than the joint's "
