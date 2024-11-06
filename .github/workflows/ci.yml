@@ -32,7 +32,7 @@ jobs:
                   mkdir -p artifacts && mv ${{ env.SPINE_PATH }}${{ env.SPINE }} ./artifacts/
 
             - name: "Upload artifacts"
-              uses: actions/upload-artifact@v3
+              uses: actions/upload-artifact@v4
               with:
                   name: ${{ env.SPINE }}
                   path: ./artifacts
