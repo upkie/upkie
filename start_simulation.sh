@@ -56,6 +56,18 @@ else
 fi
 
 if [[ -n "$SPINE_ARCHIVE" ]] && [[ ! -v BUILD ]]; then
+    if [ -f cache/bullet_spine ]; then
+        OUTPUT=$(./cache/bullet_spine --version)
+        CACHE_RC=$?
+        if [ "${CACHE_RC}" -eq 0 ]; then
+            CACHE_VERSION=$(echo "${OUTPUT}" | awk '{print $4}')
+            if [ "${CACHE_VERSION}" != "${VERSION}" ]; then
+                echo "Cached version of the simulation spine (${CACHE_VERSION}) is not ${VERSION}"
+                rm -f cache/bullet_spine
+            fi
+        fi
+    fi
+
     CURL_TAR_RC=0
     if [ ! -f cache/bullet_spine ]; then
         echo "Downloading the simulation spine from $SPINE_ARCHIVE..."
@@ -67,7 +79,7 @@ if [[ -n "$SPINE_ARCHIVE" ]] && [[ ! -v BUILD ]]; then
     fi
 
     if [[ $CURL_TAR_RC -eq 0 ]]; then
-        echo "Simulation spine downloaded successfully or already in cache, let's roll!"
+        echo "Simulation spine is ready, let's roll!"
         cd cache || exit
         OUTPUT=$(./bullet_spine "${SPINE_ARGS[@]}" 2>&1)
         SPINE_RC=$?
