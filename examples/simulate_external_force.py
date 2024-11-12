@@ -8,7 +8,6 @@
 
 import gymnasium as gym
 import numpy as np
-
 import upkie.envs
 
 upkie.envs.register()

@@ -14,15 +14,16 @@ import gymnasium as gym
 import numpy as np
 
 import upkie.envs
+from upkie.exceptions import MissingOptionalDependency
 from upkie.utils.clamp import clamp_and_warn
 
 try:
     from qpmpc import solve_mpc
     from qpmpc.systems import WheeledInvertedPendulum
-except ModuleNotFoundError:
-    raise ModuleNotFoundError(
+except ModuleNotFoundError as exn:
+    raise MissingOptionalDependency(
         "This example uses qpmpc: `[conda|pip] install qpmpc`"
-    )
+    ) from exn
 
 upkie.envs.register()
 

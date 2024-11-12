@@ -366,7 +366,8 @@ class WheeledInvertedPendulum(gymnasium.Env):
                 )
             except ImportError as exn:
                 raise MissingOptionalDependency(
-                    "matplotlive not found, run `pip install matplotlive`"
+                    "matplotlive not found, "
+                    "it can be installed using conda or pip"
                 ) from exn
         self.plot.reset()
         self.plot.add_left("pitch", "b-")
