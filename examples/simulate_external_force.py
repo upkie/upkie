@@ -52,7 +52,7 @@ def run(env: upkie.envs.UpkieGroundVelocity):
         torso_force_in_world[2] = get_vertical_force(step % 1000)
         if torso_force_in_world[2] > 1.0:
             action *= 0.0
-        env.bullet_extra(bullet_action)  # call before env.step
+        env.unwrapped.bullet_extra(bullet_action)  # call before env.step
         observation, _, terminated, truncated, _ = env.step(action)
         if terminated or truncated:
             observation, _ = env.reset()

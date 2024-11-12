@@ -46,7 +46,7 @@ if __name__ == "__main__":
             }
         },
     ) as env:
-        action = env.get_neutral_action()
+        action = env.unwrapped.get_neutral_action()
         env.reset()  # connects to the spine
         for step in range(NB_GENUFLECTIONS * GENUFLECTION_STEPS):
             x = float(step % GENUFLECTION_STEPS) / GENUFLECTION_STEPS

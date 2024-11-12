@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - examples: Lying genuflection example (thanks to @one-for-all)
+- examples: Unwrap environments to get their neutral actions
 
 ### Removed
 
