@@ -79,7 +79,7 @@ if [[ -n "$SPINE_ARCHIVE" ]] && [[ ! -v BUILD ]]; then
     fi
 
     if [[ $CURL_TAR_RC -eq 0 ]]; then
-        echo "Simulation spine is ready, let's roll!"
+        echo "Simulation spine downloaded to cache, let's roll!"
         cd cache || exit
         OUTPUT=$(./bullet_spine "${SPINE_ARGS[@]}" 2>&1)
         SPINE_RC=$?

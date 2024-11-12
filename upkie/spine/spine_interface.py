@@ -81,7 +81,7 @@ class SpineInterface:
         observation = self._read_dict()
         return observation
 
-    def start(self, config: dict) -> None:
+    def start(self, config: dict) -> dict:
         r"""!
         Reset the spine to a new configuration.
 
