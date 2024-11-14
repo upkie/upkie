@@ -375,7 +375,7 @@ class BulletInterface : public Interface {
   std::map<std::string, moteus::ServoReply> servo_reply_;
 
   //! Bullet client
-  b3RobotSimulatorClientAPI bullet_;
+  RobotSimulatorClientAPI bullet_;
 
   //! Identifier of the robot model in the simulation
   int robot_;
@@ -396,7 +396,7 @@ class BulletInterface : public Interface {
   std::map<int, double> nominal_masses;
 
   //! Nominal inertia diagonal of the robot links
-  std::map<int, Eigen::Vector3d> nominal_inertia;
+  std::map<int, double[3]> nominal_inertia;
 
   //! Mass randomization epsilon
   double mass_randomization_epsilon_;
