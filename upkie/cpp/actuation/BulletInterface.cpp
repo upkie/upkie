@@ -57,6 +57,11 @@ BulletInterface::BulletInterface(const Parameters& params)
   if (imu_link_index_ < 0) {
     throw std::runtime_error("Robot does not have a link named \"imu\"");
   }
+  // If params has an attribute mass_randomization_epsilon, store nominal masses 
+  if (params.mass_randomization_epsilon) {
+    mass_randomization_epsilon_ = params.mass_randomization_epsilon;
+    get_nominal_masses();
+  }
 
   // Read servo layout
   for (const auto& id_joint : servo_name_map()) {
@@ -128,6 +133,9 @@ void BulletInterface::reset(const Dictionary& config) {
   reset_contact_data();
   reset_joint_angles(params_.joint_configuration);
   reset_joint_properties();
+  if (params_.mass_randomization_epsilon) {
+    randomize_masses();
+  }
 }
 
 void BulletInterface::reset_base_state(
@@ -351,6 +359,27 @@ void BulletInterface::read_joint_sensors() {
     // controlled (command mode == moteus::Mode::kStopped), and is zero when
     // the joint is torque controlled (command mode == moteus::Mode::kPosition)
     result.torque = sensor_state.m_jointMotorTorque;
+  }
+}
+void BulletInterface::get_nominal_masses() {
+  const int nb_links = bullet_.getNumJoints(robot_) + 1;
+  b3DynamicsInfo info ;
+  for (int link_id = 0; link_id < nb_links; ++link_id){
+    bool _ =  bullet_.getDynamicsInfo(robot_, link_id,&info); 
+    nominal_masses[link_id] = info.m_mass;
+    nominal_inertia[link_id] = Eigen::Map<Eigen::Vector3d>(info.m_localInertialDiagonal);
+    
+  }
+}
+void BulletInterface::randomize_masses() {
+  for (const auto& link_id : nominal_masses) {
+    std::default_random_engine generator;
+    std::uniform_real_distribution<double> distribution(-mass_randomization_epsilon_, mass_randomization_epsilon_);
+    double epsilon = distribution(generator);
+    RobotSimulatorChangeDynamicsArgs change_dyn_args;
+    change_dyn_args.m_mass = nominal_masses[link_id.first] * (1+epsilon);
+    change_dyn_args.m_localInertiaDiagonal = nominal_inertia[link_id.first] * (1+epsilon);
+    bullet_.changeDynamics(robot_, link_id.first, change_dyn_args) ;
   }
 }
 
