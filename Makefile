@@ -76,8 +76,7 @@ upload: check_upkie_name build set_date  ## upload built targets to the Raspberr
 		--exclude cache/ \
 		--exclude tools/bazel \
 		--exclude tools/logs/\*.mpack \
-		--exclude tools/raspios/.packer_\* \
-		--exclude tools/raspios/\*.img \
+		--exclude tools/raspios \
 		--progress $(CURDIR)/ ${UPKIE_NAME}:$(PROJECT_NAME)/
 
 # REMOTE TARGETS
