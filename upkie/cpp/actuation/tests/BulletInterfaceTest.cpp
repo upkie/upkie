@@ -237,6 +237,17 @@ TEST_F(BulletInterfaceTest, JointRepliesHaveVoltage) {
   }
 }
 
+TEST_F(BulletInterfaceTest, MassRandomizationIsDifferent) {
+  interface_.get_nominal_masses();
+  const double nominal_mass = interface_.nominal_masses();
+  interface_.mass_randomization_epsilon_ = 0.1;
+  interface_.reset();
+  const double randomized_mass = interface
+  ASSERT_NE(nominal_mass, randomized_mass);
+  ASSERT_LT(randomized_mass, 1.1 * nominal_mass);
+  ASSERT_GT(randomized_mass, 0.9 * nominal_mass);
+}
+
 TEST_F(BulletInterfaceTest, ObserveImuOrientation) {
   Eigen::Quaterniond orientation_base_in_world = {0., 1., 0., 0.};
 
