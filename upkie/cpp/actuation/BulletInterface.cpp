@@ -362,12 +362,14 @@ void BulletInterface::read_joint_sensors() {
   }
 }
 void BulletInterface::get_nominal_masses() {
-  const int nb_links = bullet_.getNumJoints(robot_) + 1;
+  const int nb_links = bullet_.getNumJoints(robot_) ;
   b3DynamicsInfo info ;
   for (int link_id = 0; link_id < nb_links; ++link_id){
-    bool _ =  bullet_.getDynamicsInfo(robot_, link_id,&info); 
+    bullet_.getDynamicsInfo(robot_, link_id,&info); 
     nominal_masses[link_id] = info.m_mass;
-    nominal_inertia[link_id] = Eigen::Map<Eigen::Vector3d>(info.m_localInertialDiagonal);
+    for (int i = 0; i < 3; ++i) {
+        nominal_inertia[link_id][i] = info.m_localInertialDiagonal[i];
+    }
     
   }
 }
@@ -378,7 +380,10 @@ void BulletInterface::randomize_masses() {
     double epsilon = distribution(generator);
     RobotSimulatorChangeDynamicsArgs change_dyn_args;
     change_dyn_args.m_mass = nominal_masses[link_id.first] * (1+epsilon);
-    change_dyn_args.m_localInertiaDiagonal = nominal_inertia[link_id.first] * (1+epsilon);
+    for (int i = 0; i < 3; ++i) {
+        change_dyn_args.m_localInertiaDiagonal[i] = nominal_inertia[link_id.first][i] * (1 + epsilon);
+    }
+
     bullet_.changeDynamics(robot_, link_id.first, change_dyn_args) ;
   }
 }

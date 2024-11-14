@@ -78,7 +78,7 @@ class CommandLineArguments {
       } else if (arg == "--robot-variant") {
         robot_variant = args.at(++i);
         spdlog::info("Command line: robot_variant = {}", robot_variant);
-      } else if (arg == "Command line: mass_randomization_epsilon = {}") {
+      } else if (arg == "--mass-randomization-epsilon") {
         mass_randomization_epsilon = std::stod(args.at(++i));
         spdlog::info("Command line: mass_randomization_epsilon = {}",
                      mass_randomization_epsilon);

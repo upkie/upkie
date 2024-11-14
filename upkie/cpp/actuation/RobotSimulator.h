@@ -21,7 +21,7 @@ struct RobotSimulatorChangeDynamicsArgs
     double m_contactDamping;
     int m_frictionAnchor;
     int m_activationState;
-    const double m_localInertiaDiagonal[3];
+    double m_localInertiaDiagonal[3];
 
     RobotSimulatorChangeDynamicsArgs()
         : m_mass(-1),
