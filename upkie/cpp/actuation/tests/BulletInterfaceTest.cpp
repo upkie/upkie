@@ -238,11 +238,11 @@ TEST_F(BulletInterfaceTest, JointRepliesHaveVoltage) {
 }
 
 TEST_F(BulletInterfaceTest, MassRandomizationIsDifferent) {
-  interface_->get_nominal_masses();
+  interface_->save_nominal_masses();
   const std::map<int, double> nominal_masses = interface_->nominal_masses;
-  interface_->mass_randomization_epsilon_ = 0.1;
+  interface_->inertia_randomization_ = 0.1;
   interface_->randomize_masses();
-  interface_->get_nominal_masses();
+  interface_->save_nominal_masses();
   const std::map<int, double> randomized_masses = interface_->nominal_masses;
   for (const auto& [id, nominal_mass] : nominal_masses) {
     double randomized_mass = randomized_masses.at(id);
@@ -250,7 +250,7 @@ TEST_F(BulletInterfaceTest, MassRandomizationIsDifferent) {
     ASSERT_LT(randomized_mass, 1.1 * nominal_mass);
     ASSERT_GT(randomized_mass, 0.9 * nominal_mass);
   }
-  interface_->mass_randomization_epsilon_ = 0.0;
+  interface_->inertia_randomization_ = 0.0;
 }
 
 TEST_F(BulletInterfaceTest, ObserveImuOrientation) {

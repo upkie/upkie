@@ -57,9 +57,9 @@ BulletInterface::BulletInterface(const Parameters& params)
   if (imu_link_index_ < 0) {
     throw std::runtime_error("Robot does not have a link named \"imu\"");
   }
-  // If params has an attribute mass_randomization_epsilon, store masses
-  if (params.mass_randomization_epsilon) {
-    mass_randomization_epsilon_ = params.mass_randomization_epsilon;
+  // If params has an attribute inertia_randomization, store masses
+  if (params.inertia_randomization) {
+    inertia_randomization_ = params.inertia_randomization;
     save_nominal_masses();
   }
 
@@ -133,7 +133,7 @@ void BulletInterface::reset(const Dictionary& config) {
   reset_contact_data();
   reset_joint_angles(params_.joint_configuration);
   reset_joint_properties();
-  if (params_.mass_randomization_epsilon) {
+  if (params_.inertia_randomization) {
     randomize_masses();
   }
 }
@@ -361,30 +361,38 @@ void BulletInterface::read_joint_sensors() {
     result.torque = sensor_state.m_jointMotorTorque;
   }
 }
-void BulletInterface::get_nominal_masses() {
+void BulletInterface::save_nominal_masses() {
   const int nb_links = bullet_.getNumJoints(robot_);
   b3DynamicsInfo info;
   for (int link_id = 0; link_id < nb_links; ++link_id) {
     bullet_.getDynamicsInfo(robot_, link_id, &info);
     nominal_masses[link_id] = info.m_mass;
-    for (int i = 0; i < 3; ++i) {
-      nominal_inertia[link_id][i] = info.m_localInertialDiagonal[i];
-    }
+    nominal_inertia[link_id][0] = info.m_localInertialDiagonal[0];
+    nominal_inertia[link_id][1] = info.m_localInertialDiagonal[1];
+    nominal_inertia[link_id][2] = info.m_localInertialDiagonal[2];
   }
 }
 void BulletInterface::randomize_masses() {
   for (const auto& link_id : nominal_masses) {
     std::default_random_engine generator;
-    std::uniform_real_distribution<double> distribution(
-        -mass_randomization_epsilon_, mass_randomization_epsilon_);
+    std::uniform_real_distribution<double> distribution(-inertia_randomization_,
+                                                        inertia_randomization_);
     double epsilon = distribution(generator);
     RobotSimulatorChangeDynamicsArgs change_dyn_args;
     change_dyn_args.m_mass = nominal_masses[link_id.first] * (1 + epsilon);
-    for (int i = 0; i < 3; ++i) {
-      change_dyn_args.m_localInertiaDiagonal[i] =
-          nominal_inertia[link_id.first][i] * (1 + epsilon);
-    }
-
+    std::uniform_real_distribution<double> distribution01(0, 1);
+    double epsilon0 = distribution01(generator);
+    double epsilon1 = distribution01(generator);
+    double epsilon2 = distribution01(generator);
+    epsilon0 = epsilon * epsilon0 / (epsilon0 + epsilon1 + epsilon2);
+    epsilon1 = epsilon * epsilon0 / (epsilon0 + epsilon1 + epsilon2);
+    epsilon2 = epsilon * epsilon0 / (epsilon0 + epsilon1 + epsilon2);
+    change_dyn_args.m_localInertiaDiagonal[0] =
+        nominal_inertia[link_id.first][0] * (1 + epsilon0);
+    change_dyn_args.m_localInertiaDiagonal[1] =
+        nominal_inertia[link_id.first][1] * (1 + epsilon1);
+    change_dyn_args.m_localInertiaDiagonal[2] =
+        nominal_inertia[link_id.first][2] * (1 + epsilon2);
     bullet_.changeDynamics(robot_, link_id.first, change_dyn_args);
   }
 }
