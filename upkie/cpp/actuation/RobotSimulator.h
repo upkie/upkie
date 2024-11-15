@@ -58,7 +58,7 @@ struct RobotSimulatorChangeDynamicsArgs {
 //! Child class to enable modification of inertia matrices
 class RobotSimulatorClientAPI : public b3RobotSimulatorClientAPI {
  public:
-  /* Modifies the properties of a link
+  /*! Modifies the properties of a link
    *
    * This is a modification of the method changeDynamics of
    * b3RobotSimulatorClientAPI to enable the modification of the inertia
