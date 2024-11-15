@@ -13,13 +13,7 @@
 #include "SharedMemory/PhysicsClientC_API.h"
 #include "SharedMemory/b3RobotSimulatorClientAPI_InternalData.h"
 
-/*
- * Structure which contains the new link properties
- *
- * This is a modification of b3RobotSimulatorChangeDynamicsArgs
- * with the addition of the attribute m_localInertiaDiagonal
- * to enable the modification of the inertia matrix of the link
- */
+//! Structure which contains the new link properties
 struct RobotSimulatorChangeDynamicsArgs {
   double m_mass;
   double m_lateralFriction;
@@ -48,6 +42,8 @@ struct RobotSimulatorChangeDynamicsArgs {
         m_activationState(-1),
         m_localInertiaDiagonal{0, 0, 0} {}
 };
+
+//! Child class to enable modification of inertia matrices
 class RobotSimulatorClientAPI : public b3RobotSimulatorClientAPI {
  public:
   /* Modifies the properties of a link
