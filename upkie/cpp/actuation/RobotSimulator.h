@@ -15,29 +15,29 @@
 
 //! Structure which contains the new link properties
 struct RobotSimulatorChangeDynamicsArgs {
-  // The mass of the robot link
+  //! The mass of the robot link
   double m_mass;
-  // The friction in the lateral direction
+  //! The friction in the lateral direction
   double m_lateralFriction;
-  // The friction during rotational motion
+  //! The friction during rotational motion
   double m_spinningFriction;
-  // The friction while rolling
+  //! The friction while rolling
   double m_rollingFriction;
-  // The coefficient of restitution
+  //! The coefficient of restitution
   double m_restitution;
-  // The damping factor for linear motion
+  //! The damping factor for linear motion
   double m_linearDamping;
-  // The damping factor for angular motion
+  //! The damping factor for angular motion
   double m_angularDamping;
-  // The stiffness of contact between objects
+  //! The stiffness of contact between objects
   double m_contactStiffness;
-  // The damping factor during collisions
+  //! The damping factor during collisions
   double m_contactDamping;
-  // Specifies whether friction is applied at a specific anchor point
+  //! Specifies whether friction is applied at a specific anchor point
   int m_frictionAnchor;
-  // The activation state of the link
+  //! The activation state of the link
   int m_activationState;
-  // The local inertia tensor diagonal components
+  //! The local inertia tensor diagonal components
   double m_localInertiaDiagonal[3];
 
   RobotSimulatorChangeDynamicsArgs()
