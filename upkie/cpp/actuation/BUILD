@@ -106,7 +106,8 @@ cc_library(
         'RobotSimulator.cpp',
     ],
     deps = [
-        "@bullet"
+        "@bullet",
+        "@eigen"
     ],
 )
 cc_library(

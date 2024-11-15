@@ -1,3 +1,8 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2024 Inria
+
+#pragma once
+
 #ifndef ROBOT_SIMULATOR_CLIENT_API_H
 #define ROBOT_SIMULATOR_CLIENT_API_H
 
@@ -5,11 +10,10 @@
 #include "SharedMemory/PhysicsClientC_API.h"
 #include "SharedMemory/b3RobotSimulatorClientAPI_InternalData.h"
 #include "Bullet3Common/b3Logging.h"
-#include <Eigen/Dense>  // Make sure Eigen is included
+#include <Eigen/Dense>
 
 
-struct RobotSimulatorChangeDynamicsArgs
-{
+struct RobotSimulatorChangeDynamicsArgs{
     double m_mass;
     double m_lateralFriction;
     double m_spinningFriction;
@@ -37,12 +41,13 @@ struct RobotSimulatorChangeDynamicsArgs
           m_activationState(-1),
           m_localInertiaDiagonal{0, 0, 0}
         {
-        };
+        }
 };
 class RobotSimulatorClientAPI : public b3RobotSimulatorClientAPI {
-public:
-    // Override the changeDynamics method
-    bool changeDynamics(int bodyUniqueId, int linkIndex, RobotSimulatorChangeDynamicsArgs& args) ;
+ public:
+    bool changeDynamics(int bodyUniqueId,
+      int linkIndex,
+      RobotSimulatorChangeDynamicsArgs& args);
 };
 
 

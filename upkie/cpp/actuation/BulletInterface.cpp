@@ -57,7 +57,7 @@ BulletInterface::BulletInterface(const Parameters& params)
   if (imu_link_index_ < 0) {
     throw std::runtime_error("Robot does not have a link named \"imu\"");
   }
-  // If params has an attribute mass_randomization_epsilon, store nominal masses 
+  // If params has an attribute mass_randomization_epsilon, store masses
   if (params.mass_randomization_epsilon) {
     mass_randomization_epsilon_ = params.mass_randomization_epsilon;
     get_nominal_masses();
@@ -362,29 +362,31 @@ void BulletInterface::read_joint_sensors() {
   }
 }
 void BulletInterface::get_nominal_masses() {
-  const int nb_links = bullet_.getNumJoints(robot_) ;
-  b3DynamicsInfo info ;
-  for (int link_id = 0; link_id < nb_links; ++link_id){
-    bullet_.getDynamicsInfo(robot_, link_id,&info); 
+  const int nb_links = bullet_.getNumJoints(robot_);
+  b3DynamicsInfo info;
+  for (int link_id = 0; link_id < nb_links; ++link_id) {
+    bullet_.getDynamicsInfo(robot_, link_id, &info);
     nominal_masses[link_id] = info.m_mass;
     for (int i = 0; i < 3; ++i) {
         nominal_inertia[link_id][i] = info.m_localInertialDiagonal[i];
     }
-    
   }
 }
 void BulletInterface::randomize_masses() {
   for (const auto& link_id : nominal_masses) {
     std::default_random_engine generator;
-    std::uniform_real_distribution<double> distribution(-mass_randomization_epsilon_, mass_randomization_epsilon_);
+    std::uniform_real_distribution<double> distribution(
+      -mass_randomization_epsilon_,
+      mass_randomization_epsilon_);
     double epsilon = distribution(generator);
     RobotSimulatorChangeDynamicsArgs change_dyn_args;
     change_dyn_args.m_mass = nominal_masses[link_id.first] * (1+epsilon);
     for (int i = 0; i < 3; ++i) {
-        change_dyn_args.m_localInertiaDiagonal[i] = nominal_inertia[link_id.first][i] * (1 + epsilon);
+        change_dyn_args.m_localInertiaDiagonal[i] =
+          nominal_inertia[link_id.first][i] * (1 + epsilon);
     }
 
-    bullet_.changeDynamics(robot_, link_id.first, change_dyn_args) ;
+    bullet_.changeDynamics(robot_, link_id.first, change_dyn_args);
   }
 }
 
