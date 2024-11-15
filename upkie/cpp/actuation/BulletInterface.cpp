@@ -60,7 +60,7 @@ BulletInterface::BulletInterface(const Parameters& params)
   // If params has an attribute mass_randomization_epsilon, store masses
   if (params.mass_randomization_epsilon) {
     mass_randomization_epsilon_ = params.mass_randomization_epsilon;
-    get_nominal_masses();
+    save_nominal_masses();
   }
 
   // Read servo layout
