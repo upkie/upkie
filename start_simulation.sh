@@ -55,7 +55,7 @@ else
     echo "Unsupported system: $SYSTEM"
 fi
 
-if [[ -n "$SPINE_ARCHIVE" ]] && [[ ! -v BUILD ]]; then
+if [[ -n "$SPINE_ARCHIVE" ]] && [[ -z "$BUILD" ]]; then
     if [ -f cache/bullet_spine ]; then
         OUTPUT=$(./cache/bullet_spine --version)
         CACHE_RC=$?
@@ -99,7 +99,7 @@ if [[ -n "$SPINE_ARCHIVE" ]] && [[ ! -v BUILD ]]; then
     fi
 fi
 
-if [[ -v BUILD ]]; then
+if [[ -n "$BUILD" ]]; then
     echo "Building the simulation spine from source..."
     (cd "${SCRIPTDIR}" && "${SCRIPTDIR}"/tools/bazelisk run //spines:bullet_spine -- "${SPINE_ARGS[@]}")
 fi
