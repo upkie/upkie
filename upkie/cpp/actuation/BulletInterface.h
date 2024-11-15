@@ -12,7 +12,6 @@
 #include <string>
 #include <vector>
 
-#include "SharedMemory/PhysicsClientC_API.h"
 #include "upkie/cpp/actuation/ImuUncertainty.h"
 #include "upkie/cpp/actuation/Interface.h"
 #include "upkie/cpp/actuation/RobotSimulator.h"
