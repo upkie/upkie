@@ -368,7 +368,7 @@ void BulletInterface::get_nominal_masses() {
     bullet_.getDynamicsInfo(robot_, link_id, &info);
     nominal_masses[link_id] = info.m_mass;
     for (int i = 0; i < 3; ++i) {
-        nominal_inertia[link_id][i] = info.m_localInertialDiagonal[i];
+      nominal_inertia[link_id][i] = info.m_localInertialDiagonal[i];
     }
   }
 }
@@ -376,13 +376,12 @@ void BulletInterface::randomize_masses() {
   for (const auto& link_id : nominal_masses) {
     std::default_random_engine generator;
     std::uniform_real_distribution<double> distribution(
-      -mass_randomization_epsilon_,
-      mass_randomization_epsilon_);
+        -mass_randomization_epsilon_, mass_randomization_epsilon_);
     double epsilon = distribution(generator);
     RobotSimulatorChangeDynamicsArgs change_dyn_args;
-    change_dyn_args.m_mass = nominal_masses[link_id.first] * (1+epsilon);
+    change_dyn_args.m_mass = nominal_masses[link_id.first] * (1 + epsilon);
     for (int i = 0; i < 3; ++i) {
-        change_dyn_args.m_localInertiaDiagonal[i] =
+      change_dyn_args.m_localInertiaDiagonal[i] =
           nominal_inertia[link_id.first][i] * (1 + epsilon);
     }
 
