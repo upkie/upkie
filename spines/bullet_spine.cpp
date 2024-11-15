@@ -158,7 +158,7 @@ class CommandLineArguments {
   //! Spine frequency in Hz.
   unsigned spine_frequency = 1000u;
 
-  //! Mass randomization epsilon
+  //! Mass randomization ratio in [%]
   double mass_randomization_epsilon = 0.0;
 
   //! Version flag
