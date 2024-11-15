@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added upkie links mass randomization
 - Handle GLIBC version incompatibility in `start_simulation.sh`
 - Update downloaded simulation spine in cache if outdated
 - actuation: Check maximum torques before sending commands

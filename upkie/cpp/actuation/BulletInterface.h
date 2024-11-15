@@ -12,7 +12,6 @@
 #include <string>
 #include <vector>
 
-//#include "RobotSimulator/b3RobotSimulatorClientAPI.h"
 #include "upkie/cpp/actuation/RobotSimulator.h"
 #include "SharedMemory/PhysicsClientC_API.h"
 #include "upkie/cpp/actuation/ImuUncertainty.h"
@@ -126,7 +125,7 @@ class BulletInterface : public Interface {
 
     //! Mass randomization epsilon
     double mass_randomization_epsilon = 0.0;
-    
+
     //! If true, set gravity to -9.81 m/s².
     bool gravity = true;
 
@@ -327,6 +326,21 @@ class BulletInterface : public Interface {
    */
   Eigen::Vector3d get_position_link_in_world(const std::string& link_name);
 
+  //! Get nominal masses of the robot links
+  void get_nominal_masses();
+
+  //! Randomize masses of the robot links
+  void randomize_masses();
+
+  //! Mass randomization epsilon
+  double mass_randomization_epsilon_;
+
+  //! Nominal masses of the robot links
+  std::map<int, double> nominal_masses;
+
+  //! Nominal inertia diagonal of the robot links
+  std::map<int, double[3]> nominal_inertia;
+
  private:
   //! Apply external forces.
   void apply_external_forces();
@@ -358,12 +372,6 @@ class BulletInterface : public Interface {
   //! Convenience function to follow the base translation
   void translate_camera_to_robot();
 
-  //! Randomize masses of the robot links
-  void randomize_masses();
-
-  //! Get nominal masses of the robot links
-  void get_nominal_masses();
-
  private:
   //! Interface parameters
   Parameters params_;
@@ -392,14 +400,6 @@ class BulletInterface : public Interface {
   //! Map from link name to link index in Bullet
   std::map<std::string, int> link_index_;
 
-  //! Nominal masses of the robot links
-  std::map<int, double> nominal_masses;
-
-  //! Nominal inertia diagonal of the robot links
-  std::map<int, double[3]> nominal_inertia;
-
-  //! Mass randomization epsilon
-  double mass_randomization_epsilon_;
   //! Map from link name to link contact data
   std::map<std::string, bullet::ContactData> contact_data_;
 
