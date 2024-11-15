@@ -385,8 +385,8 @@ void BulletInterface::randomize_masses() {
     double epsilon1 = distribution01(generator);
     double epsilon2 = distribution01(generator);
     epsilon0 = epsilon * epsilon0 / (epsilon0 + epsilon1 + epsilon2);
-    epsilon1 = epsilon * epsilon0 / (epsilon0 + epsilon1 + epsilon2);
-    epsilon2 = epsilon * epsilon0 / (epsilon0 + epsilon1 + epsilon2);
+    epsilon1 = epsilon * epsilon1 / (epsilon0 + epsilon1 + epsilon2);
+    epsilon2 = epsilon * epsilon2 / (epsilon0 + epsilon1 + epsilon2);
     change_dyn_args.m_localInertiaDiagonal[0] =
         nominal_inertia[link_id.first][0] * (1 + epsilon0);
     change_dyn_args.m_localInertiaDiagonal[1] =
