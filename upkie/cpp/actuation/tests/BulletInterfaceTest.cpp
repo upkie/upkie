@@ -245,10 +245,10 @@ TEST_F(BulletInterfaceTest, MassRandomizationIsDifferent) {
   interface_->get_nominal_masses();
   const std::map<int, double> randomized_masses = interface_->nominal_masses;
   for (const auto& [id, nominal_mass] : nominal_masses) {
-        double randomized_mass = randomized_masses.at(id);
-        ASSERT_NE(nominal_mass, randomized_mass);
-        ASSERT_LT(randomized_mass, 1.1 * nominal_mass);
-        ASSERT_GT(randomized_mass, 0.9 * nominal_mass);
+    double randomized_mass = randomized_masses.at(id);
+    ASSERT_NE(nominal_mass, randomized_mass);
+    ASSERT_LT(randomized_mass, 1.1 * nominal_mass);
+    ASSERT_GT(randomized_mass, 0.9 * nominal_mass);
   }
   interface_->mass_randomization_epsilon_ = 0.0;
 }
