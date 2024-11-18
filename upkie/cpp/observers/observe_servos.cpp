@@ -7,6 +7,8 @@
 #include <string>
 #include <vector>
 
+#include "upkie/cpp/exceptions/UpkieError.h"
+
 namespace upkie::cpp::observers {
 
 using upkie::cpp::actuation::moteus::ServoReply;
@@ -21,7 +23,13 @@ void observe_servos(palimpsest::Dictionary& observation,
       spdlog::error("Unknown servo ID {} in CAN reply", servo_id);
       continue;
     }
+
     const auto& joint_name = it->second;
+    if (std::isnan(reply.result.torque)) {
+      spdlog::error("Invalid reply from \"{}\": torque measurement is NaN",
+                    joint_name);
+      throw exceptions::UpkieError("Torque measurement is NaN");
+    }
 
     // The moteus convention is that positive angles correspond to clockwise
     // rotations when looking at the rotor / back of the moteus board. See:
