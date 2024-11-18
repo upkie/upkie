@@ -40,6 +40,7 @@ cc_library(
     srcs = ["observe_servos.cpp"],
     deps = [
         "//upkie/cpp/actuation/moteus",
+        "//upkie/cpp/exceptions",
         "@palimpsest",
     ],
 )
