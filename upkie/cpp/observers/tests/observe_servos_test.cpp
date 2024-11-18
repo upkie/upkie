@@ -35,4 +35,21 @@ TEST(Servo, ReadTorques) {
   ASSERT_DOUBLE_EQ(observation("servo")("bar")("torque"), -10.);
 }
 
+TEST(Servo, ThrowIfNaNTorque) {
+  std::map<int, std::string> servo_joint_map = {{0, "foo"}, {1, "bar"}};
+  std::vector<actuation::moteus::ServoReply> servo_replies;
+  servo_replies.push_back({1, {}});           // bar first
+  servo_replies.back().result.torque = -10.;  // [N m]
+  servo_replies.push_back({0, {}});           // foo next
+  servo_replies.back().result.torque = std::numeric_limits<double>::quiet_NaN();
+
+  palimpsest::Dictionary observation;
+  ASSERT_THROW(observe_servos(observation, servo_joint_map, servo_replies),
+               ServoError);
+
+  servo_replies.back().result.torque = 10.;  // [N m]
+  observe_servos(observation, servo_joint_map, servo_replies);
+  ASSERT_DOUBLE_EQ(observation("servo")("foo")("torque"), 10.);
+}
+
 }  // namespace upkie::cpp::observers
