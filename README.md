@@ -22,7 +22,6 @@ This repository contains all the materials needed to build and animate an Upkie:
     - [Documentation](https://upkie.github.io/upkie/)
 - Going further:
     - [Examples](https://github.com/upkie/upkie/tree/main/examples)
-    - [Gymnasium environments](https://upkie.github.io/upkie/environments.html)
     - [Agents](https://github.com/upkie/upkie#agents)
 
 Questions are welcome in the [Chat](https://app.element.io/#/room/#upkie:matrix.org) and [Discussions forum](https://github.com/upkie/upkie/discussions).
