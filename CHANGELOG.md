@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CICD: Update upload-artifact action to v4
 - actuation: Rename `Interface::initialize_action` to `Interface::reset_action`
 - actuation: Rename `Interface::servo_joint_map` to `Interface::servo_name_map`
+- deps: Upate to palimpsest 2.2.1
 
 ### Fixed
 
