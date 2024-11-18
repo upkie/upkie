@@ -27,11 +27,8 @@ class UpkieError : public std::runtime_error {
       : std::runtime_error(other.message_ + extra_message),
         message_(other.message_ + extra_message) {}
 
-  //! Empty destructor
-  ~UpkieError() throw() {}
-
   //! Error message
-  const char* what() const throw() { return message_.c_str(); }
+  const char* what() const noexcept override { return message_.c_str(); }
 
  protected:
   //! Complete error message
