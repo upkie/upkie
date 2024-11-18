@@ -19,9 +19,6 @@ class PositionCommandError : public UpkieError {
    */
   PositionCommandError(const std::string& message, int servo_id)
       : UpkieError(message) {}
-
-  //! Empty destructor
-  ~PositionCommandError() throw() {}
 };
 
 }  // namespace upkie::cpp::exceptions
