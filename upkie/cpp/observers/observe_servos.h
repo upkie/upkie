@@ -20,7 +20,7 @@ using upkie::cpp::actuation::moteus::ServoReply;
  * \param[out] observation Dictionary to write observations to.
  * \param[in] servo_name_map Map from servo ID to joint name.
  * \param[in] servo_replies List of servo replies from the CAN bus.
- * \throw UpkieError If a servo reply is invalid.
+ * \throw ServoError If a servo reply is invalid.
  */
 void observe_servos(palimpsest::Dictionary& observation,
                     const std::map<int, std::string>& servo_name_map,
