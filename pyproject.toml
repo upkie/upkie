@@ -112,4 +112,17 @@ upkie_description = ">=2.1.0"
 [tool.pixi.pypi-dependencies]
 upkie = { path = ".", editable = true }
 
-[tool.pixi.tasks]
+[tool.pixi.feature.docs.dependencies]
+python = "=3.12"
+doxygen = "<=1.9.5"
+gymnasium = "*"
+loop-rate-limiters = "*"
+msgpack-python = "*"
+numpy = "*"
+pinocchio = "*"
+scipy = "*"
+stable-baselines3 = "*"
+upkie_description = "*"
+
+[tool.pixi.environments]
+docs = { features = ["docs"], solve-group = "default" }
