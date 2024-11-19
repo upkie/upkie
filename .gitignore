@@ -11,3 +11,7 @@ tools/logs/*.tar.*
 training/
 upkie.wiki/
 wiki/
+
+# pixi environments
+.pixi
+*.egg-info
