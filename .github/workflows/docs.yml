@@ -31,16 +31,19 @@ jobs:
             - name: "Report Doxygen version"
               run: |
                   doxygen --version
+              shell: pixi run bash -e {0}
 
             - name: "Make figures"
               run: |
                   cd ${{ github.workspace }}/docs/
                   make figures
+              shell: pixi run bash -e {0}
 
             - name: "Build documentation"
               run: |
                   cd ${{ github.workspace }}
                   doxygen docs/Doxyfile
+              shell: pixi run bash -e {0}
 
             - name: "Deploy to GitHub Pages"
               uses: peaceiris/actions-gh-pages@v3
