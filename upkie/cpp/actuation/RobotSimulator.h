@@ -15,7 +15,7 @@
 
 //! Structure which contains the new link properties
 struct RobotSimulatorChangeDynamicsArgs {
-  //! The mass of the robot link
+  //! The mass of the robot link (in kg)
   double m_mass;
   //! The friction in the lateral direction
   double m_lateralFriction;
