@@ -113,8 +113,8 @@ upkie_description = ">=2.1.0"
 upkie = { path = ".", editable = true }
 
 [tool.pixi.feature.docs.dependencies]
-python = "=3.12"
 doxygen = "<=1.9.5"
+make = "*"
 pinocchio = "*"
 stable-baselines3 = "*"
 
