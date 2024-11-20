@@ -169,6 +169,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/loop-rate-limiters-1.0.0-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/lz4-c-1.9.4-hcb278e6_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/lzo-2.10-hd590300_1001.conda
+      - conda: https://conda.anaconda.org/conda-forge/linux-64/make-4.4.1-hb9d3cd8_2.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/markupsafe-3.0.2-py312h178313f_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/matplotlib-base-3.9.2-py312hd3ec401_2.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/metis-5.1.0-hd0bcaf9_1007.conda
@@ -2349,6 +2350,23 @@ packages:
   size: 171416
   timestamp: 1713515738503
 - kind: conda
+  name: make
+  version: 4.4.1
+  build: hb9d3cd8_2
+  build_number: 2
+  subdir: linux-64
+  url: https://conda.anaconda.org/conda-forge/linux-64/make-4.4.1-hb9d3cd8_2.conda
+  sha256: d652c7bd4d3b6f82b0f6d063b0d8df6f54cc47531092d7ff008e780f3261bdda
+  md5: 33405d2a66b1411db9f7242c8b97c9e7
+  depends:
+  - __glibc >=2.17,<3.0.a0
+  - libgcc >=13
+  license: GPL-3.0-or-later
+  license_family: GPL
+  purls: []
+  size: 513088
+  timestamp: 1727801714848
+- kind: conda
   name: markupsafe
   version: 3.0.2
   build: py312h178313f_0
@@ -3343,7 +3361,7 @@ packages:
   name: upkie
   version: 6.0.0
   path: .
-  sha256: 336cc60fca6ea8d85f83a6e6b76c5aae855825e839f007973b416d862680c6e4
+  sha256: f228857e40eb6b4781c4f8c1c829fee93eed2cad19ed967c6badde5bdcb3866d
   requires_dist:
   - gymnasium>=0.29.1
   - loop-rate-limiters>=1.0.0
