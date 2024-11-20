@@ -77,8 +77,10 @@ cc_library(
     name = "bullet_interface",
     hdrs = [
         "BulletInterface.h",
+        "RobotSimulator.h"
     ],
     srcs = [
+        "RobotSimulator.cpp",
         "BulletInterface.cpp",
     ],
     data = [
@@ -95,6 +97,19 @@ cc_library(
     ],
 )
 
+cc_library(
+    name = 'robot_simulator',
+    hdrs = [
+        'RobotSimulator.h',
+    ],
+    srcs = [
+        'RobotSimulator.cpp',
+    ],
+    deps = [
+        "@bullet",
+        "@eigen"
+    ],
+)
 cc_library(
     name = "pi3hat_interface",
     hdrs = [

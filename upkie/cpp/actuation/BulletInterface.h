@@ -12,9 +12,9 @@
 #include <string>
 #include <vector>
 
-#include "RobotSimulator/b3RobotSimulatorClientAPI.h"
 #include "upkie/cpp/actuation/ImuUncertainty.h"
 #include "upkie/cpp/actuation/Interface.h"
+#include "upkie/cpp/actuation/RobotSimulator.h"
 #include "upkie/cpp/actuation/bullet/ContactData.h"
 #include "upkie/cpp/actuation/bullet/ExternalForce.h"
 #include "upkie/cpp/actuation/bullet/JointProperties.h"
@@ -121,6 +121,9 @@ class BulletInterface : public Interface {
 
     //! Translate the camera to follow the robot
     bool follower_camera = false;
+
+    //! Mass randomization epsilon
+    double inertia_randomization = 0.0;
 
     //! If true, set gravity to -9.81 m/s².
     bool gravity = true;
@@ -322,6 +325,21 @@ class BulletInterface : public Interface {
    */
   Eigen::Vector3d get_position_link_in_world(const std::string& link_name);
 
+  //! Get nominal masses of the robot links
+  void save_nominal_masses();
+
+  //! Randomize masses of the robot links
+  void randomize_masses();
+
+  //! Mass randomization epsilon
+  double inertia_randomization_;
+
+  //! Nominal masses of the robot links
+  std::map<int, double> nominal_masses;
+
+  //! Nominal inertia diagonal of the robot links
+  std::map<int, double[3]> nominal_inertia;
+
  private:
   //! Apply external forces.
   void apply_external_forces();
@@ -364,7 +382,7 @@ class BulletInterface : public Interface {
   std::map<std::string, moteus::ServoReply> servo_reply_;
 
   //! Bullet client
-  b3RobotSimulatorClientAPI bullet_;
+  RobotSimulatorClientAPI bullet_;
 
   //! Identifier of the robot model in the simulation
   int robot_;

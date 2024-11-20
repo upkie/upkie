@@ -78,6 +78,10 @@ class CommandLineArguments {
       } else if (arg == "--robot-variant") {
         robot_variant = args.at(++i);
         spdlog::info("Command line: robot_variant = {}", robot_variant);
+      } else if (arg == "--inertia-randomization") {
+        inertia_randomization = std::stod(args.at(++i));
+        spdlog::info("Command line: inertia_randomization = {} [kg]",
+                     inertia_randomization);
       } else {
         spdlog::error("Unknown argument: {}", arg);
         error = true;
@@ -116,6 +120,8 @@ class CommandLineArguments {
               << "    Spine frequency in Hertz (default: 1000 Hz).\n";
     std::cout << "--robot-variant <variant>\n"
               << "    Robot variant (default: '').\n";
+    std::cout << "--inertia-randomization <epsilon>\n"
+              << "    Randomize inertia of the robot links.\n";
     std::cout << "-v, --version\n"
               << "    Print out the spine version number.\n";
     std::cout << "\n";
@@ -151,6 +157,9 @@ class CommandLineArguments {
 
   //! Spine frequency in Hz.
   unsigned spine_frequency = 1000u;
+
+  //! Mass randomization ratio in [%]
+  double inertia_randomization = 0.0;
 
   //! Version flag
   bool version = false;
@@ -232,6 +241,7 @@ int main(const char* argv0, const CommandLineArguments& args) {
   bullet_params.floor = !args.space;
   bullet_params.gravity = !args.space;
   bullet_params.gui = args.show;
+  bullet_params.inertia_randomization = args.inertia_randomization;
   bullet_params.position_base_in_world = Eigen::Vector3d(0., 0., base_altitude);
   if (args.robot_variant.empty()) {
     bullet_params.robot_urdf_path =

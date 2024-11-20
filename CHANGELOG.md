@@ -9,9 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added upkie links mass randomization
 - Configure pixi in `pyproject.toml`
 - Handle GLIBC version incompatibility in `start_simulation.sh`
 - Update downloaded simulation spine in cache if outdated
+- actuation: Added link inertia randomization to the Bullet interface
 - actuation: Check maximum torques before sending commands
 - model: Static model for joints with position, velocity and torque limits
 - pixi: Task to generate the documentation by `pixi -e docs make`
