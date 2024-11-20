@@ -133,7 +133,7 @@ void BulletInterface::reset(const Dictionary& config) {
   reset_contact_data();
   reset_joint_angles(params_.joint_configuration);
   reset_joint_properties();
-  if (params_.inertia_randomization) {
+  if (std::abs(params_.inertia_randomization) < 1e-10) {
     randomize_masses();
   }
 }
@@ -373,26 +373,23 @@ void BulletInterface::save_nominal_masses() {
   }
 }
 void BulletInterface::randomize_masses() {
+  std::default_random_engine generator;
   for (const auto& link_id : nominal_masses) {
-    std::default_random_engine generator;
     std::uniform_real_distribution<double> distribution(-inertia_randomization_,
                                                         inertia_randomization_);
     double epsilon = distribution(generator);
     RobotSimulatorChangeDynamicsArgs change_dyn_args;
     change_dyn_args.m_mass = nominal_masses[link_id.first] * (1 + epsilon);
-    std::uniform_real_distribution<double> distribution01(0, 1);
-    double epsilon0 = distribution01(generator);
-    double epsilon1 = distribution01(generator);
-    double epsilon2 = distribution01(generator);
-    epsilon0 = epsilon * epsilon0 / (epsilon0 + epsilon1 + epsilon2);
-    epsilon1 = epsilon * epsilon1 / (epsilon0 + epsilon1 + epsilon2);
-    epsilon2 = epsilon * epsilon2 / (epsilon0 + epsilon1 + epsilon2);
+    // We assume a uniform distribution of the mass density
+    // The new mass is (1+\epsilon)previous_mass
+    // As the distribution of mass is uniform, the inertia is linear
+    // in mass, so we can multiply the original inertia by (1+\epsilon)
     change_dyn_args.m_localInertiaDiagonal[0] =
-        nominal_inertia[link_id.first][0] * (1 + epsilon0);
+        nominal_inertia[link_id.first][0] * (1 + epsilon);
     change_dyn_args.m_localInertiaDiagonal[1] =
-        nominal_inertia[link_id.first][1] * (1 + epsilon1);
+        nominal_inertia[link_id.first][1] * (1 + epsilon);
     change_dyn_args.m_localInertiaDiagonal[2] =
-        nominal_inertia[link_id.first][2] * (1 + epsilon2);
+        nominal_inertia[link_id.first][2] * (1 + epsilon);
     bullet_.changeDynamics(robot_, link_id.first, change_dyn_args);
   }
 }

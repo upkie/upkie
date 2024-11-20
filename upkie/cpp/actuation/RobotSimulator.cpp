@@ -16,56 +16,56 @@ bool RobotSimulatorClientAPI::changeDynamics(
   b3SharedMemoryCommandHandle command = b3InitChangeDynamicsInfo(sm);
   b3SharedMemoryStatusHandle statusHandle;
 
-  if (args.m_activationState >= 0) {
+  if (args.m_activationState >= 0.0) {
     b3ChangeDynamicsInfoSetActivationState(command, bodyUniqueId,
                                            args.m_activationState);
   }
-  if (args.m_mass >= 0) {
+  if (args.m_mass >= 0.0) {
     b3ChangeDynamicsInfoSetMass(command, bodyUniqueId, linkIndex, args.m_mass);
   }
-  if (!(args.m_localInertiaDiagonal[0] == 0 &&
-        args.m_localInertiaDiagonal[1] == 0 &&
-        args.m_localInertiaDiagonal[2] == 0)) {
+  if (!(std::abs(args.m_localInertiaDiagonal[0]) < 1e-6 &&
+        std::abs(args.m_localInertiaDiagonal[1]) < 1e-6 &&
+        std::abs(args.m_localInertiaDiagonal[2]) < 1e-6)) {
     b3ChangeDynamicsInfoSetLocalInertiaDiagonal(
         command, bodyUniqueId, linkIndex, args.m_localInertiaDiagonal);
   }
-  if (args.m_lateralFriction >= 0) {
+  if (args.m_lateralFriction >= 0.0) {
     b3ChangeDynamicsInfoSetLateralFriction(command, bodyUniqueId, linkIndex,
                                            args.m_lateralFriction);
   }
 
-  if (args.m_spinningFriction >= 0) {
+  if (args.m_spinningFriction >= 0.0) {
     b3ChangeDynamicsInfoSetSpinningFriction(command, bodyUniqueId, linkIndex,
                                             args.m_spinningFriction);
   }
 
-  if (args.m_rollingFriction >= 0) {
+  if (args.m_rollingFriction >= 0.0) {
     b3ChangeDynamicsInfoSetRollingFriction(command, bodyUniqueId, linkIndex,
                                            args.m_rollingFriction);
   }
 
-  if (args.m_linearDamping >= 0) {
+  if (args.m_linearDamping >= 0.0) {
     b3ChangeDynamicsInfoSetLinearDamping(command, bodyUniqueId,
                                          args.m_linearDamping);
   }
 
-  if (args.m_angularDamping >= 0) {
+  if (args.m_angularDamping >= 0.0) {
     b3ChangeDynamicsInfoSetAngularDamping(command, bodyUniqueId,
                                           args.m_angularDamping);
   }
 
-  if (args.m_restitution >= 0) {
+  if (args.m_restitution >= 0.0) {
     b3ChangeDynamicsInfoSetRestitution(command, bodyUniqueId, linkIndex,
                                        args.m_restitution);
   }
 
-  if (args.m_contactStiffness >= 0 && args.m_contactDamping >= 0) {
+  if (args.m_contactStiffness >= 0.0 && args.m_contactDamping >= 0.0) {
     b3ChangeDynamicsInfoSetContactStiffnessAndDamping(
         command, bodyUniqueId, linkIndex, args.m_contactStiffness,
         args.m_contactDamping);
   }
 
-  if (args.m_frictionAnchor >= 0) {
+  if (args.m_frictionAnchor >= 0.0) {
     b3ChangeDynamicsInfoSetFrictionAnchor(command, bodyUniqueId, linkIndex,
                                           args.m_frictionAnchor);
   }
