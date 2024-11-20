@@ -3833,7 +3833,7 @@ packages:
   name: upkie
   version: 6.0.0
   path: .
-  sha256: 2fb3d128b4aa6c3f867e84cf56b9f21fd75cb669f496f7c30b664c78dea08398
+  sha256: d4fa54bfb35d75d44087266a7a5c6fd5bd94eb1cdd4415ad2977d320a9d4a836
   requires_dist:
   - gymnasium>=0.29.1
   - loop-rate-limiters>=1.0.0
