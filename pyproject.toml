@@ -114,6 +114,7 @@ upkie = { path = ".", editable = true }
 
 [tool.pixi.feature.docs.dependencies]
 doxygen = "<=1.9.5"
+graphviz = "*"
 make = "*"
 pinocchio = "*"
 stable-baselines3 = "*"
