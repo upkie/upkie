@@ -119,5 +119,9 @@ make = "*"
 pinocchio = "*"
 stable-baselines3 = "*"
 
+[tool.pixi.feature.docs.tasks]
+doxygen-version = "doxygen --version"
+make = { cmd = "cd docs && make", depends-on = ["doxygen-version"] }
+
 [tool.pixi.environments]
 docs = { features = ["docs"], solve-group = "default" }

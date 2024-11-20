@@ -21,27 +21,16 @@ jobs:
 
             - name: "Install Inkscape for figures"
               run: |
-                  sudo apt install graphviz inkscape
+                  sudo apt install inkscape
 
             - name: "Install pixi environment"
               uses: prefix-dev/setup-pixi@v0.8.0
               with:
                   environments: docs
-                  activate-environment: true
 
-            - name: "Report Doxygen version"
+            - name: "Run pixi"
               run: |
-                  doxygen --version
-
-            - name: "Make figures"
-              run: |
-                  cd ${{ github.workspace }}/docs/
-                  make figures
-
-            - name: "Build documentation"
-              run: |
-                  cd ${{ github.workspace }}
-                  doxygen docs/Doxyfile
+                  pixi run -e docs make
 
             - name: "Deploy to GitHub Pages"
               uses: peaceiris/actions-gh-pages@v3
