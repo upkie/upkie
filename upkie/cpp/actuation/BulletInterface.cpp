@@ -226,6 +226,10 @@ void BulletInterface::observe(Dictionary& observation) const {
         contact_data_.at(link_name).num_contact_points;
   }
 
+  if envs not none {
+    sim('env_collision') = environment_collision();
+  }
+
   // Observe base pose
   Eigen::Matrix4d T = get_transform_base_to_world();
   sim("base")("position") = Eigen::Vector3d(T(0, 3), T(1, 3), T(2, 3));  // [m]
@@ -344,7 +348,24 @@ void BulletInterface::read_contacts() {
         contact_info.m_numContactPoints;
   }
 }
-
+void BulletInterface::environment_collision() {
+  b3ContactInformation contact_info;
+  b3RobotSimulatorGetContactPointsArgs contact_args;
+  for env_id in envs {
+    for (int link_id = 0; link_id < nb_links; ++link_id) {
+      if get_link_index(link_name) not in params_.monitor_contacts {
+        contact_args.m_bodyUniqueIdA = robot_;
+        contact_args.m_bodyUniqueIdB = env_id;
+        contact_args.m_linkIndexA = link_id;
+        bullet_.getContactPoints(contact_args, &contact_info);
+        if contact_info.m_numContactPoints != 0 {
+          return True
+        }
+      }
+    }
+  }
+  return False
+}
 void BulletInterface::read_joint_sensors() {
   b3JointSensorState sensor_state;
   for (const auto& name_index : joint_index_map_) {
