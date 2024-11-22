@@ -226,9 +226,7 @@ void BulletInterface::observe(Dictionary& observation) const {
         contact_data_.at(link_name).num_contact_points;
   }
 
-  if envs not none {
-    sim('env_collision') = environment_collision();
-  }
+  sim("env_collision") = environment_collision();
 
   // Observe base pose
   Eigen::Matrix4d T = get_transform_base_to_world();
@@ -348,23 +346,31 @@ void BulletInterface::read_contacts() {
         contact_info.m_numContactPoints;
   }
 }
-void BulletInterface::environment_collision() {
+bool BulletInterface::environment_collision() {
   b3ContactInformation contact_info;
   b3RobotSimulatorGetContactPointsArgs contact_args;
-  for env_id in envs {
+  const int nb_links = bullet_.getNumJoints(robot_);
+  for (const auto& key_child : body_names) {
+    const auto& env_id = key_child.second;
     for (int link_id = 0; link_id < nb_links; ++link_id) {
-      if get_link_index(link_name) not in params_.monitor_contacts {
+      bool is_wheel = false
+      for (const auto& link_name : params_.monitor_contacts) {
+        if (get_link_index(link_name)==link_id) {
+          is_wheel = true
+        }
+      if (!is_wheel) {
         contact_args.m_bodyUniqueIdA = robot_;
         contact_args.m_bodyUniqueIdB = env_id;
         contact_args.m_linkIndexA = link_id;
         bullet_.getContactPoints(contact_args, &contact_info);
         if contact_info.m_numContactPoints != 0 {
-          return True
+          return true;
         }
       }
     }
-  }
-  return False
+  }}
+
+  return false;
 }
 void BulletInterface::read_joint_sensors() {
   b3JointSensorState sensor_state;
