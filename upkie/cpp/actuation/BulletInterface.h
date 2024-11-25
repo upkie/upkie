@@ -331,6 +331,9 @@ class BulletInterface : public Interface {
   //! Randomize masses of the robot links
   void randomize_masses();
 
+  int environment_collision()  ;
+
+  int environment_collision_;
   //! Mass randomization epsilon
   double inertia_randomization_;
 
@@ -359,8 +362,6 @@ class BulletInterface : public Interface {
   //! Read contact sensors from the simulator
   void read_contacts();
 
-
-  bool environment_collision();
   //! Read IMU data from the simulator
   void read_imu();
 

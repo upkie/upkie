@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <memory>
 #include <string>
-
+#include <iostream>
 #include "tools/cpp/runfiles/runfiles.h"
 #include "upkie/cpp/actuation/bullet/gravity.h"
 #include "upkie/cpp/actuation/bullet/read_imu_data.h"
@@ -225,8 +225,7 @@ void BulletInterface::observe(Dictionary& observation) const {
     sim("contact")(link_name)("num_contact_points") =
         contact_data_.at(link_name).num_contact_points;
   }
-
-  sim("env_collision") = environment_collision();
+  sim("env_collision") = environment_collision_ ;
 
   // Observe base pose
   Eigen::Matrix4d T = get_transform_base_to_world();
@@ -304,6 +303,7 @@ void BulletInterface::cycle(
     throw std::runtime_error("simulator is not running any more");
   }
 
+  environment_collision_ = environment_collision();
   read_joint_sensors();
   read_imu();
   read_contacts();
@@ -346,31 +346,25 @@ void BulletInterface::read_contacts() {
         contact_info.m_numContactPoints;
   }
 }
-bool BulletInterface::environment_collision() {
+int BulletInterface::environment_collision()  {
   b3ContactInformation contact_info;
   b3RobotSimulatorGetContactPointsArgs contact_args;
   const int nb_links = bullet_.getNumJoints(robot_);
   for (const auto& key_child : body_names) {
     const auto& env_id = key_child.second;
     for (int link_id = 0; link_id < nb_links; ++link_id) {
-      bool is_wheel = false
-      for (const auto& link_name : params_.monitor_contacts) {
-        if (get_link_index(link_name)==link_id) {
-          is_wheel = true
-        }
-      if (!is_wheel) {
+      if (get_link_index("left_wheel_tire")!=link_id  && get_link_index("right_wheel_tire")!=link_id ) {
         contact_args.m_bodyUniqueIdA = robot_;
         contact_args.m_bodyUniqueIdB = env_id;
         contact_args.m_linkIndexA = link_id;
         bullet_.getContactPoints(contact_args, &contact_info);
-        if contact_info.m_numContactPoints != 0 {
-          return true;
+        if (contact_info.m_numContactPoints != 0) {
+          return 1;
         }
       }
     }
-  }}
-
-  return false;
+  }
+  return 0;
 }
 void BulletInterface::read_joint_sensors() {
   b3JointSensorState sensor_state;
