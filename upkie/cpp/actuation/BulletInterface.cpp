@@ -346,15 +346,15 @@ void BulletInterface::read_contacts() {
         contact_info.m_numContactPoints;
   }
 }
-int BulletInterface::environment_collision()  {
+int BulletInterface::environment_collision() {
   b3ContactInformation contact_info;
   b3RobotSimulatorGetContactPointsArgs contact_args;
   const int nb_links = bullet_.getNumJoints(robot_);
   for (const auto& key_child : body_names) {
     const auto& env_id = key_child.second;
     for (int link_id = 0; link_id < nb_links; ++link_id) {
-      if (get_link_index("left_wheel_tire") != link_id
-      && get_link_index("right_wheel_tire") != link_id) {
+      if (get_link_index("left_wheel_tire") != link_id &&
+          get_link_index("right_wheel_tire") != link_id) {
         contact_args.m_bodyUniqueIdA = robot_;
         contact_args.m_bodyUniqueIdB = env_id;
         contact_args.m_linkIndexA = link_id;

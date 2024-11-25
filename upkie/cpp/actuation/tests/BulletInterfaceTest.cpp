@@ -270,7 +270,8 @@ TEST_F(BulletInterfaceTest, EnvironmentCollision) {
   params.robot_urdf_path =
       runfiles->Rlocation("upkie_description/urdf/upkie.urdf");
   std::vector<std::string> env_urdf_paths;
-  env_urdf_paths.push_back(runfiles->Rlocation("upkie_description/urdf/upkie.urdf"));
+  env_urdf_paths.push_back(
+      runfiles->Rlocation("upkie_description/urdf/upkie.urdf"));
   params.env_urdf_paths = env_urdf_paths;
   interface_ = std::make_unique<BulletInterface>(params);
   interface_->reset(Dictionary{});
