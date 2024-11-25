@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <memory>
 #include <string>
-#include <iostream>
+
 #include "tools/cpp/runfiles/runfiles.h"
 #include "upkie/cpp/actuation/bullet/gravity.h"
 #include "upkie/cpp/actuation/bullet/read_imu_data.h"
@@ -225,7 +225,7 @@ void BulletInterface::observe(Dictionary& observation) const {
     sim("contact")(link_name)("num_contact_points") =
         contact_data_.at(link_name).num_contact_points;
   }
-  sim("env_collision") = environment_collision_ ;
+  sim("env_collision") = environment_collision_;
 
   // Observe base pose
   Eigen::Matrix4d T = get_transform_base_to_world();
@@ -353,7 +353,8 @@ int BulletInterface::environment_collision()  {
   for (const auto& key_child : body_names) {
     const auto& env_id = key_child.second;
     for (int link_id = 0; link_id < nb_links; ++link_id) {
-      if (get_link_index("left_wheel_tire")!=link_id  && get_link_index("right_wheel_tire")!=link_id ) {
+      if (get_link_index("left_wheel_tire") != link_id
+      && get_link_index("right_wheel_tire") != link_id) {
         contact_args.m_bodyUniqueIdA = robot_;
         contact_args.m_bodyUniqueIdB = env_id;
         contact_args.m_linkIndexA = link_id;

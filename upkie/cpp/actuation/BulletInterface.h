@@ -331,9 +331,12 @@ class BulletInterface : public Interface {
   //! Randomize masses of the robot links
   void randomize_masses();
 
-  int environment_collision()  ;
+  //! Check if the robot collides with its environment
+  int environment_collision();
 
+  //! Is the robot colliding with its environment
   int environment_collision_;
+
   //! Mass randomization epsilon
   double inertia_randomization_;
 
