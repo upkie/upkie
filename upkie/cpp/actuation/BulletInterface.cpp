@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <memory>
 #include <string>
-
+#include <iostream>
 #include "tools/cpp/runfiles/runfiles.h"
 #include "upkie/cpp/actuation/bullet/gravity.h"
 #include "upkie/cpp/actuation/bullet/read_imu_data.h"
@@ -92,7 +92,8 @@ BulletInterface::BulletInterface(const Parameters& params)
 
   // Load plane URDF
   if (params.floor) {
-    if (bullet_.loadURDF(find_plane_urdf(params.argv0)) < 0) {
+    plane_id_ = bullet_.loadURDF(find_plane_urdf(params.argv0));
+    if (plane_id_ < 0) {
       throw std::runtime_error("Could not load the plane URDF!");
     }
   } else {
@@ -113,7 +114,7 @@ BulletInterface::BulletInterface(const Parameters& params)
       throw std::runtime_error("Could not load the environment URDF: " +
                                urdf_path);
     }
-    body_names[body_name] = body_id;
+    env_body_ids[body_name] = body_id;
   }
 
   // Start visualizer and configure simulation
@@ -225,7 +226,7 @@ void BulletInterface::observe(Dictionary& observation) const {
     sim("contact")(link_name)("num_contact_points") =
         contact_data_.at(link_name).num_contact_points;
   }
-  sim("env_collision") = environment_collision_;
+  sim("environment_collision") = environment_collision_;
 
   // Observe base pose
   Eigen::Matrix4d T = get_transform_base_to_world();
@@ -246,7 +247,7 @@ void BulletInterface::observe(Dictionary& observation) const {
 
   // Observe the environment URDF states
   Dictionary& bodies = sim("bodies");
-  for (const auto& key_child : body_names) {
+  for (const auto& key_child : env_body_ids) {
     const auto& body_name = key_child.first;
     const auto& body_id = key_child.second;
     Eigen::Matrix4d T = get_transform_body_to_world(body_id);
@@ -346,6 +347,7 @@ void BulletInterface::read_contacts() {
         contact_info.m_numContactPoints;
   }
 }
+
 int BulletInterface::environment_collision() {
   b3ContactInformation contact_info;
   b3RobotSimulatorGetContactPointsArgs contact_args;
@@ -367,6 +369,7 @@ int BulletInterface::environment_collision() {
   }
   return 0;
 }
+
 void BulletInterface::read_joint_sensors() {
   b3JointSensorState sensor_state;
   for (const auto& name_index : joint_index_map_) {

@@ -277,7 +277,6 @@ TEST_F(BulletInterfaceTest, EnvironmentCollision) {
   interface_->reset(Dictionary{});
   interface_->cycle([](const moteus::Output& output) {});
   ASSERT_EQ(1, interface_->environment_collision());
-  SetUp();
 }
 
 TEST_F(BulletInterfaceTest, ObserveImuOrientation) {
