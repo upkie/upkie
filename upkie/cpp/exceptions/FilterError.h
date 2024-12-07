@@ -17,8 +17,7 @@ class FilterError : public UpkieError {
    *
    * \param[in] message Error message.
    */
-  explicit FilterError(const std::string& message) throw()
-      : UpkieError(message) {}
+  explicit FilterError(const std::string& message) : UpkieError(message) {}
 };
 
 }  // namespace upkie::cpp::exceptions

@@ -15,6 +15,7 @@ cc_test(
     ]),
     deps = [
         "//upkie/cpp/actuation/moteus",
+        "//upkie/cpp/exceptions",
         "//upkie/cpp/observers",
         "@eigen",
         "@googletest//:main",
