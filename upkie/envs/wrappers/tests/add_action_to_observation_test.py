@@ -8,7 +8,7 @@
 
 import unittest
 
-import gymnasium
+import gymnasium as gym
 import numpy as np
 
 from upkie.envs.wrappers.add_action_to_observation import (
@@ -30,7 +30,7 @@ class AddActionToObservationTestCase(unittest.TestCase):
         try:
             from stable_baselines3.common.env_checker import check_env
 
-            env = gymnasium.make("Pendulum-v1")
+            env = gym.make("Pendulum-v1")
             wrapped_env = AddActionToObservation(env)
             check_env(wrapped_env)
         except ImportError:

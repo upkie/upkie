@@ -6,13 +6,13 @@
 
 """Add noise to the action of an environment."""
 
-import gymnasium
+import gymnasium as gym
 import numpy as np
 
 from upkie.exceptions import UpkieException
 
 
-class NoisifyAction(gymnasium.ActionWrapper):
+class NoisifyAction(gym.ActionWrapper):
     """!
     Add noise to the action of an environment.
     """

@@ -6,14 +6,13 @@
 
 from typing import Tuple, Union
 
-import gymnasium
+import gymnasium as gym
 import numpy as np
-from gymnasium.spaces import Box
 
 from upkie.utils.filters import low_pass_filter
 
 
-class AddLagToAction(gymnasium.Wrapper):
+class AddLagToAction(gym.Wrapper):
     """!
     Model lag by applying a low-pass filter to the action of an environment.
 
@@ -41,9 +40,9 @@ class AddLagToAction(gymnasium.Wrapper):
     ## \var time_constant_box
     ## Box space from which the time constant is sampled at every reset of the
     ## environment.
-    time_constant_box: Box
+    time_constant_box: gym.spaces.Box
 
-    def __init__(self, env, time_constant: Union[float, Box]):
+    def __init__(self, env, time_constant: Union[float, gym.spaces.Box]):
         r"""!
         Initialize wrapper.
 
@@ -57,8 +56,10 @@ class AddLagToAction(gymnasium.Wrapper):
         super().__init__(env)
         time_constant_box = (
             time_constant
-            if isinstance(time_constant, Box)
-            else Box(low=time_constant - 1e-10, high=time_constant + 1e-10)
+            if isinstance(time_constant, gym.spaces.Box)
+            else gym.spaces.Box(
+                low=time_constant - 1e-10, high=time_constant + 1e-10
+            )
         )
         self.filtered_action = np.zeros(env.action_space.shape)
         self.time_constant = time_constant_box.sample()
