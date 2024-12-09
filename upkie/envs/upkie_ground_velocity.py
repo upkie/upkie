@@ -216,17 +216,12 @@ class UpkieGroundVelocity(UpkieBaseEnv):
             - `info`: Dictionary with auxiliary diagnostic information. For
               Upkie this is the full observation dictionary sent by the spine.
         """
-        return super().reset(seed=seed)
-
-    def parse_first_observation(self, spine_observation: dict) -> None:
-        r"""!
-        Parse first observation after the spine interface is initialized.
-
-        \param spine_observation First observation.
-        """
+        observation, info = super().reset(seed=seed, options=options)
+        spine_observation = info["spine_observation"]
         for joint in self.model.upper_leg_joints:
             position = spine_observation["servo"][joint.name]["position"]
             self.__leg_servo_action[joint.name]["position"] = position
+        return observation, info
 
     def get_env_observation(self, spine_observation: dict) -> np.ndarray:
         r"""!
