@@ -7,7 +7,7 @@
 import abc
 from typing import Any, Optional, Tuple
 
-import gymnasium
+import gymnasium as gym
 import numpy as np
 import upkie_description
 from loop_rate_limiters import RateLimiter
@@ -21,7 +21,7 @@ from upkie.utils.robot_state import RobotState
 from upkie.utils.spdlog import logging
 
 
-class UpkieBaseEnv(abc.ABC, gymnasium.Env):
+class UpkieBaseEnv(abc.ABC, gym.Env):
     r"""!
     Base class for Upkie environments.
 

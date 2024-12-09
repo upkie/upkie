@@ -6,12 +6,11 @@
 
 from typing import Tuple
 
-import gymnasium
+import gymnasium as gym
 import numpy as np
-from gymnasium import spaces
 
 
-class DifferentiateAction(gymnasium.Wrapper):
+class DifferentiateAction(gym.Wrapper):
     r"""!
     Act on the derivative of the action.
     """
@@ -23,7 +22,7 @@ class DifferentiateAction(gymnasium.Wrapper):
 
     ## @var action_space
     ## Action space.
-    action_space: spaces.box.Box
+    action_space: gym.spaces.Box
 
     def __init__(
         self,
@@ -46,7 +45,7 @@ class DifferentiateAction(gymnasium.Wrapper):
         \note We assume the original action lives in a vector space.
         """
         super().__init__(env)
-        self.action_space = spaces.Box(
+        self.action_space = gym.spaces.Box(
             np.float32(min_derivative),
             np.float32(max_derivative),
             shape=env.action_space.shape,

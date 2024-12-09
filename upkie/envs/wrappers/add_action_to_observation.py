@@ -4,14 +4,13 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Inria
 
-import gymnasium
+import gymnasium as gym
 import numpy as np
-from gymnasium import spaces
 
 from upkie.exceptions import UpkieException
 
 
-class AddActionToObservation(gymnasium.ObservationWrapper):
+class AddActionToObservation(gym.ObservationWrapper):
     """!
     Append last action vector to the observation vector.
 
@@ -22,7 +21,7 @@ class AddActionToObservation(gymnasium.ObservationWrapper):
 
     ## @var observation_space
     ## Observation space.
-    observation_space: spaces.box.Box
+    observation_space: gym.spaces.Box
 
     _last_action: np.ndarray
 
@@ -42,7 +41,7 @@ class AddActionToObservation(gymnasium.ObservationWrapper):
                 f"and {env.action_space.dtype=}"
             )
         low = np.concatenate([env.observation_space.low, env.action_space.low])
-        self.observation_space = spaces.Box(
+        self.observation_space = gym.spaces.Box(
             low=low,
             high=np.concatenate(
                 [env.observation_space.high, env.action_space.high]

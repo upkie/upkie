@@ -4,12 +4,12 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Inria
 
-import gymnasium
+import gymnasium as gym
 import numpy as np
 from gymnasium import spaces
 
 
-class ActionObserverEnv(gymnasium.Env):
+class ActionObserverEnv(gym.Env):
     def __init__(self):
         action_space = spaces.Box(0.0, 2.0, shape=(1,))
         self.action_space = action_space
@@ -21,7 +21,7 @@ class ActionObserverEnv(gymnasium.Env):
         return observation, 0.0, False, False, {}
 
 
-class ConstantObservationEnv(gymnasium.Env):
+class ConstantObservationEnv(gym.Env):
     def __init__(self, constant: float):
         self.action_space = spaces.Box(-1.0, 1.0, shape=(1,))
         self.observation_space = spaces.Box(0.0, 2.0, shape=(1,))
