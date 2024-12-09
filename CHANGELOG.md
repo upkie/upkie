@@ -38,6 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - env: Remove unused `leg_return_period` and hard-code it to one second
+- env: Replace contingent `parse_first_observation` by a reset override
 - model: Remove C++ `upkie::model` namespace
 - observers: Remove upper-leg and wheel joints from configurable parameters
 
