@@ -8,7 +8,7 @@
 
 import unittest
 
-import gymnasium
+import gymnasium as gym
 import numpy as np
 
 from upkie.envs.wrappers.noisify_observation import NoisifyObservation
@@ -29,7 +29,7 @@ class NoisifyObservationTestCase(unittest.TestCase):
         try:
             from stable_baselines3.common.env_checker import check_env
 
-            env = gymnasium.make("Acrobot-v1")
+            env = gym.make("Acrobot-v1")
             noisy_env = NoisifyObservation(env, noise=np.full(6, 0.42))
             check_env(noisy_env)
         except ImportError:

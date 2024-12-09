@@ -8,8 +8,8 @@
 import math
 from typing import Dict, Optional, Tuple
 
+import gymnasium as gym
 import numpy as np
-from gymnasium import spaces
 
 from upkie.exceptions import UpkieException
 from upkie.utils.clamp import clamp_and_warn
@@ -78,7 +78,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
 
     ## \var action_space
     ## Action space.
-    action_space: spaces.box.Box
+    action_space: gym.spaces.Box
 
     ## \var left_wheeled
     ## Set to True (default) if the robot is left wheeled, that is, a positive
@@ -88,7 +88,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
 
     ## \var observation_space
     ## Observation space.
-    observation_space: spaces.box.Box
+    observation_space: gym.spaces.Box
 
     ## \var reward
     ## Reward function of the environment.
@@ -169,7 +169,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
             ],
             dtype=float,
         )
-        self.observation_space = spaces.Box(
+        self.observation_space = gym.spaces.Box(
             -observation_limit,
             +observation_limit,
             shape=observation_limit.shape,
@@ -178,7 +178,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
 
         # gymnasium.Env: action_space
         action_limit = np.array([max_ground_velocity], dtype=float)
-        self.action_space = spaces.Box(
+        self.action_space = gym.spaces.Box(
             -action_limit,
             +action_limit,
             shape=action_limit.shape,

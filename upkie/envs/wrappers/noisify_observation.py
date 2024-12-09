@@ -4,13 +4,13 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Inria
 
-import gymnasium
+import gymnasium as gym
 import numpy as np
 
 from upkie.exceptions import UpkieException
 
 
-class NoisifyObservation(gymnasium.ObservationWrapper):
+class NoisifyObservation(gym.ObservationWrapper):
     """!
     Add noise to the observation of an environment.
     """
