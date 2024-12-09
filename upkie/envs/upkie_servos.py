@@ -6,8 +6,8 @@
 
 from typing import Optional, Set, Tuple
 
+import gymnasium as gym
 import numpy as np
-from gymnasium import spaces
 
 from upkie.utils.clamp import clamp_and_warn
 from upkie.utils.robot_state import RobotState
@@ -104,11 +104,11 @@ class UpkieServos(UpkieBaseEnv):
 
     ## \var action_space
     ## Action space.
-    action_space: spaces.dict.Dict
+    action_space: gym.spaces.dict.Dict
 
     ## \var observation_space
     ## Observation space.
-    observation_space: spaces.dict.Dict
+    observation_space: gym.spaces.dict.Dict
 
     ## \var version
     ## Environment version number.
@@ -157,39 +157,39 @@ class UpkieServos(UpkieBaseEnv):
         servo_space = {}
 
         for joint in self.model.joints:
-            action_space[joint.name] = spaces.Dict(
+            action_space[joint.name] = gym.spaces.Dict(
                 {
-                    "position": spaces.Box(
+                    "position": gym.spaces.Box(
                         low=joint.limit.lower,
                         high=joint.limit.upper,
                         shape=(1,),
                         dtype=float,
                     ),
-                    "velocity": spaces.Box(
+                    "velocity": gym.spaces.Box(
                         low=-joint.limit.velocity,
                         high=+joint.limit.velocity,
                         shape=(1,),
                         dtype=float,
                     ),
-                    "feedforward_torque": spaces.Box(
+                    "feedforward_torque": gym.spaces.Box(
                         low=-joint.limit.effort,
                         high=+joint.limit.effort,
                         shape=(1,),
                         dtype=float,
                     ),
-                    "kp_scale": spaces.Box(
+                    "kp_scale": gym.spaces.Box(
                         low=0.0,
                         high=1.0,
                         shape=(1,),
                         dtype=float,
                     ),
-                    "kd_scale": spaces.Box(
+                    "kd_scale": gym.spaces.Box(
                         low=0.0,
                         high=1.0,
                         shape=(1,),
                         dtype=float,
                     ),
-                    "maximum_torque": spaces.Box(
+                    "maximum_torque": gym.spaces.Box(
                         low=0.0,
                         high=joint.limit.effort,
                         shape=(1,),
@@ -197,33 +197,33 @@ class UpkieServos(UpkieBaseEnv):
                     ),
                 }
             )
-            servo_space[joint.name] = spaces.Dict(
+            servo_space[joint.name] = gym.spaces.Dict(
                 {
-                    "position": spaces.Box(
+                    "position": gym.spaces.Box(
                         low=joint.limit.lower,
                         high=joint.limit.upper,
                         shape=(1,),
                         dtype=float,
                     ),
-                    "velocity": spaces.Box(
+                    "velocity": gym.spaces.Box(
                         low=-joint.limit.velocity,
                         high=+joint.limit.velocity,
                         shape=(1,),
                         dtype=float,
                     ),
-                    "torque": spaces.Box(
+                    "torque": gym.spaces.Box(
                         low=-joint.limit.effort,
                         high=+joint.limit.effort,
                         shape=(1,),
                         dtype=float,
                     ),
-                    "temperature": spaces.Box(
+                    "temperature": gym.spaces.Box(
                         low=0.0,
                         high=100.0,
                         shape=(1,),
                         dtype=float,
                     ),
-                    "voltage": spaces.Box(
+                    "voltage": gym.spaces.Box(
                         low=10.0,  # moteus min 10 V
                         high=44.0,  # moteus max 44 V
                         shape=(1,),
@@ -257,10 +257,10 @@ class UpkieServos(UpkieBaseEnv):
             }
 
         # gymnasium.Env: action_space
-        self.action_space = spaces.Dict(action_space)
+        self.action_space = gym.spaces.Dict(action_space)
 
         # gymnasium.Env: observation_space
-        self.observation_space = spaces.Dict(servo_space)
+        self.observation_space = gym.spaces.Dict(servo_space)
 
         # Class attributes
         self.__neutral_action = neutral_action
