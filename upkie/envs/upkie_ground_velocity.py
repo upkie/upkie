@@ -33,8 +33,8 @@ class UpkieGroundVelocity(UpkieBaseEnv):
     instance by the [MPC balancer](https://github.com/upkie/mpc_balancer/) and
     [PPO balancer](https://github.com/upkie/ppo_balancer) agents.
 
-    \note For reinforcement learning with neural networks: the observation
-    space and action space are not normalized.
+    \note For reinforcement learning with neural-network policies: the
+    observation space and action space are not normalized.
 
     ### Action space
 
@@ -80,11 +80,6 @@ class UpkieGroundVelocity(UpkieBaseEnv):
     ## Action space.
     action_space: spaces.box.Box
 
-    ## \var leg_return_period
-    ## Time constant for the legs (hips and knees) to revert to their neutral
-    ## configuration.
-    leg_return_period: float
-
     ## \var left_wheeled
     ## Set to True (default) if the robot is left wheeled, that is, a positive
     ## turn of the left wheel results in forward motion. Set to False for a
@@ -113,7 +108,6 @@ class UpkieGroundVelocity(UpkieBaseEnv):
         frequency: float = 200.0,
         frequency_checks: bool = True,
         init_state: Optional[RobotState] = None,
-        leg_return_period: float = 1.0,
         left_wheeled: bool = True,
         max_ground_velocity: float = 1.0,
         regulate_frequency: bool = True,
@@ -132,12 +126,11 @@ class UpkieGroundVelocity(UpkieBaseEnv):
             control loop runs slower than the desired `frequency`. Set this
             parameter to false to disable these warnings.
         \param init_state Initial state of the robot, only used in simulation.
-        \param leg_return_period Time constant for the legs (hips and knees) to
-            revert to their neutral configuration.
         \param left_wheeled Set to True (default) if the robot is left wheeled,
             that is, a positive turn of the left wheel results in forward
             motion. Set to False for a right-wheeled variant.
         \param max_ground_velocity Maximum commanded ground velocity in m/s.
+            The default value of 1 m/s is conservative, don't hesitate
         \param regulate_frequency Enables loop frequency regulation.
         \param reward Reward function of the environment.
         \param shm_name Name of shared-memory file.
@@ -201,7 +194,6 @@ class UpkieGroundVelocity(UpkieBaseEnv):
             for joint in self.model.upper_leg_joints
         }
 
-        self.leg_return_period = leg_return_period
         self.left_wheeled = left_wheeled
         self.reward = reward
         self.wheel_radius = wheel_radius
@@ -266,8 +258,8 @@ class UpkieGroundVelocity(UpkieBaseEnv):
             prev_position = self.__leg_servo_action[joint.name]["position"]
             new_position = low_pass_filter(
                 prev_output=prev_position,
-                cutoff_period=self.leg_return_period,
-                new_input=0.0,
+                new_input=0.0,  # go to neutral configuration
+                cutoff_period=1.0,  # in roughly one second
                 dt=self.dt,
             )
             self.__leg_servo_action[joint.name]["position"] = new_position
