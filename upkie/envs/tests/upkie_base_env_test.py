@@ -32,9 +32,6 @@ class UpkieTestEnv(UpkieBaseEnv):
             dtype=np.float32,
         )
 
-    def parse_first_observation(self, spine_observation: dict) -> None:
-        pass
-
     def get_env_observation(self, spine_observation: dict) -> np.ndarray:
         return np.full((1,), 0.5, dtype=self.observation_space.dtype)
 
