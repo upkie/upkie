@@ -331,6 +331,9 @@ class BulletInterface : public Interface {
   //! Randomize masses of the robot links
   void randomize_masses();
 
+  //! Check if the robot collides with its environment
+  int environment_collision();
+
   //! Mass randomization epsilon
   double inertia_randomization_;
 
@@ -388,8 +391,14 @@ class BulletInterface : public Interface {
   int robot_;
 
   //! Map from URDF link names to Bullet link indices
-  std::map<std::string, int> body_names;
+  std::map<std::string, int> env_body_ids;
 
+  //! Is the robot colliding with its environment
+  int environment_collision_;
+
+  //! Identifier of the ground plane in the simulation
+  int plane_id_;
+  
   //! Maximum joint torques read from the URDF model
   std::map<std::string, bullet::JointProperties> joint_properties_;
 
