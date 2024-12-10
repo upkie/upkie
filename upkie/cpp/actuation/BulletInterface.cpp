@@ -352,7 +352,7 @@ int BulletInterface::environment_collision() {
   b3ContactInformation contact_info;
   b3RobotSimulatorGetContactPointsArgs contact_args;
   const int nb_links = bullet_.getNumJoints(robot_);
-  for (const auto& key_child : body_names) {
+  for (const auto& key_child : env_body_ids) {
     const auto& env_id = key_child.second;
     for (int link_id = 0; link_id < nb_links; ++link_id) {
       if (get_link_index("left_wheel_tire") != link_id &&
