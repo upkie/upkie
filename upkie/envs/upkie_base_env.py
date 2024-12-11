@@ -261,7 +261,7 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
         observation = self.get_env_observation(spine_observation)
         reward = self.get_reward(observation, action)
         terminated = self.detect_fall(spine_observation)
-        truncated = False  # rather handled by e.g. a TimeLimit wrapper
+        truncated = False  # will be handled by e.g. a TimeLimit wrapper
         info = {"spine_observation": spine_observation}
         return observation, reward, terminated, truncated, info
 
