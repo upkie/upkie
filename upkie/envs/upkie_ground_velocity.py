@@ -130,7 +130,8 @@ class UpkieGroundVelocity(UpkieBaseEnv):
             that is, a positive turn of the left wheel results in forward
             motion. Set to False for a right-wheeled variant.
         \param max_ground_velocity Maximum commanded ground velocity in m/s.
-            The default value of 1 m/s is conservative, don't hesitate
+            The default value of 1 m/s is conservative, don't hesitate to
+            increase it once you feel confident in your agent.
         \param regulate_frequency Enables loop frequency regulation.
         \param reward Reward function of the environment.
         \param shm_name Name of shared-memory file.
