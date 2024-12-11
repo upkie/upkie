@@ -398,7 +398,7 @@ class BulletInterface : public Interface {
 
   //! Identifier of the ground plane in the simulation
   int plane_id_;
-  
+
   //! Maximum joint torques read from the URDF model
   std::map<std::string, bullet::JointProperties> joint_properties_;
 

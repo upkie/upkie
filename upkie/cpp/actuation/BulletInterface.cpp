@@ -4,9 +4,10 @@
 #include "upkie/cpp/actuation/BulletInterface.h"
 
 #include <algorithm>
+#include <iostream>
 #include <memory>
 #include <string>
-#include <iostream>
+
 #include "tools/cpp/runfiles/runfiles.h"
 #include "upkie/cpp/actuation/bullet/gravity.h"
 #include "upkie/cpp/actuation/bullet/read_imu_data.h"
