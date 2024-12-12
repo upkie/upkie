@@ -14,21 +14,23 @@ bool RobotSimulatorClientAPI::changeDynamics(
     return false;
   }
   b3SharedMemoryCommandHandle command = b3InitChangeDynamicsInfo(sm);
-  b3SharedMemoryStatusHandle statusHandle;
 
   if (args.m_activationState >= 0.0) {
     b3ChangeDynamicsInfoSetActivationState(command, bodyUniqueId,
                                            args.m_activationState);
   }
+
   if (args.m_mass >= 0.0) {
     b3ChangeDynamicsInfoSetMass(command, bodyUniqueId, linkIndex, args.m_mass);
   }
+
   if (!(std::abs(args.m_localInertiaDiagonal[0]) < 1e-6 &&
         std::abs(args.m_localInertiaDiagonal[1]) < 1e-6 &&
         std::abs(args.m_localInertiaDiagonal[2]) < 1e-6)) {
     b3ChangeDynamicsInfoSetLocalInertiaDiagonal(
         command, bodyUniqueId, linkIndex, args.m_localInertiaDiagonal);
   }
+
   if (args.m_lateralFriction >= 0.0) {
     b3ChangeDynamicsInfoSetLateralFriction(command, bodyUniqueId, linkIndex,
                                            args.m_lateralFriction);
@@ -69,6 +71,7 @@ bool RobotSimulatorClientAPI::changeDynamics(
     b3ChangeDynamicsInfoSetFrictionAnchor(command, bodyUniqueId, linkIndex,
                                           args.m_frictionAnchor);
   }
-  statusHandle = b3SubmitClientCommandAndWaitStatus(sm, command);
+
+  b3SubmitClientCommandAndWaitStatus(sm, command);
   return true;
 }
