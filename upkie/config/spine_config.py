@@ -21,8 +21,8 @@ SPINE_CONFIG = {
         "monitor": {
             "contacts": {
                 "wheels":{
-                "left_wheel_tire": True,
-                "right_wheel_tire": True,
+                    "left_wheel_tire": True,
+                    "right_wheel_tire": True,
                 },
                 "envs":{
                     "exclude": {

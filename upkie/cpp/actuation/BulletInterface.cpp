@@ -2,6 +2,7 @@
 // Copyright 2022 Stéphane Caron
 
 #include "upkie/cpp/actuation/BulletInterface.h"
+
 #include <algorithm>
 #include <memory>
 #include <string>
@@ -172,8 +173,9 @@ void BulletInterface::reset_base_state(
 
 void BulletInterface::reset_contact_data() {
   for (const auto& collision_name : params_.monitor_contacts) {
-    for (const auto& link_name : params_.monitor_contacts[collision_name.first]) {
-      contact_data_[collision_name.first][link_name]= bullet::ContactData();
+    for (const auto& link_name :
+         params_.monitor_contacts[collision_name.first]) {
+      contact_data_[collision_name.first][link_name] = bullet::ContactData();
     }
   }
 }
@@ -226,10 +228,14 @@ void BulletInterface::observe(Dictionary& observation) const {
 
   Dictionary& sim = observation("sim");
   sim("imu")("linear_velocity") = imu_data_.linear_velocity_imu_in_world;
+
   for (const auto& collision_name : params_.monitor_contacts) {
-    for (const auto& link_name : params_.monitor_contacts.at(collision_name.first)) {
+    for (const auto& link_name :
+         params_.monitor_contacts.at(collision_name.first)) {
       sim("contact")(collision_name.first)(link_name)("num_contact_points") =
-          contact_data_.at(collision_name.first).at(link_name).num_contact_points;
+          contact_data_.at(collision_name.first)
+              .at(link_name)
+              .num_contact_points;
     }
   }
 
@@ -335,7 +341,7 @@ void BulletInterface::read_imu() {
   bullet::read_imu_data(imu_data_, bullet_, robot_, imu_link_index_,
                         params_.dt);
   params_.imu_uncertainty.apply(imu_data_.linear_acceleration_imu_in_imu,
-                                 imu_data_.angular_velocity_imu_in_imu, rng_);
+                                imu_data_.angular_velocity_imu_in_imu, rng_);
   params_.imu_uncertainty.apply(imu_data_.raw_linear_acceleration,
                                 imu_data_.raw_angular_velocity, rng_);
 }
@@ -343,8 +349,9 @@ void BulletInterface::read_imu() {
 void BulletInterface::read_contacts() {
   b3ContactInformation contact_info;
   b3RobotSimulatorGetContactPointsArgs contact_args;
-  for (const auto& contact_name : params_.monitor_contacts){
-    for (const auto& link_name : params_.monitor_contacts.at(contact_name.first)) {
+  for (const auto& contact_name : params_.monitor_contacts) {
+    for (const auto& link_name :
+         params_.monitor_contacts.at(contact_name.first)) {
       contact_args.m_bodyUniqueIdA = robot_;
       contact_args.m_linkIndexA = get_link_index(link_name);
       bullet_.getContactPoints(contact_args, &contact_info);
@@ -352,7 +359,6 @@ void BulletInterface::read_contacts() {
           contact_info.m_numContactPoints;
     }
   }
-  
 }
 
 void BulletInterface::read_joint_sensors() {

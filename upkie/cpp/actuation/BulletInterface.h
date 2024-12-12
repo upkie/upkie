@@ -6,6 +6,7 @@
 #include <palimpsest/Dictionary.h>
 #include <spdlog/spdlog.h>
 
+#include <iostream>
 #include <limits>
 #include <map>
 #include <random>
@@ -35,14 +36,17 @@ class BulletInterface : public Interface {
      *
      * \param[in] config Global configuration dictionary.
      */
-    std::map<std::string, int>  empty_map= {{"", 0}};
-    explicit Parameters(const Dictionary& config) { configure(config,empty_map); }
+    std::map<std::string, int> empty_map = {{"", 0}};
+    explicit Parameters(const Dictionary& config) {
+      configure(config, empty_map);
+    }
 
     /*! Configure from dictionary.
      *
      * \param[in] config Global configuration dictionary.
      */
-    void configure(const Dictionary& config, std::map<std::string, int> link_index) {
+    void configure(const Dictionary& config,
+                   std::map<std::string, int> link_index) {
       if (!config.has("bullet")) {
         spdlog::debug("No \"bullet\" runtime configuration");
         return;
@@ -70,18 +74,19 @@ class BulletInterface : public Interface {
         const auto& monitor = bullet("monitor");
         if (monitor.has("contacts")) {
           for (const auto& collision_name : monitor("contacts").keys()) {
-            if (monitor("contacts")(collision_name).has("exclude")){
-              for (const auto& body : link_index){
-                if (!monitor("contacts")(collision_name)("exclude").has(body.first)){
-                  spdlog::debug("Adding body \"{}\" to contacts for collision name \"{}\"", body.first, collision_name);
+            spdlog::debug("Monitoring contacts for collision \"{}\"",
+                          collision_name);
+            if (monitor("contacts")(collision_name).has("exclude")) {
+              for (const auto& body : link_index) {
+                if (!monitor("contacts")(collision_name)("exclude").has(
+                        body.first)) {
                   monitor_contacts[collision_name].push_back(body.first);
                 }
               }
-            }
-            else {
-              for (const auto& body : monitor("contacts")(collision_name).keys()) {
-              spdlog::debug("Adding body \"{}\" to contacts for collision name \"{}\"", body, collision_name);
-              monitor_contacts[collision_name].push_back(body);
+            } else {
+              for (const auto& body :
+                   monitor("contacts")(collision_name).keys()) {
+                monitor_contacts[collision_name].push_back(body);
               }
             }
           }
@@ -127,7 +132,7 @@ class BulletInterface : public Interface {
     std::string argv0 = "";
 
     //! Contacts to monitor and report along with observations
-    std::map<std::string,std::vector<std::string>> monitor_contacts;
+    std::map<std::string, std::vector<std::string>> monitor_contacts;
 
     //! Simulation timestep in [s]
     double dt = std::numeric_limits<double>::quiet_NaN();
@@ -416,7 +421,8 @@ class BulletInterface : public Interface {
   std::map<std::string, int> link_index_;
 
   //! Map from link name to link contact data
-  std::map<std::string,std::map<std::string, bullet::ContactData>> contact_data_;
+  std::map<std::string, std::map<std::string, bullet::ContactData>>
+      contact_data_;
 
   //! Random number generator used to sample from probability distributions
   std::mt19937 rng_;

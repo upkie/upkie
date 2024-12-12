@@ -290,22 +290,23 @@ TEST_F(BulletInterfaceTest, ObserveImuOrientation) {
 
 TEST_F(BulletInterfaceTest, MonitorContacts) {
   Dictionary config;
-  config("bullet")("monitor")("contacts")("left_wheel_tire") = true;
-  config("bullet")("monitor")("contacts")("right_wheel_tire") = true;
+  config("bullet")("monitor")("contacts")("wheels")("left_wheel_tire") = true;
+  config("bullet")("monitor")("contacts")("wheels")("right_wheel_tire") = true;
   interface_->reset(config);
 
   Dictionary observation;
   interface_->cycle([](const moteus::Output& output) {});
   interface_->observe(observation);
-
+  spdlog::info(observation);
   ASSERT_TRUE(observation.has("sim"));
   ASSERT_TRUE(observation("sim").has("contact"));
-  ASSERT_TRUE(observation("sim")("contact").has("left_wheel_tire"));
-  ASSERT_TRUE(observation("sim")("contact").has("right_wheel_tire"));
-  ASSERT_EQ(observation("sim")("contact")("left_wheel_tire")
+  ASSERT_TRUE(observation("sim")("contact").has("wheels"));
+  ASSERT_TRUE(observation("sim")("contact")("wheels").has("left_wheel_tire"));
+  ASSERT_TRUE(observation("sim")("contact")("wheels").has("right_wheel_tire"));
+  ASSERT_EQ(observation("sim")("contact")("wheels")("left_wheel_tire")
                 .get<int>("num_contact_points"),
             0);
-  ASSERT_EQ(observation("sim")("contact")("right_wheel_tire")
+  ASSERT_EQ(observation("sim")("contact")("wheels")("right_wheel_tire")
                 .get<int>("num_contact_points"),
             0);
 }
