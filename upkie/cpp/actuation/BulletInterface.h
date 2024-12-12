@@ -32,11 +32,12 @@ class BulletInterface : public Interface {
     //! Keep default constructor.
     Parameters() = default;
 
+    //! Placeholder at initization time.
+    std::map<std::string, int> empty_map = {{"", 0}};
     /*! Initialize from global configuration.
      *
      * \param[in] config Global configuration dictionary.
      */
-    std::map<std::string, int> empty_map = {{"", 0}};
     explicit Parameters(const Dictionary& config) {
       configure(config, empty_map);
     }
@@ -44,6 +45,7 @@ class BulletInterface : public Interface {
     /*! Configure from dictionary.
      *
      * \param[in] config Global configuration dictionary.
+     * \param[in] link_index Map of link indices.
      */
     void configure(const Dictionary& config,
                    std::map<std::string, int> link_index) {
