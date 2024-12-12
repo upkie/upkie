@@ -3,9 +3,6 @@
 
 #pragma once
 
-#ifndef ROBOT_SIMULATOR_CLIENT_API_H
-#define ROBOT_SIMULATOR_CLIENT_API_H
-
 #include <Eigen/Dense>
 
 #include "Bullet3Common/b3Logging.h"
