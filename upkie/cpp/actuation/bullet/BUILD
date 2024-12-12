@@ -13,7 +13,7 @@ cc_library(
         "ExternalForce.h",
         "JointProperties.h",
         "gravity.h",
-        "RobotSimulator.h"
+        "RobotSimulator.h",
         "read_imu_data.h",
         "utils.h",
     ],

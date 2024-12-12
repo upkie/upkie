@@ -14,10 +14,10 @@
 
 #include "upkie/cpp/actuation/ImuUncertainty.h"
 #include "upkie/cpp/actuation/Interface.h"
-#include "upkie/cpp/actuation/RobotSimulator.h"
 #include "upkie/cpp/actuation/bullet/ContactData.h"
 #include "upkie/cpp/actuation/bullet/ExternalForce.h"
 #include "upkie/cpp/actuation/bullet/JointProperties.h"
+#include "upkie/cpp/actuation/bullet/RobotSimulator.h"
 #include "upkie/cpp/actuation/moteus/Output.h"
 #include "upkie/cpp/actuation/moteus/ServoReply.h"
 
