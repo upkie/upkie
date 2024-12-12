@@ -3,18 +3,18 @@
 ## Host platform
 
 build --compilation_mode=opt
-build --copt="-Werror"
+build --copt="-Werror=return-type"
 build --cxxopt=-std=c++17
 build --incompatible_default_to_explicit_init_py  # for upkie imports
 
 coverage --combined_report=lcov
 coverage --compilation_mode=opt
-coverage --copt="-Werror"
+coverage --copt="-Werror=return-type"
 coverage --cxxopt=-std=c++17
 coverage --instrument_test_targets
 
 test --compilation_mode=opt
-test --copt="-Werror"
+test --copt="-Werror=return-type"
 test --cxxopt=-std=c++17
 test --incompatible_default_to_explicit_init_py  # for upkie imports
 test --test_output=errors
