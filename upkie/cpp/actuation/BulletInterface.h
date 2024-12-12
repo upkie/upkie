@@ -35,13 +35,14 @@ class BulletInterface : public Interface {
      *
      * \param[in] config Global configuration dictionary.
      */
-    explicit Parameters(const Dictionary& config) { configure(config); }
+    std::map<std::string, int>  empty_map= {{"", 0}};
+    explicit Parameters(const Dictionary& config) { configure(config,empty_map); }
 
     /*! Configure from dictionary.
      *
      * \param[in] config Global configuration dictionary.
      */
-    void configure(const Dictionary& config) {
+    void configure(const Dictionary& config, std::map<std::string, int> link_index) {
       if (!config.has("bullet")) {
         spdlog::debug("No \"bullet\" runtime configuration");
         return;
@@ -68,9 +69,21 @@ class BulletInterface : public Interface {
       if (bullet.has("monitor")) {
         const auto& monitor = bullet("monitor");
         if (monitor.has("contacts")) {
-          for (const auto& body : monitor("contacts").keys()) {
-            spdlog::debug("Adding body \"{}\" to contacts", body);
-            monitor_contacts.push_back(body);
+          for (const auto& collision_name : monitor("contacts").keys()) {
+            if (monitor("contacts")(collision_name).has("exclude")){
+              for (const auto& body : link_index){
+                if (!monitor("contacts")(collision_name)("exclude").has(body.first)){
+                  spdlog::debug("Adding body \"{}\" to contacts for collision name \"{}\"", body.first, collision_name);
+                  monitor_contacts[collision_name].push_back(body.first);
+                }
+              }
+            }
+            else {
+              for (const auto& body : monitor("contacts")(collision_name).keys()) {
+              spdlog::debug("Adding body \"{}\" to contacts for collision name \"{}\"", body, collision_name);
+              monitor_contacts[collision_name].push_back(body);
+              }
+            }
           }
         }
       }
@@ -114,7 +127,7 @@ class BulletInterface : public Interface {
     std::string argv0 = "";
 
     //! Contacts to monitor and report along with observations
-    std::vector<std::string> monitor_contacts;
+    std::map<std::string,std::vector<std::string>> monitor_contacts;
 
     //! Simulation timestep in [s]
     double dt = std::numeric_limits<double>::quiet_NaN();
@@ -331,9 +344,6 @@ class BulletInterface : public Interface {
   //! Randomize masses of the robot links
   void randomize_masses();
 
-  //! Check if the robot collides with its environment
-  int environment_collision();
-
   //! Mass randomization epsilon
   double inertia_randomization_;
 
@@ -393,9 +403,6 @@ class BulletInterface : public Interface {
   //! Map from URDF link names to Bullet link indices
   std::map<std::string, int> env_body_ids;
 
-  //! Is the robot colliding with its environment
-  int environment_collision_;
-
   //! Identifier of the ground plane in the simulation
   int plane_id_;
 
@@ -409,7 +416,7 @@ class BulletInterface : public Interface {
   std::map<std::string, int> link_index_;
 
   //! Map from link name to link contact data
-  std::map<std::string, bullet::ContactData> contact_data_;
+  std::map<std::string,std::map<std::string, bullet::ContactData>> contact_data_;
 
   //! Random number generator used to sample from probability distributions
   std::mt19937 rng_;

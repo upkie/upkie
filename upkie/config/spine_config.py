@@ -18,6 +18,21 @@ SPINE_CONFIG = {
             "kp": 20.0,
             "kd": 1.0,
         },
+        "monitor": {
+            "contacts": {
+                "wheels":{
+                "left_wheel_tire": True,
+                "right_wheel_tire": True,
+                },
+                "envs":{
+                    "exclude": {
+                        "left_wheel_tire": True,
+                        "right_wheel_tire": True,
+                        },
+                }
+            }
+        },
+
     },
     "floor_contact": {
         "upper_leg_torque_threshold": 10.0,

@@ -2,9 +2,7 @@
 // Copyright 2022 Stéphane Caron
 
 #include "upkie/cpp/actuation/BulletInterface.h"
-
 #include <algorithm>
-#include <iostream>
 #include <memory>
 #include <string>
 
@@ -58,6 +56,7 @@ BulletInterface::BulletInterface(const Parameters& params)
   if (imu_link_index_ < 0) {
     throw std::runtime_error("Robot does not have a link named \"imu\"");
   }
+
   // If params has an attribute inertia_randomization, store masses
   if (params.inertia_randomization) {
     inertia_randomization_ = params.inertia_randomization;
@@ -82,6 +81,8 @@ BulletInterface::BulletInterface(const Parameters& params)
   for (int joint_index = 0; joint_index < nb_joints; ++joint_index) {
     bullet_.getJointInfo(robot_, joint_index, &joint_info);
     std::string joint_name = joint_info.m_jointName;
+    std::string link_name = joint_info.m_linkName;
+    get_link_index(link_name);  // memoize link index
     if (joint_index_map_.find(joint_name) != joint_index_map_.end()) {
       joint_index_map_[joint_name] = joint_index;
 
@@ -126,7 +127,7 @@ BulletInterface::BulletInterface(const Parameters& params)
 BulletInterface::~BulletInterface() { bullet_.disconnect(); }
 
 void BulletInterface::reset(const Dictionary& config) {
-  params_.configure(config);
+  params_.configure(config, link_index_);
   bullet_.setTimeStep(params_.dt);
   reset_base_state(params_.position_base_in_world,
                    params_.orientation_base_in_world,
@@ -170,8 +171,10 @@ void BulletInterface::reset_base_state(
 }
 
 void BulletInterface::reset_contact_data() {
-  for (const auto& link_name : params_.monitor_contacts) {
-    contact_data_.try_emplace(link_name, bullet::ContactData());
+  for (const auto& collision_name : params_.monitor_contacts) {
+    for (const auto& link_name : params_.monitor_contacts[collision_name.first]) {
+      contact_data_[collision_name.first][link_name]= bullet::ContactData();
+    }
   }
 }
 
@@ -223,11 +226,12 @@ void BulletInterface::observe(Dictionary& observation) const {
 
   Dictionary& sim = observation("sim");
   sim("imu")("linear_velocity") = imu_data_.linear_velocity_imu_in_world;
-  for (const auto& link_name : params_.monitor_contacts) {
-    sim("contact")(link_name)("num_contact_points") =
-        contact_data_.at(link_name).num_contact_points;
+  for (const auto& collision_name : params_.monitor_contacts) {
+    for (const auto& link_name : params_.monitor_contacts.at(collision_name.first)) {
+      sim("contact")(collision_name.first)(link_name)("num_contact_points") =
+          contact_data_.at(collision_name.first).at(link_name).num_contact_points;
+    }
   }
-  sim("environment_collision") = environment_collision_;
 
   // Observe base pose
   Eigen::Matrix4d T = get_transform_base_to_world();
@@ -305,7 +309,6 @@ void BulletInterface::cycle(
     throw std::runtime_error("simulator is not running any more");
   }
 
-  environment_collision_ = environment_collision();
   read_joint_sensors();
   read_imu();
   read_contacts();
@@ -332,7 +335,7 @@ void BulletInterface::read_imu() {
   bullet::read_imu_data(imu_data_, bullet_, robot_, imu_link_index_,
                         params_.dt);
   params_.imu_uncertainty.apply(imu_data_.linear_acceleration_imu_in_imu,
-                                imu_data_.angular_velocity_imu_in_imu, rng_);
+                                 imu_data_.angular_velocity_imu_in_imu, rng_);
   params_.imu_uncertainty.apply(imu_data_.raw_linear_acceleration,
                                 imu_data_.raw_angular_velocity, rng_);
 }
@@ -340,35 +343,16 @@ void BulletInterface::read_imu() {
 void BulletInterface::read_contacts() {
   b3ContactInformation contact_info;
   b3RobotSimulatorGetContactPointsArgs contact_args;
-  for (const auto& link_name : params_.monitor_contacts) {
-    contact_args.m_bodyUniqueIdA = robot_;
-    contact_args.m_linkIndexA = get_link_index(link_name);
-    bullet_.getContactPoints(contact_args, &contact_info);
-    contact_data_[link_name].num_contact_points =
-        contact_info.m_numContactPoints;
-  }
-}
-
-int BulletInterface::environment_collision() {
-  b3ContactInformation contact_info;
-  b3RobotSimulatorGetContactPointsArgs contact_args;
-  const int nb_links = bullet_.getNumJoints(robot_);
-  for (const auto& key_child : env_body_ids) {
-    const auto& env_id = key_child.second;
-    for (int link_id = 0; link_id < nb_links; ++link_id) {
-      if (get_link_index("left_wheel_tire") != link_id &&
-          get_link_index("right_wheel_tire") != link_id) {
-        contact_args.m_bodyUniqueIdA = robot_;
-        contact_args.m_bodyUniqueIdB = env_id;
-        contact_args.m_linkIndexA = link_id;
-        bullet_.getContactPoints(contact_args, &contact_info);
-        if (contact_info.m_numContactPoints != 0) {
-          return 1;
-        }
-      }
+  for (const auto& contact_name : params_.monitor_contacts){
+    for (const auto& link_name : params_.monitor_contacts.at(contact_name.first)) {
+      contact_args.m_bodyUniqueIdA = robot_;
+      contact_args.m_linkIndexA = get_link_index(link_name);
+      bullet_.getContactPoints(contact_args, &contact_info);
+      contact_data_.at(contact_name.first).at(link_name).num_contact_points =
+          contact_info.m_numContactPoints;
     }
   }
-  return 0;
+  
 }
 
 void BulletInterface::read_joint_sensors() {

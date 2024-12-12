@@ -253,32 +253,6 @@ TEST_F(BulletInterfaceTest, MassRandomizationIsDifferent) {
   interface_->inertia_randomization_ = 0.0;
 }
 
-TEST_F(BulletInterfaceTest, EnvironmentCollision) {
-  interface_->reset(Dictionary{});
-  interface_->cycle([](const moteus::Output& output) {});
-  ASSERT_EQ(0, interface_->environment_collision());
-  std::string error;
-  std::unique_ptr<Runfiles> runfiles(Runfiles::CreateForTest(&error));
-  ASSERT_NE(runfiles, nullptr);
-  BulletInterface::Parameters params;
-  params.dt = dt_;
-  params.floor = false;   // wheels roll freely during testing
-  params.gravity = true;  // default, just a reminder
-  bullet::JointProperties left_wheel_props;
-  left_wheel_props.friction = kLeftWheelFriction;
-  params.joint_properties.try_emplace("left_wheel", left_wheel_props);
-  params.robot_urdf_path =
-      runfiles->Rlocation("upkie_description/urdf/upkie.urdf");
-  std::vector<std::string> env_urdf_paths;
-  env_urdf_paths.push_back(
-      runfiles->Rlocation("upkie_description/urdf/upkie.urdf"));
-  params.env_urdf_paths = env_urdf_paths;
-  interface_ = std::make_unique<BulletInterface>(params);
-  interface_->reset(Dictionary{});
-  interface_->cycle([](const moteus::Output& output) {});
-  ASSERT_EQ(1, interface_->environment_collision());
-}
-
 TEST_F(BulletInterfaceTest, ObserveImuOrientation) {
   Eigen::Quaterniond orientation_base_in_world = {0., 1., 0., 0.};
 
