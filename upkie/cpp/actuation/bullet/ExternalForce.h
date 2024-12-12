@@ -5,6 +5,7 @@
 
 #include <string>
 
+#include "LinearMath/btVector3.h"
 #include "upkie/cpp/actuation/ImuData.h"
 
 namespace upkie::cpp::actuation::bullet {
