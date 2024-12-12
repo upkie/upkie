@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2024 Inria
 
-#include "upkie/cpp/actuation/RobotSimulator.h"
+#include "upkie/cpp/actuation/bullet/RobotSimulator.h"
 
 #include <iostream>
 
