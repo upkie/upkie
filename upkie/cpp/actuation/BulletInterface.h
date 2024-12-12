@@ -382,7 +382,7 @@ class BulletInterface : public Interface {
   std::map<std::string, moteus::ServoReply> servo_reply_;
 
   //! Bullet client
-  RobotSimulatorClientAPI bullet_;
+  bullet::RobotSimulatorClientAPI bullet_;
 
   //! Identifier of the robot model in the simulation
   int robot_;
