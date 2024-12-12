@@ -5,6 +5,8 @@
 
 #include <iostream>
 
+namespace upkie::cpp::actuation::bullet {
+
 bool RobotSimulatorClientAPI::changeDynamics(
     int bodyUniqueId, int linkIndex,
     struct RobotSimulatorChangeDynamicsArgs& args) {
@@ -75,3 +77,5 @@ bool RobotSimulatorClientAPI::changeDynamics(
   b3SubmitClientCommandAndWaitStatus(sm, command);
   return true;
 }
+
+}  // namespace upkie::cpp::actuation::bullet

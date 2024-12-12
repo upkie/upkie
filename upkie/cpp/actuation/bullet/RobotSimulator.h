@@ -13,30 +13,43 @@
 #include "SharedMemory/PhysicsClientC_API.h"
 #include "SharedMemory/b3RobotSimulatorClientAPI_InternalData.h"
 
+namespace upkie::cpp::actuation::bullet {
+
 //! Structure which contains the new link properties
 struct RobotSimulatorChangeDynamicsArgs {
   //! The mass of the robot link (in kg)
   double m_mass;
+
   //! The friction in the lateral direction
   double m_lateralFriction;
+
   //! The friction during rotational motion
   double m_spinningFriction;
+
   //! The friction while rolling
   double m_rollingFriction;
+
   //! The coefficient of restitution
   double m_restitution;
+
   //! The damping factor for linear motion
   double m_linearDamping;
+
   //! The damping factor for angular motion
   double m_angularDamping;
+
   //! The stiffness of contact between objects
   double m_contactStiffness;
+
   //! The damping factor during collisions
   double m_contactDamping;
+
   //! Specifies whether friction is applied at a specific anchor point
   int m_frictionAnchor;
+
   //! The activation state of the link
   int m_activationState;
+
   //! The local inertia tensor diagonal components
   double m_localInertiaDiagonal[3];
 
@@ -72,4 +85,4 @@ class RobotSimulatorClientAPI : public b3RobotSimulatorClientAPI {
                       RobotSimulatorChangeDynamicsArgs& args);
 };
 
-#endif  // ROBOT_SIMULATOR_CLIENT_API_H
+}  // namespace upkie::cpp::actuation::bullet
