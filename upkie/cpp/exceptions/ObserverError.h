@@ -26,13 +26,11 @@ class ObserverError : public UpkieError {
     message_ = out.str();
   }
 
-  ~ObserverError() throw() {}
-
   //! Observer prefix in observation/
-  const std::string& prefix() const throw() { return prefix_; }
+  const std::string& prefix() const noexcept { return prefix_; }
 
   //! Key that was not found
-  const std::string& key() const throw() { return key_; }
+  const std::string& key() const noexcept { return key_; }
 
  private:
   //! Observer prefix in observation/

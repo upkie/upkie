@@ -6,7 +6,7 @@
 
 from typing import Optional, Set
 
-from gymnasium import spaces
+import gymnasium as gym
 
 from upkie.utils.robot_state import RobotState
 
@@ -49,7 +49,7 @@ class UpkieServoPositions(UpkieServos):
 
     ## \var action_space
     ## Action space.
-    action_space: spaces.dict.Dict
+    action_space: gym.spaces.dict.Dict
 
     def __init__(
         self,
@@ -87,21 +87,21 @@ class UpkieServoPositions(UpkieServos):
             spine_config=spine_config,
         )
         action_space = {
-            joint.name: spaces.Dict(
+            joint.name: gym.spaces.Dict(
                 {
-                    "position": spaces.Box(
+                    "position": gym.spaces.Box(
                         low=joint.limit.lower,
                         high=joint.limit.upper,
                         shape=(1,),
                         dtype=float,
                     ),
-                    "kp_scale": spaces.Box(
+                    "kp_scale": gym.spaces.Box(
                         low=0.0,
                         high=1.0,
                         shape=(1,),
                         dtype=float,
                     ),
-                    "kd_scale": spaces.Box(
+                    "kd_scale": gym.spaces.Box(
                         low=0.0,
                         high=1.0,
                         shape=(1,),
@@ -111,4 +111,4 @@ class UpkieServoPositions(UpkieServos):
             )
             for joint in self.model.joints
         }
-        self.action_space = spaces.Dict(action_space)
+        self.action_space = gym.spaces.Dict(action_space)

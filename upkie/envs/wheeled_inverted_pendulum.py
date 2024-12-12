@@ -8,10 +8,9 @@
 
 from typing import Any, Optional, Tuple, Union
 
-import gymnasium
+import gymnasium as gym
 import numpy as np
 import upkie_description
-from gymnasium import spaces
 from loop_rate_limiters import RateLimiter
 from numpy import cos, sin
 
@@ -25,7 +24,7 @@ from .rewards import WheeledInvertedPendulumReward
 GRAVITY: float = 9.81  # [m] / [s]²
 
 
-class WheeledInvertedPendulum(gymnasium.Env):
+class WheeledInvertedPendulum(gym.Env):
     r"""!
     Wheeled inverted pendulum model.
 
@@ -84,7 +83,7 @@ class WheeledInvertedPendulum(gymnasium.Env):
 
     ## \var action_space
     ## Action space.
-    action_space: spaces.box.Box
+    action_space: gym.spaces.Box
 
     ## \var dt
     ## Period of the control loop in seconds.
@@ -108,7 +107,7 @@ class WheeledInvertedPendulum(gymnasium.Env):
 
     ## \var observation_space
     ## Observation space.
-    observation_space: spaces.box.Box
+    observation_space: gym.spaces.Box
 
     ## \var plot
     ## Optional plot used for rendering.
@@ -244,7 +243,7 @@ class WheeledInvertedPendulum(gymnasium.Env):
             ],
             dtype=float,
         )
-        self.observation_space = spaces.Box(
+        self.observation_space = gym.spaces.Box(
             -observation_limit,
             +observation_limit,
             shape=observation_limit.shape,
@@ -253,7 +252,7 @@ class WheeledInvertedPendulum(gymnasium.Env):
 
         # gymnasium.Env: action_space
         action_limit = np.array([max_ground_velocity], dtype=float)
-        self.action_space = spaces.Box(
+        self.action_space = gym.spaces.Box(
             -action_limit,
             +action_limit,
             shape=action_limit.shape,

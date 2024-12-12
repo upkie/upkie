@@ -7,7 +7,7 @@
 import abc
 from typing import Any, Optional, Tuple
 
-import gymnasium
+import gymnasium as gym
 import numpy as np
 import upkie_description
 from loop_rate_limiters import RateLimiter
@@ -21,7 +21,7 @@ from upkie.utils.robot_state import RobotState
 from upkie.utils.spdlog import logging
 
 
-class UpkieBaseEnv(abc.ABC, gymnasium.Env):
+class UpkieBaseEnv(abc.ABC, gym.Env):
     r"""!
     Base class for Upkie environments.
 
@@ -186,7 +186,6 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         self.__reset_rate()
         self.__reset_init_state()
         spine_observation = self._spine.start(self._spine_config)
-        self.parse_first_observation(spine_observation)
         observation = self.get_env_observation(spine_observation)
         info = {"spine_observation": spine_observation}
         return observation, info
@@ -262,7 +261,7 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
         observation = self.get_env_observation(spine_observation)
         reward = self.get_reward(observation, action)
         terminated = self.detect_fall(spine_observation)
-        truncated = False
+        truncated = False  # will be handled by e.g. a TimeLimit wrapper
         info = {"spine_observation": spine_observation}
         return observation, reward, terminated, truncated, info
 
@@ -285,16 +284,6 @@ class UpkieBaseEnv(abc.ABC, gymnasium.Env):
             )
             return True
         return False
-
-    def parse_first_observation(self, spine_observation: dict) -> None:
-        r"""!
-        Parse first observation after the spine interface is initialized.
-
-        \param spine_observation First observation.
-
-        This method is an optional way for environments to record some state
-        (abstracted away from the agnet) at reset.
-        """
 
     @abc.abstractmethod
     def get_env_observation(self, spine_observation: dict):

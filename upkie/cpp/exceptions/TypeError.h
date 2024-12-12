@@ -32,9 +32,6 @@ class TypeError : public UpkieError {
    */
   TypeError(const TypeError& other, const std::string& extra_message)
       : UpkieError(other, extra_message) {}
-
-  //! Empty destructor
-  ~TypeError() throw() {}
 };
 
 }  // namespace upkie::cpp::exceptions

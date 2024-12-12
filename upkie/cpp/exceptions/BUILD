@@ -12,6 +12,7 @@ cc_library(
         "FilterError.h",
         "ObserverError.h",
         "PositionCommandError.h",
+        "ServoError.h",
         "TypeError.h",
         "UpkieError.h",
     ],

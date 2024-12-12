@@ -12,9 +12,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - actuation: Added collision with environment observation
 - Configure pixi in `pyproject.toml`
 - Handle GLIBC version incompatibility in `start_simulation.sh`
+- Spine: Throw an exception when a servo reply has invalid torque
 - Update downloaded simulation spine in cache if outdated
 - actuation: Added link inertia randomization to the Bullet interface (thanks to @Tordjx)
 - actuation: Check maximum torques before sending commands
+- cpp: Add `ServoError` exception
 - model: Static model for joints with position, velocity and torque limits
 - pixi: Task to generate the documentation by `pixi -e docs make`
 
@@ -36,6 +38,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+- env: Remove unused `leg_return_period` and hard-code it to one second
+- env: Replace contingent `parse_first_observation` by a reset override
 - model: Remove C++ `upkie::model` namespace
 - observers: Remove upper-leg and wheel joints from configurable parameters
 

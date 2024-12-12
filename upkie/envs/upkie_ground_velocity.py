@@ -8,8 +8,8 @@
 import math
 from typing import Dict, Optional, Tuple
 
+import gymnasium as gym
 import numpy as np
-from gymnasium import spaces
 
 from upkie.exceptions import UpkieException
 from upkie.utils.clamp import clamp_and_warn
@@ -33,8 +33,8 @@ class UpkieGroundVelocity(UpkieBaseEnv):
     instance by the [MPC balancer](https://github.com/upkie/mpc_balancer/) and
     [PPO balancer](https://github.com/upkie/ppo_balancer) agents.
 
-    \note For reinforcement learning with neural networks: the observation
-    space and action space are not normalized.
+    \note For reinforcement learning with neural-network policies: the
+    observation space and action space are not normalized.
 
     ### Action space
 
@@ -78,12 +78,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
 
     ## \var action_space
     ## Action space.
-    action_space: spaces.box.Box
-
-    ## \var leg_return_period
-    ## Time constant for the legs (hips and knees) to revert to their neutral
-    ## configuration.
-    leg_return_period: float
+    action_space: gym.spaces.Box
 
     ## \var left_wheeled
     ## Set to True (default) if the robot is left wheeled, that is, a positive
@@ -93,7 +88,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
 
     ## \var observation_space
     ## Observation space.
-    observation_space: spaces.box.Box
+    observation_space: gym.spaces.Box
 
     ## \var reward
     ## Reward function of the environment.
@@ -113,7 +108,6 @@ class UpkieGroundVelocity(UpkieBaseEnv):
         frequency: float = 200.0,
         frequency_checks: bool = True,
         init_state: Optional[RobotState] = None,
-        leg_return_period: float = 1.0,
         left_wheeled: bool = True,
         max_ground_velocity: float = 1.0,
         regulate_frequency: bool = True,
@@ -132,12 +126,12 @@ class UpkieGroundVelocity(UpkieBaseEnv):
             control loop runs slower than the desired `frequency`. Set this
             parameter to false to disable these warnings.
         \param init_state Initial state of the robot, only used in simulation.
-        \param leg_return_period Time constant for the legs (hips and knees) to
-            revert to their neutral configuration.
         \param left_wheeled Set to True (default) if the robot is left wheeled,
             that is, a positive turn of the left wheel results in forward
             motion. Set to False for a right-wheeled variant.
         \param max_ground_velocity Maximum commanded ground velocity in m/s.
+            The default value of 1 m/s is conservative, don't hesitate to
+            increase it once you feel confident in your agent.
         \param regulate_frequency Enables loop frequency regulation.
         \param reward Reward function of the environment.
         \param shm_name Name of shared-memory file.
@@ -176,7 +170,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
             ],
             dtype=float,
         )
-        self.observation_space = spaces.Box(
+        self.observation_space = gym.spaces.Box(
             -observation_limit,
             +observation_limit,
             shape=observation_limit.shape,
@@ -185,7 +179,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
 
         # gymnasium.Env: action_space
         action_limit = np.array([max_ground_velocity], dtype=float)
-        self.action_space = spaces.Box(
+        self.action_space = gym.spaces.Box(
             -action_limit,
             +action_limit,
             shape=action_limit.shape,
@@ -201,7 +195,6 @@ class UpkieGroundVelocity(UpkieBaseEnv):
             for joint in self.model.upper_leg_joints
         }
 
-        self.leg_return_period = leg_return_period
         self.left_wheeled = left_wheeled
         self.reward = reward
         self.wheel_radius = wheel_radius
@@ -224,17 +217,12 @@ class UpkieGroundVelocity(UpkieBaseEnv):
             - `info`: Dictionary with auxiliary diagnostic information. For
               Upkie this is the full observation dictionary sent by the spine.
         """
-        return super().reset(seed=seed)
-
-    def parse_first_observation(self, spine_observation: dict) -> None:
-        r"""!
-        Parse first observation after the spine interface is initialized.
-
-        \param spine_observation First observation.
-        """
+        observation, info = super().reset(seed=seed, options=options)
+        spine_observation = info["spine_observation"]
         for joint in self.model.upper_leg_joints:
             position = spine_observation["servo"][joint.name]["position"]
             self.__leg_servo_action[joint.name]["position"] = position
+        return observation, info
 
     def get_env_observation(self, spine_observation: dict) -> np.ndarray:
         r"""!
@@ -266,8 +254,8 @@ class UpkieGroundVelocity(UpkieBaseEnv):
             prev_position = self.__leg_servo_action[joint.name]["position"]
             new_position = low_pass_filter(
                 prev_output=prev_position,
-                cutoff_period=self.leg_return_period,
-                new_input=0.0,
+                new_input=0.0,  # go to neutral configuration
+                cutoff_period=1.0,  # in roughly one second
                 dt=self.dt,
             )
             self.__leg_servo_action[joint.name]["position"] = new_position
