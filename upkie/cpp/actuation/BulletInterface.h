@@ -32,23 +32,17 @@ class BulletInterface : public Interface {
     //! Keep default constructor.
     Parameters() = default;
 
-    //! Placeholder at initization time.
-    std::map<std::string, int> empty_map = {{"", 0}};
     /*! Initialize from global configuration.
      *
      * \param[in] config Global configuration dictionary.
      */
-    explicit Parameters(const Dictionary& config) {
-      configure(config, empty_map);
-    }
+    explicit Parameters(const Dictionary& config) { configure(config); }
 
     /*! Configure from dictionary.
      *
      * \param[in] config Global configuration dictionary.
-     * \param[in] link_index Map of link indices.
      */
-    void configure(const Dictionary& config,
-                   std::map<std::string, int> link_index) {
+    void configure(const Dictionary& config) {
       if (!config.has("bullet")) {
         spdlog::debug("No \"bullet\" runtime configuration");
         return;
@@ -75,20 +69,13 @@ class BulletInterface : public Interface {
       if (bullet.has("monitor")) {
         const auto& monitor = bullet("monitor");
         if (monitor.has("contacts")) {
-          for (const auto& collision_name : monitor("contacts").keys()) {
+          for (const auto& contact_group : monitor("contacts").keys()) {
             spdlog::debug("Monitoring contacts for collision \"{}\"",
-                          collision_name);
-            if (monitor("contacts")(collision_name).has("exclude")) {
-              for (const auto& body : link_index) {
-                if (!monitor("contacts")(collision_name)("exclude").has(
-                        body.first)) {
-                  monitor_contacts[collision_name].push_back(body.first);
-                }
-              }
-            } else {
+                          contact_group);
+            if (monitor("contacts")(contact_group).has("include")) {
               for (const auto& body :
-                   monitor("contacts")(collision_name).keys()) {
-                monitor_contacts[collision_name].push_back(body);
+                   monitor("contacts")(contact_group)("include").keys()) {
+                monitor_contacts[contact_group].push_back(body);
               }
             }
           }
@@ -118,6 +105,81 @@ class BulletInterface : public Interface {
       }
     }
 
+    /*! Configure from dictionary.
+     *
+     * \param[in] config Global configuration dictionary.
+      * \param[in] link_index Map of link names to their indices.
+     */
+    void configure(const Dictionary& config,
+                   std::map<std::string, int> link_index) {
+      if (!config.has("bullet")) {
+        spdlog::debug("No \"bullet\" runtime configuration");
+        return;
+      }
+      spdlog::info("Applying \"bullet\" runtime configuration...");
+
+      const auto& bullet = config("bullet");
+      follower_camera = bullet.get<bool>("follower_camera", follower_camera);
+      gui = bullet.get<bool>("gui", gui);
+
+      if (bullet.has("imu_uncertainty")) {
+        imu_uncertainty.configure(bullet("imu_uncertainty"));
+      }
+
+      joint_properties.clear();
+      if (bullet.has("joint_properties")) {
+        for (const auto& joint : bullet("joint_properties").keys()) {
+          const auto& props = bullet("joint_properties")(joint);
+          joint_properties.try_emplace(joint, bullet::JointProperties(props));
+        }
+      }
+
+      monitor_contacts.clear();
+      if (bullet.has("monitor")) {
+        const auto& monitor = bullet("monitor");
+        if (monitor.has("contacts")) {
+          for (const auto& contact_group : monitor("contacts").keys()) {
+            spdlog::debug("Monitoring contacts for collision \"{}\"",
+                          contact_group);
+            if (monitor("contacts")(contact_group).has("exclude")) {
+              for (const auto& body : link_index) {
+                if (!monitor("contacts")(contact_group)("exclude").has(
+                        body.first)) {
+                  monitor_contacts[contact_group].push_back(body.first);
+                }
+              }
+            } else {
+              for (const auto& body :
+                   monitor("contacts")(contact_group)("include").keys()) {
+                monitor_contacts[contact_group].push_back(body);
+              }
+            }
+          }
+        }
+      }
+
+      if (bullet.has("reset")) {
+        const auto& reset = bullet("reset");
+        position_base_in_world = reset.get<Eigen::Vector3d>(
+            "position_base_in_world", Eigen::Vector3d::Zero());
+        orientation_base_in_world = reset.get<Eigen::Quaterniond>(
+            "orientation_base_in_world", Eigen::Quaterniond::Identity());
+        linear_velocity_base_to_world_in_world = reset.get<Eigen::Vector3d>(
+            "linear_velocity_base_to_world_in_world", Eigen::Vector3d::Zero());
+        angular_velocity_base_in_base = reset.get<Eigen::Vector3d>(
+            "angular_velocity_base_in_base", Eigen::Vector3d::Zero());
+        joint_configuration.resize(0);
+        if (reset.has("joint_configuration")) {
+          joint_configuration =
+              reset.get<Eigen::VectorXd>("joint_configuration");
+        }
+      }
+
+      if (bullet.has("torque_control")) {
+        torque_control_kd = bullet("torque_control")("kd");
+        torque_control_kp = bullet("torque_control")("kp");
+      }
+    }
     /*! Value of argv[0] used to locate runfiles (e.g. plane.urdf) in Bazel.
      *
      * This value helps find runfiles because Bazel does not seem to set the
@@ -423,8 +485,7 @@ class BulletInterface : public Interface {
   std::map<std::string, int> link_index_;
 
   //! Map from link name to link contact data
-  std::map<std::string, std::map<std::string, bullet::ContactData>>
-      contact_data_;
+  std::map<std::string, bullet::ContactData> contact_data_;
 
   //! Random number generator used to sample from probability distributions
   std::mt19937 rng_;

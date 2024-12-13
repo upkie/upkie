@@ -303,12 +303,10 @@ TEST_F(BulletInterfaceTest, MonitorContacts) {
   ASSERT_TRUE(observation("sim")("contact").has("wheels"));
   ASSERT_TRUE(observation("sim")("contact")("wheels").has("left_wheel_tire"));
   ASSERT_TRUE(observation("sim")("contact")("wheels").has("right_wheel_tire"));
-  ASSERT_EQ(observation("sim")("contact")("wheels")("left_wheel_tire")
-                .get<int>("num_contact_points"),
+  ASSERT_EQ(observation("sim")("contact")("wheels").get<int>("left_wheel_tire"),
             0);
-  ASSERT_EQ(observation("sim")("contact")("wheels")("right_wheel_tire")
-                .get<int>("num_contact_points"),
-            0);
+  ASSERT_EQ(
+      observation("sim")("contact")("wheels").get<int>("right_wheel_tire"), 0);
 }
 
 TEST_F(BulletInterfaceTest, MonitorIMU) {

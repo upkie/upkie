@@ -20,16 +20,28 @@ SPINE_CONFIG = {
         },
         "monitor": {
             "contacts": {
-                "wheels":{
-                    "left_wheel_tire": True,
-                    "right_wheel_tire": True,
+                "left_wheel_tire": {
+                    "include": {
+                        "left_wheel_tire": True,
+                    },
                 },
-                "envs":{
+                "right_wheel_tire": {
+                    "include": {
+                        "right_wheel_tire": True,
+                    },
+                },
+                "wheels": {
+                    "include": {
+                        "left_wheel_tire": True,
+                        "right_wheel_tire": True,
+                    },
+                },
+                "not_wheels": {
                     "exclude": {
                         "left_wheel_tire": True,
                         "right_wheel_tire": True,
-                        },
-                }
+                    },
+                },
             }
         },
 

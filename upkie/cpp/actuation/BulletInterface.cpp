@@ -172,11 +172,8 @@ void BulletInterface::reset_base_state(
 }
 
 void BulletInterface::reset_contact_data() {
-  for (const auto& collision_name : params_.monitor_contacts) {
-    for (const auto& link_name :
-         params_.monitor_contacts[collision_name.first]) {
-      contact_data_[collision_name.first][link_name] = bullet::ContactData();
-    }
+  for (const auto& contact_group : params_.monitor_contacts) {
+    contact_data_[contact_group.first] = bullet::ContactData();
   }
 }
 
@@ -229,14 +226,9 @@ void BulletInterface::observe(Dictionary& observation) const {
   Dictionary& sim = observation("sim");
   sim("imu")("linear_velocity") = imu_data_.linear_velocity_imu_in_world;
 
-  for (const auto& collision_name : params_.monitor_contacts) {
-    for (const auto& link_name :
-         params_.monitor_contacts.at(collision_name.first)) {
-      sim("contact")(collision_name.first)(link_name)("num_contact_points") =
-          contact_data_.at(collision_name.first)
-              .at(link_name)
-              .num_contact_points;
-    }
+  for (const auto& contact_group : params_.monitor_contacts) {
+    sim("contact")(contact_group.first) =
+        contact_data_.at(contact_group.first).num_contact_points;
   }
 
   // Observe base pose
@@ -349,15 +341,17 @@ void BulletInterface::read_imu() {
 void BulletInterface::read_contacts() {
   b3ContactInformation contact_info;
   b3RobotSimulatorGetContactPointsArgs contact_args;
-  for (const auto& contact_name : params_.monitor_contacts) {
+  int n_contacts;
+  for (const auto& contact_group : params_.monitor_contacts) {
+    n_contacts = 0;
     for (const auto& link_name :
-         params_.monitor_contacts.at(contact_name.first)) {
+         params_.monitor_contacts.at(contact_group.first)) {
       contact_args.m_bodyUniqueIdA = robot_;
       contact_args.m_linkIndexA = get_link_index(link_name);
       bullet_.getContactPoints(contact_args, &contact_info);
-      contact_data_.at(contact_name.first).at(link_name).num_contact_points =
-          contact_info.m_numContactPoints;
+      n_contacts += contact_info.m_numContactPoints;
     }
+    contact_data_.at(contact_group.first).num_contact_points = n_contacts;
   }
 }
 
