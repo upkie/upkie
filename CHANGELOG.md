@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- utils: Add `clear_shared_memory` utility function
+
 ### Fixed
 
 - Bazel: Ignore `.pixi` directory as it can contain unrelated Bazel files
