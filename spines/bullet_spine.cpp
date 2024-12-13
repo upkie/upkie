@@ -168,19 +168,13 @@ class CommandLineArguments {
   bool version = false;
 };
 
-/*! Make the observer pipeline.
+/*! Connect sensors to the observation pipeline.
  *
- * You can customize your simulation spine by adding observers to this
- * pipeline. See \ref observations to get started.
+ * \param[in] observation Observation pipeline.
+ * \param[in] interface Actuation interface.
  */
-ObserverPipeline make_observer_pipeline(unsigned spine_frequency) {
-  ObserverPipeline observation;
-
-  BaseOrientation::Parameters base_orientation_params;
-  auto base_orientation =
-      std::make_shared<BaseOrientation>(base_orientation_params);
-  observation.append_observer(base_orientation);
-
+void connect_sensors(ObserverPipeline& observation,
+                     const BulletInterface& interface) {
   auto cpu_temperature = std::make_shared<CpuTemperature>();
   observation.connect_sensor(cpu_temperature);
 
@@ -191,6 +185,18 @@ ObserverPipeline make_observer_pipeline(unsigned spine_frequency) {
     observation.connect_sensor(joystick);
   }
 #endif
+}
+
+/*! Append observers (in a given order) to the observation pipeline.
+ *
+ * \param[in] observation Observation pipeline.
+ * \param[in] spine_frequency Spine frequency in [Hz].
+ */
+void append_observers(ObserverPipeline& observation, unsigned spine_frequency) {
+  BaseOrientation::Parameters base_orientation_params;
+  auto base_orientation =
+      std::make_shared<BaseOrientation>(base_orientation_params);
+  observation.append_observer(base_orientation);
 
   FloorContact::Parameters floor_contact_params;
   floor_contact_params.dt = 1.0 / spine_frequency;
@@ -201,14 +207,12 @@ ObserverPipeline make_observer_pipeline(unsigned spine_frequency) {
   odometry_params.dt = 1.0 / spine_frequency;
   auto odometry = std::make_shared<WheelOdometry>(odometry_params);
   observation.append_observer(odometry);
-
-  return observation;
 }
 
-/*! Make the actuation interface.
+/*! Create the actuation interface.
  *
- * The actuation interface is an abstraction for talking to real/simulated
- * motors.
+ * \param[in] argv0 Name of spine binary from the command line.
+ * \param[in] args Command-line arguments.
  */
 BulletInterface make_actuation_interface(const char* argv0,
                                          const CommandLineArguments& args) {
@@ -231,9 +235,12 @@ BulletInterface make_actuation_interface(const char* argv0,
   return BulletInterface(params);
 }
 
-//! Build and run the simulation spine.
+/*! Build and run the simulation spine.
+ *
+ * \param[in] argv0 Name of spine binary from the command line.
+ * \param[in] args Command-line arguments.
+ */
 int run_spine(const char* argv0, const CommandLineArguments& args) {
-  // Clear any existing shared-memory file
   if (clear_shared_memory(args.shm_name) != EXIT_SUCCESS) {
     return EXIT_FAILURE;
   }
@@ -248,9 +255,13 @@ int run_spine(const char* argv0, const CommandLineArguments& args) {
   params.shm_name = args.shm_name;
   spdlog::info("Spine data logged to {}", params.log_path);
 
-  ObserverPipeline observation = make_observer_pipeline(args.spine_frequency);
-  BulletInterface actuation = make_actuation_interface(argv0, args);
-  Spine spine(params, actuation, observation);
+  BulletInterface interface = make_actuation_interface(argv0, args);
+
+  ObserverPipeline observation;
+  connect_sensors(observation, interface);
+  append_observers(observation, args.spine_frequency);
+
+  Spine spine(params, interface, observation);
   if (args.nb_substeps == 0u) {
     spine.run();
   } else /* args.nb_substeps > 0 */ {
@@ -274,5 +285,6 @@ int main(int argc, char** argv) {
     std::cout << "Upkie bullet spine " << upkie::cpp::kVersion << "\n";
     return EXIT_SUCCESS;
   }
+
   return spines::bullet::run_spine(argv[0], args);
 }
