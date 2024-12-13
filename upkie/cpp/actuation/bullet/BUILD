@@ -28,6 +28,7 @@ cc_library(
 cc_library(
     name = 'robot_simulator',
     hdrs = [
+        'RobotSimulatorChangeDynamicsArgs.h',
         'RobotSimulator.h',
     ],
     srcs = [
