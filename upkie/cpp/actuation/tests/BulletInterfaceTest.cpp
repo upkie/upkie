@@ -290,8 +290,10 @@ TEST_F(BulletInterfaceTest, ObserveImuOrientation) {
 
 TEST_F(BulletInterfaceTest, MonitorContacts) {
   Dictionary config;
-  config("bullet")("monitor")("contacts")("wheels")("left_wheel_tire") = true;
-  config("bullet")("monitor")("contacts")("wheels")("right_wheel_tire") = true;
+  config("bullet")("monitor")("contacts")("wheels")("include")(
+      "left_wheel_tire") = true;
+  config("bullet")("monitor")("contacts")("wheels")("include")(
+      "right_wheel_tire") = true;
   interface_->reset(config);
 
   Dictionary observation;
@@ -301,157 +303,151 @@ TEST_F(BulletInterfaceTest, MonitorContacts) {
   ASSERT_TRUE(observation.has("sim"));
   ASSERT_TRUE(observation("sim").has("contact"));
   ASSERT_TRUE(observation("sim")("contact").has("wheels"));
-  ASSERT_TRUE(observation("sim")("contact")("wheels").has("left_wheel_tire"));
-  ASSERT_TRUE(observation("sim")("contact")("wheels").has("right_wheel_tire"));
-  ASSERT_EQ(observation("sim")("contact")("wheels").get<int>("left_wheel_tire"),
-            0);
-  ASSERT_EQ(
-      observation("sim")("contact")("wheels").get<int>("right_wheel_tire"), 0);
-}
+  ASSERT_EQ(observation("sim")("contact").get<int>("wheels"), 0);
 
-TEST_F(BulletInterfaceTest, MonitorIMU) {
-  Dictionary config;
-  interface_->reset(config);
+  TEST_F(BulletInterfaceTest, MonitorIMU) {
+    Dictionary config;
+    interface_->reset(config);
 
-  Dictionary observation;
-  interface_->cycle([](const moteus::Output& output) {});
-  interface_->cycle([](const moteus::Output& output) {});
-  interface_->observe(observation);
-
-  ASSERT_TRUE(observation.has("sim"));
-  ASSERT_TRUE(observation("sim").has("imu"));
-  ASSERT_TRUE(observation("sim")("imu").has("linear_velocity"));
-  Eigen::Vector3d linear_velocity_imu_in_imu =
-      observation("sim")("imu")("linear_velocity");
-  ASSERT_DOUBLE_EQ(linear_velocity_imu_in_imu.z(), -bullet::kGravity * dt_);
-}
-
-TEST_F(BulletInterfaceTest, MonitorBaseState) {
-  Dictionary config;
-  interface_->reset(config);
-
-  Dictionary observation;
-  interface_->cycle([](const moteus::Output& output) {});
-  interface_->cycle([](const moteus::Output& output) {});
-  interface_->observe(observation);
-
-  ASSERT_TRUE(observation.has("sim"));
-  ASSERT_TRUE(observation("sim").has("base"));
-  ASSERT_TRUE(observation("sim")("base").has("position"));
-  Eigen::Vector3d base_position = observation("sim")("base")("position");
-
-  ASSERT_NEAR(base_position.x(), 0.0, 1e-20);
-  ASSERT_NEAR(base_position.y(), 0.0, 1e-20);
-
-  /* Bullet does not seem to double integrate accelerations (explicit Euler),
-     it first updates velocities then integrates those to get positions
-     (semi-implicit Euler method).
-  */
-  ASSERT_NEAR(base_position.z(), 3 * -bullet::kGravity * std::pow(dt_, 2.0),
-              1e-6);
-
-  ASSERT_TRUE(observation("sim")("base").has("orientation"));
-  Eigen::Quaterniond base_orientation =
-      observation("sim")("base")("orientation");
-
-  // Rotation vector should be practically zero
-  ASSERT_DOUBLE_EQ(base_orientation.w(), 1.0);
-
-  // We cannot check for zero equality because of numerical errors
-  ASSERT_NEAR(base_orientation.x(), 0.0, 1e-20);
-  ASSERT_NEAR(base_orientation.y(), 0.0, 1e-20);
-  ASSERT_NEAR(base_orientation.z(), 0.0, 1e-20);
-}
-
-TEST_F(BulletInterfaceTest, FreeFallBasePosition) {
-  const double T = 0.05;  // trajectory duration in seconds
-
-  Dictionary config;
-  Eigen::Vector3d base_position;
-  interface_->reset(config);
-  base_position = interface_->get_transform_base_to_world().block<3, 1>(0, 3);
-  ASSERT_NEAR(base_position.x(), 0.0, 1e-4);
-  ASSERT_NEAR(base_position.y(), 0.0, 1e-4);
-  ASSERT_NEAR(base_position.z(), 0.0, 1e-4);
-
-  for (double t = 0.0; t < T; t += dt_) {
+    Dictionary observation;
     interface_->cycle([](const moteus::Output& output) {});
+    interface_->cycle([](const moteus::Output& output) {});
+    interface_->observe(observation);
+
+    ASSERT_TRUE(observation.has("sim"));
+    ASSERT_TRUE(observation("sim").has("imu"));
+    ASSERT_TRUE(observation("sim")("imu").has("linear_velocity"));
+    Eigen::Vector3d linear_velocity_imu_in_imu =
+        observation("sim")("imu")("linear_velocity");
+    ASSERT_DOUBLE_EQ(linear_velocity_imu_in_imu.z(), -bullet::kGravity * dt_);
   }
 
-  base_position = interface_->get_transform_base_to_world().block<3, 1>(0, 3);
-  ASSERT_NEAR(base_position.x(), 0.0, 1e-4);
-  ASSERT_NEAR(base_position.y(), 0.0, 1e-4);
-  ASSERT_NEAR(base_position.z(), -0.5 * bullet::kGravity * T * T, 1e-3);
-
-  Eigen::Vector3d base_velocity =
-      interface_->get_linear_velocity_base_to_world_in_world();
-  ASSERT_NEAR(base_velocity.x(), 0.0 * T, 1e-4);
-  ASSERT_NEAR(base_velocity.y(), 0.0 * T, 1e-4);
-  ASSERT_NEAR(base_velocity.z(), -bullet::kGravity * T, 1e-3);
-}
-
-TEST_F(BulletInterfaceTest, ComputeRobotMass) {
-  ASSERT_NEAR(interface_->compute_robot_mass(), 5.3382, 1e-4);
-}
-
-TEST_F(BulletInterfaceTest, ApplyExternalForces) {
-  const double T = 0.05;  // trajectory duration in seconds
-
-  Dictionary action, config;
-  auto& torso_force = action("bullet")("external_forces")("torso");
-  auto& external_force =
-      torso_force.insert<Eigen::Vector3d>("force", Eigen::Vector3d{0., 0., 0.});
-  torso_force.insert<bool>("local_frame", false);  // world frame
-
-  const double mass = interface_->compute_robot_mass();
-  Eigen::Vector3d init_com_position;
-  for (int n_g = 0; n_g < 4; ++n_g) {
-    external_force.z() = n_g * bullet::kGravity * mass;
+  TEST_F(BulletInterfaceTest, MonitorBaseState) {
+    Dictionary config;
     interface_->reset(config);
-    init_com_position = interface_->compute_position_com_in_world();
+
+    Dictionary observation;
+    interface_->cycle([](const moteus::Output& output) {});
+    interface_->cycle([](const moteus::Output& output) {});
+    interface_->observe(observation);
+
+    ASSERT_TRUE(observation.has("sim"));
+    ASSERT_TRUE(observation("sim").has("base"));
+    ASSERT_TRUE(observation("sim")("base").has("position"));
+    Eigen::Vector3d base_position = observation("sim")("base")("position");
+
+    ASSERT_NEAR(base_position.x(), 0.0, 1e-20);
+    ASSERT_NEAR(base_position.y(), 0.0, 1e-20);
+
+    /* Bullet does not seem to double integrate accelerations (explicit Euler),
+       it first updates velocities then integrates those to get positions
+       (semi-implicit Euler method).
+    */
+    ASSERT_NEAR(base_position.z(), 3 * -bullet::kGravity * std::pow(dt_, 2.0),
+                1e-6);
+
+    ASSERT_TRUE(observation("sim")("base").has("orientation"));
+    Eigen::Quaterniond base_orientation =
+        observation("sim")("base")("orientation");
+
+    // Rotation vector should be practically zero
+    ASSERT_DOUBLE_EQ(base_orientation.w(), 1.0);
+
+    // We cannot check for zero equality because of numerical errors
+    ASSERT_NEAR(base_orientation.x(), 0.0, 1e-20);
+    ASSERT_NEAR(base_orientation.y(), 0.0, 1e-20);
+    ASSERT_NEAR(base_orientation.z(), 0.0, 1e-20);
+  }
+
+  TEST_F(BulletInterfaceTest, FreeFallBasePosition) {
+    const double T = 0.05;  // trajectory duration in seconds
+
+    Dictionary config;
+    Eigen::Vector3d base_position;
+    interface_->reset(config);
+    base_position = interface_->get_transform_base_to_world().block<3, 1>(0, 3);
+    ASSERT_NEAR(base_position.x(), 0.0, 1e-4);
+    ASSERT_NEAR(base_position.y(), 0.0, 1e-4);
+    ASSERT_NEAR(base_position.z(), 0.0, 1e-4);
+
     for (double t = 0.0; t < T; t += dt_) {
-      interface_->process_action(action);  // forces are cleared at each cycle
       interface_->cycle([](const moteus::Output& output) {});
     }
 
-    // Since there is no ground in this text fixture, the only forces exerted on
-    // the robot during this test are gravity and the external force
-    const Eigen::Vector3d gravity = {0., 0., -bullet::kGravity};
-    const Eigen::Vector3d com_accel = gravity + external_force / mass;
-    const Eigen::Vector3d Delta_com =
-        interface_->compute_position_com_in_world() - init_com_position;
+    base_position = interface_->get_transform_base_to_world().block<3, 1>(0, 3);
+    ASSERT_NEAR(base_position.x(), 0.0, 1e-4);
+    ASSERT_NEAR(base_position.y(), 0.0, 1e-4);
+    ASSERT_NEAR(base_position.z(), -0.5 * bullet::kGravity * T * T, 1e-3);
 
-    ASSERT_NEAR(Delta_com.x(), 0.5 * com_accel.x() * T * T, 5e-3);
-    ASSERT_NEAR(Delta_com.y(), 0.5 * com_accel.y() * T * T, 5e-3);
-    if (n_g != 1) {  // relative error check for the vertical coordinate
-      double should_be = 0.5 * com_accel.z() * T * T;
-      double relvar = std::abs((Delta_com.z() - should_be) / should_be);
-      ASSERT_NEAR(relvar, 0.0, 5e-2);
-    } else /* n_g == 1 */ {
-      ASSERT_NEAR(Delta_com.z(), 0.5 * com_accel.z() * T * T, 5e-3);
+    Eigen::Vector3d base_velocity =
+        interface_->get_linear_velocity_base_to_world_in_world();
+    ASSERT_NEAR(base_velocity.x(), 0.0 * T, 1e-4);
+    ASSERT_NEAR(base_velocity.y(), 0.0 * T, 1e-4);
+    ASSERT_NEAR(base_velocity.z(), -bullet::kGravity * T, 1e-3);
+  }
+
+  TEST_F(BulletInterfaceTest, ComputeRobotMass) {
+    ASSERT_NEAR(interface_->compute_robot_mass(), 5.3382, 1e-4);
+  }
+
+  TEST_F(BulletInterfaceTest, ApplyExternalForces) {
+    const double T = 0.05;  // trajectory duration in seconds
+
+    Dictionary action, config;
+    auto& torso_force = action("bullet")("external_forces")("torso");
+    auto& external_force = torso_force.insert<Eigen::Vector3d>(
+        "force", Eigen::Vector3d{0., 0., 0.});
+    torso_force.insert<bool>("local_frame", false);  // world frame
+
+    const double mass = interface_->compute_robot_mass();
+    Eigen::Vector3d init_com_position;
+    for (int n_g = 0; n_g < 4; ++n_g) {
+      external_force.z() = n_g * bullet::kGravity * mass;
+      interface_->reset(config);
+      init_com_position = interface_->compute_position_com_in_world();
+      for (double t = 0.0; t < T; t += dt_) {
+        interface_->process_action(action);  // forces are cleared at each cycle
+        interface_->cycle([](const moteus::Output& output) {});
+      }
+
+      // Since there is no ground in this text fixture, the only forces exerted
+      // on the robot during this test are gravity and the external force
+      const Eigen::Vector3d gravity = {0., 0., -bullet::kGravity};
+      const Eigen::Vector3d com_accel = gravity + external_force / mass;
+      const Eigen::Vector3d Delta_com =
+          interface_->compute_position_com_in_world() - init_com_position;
+
+      ASSERT_NEAR(Delta_com.x(), 0.5 * com_accel.x() * T * T, 5e-3);
+      ASSERT_NEAR(Delta_com.y(), 0.5 * com_accel.y() * T * T, 5e-3);
+      if (n_g != 1) {  // relative error check for the vertical coordinate
+        double should_be = 0.5 * com_accel.z() * T * T;
+        double relvar = std::abs((Delta_com.z() - should_be) / should_be);
+        ASSERT_NEAR(relvar, 0.0, 5e-2);
+      } else /* n_g == 1 */ {
+        ASSERT_NEAR(Delta_com.z(), 0.5 * com_accel.z() * T * T, 5e-3);
+      }
     }
   }
-}
 
-TEST_F(BulletInterfaceTest, ResetJointConfiguration) {
-  Eigen::VectorXd joint_configuration(6);
-  joint_configuration << 1.0, 2.0, 3.0, 4.0, 5.0, 6.0;
+  TEST_F(BulletInterfaceTest, ResetJointConfiguration) {
+    Eigen::VectorXd joint_configuration(6);
+    joint_configuration << 1.0, 2.0, 3.0, 4.0, 5.0, 6.0;
 
-  Dictionary config;
-  config("bullet")("reset")("joint_configuration") = joint_configuration;
-  interface_->reset(config);  // no exn
-  Eigen::VectorXd q = interface_->get_joint_angles();
-  ASSERT_DOUBLE_EQ(q(0), 1.0);
-  ASSERT_DOUBLE_EQ(q(1), 2.0);
-  ASSERT_DOUBLE_EQ(q(2), 3.0);
-  ASSERT_DOUBLE_EQ(q(3), 4.0);
-  ASSERT_DOUBLE_EQ(q(4), 5.0);
-  ASSERT_DOUBLE_EQ(q(5), 6.0);
+    Dictionary config;
+    config("bullet")("reset")("joint_configuration") = joint_configuration;
+    interface_->reset(config);  // no exn
+    Eigen::VectorXd q = interface_->get_joint_angles();
+    ASSERT_DOUBLE_EQ(q(0), 1.0);
+    ASSERT_DOUBLE_EQ(q(1), 2.0);
+    ASSERT_DOUBLE_EQ(q(2), 3.0);
+    ASSERT_DOUBLE_EQ(q(3), 4.0);
+    ASSERT_DOUBLE_EQ(q(4), 5.0);
+    ASSERT_DOUBLE_EQ(q(5), 6.0);
 
-  Eigen::VectorXd invalid_configuration(5);
-  invalid_configuration << 1.0, 2.0, 3.0, 4.0, 5.0;
-  config("bullet")("reset")("joint_configuration") = invalid_configuration;
-  ASSERT_THROW(interface_->reset(config), std::runtime_error);  // exn
-}
-
+    Eigen::VectorXd invalid_configuration(5);
+    invalid_configuration << 1.0, 2.0, 3.0, 4.0, 5.0;
+    config("bullet")("reset")("joint_configuration") = invalid_configuration;
+    ASSERT_THROW(interface_->reset(config), std::runtime_error);  // exn
+  }
+  
 }  // namespace upkie::cpp::actuation

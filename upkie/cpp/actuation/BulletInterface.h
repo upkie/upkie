@@ -108,7 +108,7 @@ class BulletInterface : public Interface {
     /*! Configure from dictionary.
      *
      * \param[in] config Global configuration dictionary.
-      * \param[in] link_index Map of link names to their indices.
+     * \param[in] link_index Map of link names to their indices.
      */
     void configure(const Dictionary& config,
                    std::map<std::string, int> link_index) {
