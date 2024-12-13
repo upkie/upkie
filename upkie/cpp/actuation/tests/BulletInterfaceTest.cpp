@@ -290,8 +290,8 @@ TEST_F(BulletInterfaceTest, ObserveImuOrientation) {
 
 TEST_F(BulletInterfaceTest, MonitorContacts) {
   Dictionary config;
-  config("bullet")("monitor")("contacts")("wheels")("left_wheel_tire") = true;
-  config("bullet")("monitor")("contacts")("wheels")("right_wheel_tire") = true;
+  config("bullet")("monitor")("contacts")("wheels")("include")("left_wheel_tire") = true;
+  config("bullet")("monitor")("contacts")("wheels")("include")("right_wheel_tire") = true;
   interface_->reset(config);
 
   Dictionary observation;
