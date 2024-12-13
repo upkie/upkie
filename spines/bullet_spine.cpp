@@ -19,6 +19,7 @@
 #include "upkie/cpp/observers/WheelOdometry.h"
 #include "upkie/cpp/sensors/CpuTemperature.h"
 #include "upkie/cpp/spine/Spine.h"
+#include "upkie/cpp/utils/clear_shared_memory.h"
 #include "upkie/cpp/utils/get_log_path.h"
 #include "upkie/cpp/version.h"
 
@@ -36,6 +37,8 @@ using upkie::cpp::observers::ObserverPipeline;
 using upkie::cpp::observers::WheelOdometry;
 using upkie::cpp::sensors::CpuTemperature;
 using upkie::cpp::spine::Spine;
+using upkie::cpp::utils::clear_shared_memory;
+using upkie::cpp::utils::get_log_path;
 
 #ifndef __APPLE__
 using upkie::cpp::sensors::Joystick;
