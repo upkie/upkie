@@ -146,6 +146,7 @@ inline bool calibration_needed() {
   return !file_found;
 }
 
+//! Build and run the pi3hat spine.
 int main(const CommandLineArguments& args) {
   if (calibration_needed()) {
     spdlog::error("Calibration needed: did you run `upkie_tool rezero`?");
@@ -240,5 +241,5 @@ int main(int argc, char** argv) {
     std::cout << "Upkie pi3hat spine " << upkie::cpp::kVersion << "\n";
     return EXIT_SUCCESS;
   }
-  return spines::pi3hat::main(args);
+  return spines::pi3hat::run_spine(args);
 }
