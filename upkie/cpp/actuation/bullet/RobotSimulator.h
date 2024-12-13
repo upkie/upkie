@@ -9,21 +9,23 @@
 #include "RobotSimulator/b3RobotSimulatorClientAPI.h"
 #include "SharedMemory/PhysicsClientC_API.h"
 #include "SharedMemory/b3RobotSimulatorClientAPI_InternalData.h"
+#include "upkie/cpp/actuation/bullet/RobotSimulatorChangeDynamicsArgs.h"
 
 namespace upkie::cpp::actuation::bullet {
 
 //! Child class to enable modification of inertia matrices.
 class RobotSimulatorClientAPI : public b3RobotSimulatorClientAPI {
  public:
-  /*! Modifies the properties of a link
+  /*! Modifies the dynamic properties of a link.
    *
-   * This is a modification of the method changeDynamics of
-   * b3RobotSimulatorClientAPI to enable the modification of the inertia
-   * matrices.
-   * The usage is identical.
+   * This is a variant of b3RobotSimulatorClientAPI::changeDynamics that allows
+   * updating inertia matrices as well. Its usage is identical to the original.
+   *
    * \param[in] bodyUniqueId The body which links will be modified
    * \param[in] linkIndex The link id
    * \param[in] args Structure which contains the values to modify
+   * \return True if changes were applied successfully, false if there was an
+   *     issue.
    */
   bool changeDynamics(int bodyUniqueId, int linkIndex,
                       RobotSimulatorChangeDynamicsArgs& args);
