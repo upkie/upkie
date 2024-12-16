@@ -16,7 +16,6 @@ from upkie.utils.clamp import clamp_and_warn
 from upkie.utils.filters import low_pass_filter
 from upkie.utils.robot_state import RobotState
 
-from .rewards import WheeledInvertedPendulumReward
 from .upkie_base_env import UpkieBaseEnv
 
 
@@ -90,10 +89,6 @@ class UpkieGroundVelocity(UpkieBaseEnv):
     ## Observation space.
     observation_space: gym.spaces.Box
 
-    ## \var reward
-    ## Reward function of the environment.
-    reward: WheeledInvertedPendulumReward
-
     ## \var version
     ## Environment version number.
     version = 3
@@ -111,7 +106,6 @@ class UpkieGroundVelocity(UpkieBaseEnv):
         left_wheeled: bool = True,
         max_ground_velocity: float = 1.0,
         regulate_frequency: bool = True,
-        reward: Optional[WheeledInvertedPendulumReward] = None,
         shm_name: str = "/upkie",
         spine_config: Optional[dict] = None,
         wheel_radius: float = 0.06,
@@ -133,7 +127,6 @@ class UpkieGroundVelocity(UpkieBaseEnv):
             The default value of 1 m/s is conservative, don't hesitate to
             increase it once you feel confident in your agent.
         \param regulate_frequency Enables loop frequency regulation.
-        \param reward Reward function of the environment.
         \param shm_name Name of shared-memory file.
         \param spine_config Additional spine configuration overriding the
             default `upkie.config.SPINE_CONFIG`. The combined configuration
@@ -152,10 +145,6 @@ class UpkieGroundVelocity(UpkieBaseEnv):
 
         if self.dt is None:
             raise UpkieException("This environment needs a loop frequency")
-
-        reward: WheeledInvertedPendulumReward = (
-            reward if reward is not None else WheeledInvertedPendulumReward()
-        )
 
         # gymnasium.Env: observation_space
         MAX_BASE_PITCH: float = np.pi
@@ -196,7 +185,6 @@ class UpkieGroundVelocity(UpkieBaseEnv):
         }
 
         self.left_wheeled = left_wheeled
-        self.reward = reward
         self.wheel_radius = wheel_radius
 
     def reset(
@@ -306,22 +294,3 @@ class UpkieGroundVelocity(UpkieBaseEnv):
         servo_dict.update(self.get_wheel_servo_action(left_wheel_velocity))
         spine_action = {"servo": servo_dict}
         return spine_action
-
-    def get_reward(
-        self,
-        observation: np.ndarray,
-        action: np.ndarray,
-    ) -> float:
-        r"""!
-        Get reward from observation and action.
-
-        \param observation Environment observation vector.
-        \param action Environment action vector.
-        \return Reward.
-        """
-        return self.reward(
-            pitch=observation[0],
-            ground_position=observation[1],
-            angular_velocity=observation[2],
-            ground_velocity=observation[3],
-        )

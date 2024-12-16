@@ -325,13 +325,3 @@ class UpkieServos(UpkieBaseEnv):
                 )
             spine_action["servo"][joint.name] = servo_action
         return spine_action
-
-    def get_reward(self, observation: dict, action: dict) -> float:
-        r"""!
-        Get reward from observation and action.
-
-        \param observation Environment observation.
-        \param action Environment action.
-        \return Reward.
-        """
-        return 1.0

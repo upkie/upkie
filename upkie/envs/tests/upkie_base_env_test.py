@@ -38,9 +38,6 @@ class UpkieTestEnv(UpkieBaseEnv):
     def get_spine_action(self, action: np.ndarray) -> dict:
         return {"test": action}
 
-    def get_reward(self, observation: np.ndarray, action: np.ndarray) -> float:
-        return 1.0
-
 
 class TestUpkieBaseEnv(unittest.TestCase):
     def setUp(self):
