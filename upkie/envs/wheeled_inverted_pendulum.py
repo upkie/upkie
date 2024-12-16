@@ -19,8 +19,6 @@ from upkie.model import Model
 from upkie.utils.clamp import clamp_and_warn
 from upkie.utils.spdlog import logging
 
-from .rewards import WheeledInvertedPendulumReward
-
 GRAVITY: float = 9.81  # [m] / [s]²
 
 
@@ -117,10 +115,6 @@ class WheeledInvertedPendulum(gym.Env):
     ## Inherited from gymnasium.Env.
     render_mode: Optional[str]
 
-    ## \var reward
-    ## Reward function of the environment.
-    reward: WheeledInvertedPendulumReward
-
     ## \var uncertainty
     ## Biases and noise levels on modeled system uncertainties.
     uncertainty: "WheeledInvertedPendulum.Uncertainty"
@@ -199,7 +193,6 @@ class WheeledInvertedPendulum(gym.Env):
         max_ground_velocity: float = 1.0,
         regulate_frequency: bool = True,
         render_mode: Optional[str] = None,
-        reward: Optional[WheeledInvertedPendulumReward] = None,
         uncertainty: Optional["WheeledInvertedPendulum.Uncertainty"] = None,
     ):
         r"""!
@@ -218,7 +211,6 @@ class WheeledInvertedPendulum(gym.Env):
             in [m] / [s]².
         \param regulate_frequency Enables loop frequency regulation.
         \param render_mode Rendering mode, set to "plot" for live plotting.
-        \param reward Reward function of the environment.
         \param uncertainty Uncertainty biases and noise magnitudes.
         """
         if (
@@ -257,10 +249,6 @@ class WheeledInvertedPendulum(gym.Env):
             +action_limit,
             shape=action_limit.shape,
             dtype=action_limit.dtype,
-        )
-
-        reward: WheeledInvertedPendulumReward = (
-            reward if reward is not None else WheeledInvertedPendulumReward()
         )
 
         rate = None
@@ -320,7 +308,6 @@ class WheeledInvertedPendulum(gym.Env):
         self.model = model
         self.plot = None
         self.render_mode = render_mode
-        self.reward = reward
         self.uncertainty = uncertainty
 
     def reset(
@@ -439,12 +426,7 @@ class WheeledInvertedPendulum(gym.Env):
             self._render_plot()
 
         observation = self.__state + self.uncertainty.observation()
-        reward = self.reward(
-            pitch=theta,
-            ground_position=r,
-            angular_velocity=thetad,
-            ground_velocity=rd,
-        )
+        reward = 1.0
         terminated = self.detect_fall(theta)
         truncated = False
         info = {"spine_observation": self._get_spine_observation()}

@@ -20,6 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bazel: Ignore `.pixi` directory as it can contain unrelated Bazel files
 - Fix unused variable warning in Bullet interface
 
+### Removed
+
+- envs: Remove `get_reward` functions
+
 ## [6.1.0] - 2024-12-12
 
 ### Added
