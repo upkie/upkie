@@ -9,9 +9,10 @@ from typing import Any, Optional, Tuple
 
 import gymnasium as gym
 import numpy as np
-import upkie.config
 import upkie_description
 from loop_rate_limiters import RateLimiter
+
+import upkie.config
 from upkie.exceptions import UpkieException
 from upkie.model import Model
 from upkie.spine import SpineInterface
@@ -258,7 +259,7 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
 
         # Process spine observation
         observation = self.get_env_observation(spine_observation)
-        reward = 1.0  # ready for a gym.RewardWrapper
+        reward = 1.0  # ready for e.g. an ObservationBasedReward wrapper
         terminated = self.detect_fall(spine_observation)
         truncated = False  # will be handled by e.g. a TimeLimit wrapper
         info = {"spine_observation": spine_observation}
