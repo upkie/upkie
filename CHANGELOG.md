@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Bazel: Treat warnings as errors (except the one we can't avoid)
+- envs: Observation-based reward wrapper
 
 ### Fixed
 
