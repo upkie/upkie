@@ -5,6 +5,7 @@
 build --compilation_mode=opt
 build --copt="-Werror"
 build --copt="-Wno-builtin-macro-redefined"
+build --copt="-Wno-deprecated-declarations"
 build --cxxopt=-std=c++17
 build --incompatible_default_to_explicit_init_py  # for upkie imports
 
@@ -12,12 +13,14 @@ coverage --combined_report=lcov
 coverage --compilation_mode=opt
 coverage --copt="-Werror"
 coverage --copt="-Wno-builtin-macro-redefined"
+coverage --copt="-Wno-deprecated-declarations"
 coverage --cxxopt=-std=c++17
 coverage --instrument_test_targets
 
 test --compilation_mode=opt
 test --copt="-Werror"
 test --copt="-Wno-builtin-macro-redefined"
+test --copt="-Wno-deprecated-declarations"
 test --cxxopt=-std=c++17
 test --incompatible_default_to_explicit_init_py  # for upkie imports
 test --test_output=errors
