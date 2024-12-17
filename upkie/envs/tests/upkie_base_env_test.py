@@ -86,6 +86,16 @@ class TestUpkieBaseEnv(unittest.TestCase):
         }
         self.assertTrue(self.env.detect_fall(spine_observation))
 
+    def test_step(self):
+        self.env.reset()
+        observation, reward, terminated, truncated, info = self.env.step(None)
+        self.assertEqual(observation.shape, (1,))
+        self.assertIsInstance(reward, float)
+        self.assertIsInstance(terminated, bool)
+        self.assertIsInstance(truncated, bool)
+        self.assertIsInstance(info, dict)
+        self.assertAlmostEqual(reward, 1.0)
+
 
 if __name__ == "__main__":
     unittest.main()
