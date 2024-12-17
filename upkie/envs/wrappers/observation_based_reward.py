@@ -11,7 +11,8 @@ from gymnasium.core import ActType, ObsType
 
 
 class ObservationBasedReward(gym.Wrapper[ObsType, ActType, ObsType, ActType]):
-    """Redefine the reward of an environment as a function of its observation.
+    r"""!
+    Redefine the reward of an environment as a function of its observation.
 
     If you would like to redefine the reward that is returned by the base
     environment before passing it to learning code, you can simply inherit from
@@ -21,17 +22,19 @@ class ObservationBasedReward(gym.Wrapper[ObsType, ActType, ObsType, ActType]):
     """
 
     def __init__(self, env: gym.Env[ObsType, ActType]):
-        """Constructor for the Reward wrapper.
+        r"""!
+        Constructor for the Reward wrapper.
 
-        Args:
-            env: Environment to be wrapped.
+        \param[in] env Environment to be wrapped.
         """
         super().__init__(self, env)
 
     def step(
         self, action: ActType
     ) -> Tuple[ObsType, SupportsFloat, bool, bool, Dict[str, Any]]:
-        """Modifies the :attr:`env` reward using :meth:`self.reward`."""
+        r"""!
+        Modifies the :attr:`env` reward using :meth:`self.reward`.
+        """
         observation, _, terminated, truncated, info = self.env.step(action)
         return (
             observation,
@@ -42,12 +45,9 @@ class ObservationBasedReward(gym.Wrapper[ObsType, ActType, ObsType, ActType]):
         )
 
     def reward(self, observation: ObsType) -> SupportsFloat:
-        """Returns the new environment reward.
+        r"""!Returns the new environment reward.
 
-        Args:
-            observation: Latest observation from the environment.
-
-        Returns:
-            The modified reward.
+        \param[in] observation Latest observation from the environment.
+        \return The modified reward.
         """
         raise NotImplementedError
