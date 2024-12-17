@@ -1,15 +1,12 @@
 __pycache__
 bazel-*
 cache/
-conda_env.tar.gz
 dist/
 docs/html/
-examples/upkie
 tools/bazel
 tools/logs/*.mpack
 tools/logs/*.tar.*
 training/
-upkie.wiki/
 wiki/
 
 # pixi environments
