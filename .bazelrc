@@ -4,8 +4,6 @@
 
 build --compilation_mode=opt
 build --copt="-Werror"
-build --copt="-Wno-builtin-macro-redefined"
-build --copt="-Wno-deprecated-declarations"
 build --cxxopt=-std=c++17
 build --incompatible_default_to_explicit_init_py  # for upkie imports
 
@@ -36,11 +34,13 @@ test:lint --test_tag_filters=lint
 
 build:pi32 --compilation_mode=opt
 build:pi32 --compiler=clang
+build:pi32 --copt="-Wno-error=macro-redefined"
 build:pi32 --cpu=armeabihf
 build:pi32 --crosstool_top=@rpi_bazel//tools/cc_toolchain:toolchain
 
 test:pi32 --compilation_mode=opt
 test:pi32 --compiler=clang
+test:pi32 --copt="-Wno-error=macro-redefined"
 test:pi32 --cpu=armeabihf
 test:pi32 --crosstool_top=@rpi_bazel//tools/cc_toolchain:toolchain
 test:pi32 --test_output=errors
@@ -49,11 +49,13 @@ test:pi32 --test_output=errors
 
 build:pi64 --compilation_mode=opt
 build:pi64 --compiler=clang
+build:pi64 --copt="-Wno-error=macro-redefined"
 build:pi64 --cpu=aarch64
 build:pi64 --crosstool_top=@rpi_bazel//tools/cc_toolchain:toolchain
 
 test:pi64 --compilation_mode=opt
 test:pi64 --compiler=clang
+test:pi64 --copt="-Wno-error=macro-redefined"
 test:pi64 --cpu=aarch64
 test:pi64 --crosstool_top=@rpi_bazel//tools/cc_toolchain:toolchain
 test:pi64 --test_output=errors
@@ -62,6 +64,8 @@ test:pi64 --test_output=errors
 
 build:darwin_arm64 --compilation_mode=opt
 build:darwin_arm64 --compiler=clang
+build:darwin_arm64 --copt="-Wno-deprecated-declarations"
+build:darwin_arm64 --copt="-Wno-single-bit-bitfield-constant-conversion"
 build:darwin_arm64 --cpu=darwin_arm64
 build:darwin_arm64 --macos_minimum_os=11.5
 
@@ -69,5 +73,7 @@ build:darwin_arm64 --macos_minimum_os=11.5
 
 build:darwin_x86 --compilation_mode=opt
 build:darwin_x86 --compiler=clang
+build:darwin_x86 --copt="-Wno-deprecated-declarations"
+build:darwin_x86 --copt="-Wno-single-bit-bitfield-constant-conversion"
 build:darwin_x86 --cpu=darwin_x86_64
 build:darwin_x86 --macos_minimum_os=11.5
