@@ -6,7 +6,6 @@
 #include <palimpsest/Dictionary.h>
 #include <spdlog/spdlog.h>
 
-#include <iostream>
 #include <limits>
 #include <map>
 #include <random>
