@@ -23,7 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
-- envs: Remove `get_reward` functions
+- **Breaking:** Remove `get_reward` functions from all environments
 
 ## [6.1.0] - 2024-12-12
 
