@@ -3,6 +3,8 @@
 
 #pragma once
 
+#include <string>
+
 namespace upkie::cpp::utils {
 
 /*! Clear an existing shared-memory file.
