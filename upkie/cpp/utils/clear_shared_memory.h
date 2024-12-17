@@ -5,6 +5,11 @@
 
 namespace upkie::cpp::utils {
 
+/*! Clear an existing shared-memory file.
+ *
+ * \param[in] name Name of the shared-memory file to remove if it exists.
+ * \return EXIT_SUCCESS if the file is cleared, EXIT_FAILURE otherwise.
+ */
 int clear_shared_memory(const std::string& name) {
   const char* shm_name = name.c_str();
   int file_descriptor = ::shm_open(shm_name, O_RDWR, 0666);
