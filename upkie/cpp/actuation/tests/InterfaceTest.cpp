@@ -148,7 +148,7 @@ TEST_F(InterfaceTest, ThrowIfNoPosition) {
 
 TEST_F(InterfaceTest, ForwardVelocityCommands) {
   Dictionary action;
-  for (const auto servo_name : joint_names()) {
+  for (const auto& servo_name : joint_names()) {
     action("servo")(servo_name)("position") = 2 * M_PI;  // [rad]
     action("servo")(servo_name)("velocity") = M_PI;      // [rad] / [s]
   }
