@@ -81,7 +81,7 @@ TEST_F(InterfaceTest, ExpectFillsDictionaryKeys) {
   interface_->reset_action(action);
   ASSERT_TRUE(action.has("servo"));
   const Dictionary& servo = action("servo");
-  for (const auto joint_name : joint_names()) {
+  for (const auto& joint_name : joint_names()) {
     ASSERT_TRUE(servo.has(joint_name));
     ASSERT_TRUE(servo(joint_name).has("position"));
     ASSERT_TRUE(servo(joint_name).has("velocity"));
