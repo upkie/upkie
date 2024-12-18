@@ -11,7 +11,7 @@
 #include <random>
 #include <string>
 #include <vector>
-
+#include <iostream>
 #include "upkie/cpp/actuation/ImuUncertainty.h"
 #include "upkie/cpp/actuation/Interface.h"
 #include "upkie/cpp/actuation/RobotSimulator.h"
@@ -66,6 +66,7 @@ class BulletInterface : public Interface {
 
       monitor_contacts.clear();
       if (bullet.has("monitor")) {
+
         const auto& monitor = bullet("monitor");
         if (monitor.has("contacts")) {
           for (const auto& contact_group : monitor("contacts").keys()) {
@@ -74,89 +75,18 @@ class BulletInterface : public Interface {
             if (monitor("contacts")(contact_group).has("include")) {
               for (const auto& body :
                    monitor("contacts")(contact_group)("include").keys()) {
-                monitor_contacts[contact_group].push_back(body);
+                monitor_contacts[contact_group]["include"].push_back(body);
               }
             }
-          }
-        }
-      }
-
-      if (bullet.has("reset")) {
-        const auto& reset = bullet("reset");
-        position_base_in_world = reset.get<Eigen::Vector3d>(
-            "position_base_in_world", Eigen::Vector3d::Zero());
-        orientation_base_in_world = reset.get<Eigen::Quaterniond>(
-            "orientation_base_in_world", Eigen::Quaterniond::Identity());
-        linear_velocity_base_to_world_in_world = reset.get<Eigen::Vector3d>(
-            "linear_velocity_base_to_world_in_world", Eigen::Vector3d::Zero());
-        angular_velocity_base_in_base = reset.get<Eigen::Vector3d>(
-            "angular_velocity_base_in_base", Eigen::Vector3d::Zero());
-        joint_configuration.resize(0);
-        if (reset.has("joint_configuration")) {
-          joint_configuration =
-              reset.get<Eigen::VectorXd>("joint_configuration");
-        }
-      }
-
-      if (bullet.has("torque_control")) {
-        torque_control_kd = bullet("torque_control")("kd");
-        torque_control_kp = bullet("torque_control")("kp");
-      }
-    }
-
-    /*! Configure from dictionary.
-     *
-     * \param[in] config Global configuration dictionary.
-     * \param[in] link_index Map of link names to their indices.
-     */
-    void configure(const Dictionary& config,
-                   std::map<std::string, int> link_index) {
-      if (!config.has("bullet")) {
-        spdlog::debug("No \"bullet\" runtime configuration");
-        return;
-      }
-      spdlog::info("Applying \"bullet\" runtime configuration...");
-
-      const auto& bullet = config("bullet");
-      follower_camera = bullet.get<bool>("follower_camera", follower_camera);
-      gui = bullet.get<bool>("gui", gui);
-
-      if (bullet.has("imu_uncertainty")) {
-        imu_uncertainty.configure(bullet("imu_uncertainty"));
-      }
-
-      joint_properties.clear();
-      if (bullet.has("joint_properties")) {
-        for (const auto& joint : bullet("joint_properties").keys()) {
-          const auto& props = bullet("joint_properties")(joint);
-          joint_properties.try_emplace(joint, bullet::JointProperties(props));
-        }
-      }
-
-      monitor_contacts.clear();
-      if (bullet.has("monitor")) {
-        const auto& monitor = bullet("monitor");
-        if (monitor.has("contacts")) {
-          for (const auto& contact_group : monitor("contacts").keys()) {
-            spdlog::debug("Monitoring contacts for collision \"{}\"",
-                          contact_group);
             if (monitor("contacts")(contact_group).has("exclude")) {
-              for (const auto& body : link_index) {
-                if (!monitor("contacts")(contact_group)("exclude").has(
-                        body.first)) {
-                  monitor_contacts[contact_group].push_back(body.first);
-                }
-              }
-            } else {
               for (const auto& body :
-                   monitor("contacts")(contact_group)("include").keys()) {
-                monitor_contacts[contact_group].push_back(body);
+                   monitor("contacts")(contact_group)("exclude").keys()) {
+                monitor_contacts[contact_group]["exclude"].push_back(body);
               }
             }
           }
         }
       }
-
       if (bullet.has("reset")) {
         const auto& reset = bullet("reset");
         position_base_in_world = reset.get<Eigen::Vector3d>(
@@ -179,6 +109,8 @@ class BulletInterface : public Interface {
         torque_control_kp = bullet("torque_control")("kp");
       }
     }
+
+
     /*! Value of argv[0] used to locate runfiles (e.g. plane.urdf) in Bazel.
      *
      * This value helps find runfiles because Bazel does not seem to set the
@@ -195,7 +127,7 @@ class BulletInterface : public Interface {
     std::string argv0 = "";
 
     //! Contacts to monitor and report along with observations
-    std::map<std::string, std::vector<std::string>> monitor_contacts;
+    std::map<std::string, std::map<std::string, std::vector<std::string>>> monitor_contacts;
 
     //! Simulation timestep in [s]
     double dt = std::numeric_limits<double>::quiet_NaN();
@@ -439,7 +371,7 @@ class BulletInterface : public Interface {
 
   //! Read contact sensors from the simulator
   void read_contacts();
-
+  void register_contacts();
   //! Read IMU data from the simulator
   void read_imu();
 
@@ -471,6 +403,8 @@ class BulletInterface : public Interface {
   //! Map from URDF link names to Bullet link indices
   std::map<std::string, int> env_body_ids;
 
+  //! 
+  std::map<std::string, std::vector<std::string>> monitor_contacts_;
   //! Identifier of the ground plane in the simulation
   int plane_id_;
 
