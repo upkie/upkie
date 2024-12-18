@@ -129,24 +129,27 @@ BulletInterface::BulletInterface(const Parameters& params)
 
 BulletInterface::~BulletInterface() { bullet_.disconnect(); }
 
-void BulletInterface::register_contacts(){
-  // Save contacts to monitor 
-  for (const auto& contact_group : params_.monitor_contacts){
-    for (const auto& include_or_exclude : params_.monitor_contacts.at(contact_group.first)){
-      if (include_or_exclude.first == "include"){
-        for (const auto& body : params_.monitor_contacts.at(contact_group.first).at("include")){
+void BulletInterface::register_contacts() {
+  // Save contacts to monitor
+  for (const auto& contact_group : params_.monitor_contacts) {
+    for (const auto& include_or_exclude : params_.monitor_contacts
+      .at(contact_group.first)) {
+      if (include_or_exclude.first == "include") {
+        for (const auto& body : params_.monitor_contacts.at(contact_group.first)
+          .at("include")) {
           monitor_contacts_[contact_group.first].push_back(body);
         }
-      }
-      else if (include_or_exclude.first == "exclude"){
-        for (const auto& body : link_index_){
+      } else if (include_or_exclude.first == "exclude") {
+        for (const auto& body : link_index_) {
           // find if the body has to be excluded
-          if (std::find(params_.monitor_contacts.at(contact_group.first).at("exclude").begin(),
-              params_.monitor_contacts.at(contact_group.first).at("exclude").end(), 
-              body.first) == params_.monitor_contacts.at(contact_group.first).at("exclude").end()) {
+          if (std::find(params_.monitor_contacts.at(contact_group.first)
+            .at("exclude").begin(),
+              params_.monitor_contacts.at(contact_group.first)
+                .at("exclude").end(),
+              body.first) == params_.monitor_contacts.at(contact_group.first)
+                .at("exclude").end()) {
               monitor_contacts_[contact_group.first].push_back(body.first);
           }
-
         }
       }
     }

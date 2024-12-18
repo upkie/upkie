@@ -66,7 +66,6 @@ class BulletInterface : public Interface {
 
       monitor_contacts.clear();
       if (bullet.has("monitor")) {
-
         const auto& monitor = bullet("monitor");
         if (monitor.has("contacts")) {
           for (const auto& contact_group : monitor("contacts").keys()) {
@@ -127,7 +126,8 @@ class BulletInterface : public Interface {
     std::string argv0 = "";
 
     //! Contacts to monitor and report along with observations
-    std::map<std::string, std::map<std::string, std::vector<std::string>>> monitor_contacts;
+    std::map<std::string, std::map<std::string, std::vector<std::string>>>
+      monitor_contacts;
 
     //! Simulation timestep in [s]
     double dt = std::numeric_limits<double>::quiet_NaN();
@@ -403,8 +403,9 @@ class BulletInterface : public Interface {
   //! Map from URDF link names to Bullet link indices
   std::map<std::string, int> env_body_ids;
 
-  //! 
+  //! Register the contacts to monitor
   std::map<std::string, std::vector<std::string>> monitor_contacts_;
+
   //! Identifier of the ground plane in the simulation
   int plane_id_;
 
