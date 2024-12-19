@@ -10,6 +10,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - actuation: Added collision with environment observation
+- utils: Add `clear_shared_memory` utility function
+
+### Changed
+
+- Bazel: Treat warnings as errors (except the one we can't avoid)
+- envs: Observation-based reward wrapper
+- envs: Unit test for the base `step` function
+
+### Fixed
+
+- Bazel: Ignore `.pixi` directory as it can contain unrelated Bazel files
+- Fix unused variable warning in Bullet interface
+
+### Removed
+
+- **Breaking:** Remove `get_reward` functions from all environments
+- Makefile: Remove conda packing rules, now deprecated in favor of pixi
+
+## [6.1.0] - 2024-12-12
+
+### Added
+
 - Configure pixi in `pyproject.toml`
 - Handle GLIBC version incompatibility in `start_simulation.sh`
 - Spine: Throw an exception when a servo reply has invalid torque

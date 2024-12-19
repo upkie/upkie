@@ -259,7 +259,7 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
 
         # Process spine observation
         observation = self.get_env_observation(spine_observation)
-        reward = self.get_reward(observation, action)
+        reward = 1.0  # ready for e.g. an ObservationBasedReward wrapper
         terminated = self.detect_fall(spine_observation)
         truncated = False  # will be handled by e.g. a TimeLimit wrapper
         info = {"spine_observation": spine_observation}
@@ -292,16 +292,6 @@ class UpkieBaseEnv(abc.ABC, gym.Env):
 
         \param spine_observation Spine observation dictionary.
         \return Environment observation.
-        """
-
-    @abc.abstractmethod
-    def get_reward(self, observation, action) -> float:
-        r"""!
-        Get reward from observation and action.
-
-        \param observation Environment observation.
-        \param action Environment action.
-        \return Reward.
         """
 
     @abc.abstractmethod
