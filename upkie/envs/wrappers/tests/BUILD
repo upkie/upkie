@@ -57,6 +57,15 @@ py_test(
 )
 
 py_test(
+    name = "observation_based_reward_test",
+    srcs = ["observation_based_reward_test.py"],
+    deps = [
+        "//upkie/envs/wrappers",
+        ":envs",
+    ],
+)
+
+py_test(
     name = "random_push_test",
     srcs = ["random_push_test.py"],
     deps = [
