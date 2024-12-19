@@ -17,15 +17,17 @@ from upkie.envs.wrappers.tests.envs import ActionObserverEnv
 
 class TestReward(ObservationBasedReward):
     def reward(self, observation, info):
-        return 42.0
+        return observation[0] + 42.0
 
 
 class ObservationBasedRewardTestCase(unittest.TestCase):
     def test_reward(self):
         wrapped_env = TestReward(ActionObserverEnv())
         wrapped_env.reset()
-        _, reward, _, _, _ = wrapped_env.step(np.array([1.0]))
-        self.assertAlmostEqual(reward, 42.0)
+        _, reward, _, _, _ = wrapped_env.step(np.array([+1.0]))
+        self.assertAlmostEqual(reward, 43.0)
+        _, reward, _, _, _ = wrapped_env.step(np.array([-1.0]))
+        self.assertAlmostEqual(reward, 41.0)
 
     def test_check_env(self):
         try:
