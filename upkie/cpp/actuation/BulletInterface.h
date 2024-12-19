@@ -6,12 +6,13 @@
 #include <palimpsest/Dictionary.h>
 #include <spdlog/spdlog.h>
 
+#include <iostream>
 #include <limits>
 #include <map>
 #include <random>
 #include <string>
 #include <vector>
-#include <iostream>
+
 #include "upkie/cpp/actuation/ImuUncertainty.h"
 #include "upkie/cpp/actuation/Interface.h"
 #include "upkie/cpp/actuation/bullet/ContactData.h"
@@ -109,7 +110,6 @@ class BulletInterface : public Interface {
       }
     }
 
-
     /*! Value of argv[0] used to locate runfiles (e.g. plane.urdf) in Bazel.
      *
      * This value helps find runfiles because Bazel does not seem to set the
@@ -127,7 +127,7 @@ class BulletInterface : public Interface {
 
     //! Contacts to monitor and report along with observations
     std::map<std::string, std::map<std::string, std::vector<std::string>>>
-      monitor_contacts;
+        monitor_contacts;
 
     //! Simulation timestep in [s]
     double dt = std::numeric_limits<double>::quiet_NaN();

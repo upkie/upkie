@@ -4,10 +4,10 @@
 #include "upkie/cpp/actuation/BulletInterface.h"
 
 #include <algorithm>
+#include <iostream>
 #include <memory>
 #include <string>
 
-#include <iostream>
 #include "tools/cpp/runfiles/runfiles.h"
 #include "upkie/cpp/actuation/bullet/gravity.h"
 #include "upkie/cpp/actuation/bullet/read_imu_data.h"
@@ -94,7 +94,6 @@ BulletInterface::BulletInterface(const Parameters& params)
     }
   }
 
-
   // Load plane URDF
   if (params.floor) {
     plane_id_ = bullet_.loadURDF(find_plane_urdf(params.argv0));
@@ -132,23 +131,27 @@ BulletInterface::~BulletInterface() { bullet_.disconnect(); }
 void BulletInterface::register_contacts() {
   // Save contacts to monitor
   for (const auto& contact_group : params_.monitor_contacts) {
-    for (const auto& include_or_exclude : params_.monitor_contacts
-      .at(contact_group.first)) {
+    for (const auto& include_or_exclude :
+         params_.monitor_contacts.at(contact_group.first)) {
       if (include_or_exclude.first == "include") {
-        for (const auto& body : params_.monitor_contacts.at(contact_group.first)
-          .at("include")) {
+        for (const auto& body :
+             params_.monitor_contacts.at(contact_group.first).at("include")) {
           monitor_contacts_[contact_group.first].push_back(body);
         }
       } else if (include_or_exclude.first == "exclude") {
         for (const auto& body : link_index_) {
           // find if the body has to be excluded
           if (std::find(params_.monitor_contacts.at(contact_group.first)
-            .at("exclude").begin(),
+                            .at("exclude")
+                            .begin(),
+                        params_.monitor_contacts.at(contact_group.first)
+                            .at("exclude")
+                            .end(),
+                        body.first) ==
               params_.monitor_contacts.at(contact_group.first)
-                .at("exclude").end(),
-              body.first) == params_.monitor_contacts.at(contact_group.first)
-                .at("exclude").end()) {
-              monitor_contacts_[contact_group.first].push_back(body.first);
+                  .at("exclude")
+                  .end()) {
+            monitor_contacts_[contact_group.first].push_back(body.first);
           }
         }
       }
@@ -373,8 +376,7 @@ void BulletInterface::read_contacts() {
   int n_contacts;
   for (const auto& contact_group : monitor_contacts_) {
     n_contacts = 0;
-    for (const auto& link_name :
-         monitor_contacts_.at(contact_group.first)) {
+    for (const auto& link_name : monitor_contacts_.at(contact_group.first)) {
       contact_args.m_bodyUniqueIdA = robot_;
       contact_args.m_linkIndexA = get_link_index(link_name);
       bullet_.getContactPoints(contact_args, &contact_info);
