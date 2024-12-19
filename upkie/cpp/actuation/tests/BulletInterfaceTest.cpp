@@ -299,7 +299,6 @@ TEST_F(BulletInterfaceTest, MonitorContacts) {
   Dictionary observation;
   interface_->cycle([](const moteus::Output& output) {});
   interface_->observe(observation);
-  spdlog::info(observation);
   ASSERT_TRUE(observation.has("sim"));
   ASSERT_TRUE(observation("sim").has("contact"));
   ASSERT_TRUE(observation("sim")("contact").has("wheels"));
