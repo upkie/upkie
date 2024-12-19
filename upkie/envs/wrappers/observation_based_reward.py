@@ -38,16 +38,18 @@ class ObservationBasedReward(gym.Wrapper[ObsType, ActType, ObsType, ActType]):
         observation, _, terminated, truncated, info = self.env.step(action)
         return (
             observation,
-            self.reward(observation),
+            self.reward(observation, info),
             terminated,
             truncated,
             info,
         )
 
-    def reward(self, observation: ObsType) -> SupportsFloat:
-        r"""!Returns the new environment reward.
+    def reward(self, observation: ObsType, info: dict) -> SupportsFloat:
+        r"""!
+        Returns the new environment reward.
 
         \param[in] observation Latest observation from the environment.
+        \param[in] info Latest info dictionary from the environment.
         \return The modified reward.
         """
         raise NotImplementedError
