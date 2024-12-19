@@ -16,9 +16,19 @@ class ObservationBasedReward(gym.Wrapper[ObsType, ActType, ObsType, ActType]):
 
     If you would like to redefine the reward that is returned by the base
     environment before passing it to learning code, you can simply inherit from
-    this class and overwrite the :meth:`reward` method.
+    this class and overwrite the :meth:`reward` method. See also the
+    `RewardWrapper` class defined in Gymnasium.
 
-    See also the (reward-based) `RewardWrapper` in Gymnasium.
+    Rewards in reinforcement learning are often defined as \f$r(s_t, a_t,
+    s_{t+1})\f$. With this wrapper, the reward function is redefined as
+    \f$r(o_{t+1})\f$, with two differences:
+
+    - We use the observation rather than the environment state.
+    - The new reward is computed based on the post-step observation.
+
+    Using observation rather than state does not have a big impact when
+    training in simulation, as simulation sensors can read any part of the full
+    simulation state on demand.
     """
 
     def __init__(self, env: gym.Env[ObsType, ActType]):
