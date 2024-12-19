@@ -27,7 +27,7 @@ class ObservationBasedReward(gym.Wrapper[ObsType, ActType, ObsType, ActType]):
 
         \param[in] env Environment to be wrapped.
         """
-        super().__init__(self, env)
+        super().__init__(env)
 
     def step(
         self, action: ActType
