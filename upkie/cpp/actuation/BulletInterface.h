@@ -6,6 +6,7 @@
 #include <palimpsest/Dictionary.h>
 #include <spdlog/spdlog.h>
 
+#include <iostream>
 #include <limits>
 #include <map>
 #include <random>
@@ -68,13 +69,24 @@ class BulletInterface : public Interface {
       if (bullet.has("monitor")) {
         const auto& monitor = bullet("monitor");
         if (monitor.has("contacts")) {
-          for (const auto& body : monitor("contacts").keys()) {
-            spdlog::debug("Adding body \"{}\" to contacts", body);
-            monitor_contacts.push_back(body);
+          for (const auto& contact_group : monitor("contacts").keys()) {
+            spdlog::debug("Monitoring contacts for collision \"{}\"",
+                          contact_group);
+            if (monitor("contacts")(contact_group).has("include")) {
+              for (const auto& body :
+                   monitor("contacts")(contact_group)("include").keys()) {
+                monitor_contacts[contact_group]["include"].push_back(body);
+              }
+            }
+            if (monitor("contacts")(contact_group).has("exclude")) {
+              for (const auto& body :
+                   monitor("contacts")(contact_group)("exclude").keys()) {
+                monitor_contacts[contact_group]["exclude"].push_back(body);
+              }
+            }
           }
         }
       }
-
       if (bullet.has("reset")) {
         const auto& reset = bullet("reset");
         position_base_in_world = reset.get<Eigen::Vector3d>(
@@ -114,7 +126,8 @@ class BulletInterface : public Interface {
     std::string argv0 = "";
 
     //! Contacts to monitor and report along with observations
-    std::vector<std::string> monitor_contacts;
+    std::map<std::string, std::map<std::string, std::vector<std::string>>>
+        monitor_contacts;
 
     //! Simulation timestep in [s]
     double dt = std::numeric_limits<double>::quiet_NaN();
@@ -358,7 +371,7 @@ class BulletInterface : public Interface {
 
   //! Read contact sensors from the simulator
   void read_contacts();
-
+  void register_contacts();
   //! Read IMU data from the simulator
   void read_imu();
 
@@ -388,7 +401,13 @@ class BulletInterface : public Interface {
   int robot_;
 
   //! Map from URDF link names to Bullet link indices
-  std::map<std::string, int> body_names;
+  std::map<std::string, int> env_body_ids;
+
+  //! Register the contacts to monitor
+  std::map<std::string, std::vector<std::string>> monitor_contacts_;
+
+  //! Identifier of the ground plane in the simulation
+  int plane_id_;
 
   //! Maximum joint torques read from the URDF model
   std::map<std::string, bullet::JointProperties> joint_properties_;

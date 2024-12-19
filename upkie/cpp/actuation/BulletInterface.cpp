@@ -4,6 +4,7 @@
 #include "upkie/cpp/actuation/BulletInterface.h"
 
 #include <algorithm>
+#include <iostream>
 #include <memory>
 #include <string>
 
@@ -57,6 +58,7 @@ BulletInterface::BulletInterface(const Parameters& params)
   if (imu_link_index_ < 0) {
     throw std::runtime_error("Robot does not have a link named \"imu\"");
   }
+
   // If params has an attribute inertia_randomization, store masses
   if (params.inertia_randomization) {
     inertia_randomization_ = params.inertia_randomization;
@@ -81,6 +83,8 @@ BulletInterface::BulletInterface(const Parameters& params)
   for (int joint_index = 0; joint_index < nb_joints; ++joint_index) {
     bullet_.getJointInfo(robot_, joint_index, &joint_info);
     std::string joint_name = joint_info.m_jointName;
+    std::string link_name = joint_info.m_linkName;
+    get_link_index(link_name);  // memoize link index
     if (joint_index_map_.find(joint_name) != joint_index_map_.end()) {
       joint_index_map_[joint_name] = joint_index;
 
@@ -92,7 +96,8 @@ BulletInterface::BulletInterface(const Parameters& params)
 
   // Load plane URDF
   if (params.floor) {
-    if (bullet_.loadURDF(find_plane_urdf(params.argv0)) < 0) {
+    plane_id_ = bullet_.loadURDF(find_plane_urdf(params.argv0));
+    if (plane_id_ < 0) {
       throw std::runtime_error("Could not load the plane URDF!");
     }
   } else {
@@ -113,7 +118,7 @@ BulletInterface::BulletInterface(const Parameters& params)
       throw std::runtime_error("Could not load the environment URDF: " +
                                urdf_path);
     }
-    body_names[body_name] = body_id;
+    env_body_ids[body_name] = body_id;
   }
 
   // Start visualizer and configure simulation
@@ -123,8 +128,39 @@ BulletInterface::BulletInterface(const Parameters& params)
 
 BulletInterface::~BulletInterface() { bullet_.disconnect(); }
 
+void BulletInterface::register_contacts() {
+  // Save contacts to monitor
+  for (const auto& contact_group : params_.monitor_contacts) {
+    for (const auto& include_or_exclude :
+         params_.monitor_contacts.at(contact_group.first)) {
+      if (include_or_exclude.first == "include") {
+        for (const auto& body :
+             params_.monitor_contacts.at(contact_group.first).at("include")) {
+          monitor_contacts_[contact_group.first].push_back(body);
+        }
+      } else if (include_or_exclude.first == "exclude") {
+        for (const auto& body : link_index_) {
+          // find if the body has to be excluded
+          if (std::find(params_.monitor_contacts.at(contact_group.first)
+                            .at("exclude")
+                            .begin(),
+                        params_.monitor_contacts.at(contact_group.first)
+                            .at("exclude")
+                            .end(),
+                        body.first) ==
+              params_.monitor_contacts.at(contact_group.first)
+                  .at("exclude")
+                  .end()) {
+            monitor_contacts_[contact_group.first].push_back(body.first);
+          }
+        }
+      }
+    }
+  }
+}
 void BulletInterface::reset(const Dictionary& config) {
   params_.configure(config);
+  register_contacts();
   bullet_.setTimeStep(params_.dt);
   reset_base_state(params_.position_base_in_world,
                    params_.orientation_base_in_world,
@@ -168,8 +204,8 @@ void BulletInterface::reset_base_state(
 }
 
 void BulletInterface::reset_contact_data() {
-  for (const auto& link_name : params_.monitor_contacts) {
-    contact_data_.try_emplace(link_name, bullet::ContactData());
+  for (const auto& contact_group : monitor_contacts_) {
+    contact_data_[contact_group.first] = bullet::ContactData();
   }
 }
 
@@ -221,9 +257,10 @@ void BulletInterface::observe(Dictionary& observation) const {
 
   Dictionary& sim = observation("sim");
   sim("imu")("linear_velocity") = imu_data_.linear_velocity_imu_in_world;
-  for (const auto& link_name : params_.monitor_contacts) {
-    sim("contact")(link_name)("num_contact_points") =
-        contact_data_.at(link_name).num_contact_points;
+
+  for (const auto& contact_group : monitor_contacts_) {
+    sim("contact")(contact_group.first) =
+        contact_data_.at(contact_group.first).num_contact_points;
   }
 
   // Observe base pose
@@ -245,7 +282,7 @@ void BulletInterface::observe(Dictionary& observation) const {
 
   // Observe the environment URDF states
   Dictionary& bodies = sim("bodies");
-  for (const auto& key_child : body_names) {
+  for (const auto& key_child : env_body_ids) {
     const auto& body_name = key_child.first;
     const auto& body_id = key_child.second;
     Eigen::Matrix4d T = get_transform_body_to_world(body_id);
@@ -336,12 +373,16 @@ void BulletInterface::read_imu() {
 void BulletInterface::read_contacts() {
   b3ContactInformation contact_info;
   b3RobotSimulatorGetContactPointsArgs contact_args;
-  for (const auto& link_name : params_.monitor_contacts) {
-    contact_args.m_bodyUniqueIdA = robot_;
-    contact_args.m_linkIndexA = get_link_index(link_name);
-    bullet_.getContactPoints(contact_args, &contact_info);
-    contact_data_[link_name].num_contact_points =
-        contact_info.m_numContactPoints;
+  int n_contacts;
+  for (const auto& contact_group : monitor_contacts_) {
+    n_contacts = 0;
+    for (const auto& link_name : monitor_contacts_.at(contact_group.first)) {
+      contact_args.m_bodyUniqueIdA = robot_;
+      contact_args.m_linkIndexA = get_link_index(link_name);
+      bullet_.getContactPoints(contact_args, &contact_info);
+      n_contacts += contact_info.m_numContactPoints;
+    }
+    contact_data_.at(contact_group.first).num_contact_points = n_contacts;
   }
 }
 
