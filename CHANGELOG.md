@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - **Breaking:** Remove `get_reward` functions from all environments
+- Makefile: Remove conda packing rules, now deprecated in favor of pixi
 
 ## [6.1.0] - 2024-12-12
 
