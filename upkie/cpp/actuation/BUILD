@@ -77,10 +77,8 @@ cc_library(
     name = "bullet_interface",
     hdrs = [
         "BulletInterface.h",
-        "RobotSimulator.h"
     ],
     srcs = [
-        "RobotSimulator.cpp",
         "BulletInterface.cpp",
     ],
     data = [
@@ -88,6 +86,7 @@ cc_library(
     ],
     deps = [
         "//upkie/cpp/actuation/bullet",
+        "//upkie/cpp/actuation/bullet:robot_simulator",
         "//upkie/cpp/actuation:interface",
         "//upkie/cpp/utils:synchronous_clock",
         "@bazel_tools//tools/cpp/runfiles",
@@ -97,19 +96,6 @@ cc_library(
     ],
 )
 
-cc_library(
-    name = 'robot_simulator',
-    hdrs = [
-        'RobotSimulator.h',
-    ],
-    srcs = [
-        'RobotSimulator.cpp',
-    ],
-    deps = [
-        "@bullet",
-        "@eigen"
-    ],
-)
 cc_library(
     name = "pi3hat_interface",
     hdrs = [

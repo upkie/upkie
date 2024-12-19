@@ -417,7 +417,7 @@ void BulletInterface::randomize_masses() {
     std::uniform_real_distribution<double> distribution(-inertia_randomization_,
                                                         inertia_randomization_);
     double epsilon = distribution(generator);
-    RobotSimulatorChangeDynamicsArgs change_dyn_args;
+    bullet::RobotSimulatorChangeDynamicsArgs change_dyn_args;
     change_dyn_args.m_mass = nominal_masses[link_id.first] * (1 + epsilon);
     // We assume a uniform distribution of the mass density
     // The new mass is (1+\epsilon)previous_mass

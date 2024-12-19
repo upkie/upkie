@@ -12,6 +12,11 @@ cc_library(
 )
 
 cc_library(
+    name = "clear_shared_memory",
+    hdrs = ["clear_shared_memory.h"],
+)
+
+cc_library(
     name = "get_log_path",
     hdrs = ["get_log_path.h"],
     deps = [
@@ -63,6 +68,7 @@ cc_library(
 cc_library(
     name = "utils",
     deps = [
+        ":clear_shared_memory",
         ":datetime_now_string",
         ":get_log_path",
         ":handle_interrupts",

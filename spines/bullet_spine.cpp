@@ -19,6 +19,7 @@
 #include "upkie/cpp/observers/WheelOdometry.h"
 #include "upkie/cpp/sensors/CpuTemperature.h"
 #include "upkie/cpp/spine/Spine.h"
+#include "upkie/cpp/utils/clear_shared_memory.h"
 #include "upkie/cpp/utils/get_log_path.h"
 #include "upkie/cpp/version.h"
 
@@ -36,6 +37,8 @@ using upkie::cpp::observers::ObserverPipeline;
 using upkie::cpp::observers::WheelOdometry;
 using upkie::cpp::sensors::CpuTemperature;
 using upkie::cpp::spine::Spine;
+using upkie::cpp::utils::clear_shared_memory;
+using upkie::cpp::utils::get_log_path;
 
 #ifndef __APPLE__
 using upkie::cpp::sensors::Joystick;
@@ -165,102 +168,100 @@ class CommandLineArguments {
   bool version = false;
 };
 
-int clear_shared_memory(const std::string& name) {
-  const char* shm_name = name.c_str();
-  int file_descriptor = ::shm_open(shm_name, O_RDWR, 0666);
-  if (file_descriptor < 0) {
-    if (errno == ENOENT) {
-      return EXIT_SUCCESS;
-    } else if (errno == EINVAL) {
-      spdlog::error("Cannot clear shared memory (EINVAL: name '{}' invalid)",
-                    shm_name);
-      return EXIT_FAILURE;
-    } else {
-      spdlog::error(
-          "Cannot clear shared memory (error opening '{}', error number: {})",
-          shm_name, errno);
-      return EXIT_FAILURE;
-    }
-  }
-  if (::shm_unlink(shm_name) < 0) {
-    spdlog::error(
-        "Failed to unlink shared memory (name: '{}', error number: {})",
-        shm_name, errno);
-    return EXIT_FAILURE;
-  }
-  return EXIT_SUCCESS;
-}
-
-int main(const char* argv0, const CommandLineArguments& args) {
-  ObserverPipeline observation;
-
-  // Clear any existing shared-memory file
-  if (clear_shared_memory(args.shm_name) != EXIT_SUCCESS) {
-    return EXIT_FAILURE;
-  }
-
-  // Observation: Base orientation
-  BaseOrientation::Parameters base_orientation_params;
-  auto base_orientation =
-      std::make_shared<BaseOrientation>(base_orientation_params);
-  observation.append_observer(base_orientation);
-
-  // Observation: CPU temperature
+/*! Connect sensors to the observation pipeline.
+ *
+ * \param[in] observation Observation pipeline.
+ * \param[in] interface Actuation interface.
+ */
+void connect_sensors(ObserverPipeline& observation,
+                     const BulletInterface& interface) {
   auto cpu_temperature = std::make_shared<CpuTemperature>();
   observation.connect_sensor(cpu_temperature);
 
 #ifndef __APPLE__
-  // Observation: Joystick
   auto joystick = std::make_shared<Joystick>();
   if (joystick->present()) {
     spdlog::info("Joystick found");
     observation.connect_sensor(joystick);
   }
 #endif
+}
 
-  // Observation: Floor contact
+/*! Append observers (in a given order) to the observation pipeline.
+ *
+ * \param[in] observation Observation pipeline.
+ * \param[in] spine_frequency Spine frequency in [Hz].
+ */
+void append_observers(ObserverPipeline& observation, unsigned spine_frequency) {
+  BaseOrientation::Parameters base_orientation_params;
+  auto base_orientation =
+      std::make_shared<BaseOrientation>(base_orientation_params);
+  observation.append_observer(base_orientation);
+
   FloorContact::Parameters floor_contact_params;
-  floor_contact_params.dt = 1.0 / args.spine_frequency;
+  floor_contact_params.dt = 1.0 / spine_frequency;
   auto floor_contact = std::make_shared<FloorContact>(floor_contact_params);
   observation.append_observer(floor_contact);
 
-  // Observation: Wheel odometry
   WheelOdometry::Parameters odometry_params;
-  odometry_params.dt = 1.0 / args.spine_frequency;
+  odometry_params.dt = 1.0 / spine_frequency;
   auto odometry = std::make_shared<WheelOdometry>(odometry_params);
   observation.append_observer(odometry);
+}
 
-  // Note that we don't lock memory in this spine. Otherwise Bullet will yield
-  // a "b3AlignedObjectArray reserve out-of-memory" error below.
-
-  // Simulator
+/*! Create the actuation interface.
+ *
+ * \param[in] argv0 Name of spine binary from the command line.
+ * \param[in] args Command-line arguments.
+ */
+BulletInterface make_actuation_interface(const char* argv0,
+                                         const CommandLineArguments& args) {
   const double base_altitude = args.space ? 0.0 : 0.6;  // [m]
-  BulletInterface::Parameters bullet_params(Dictionary{});
-  bullet_params.argv0 = argv0;
-  bullet_params.dt = 1.0 / args.spine_frequency;
-  bullet_params.floor = !args.space;
-  bullet_params.gravity = !args.space;
-  bullet_params.gui = args.show;
-  bullet_params.inertia_randomization = args.inertia_randomization;
-  bullet_params.position_base_in_world = Eigen::Vector3d(0., 0., base_altitude);
+  BulletInterface::Parameters params(Dictionary{});
+  params.argv0 = argv0;
+  params.dt = 1.0 / args.spine_frequency;
+  params.floor = !args.space;
+  params.gravity = !args.space;
+  params.gui = args.show;
+  params.inertia_randomization = args.inertia_randomization;
+  params.position_base_in_world = Eigen::Vector3d(0., 0., base_altitude);
   if (args.robot_variant.empty()) {
-    bullet_params.robot_urdf_path =
-        "external/upkie_description/urdf/upkie.urdf";
+    params.robot_urdf_path = "external/upkie_description/urdf/upkie.urdf";
   } else {
-    bullet_params.robot_urdf_path =
+    params.robot_urdf_path =
         "external/upkie_description/urdf/upkie_" + args.robot_variant + ".urdf";
   }
-  bullet_params.env_urdf_paths = args.extra_urdf_paths;
-  BulletInterface interface(bullet_params);
+  params.env_urdf_paths = args.extra_urdf_paths;
+  return BulletInterface(params);
+}
 
-  // Spine
-  Spine::Parameters spine_params;
-  spine_params.frequency = args.spine_frequency;
-  spine_params.log_path =
-      upkie::cpp::utils::get_log_path(args.log_dir, "bullet_spine");
-  spine_params.shm_name = args.shm_name;
-  spdlog::info("Spine data logged to {}", spine_params.log_path);
-  Spine spine(spine_params, interface, observation);
+/*! Build and run the simulation spine.
+ *
+ * \param[in] argv0 Name of spine binary from the command line.
+ * \param[in] args Command-line arguments.
+ */
+int run_spine(const char* argv0, const CommandLineArguments& args) {
+  if (clear_shared_memory(args.shm_name) != EXIT_SUCCESS) {
+    return EXIT_FAILURE;
+  }
+
+  // Note how, contrary to the pi3hat spine, we don't lock memory here.
+  // Otherwise Bullet will yield a "b3AlignedObjectArray reserve out-of-memory"
+  // error afterwards.
+
+  Spine::Parameters params;
+  params.frequency = args.spine_frequency;
+  params.log_path = get_log_path(args.log_dir, "bullet_spine");
+  params.shm_name = args.shm_name;
+  spdlog::info("Spine data logged to {}", params.log_path);
+
+  BulletInterface interface = make_actuation_interface(argv0, args);
+
+  ObserverPipeline observation;
+  connect_sensors(observation, interface);
+  append_observers(observation, args.spine_frequency);
+
+  Spine spine(params, interface, observation);
   if (args.nb_substeps == 0u) {
     spine.run();
   } else /* args.nb_substeps > 0 */ {
@@ -284,5 +285,6 @@ int main(int argc, char** argv) {
     std::cout << "Upkie bullet spine " << upkie::cpp::kVersion << "\n";
     return EXIT_SUCCESS;
   }
-  return spines::bullet::main(argv[0], args);
+
+  return spines::bullet::run_spine(argv[0], args);
 }

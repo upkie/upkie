@@ -14,10 +14,10 @@
 #include <iostream>
 #include "upkie/cpp/actuation/ImuUncertainty.h"
 #include "upkie/cpp/actuation/Interface.h"
-#include "upkie/cpp/actuation/RobotSimulator.h"
 #include "upkie/cpp/actuation/bullet/ContactData.h"
 #include "upkie/cpp/actuation/bullet/ExternalForce.h"
 #include "upkie/cpp/actuation/bullet/JointProperties.h"
+#include "upkie/cpp/actuation/bullet/RobotSimulator.h"
 #include "upkie/cpp/actuation/moteus/Output.h"
 #include "upkie/cpp/actuation/moteus/ServoReply.h"
 
@@ -395,7 +395,7 @@ class BulletInterface : public Interface {
   std::map<std::string, moteus::ServoReply> servo_reply_;
 
   //! Bullet client
-  RobotSimulatorClientAPI bullet_;
+  bullet::RobotSimulatorClientAPI bullet_;
 
   //! Identifier of the robot model in the simulation
   int robot_;

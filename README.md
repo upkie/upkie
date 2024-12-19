@@ -44,7 +44,7 @@ pip install upkie
 
 Let's start a Bullet simulation spine:
 
-<img src="https://github.com/upkie/upkie/blob/main/docs/images/bullet-spine.png" height="100" align="right" />
+<img src="https://raw.githubusercontent.com/upkie/upkie/refs/heads/main/docs/images/bullet-spine.png" height="100" align="right" />
 
 ```console
 ./start_simulation.sh
@@ -107,7 +107,7 @@ If you built an Upkie or use parts of this project in your works, please cite th
   author = {Caron, St\'{e}phane and Perrin-Gilbert, Nicolas and Ledoux, Viviane and G\"{o}kbakan, \"{Umit} Bora and Raverdy, Pierre-Guillaume and Raffin, Antonin and Tordjman--Levavasseur, Valentin},
   url = {https://github.com/upkie/upkie},
   license = {Apache-2.0},
-  version = {6.0.0},
+  version = {6.1.0},
   year = {2024}
 }
 ```

@@ -22,10 +22,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- **Breaking:** Remove layout argument to actuation interfaces
 - CICD: Build release spines with Ubuntu 20.04 rather than 22.04
 - CICD: Switch to pixi for documentation workflow
 - CICD: Update upload-artifact action to v4
+- Remove layout argument to actuation interfaces
 - actuation: Rename `Interface::initialize_action` to `Interface::reset_action`
 - actuation: Rename `Interface::servo_joint_map` to `Interface::servo_name_map`
 - deps: Upate to palimpsest 2.2.1
@@ -710,7 +710,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Starting this changelog.
 
-[unreleased]: https://github.com/upkie/upkie/compare/v6.0.0...HEAD
+[unreleased]: https://github.com/upkie/upkie/compare/v6.1.0...HEAD
+[6.1.0]: https://github.com/upkie/upkie/compare/v6.0.0...v6.1.0
 [6.0.0]: https://github.com/upkie/upkie/compare/v5.2.0...v6.0.0
 [5.2.0]: https://github.com/upkie/upkie/compare/v5.1.0...v5.2.0
 [5.1.0]: https://github.com/upkie/upkie/compare/v5.0.1...v5.1.0
