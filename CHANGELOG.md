@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- actuation: Added collision with environment observation
+- actuation: Add collision-with-environment observation (thanks to @Tordjx)
 - utils: Add `clear_shared_memory` utility function
 
 ### Changed
