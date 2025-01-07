@@ -68,6 +68,7 @@ upload: check_upkie_name build set_date  ## upload built targets to the Raspberr
 	ssh ${UPKIE_NAME} mkdir -p $(PROJECT_NAME)
 	ssh ${UPKIE_NAME} sudo find $(PROJECT_NAME) -type d -name __pycache__ -user root -exec chmod go+wx {} "\;"
 	rsync -Lrtu --delete-after --delete-excluded \
+		--exclude .pixi \
 		--exclude __pycache__ \
 		--exclude bazel-$(CURDIR_NAME) \
 		--exclude bazel-$(PROJECT_NAME)/ \
