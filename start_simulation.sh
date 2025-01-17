@@ -1,9 +1,12 @@
 #!/bin/bash
+# -*- coding: utf-8 -*-
+#
+# SPDX-License-Identifier: Apache-2.0
 
 SCRIPT=$(realpath "$0")
 SCRIPTDIR=$(dirname "${SCRIPT}")
 
-URL_ARCHIVE="https://github.com/upkie/upkie/releases/download"
+DOWNLOAD_URL="https://github.com/upkie/upkie/releases/download"
 
 if [ ! -f docs/Doxyfile ]; then
     echo "Unable to find file 'docs/Doxyfile' for version number"
@@ -24,30 +27,30 @@ fi
 
 for arg in "$@"; do
     if [ "$arg" == "--build" ]; then
-        BUILD=1
+        REBUILD=1
         break
     fi
 done
 
 if [[ "$SYSTEM" == Darwin ]]; then
-    echo "macOS system"
+    echo "🍏 macOS operating system"
     if [[ "$ARCH" == x86_64* ]]; then
-        echo "x86-64 architecture"
-        SPINE_ARCHIVE="$URL_ARCHIVE"/v"$VERSION"/darwin_x86_bullet_spine.tar.gz
+        echo "⚙️ x86 64-bit CPU architecture"
+        SPINE_ARCHIVE="$DOWNLOAD_URL"/v"$VERSION"/darwin_x86_bullet_spine.tar.gz
     elif [[ "$ARCH" == i*86 ]]; then
-        echo "x86-32 architecture"
-        SPINE_ARCHIVE="$URL_ARCHIVE"/v"$VERSION"/darwin_x86_bullet_spine.tar.gz
+        echo "⚙️ x86 32-bit CPU architecture"
+        SPINE_ARCHIVE="$DOWNLOAD_URL"/v"$VERSION"/darwin_x86_bullet_spine.tar.gz
     elif  [[ "$ARCH" == arm* ]]; then
-        echo "ARM architecture"
-        SPINE_ARCHIVE="$URL_ARCHIVE"/v"$VERSION"/darwin_arm64_bullet_spine.tar.gz
+        echo "⚙️ ARM CPU architecture"
+        SPINE_ARCHIVE="$DOWNLOAD_URL"/v"$VERSION"/darwin_arm64_bullet_spine.tar.gz
     else
-        echo "Unsupported architecture $ARCH"
+        echo "❌ Unsupported CPU architecture: $ARCH"
     fi
 elif  [[ "$SYSTEM" == Linux ]]; then
-    echo "Linux system"
+    echo "🐧 Linux operating system"
     if [[ "$ARCH" == x86_64* ]]; then
         echo "x86-64 architecture"
-        SPINE_ARCHIVE="$URL_ARCHIVE"/v"$VERSION"/linux_amd64_bullet_spine.tar.gz
+        SPINE_ARCHIVE="$DOWNLOAD_URL"/v"$VERSION"/linux_amd64_bullet_spine.tar.gz
     else
         echo "Unsupported architecture: $ARCH"
     fi
@@ -55,7 +58,7 @@ else
     echo "Unsupported system: $SYSTEM"
 fi
 
-if [[ -n "$SPINE_ARCHIVE" ]] && [[ -z "$BUILD" ]]; then
+if [[ -n "$SPINE_ARCHIVE" ]] && [[ -z "${REBUILD}" ]]; then
     if [ -f cache/bullet_spine ]; then
         OUTPUT=$(./cache/bullet_spine --version)
         CACHE_RC=$?
@@ -88,18 +91,18 @@ if [[ -n "$SPINE_ARCHIVE" ]] && [[ -z "$BUILD" ]]; then
         if [ $SPINE_RC -eq 1 ]; then
             if echo "$OUTPUT" | grep -q "version.*GLIBC"; then
                 echo "⚠️ It seems your GLIBC version is not compatible with the downloaded binary"
-                BUILD=1
+                REBUILD=1
             fi
         elif [ $SPINE_RC -ne 0 ] && [ $SPINE_RC -ne 1 ]; then
             echo "Simulation spine exited with code $SPINE_RC"
             echo "If this was unexpected, you can also try \`$0 --build\`"
         fi
     else
-        BUILD=1
+        REBUILD=1
     fi
 fi
 
-if [[ -n "$BUILD" ]]; then
+if [[ -n "${REBUILD}" ]]; then
     echo "Building the simulation spine from source..."
     (cd "${SCRIPTDIR}" && "${SCRIPTDIR}"/tools/bazelisk run //spines:bullet_spine -- "${SPINE_ARGS[@]}")
 fi
