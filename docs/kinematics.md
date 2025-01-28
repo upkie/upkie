@@ -2,6 +2,20 @@
 
 This page is about the geometry and joint properties of Upkies. Mechanics and electronics are discussed in the [Hardware wiki](https://github.com/upkie/upkie/wiki).
 
+## Frames
+
+### IMU frame
+
+<img alt="Location of the IMU frame" src="imu-frame.jpg" height="200" align="right" />
+
+The IMU frame has the orientation of the pi3hat IMU:
+
+- **x-axis:** from the IMU towards the back of the robot (CAN/HDMI connectors on the Raspberry Pi).
+- **y-axis:** from the IMU towards the left of the robot (USB ports of the Raspberry Pi).
+- **z-axis:** from the IMU towards the wheels of the robot (from the Raspberry Pi towards the pi3hat).
+
+Right-click on the image to the right and open it in a new tab/window to see the frame orientation better.
+
 ## Joint limits {#joint-limits}
 
 | Joint | Limit    | Value (±)  | Why? |
