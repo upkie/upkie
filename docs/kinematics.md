@@ -20,7 +20,7 @@ This page is about the geometry and joint properties of Upkies. Mechanics and el
 
 **For mj5208's:** peak velocities from the [mj5208 spec](https://mjbots.com/products/mj5208) are rated as 7,500 rpm, or approximately 785 rad/s. Multiplying by the wheel radius of your typical Upkie (between 5 and 6 cm), we obtain a ground speed comparable to that of a car on a highway. We scale this down a notch! Backtracking from a top ground speed at 20 km/h, we obtain a maximum velocity around 111 rad/s.
 
-## Model conventions
+## Model conventions {#model-conventions}
 
 There are the conventions used in the URDF description of the robot model. In what follows, we assume you are familiar with the informal URDF standard from the ROS wiki, in particular the [urdf/XML/joint](https://wiki.ros.org/urdf/XML/joint) and [urdf/XML/link](https://wiki.ros.org/urdf/XML/link) pages.
 
