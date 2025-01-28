@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - actuation: Add collision-with-environment observation (thanks to @Tordjx)
+- docs: Start Kinematics page
 - utils: Add `clear_shared_memory` utility function
 
 ### Changed
