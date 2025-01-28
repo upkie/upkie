@@ -9,7 +9,7 @@ from .joint_limit import JointLimit
 
 class Joint:
     """!
-    Joint properties.
+    Joint properties (see also [joint limits](@ref joint-limits)).
 
     Extra indices in this class are provided as convenience for users familiar
     with Pinocchio.
