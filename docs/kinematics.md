@@ -34,7 +34,7 @@ Links and joints are grouped by "assemblies". We can recognize assemblies in lin
 
 Note that the moteus convention is that positive angles correspond to clockwise rotations when looking at the rotor / back of the moteus board. This is opposite to the URDF default, so our motor stator-rotor joint axes are aligned with the -z axis of the joint frame. See [moteus direction configuration](https://jpieper.com/2021/04/30/moteus-direction-configuration/) for details.
 
-### Virtual links
+### Virtual links {#virtual-links}
 
 Virtual links have a net mass of 1 gram. Setting the mass of a virtual link to zero prevents the base link from free-floating in Bullet. Since our description does not account for screws and cables anyway, the additional 1 gram per virtual link should not make a significant difference.
 
