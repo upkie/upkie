@@ -19,3 +19,23 @@ This page is about the geometry and joint properties of Upkies. Mechanics and el
 **For qdd100's:** peak velocities are [rated](https://mjbots.com/products/qdd100-beta-3) as 3,600 dps at 36 V and 2,300 dps at 24 V. Assuming a linear velocity-voltage relationship (which is a big assumption, for instance the actual maximum velocity will also depend on [`servo.pwm_rate_hz`](https://github.com/mjbots/moteus/blob/main/docs/reference.md#servopwm_rate_hz)) leads to 1,650 dps at the 18 V of the [RYOBI batteries used on Upkie](https://github.com/upkie/upkie/wiki/Bill-of-materials), or equivalently 28.8 rad/s after conversion and rounding.
 
 **For mj5208's:** peak velocities from the [mj5208 spec](https://mjbots.com/products/mj5208) are rated as 7,500 rpm, or approximately 785 rad/s. Multiplying by the wheel radius of your typical Upkie (between 5 and 6 cm), we obtain a ground speed comparable to that of a car on a highway. We scale this down a notch! Backtracking from a top ground speed at 20 km/h, we obtain a maximum velocity around 111 rad/s.
+
+## Model conventions
+
+There are the conventions used in the URDF description of the robot model. In what follows, we assume you are familiar with the informal URDF standard from the ROS wiki, in particular the [urdf/XML/joint](https://wiki.ros.org/urdf/XML/joint) and [urdf/XML/link](https://wiki.ros.org/urdf/XML/link) pages.
+
+### Link and joint names
+
+Links and joints are grouped by "assemblies". We can recognize assemblies in link and joint names:
+
+- A link is named ``<assembly>_<identifier>``, for example ``left_hip_qdd100_stator`` denotes the stator of the qdd100 of the left hip.
+- A fixed joint is named ``<child_link>_fix``, for instance the ``left_hip_qdd100_stator_fix`` that attaches the qdd100 stator of the left-hip assembly to the torso.
+- A revolute joint is named directly based on its side and role, for example ``left_hip`` or ``right_wheel``.
+
+Note that the moteus convention is that positive angles correspond to clockwise rotations when looking at the rotor / back of the moteus board. This is opposite to the URDF default, so our motor stator-rotor joint axes are aligned with the -z axis of the joint frame. See [moteus direction configuration](https://jpieper.com/2021/04/30/moteus-direction-configuration/) for details.
+
+### Virtual links
+
+Virtual links have a net mass of 1 gram. Setting the mass of a virtual link to zero prevents the base link from free-floating in Bullet. Since our description does not account for screws and cables anyway, the additional 1 gram per virtual link should not make a significant difference.
+
+Virtual links should also contain a visual geometry (see [this comment](https://github.com/upkie/upkie_description/pull/19#issuecomment-2259933854)).
