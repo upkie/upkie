@@ -33,6 +33,6 @@ If this is a runtime issue, provide some minimal code to reproduce it:
 
 ### Context
 
-- OS: [e.g. Ubuntu 20.04]
-- Upkie version: [e.g. 3.2.0]
+- OS: [e.g. Ubuntu 22.04]
+- Upkie version: [e.g. 6.1.0]
 - If applicable, screenshot to help explain the issue?

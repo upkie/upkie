@@ -53,7 +53,7 @@ struct ImuData {
    * \f]
    * with \f${}_I a_{WI}\f$ the *proper* linear acceleration of the IMU frame
    * \f$I\f$, and \f${}_I g\f$ the standard acceleration of gravity in the IMU
-   * frame. Pay attention to the fact that
+   * frame.
    *
    * Pay attention to the fact that proper acceleration is different from
    * coordinate acceleration, which would be the acceleration of the IMU with
