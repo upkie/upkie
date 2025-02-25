@@ -9,7 +9,7 @@ SCRIPTDIR=$(dirname "${SCRIPT}")
 DOWNLOAD_URL="https://github.com/upkie/upkie/releases/download"
 
 if [ ! -f docs/Doxyfile ]; then
-    echo "Unable to find file 'docs/Doxyfile' for version number"
+    echo "❌ Unable to find file 'docs/Doxyfile' for version number"
     exit
 fi
 # no v at start of version number here
@@ -35,13 +35,13 @@ done
 if [[ "$SYSTEM" == Darwin ]]; then
     echo "🍏 macOS operating system"
     if [[ "$ARCH" == x86_64* ]]; then
-        echo "⚙️ x86 64-bit CPU architecture"
+        echo "⚙️  x86 64-bit CPU architecture"
         SPINE_ARCHIVE="$DOWNLOAD_URL"/v"$VERSION"/darwin_x86_bullet_spine.tar.gz
     elif [[ "$ARCH" == i*86 ]]; then
-        echo "⚙️ x86 32-bit CPU architecture"
+        echo "⚙️  x86 32-bit CPU architecture"
         SPINE_ARCHIVE="$DOWNLOAD_URL"/v"$VERSION"/darwin_x86_bullet_spine.tar.gz
     elif  [[ "$ARCH" == arm* ]]; then
-        echo "⚙️ ARM CPU architecture"
+        echo "⚙️  ARM CPU architecture"
         SPINE_ARCHIVE="$DOWNLOAD_URL"/v"$VERSION"/darwin_arm64_bullet_spine.tar.gz
     else
         echo "❌ Unsupported CPU architecture: $ARCH"
@@ -49,13 +49,13 @@ if [[ "$SYSTEM" == Darwin ]]; then
 elif  [[ "$SYSTEM" == Linux ]]; then
     echo "🐧 Linux operating system"
     if [[ "$ARCH" == x86_64* ]]; then
-        echo "x86-64 architecture"
+        echo "⚙️  x86 64-bit CPU architecture"
         SPINE_ARCHIVE="$DOWNLOAD_URL"/v"$VERSION"/linux_amd64_bullet_spine.tar.gz
     else
-        echo "Unsupported architecture: $ARCH"
+        echo "❌ Unsupported CPU architecture: $ARCH"
     fi
 else
-    echo "Unsupported system: $SYSTEM"
+    echo "❌ Unsupported operating system: $SYSTEM"
 fi
 
 if [[ -n "$SPINE_ARCHIVE" ]] && [[ -z "${REBUILD}" ]]; then
@@ -82,7 +82,7 @@ if [[ -n "$SPINE_ARCHIVE" ]] && [[ -z "${REBUILD}" ]]; then
     fi
 
     if [[ $CURL_TAR_RC -eq 0 ]]; then
-        echo "Simulation spine downloaded to cache, let's roll!"
+        echo "✅ Simulation spine downloaded to cache, let's roll!"
         cd cache || exit
         OUTPUT=$(./bullet_spine "${SPINE_ARGS[@]}" 2>&1)
         SPINE_RC=$?
