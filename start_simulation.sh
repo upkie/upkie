@@ -65,7 +65,7 @@ if [[ -n "$SPINE_ARCHIVE" ]] && [[ -z "${REBUILD}" ]]; then
         if [ "${CACHE_RC}" -eq 0 ]; then
             CACHE_VERSION=$(echo "${OUTPUT}" | awk '{print $4}')
             if [ "${CACHE_VERSION}" != "${VERSION}" ]; then
-                echo "Cached version of the simulation spine (${CACHE_VERSION}) is not ${VERSION}"
+                echo "⚠️ Cached version of the simulation spine (${CACHE_VERSION}) is not ${VERSION}"
                 rm -f cache/bullet_spine
             fi
         fi
@@ -73,7 +73,7 @@ if [[ -n "$SPINE_ARCHIVE" ]] && [[ -z "${REBUILD}" ]]; then
 
     CURL_TAR_RC=0
     if [ ! -f cache/bullet_spine ]; then
-        echo "Downloading the simulation spine from $SPINE_ARCHIVE..."
+        echo "📥 Downloading the simulation spine from $SPINE_ARCHIVE..."
         mkdir -p cache
 
         # check that the full operation works - use pipefail as it works for bash/zsh
@@ -94,7 +94,7 @@ if [[ -n "$SPINE_ARCHIVE" ]] && [[ -z "${REBUILD}" ]]; then
                 REBUILD=1
             fi
         elif [ $SPINE_RC -ne 0 ] && [ $SPINE_RC -ne 1 ]; then
-            echo "Simulation spine exited with code $SPINE_RC"
+            echo "⚠️ Simulation spine exited with code $SPINE_RC"
             echo "If this was unexpected, you can also try \`$0 --build\`"
         fi
     else
@@ -103,6 +103,6 @@ if [[ -n "$SPINE_ARCHIVE" ]] && [[ -z "${REBUILD}" ]]; then
 fi
 
 if [[ -n "${REBUILD}" ]]; then
-    echo "Building the simulation spine from source..."
+    echo "🏗️  Building the simulation spine from source..."
     (cd "${SCRIPTDIR}" && "${SCRIPTDIR}"/tools/bazelisk run //spines:bullet_spine -- "${SPINE_ARGS[@]}")
 fi
