@@ -24,7 +24,7 @@ This repository contains all the materials needed to build and control an Upkie:
     - [Examples](https://github.com/upkie/upkie/tree/main/examples)
     - [Agents](https://github.com/upkie/upkie#agents)
 
-Questions are welcome in the [Chat](https://app.element.io/#/room/#upkie:matrix.org) and [Discussions forum](https://github.com/upkie/upkie/discussions).
+Questions are welcome in the [Chat](https://matrix.to/#/#upkie:matrix.org) and [Discussions forum](https://github.com/upkie/upkie/discussions).
 
 ## Installation
 
