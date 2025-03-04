@@ -40,5 +40,5 @@ clean:  ## remove all generated files
 	rm -f $(wildcard images/*.eps) $(wildcard images/*.png)
 
 .PHONY: open
-open:  ## open the locally built documentation in Firefox
-	firefox $(OUTPUTDIR)/index.html
+open:  ## open the locally built documentation in the default Web browser
+	xdg-open $(OUTPUTDIR)/index.html

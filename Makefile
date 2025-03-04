@@ -94,13 +94,13 @@ run_pi3hat_spine:  ### run the pi3hat spine on the Raspberry Pi
 # ===========
 
 .PHONY: coverage
-coverage:  # check unit test coverage and open an HTML report in Firefox (not documented in `make help`)
+coverage:  # check unit test coverage and open the resulting HTML report
 	$(BAZEL) coverage --combined_report=lcov --compilation_mode=fastbuild --instrument_test_targets //...
 	@if [ -z "$(shell which genhtml)" ]; then\
 		echo "ERROR: genhtml not found, is lcov installed?"; \
 	else \
 		genhtml $(COVERAGE_DIR)/_coverage_report.dat -o $(COVERAGE_DIR); \
-		firefox $(COVERAGE_DIR)/index.html; \
+		xdg-open $(COVERAGE_DIR)/index.html; \
 	fi
 
 .PHONY: lint
