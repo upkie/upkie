@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [7.0.0] - 2025-03-10
+
 ### Added
 
 - Add pixi-pack integration
@@ -736,7 +738,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Starting this changelog.
 
-[unreleased]: https://github.com/upkie/upkie/compare/v6.1.0...HEAD
+[unreleased]: https://github.com/upkie/upkie/compare/v7.0.0...HEAD
+[7.0.0]: https://github.com/upkie/upkie/compare/v6.1.0...v7.0.0
 [6.1.0]: https://github.com/upkie/upkie/compare/v6.0.0...v6.1.0
 [6.0.0]: https://github.com/upkie/upkie/compare/v5.2.0...v6.0.0
 [5.2.0]: https://github.com/upkie/upkie/compare/v5.1.0...v5.2.0
