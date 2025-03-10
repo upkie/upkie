@@ -11,7 +11,7 @@ import upkie.envs
 
 upkie.envs.register()
 
-RESET_DURATION = 2.0  # seconds
+RESET_DURATION = 10.0  # seconds
 
 
 def reset_to_neutral(env: upkie.envs.UpkieServos):
