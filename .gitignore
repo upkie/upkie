@@ -10,5 +10,8 @@ training/
 wiki/
 
 # pixi environments
-.pixi
 *.egg-info
+.pixi
+activate.sh
+env/
+environment.tar

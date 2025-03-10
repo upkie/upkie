@@ -81,8 +81,22 @@ upload: check_upkie_name build set_date  ## upload built targets to the Raspberr
 		--exclude tools/raspios \
 		--progress $(CURDIR)/ ${UPKIE_NAME}:$(PROJECT_NAME)/
 
+pack_env:  ## pack pixi environment to environment.tar
+	pixi run pack-to-upkie
+
 # REMOTE TARGETS
 # ==============
+
+check_mamba_setup:
+	@ if [ -z "${MAMBA_ROOT_PREFIX}" ]; then \
+        echo "ERROR: Either MAMBA_EXE or MAMBA_ROOT_PREFIX is not set."; \
+        echo "Is Micromamba installed?"; \
+        echo "See https://mamba.readthedocs.io/en/latest/installation/micromamba-installation.html"; \
+        exit 1; \
+	fi
+
+unpack_env: check_mamba_setup  ### unpack pixi environment from environment.tar
+	pixi-pack unpack environment.tar -e upkie -o ${MAMBA_ROOT_PREFIX}/envs
 
 run_mock_spine:  ### run the mock spine on the Raspberry Pi
 	$(RASPUNZEL) run -s //spines:mock_spine
