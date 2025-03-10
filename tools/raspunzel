@@ -162,12 +162,16 @@ def run(workspace: Workspace, target: str, subargs: List[str]) -> None:
 
     log_run(target_name, arch)
 
-    execution_path = (
-        f"{workspace.bazel_bin}/{target_dir}/"
-    )
-
+    execution_path = f"{workspace.bazel_bin}/{target_dir}/"
     os.chdir(execution_path)
-    os.execv(target_name, [f"{execution_path}/{target_name}"] + subargs)
+    try:
+        os.execv(target_name, [f"{execution_path}/{target_name}"] + subargs)
+    except FileNotFoundError as exn:
+        doc = "https://upkie.github.io/upkie/real-robot.html#build-from-source"
+        print(f"ERROR: Executable '{exn}' not found in '{execution_path}'.")
+        print("Did `make upload` run successfully?")
+        print(f"See {doc} for details")
+        raise
 
 
 def get_argument_parser() -> argparse.ArgumentParser:
