@@ -37,10 +37,21 @@ To build the pi3hat spine locally from source, then upload it to Raspberry Pi, u
 
 ```console
 make build
+```
+
+Make sure there is no error during this step. It should conclude with a success info, like so:
+
+```
+INFO: Build completed successfully, 1 total action
+```
+
+Next, you can upload the built spine to your robot by:
+
+```console
 make upload UPKIE_NAME=your_upkie
 ```
 
-Next, log into the Pi and run a pi3hat spine:
+Log into the Pi and run a pi3hat spine:
 
 ```console
 $ ssh user@upkie
