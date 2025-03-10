@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Inria
 
-"""Tiny example: balancing using a proportional wheel controller."""
+"""Tiny example: balancing by PD feedback to wheel velocities."""
 
 import gymnasium as gym
 

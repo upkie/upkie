@@ -28,7 +28,7 @@ user@upkie:~$ pi3hat_spine
 You can then run any agent in a separate shell on the robot, for example the PID balancer from the examples directory:
 
 ```console
-user@upkie:upkie$ python examples/pid_balancer.py
+user@upkie:upkie$ python examples/pi_balancer.py
 ```
 
 ### Build from source {#build-from-source}
@@ -62,5 +62,5 @@ user@upkie:upkie$ make run_pi3hat_spine
 Once the spine is running, you can run any agent in a separate shell on the robot, for example the PID balancer from the examples directory:
 
 ```console
-user@upkie:upkie$ python examples/pid_balancer.py
+user@upkie:upkie$ python examples/pi_balancer.py
 ```
