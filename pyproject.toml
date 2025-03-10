@@ -98,7 +98,7 @@ convention = "numpy"
 
 [tool.pixi.project]
 channels = ["conda-forge"]
-platforms = ["linux-64"]
+platforms = ["linux-64", "linux-aarch64", "osx-arm64"]
 
 [tool.pixi.dependencies]
 gymnasium = ">=0.29.1"
@@ -122,5 +122,13 @@ stable-baselines3 = "*"
 doxygen-version = "doxygen --version"
 make-docs = { cmd = "cd docs && make", depends-on = ["doxygen-version"] }
 
+[tool.pixi.feature.pack.dependencies]
+pixi-pack = "*"
+
+[tool.pixi.feature.pack.tasks]
+pack-to-upkie = "pixi-pack pack -e default --platform linux-aarch64 --ignore-pypi-errors"
+
 [tool.pixi.environments]
+default = { features = [], solve-group = "default" }
 docs = { features = ["docs"], solve-group = "default" }
+pack = { features = ["pack"], solve-group = "default" }
