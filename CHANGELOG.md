@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Bazel: Treat warnings as errors (except the one we can't avoid)
+- Minimum Python version is now 3.9
 - envs: Observation-based reward wrapper
 - envs: Unit test for the base `step` function
 - examples: Group simulation-related examples in a sub-directory

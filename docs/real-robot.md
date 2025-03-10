@@ -25,10 +25,10 @@ Once the spine is installed, start it from a command-line on the robot:
 user@upkie:~$ pi3hat_spine
 ```
 
-You can then run any agent in a separate shell on the robot, for example the wheel balancer:
+You can then run any agent in a separate shell on the robot, for example the PID balancer from the examples directory:
 
 ```console
-user@upkie:upkie$ make run_pid_balancer
+user@upkie:upkie$ python examples/pid_balancer.py
 ```
 
 ### Build from source
@@ -59,8 +59,8 @@ user@upkie:~$ cd upkie
 user@upkie:upkie$ make run_pi3hat_spine
 ```
 
-Once the spine is running, you can run any agent in a separate shell on the robot, for example the wheel balancer:
+Once the spine is running, you can run any agent in a separate shell on the robot, for example the PID balancer from the examples directory:
 
 ```console
-user@upkie:upkie$ make run_pid_balancer
+user@upkie:upkie$ python examples/pid_balancer.py
 ```
