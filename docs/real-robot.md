@@ -10,7 +10,7 @@ The mock spine is useful to run an agent on the robot without firing up the actu
 
 The pi3hat spine is the one that runs on the real robot, where a [pi3hat r4.5](https://mjbots.com/products/mjbots-pi3hat-r4-5) is mounted on top of the onboard Raspberry Pi computer. To run this spine, you can either download it from GitHub, or build it locally from source.
 
-### Download the latest release
+### Download the latest release {#download-the-latest-release}
 
 Assuming your robot is connected to the Internet, you can get the latest pi3hat spine from GitHub using the `upkie_tool` command-line utility:
 
@@ -18,6 +18,8 @@ Assuming your robot is connected to the Internet, you can get the latest pi3hat 
 $ ssh user@upkie
 user@upkie:~$ upkie_tool update
 ```
+
+Alternatively, you can manually go to the [Release page](https://github.com/upkie/upkie/releases), download `pi3hat_spine` from the Assets of the latest release and `scp` it to the `/usr/local/bin` directory of your robot.
 
 Once the spine is installed, start it from a command-line on the robot:
 
