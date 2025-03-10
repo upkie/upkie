@@ -31,7 +31,7 @@ You can then run any agent in a separate shell on the robot, for example the PID
 user@upkie:upkie$ python examples/pid_balancer.py
 ```
 
-### Build from source
+### Build from source {#build-from-source}
 
 To build the pi3hat spine locally from source, then upload it to Raspberry Pi, use the Makefile at the root of the repository:
 
