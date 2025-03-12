@@ -16,7 +16,6 @@ from .upkie_ground_velocity import UpkieGroundVelocity
 from .upkie_servo_positions import UpkieServoPositions
 from .upkie_servo_torques import UpkieServoTorques
 from .upkie_servos import UpkieServos
-from .wheeled_inverted_pendulum import WheeledInvertedPendulum
 
 
 def register() -> None:
@@ -28,7 +27,6 @@ def register() -> None:
         ("UpkieServoPositions", UpkieServoPositions),
         ("UpkieServoTorques", UpkieServoTorques),
         ("UpkieServos", UpkieServos),
-        ("WheeledInvertedPendulum", WheeledInvertedPendulum),
     )
     for env_name, env_class in envs:
         gym.envs.registration.register(
@@ -43,6 +41,5 @@ __all__ = [
     "UpkieServoPositions",
     "UpkieServoTorques",
     "UpkieServos",
-    "WheeledInvertedPendulum",
     "register",
 ]
