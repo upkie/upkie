@@ -35,7 +35,13 @@ user@upkie:upkie$ python examples/pi_balancer.py
 
 ### Build from source {#build-from-source}
 
-To build the pi3hat spine locally from source, then upload it to Raspberry Pi, use the Makefile at the root of the repository:
+If your operating system is a Debian-based Linux distribution like Ubuntu 20.04, you will need to install the following dependency (also discussed in [#42](https://github.com/orgs/upkie/discussions/42)):
+
+```console
+sudo apt install libtinfo5  # only needed for Debian-based Linux distributions
+```
+
+To build the pi3hat spine locally from source, use the Makefile at the root of the repository as follows:
 
 ```console
 make build
