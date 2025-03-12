@@ -64,17 +64,6 @@ py_library(
 )
 
 py_library(
-    name = "wheeled_inverted_pendulum",
-    srcs = [
-        "wheeled_inverted_pendulum.py",
-    ],
-    deps = [
-        "//upkie/envs/rewards",
-        "//upkie/model",
-    ],
-)
-
-py_library(
     name = "envs",
     srcs = [
         "__init__.py",
@@ -85,7 +74,6 @@ py_library(
         ":upkie_servo_positions",
         ":upkie_servo_torques",
         ":upkie_servos",
-        ":wheeled_inverted_pendulum",
     ],
 )
 
