@@ -126,7 +126,7 @@ make-docs = { cmd = "cd docs && make", depends-on = ["doxygen-version"] }
 pixi-pack = "*"
 
 [tool.pixi.feature.pack.tasks]
-pack-to-upkie = "pixi-pack pack -e default --platform linux-aarch64 --ignore-pypi-errors"
+pack-to-aarch64 = "pixi-pack pack -e default --platform linux-aarch64 --ignore-pypi-errors"
 
 [tool.pixi.environments]
 default = { features = [], solve-group = "default" }

@@ -7678,8 +7678,8 @@ packages:
   timestamp: 1736692768349
 - pypi: .
   name: upkie
-  version: 6.1.0
-  sha256: 6ca17f9d392cd9a2acd854508f729fac5cf1a635472a607a9f0aa6db89c66e20
+  version: 7.0.0
+  sha256: 6bddcded99f8cd9f6f3f330e248f5e7d57218d42ae80af7af99ddd972e58135c
   requires_dist:
   - gymnasium>=0.29.1
   - loop-rate-limiters>=1.0.0

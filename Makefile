@@ -82,7 +82,7 @@ upload: check_upkie_name build set_date  ## upload built targets to the Raspberr
 		--progress $(CURDIR)/ ${UPKIE_NAME}:$(PROJECT_NAME)/
 
 pack_env:  ## pack pixi environment to environment.tar
-	pixi run pack-to-upkie
+	pixi run pack-to-aarch64
 
 # REMOTE TARGETS
 # ==============
