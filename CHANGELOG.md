@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+#### Added
+
+- docs: Install `libtinfo5` when building from source on Debian-based distros
+
 ## [7.0.0] - 2025-03-10
 
 ### Added
