@@ -8,7 +8,7 @@
 [![Conda version](https://img.shields.io/conda/vn/conda-forge/upkie.svg)](https://anaconda.org/conda-forge/upkie)
 [![PyPI version](https://img.shields.io/pypi/v/upkie)](https://pypi.org/project/upkie/)
 
-**Upkie** is an open source wheeled biped robot. It has wheels for balancing and legs to negotiate uneven terrains. Upkies are designed to be buildable using only tools and components ordered online, like mjbots actuators. You can develop in Python or C++, on Linux or macOS, then deploy your agent to the robot's Raspberry Pi. Here are some [videos](https://www.youtube.com/@upkie) of Upkies in action.
+**Upkie** is an open source wheeled biped robot. It has wheels for balancing and legs to negotiate uneven terrains. Upkies are designed to be buildable using only tools and components ordered online, like mjbots actuators. You can develop in Python or C++, on Linux or macOS, then deploy your agent to the robot's Raspberry Pi.
 
 This repository contains all the materials needed to build and control an Upkie:
 
@@ -20,9 +20,9 @@ This repository contains all the materials needed to build and control an Upkie:
     - [Installation](https://github.com/upkie/upkie#installation)
     - [Getting started](https://github.com/upkie/upkie#getting-started)
     - [Documentation](https://upkie.github.io/upkie/)
-- Going further:
+- See also:
     - [Examples](https://github.com/upkie/upkie/tree/main/examples)
-    - [Agents](https://github.com/upkie/upkie#agents)
+    - [Videos](https://www.youtube.com/@upkie)
 
 Questions are welcome in the [Chat](https://matrix.to/#/#upkie:matrix.org) and [Discussions forum](https://github.com/upkie/upkie/discussions).
 
