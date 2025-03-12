@@ -1,17 +1,13 @@
+*.egg-info
+.pixi
 __pycache__
 bazel-*
 cache/
 dist/
 docs/html/
+environment.tar
 tools/bazel
 tools/logs/*.mpack
 tools/logs/*.tar.*
 training/
 wiki/
-
-# pixi environments
-*.egg-info
-.pixi
-activate.sh
-env/
-environment.tar
