@@ -8,23 +8,9 @@
 [![Conda version](https://img.shields.io/conda/vn/conda-forge/upkie.svg)](https://anaconda.org/conda-forge/upkie)
 [![PyPI version](https://img.shields.io/pypi/v/upkie)](https://pypi.org/project/upkie/)
 
-**Upkie** is an open source wheeled biped robot. It has wheels for balancing and legs to negotiate uneven terrains. Upkies are designed to be buildable using only tools and components ordered online, like mjbots actuators. You can develop in Python or C++, on Linux or macOS, then deploy your agent to the robot's Raspberry Pi.
+**Upkie** is an open source wheeled biped robot. It has wheels for balancing and legs to negotiate uneven terrains. Upkies are designed to be buildable using only tools and components ordered online, like mjbots actuators. You can develop in Python or C++, on Linux or macOS, then deploy your agent to the robot's Raspberry Pi. Here are some videos of [Upkies in action](https://www.youtube.com/@upkie).
 
-This repository contains all the materials needed to build and control an Upkie:
-
-- Hardware:
-    - [Bill of materials](https://github.com/upkie/upkie/wiki/Bill-of-materials)
-    - [Build instructions](https://github.com/upkie/upkie/wiki)
-    - [Project log](https://hackaday.io/project/185729-upkie-wheeled-biped-robots)
-- Software:
-    - [Installation](https://github.com/upkie/upkie#installation)
-    - [Getting started](https://github.com/upkie/upkie#getting-started)
-    - [Documentation](https://upkie.github.io/upkie/)
-- See also:
-    - [Examples](https://github.com/upkie/upkie/tree/main/examples)
-    - [Videos](https://www.youtube.com/@upkie)
-
-Questions are welcome in the [Chat](https://matrix.to/#/#upkie:matrix.org) and [Discussions forum](https://github.com/upkie/upkie/discussions).
+This repository contains all the materials needed to build and control an Upkie: [build instructions](https://github.com/upkie/upkie/wiki), [documentation](https://upkie.github.io/upkie/) and [examples](https://github.com/upkie/upkie/tree/main/examples). Questions are welcome in the [Chat](https://matrix.to/#/#upkie:matrix.org) and [Discussions forum](https://github.com/upkie/upkie/discussions).
 
 ## Installation
 
