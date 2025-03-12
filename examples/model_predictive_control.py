@@ -102,7 +102,7 @@ def run(env: gym.Env, nb_env_steps: int = 10_000) -> None:
         plan = solve_mpc(mpc_problem, solver="proxqp")
         dt = env.unwrapped.dt
         if not plan.is_empty:
-            commanded_accel = plan.first_input
+            commanded_accel = plan.first_input[0]
             commanded_velocity = clamp_and_warn(
                 commanded_velocity + commanded_accel * dt / 2.0,
                 lower=-1.0,
