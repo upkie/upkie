@@ -7,7 +7,6 @@
 """Pitch-position PI balancing controller."""
 
 import gymnasium as gym
-
 import upkie.envs
 from upkie.utils.raspi import configure_agent_process, on_raspi
 
@@ -32,10 +31,10 @@ def main(
         pitch_integrator += pitch * dt
         position_integrator += position * dt
         commanded_velocity = (
-            pitch_kp.value * pitch
-            + pitch_ki.value * pitch_integrator
-            + position_kp.value * position
-            + position_ki.value * position_integrator
+            pitch_kp * pitch
+            + pitch_ki * pitch_integrator
+            + position_kp * position
+            + position_ki * position_integrator
         )
         action[0] = commanded_velocity
         observation, reward, terminated, truncated, _ = env.step(action)
