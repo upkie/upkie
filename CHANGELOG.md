@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - docs: Install `libtinfo5` when building from source on Debian-based distros
 
+### Fixed
+
+- examples: Fix warning in model predictive control example
+
 ### Removed
 
 - envs: Remove unused `WheeledInvertedPendulum` environment
