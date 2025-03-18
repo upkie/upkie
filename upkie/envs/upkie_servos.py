@@ -26,11 +26,11 @@ class UpkieServos(UpkieBaseEnv):
     The action space is a dictionary with one key for each servo:
 
     - `left_hip`: left hip joint (qdd100)
-    - `left_hip`: left knee joint (qdd100)
-    - `left_hip`: left wheel joint (mj5208)
+    - `left_knee`: left knee joint (qdd100)
+    - `left_wheel`: left wheel joint (mj5208)
     - `right_hip`: right hip joint (qdd100)
-    - `right_hip`: right knee joint (qdd100)
-    - `right_hip`: right wheel joint (mj5208)
+    - `right_knee`: right knee joint (qdd100)
+    - `right_wheel`: right wheel joint (mj5208)
 
     The value for each servo dictionary is itself a dictionary with the
     following keys:
