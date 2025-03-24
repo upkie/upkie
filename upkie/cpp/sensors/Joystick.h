@@ -38,7 +38,7 @@ constexpr double kJoystickDeadband = 0.1;
  * | `right_button` | float | R1 on PS4, R on Xbox |
  *
  * Note that the **red button** (circle on PS4, B on Xbox) serves as **emergency
- * stop** 🚨.
+ * stop** 🚨: when it is pressed, the spine will terminate.
  *
  * ### Continus axes
  *
