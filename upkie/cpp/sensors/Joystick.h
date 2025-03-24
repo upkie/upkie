@@ -19,10 +19,42 @@ constexpr double kJoystickDeadband = 0.1;
 
 /*! Sensor for a joystick controller.
  *
- * Axes are the same for PS4 and Xbox controllers, but buttons differ slightly.
- * See comments in the C++ code of the class for the exact mapping.
- *
  * \note This sensor only works on Linux.
+ *
+ * Axes are the same for PS4 and Xbox controllers, but buttons differ slightly.
+ *
+ * ## Outputs
+ *
+ * This sensor has the following outputs:
+ *
+ * ### Buttons
+ *
+ * | Key | Type | Description |
+ * |-----|------|-------------|
+ * | `cross_button` | float | bottom button (cross on PS4, A on Xbox) |
+ * | `square_button` | float | left button (square on PS4, Y on Xbox) |
+ * | `triangle_button` | float | top button (triangle on PS4, X on Xbox) |
+ * | `left_button` | float | L1 on PS4, L on Xbox |
+ * | `right_button` | float | R1 on PS4, R on Xbox |
+ *
+ * Note that the **red button** (circle on PS4, B on Xbox) serves as **emergency
+ * stop** 🚨.
+ *
+ * ### Continus axes
+ *
+ * | Key | Type | Description |
+ * |-----|------|-------------|
+ * | `left_axis` | [float, float] | left analog joystick |
+ * | `right_axis` | [float, float] | right analog joystick |
+ * | `left_trigger` | float | left trigger if there is one (L2 on PS4) |
+ * | `right_trigger` | float | right trigger if there is one (R2 on PS4) |
+ *
+ * ### Discrete axes
+ *
+ * | Key | Type | Description |
+ * |-----|------|-------------|
+ * | `pad_axis` | [float, float] | directional pad |
+ *
  */
 class Joystick : public Sensor {
  public:
