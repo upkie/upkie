@@ -170,29 +170,32 @@ class CommandLineArguments {
 
 /*! Connect sensors to the observation pipeline.
  *
- * \param[in] observation Observation pipeline.
  * \param[in] interface Actuation interface.
  */
-void connect_sensors(ObserverPipeline& observation,
-                     const BulletInterface& interface) {
+SensorPipeline connect_sensors(const BulletInterface& interface) {
+  SensorPipeline sensors;
+
   auto cpu_temperature = std::make_shared<CpuTemperature>();
-  observation.connect_sensor(cpu_temperature);
+  sensors.connect_sensor(cpu_temperature);
 
 #ifndef __APPLE__
   auto joystick = std::make_shared<Joystick>();
   if (joystick->present()) {
     spdlog::info("Joystick found");
-    observation.connect_sensor(joystick);
+    sensors.connect_sensor(joystick);
   }
 #endif
+
+  return sensors;
 }
 
 /*! Append observers (in a given order) to the observation pipeline.
  *
- * \param[in] observation Observation pipeline.
  * \param[in] spine_frequency Spine frequency in [Hz].
  */
-void append_observers(ObserverPipeline& observation, unsigned spine_frequency) {
+ObserverPipeline append_observers(unsigned spine_frequency) {
+  ObserverPipeline observation;
+
   BaseOrientation::Parameters base_orientation_params;
   auto base_orientation =
       std::make_shared<BaseOrientation>(base_orientation_params);
@@ -207,6 +210,8 @@ void append_observers(ObserverPipeline& observation, unsigned spine_frequency) {
   odometry_params.dt = 1.0 / spine_frequency;
   auto odometry = std::make_shared<WheelOdometry>(odometry_params);
   observation.append_observer(odometry);
+
+  return observation;
 }
 
 /*! Create the actuation interface.
@@ -256,12 +261,9 @@ int run_spine(const char* argv0, const CommandLineArguments& args) {
   spdlog::info("Spine data logged to {}", params.log_path);
 
   BulletInterface interface = make_actuation_interface(argv0, args);
-
-  ObserverPipeline observation;
-  connect_sensors(observation, interface);
-  append_observers(observation, args.spine_frequency);
-
-  Spine spine(params, interface, observation);
+  SensorPipeline sensors = make_sensors(interface);
+  ObserverPipeline observers = make_observers(args.spine_frequency);
+  Spine spine(params, interface, sensors, observers);
   if (args.nb_substeps == 0u) {
     spine.run();
   } else /* args.nb_substeps > 0 */ {

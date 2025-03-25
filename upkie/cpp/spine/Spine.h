@@ -14,6 +14,7 @@
 
 #include "upkie/cpp/actuation/Interface.h"
 #include "upkie/cpp/observers/ObserverPipeline.h"
+#include "upkie/cpp/sensors/SensorPipeline.h"
 #include "upkie/cpp/spine/AgentInterface.h"
 #include "upkie/cpp/spine/StateMachine.h"
 #include "upkie/cpp/utils/SynchronousClock.h"

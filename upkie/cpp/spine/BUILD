@@ -52,6 +52,7 @@ cc_library(
         "//upkie/cpp/observers:observe_servos",
         "//upkie/cpp/observers:observe_time",
         "//upkie/cpp/observers:observer_pipeline",
+        "//upkie/cpp/sensors:sensor_pipeline",
         "//upkie/cpp/utils:realtime",
         "//upkie/cpp/utils:synchronous_clock",
         ":state_machine",

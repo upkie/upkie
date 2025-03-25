@@ -189,7 +189,7 @@ void Spine::cycle_actuation() {
     if (state_machine_.state() != State::kSendStops &&
         state_machine_.state() != State::kShutdown) {
       try {
-        observer_pipeline_.run_observers(observation);
+        observer_pipeline_.run(observation);
       } catch (const exceptions::ObserverError& e) {
         spdlog::info("Key error from {}: key \"{}\" not found", e.prefix(),
                      e.key());
