@@ -18,6 +18,7 @@
 #include "upkie/cpp/observers/ObserverPipeline.h"
 #include "upkie/cpp/observers/WheelOdometry.h"
 #include "upkie/cpp/sensors/CpuTemperature.h"
+#include "upkie/cpp/sensors/SensorPipeline.h"
 #include "upkie/cpp/spine/Spine.h"
 #include "upkie/cpp/utils/clear_shared_memory.h"
 #include "upkie/cpp/utils/get_log_path.h"
@@ -36,6 +37,7 @@ using upkie::cpp::observers::FloorContact;
 using upkie::cpp::observers::ObserverPipeline;
 using upkie::cpp::observers::WheelOdometry;
 using upkie::cpp::sensors::CpuTemperature;
+using upkie::cpp::sensors::SensorPipeline;
 using upkie::cpp::spine::Spine;
 using upkie::cpp::utils::clear_shared_memory;
 using upkie::cpp::utils::get_log_path;
@@ -172,7 +174,7 @@ class CommandLineArguments {
  *
  * \param[in] interface Actuation interface.
  */
-SensorPipeline connect_sensors(const BulletInterface& interface) {
+SensorPipeline make_sensors(const BulletInterface& interface) {
   SensorPipeline sensors;
 
   auto cpu_temperature = std::make_shared<CpuTemperature>();
@@ -193,7 +195,7 @@ SensorPipeline connect_sensors(const BulletInterface& interface) {
  *
  * \param[in] spine_frequency Spine frequency in [Hz].
  */
-ObserverPipeline append_observers(unsigned spine_frequency) {
+ObserverPipeline make_observers(unsigned spine_frequency) {
   ObserverPipeline observation;
 
   BaseOrientation::Parameters base_orientation_params;
