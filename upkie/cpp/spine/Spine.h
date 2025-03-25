@@ -43,6 +43,7 @@ constexpr size_t kMebibytes = 1 << 20;
 class Spine {
   using ObserverPipeline = upkie::cpp::observers::ObserverPipeline;
   using Output = upkie::cpp::actuation::moteus::Output;
+  using SensorPipeline = upkie::cpp::sensors::SensorPipeline;
   using ServoReply = upkie::cpp::actuation::moteus::ServoReply;
 
  public:
@@ -68,11 +69,12 @@ class Spine {
    *
    * \param[in] params Spine parameters.
    * \param[in, out] interface Interface to actuators.
+   * \param[in, out] sensors Pipeline of sensors to read from.
    * \param[in, out] observers Pipeline of observers to run, in that order, at
    *     each cycle.
    */
   Spine(const Parameters& params, actuation::Interface& interface,
-        ObserverPipeline& observers);
+        SensorPipeline& sensors, ObserverPipeline& observers);
 
   /*! Reset the spine with a new configuration.
    *
@@ -118,7 +120,7 @@ class Spine {
    *
    * A cycle consists in:
    *
-   * 1. Run the observer pipeline over the latest reply
+   * 1. Run sensors and observers over the latest reply
    * 2. Prepare servo commands
    * 3. Wait to receive the reply from the previous cycle over the interface
    * 4. If applicable, start the next cycle:
@@ -157,6 +159,9 @@ class Spine {
 
   //! All data from observation to action goes to this dictionary.
   palimpsest::Dictionary working_dict_;
+
+  //! Pipeline of sensors, executed in that order.
+  SensorPipeline sensor_pipeline_;
 
   //! Pipeline of observers, executed in that order.
   ObserverPipeline observer_pipeline_;
