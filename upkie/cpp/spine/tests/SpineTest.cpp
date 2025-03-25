@@ -70,9 +70,9 @@ class SpineTest : public ::testing::Test {
     actuation_interface_ = std::make_unique<actuation::MockInterface>(dt);
 
     schwifty_observer_ = std::make_unique<observers::SchwiftyObserver>();
-    observation_.append_observer(schwifty_observer_);
+    observers_.append_observer(schwifty_observer_);
     spine_ = std::make_unique<TestSpine>(params_, *actuation_interface_,
-                                         observation_);
+                                         sensors_, observers_);
     int file_descriptor =
         ::shm_open(params_.shm_name.c_str(), O_RDWR | O_CREAT, 0666);
     ASSERT_GE(file_descriptor, 0);
@@ -136,8 +136,11 @@ class SpineTest : public ::testing::Test {
   //! Test observer
   std::shared_ptr<observers::SchwiftyObserver> schwifty_observer_;
 
+  //! Test sensors
+  sensors::SensorPipeline sensors_;
+
   //! Test observers
-  observers::ObserverPipeline observation_;
+  observers::ObserverPipeline observers_;
 
   //! Test spine
   std::unique_ptr<TestSpine> spine_;
