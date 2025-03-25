@@ -162,10 +162,10 @@ class Spine {
   palimpsest::Dictionary working_dict_;
 
   //! Pipeline of sensors, executed in that order.
-  SensorPipeline sensor_pipeline_;
+  SensorPipeline sensors_;
 
   //! Pipeline of observers, executed in that order.
-  ObserverPipeline observer_pipeline_;
+  ObserverPipeline observers_;
 
   //! Logger for the \ref working_dict_ produced at each cycle.
   mpacklog::Logger logger_;
