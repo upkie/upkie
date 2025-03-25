@@ -30,8 +30,8 @@ Spine::Spine(const Parameters& params, actuation::Interface& actuation,
     : frequency_(params.frequency),
       actuation_(actuation),
       agent_interface_(params.shm_name, params.shm_size),
-      sensor_pipeline_(sensors),
-      observer_pipeline_(observers),
+      sensors_(sensors),
+      observers_(observers),
       logger_(params.log_path),
       caught_interrupt_(utils::handle_interrupts()),
       state_machine_(agent_interface_),
@@ -66,7 +66,7 @@ void Spine::reset(const Dictionary& config) {
   actuation_.reset(config);
   action.clear();
   actuation_.reset_action(action);
-  observer_pipeline_.reset(config);
+  observers_.reset(config);
   spdlog::info("Spine configured with:\n\n{}\n", config);
 }
 
@@ -184,12 +184,12 @@ void Spine::cycle_actuation() {
     observers::observe_servos(observation, actuation_.servo_name_map(),
                               servo_replies_);
     actuation_.observe(observation);
-    sensor_pipeline_.run(observation);
+    sensors_.run(observation);
     // Observers need configuration, so they cannot run at stop
     if (state_machine_.state() != State::kSendStops &&
         state_machine_.state() != State::kShutdown) {
       try {
-        observer_pipeline_.run(observation);
+        observers_.run(observation);
       } catch (const exceptions::ObserverError& e) {
         spdlog::info("Key error from {}: key \"{}\" not found", e.prefix(),
                      e.key());
