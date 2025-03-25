@@ -48,8 +48,21 @@ cc_library(
 )
 
 cc_library(
+    name = "sensor_pipeline",
+    hdrs = ["SensorPipeline.h"],
+    srcs = [
+        "SensorPipeline.cpp",
+    ],
+    deps = [
+        ":sensor",
+    ],
+)
+
+cc_library(
     name = "sensors",
-    deps =  select({
+    deps =  [
+        ":sensor_pipeline",
+    ] + select({
         "@//:linux": [":joystick", ":cpu_temperature", ":keyboard"],
         "@//conditions:default": [":cpu_temperature", ":keyboard"],
     }),

@@ -15,8 +15,8 @@ using palimpsest::Dictionary;
 /*! Base class for sensors.
  *
  * Sensors run before observers. They write their observations without reading
- * other observations from the pipeline, although they may of course read data
- * from other media (such as the file system).
+ * other observations from the pipeline, although they may read data from other
+ * media (such as the file system).
  */
 class Sensor {
  public:

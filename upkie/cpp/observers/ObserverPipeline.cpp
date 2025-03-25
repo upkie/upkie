@@ -19,9 +19,6 @@ void ObserverPipeline::reset(const Dictionary& config) {
 }
 
 void ObserverPipeline::run(Dictionary& observation) {
-  for (auto sensor : sensors_) {
-    sensor->write(observation);
-  }
   for (auto observer : observers_) {
     try {
       observer->read(observation);

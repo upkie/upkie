@@ -26,10 +26,11 @@ using palimpsest::Dictionary;
 using upkie::cpp::actuation::moteus::Output;
 
 Spine::Spine(const Parameters& params, actuation::Interface& actuation,
-             ObserverPipeline& observers)
+             SensorPipeline& sensors, ObserverPipeline& observers)
     : frequency_(params.frequency),
       actuation_(actuation),
       agent_interface_(params.shm_name, params.shm_size),
+      sensor_pipeline_(sensors),
       observer_pipeline_(observers),
       logger_(params.log_path),
       caught_interrupt_(utils::handle_interrupts()),
@@ -183,11 +184,12 @@ void Spine::cycle_actuation() {
     observers::observe_servos(observation, actuation_.servo_name_map(),
                               servo_replies_);
     actuation_.observe(observation);
+    sensor_pipeline_.run(observation);
     // Observers need configuration, so they cannot run at stop
     if (state_machine_.state() != State::kSendStops &&
         state_machine_.state() != State::kShutdown) {
       try {
-        observer_pipeline_.run(observation);
+        observer_pipeline_.run_observers(observation);
       } catch (const exceptions::ObserverError& e) {
         spdlog::info("Key error from {}: key \"{}\" not found", e.prefix(),
                      e.key());
