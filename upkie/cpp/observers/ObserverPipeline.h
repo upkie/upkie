@@ -53,14 +53,8 @@ class ObserverPipeline {
   //! Sensors of the pipeline.
   std::vector<std::shared_ptr<Sensor>>& sensors() { return sensors_; }
 
-  //! Number of sensors in the pipeline.
-  size_t nb_sensors() { return sensors_.size(); }
-
   //! Observers of the pipeline. Order matters.
   std::vector<std::shared_ptr<Observer>>& observers() { return observers_; }
-
-  //! Number of observers in the pipeline.
-  size_t nb_observers() { return observers_.size(); }
 
   /*! Run observer pipeline on an observation dictionary.
    *

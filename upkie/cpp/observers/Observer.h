@@ -11,7 +11,10 @@ namespace upkie::cpp::observers {
 
 using palimpsest::Dictionary;
 
-//! Base class for observers.
+/*! Base class for observers.
+ *
+ * Observers read and write from/to observation dictionaries.
+ */
 class Observer {
  public:
   //! Destructor is virtual to deallocate lists of observers properly.
