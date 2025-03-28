@@ -155,7 +155,6 @@ class UpkieServos(gym.Env):
         regulate_frequency: bool = True,
         shm_name: str = "/upkie",
         spine_config: Optional[dict] = None,
-        spine_retries: int = 10,
     ) -> None:
         r"""!
         Initialize environment.
@@ -176,8 +175,6 @@ class UpkieServos(gym.Env):
         \param spine_config Additional spine configuration overriding the
             default `upkie.config.SPINE_CONFIG`. The combined configuration
             dictionary is sent to the spine at every reset.
-        \param spine_retries Number of times to try opening the shared-memory
-            file to communicate with the spine.
 
         \throw SpineError If the spine did not respond after the prescribed
             number of trials.
@@ -314,7 +311,7 @@ class UpkieServos(gym.Env):
         self.__neutral_action = neutral_action
         self.__rate = None
         self.__regulate_frequency = regulate_frequency
-        self._spine = SpineInterface(shm_name, retries=spine_retries)
+        self._spine = SpineInterface(shm_name, retries=10)
         self._spine_config = merged_spine_config
         self.init_state = init_state
         self.model = model
