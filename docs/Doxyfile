@@ -865,8 +865,8 @@ WARN_LOGFILE           =
 # Note: If this tag is empty the current directory is searched.
 
 INPUT                  = README.md \
+                         docs/gym-environments.md \
                          docs/kinematics.md \
-                         docs/environments.md \
                          docs/observations.md \
                          docs/simulation.md \
                          docs/real-robot.md \
