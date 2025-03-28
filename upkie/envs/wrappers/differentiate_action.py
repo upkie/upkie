@@ -72,7 +72,7 @@ class DifferentiateAction(gym.Wrapper):
 
         \param action Action from the agent.
         \return Tuple with (observation, reward, terminated, truncated,info).
-            See \ref upkie.envs.upkie_base_env.UpkieBaseEnv.step for details.
+            See \ref upkie.envs.upkie_servos.UpkieServos.step for details.
         """
         self._integral = np.clip(
             self._integral + action * self.env.unwrapped.dt,

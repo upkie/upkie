@@ -83,7 +83,7 @@ class AddLagToAction(gym.Wrapper):
 
         \param action Action from the agent.
         \return Tuple with (observation, reward, terminated, truncated,info).
-            See \ref upkie.envs.upkie_base_env.UpkieBaseEnv.step for details.
+            See \ref upkie.envs.upkie_servos.UpkieServos.step for details.
         """
         dt = self.env.unwrapped.dt
         if self.time_constant <= 2.0 * dt:

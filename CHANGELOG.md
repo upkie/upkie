@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - envs: Increase version number of `UpkieGroundVelocity`
 - envs: Increase version number of `UpkieServos`
 - envs: Merge base and servos environments
+- envs: Refactor `UpkieGroundVelocity` environment
 
 ### Fixed
 

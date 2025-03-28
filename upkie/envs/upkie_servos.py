@@ -18,20 +18,18 @@ from upkie.spine import SpineInterface
 from upkie.utils.clamp import clamp_and_warn
 from upkie.utils.nested_update import nested_update
 from upkie.utils.robot_state import RobotState
-from upkie.utils.spdlog import logging
 
 
 class UpkieServos(gym.Env):
     r"""!
     Base Upkie environment where actions command servomotors directly.
 
-    \anchor upkie_base_env_description
+    \anchor upkie_servos_description
 
     Actions and observations correspond to the moteus servo API. Under the
     hood, the environment provides a number of features:
 
     - Communication with the spine process.
-    - Fall detection.
     - Initial state randomization (e.g. when training a policy).
     - Loop frequency regulation (optional).
 
@@ -39,8 +37,6 @@ class UpkieServos(gym.Env):
     downside for reinforcement learning is that computations are not massively
     parallel. The upside is that it simplifies deployment to the real robot, as
     it relies on the same spine interface that runs on real robots.
-
-    \anchor upkie_servos_description
 
     ### Action space
 
@@ -134,10 +130,6 @@ class UpkieServos(gym.Env):
     ## Action space.
     action_space: gym.spaces.dict.Dict
 
-    ## \var fall_pitch
-    ## Fall detection pitch angle, in radians.
-    fall_pitch: float
-
     ## \var init_state
     ## Initial state for the floating base of the robot, which may be
     ## randomized upon resets.
@@ -157,7 +149,6 @@ class UpkieServos(gym.Env):
 
     def __init__(
         self,
-        fall_pitch: float = 1.0,
         frequency: Optional[float] = 200.0,
         frequency_checks: bool = True,
         init_state: Optional[RobotState] = None,
@@ -169,7 +160,6 @@ class UpkieServos(gym.Env):
         r"""!
         Initialize environment.
 
-        \param fall_pitch Fall detection pitch angle, in radians.
         \param frequency Regulated frequency of the control loop, in Hz. Can be
             prescribed even when `regulate_frequency` is unset, in which case
             `self.dt` will be defined but the loop frequency will not be
@@ -208,7 +198,8 @@ class UpkieServos(gym.Env):
         min_action = {}
         servo_space = {}
 
-        for joint in self.model.joints:
+        model = Model(upkie_description.URDF_PATH)
+        for joint in model.joints:
             action_space[joint.name] = gym.spaces.Dict(
                 {
                     "position": gym.spaces.Box(
@@ -325,9 +316,8 @@ class UpkieServos(gym.Env):
         self.__regulate_frequency = regulate_frequency
         self._spine = SpineInterface(shm_name, retries=spine_retries)
         self._spine_config = merged_spine_config
-        self.fall_pitch = fall_pitch
         self.init_state = init_state
-        self.model = Model(upkie_description.URDF_PATH)
+        self.model = model
 
     def __del__(self):
         """!
@@ -398,7 +388,7 @@ class UpkieServos(gym.Env):
         self.__reset_rate()
         self.__reset_init_state()
         spine_observation = self._spine.start(self._spine_config)
-        observation = self.get_env_observation(spine_observation)
+        observation = self.__get_observation(spine_observation)
         info = {"spine_observation": spine_observation}
         return observation, info
 
@@ -458,7 +448,7 @@ class UpkieServos(gym.Env):
             self.log("rate", {"slack": self.__rate.slack})
 
         # Prepare spine action
-        spine_action = self.get_spine_action(action)
+        spine_action = self.__get_spine_action(action)
         for key in ("bullet", "log"):
             if not self.__extras[key]:
                 continue
@@ -470,34 +460,14 @@ class UpkieServos(gym.Env):
         spine_observation = self._spine.set_action(spine_action)
 
         # Process spine observation
-        observation = self.get_env_observation(spine_observation)
+        observation = self.__get_observation(spine_observation)
         reward = 1.0  # ready for e.g. an ObservationBasedReward wrapper
-        terminated = self.detect_fall(spine_observation)
+        terminated = False
         truncated = False  # will be handled by e.g. a TimeLimit wrapper
         info = {"spine_observation": spine_observation}
         return observation, reward, terminated, truncated, info
 
-    def detect_fall(self, spine_observation: dict) -> bool:
-        r"""!
-        Detect a fall based on the base-to-world pitch angle.
-
-        \param spine_observation Observation dictionary with a
-            "base_orientation" key. This requires the \ref
-            upkie::cpp::observers::BaseOrientation observer in the spine's
-            observer pipeline.
-        \return True if and only if a fall is detected.
-        """
-        pitch = spine_observation["base_orientation"]["pitch"]
-        if abs(pitch) > self.fall_pitch:
-            logging.warning(
-                "Fall detected (pitch=%.2f rad, fall_pitch=%.2f rad)",
-                abs(pitch),
-                self.fall_pitch,
-            )
-            return True
-        return False
-
-    def get_env_observation(self, spine_observation: dict):
+    def __get_observation(self, spine_observation: dict):
         r"""!
         Extract environment observation from spine observation dictionary.
 
@@ -517,7 +487,7 @@ class UpkieServos(gym.Env):
             for joint in self.model.joints
         }
 
-    def get_spine_action(self, env_action: dict) -> dict:
+    def __get_spine_action(self, env_action: dict) -> dict:
         r"""!
         Convert environment action to a spine action dictionary.
 
