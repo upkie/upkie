@@ -7,6 +7,7 @@
 """Pitch-position PI balancing controller."""
 
 import gymnasium as gym
+
 import upkie.envs
 from upkie.utils.raspi import configure_agent_process, on_raspi
 
