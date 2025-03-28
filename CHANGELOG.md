@@ -15,11 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - cpp: Spine constructor now takes an additional sensor-pipeline argument
-- envs: Increase version number of `UpkieGroundVelocity`
-- envs: Increase version number of `UpkieServos`
-- envs: Merge base and servos environments
-- envs: Refactor `UpkieGroundVelocity` environment
 - envs: Hard-code spine retries to ten attempts
+- envs: Make `UpkieGroundVelocity` a wrapper around `UpkieServos`
+- envs: Merge base and servos environments
 
 ### Fixed
 

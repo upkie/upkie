@@ -16,22 +16,39 @@ from .upkie_servo_positions import UpkieServoPositions
 from .upkie_servo_torques import UpkieServoTorques
 from .upkie_servos import UpkieServos
 
+UPKIE_SERVOS_KWARGS = (
+    "frequency",
+    "frequency_checks",
+    "init_state",
+    "regulate_frequency",
+    "shm_name",
+    "spine_config",
+)
+
+
+def make_upkie_ground_velocity(**kwargs):
+    servos_kwargs = {
+        key: value for key, value in kwargs.items() if key in UPKIE_SERVOS_KWARGS
+    }
+    ground_velocity_kwargs = {
+        key: value
+        for key, value in kwargs.items()
+        if key not in UPKIE_SERVOS_KWARGS
+    }
+    env = UpkieServos(**servos_kwargs)
+    return UpkieGroundVelocity(env, **ground_velocity_kwargs)
+
 
 def register() -> None:
-    """!
-    Register Upkie environments with Gymnasium.
-    """
-    envs = (
-        ("UpkieGroundVelocity", UpkieGroundVelocity),
-        ("UpkieServoPositions", UpkieServoPositions),
-        ("UpkieServoTorques", UpkieServoTorques),
-        ("UpkieServos", UpkieServos),
+    gym.envs.registration.register(
+        id=f"UpkieServos-v{UpkieServos.version}",
+        entry_point="upkie.envs:UpkieServos",
     )
-    for env_name, env_class in envs:
-        gym.envs.registration.register(
-            id=f"{env_name}-v{env_class.version}",
-            entry_point=f"upkie.envs:{env_name}",
-        )
+
+    gym.envs.registration.register(
+        id=f"UpkieGroundVelocity-v{UpkieGroundVelocity.version}",
+        entry_point="upkie.envs:make_upkie_ground_velocity",
+    )
 
 
 __all__ = [

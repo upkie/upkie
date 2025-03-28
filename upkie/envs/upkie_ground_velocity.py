@@ -14,13 +14,12 @@ import numpy as np
 from upkie.exceptions import UpkieException
 from upkie.utils.clamp import clamp_and_warn
 from upkie.utils.filters import low_pass_filter
-from upkie.utils.robot_state import RobotState
 from upkie.utils.spdlog import logging
 
 from .upkie_servos import UpkieServos
 
 
-class UpkieGroundVelocity(gym.Env):
+class UpkieGroundVelocity(gym.Wrapper):
     r"""!
     Environment where Upkie is used as a wheeled inverted pendulum.
 
@@ -108,51 +107,28 @@ class UpkieGroundVelocity(gym.Env):
 
     def __init__(
         self,
+        env: UpkieServos,
         fall_pitch: float = 1.0,
-        frequency: float = 200.0,
-        frequency_checks: bool = True,
-        init_state: Optional[RobotState] = None,
         left_wheeled: bool = True,
         max_ground_velocity: float = 1.0,
-        regulate_frequency: bool = True,
-        shm_name: str = "/upkie",
-        spine_config: Optional[dict] = None,
         wheel_radius: float = 0.06,
     ):
         r"""!
         Initialize environment.
 
+        \param env UpkieServos environment to command servomotors.
         \param fall_pitch Fall detection pitch angle, in radians.
-        \param frequency Regulated frequency of the control loop, in Hz.
-        \param frequency_checks If `regulate_frequency` is set and this
-            parameter is true (default), a warning is issued every time the
-            control loop runs slower than the desired `frequency`. Set this
-            parameter to false to disable these warnings.
-        \param init_state Initial state of the robot, only used in simulation.
         \param left_wheeled Set to True (default) if the robot is left wheeled,
             that is, a positive turn of the left wheel results in forward
             motion. Set to False for a right-wheeled variant.
         \param max_ground_velocity Maximum commanded ground velocity in m/s.
             The default value of 1 m/s is conservative, don't hesitate to
             increase it once you feel confident in your agent.
-        \param regulate_frequency Enables loop frequency regulation.
-        \param shm_name Name of shared-memory file.
-        \param spine_config Additional spine configuration overriding the
-            default `upkie.config.SPINE_CONFIG`. The combined configuration
-            dictionary is sent to the spine at every reset.
         \param wheel_radius Wheel radius in [m].
         """
-        if frequency is None:
+        super().__init__(env)
+        if env.frequency is None:
             raise UpkieException("This environment needs a loop frequency")
-
-        servos = UpkieServos(
-            frequency=frequency,
-            frequency_checks=frequency_checks,
-            init_state=init_state,
-            regulate_frequency=regulate_frequency,
-            shm_name=shm_name,
-            spine_config=spine_config,
-        )
 
         MAX_BASE_PITCH: float = np.pi
         MAX_GROUND_POSITION: float = float("inf")
@@ -185,15 +161,11 @@ class UpkieGroundVelocity(gym.Env):
         )
 
         # Class attributes
-        self.__leg_servo_action = servos.get_neutral_action()
+        self.__leg_servo_action = env.get_neutral_action()
+        self.env = env
         self.fall_pitch = fall_pitch
-        self.servos = servos
         self.left_wheeled = left_wheeled
         self.wheel_radius = wheel_radius
-
-    @property
-    def dt(self):
-        return self.servos.dt
 
     def __get_observation(self, spine_observation: dict) -> np.ndarray:
         r"""!
@@ -233,9 +205,9 @@ class UpkieGroundVelocity(gym.Env):
             - `info`: Dictionary with auxiliary diagnostic information. For
               Upkie this is the full observation dictionary sent by the spine.
         """
-        _, info = self.servos.reset(seed=seed, options=options)
+        _, info = self.env.reset(seed=seed, options=options)
         spine_observation = info["spine_observation"]
-        for joint in self.servos.model.upper_leg_joints:
+        for joint in self.env.model.upper_leg_joints:
             position = spine_observation["servo"][joint.name]["position"]
             self.__leg_servo_action[joint.name]["position"] = position
         observation = self.__get_observation(spine_observation)
@@ -247,13 +219,13 @@ class UpkieGroundVelocity(gym.Env):
 
         \return Servo action dictionary.
         """
-        for joint in self.servos.model.upper_leg_joints:
+        for joint in self.env.model.upper_leg_joints:
             prev_position = self.__leg_servo_action[joint.name]["position"]
             new_position = low_pass_filter(
                 prev_output=prev_position,
                 new_input=0.0,  # go to neutral configuration
                 cutoff_period=1.0,  # in roughly one second
-                dt=self.dt,
+                dt=self.env.dt,
             )
             self.__leg_servo_action[joint.name]["position"] = new_position
         return self.__leg_servo_action
@@ -278,7 +250,7 @@ class UpkieGroundVelocity(gym.Env):
                 "velocity": right_wheel_velocity,
             },
         }
-        for joint in self.servos.model.wheel_joints:
+        for joint in self.env.model.wheel_joints:
             servo_action[joint.name]["maximum_torque"] = joint.limit.effort
         return servo_action
 
@@ -352,7 +324,7 @@ class UpkieGroundVelocity(gym.Env):
               us this is the full observation dictionary coming from the spine.
         """
         servos_act = self.__get_servos_action(action)
-        _, reward, terminated, truncated, info = self.servos.step(servos_act)
+        _, reward, terminated, truncated, info = self.env.step(servos_act)
         spine_observation = info["spine_observation"]
         observation = self.__get_observation(spine_observation)
         if self.__detect_fall(spine_observation):
