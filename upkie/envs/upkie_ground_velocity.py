@@ -20,7 +20,7 @@ from upkie.utils.spdlog import logging
 from .upkie_servos import UpkieServos
 
 
-class UpkieGroundVelocity(UpkieServos):
+class UpkieGroundVelocity(gym.Env):
     r"""!
     Environment where Upkie is used as a wheeled inverted pendulum.
 
@@ -145,7 +145,7 @@ class UpkieGroundVelocity(UpkieServos):
         if frequency is None:
             raise UpkieException("This environment needs a loop frequency")
 
-        super().__init__(
+        servos = UpkieServos(
             frequency=frequency,
             frequency_checks=frequency_checks,
             init_state=init_state,
@@ -185,18 +185,15 @@ class UpkieGroundVelocity(UpkieServos):
         )
 
         # Class attributes
-        self.__leg_servo_action = super().get_neutral_action()
+        self.__leg_servo_action = servos.get_neutral_action()
         self.fall_pitch = fall_pitch
+        self.servos = servos
         self.left_wheeled = left_wheeled
         self.wheel_radius = wheel_radius
 
-    def get_neutral_action(self) -> np.ndarray:
-        r"""!
-        Get the neutral action where servos don't move.
-
-        \return Neutral action where servos don't move.
-        """
-        return np.zeros(1, dtype=float)
+    @property
+    def dt(self):
+        return self.servos.dt
 
     def __get_observation(self, spine_observation: dict) -> np.ndarray:
         r"""!
@@ -236,9 +233,9 @@ class UpkieGroundVelocity(UpkieServos):
             - `info`: Dictionary with auxiliary diagnostic information. For
               Upkie this is the full observation dictionary sent by the spine.
         """
-        _, info = super().reset(seed=seed, options=options)
+        _, info = self.servos.reset(seed=seed, options=options)
         spine_observation = info["spine_observation"]
-        for joint in self.model.upper_leg_joints:
+        for joint in self.servos.model.upper_leg_joints:
             position = spine_observation["servo"][joint.name]["position"]
             self.__leg_servo_action[joint.name]["position"] = position
         observation = self.__get_observation(spine_observation)
@@ -250,7 +247,7 @@ class UpkieGroundVelocity(UpkieServos):
 
         \return Servo action dictionary.
         """
-        for joint in self.model.upper_leg_joints:
+        for joint in self.servos.model.upper_leg_joints:
             prev_position = self.__leg_servo_action[joint.name]["position"]
             new_position = low_pass_filter(
                 prev_output=prev_position,
@@ -281,7 +278,7 @@ class UpkieGroundVelocity(UpkieServos):
                 "velocity": right_wheel_velocity,
             },
         }
-        for joint in self.model.wheel_joints:
+        for joint in self.servos.model.wheel_joints:
             servo_action[joint.name]["maximum_torque"] = joint.limit.effort
         return servo_action
 
@@ -354,8 +351,8 @@ class UpkieGroundVelocity(UpkieServos):
             - `info`: Dictionary with auxiliary diagnostic information. For
               us this is the full observation dictionary coming from the spine.
         """
-        servos_action = self.__get_servos_action(action)
-        _, reward, terminated, truncated, info = super().step(servos_action)
+        servos_act = self.__get_servos_action(action)
+        _, reward, terminated, truncated, info = self.servos.step(servos_act)
         spine_observation = info["spine_observation"]
         observation = self.__get_observation(spine_observation)
         if self.__detect_fall(spine_observation):
