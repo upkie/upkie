@@ -7,8 +7,10 @@ load("//tools/lint:lint.bzl", "add_lint_tests")
 package(default_visibility = ["//visibility:public"])
 
 py_library(
-    name = "upkie_base_env",
-    srcs = ["upkie_base_env.py"],
+    name = "upkie_servos",
+    srcs = [
+        "upkie_servos.py",
+    ],
     deps = [
         "//upkie/config",
         "//upkie/model",
@@ -28,7 +30,7 @@ py_library(
     deps = [
         "//upkie/envs/rewards",
         "//upkie/utils:filters",
-        ":upkie_base_env",
+        ":upkie_servos",
     ],
 )
 
@@ -53,23 +55,11 @@ py_library(
 )
 
 py_library(
-    name = "upkie_servos",
-    srcs = [
-        "upkie_servos.py",
-    ],
-    deps = [
-        "//upkie/utils:robot_state",
-        ":upkie_base_env",
-    ],
-)
-
-py_library(
     name = "envs",
     srcs = [
         "__init__.py",
     ],
     deps = [
-        ":upkie_base_env",
         ":upkie_ground_velocity",
         ":upkie_servo_positions",
         ":upkie_servo_torques",

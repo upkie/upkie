@@ -12,15 +12,6 @@ py_library(
 )
 
 py_test(
-    name = "upkie_base_env_test",
-    srcs = ["upkie_base_env_test.py"],
-    deps = [
-        "//upkie/envs",
-        ":mock_spine",
-    ],
-)
-
-py_test(
     name = "upkie_envs_test",
     srcs = ["upkie_envs_test.py"],
     deps = [
