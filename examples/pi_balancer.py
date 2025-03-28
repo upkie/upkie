@@ -47,5 +47,5 @@ def main(
 if __name__ == "__main__":
     if on_raspi():
         configure_agent_process()
-    with gym.make("UpkieGroundVelocity-v3", frequency=100.0) as env:
+    with gym.make("UpkieGroundVelocity-v4", frequency=100.0) as env:
         main(env)

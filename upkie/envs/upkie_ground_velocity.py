@@ -15,11 +15,12 @@ from upkie.exceptions import UpkieException
 from upkie.utils.clamp import clamp_and_warn
 from upkie.utils.filters import low_pass_filter
 from upkie.utils.robot_state import RobotState
+from upkie.utils.spdlog import logging
 
-from .upkie_base_env import UpkieBaseEnv
+from .upkie_servos import UpkieServos
 
 
-class UpkieGroundVelocity(UpkieBaseEnv):
+class UpkieGroundVelocity(UpkieServos):
     r"""!
     Environment where Upkie is used as a wheeled inverted pendulum.
 
@@ -79,6 +80,10 @@ class UpkieGroundVelocity(UpkieBaseEnv):
     ## Action space.
     action_space: gym.spaces.Box
 
+    ## \var fall_pitch
+    ## Fall detection pitch angle, in radians.
+    fall_pitch: float
+
     ## \var left_wheeled
     ## Set to True (default) if the robot is left wheeled, that is, a positive
     ## turn of the left wheel results in forward motion. Set to False for a
@@ -89,9 +94,13 @@ class UpkieGroundVelocity(UpkieBaseEnv):
     ## Observation space.
     observation_space: gym.spaces.Box
 
+    ## \var servos
+    ## Internal \ref upkie.envs.upkie_servos.UpkieServos environment.
+    servos: UpkieServos
+
     ## \var version
     ## Environment version number.
-    version = 3
+    version = 4
 
     ## \var wheel_radius
     ## Wheel radius in [m].
@@ -133,8 +142,10 @@ class UpkieGroundVelocity(UpkieBaseEnv):
             dictionary is sent to the spine at every reset.
         \param wheel_radius Wheel radius in [m].
         """
+        if frequency is None:
+            raise UpkieException("This environment needs a loop frequency")
+
         super().__init__(
-            fall_pitch=fall_pitch,
             frequency=frequency,
             frequency_checks=frequency_checks,
             init_state=init_state,
@@ -143,10 +154,6 @@ class UpkieGroundVelocity(UpkieBaseEnv):
             spine_config=spine_config,
         )
 
-        if self.dt is None:
-            raise UpkieException("This environment needs a loop frequency")
-
-        # gymnasium.Env: observation_space
         MAX_BASE_PITCH: float = np.pi
         MAX_GROUND_POSITION: float = float("inf")
         MAX_BASE_ANGULAR_VELOCITY: float = 1000.0  # rad/s
@@ -159,6 +166,9 @@ class UpkieGroundVelocity(UpkieBaseEnv):
             ],
             dtype=float,
         )
+        action_limit = np.array([max_ground_velocity], dtype=float)
+
+        # gymnasium.Env: observation_space
         self.observation_space = gym.spaces.Box(
             -observation_limit,
             +observation_limit,
@@ -167,7 +177,6 @@ class UpkieGroundVelocity(UpkieBaseEnv):
         )
 
         # gymnasium.Env: action_space
-        action_limit = np.array([max_ground_velocity], dtype=float)
         self.action_space = gym.spaces.Box(
             -action_limit,
             +action_limit,
@@ -175,44 +184,21 @@ class UpkieGroundVelocity(UpkieBaseEnv):
             dtype=action_limit.dtype,
         )
 
-        self.__leg_servo_action = {
-            joint.name: {
-                "position": None,
-                "velocity": 0.0,
-                "maximum_torque": joint.limit.effort,
-            }
-            for joint in self.model.upper_leg_joints
-        }
-
+        # Class attributes
+        self.__leg_servo_action = super().get_neutral_action()
+        self.fall_pitch = fall_pitch
         self.left_wheeled = left_wheeled
         self.wheel_radius = wheel_radius
 
-    def reset(
-        self,
-        *,
-        seed: Optional[int] = None,
-        options: Optional[dict] = None,
-    ) -> Tuple[np.ndarray, Dict]:
+    def get_neutral_action(self) -> np.ndarray:
         r"""!
-        Resets the environment and get an initial observation.
+        Get the neutral action where servos don't move.
 
-        \param seed Number used to initialize the environment’s internal random
-            number generator.
-        \param options Currently unused.
-        \return
-            - `observation`: Initial vectorized observation, i.e. an element
-              of the environment's `observation_space`.
-            - `info`: Dictionary with auxiliary diagnostic information. For
-              Upkie this is the full observation dictionary sent by the spine.
+        \return Neutral action where servos don't move.
         """
-        observation, info = super().reset(seed=seed, options=options)
-        spine_observation = info["spine_observation"]
-        for joint in self.model.upper_leg_joints:
-            position = spine_observation["servo"][joint.name]["position"]
-            self.__leg_servo_action[joint.name]["position"] = position
-        return observation, info
+        return np.zeros(1, dtype=float)
 
-    def get_env_observation(self, spine_observation: dict) -> np.ndarray:
+    def __get_observation(self, spine_observation: dict) -> np.ndarray:
         r"""!
         Extract environment observation from spine observation dictionary.
 
@@ -232,7 +218,33 @@ class UpkieGroundVelocity(UpkieBaseEnv):
         obs[3] = ground_velocity
         return obs
 
-    def get_upper_leg_servo_action(self) -> Dict[str, Dict[str, float]]:
+    def reset(
+        self,
+        *,
+        seed: Optional[int] = None,
+        options: Optional[dict] = None,
+    ) -> Tuple[np.ndarray, Dict]:
+        r"""!
+        Resets the environment and get an initial observation.
+
+        \param seed Number used to initialize the environment’s internal random
+            number generator.
+        \param options Currently unused.
+        \return
+            - `observation`: Initial vectorized observation, i.e. an element
+              of the environment's `observation_space`.
+            - `info`: Dictionary with auxiliary diagnostic information. For
+              Upkie this is the full observation dictionary sent by the spine.
+        """
+        _, info = super().reset(seed=seed, options=options)
+        spine_observation = info["spine_observation"]
+        for joint in self.model.upper_leg_joints:
+            position = spine_observation["servo"][joint.name]["position"]
+            self.__leg_servo_action[joint.name]["position"] = position
+        observation = self.__get_observation(spine_observation)
+        return observation, info
+
+    def __get_upper_leg_servo_action(self) -> Dict[str, Dict[str, float]]:
         r"""!
         Get servo actions for both hip and knee joints.
 
@@ -249,7 +261,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
             self.__leg_servo_action[joint.name]["position"] = new_position
         return self.__leg_servo_action
 
-    def get_wheel_servo_action(
+    def __get_wheel_servo_action(
         self, left_wheel_velocity: float
     ) -> Dict[str, Dict[str, float]]:
         r"""!
@@ -273,7 +285,7 @@ class UpkieGroundVelocity(UpkieBaseEnv):
             servo_action[joint.name]["maximum_torque"] = joint.limit.effort
         return servo_action
 
-    def get_spine_action(self, action: np.ndarray) -> dict:
+    def __get_servos_action(self, action: np.ndarray) -> dict:
         r"""!
         Convert environment action to a spine action dictionary.
 
@@ -289,8 +301,63 @@ class UpkieGroundVelocity(UpkieBaseEnv):
         wheel_velocity = ground_velocity / self.wheel_radius
         left_wheel_sign = 1.0 if self.left_wheeled else -1.0
         left_wheel_velocity = left_wheel_sign * wheel_velocity
-        servo_dict = {}
-        servo_dict.update(self.get_upper_leg_servo_action())
-        servo_dict.update(self.get_wheel_servo_action(left_wheel_velocity))
-        spine_action = {"servo": servo_dict}
-        return spine_action
+        servos_action: Dict[str, dict] = {}
+        servos_action.update(self.__get_upper_leg_servo_action())
+        servos_action.update(
+            self.__get_wheel_servo_action(left_wheel_velocity)
+        )
+        return servos_action
+
+    def __detect_fall(self, spine_observation: dict) -> bool:
+        r"""!
+        Detect a fall based on the base-to-world pitch angle.
+
+        \param spine_observation Spine observation dictionary.
+        \return True if and only if a fall is detected.
+
+        Spine observations should have a "base_orientation" key. This requires
+        the \ref upkie::cpp::observers::BaseOrientation observer in the spine's
+        observer pipeline.
+        """
+        pitch = spine_observation["base_orientation"]["pitch"]
+        if abs(pitch) > self.fall_pitch:
+            logging.warning(
+                "Fall detected (pitch=%.2f rad, fall_pitch=%.2f rad)",
+                abs(pitch),
+                self.fall_pitch,
+            )
+            return True
+        return False
+
+    def step(
+        self,
+        action: np.ndarray,
+    ) -> Tuple[np.ndarray, float, bool, bool, dict]:
+        r"""!
+        Run one timestep of the environment's dynamics.
+
+        When the end of the episode is reached, you are responsible for calling
+        `reset()` to reset the environment's state.
+
+        \param action Action from the agent.
+        \return
+            - `observation`: Observation of the environment, i.e. an element
+              of its `observation_space`.
+            - `reward`: Reward returned after taking the action.
+            - `terminated`: Whether the agent reached a terminal state,
+              which may be a good or a bad thing. When true, the user needs to
+              call `reset()`.
+            - `truncated`: Whether the episode is reaching max number of
+              steps. This boolean can signal a premature end of the episode,
+              i.e. before a terminal state is reached. When true, the user
+              needs to call `reset()`.
+            - `info`: Dictionary with auxiliary diagnostic information. For
+              us this is the full observation dictionary coming from the spine.
+        """
+        servos_action = self.__get_servos_action(action)
+        _, reward, terminated, truncated, info = super().step(servos_action)
+        spine_observation = info["spine_observation"]
+        observation = self.__get_observation(spine_observation)
+        if self.__detect_fall(spine_observation):
+            terminated = True
+        return observation, reward, terminated, truncated, info
