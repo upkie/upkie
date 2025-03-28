@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - cpp: Spine constructor now takes an additional sensor-pipeline argument
+- envs: Merge base and servos environments
 
 ### Fixed
 

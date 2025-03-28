@@ -7,11 +7,10 @@
 ## \namespace upkie.envs
 ## \brief Gymnasium environments.
 ##
-## See the [list of environments](\ref environments) for more details.
+## See the [list of environments](\ref gym-environments) for more details.
 
 import gymnasium as gym
 
-from .upkie_base_env import UpkieBaseEnv
 from .upkie_ground_velocity import UpkieGroundVelocity
 from .upkie_servo_positions import UpkieServoPositions
 from .upkie_servo_torques import UpkieServoTorques
@@ -36,7 +35,6 @@ def register() -> None:
 
 
 __all__ = [
-    "UpkieBaseEnv",
     "UpkieGroundVelocity",
     "UpkieServoPositions",
     "UpkieServoTorques",
