@@ -108,8 +108,8 @@ class UpkieServos(gym.Env):
     returned by the reset and step functions.
     """
 
+    __bonus_action: dict
     __frequency: Optional[float]
-    __extras: dict
     __rate: Optional[RateLimiter]
     __regulate_frequency: bool
     _spine: SpineInterface
@@ -303,7 +303,7 @@ class UpkieServos(gym.Env):
         self.observation_space = gym.spaces.Dict(servo_space)
 
         # Class attributes
-        self.__extras = {"bullet": {}, "log": {}}
+        self.__bonus_action = {"bullet": {}, "log": {}}
         self.__frequency = frequency
         self.__frequency_checks = frequency_checks
         self.__max_action = max_action
@@ -447,11 +447,11 @@ class UpkieServos(gym.Env):
         # Prepare spine action
         spine_action = self.__get_spine_action(action)
         for key in ("bullet", "log"):
-            if not self.__extras[key]:
+            if not self.__bonus_action[key]:
                 continue
             spine_action[key] = {}
-            spine_action[key].update(self.__extras[key])
-            self.__extras[key].clear()
+            spine_action[key].update(self.__bonus_action[key])
+            self.__bonus_action[key].clear()
 
         # Send action to and get observation from the spine
         spine_observation = self._spine.set_action(spine_action)
@@ -523,17 +523,25 @@ class UpkieServos(gym.Env):
         \param entry Dictionary to log along with the actual action.
         """
         if isinstance(entry, dict):
-            self.__extras["log"][name] = entry.copy()
+            self.__bonus_action["log"][name] = entry.copy()
         else:  # logging values directly
-            self.__extras["log"][name] = entry
+            self.__bonus_action["log"][name] = entry
 
-    def bullet_extra(self, bullet_action: dict) -> None:
+    def get_bullet_action(self) -> dict:
         r"""!
-        Prepend for the next step an extra action for the Bullet spine.
+        Get the Bullet action that will be applied at next step.
+
+        \return Upcoming simulator action.
+        """
+        return self.__bonus_action["bullet"]
+
+    def set_bullet_action(self, bullet_action: dict) -> None:
+        r"""!
+        Prepare for the next step an extra action for the Bullet spine.
 
         This extra action can be for instance a set of external forces applied
         to some robot bodies.
 
         \param bullet_action Action dictionary processed by the Bullet spine.
         """
-        self.__extras["bullet"] = bullet_action.copy()
+        self.__bonus_action["bullet"] = bullet_action.copy()
