@@ -11,21 +11,26 @@ from multiprocessing.shared_memory import SharedMemory
 
 import numpy as np
 
-from upkie.envs import UpkieGroundVelocity
+from upkie.envs import UpkieGroundVelocity, UpkieServos
 from upkie.envs.tests.mock_spine import MockSpine
 
 
 class TestUpkieGroundVelocity(unittest.TestCase):
     def setUp(self):
         shared_memory = SharedMemory(name=None, size=42, create=True)
-        self.env = UpkieGroundVelocity(
-            fall_pitch=1.0,
+        servos_env = UpkieServos(
             frequency=100.0,
-            max_ground_velocity=1.0,
             shm_name=shared_memory._name,
         )
+        servos_env._spine = MockSpine()
+        ground_velocity_env = UpkieGroundVelocity(
+            servos_env,
+            fall_pitch=1.0,
+            max_ground_velocity=1.0,
+        )
         shared_memory.close()
-        self.env._spine = MockSpine()
+        self.servos_env = servos_env
+        self.env = ground_velocity_env
 
     def test_reset(self):
         observation, info = self.env.reset()
@@ -41,7 +46,8 @@ class TestUpkieGroundVelocity(unittest.TestCase):
         observation, reward, terminated, truncated, _ = self.env.step(action)
         self.assertNotEqual(reward, 0.0)  # non-zero base velocity
 
-        base_orientation = self.env._spine.observation["base_orientation"]
+        spine_observation = self.servos_env._spine.observation
+        base_orientation = spine_observation["base_orientation"]
         base_orientation["pitch"] = 0.0
         base_orientation["angular_velocity"] = [0.0, 0.0, 0.0]
         base_orientation["linear_velocity"] = [0.0, 0.0, 0.0]
@@ -60,7 +66,8 @@ class TestUpkieGroundVelocity(unittest.TestCase):
         _, _ = self.env.reset()
         action = np.zeros(self.env.action_space.shape)
         _, _, _, _, _ = self.env.step(action)
-        servo_action = self.env._spine.action["servo"]
+        spine_action = self.servos_env._spine.action
+        servo_action = spine_action["servo"]
         for joint in self.env.model.upper_leg_joints:
             maximum_torque = servo_action[joint.name]["maximum_torque"]
             self.assertLess(maximum_torque, 20.0)
@@ -72,7 +79,8 @@ class TestUpkieGroundVelocity(unittest.TestCase):
         _, _ = self.env.reset()
         action = np.full(self.env.action_space.shape, 1111.1)
         _, _, _, _, _ = self.env.step(action)
-        servo_action = self.env._spine.action["servo"]
+        spine_action = self.servos_env._spine.action
+        servo_action = spine_action["servo"]
         max_ground_velocity = self.env.action_space.high[0]
         for wheel in self.env.model.wheel_joints:
             wheel_velocity = servo_action[wheel.name]["velocity"]  # rad/s
