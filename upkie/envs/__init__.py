@@ -26,7 +26,7 @@ def make_upkie_ground_velocity(**kwargs):
             "fall_pitch",
             "left_wheeled",
             "max_ground_velocity",
-            "wheel_radius"
+            "wheel_radius",
         )
     }
     servos_kwargs = {
@@ -57,7 +57,9 @@ def register() -> None:
     # Wrappers
     gym.envs.registration.register(
         id=f"UpkieGroundVelocity-v{UpkieGroundVelocity.version}",
-        entry_point="upkie.envs:make_upkie_ground_velocity",
+        entry_point=(
+            "upkie.envs.upkie_ground_velocity:make_upkie_ground_velocity"
+        ),
     )
 
 

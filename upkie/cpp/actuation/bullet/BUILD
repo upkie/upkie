@@ -26,13 +26,13 @@ cc_library(
 )
 
 cc_library(
-    name = 'robot_simulator',
+    name = "robot_simulator",
     hdrs = [
-        'RobotSimulatorChangeDynamicsArgs.h',
-        'RobotSimulator.h',
+        "RobotSimulatorChangeDynamicsArgs.h",
+        "RobotSimulator.h",
     ],
     srcs = [
-        'RobotSimulator.cpp',
+        "RobotSimulator.cpp",
     ],
     deps = [
         "@bullet",
