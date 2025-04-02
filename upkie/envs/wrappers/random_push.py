@@ -17,9 +17,6 @@ class RandomPush(Wrapper):
     ## Wrapped environment.
     env: Env
 
-    # Internal reference to unwrapped get_spine_action function.
-    _env_get_spine_action: callable
-
     ## \var push_generator
     ## Function that generates the push force. It should return a 3D numpy
     ## array.
@@ -47,16 +44,16 @@ class RandomPush(Wrapper):
         self.env = env
         self.push_prob = push_prob
         self.push_generator = push_generator
-        if not hasattr(self.env, "get_spine_action"):
+        if not hasattr(self.env.unwrapped, "get_spine_action"):
             raise ValueError(
                 "The environment must have a method get_spine_action"
             )
-        self._env_get_spine_action = self.env.get_spine_action
+        self.__get_spine_action = self.env.unwrapped.get_spine_action
         self.env.unwrapped.get_spine_action = self.get_spine_action
 
     def get_spine_action(self, action):
         """Adds a random push to the action."""
-        spine_action = self._env_get_spine_action(action)
+        spine_action = self.__get_spine_action(action)
         if np.random.binomial(1, self.push_prob):
             force = self.push_generator()
             spine_action["bullet"] = {
