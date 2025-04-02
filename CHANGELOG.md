@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- CICD: Setup Micromamba in coverage job
 - cpp: Spine constructor now takes an additional sensor-pipeline argument
 - envs: Hard-code spine retries to ten attempts
 - envs: Make `UpkieGroundVelocity` a wrapper around `UpkieServos`
