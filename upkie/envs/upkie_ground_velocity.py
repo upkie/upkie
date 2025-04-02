@@ -336,6 +336,17 @@ class UpkieGroundVelocity(gym.Wrapper):
 
 
 def make_upkie_ground_velocity(**kwargs):
+    r"""!
+    Make a new ground-velocity environment.
+
+    This function is meant to be called by `gymnasium.make()` rather than to be
+    called directly.
+
+    \param kwargs Keyword arguments forwarded to both the \ref
+        upkie.envs.upkie_ground_velocity.UpkieGroundVelocity and internal \ref
+        upkie.envs.upkie_servos.UpkieServos environments.
+    \return New ground-velocity environment.
+    """
     ground_velocity_kwargs = {
         key: value
         for key, value in kwargs.items()
