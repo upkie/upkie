@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - envs: Hard-code spine retries to ten attempts
 - envs: Make `UpkieGroundVelocity` a wrapper around `UpkieServos`
 - envs: Merge base and servos environments
+- Update minimum Gymnasium version to 1.0
 
 ### Fixed
 
