@@ -12,9 +12,11 @@ jobs:
     artifacts:
         name: "Artifacts"
         runs-on: ubuntu-22.04
+
         env:
             SPINE: pi3hat_spine
             SPINE_PATH: ./bazel-out/aarch64-opt/bin/spines/
+
         steps:
             - name: "Checkout sources"
               uses: actions/checkout@v4
@@ -59,6 +61,7 @@ jobs:
     build_darwin_arm64:
         name: "Build on macOS (ARM64)"
         runs-on: macos-latest
+
         steps:
             - name: "Checkout sources"
               uses: actions/checkout@v4
@@ -81,6 +84,7 @@ jobs:
     build_darwin_x86:
         name: "Build on macOS (x86)"
         runs-on: macos-13
+
         steps:
             - name: "Checkout sources"
               uses: actions/checkout@v4
@@ -122,18 +126,32 @@ jobs:
     coverage:
         name: "Coverage"
         runs-on: ubuntu-22.04
+
+        defaults:
+            run:
+                # See https://github.com/mamba-org/setup-micromamba?tab=readme-ov-file#about-login-shells
+                shell: bash -leo pipefail {0}
+
         steps:
             - name: "Checkout sources"
               uses: actions/checkout@v4
 
-            - name: "Setup Python environment"
-              uses: actions/setup-python@v5
+            - name: "Install Conda environment with Micromamba"
+              uses: mamba-org/setup-micromamba@v1
               with:
-                python-version: '3.12'
-
-            - name: "Install dependencies"
-              run: |
-                  pip install gymnasium loop-rate-limiters msgpack numpy scipy upkie_description
+                  micromamba-version: '1.5.8-0'
+                  environment-name: upkie_coverage_env
+                  create-args: >-
+                      python=3.12
+                      gymnasium
+                      loop-rate-limiters
+                      msgpack-python
+                      numpy
+                      scipy
+                      stable-baselines3>2.3.0
+                      upkie_description
+                  cache-environment: true
+                  post-cleanup: 'all'
 
             - name: "Test coverage"
               run: |
@@ -149,6 +167,7 @@ jobs:
     lint:
         name: "Lint code"
         runs-on: ubuntu-22.04
+
         steps:
             - name: "Checkout sources"
               uses: actions/checkout@v4
@@ -223,6 +242,7 @@ jobs:
     ci_success:
         name: "CI success"
         runs-on: ubuntu-22.04
+
         needs:
             - artifacts
             - build_darwin_arm64
@@ -232,5 +252,6 @@ jobs:
             - coverage
             - lint
             - test
+
         steps:
             - run: echo "CI workflow completed successfully"
