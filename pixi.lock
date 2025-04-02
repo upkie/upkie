@@ -7679,9 +7679,9 @@ packages:
 - pypi: .
   name: upkie
   version: 7.0.0
-  sha256: 6bddcded99f8cd9f6f3f330e248f5e7d57218d42ae80af7af99ddd972e58135c
+  sha256: ad6fc1fed644832105465882afdc87d93c902ed8306fe075d4507b650073a494
   requires_dist:
-  - gymnasium>=0.29.1
+  - gymnasium>=1.0.0
   - loop-rate-limiters>=1.0.0
   - msgpack>=1.0.2
   - numpy>=1.24.3
