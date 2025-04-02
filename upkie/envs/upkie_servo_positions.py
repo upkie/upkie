@@ -53,7 +53,6 @@ class UpkieServoPositions(UpkieServos):
 
     def __init__(
         self,
-        fall_pitch: float = 1.0,
         frequency: float = 200.0,
         frequency_checks: bool = True,
         init_state: Optional[RobotState] = None,
@@ -64,7 +63,6 @@ class UpkieServoPositions(UpkieServos):
         r"""!
         Initialize environment.
 
-        \param fall_pitch Fall pitch angle, in radians.
         \param frequency Regulated frequency of the control loop, in Hz.
         \param frequency_checks If `regulate_frequency` is set and this
             parameter is true (default), a warning is issued every time the
@@ -78,7 +76,6 @@ class UpkieServoPositions(UpkieServos):
             dictionary is sent to the spine at every reset.
         """
         super().__init__(
-            fall_pitch=fall_pitch,
             frequency=frequency,
             frequency_checks=frequency_checks,
             init_state=init_state,
