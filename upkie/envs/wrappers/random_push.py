@@ -4,18 +4,20 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2024 Inria
 
+import gymnasium as gym
 import numpy as np
-from gymnasium import Env, Wrapper
+
+from upkie.exceptions import UpkieException
 
 
-class RandomPush(Wrapper):
+class RandomPush(gym.Wrapper):
     """!
     At each step, with a given probability, apply a random push to the robot.
     """
 
     ## \var env
     ## Wrapped environment.
-    env: Env
+    env: gym.Env
 
     ## \var push_generator
     ## Function that generates the push force. It should return a 3D numpy
@@ -28,39 +30,36 @@ class RandomPush(Wrapper):
 
     def __init__(
         self,
-        env,
-        push_prob=0.01,
-        push_generator=lambda: np.random.normal(0, 400, 3),
+        env: gym.Env,
+        push_prob: float = 0.01,
+        push_generator: callable = lambda: np.random.normal(0, 400, 3),
     ):
         r"""!
         Initialize wrapper.
 
         \param env Environment to wrap.
-        \param push_prob Probability of pushing at each step.
+        \param push_prob Probability of applying a push at each timestep.
         \param push_generator Function that generates the push force. It should
-            return a 3D numpy array.
+            return a 3D NumPy array.
         """
         super().__init__(env)
+        if not env.has_wrapper_attr("set_bullet_action"):
+            raise UpkieException(
+                "Wrapped environment must have a `set_bullet_action` method"
+            )
         self.env = env
         self.push_prob = push_prob
         self.push_generator = push_generator
-        if not hasattr(self.env.unwrapped, "get_spine_action"):
-            raise ValueError(
-                "The environment must have a method get_spine_action"
-            )
-        self.__get_spine_action = self.env.unwrapped.get_spine_action
-        self.env.unwrapped.get_spine_action = self.get_spine_action
 
-    def get_spine_action(self, action):
+    def step(self, action):
         """Adds a random push to the action."""
-        spine_action = self.__get_spine_action(action)
         if np.random.binomial(1, self.push_prob):
             force = self.push_generator()
-            spine_action["bullet"] = {
-                "external_forces": {"torso": {"force": force}}
-            }
+            self.env.unwrapped.set_bullet_action(
+                {"external_forces": {"torso": {"force": force}}}
+            )
         else:  # Reset the forces to zero
-            spine_action["bullet"] = {
-                "external_forces": {"torso": {"force": np.zeros(3)}}
-            }
-        return spine_action
+            self.env.unwrapped.set_bullet_action(
+                {"external_forces": {"torso": {"force": np.zeros(3)}}}
+            )
+        return self.env.step(action)
