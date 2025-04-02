@@ -5,6 +5,9 @@
 # Copyright 2022 Stéphane Caron
 # Copyright 2023 Inria
 
+## \namespace upkie.envs.upkie_ground_velocity
+## \brief Ground-velocity Gymnasium environment.
+
 import math
 from typing import Dict, Optional, Tuple
 
@@ -79,6 +82,10 @@ class UpkieGroundVelocity(gym.Wrapper):
     ## Action space.
     action_space: gym.spaces.Box
 
+    ## \var env
+    ## Internal \ref upkie.envs.upkie_servos.UpkieServos environment.
+    env: UpkieServos
+
     ## \var fall_pitch
     ## Fall detection pitch angle, in radians.
     fall_pitch: float
@@ -92,10 +99,6 @@ class UpkieGroundVelocity(gym.Wrapper):
     ## \var observation_space
     ## Observation space.
     observation_space: gym.spaces.Box
-
-    ## \var servos
-    ## Internal \ref upkie.envs.upkie_servos.UpkieServos environment.
-    servos: UpkieServos
 
     ## \var version
     ## Environment version number.
