@@ -27,7 +27,7 @@ classifiers = [
     "Topic :: Scientific/Engineering",
 ]
 dependencies = [
-    "gymnasium >= 0.29.1",
+    "gymnasium >= 1.0.0",
     "loop-rate-limiters >= 1.0.0",
     "msgpack >= 1.0.2",
     "numpy >= 1.24.3",
@@ -101,7 +101,7 @@ channels = ["conda-forge"]
 platforms = ["linux-64", "linux-aarch64", "osx-arm64"]
 
 [tool.pixi.dependencies]
-gymnasium = ">=0.29.1"
+gymnasium = ">=1.0.0"
 loop-rate-limiters = ">=1.0.0"
 msgpack-python = ">=1.0.2"
 numpy = ">=1.24.3"

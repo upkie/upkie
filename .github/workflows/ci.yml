@@ -143,7 +143,7 @@ jobs:
                   environment-name: upkie_coverage_env
                   create-args: >-
                       python=3.12
-                      gymnasium
+                      gymnasium>=1.0.0
                       loop-rate-limiters
                       msgpack-python
                       numpy
@@ -223,7 +223,7 @@ jobs:
                   environment-name: upkie_test_env
                   create-args: >-
                       python=${{ matrix.python-version }}
-                      gymnasium
+                      gymnasium>=1.0.0
                       loop-rate-limiters
                       msgpack-python
                       numpy
