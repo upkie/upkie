@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Added
 
 - docs: Install `libtinfo5` when building from source on Debian-based distros
+- examples: Domain randomization by environment wrapping
 - sensors: Sensor pipeline that runs at every spine cycle
 
 ### Changed
