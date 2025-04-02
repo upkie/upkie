@@ -40,16 +40,14 @@ class RandomPushTestCase(unittest.TestCase):
             env, push_prob=1, push_generator=lambda: np.array([42, 42, 42])
         )
         action = np.array([1.0])
-        spine_action = wrapped_env.get_spine_action(action)
-        self.assertTrue("bullet" in spine_action)
-        self.assertTrue("external_forces" in spine_action["bullet"])
-        self.assertTrue("torso" in spine_action["bullet"]["external_forces"])
-        self.assertTrue(
-            "force" in spine_action["bullet"]["external_forces"]["torso"]
-        )
+        wrapped_env.step(action)
+        bullet_action = wrapped_env.unwrapped.get_bullet_action()
+        self.assertTrue("external_forces" in bullet_action)
+        self.assertTrue("torso" in bullet_action["external_forces"])
+        self.assertTrue("force" in bullet_action["external_forces"]["torso"])
         self.assertTrue(
             np.allclose(
-                spine_action["bullet"]["external_forces"]["torso"]["force"],
+                bullet_action["external_forces"]["torso"]["force"],
                 np.array([42, 42, 42]),
             )
         )
