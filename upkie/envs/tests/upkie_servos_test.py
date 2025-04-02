@@ -19,7 +19,6 @@ class TestUpkieServos(unittest.TestCase):
     def setUp(self):
         shared_memory = SharedMemory(name=None, size=42, create=True)
         self.env = UpkieServos(
-            fall_pitch=1.0,
             frequency=100.0,
             shm_name=shared_memory._name,
         )
