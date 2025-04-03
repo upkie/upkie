@@ -1,0 +1,6 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" title=" " alt="" coords="5,48,84,76"/>
+<area shape="rect" id="node2" href="$classupkie_1_1envs_1_1upkie__servos_1_1UpkieServos.html" title="Base Upkie environment where actions command servomotors directly." alt="" coords="132,40,318,85"/>
+<area shape="rect" id="node3" href="$classupkie_1_1envs_1_1upkie__servo__positions_1_1UpkieServoPositions.html" title="Command servos by position control." alt="" coords="366,5,591,50"/>
+<area shape="rect" id="node4" href="$classupkie_1_1envs_1_1upkie__servo__torques_1_1UpkieServoTorques.html" title="Command servos by torque control." alt="" coords="376,75,582,119"/>
+</map>
