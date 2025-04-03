@@ -216,7 +216,7 @@ class UpkieGroundVelocity(gym.Wrapper):
         observation = self.__get_observation(spine_observation)
         return observation, info
 
-    def __get_upper_leg_servo_action(self) -> Dict[str, Dict[str, float]]:
+    def __get_leg_servo_action(self) -> Dict[str, Dict[str, float]]:
         r"""!
         Get servo actions for both hip and knee joints.
 
@@ -257,7 +257,7 @@ class UpkieGroundVelocity(gym.Wrapper):
             servo_action[joint.name]["maximum_torque"] = joint.limit.effort
         return servo_action
 
-    def __get_servos_action(self, action: np.ndarray) -> dict:
+    def __get_servo_action(self, action: np.ndarray) -> Dict[str, dict]:
         r"""!
         Convert environment action to a spine action dictionary.
 
@@ -273,12 +273,9 @@ class UpkieGroundVelocity(gym.Wrapper):
         wheel_velocity = ground_velocity / self.wheel_radius
         left_wheel_sign = 1.0 if self.left_wheeled else -1.0
         left_wheel_velocity = left_wheel_sign * wheel_velocity
-        servos_action: Dict[str, dict] = {}
-        servos_action.update(self.__get_upper_leg_servo_action())
-        servos_action.update(
-            self.__get_wheel_servo_action(left_wheel_velocity)
-        )
-        return servos_action
+        leg_servo_action = self.__get_leg_servo_action()
+        wheel_servo_action = self.__get_wheel_servo_action(left_wheel_velocity)
+        return leg_servo_action | wheel_servo_action  # wheel comes second
 
     def __detect_fall(self, spine_observation: dict) -> bool:
         r"""!
@@ -326,8 +323,8 @@ class UpkieGroundVelocity(gym.Wrapper):
             - `info`: Dictionary with additional information, reporting in
               particular the full observation dictionary coming from the spine.
         """
-        servos_act = self.__get_servos_action(action)
-        _, reward, terminated, truncated, info = self.env.step(servos_act)
+        servo_action = self.__get_servo_action(action)
+        _, reward, terminated, truncated, info = self.env.step(servo_action)
         spine_observation = info["spine_observation"]
         observation = self.__get_observation(spine_observation)
         if self.__detect_fall(spine_observation):
