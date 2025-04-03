@@ -437,8 +437,8 @@ class UpkieServos(gym.Env):
               steps. This boolean can signal a premature end of the episode,
               i.e. before a terminal state is reached. When true, the user
               needs to call `reset()`.
-            - `info`: Dictionary with auxiliary diagnostic information. For
-              us this is the full observation dictionary coming from the spine.
+            - `info`: Dictionary with additional information, reporting in
+              particular the full observation dictionary coming from the spine.
         """
         if self.__regulate_frequency:
             self.__rate.sleep()  # wait until clock tick to send the action

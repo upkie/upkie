@@ -323,8 +323,8 @@ class UpkieGroundVelocity(gym.Wrapper):
               steps. This boolean can signal a premature end of the episode,
               i.e. before a terminal state is reached. When true, the user
               needs to call `reset()`.
-            - `info`: Dictionary with auxiliary diagnostic information. For
-              us this is the full observation dictionary coming from the spine.
+            - `info`: Dictionary with additional information, reporting in
+              particular the full observation dictionary coming from the spine.
         """
         servos_act = self.__get_servos_action(action)
         _, reward, terminated, truncated, info = self.env.step(servos_act)
