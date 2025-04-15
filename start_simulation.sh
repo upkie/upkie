@@ -92,6 +92,9 @@ if [[ -n "$SPINE_ARCHIVE" ]] && [[ -z "${REBUILD}" ]]; then
             if echo "$OUTPUT" | grep -q "version.*GLIBC"; then
                 echo "⚠️ It seems your GLIBC version is not compatible with the downloaded binary"
                 REBUILD=1
+            else
+                echo "❌ Spine exited with the following error:"
+                echo "${OUTPUT}"
             fi
         elif [ $SPINE_RC -ne 0 ] && [ $SPINE_RC -ne 1 ]; then
             echo "⚠️ Simulation spine exited with code $SPINE_RC"
