@@ -158,6 +158,7 @@ void BulletInterface::register_contacts() {
     }
   }
 }
+
 void BulletInterface::reset(const Dictionary& config) {
   params_.configure(config);
   register_contacts();
@@ -402,6 +403,7 @@ void BulletInterface::read_joint_sensors() {
     result.torque = sensor_state.m_jointMotorTorque;
   }
 }
+
 void BulletInterface::save_nominal_masses() {
   const int nb_links = bullet_.getNumJoints(robot_);
   b3DynamicsInfo info;
@@ -413,6 +415,7 @@ void BulletInterface::save_nominal_masses() {
     nominal_inertia[link_id][2] = info.m_localInertialDiagonal[2];
   }
 }
+
 void BulletInterface::randomize_masses() {
   std::default_random_engine generator;
   for (const auto& link_id : nominal_masses) {

@@ -36,7 +36,7 @@ class Model:
 
     ## \var wheel_joints
     ## Wheel joints.
-    upper_leg_joints: Tuple[float]
+    wheel_joints: Tuple[float]
 
     def __init__(self, urdf_path: str):
         r"""!
