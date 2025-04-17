@@ -7,13 +7,12 @@
 from typing import Optional, Set
 
 from gymnasium import spaces
-
 from upkie.utils.robot_state import RobotState
 
-from .upkie_servos import UpkieServos
+from .upkie_spine_servos import UpkieSpineServos
 
 
-class UpkieServoTorques(UpkieServos):
+class UpkieServoTorques(UpkieSpineServos):
     r"""!
     Command servos by torque control.
 
@@ -36,8 +35,8 @@ class UpkieServoTorques(UpkieServos):
 
     ### Observation space
 
-    This environment has the same observation space as
-    [UpkieServos](\ref upkie_servos_description).
+    This environment has the same observation space as the other servo
+    environments, detailed in [UpkieServos](\ref upkie_servos_description).
     """
 
     ACTION_MASK: Set[str] = set(["feedforward_torque"])

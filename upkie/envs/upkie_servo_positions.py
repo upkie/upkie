@@ -7,13 +7,12 @@
 from typing import Optional, Set
 
 import gymnasium as gym
-
 from upkie.utils.robot_state import RobotState
 
-from .upkie_servos import UpkieServos
+from .upkie_spine_servos import UpkieSpineServos
 
 
-class UpkieServoPositions(UpkieServos):
+class UpkieServoPositions(UpkieSpineServos):
     r"""!
     Command servos by position control.
 
