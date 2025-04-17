@@ -4,9 +4,8 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Inria
 
-from typing import Any, Optional, Set, Tuple
+from typing import Optional, Set, Tuple
 
-import gymnasium as gym
 import numpy as np
 import upkie.config
 from upkie.spine import SpineInterface
@@ -14,19 +13,15 @@ from upkie.utils.clamp import clamp_and_warn
 from upkie.utils.nested_update import nested_update
 from upkie.utils.robot_state import RobotState
 
+from .upkie_servos import UpkieServos
 
-class UpkieSpineServos(gym.Env):
+
+class UpkieSpineServos(UpkieServos):
     r"""!
     Upkie servo environment connected to a simulation or real spine.
 
-    \anchor upkie_spine_description
-
     See [UpkieServos](\ref upkie_servos_description) for a description of the
     action and observation spaces of servo environments.
-
-    As with all Upkie environments, full observations from the spine (detailed
-    in \ref observations) are also available in the `info` dictionary
-    returned by the reset and step functions.
     """
 
     __bonus_action: dict
@@ -147,10 +142,7 @@ class UpkieSpineServos(gym.Env):
         reset["angular_velocity_base_in_base"] = omega
         reset["joint_configuration"] = init_state.joint_configuration
 
-    def step(
-        self,
-        action: np.ndarray,
-    ) -> Tuple[np.ndarray, float, bool, bool, dict]:
+    def step(self, action: dict) -> Tuple[dict, float, bool, bool, dict]:
         r"""!
         Run one timestep of the environment's dynamics.
 
@@ -172,6 +164,7 @@ class UpkieSpineServos(gym.Env):
             - `info`: Dictionary with additional information, reporting in
               particular the full observation dictionary coming from the spine.
         """
+        # Regulate loop frequency, if applicable
         super().step()
 
         # Prepare spine action
@@ -245,7 +238,7 @@ class UpkieSpineServos(gym.Env):
             spine_action["servo"][joint.name] = servo_action
         return spine_action
 
-    def log(self, name: str, entry: Any) -> None:
+    def log(self, name: str, entry) -> None:
         r"""!
         Log a new entry to the "log" key of the action dictionary.
 
