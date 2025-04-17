@@ -7,15 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- envs: Drop Gymnasium environment versioning
+
 ## [8.1.0] - 2025-05-08
 
 ### Added
 
 - Development workflow based on Pixi
 - cpp: Controller pipeline run by the spine after observers
+- envs: Add `UpkieMockServos` environment
 
 ### Changed
 
+- **Breaking:** Rename `UpkieServos` to `UpkieSpineServos`
 - cpp: Spines now take a controller pipeline as constructor argument
 - envs: Wait one second when resetting environments on the Raspberry Pi (thanks to @Tordjx)
 
