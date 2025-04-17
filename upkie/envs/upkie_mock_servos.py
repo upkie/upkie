@@ -137,7 +137,7 @@ class UpkieMockServos(UpkieServos):
               particular the full observation dictionary coming from the spine.
         """
         # Regulate loop frequency, if applicable
-        super().step(action)
+        super().step()
 
         # Prepare spine action
         for joint_name, joint_action in action.items():
