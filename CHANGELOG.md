@@ -10,19 +10,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Added
 
 - docs: Install `libtinfo5` when building from source on Debian-based distros
+- envs: Add `UpkieMockServos` environment
 - examples: Domain randomization by environment wrapping
 - sensors: Sensor pipeline that runs at every spine cycle
 
 ### Changed
 
+- **Breaking:** Rename `UpkieServos` to `UpkieSpineServos`
 - CICD: Setup Micromamba in coverage job
-- cpp: Spine constructor now takes an additional sensor-pipeline argument
-- envs: Hard-code spine retries to ten attempts
-- envs: Make `UpkieGroundVelocity` a wrapper around `UpkieServos`
-- envs: Merge base and servos environments
 - Report error messages in simulation script
 - Update minimum Gymnasium version to 1.0
 - Update palimpsest to version 2.3.0
+- cpp: Spine constructor now takes an additional sensor-pipeline argument
+- envs: Drop Gymnasium environment versioning
+- envs: Hard-code spine retries to ten attempts
+- envs: Make `UpkieGroundVelocity` a wrapper around a servo environment
+- envs: Merge base and servo environments into a spineless base class
 
 ### Fixed
 
