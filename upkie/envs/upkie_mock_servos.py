@@ -109,18 +109,12 @@ class UpkieMockServos(UpkieServos):
               Upkie this is the full observation dictionary sent by the spine.
         """
         super().reset(seed=seed)
-        self._spine.stop()
-        self.__reset_rate()
-        self.__reset_init_state()
-        spine_observation = self._spine.start(self._spine_config)
+        spine_observation = self.__spine_observation
         observation = self.__get_observation(spine_observation)
         info = {"spine_observation": spine_observation}
         return observation, info
 
-    def step(
-        self,
-        action: np.ndarray,
-    ) -> Tuple[np.ndarray, float, bool, bool, dict]:
+    def step(self, action: dict) -> Tuple[dict, float, bool, bool, dict]:
         r"""!
         Run one timestep of the environment's dynamics.
 
@@ -142,23 +136,21 @@ class UpkieMockServos(UpkieServos):
             - `info`: Dictionary with additional information, reporting in
               particular the full observation dictionary coming from the spine.
         """
-        if self.__regulate_frequency:
-            self.__rate.sleep()  # wait until clock tick to send the action
-            self.log("rate", {"slack": self.__rate.slack})
+        # Regulate loop frequency, if applicable
+        super().step(action)
 
         # Prepare spine action
-        spine_action = self.__get_spine_action(action)
-        for key in ("bullet", "log"):
-            if not self.__bonus_action[key]:
-                continue
-            spine_action[key] = {}
-            spine_action[key].update(self.__bonus_action[key])
-            self.__bonus_action[key].clear()
+        for joint_name, joint_action in action.items():
+            joint_obs = self.__spine_observation["servo"][joint_name]
+            for key in ("position", "velocity", "torque"):
+                if key in joint_action and not np.isnan(joint_action[key]):
+                    joint_obs[key] = joint_action[key]
 
-        # Send action to and get observation from the spine
-        spine_observation = self._spine.set_action(spine_action)
+        if self.joystick is not None:
+            self.joystick.write(self.__spine_observation)
 
         # Process spine observation
+        spine_observation = self.__spine_observation
         observation = self.__get_observation(spine_observation)
         reward = 1.0  # ready for e.g. an ObservationBasedReward wrapper
         terminated = False
@@ -166,7 +158,7 @@ class UpkieMockServos(UpkieServos):
         info = {"spine_observation": spine_observation}
         return observation, reward, terminated, truncated, info
 
-    def __get_observation(self, spine_observation: dict):
+    def __get_observation(self, spine_observation: dict) -> dict:
         r"""!
         Extract environment observation from spine observation dictionary.
 
@@ -185,65 +177,3 @@ class UpkieMockServos(UpkieServos):
             }
             for joint in self.model.joints
         }
-
-    def __get_spine_action(self, env_action: dict) -> dict:
-        r"""!
-        Convert environment action to a spine action dictionary.
-
-        \param env_action Environment action.
-        \return Spine action dictionary.
-        """
-        spine_action = {"servo": {}}
-        for joint in self.model.joints:
-            servo_action = {}
-            for key in self.ACTION_KEYS:
-                action = (
-                    env_action[joint.name][key]
-                    if key in env_action[joint.name]
-                    and (not self.ACTION_MASK or key in self.ACTION_MASK)
-                    else self.__neutral_action[joint.name][key]
-                )
-                action_value = (
-                    action.item()
-                    if isinstance(action, np.ndarray)
-                    else float(action)
-                )
-                servo_action[key] = clamp_and_warn(
-                    action_value,
-                    self.__min_action[joint.name][key],
-                    self.__max_action[joint.name][key],
-                    label=f"{joint.name}: {key}",
-                )
-            spine_action["servo"][joint.name] = servo_action
-        return spine_action
-
-    def log(self, name: str, entry: Any) -> None:
-        r"""!
-        Log a new entry to the "log" key of the action dictionary.
-
-        \param name Name of the entry.
-        \param entry Dictionary to log along with the actual action.
-        """
-        if isinstance(entry, dict):
-            self.__bonus_action["log"][name] = entry.copy()
-        else:  # logging values directly
-            self.__bonus_action["log"][name] = entry
-
-    def get_bullet_action(self) -> dict:
-        r"""!
-        Get the Bullet action that will be applied at next step.
-
-        \return Upcoming simulator action.
-        """
-        return self.__bonus_action["bullet"]
-
-    def set_bullet_action(self, bullet_action: dict) -> None:
-        r"""!
-        Prepare for the next step an extra action for the Bullet spine.
-
-        This extra action can be for instance a set of external forces applied
-        to some robot bodies.
-
-        \param bullet_action Action dictionary processed by the Bullet spine.
-        """
-        self.__bonus_action["bullet"] = bullet_action.copy()
