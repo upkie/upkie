@@ -4,19 +4,20 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Inria
 
-from typing import Any, Optional, Tuple
+from pathlib import Path
+from typing import Optional, Tuple
 
-import gymnasium as gym
 import numpy as np
-from upkie.utils.clamp import clamp_and_warn
+
+from upkie.utils.joystick import Joystick
 from upkie.utils.robot_state import RobotState
 
+from .upkie_servos import UpkieServos
 
-class UpkieMockServos(gym.Env):
+
+class UpkieMockServos(UpkieServos):
     r"""!
-    Upkie environment that mimicks connecting to a spine for testing.
-
-    \anchor upkie_mock_spine_description
+    Upkie servo environment that mimicks commanding servos perfectly.
 
     See [UpkieServos](\ref upkie_servos_description) for a description of the
     action and observation spaces of servo environments.
@@ -28,8 +29,6 @@ class UpkieMockServos(gym.Env):
         frequency_checks: bool = True,
         init_state: Optional[RobotState] = None,
         regulate_frequency: bool = True,
-        shm_name: str = "/upkie",
-        spine_config: Optional[dict] = None,
     ) -> None:
         r"""!
         Initialize environment.
@@ -46,10 +45,6 @@ class UpkieMockServos(gym.Env):
         \param regulate_frequency If set (default), the environment will
             regulate the control loop frequency to the value prescribed in
             `frequency`.
-        \param shm_name Name of shared-memory file to exchange with the spine.
-        \param spine_config Additional spine configuration overriding the
-            default `upkie.config.SPINE_CONFIG`. The combined configuration
-            dictionary is sent to the spine at every reset.
 
         \throw SpineError If the spine did not respond after the prescribed
             number of trials.
@@ -60,6 +55,41 @@ class UpkieMockServos(gym.Env):
             init_state=init_state,
             regulate_frequency=regulate_frequency,
         )
+
+        spine_observation = {
+            "base_orientation": {
+                "pitch": 0.1,
+                "angular_velocity": [-2e-3, 3e2, 1e-8],
+                "linear_velocity": [1e3, 2e2, 3e1],
+            },
+            "imu": {
+                "orientation": [1.0, 0.0, 0.0, 0.0],
+                "angular_velocity": [0.0, 0.0, 0.0],
+                "linear_acceleration": [0.0, 0.0, 0.0],
+            },
+            "number": 0,
+            "servo": {
+                f"{side}_{joint}": {
+                    "position": 0.0,
+                    "velocity": 0.0,
+                    "torque": 0.0,
+                    "temperature": 42.0,
+                    "voltage": 18.0,
+                }
+                for side in ("left", "right")
+                for joint in ("hip", "knee", "wheel")
+            },
+            "wheel_odometry": {
+                "position": 0.0,
+                "velocity": 0.0,
+            },
+        }
+
+        js_path = Path("/dev/input/js0")
+        joystick = Joystick(js_path) if js_path.exists() else None
+
+        self.__spine_observation = spine_observation
+        self.joystick = joystick
 
     def reset(
         self,
