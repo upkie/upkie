@@ -4,8 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Inria
 
-import abc
-from typing import Any, Optional, Tuple
+from typing import Optional, Tuple
 
 import gymnasium as gym
 import numpy as np
@@ -17,7 +16,7 @@ from upkie.model import Model
 from upkie.utils.robot_state import RobotState
 
 
-class UpkieServos(abc.ABC, gym.Env):
+class UpkieServos(gym.Env):
     r"""!
     Base Upkie environment where actions command servomotors directly.
 
@@ -100,9 +99,9 @@ class UpkieServos(abc.ABC, gym.Env):
     - `temperature`: Servo temperature in degree Celsius.
     - `voltage`: Power bus voltage of the servo, in [V].
 
-    As with all Upkie environments, full observations from the spine (detailed
-    in \ref observations) are also available in the `info` dictionary
-    returned by the reset and step functions.
+    Full observations from the spine (detailed in \ref observations) are also
+    available in the `info` dictionary returned by the reset and step
+    functions.
     """
 
     __frequency: Optional[float]
@@ -307,10 +306,9 @@ class UpkieServos(abc.ABC, gym.Env):
         """
         return self.__neutral_action.copy()
 
-    @abc.abstractmethod
-    def log(self, name: str, entry: Any) -> None:
+    def log(self, name: str, entry) -> None:
         r"""!
-        Log a new entry to the "log" key of the action dictionary.
+        Log a new entry to the spine, if one is connected.
 
         \param name Name of the entry.
         \param entry Dictionary to log along with the actual action.
