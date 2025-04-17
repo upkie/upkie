@@ -7,11 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **Breaking:** Rename `UpkieServos` to `UpkieSpineServos`
+- envs: Drop Gymnasium environment versioning
+
 ## [8.0.0] - 2025-05-08
 
 #### Added
 
 - docs: Install `libtinfo5` when building from source on Debian-based distros
+- envs: Add `UpkieMockServos` environment
 - examples: Domain randomization by environment wrapping
 - sensors: Sensor pipeline that runs at every spine cycle
 
