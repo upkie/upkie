@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- envs: Add `UpkieMockServos` environment
+
+### Changed
+
+- **Breaking:** Rename `UpkieServos` to `UpkieSpineServos`
+- envs: Drop Gymnasium environment versioning
+
 ## [8.1.1] - 2025-07-21
 
 ### Changed
