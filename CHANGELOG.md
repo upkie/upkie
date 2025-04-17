@@ -14,7 +14,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Breaking:** Rename `UpkieServos` to `UpkieSpineServos`
 - cpp: Spines now take a controller pipeline as constructor argument
+- envs: Drop Gymnasium environment versioning
 
 ### Fixed
 
@@ -26,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Added
 
 - docs: Install `libtinfo5` when building from source on Debian-based distros
+- envs: Add `UpkieMockServos` environment
 - examples: Domain randomization by environment wrapping
 - sensors: Sensor pipeline that runs at every spine cycle
 
