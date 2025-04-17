@@ -11,10 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Development workflow based on Pixi
 - cpp: Controller pipeline run by the spine after observers
+- envs: Add `UpkieMockServos` environment
 
 ### Changed
 
+- **Breaking:** Rename `UpkieServos` to `UpkieSpineServos`
 - cpp: Spines now take a controller pipeline as constructor argument
+- envs: Drop Gymnasium environment versioning
 
 ### Fixed
 
