@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - examples: Fix warning in model predictive control example
+- Spine: Fix logging when substepping a simulation spine
 
 ### Removed
 
@@ -106,20 +107,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- **Breaking:** Spine and spine interface revisions:
-    - Observations are now returned upon reset and step
-    - Spine: Remove separate observation state and observation request
-    - SpineInterface: Setting an action now returns an observation
-    - SpineInterface: Starting the spine now returns an observation
-    - StateMachine: Rename spine FSM state from "act" to "step"
-    - docs: Update spine FSM specification in the documentation
-- **Breaking:** actuation: Move resolution to static configuration
-- **Breaking:** actuation: Move servo layout to static configuration
+- **Breaking:** Observations are now returned upon reset and step
+- **Breaking:** Spine: Remove separate observation state and observation request
+- **Breaking:** SpineInterface: Setting an action now returns an observation
+- **Breaking:** SpineInterface: Starting the spine now returns an observation
+- **Breaking:** StateMachine: Rename spine FSM state from "act" to "step"
 - **Breaking:** envs: Rename `LowPassFilterAction` to `AddLagToAction`
 - CICD: Pin Ubuntu workflows to 22.04
 - Default `kd` gain for wheel servos is now 0.3
 - Move Python spine exceptions to `upkie.exceptions`
+- actuation: Move resolution to static configuration
+- actuation: Move servo layout to static configuration
 - docs: Turn environment page into an index
+- docs: Update spine FSM specification in the documentation
 - tools: Make output directory an argument in `dump_servo_configs`
 - tools: Simplify servo configuration script
 

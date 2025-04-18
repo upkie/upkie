@@ -73,6 +73,9 @@ void Spine::reset(const Dictionary& config) {
 void Spine::log_working_dict() {
   // Log spine entries to the working dictionary
   Dictionary& spine = working_dict_("spine");
+  spine("clock")("measured_period") = clock.measured_period();
+  spine("clock")("skip_count") = clock.skip_count();
+  spine("clock")("slack") = clock.slack();
   spine("logger_last_size") = static_cast<uint32_t>(logger_.last_size());
   spine("rx_count") = static_cast<uint32_t>(rx_count_);
   spine("state_cycle_beginning") =
@@ -96,9 +99,6 @@ void Spine::run() {
   while (state_machine_.state() != State::kOver) {
     cycle();
     if (state_machine_.state() != State::kSendStops) {
-      spine("clock")("measured_period") = clock.measured_period();
-      spine("clock")("skip_count") = clock.skip_count();
-      spine("clock")("slack") = clock.slack();
       log_working_dict();
     }
     clock.wait_for_next_tick();
@@ -117,8 +117,8 @@ void Spine::simulate(unsigned nb_substeps) {
     begin_cycle();
     if (state_machine_.state() == State::kReset) {
       cycle_actuation();  // S1: cycle the simulator, promise actuation_output_
-      cycle_actuation();  // S2: fill servo_replies_ from actuation_output_
-      cycle_actuation();  // S3: fill observation dict from servo_replies_
+      cycle_actuation();  // S2: read actuation_output_, fill servo_replies_
+      cycle_actuation();  // S3: read servo_replies_, fill observation dict
       end_cycle();
       // now the first observation is ready to be read by the agent
     } else if (state_machine_.state() == State::kStep) {
@@ -129,6 +129,9 @@ void Spine::simulate(unsigned nb_substeps) {
       }
     } else {
       end_cycle();
+    }
+    if (state_machine_.state() != State::kSendStops) {
+      log_working_dict();
     }
   }
 }
