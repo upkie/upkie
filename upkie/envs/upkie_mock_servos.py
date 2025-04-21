@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # SPDX-License-Identifier: Apache-2.0
-# Copyright 2023 Inria
+# Copyright 2025 Inria
 
 from pathlib import Path
 from typing import Optional, Tuple
