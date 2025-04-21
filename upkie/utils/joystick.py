@@ -165,4 +165,9 @@ class Joystick:
             "right_axis": [self.axis_states["rx"], self.axis_states["ry"]],
             "left_trigger": self.axis_states["throttle"],
             "right_trigger": self.axis_states["brake"],
+            "cross_button": self.button_states["a"],
+            "left_button": self.button_states["tl"],
+            "right_button": self.button_states["tr"],
+            "square_button": self.button_states["x"],
+            "triangle_button": self.button_states["y"],
         }
