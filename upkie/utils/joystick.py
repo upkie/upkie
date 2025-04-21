@@ -13,6 +13,8 @@ import os
 import struct
 from fcntl import ioctl
 
+from ..exceptions import UpkieRuntimeError
+
 
 class Joystick:
     r"""!
@@ -154,6 +156,9 @@ class Joystick:
                 if axis:
                     fvalue = value / 32767.0
                     self.axis_states[axis] = fvalue
+
+        if self.button_states["b"]:
+            raise UpkieRuntimeError("Stop button pressed")
 
         observation[self.prefix] = {
             "left_axis": [self.axis_states["x"], self.axis_states["y"]],
