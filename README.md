@@ -98,6 +98,8 @@ If you built an Upkie or use parts of this project in your works, please cite th
 }
 ```
 
+Don't forget to add yourself to the BibTeX above and to `CITATION.cff` if you contribute to this repository.
+
 ## See also
 
 - [Awesome Open Source Robots](https://github.com/stephane-caron/awesome-open-source-robots): Upkies are one among many open-source open-hardware robot initiative: check out the others!
