@@ -142,7 +142,7 @@ class Spine {
   //! End cycle: write agent outputs, apply state machine transition
   void end_cycle();
 
-  /*! Log internal dictionary
+  /*! Log internal working dictionary.
    *
    * \param[in] clock Spine loop clock, if running in real time.
    */
