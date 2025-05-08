@@ -70,13 +70,14 @@ void Spine::reset(const Dictionary& config) {
   spdlog::info("Spine configured with:\n\n{}\n", config);
 }
 
-void Spine::log_working_dict(std::optional<utils::SynchronousClock&> clock) {
+void Spine::log_working_dict(
+    std::optional<std::reference_wrapper<utils::SynchronousClock>> clock) {
   // Log spine entries to the working dictionary
   Dictionary& spine = working_dict_("spine");
   if (clock) {
-    spine("clock")("measured_period") = clock.measured_period();
-    spine("clock")("skip_count") = clock.skip_count();
-    spine("clock")("slack") = clock.slack();
+    spine("clock")("measured_period") = clock->get().measured_period();
+    spine("clock")("skip_count") = clock->get().skip_count();
+    spine("clock")("slack") = clock->get().slack();
   }
   spine("logger_last_size") = static_cast<uint32_t>(logger_.last_size());
   spine("rx_count") = static_cast<uint32_t>(rx_count_);

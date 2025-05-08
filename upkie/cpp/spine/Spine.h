@@ -6,6 +6,7 @@
 #include <mpacklog/Logger.h>
 
 #include <algorithm>
+#include <functional>
 #include <future>
 #include <map>
 #include <memory>
@@ -141,7 +142,8 @@ class Spine {
    * \param[in] clock Spine loop clock, if running in real time.
    */
   void log_working_dict(
-      std::optional<utils::SynchronousClock&> clock = std::nullopt);
+      std::optional<std::reference_wrapper<utils::SynchronousClock>> clock =
+          std::nullopt);
 
  protected:
   //! Frequency of the spine loop in [Hz].
