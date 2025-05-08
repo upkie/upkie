@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Development workflow based on Pixi
 - cpp: Controller pipeline run by the spine after observers
+- envs: Add `UpkieMockServos` environment
+- utils: Joystick utility class
 
 ### Changed
 
@@ -28,10 +30,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Added
 
 - docs: Install `libtinfo5` when building from source on Debian-based distros
-- envs: Add `UpkieMockServos` environment
 - examples: Domain randomization by environment wrapping
 - sensors: Sensor pipeline that runs at every spine cycle
-- utils: Joystick utility class
 
 ### Changed
 
