@@ -97,7 +97,6 @@ void Spine::log_working_dict(
 }
 
 void Spine::run() {
-  Dictionary& spine = working_dict_("spine");
   utils::SynchronousClock clock(frequency_);
   while (state_machine_.state() != State::kOver) {
     cycle();
