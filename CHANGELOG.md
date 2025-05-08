@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [7.1.0] - 2025-05-08
+## [8.0.0] - 2025-05-08
 
 #### Added
 
@@ -17,14 +17,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Breaking:** envs: Make `UpkieGroundVelocity` a wrapper around `UpkieServos`
+- **Breaking:** envs: Merge base and servos environments
 - CICD: Setup Micromamba in coverage job
-- cpp: Spine constructor now takes an additional sensor-pipeline argument
-- envs: Hard-code spine retries to ten attempts
-- envs: Make `UpkieGroundVelocity` a wrapper around `UpkieServos`
-- envs: Merge base and servos environments
 - Report error messages in simulation script
 - Update minimum Gymnasium version to 1.0
 - Update palimpsest to version 2.3.2
+- cpp: Spine constructor now takes an additional sensor-pipeline argument
+- envs: Hard-code spine retries to ten attempts
 
 ### Fixed
 
@@ -766,8 +766,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Starting this changelog.
 
-[unreleased]: https://github.com/upkie/upkie/compare/v7.1.0...HEAD
-[7.1.0]: https://github.com/upkie/upkie/compare/v7.0.0...v7.1.0
+[unreleased]: https://github.com/upkie/upkie/compare/v8.0.0...HEAD
+[8.0.0]: https://github.com/upkie/upkie/compare/v7.0.0...v8.0.0
 [7.0.0]: https://github.com/upkie/upkie/compare/v6.1.0...v7.0.0
 [6.1.0]: https://github.com/upkie/upkie/compare/v6.0.0...v6.1.0
 [6.0.0]: https://github.com/upkie/upkie/compare/v5.2.0...v6.0.0
