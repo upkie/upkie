@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [7.1.0] - 2025-05-08
+
 #### Added
 
 - docs: Install `libtinfo5` when building from source on Debian-based distros
@@ -764,7 +766,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Starting this changelog.
 
-[unreleased]: https://github.com/upkie/upkie/compare/v7.0.0...HEAD
+[unreleased]: https://github.com/upkie/upkie/compare/v7.1.0...HEAD
+[7.1.0]: https://github.com/upkie/upkie/compare/v7.0.0...v7.1.0
 [7.0.0]: https://github.com/upkie/upkie/compare/v6.1.0...v7.0.0
 [6.1.0]: https://github.com/upkie/upkie/compare/v6.0.0...v6.1.0
 [6.0.0]: https://github.com/upkie/upkie/compare/v5.2.0...v6.0.0
