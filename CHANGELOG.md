@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- envs: Add `UpkieMockServos` environment
+- utils: Joystick utility class
+
+### Changed
+
+- **Breaking:** Rename `UpkieServos` to `UpkieSpineServos`
+- envs: Drop Gymnasium environment versioning
+
 ## [8.0.0] - 2025-05-08
 
 #### Added
