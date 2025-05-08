@@ -135,8 +135,12 @@ class Spine {
   //! End cycle: write agent outputs, apply state machine transition
   void end_cycle();
 
-  //! Log internal dictionary
-  void log_working_dict();
+  /*! Log internal dictionary
+   *
+   * \param[in] clock Spine loop clock, if running in real time.
+   */
+  void log_working_dict(
+      std::optional<utils::SynchronousClock&> clock = std::nullopt);
 
  protected:
   //! Frequency of the spine loop in [Hz].
