@@ -5,11 +5,16 @@ on:
     release:
         types:
             - created
+    # Temporary for PR purposes:
+    push:
+        branches: [ main ]
+    pull_request:
+        branches: [ main ]
 
 jobs:
     pi3hat_spine:
         name: "Add pi3hat spine to release assets"
-        runs-on: ubuntu-20.04
+        runs-on: ubuntu-latest
         steps:
             - name: "Checkout sources"
               uses: actions/checkout@v4
