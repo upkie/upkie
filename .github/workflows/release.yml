@@ -19,6 +19,10 @@ jobs:
             - name: "Checkout sources"
               uses: actions/checkout@v4
 
+          - name: "Install dependencies"
+            run: |
+                sudo apt install libtinfo5
+
             - name: "Build the pi3hat spine"
               run: |
                   tools/bazelisk build --verbose_failures --config=pi64 //spines:pi3hat_spine
@@ -31,14 +35,14 @@ jobs:
 
     bullet_ubuntu_spine:
       name: "Add Bullet Linux spine to release assets"
-      runs-on: ubuntu-20.04
+      runs-on: ubuntu-latest
       steps:
           - name: "Checkout sources"
             uses: actions/checkout@v4
 
           - name: "Install dependencies"
             run: |
-                sudo apt install libncurses5
+                sudo apt install libtinfo5
 
           - name: "Build linux bullet spine artifact"
             run: |
