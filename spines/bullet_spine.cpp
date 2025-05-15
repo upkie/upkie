@@ -13,6 +13,7 @@
 #include <vector>
 
 #include "upkie/cpp/actuation/BulletInterface.h"
+#include "upkie/cpp/controllers/ControllerPipeline.h"
 #include "upkie/cpp/observers/BaseOrientation.h"
 #include "upkie/cpp/observers/FloorContact.h"
 #include "upkie/cpp/observers/ObserverPipeline.h"
@@ -33,6 +34,7 @@ namespace spines::bullet {
 using palimpsest::Dictionary;
 using upkie::cpp::actuation::BulletInterface;
 using upkie::cpp::observers::BaseOrientation;
+using upkie::cpp::observers::ControllerPipeline;
 using upkie::cpp::observers::FloorContact;
 using upkie::cpp::observers::ObserverPipeline;
 using upkie::cpp::observers::WheelOdometry;
@@ -265,7 +267,8 @@ int run_spine(const char* argv0, const CommandLineArguments& args) {
   BulletInterface interface = make_actuation_interface(argv0, args);
   SensorPipeline sensors = make_sensors(interface);
   ObserverPipeline observers = make_observers(args.spine_frequency);
-  Spine spine(params, interface, sensors, observers);
+  ControllerPipeline controllers;
+  Spine spine(params, interface, sensors, observers, controllers);
   if (args.nb_substeps == 0u) {
     spine.run();
   } else /* args.nb_substeps > 0 */ {
