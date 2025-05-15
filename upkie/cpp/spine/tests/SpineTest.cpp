@@ -72,7 +72,7 @@ class SpineTest : public ::testing::Test {
     schwifty_observer_ = std::make_unique<observers::SchwiftyObserver>();
     observers_.append_observer(schwifty_observer_);
     spine_ = std::make_unique<TestSpine>(params_, *actuation_interface_,
-                                         sensors_, observers_);
+                                         sensors_, observers_, controllers_);
     int file_descriptor =
         ::shm_open(params_.shm_name.c_str(), O_RDWR | O_CREAT, 0666);
     ASSERT_GE(file_descriptor, 0);
@@ -150,6 +150,9 @@ class SpineTest : public ::testing::Test {
 
   //! Buffer used to write dictionaries to shared memory
   std::vector<char> serialization_buffer_;
+
+  //! Test controllers
+  controllers::ControllerPipeline controllers_;
 };
 
 TEST_F(SpineTest, ObservationInitializedInConstructor) {

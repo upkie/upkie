@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2022 Stéphane Caron
+// Copyright 2025 Inria
 /*
  * This file incorporates work covered by the following copyright and
  * permission notice:
@@ -14,6 +15,7 @@
 
 #include <limits>
 
+#include "upkie/cpp/exceptions/ControllerError.h"
 #include "upkie/cpp/exceptions/ObserverError.h"
 #include "upkie/cpp/observers/observe_servos.h"
 #include "upkie/cpp/observers/observe_time.h"
@@ -26,7 +28,8 @@ using palimpsest::Dictionary;
 using upkie::cpp::actuation::moteus::Output;
 
 Spine::Spine(const Parameters& params, actuation::Interface& actuation,
-             SensorPipeline& sensors, ObserverPipeline& observers)
+             SensorPipeline& sensors, ObserverPipeline& observers,
+             ControllerPipeline& controllers)
     : frequency_(params.frequency),
       actuation_(actuation),
       agent_interface_(params.shm_name, params.shm_size),
@@ -37,7 +40,8 @@ Spine::Spine(const Parameters& params, actuation::Interface& actuation,
       state_machine_(agent_interface_),
       state_cycle_beginning_(State::kOver),
       state_cycle_end_(State::kOver),
-      rx_count_(0) {
+      rx_count_(0),
+      controllers_(controllers) {
 // Thread name as it appears in the `cmd` column of `ps`
 #ifdef __APPLE__
   pthread_setname_np("spine_thread");
@@ -67,6 +71,7 @@ void Spine::reset(const Dictionary& config) {
   action.clear();
   actuation_.reset_action(action);
   observers_.reset(config);
+  controllers_.reset(config);
   spdlog::info("Spine configured with:\n\n{}\n", config);
 }
 
@@ -190,14 +195,20 @@ void Spine::cycle_actuation() {
                               servo_replies_);
     actuation_.observe(observation);
     sensors_.run(observation);
-    // Observers need configuration, so they cannot run at stop
+
+    // Observers and controllers need configuration, so they cannot run at stop
     if (state_machine_.state() != State::kSendStops &&
         state_machine_.state() != State::kShutdown) {
       try {
         observers_.run(observation);
       } catch (const exceptions::ObserverError& e) {
-        spdlog::info("Key error from {}: key \"{}\" not found", e.prefix(),
-                     e.key());
+        spdlog::info("Error from observer {}: {}", e.prefix(), e.what());
+      }
+      try {
+        Dictionary& action = working_dict_("action");
+        controllers_.run(observation, action);
+      } catch (const exceptions::ControllerError& e) {
+        spdlog::info("Error from controller {}: {}", e.name(), e.what());
       }
     }
 

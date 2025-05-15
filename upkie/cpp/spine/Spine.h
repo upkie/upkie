@@ -15,6 +15,7 @@
 #include <vector>
 
 #include "upkie/cpp/actuation/Interface.h"
+#include "upkie/cpp/controllers/ControllerPipeline.h"
 #include "upkie/cpp/observers/ObserverPipeline.h"
 #include "upkie/cpp/sensors/SensorPipeline.h"
 #include "upkie/cpp/spine/AgentInterface.h"
@@ -44,6 +45,7 @@ constexpr size_t kMebibytes = 1 << 20;
  * See StateMachine for more details.
  */
 class Spine {
+  using ControllerPipeline = upkie::cpp::controllers::ControllerPipeline;
   using ObserverPipeline = upkie::cpp::observers::ObserverPipeline;
   using Output = upkie::cpp::actuation::moteus::Output;
   using SensorPipeline = upkie::cpp::sensors::SensorPipeline;
@@ -73,11 +75,14 @@ class Spine {
    * \param[in] params Spine parameters.
    * \param[in, out] interface Interface to actuators.
    * \param[in, out] sensors Pipeline of sensors to read from.
-   * \param[in, out] observers Pipeline of observers to run, in that order, at
-   *     each cycle.
+   * \param[in, out] observers Pipeline of observers to run, in order, at each
+   *     cycle of the spine loop.
+   * \param[in, out] controllers Pipeline of controllers to run, in order, at
+   *     each cycle of the spine loop.
    */
   Spine(const Parameters& params, actuation::Interface& interface,
-        SensorPipeline& sensors, ObserverPipeline& observers);
+        SensorPipeline& sensors, ObserverPipeline& observers,
+        ControllerPipeline& controllers);
 
   /*! Reset the spine with a new configuration.
    *
@@ -194,6 +199,9 @@ class Spine {
 
   //! Number of actuation replies received during the latest cycle.
   size_t rx_count_;
+
+  //! Pipeline of controllers, executed in that order.
+  ControllerPipeline controllers_;
 };
 
 }  // namespace upkie::cpp::spine
