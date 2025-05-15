@@ -16,6 +16,7 @@
 #include "spines/common/sensors.h"
 #include "upkie/cpp/actuation/BulletInterface.h"
 #include "upkie/cpp/controllers/ControllerPipeline.h"
+#include "upkie/cpp/controllers/WheelBalancer.h"
 #include "upkie/cpp/observers/ObserverPipeline.h"
 #include "upkie/cpp/sensors/SensorPipeline.h"
 #include "upkie/cpp/spine/Spine.h"
@@ -27,8 +28,12 @@
 constexpr unsigned kSpineFrequency = 1000u;
 
 using palimpsest::Dictionary;
+using spines::common::make_observers;
+using spines::common::make_sensors;
 using upkie::cpp::actuation::BulletInterface;
 using upkie::cpp::controllers::ControllerPipeline;
+using upkie::cpp::controllers::WheelBalancer;
+using upkie::cpp::observers::ObserverPipeline;
 using upkie::cpp::sensors::SensorPipeline;
 using upkie::cpp::spine::Spine;
 using upkie::cpp::utils::clear_shared_memory;
@@ -153,7 +158,7 @@ BulletInterface make_actuation_interface(const char* argv0,
   const double base_altitude = 0.6;  // [m]
   BulletInterface::Parameters params(Dictionary{});
   params.argv0 = argv0;
-  params.dt = 1.0 / args.spine_frequency;
+  params.dt = 1.0 / kSpineFrequency;
   params.floor = true;
   params.gravity = true;
   params.gui = args.show;
@@ -184,20 +189,19 @@ int run_spine(const char* argv0, const CommandLineArguments& args) {
   // error afterwards.
 
   Spine::Parameters params;
-  params.frequency = args.spine_frequency;
+  params.frequency = kSpineFrequency;
   params.log_path = get_log_path(args.log_dir, "bullet_spine");
   params.shm_name = args.shm_name;
   spdlog::info("Spine data logged to {}", params.log_path);
 
   BulletInterface interface = make_actuation_interface(argv0, args);
-  SensorPipeline sensors =
-      common::make_sensors(/* joystick_required = */ false);
-  ObserverPipeline observers = common::make_observers(args.spine_frequency);
+  SensorPipeline sensors = make_sensors(/* joystick_required = */ false);
+  ObserverPipeline observers = make_observers(kSpineFrequency);
 
   ControllerPipeline controllers;
 
   WheelBalancer::Parameters balancer_params;
-  balancer_params.dt = 1.0 / spine_frequency;
+  balancer_params.dt = 1.0 / kSpineFrequency;
   auto balancer = std::make_shared<WheelBalancer>(balancer_params);
   controllers.append(balancer);
 
