@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Development workflow based on Pixi
+
 ### Fixed
 
 - CICD: Update release workflow images to `ubuntu-latest`
@@ -64,13 +68,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - **Breaking:** Remove `get_reward` functions from all environments
-- Makefile: Remove conda packing rules, now deprecated in favor of pixi
+- Makefile: Remove conda packing rules, now deprecated in favor of Pixi
 
 ## [6.1.0] - 2024-12-12
 
 ### Added
 
-- Configure pixi in `pyproject.toml`
+- Configure Pixi in `pyproject.toml`
 - Handle GLIBC version incompatibility in `start_simulation.sh`
 - Spine: Throw an exception when a servo reply has invalid torque
 - Update downloaded simulation spine in cache if outdated
@@ -83,7 +87,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - CICD: Build release spines with Ubuntu 20.04 rather than 22.04
-- CICD: Switch to pixi for documentation workflow
+- CICD: Switch to Pixi for documentation workflow
 - CICD: Update upload-artifact action to v4
 - Remove layout argument to actuation interfaces
 - actuation: Rename `Interface::initialize_action` to `Interface::reset_action`
