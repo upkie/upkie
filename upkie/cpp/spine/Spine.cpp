@@ -130,15 +130,17 @@ void Spine::simulate(unsigned nb_substeps) {
       // now the first observation is ready to be read by the agent
     } else if (state_machine_.state() == State::kStep) {
       cycle_actuation();
-      end_cycle();  // important: writes observation of the first substep
+      // Important: end cycle now to write the observation of the first substep
+      end_cycle();
+      if (state_machine_.state() != State::kSendStops) {
+        // Only log when stepping, as simulate() otherwise busy loops in idle
+        log_working_dict();
+      }
       for (unsigned substep = 1; substep < nb_substeps; ++substep) {
         cycle_actuation();
       }
     } else {
       end_cycle();
-    }
-    if (state_machine_.state() != State::kSendStops) {
-      log_working_dict();
     }
   }
 }

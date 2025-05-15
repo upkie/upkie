@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - CICD: Update release workflow images to `ubuntu-latest`
+- Spine: Fix logging when substepping a simulation spine (bis repetita placent)
 
 ## [8.0.0] - 2025-05-08
 
