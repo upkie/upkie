@@ -16,6 +16,7 @@
 #include <vector>
 
 #include "spines/common/observers.h"
+#include "spines/common/sensors.h"
 #include "upkie/cpp/actuation/Pi3HatInterface.h"
 #include "upkie/cpp/controllers/ControllerPipeline.h"
 #include "upkie/cpp/observers/ObserverPipeline.h"
@@ -27,10 +28,10 @@
 #include "upkie/cpp/utils/realtime.h"
 #include "upkie/cpp/version.h"
 
-namespace spines::pi3hat {
-
 using Pi3Hat = ::mjbots::pi3hat::Pi3Hat;
 using palimpsest::Dictionary;
+using spines::common::make_observers;
+using spines::common::make_sensors;
 using upkie::cpp::actuation::Pi3HatInterface;
 using upkie::cpp::controllers::ControllerPipeline;
 using upkie::cpp::observers::ObserverPipeline;
@@ -156,8 +157,8 @@ int run_spine(const CommandLineArguments& args) {
     return -4;
   }
 
-  SensorPipeline sensors = common::make_sensors(/* joystick_required = */ true);
-  ObserverPipeline observers = common::make_observers(args.spine_frequency);
+  SensorPipeline sensors = make_sensors(/* joystick_required = */ true);
+  ObserverPipeline observers = make_observers(args.spine_frequency);
   ControllerPipeline controllers;
 
   try {
@@ -192,10 +193,8 @@ int run_spine(const CommandLineArguments& args) {
   return EXIT_SUCCESS;
 }
 
-}  // namespace spines::pi3hat
-
 int main(int argc, char** argv) {
-  spines::pi3hat::CommandLineArguments args({argv + 1, argv + argc});
+  CommandLineArguments args({argv + 1, argv + argc});
   if (args.error) {
     return EXIT_FAILURE;
   } else if (args.help) {
@@ -205,5 +204,5 @@ int main(int argc, char** argv) {
     std::cout << "Upkie pi3hat spine " << upkie::cpp::kVersion << "\n";
     return EXIT_SUCCESS;
   }
-  return spines::pi3hat::run_spine(args);
+  return run_spine(args);
 }
