@@ -17,8 +17,8 @@ cc_binary(
     deps = [
         "//spines/common",
         "//upkie/cpp/actuation:bullet_interface",
-        "//upkie/cpp/controllers:stop_wheels",
         "//upkie/cpp/controllers:wheel_balancer",
+        "//upkie/cpp/controllers:wheel_stopper",
         "//upkie/cpp/spine",
         "//upkie/cpp/utils:clear_shared_memory",
         "//upkie/cpp/utils:get_log_path",
