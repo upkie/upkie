@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breaking:** Rename `UpkieServos` to `UpkieSpineServos`
 - cpp: Spines now take a controller pipeline as constructor argument
 - envs: Drop Gymnasium environment versioning
+- spines: Factor common observers and sensors between spines
 
 ### Fixed
 

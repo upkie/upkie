@@ -15,10 +15,8 @@ cc_binary(
         "@upkie_description",
     ],
     deps = [
+        "//spines/common",
         "//upkie/cpp/actuation:bullet_interface",
-        "//upkie/cpp/observers",
-        "//upkie/cpp/observers:history_observer",
-        "//upkie/cpp/sensors",
         "//upkie/cpp/spine",
         "//upkie/cpp/utils:clear_shared_memory",
         "//upkie/cpp/utils:get_log_path",
@@ -38,6 +36,7 @@ cc_binary(
         "//upkie/cpp/spine",
         "//upkie/cpp/utils:get_log_path",
         "//upkie/cpp:version",
+        "//spines/common",
     ] + select({
         "//:pi64_config": [
             "@org_llvm_libcxx//:libcxx",
@@ -58,6 +57,7 @@ cc_binary(
         "//upkie/cpp/spine",
         "//upkie/cpp/utils:get_log_path",
         "//upkie/cpp:version",
+        "//spines/common",
     ] + select({
         "//:pi64_config": ["//upkie/cpp/actuation:pi3hat_interface"],
         "//conditions:default": [],
