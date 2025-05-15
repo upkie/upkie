@@ -25,8 +25,8 @@ void WheelBalancer::read(const Dictionary& observation,
   // bool floor_contact = observation("floor_contact")("contact");
   double target_pitch = 0.0;  // [rad]
   double pitch_error = target_pitch - pitch;
-  double kp = 1.0;
-  ground_velocity_ = kp * pitch_error;
+  double kp = 10.0;
+  ground_velocity_ = -kp * pitch_error;
 }
 
 void WheelBalancer::write(Dictionary& action) {
