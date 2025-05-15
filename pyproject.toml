@@ -11,7 +11,7 @@ authors = [
 maintainers = [
     {name = "Stéphane Caron", email = "stephane.caron@normalesup.org"},
 ]
-dynamic = ['version', 'description']
+dynamic = ["version", "description"]
 requires-python = ">=3.9"
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -108,7 +108,7 @@ upkie_description = ">=2.1.0"
 dependencies = { pinocchio = "*", "stable-baselines3" = ">2.3.0" }
 
 [tool.pixi.feature.docs]
-dependencies= { doxygen = "<=1.9.5", graphviz = "*", make = "*", pinocchio = "*", stable-baselines3 = "*" }
+dependencies = { doxygen = "<=1.9.5", graphviz = "*", make = "*", pinocchio = "*", stable-baselines3 = "*" }
 tasks.make-docs = { cmd = "doxygen --version && cd docs && make" }
 
 [tool.pixi.feature.pack]
