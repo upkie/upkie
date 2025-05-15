@@ -109,10 +109,10 @@ scipy = ">=1.10.0"
 upkie_description = ">=2.1.0"
 
 [tool.pixi.feature.dev]
-dependencies = { pinocchio = "*", "stable-baselines3" = ">2.3.0" }
+dependencies = { "stable-baselines3" = ">2.3.0" }
 
 [tool.pixi.feature.docs]
-dependencies = { doxygen = "<=1.9.5", graphviz = "*", make = "*", pinocchio = "*", "stable-baselines3" = "*" }
+dependencies = { doxygen = "<=1.9.5", graphviz = "*", make = "*", "stable-baselines3" = "*" }
 tasks = { make-docs = "doxygen --version && cd docs && make" }
 
 [tool.pixi.feature.pack]
@@ -120,7 +120,7 @@ dependencies = { pixi-pack = "*" }
 tasks = { pack-to-aarch64 = "pixi-pack pack -e default --platform linux-aarch64 --ignore-pypi-errors" }
 
 [tool.pixi.feature.test]
-dependencies = { pinocchio = "*", "stable-baselines3" = ">2.3.0" }
+dependencies = { "stable-baselines3" = ">2.3.0" }
 tasks = { test = "tools/bazel test //upkie/..." }
 
 [tool.pixi.environments]
