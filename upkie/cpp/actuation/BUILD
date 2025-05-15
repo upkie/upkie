@@ -7,6 +7,13 @@ load("//tools/lint:lint.bzl", "add_lint_tests")
 package(default_visibility = ["//visibility:public"])
 
 cc_library(
+    name = "default_action",
+    hdrs = [
+        "default_action.h",
+    ],
+)
+
+cc_library(
     name = "imu",
     hdrs = [
         "ImuData.h",
@@ -43,7 +50,6 @@ cc_library(
 cc_library(
     name = "interface",
     hdrs = [
-        "default_action.h",
         "Interface.h",
     ],
     srcs = [
@@ -52,6 +58,7 @@ cc_library(
     deps = [
         "//upkie/cpp/actuation/moteus",
         "//upkie/cpp/exceptions",
+        ":default_action",
         ":imu",
         ":static_config",
         "@palimpsest",
