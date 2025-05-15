@@ -9,6 +9,7 @@ package(default_visibility = ["//visibility:public"])
 cc_library(
     name = "exceptions",
     hdrs = [
+        "ControllerError.h",
         "FilterError.h",
         "ObserverError.h",
         "PositionCommandError.h",
