@@ -7,6 +7,24 @@ load("//tools/lint:lint.bzl", "add_lint_tests")
 package(default_visibility = ["//visibility:public"])
 
 cc_binary(
+    name = "bullet_balancer_spine",
+    srcs = [
+        "bullet_balancer_spine.cpp",
+    ],
+    data = [
+        "@upkie_description",
+    ],
+    deps = [
+        "//spines/common",
+        "//upkie/cpp/actuation:bullet_interface",
+        "//upkie/cpp/spine",
+        "//upkie/cpp/utils:clear_shared_memory",
+        "//upkie/cpp/utils:get_log_path",
+        "//upkie/cpp:version",
+    ],
+)
+
+cc_binary(
     name = "bullet_spine",
     srcs = [
         "bullet_spine.cpp",
