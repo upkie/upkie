@@ -16,6 +16,7 @@
 #include "spines/common/sensors.h"
 #include "upkie/cpp/actuation/BulletInterface.h"
 #include "upkie/cpp/controllers/ControllerPipeline.h"
+#include "upkie/cpp/controllers/StopWheels.h"
 #include "upkie/cpp/controllers/WheelBalancer.h"
 #include "upkie/cpp/observers/ObserverPipeline.h"
 #include "upkie/cpp/sensors/SensorPipeline.h"
@@ -32,6 +33,7 @@ using spines::common::make_observers;
 using spines::common::make_sensors;
 using upkie::cpp::actuation::BulletInterface;
 using upkie::cpp::controllers::ControllerPipeline;
+using upkie::cpp::controllers::StopWheels;
 using upkie::cpp::controllers::WheelBalancer;
 using upkie::cpp::observers::ObserverPipeline;
 using upkie::cpp::sensors::SensorPipeline;
@@ -199,6 +201,9 @@ int run_spine(const char* argv0, const CommandLineArguments& args) {
   ObserverPipeline observers = make_observers(kSpineFrequency);
 
   ControllerPipeline controllers;
+
+  auto stop_wheels = std::make_shared<StopWheels>();
+  controllers.append(stop_wheels);
 
   WheelBalancer::Parameters balancer_params;
   balancer_params.dt = 1.0 / kSpineFrequency;
