@@ -70,6 +70,16 @@ include = [
 line-length = 79
 
 [tool.ruff.lint]
+ignore = [
+    "D100",  # we use ## Doxygen comments: https://stackoverflow.com/q/71380065
+    "D104",  # we use ## Doxygen comments: https://stackoverflow.com/q/71380065
+    "D204",  # ruff does not know we use Doxygen docstrings
+    "D205",  # ruff does not know we use Doxygen docstrings
+    "D401",  # good for methods but not for class docstrings
+    "D405",  # British-style section names are also "proper"!
+]
+per-file-ignores = { "*/tests/*.py" = ["D"] }
+pydocstyle = { convention = "numpy" }
 select = [
     # pyflakes
     "F",
@@ -81,20 +91,6 @@ select = [
     # pydocstyle
     "D"
 ]
-ignore = [
-    "D100",  # we use ## Doxygen comments: https://stackoverflow.com/q/71380065
-    "D104",  # we use ## Doxygen comments: https://stackoverflow.com/q/71380065
-    "D204",  # ruff does not know we use Doxygen docstrings
-    "D205",  # ruff does not know we use Doxygen docstrings
-    "D401",  # good for methods but not for class docstrings
-    "D405",  # British-style section names are also "proper"!
-]
-
-[tool.ruff.lint.per-file-ignores]
-"*/tests/*.py" = ["D"]
-
-[tool.ruff.lint.pydocstyle]
-convention = "numpy"
 
 [tool.pixi.project]
 channels = ["conda-forge"]
@@ -108,13 +104,12 @@ numpy = ">=1.24.3"
 scipy = ">=1.10.0"
 upkie_description = ">=2.1.0"
 
-[tool.pixi.pypi-dependencies]
-upkie = { path = ".", editable = true }
+[tool.pixi.feature.dev]
+dependencies = { pinocchio = "*", "stable-baselines3" = ">2.3.0" }
 
 [tool.pixi.feature.docs]
 dependencies= { doxygen = "<=1.9.5", graphviz = "*", make = "*", pinocchio = "*", stable-baselines3 = "*" }
-tasks.doxygen-version = "doxygen --version"
-tasks.make-docs = { cmd = "cd docs && make", depends-on = ["doxygen-version"] }
+tasks.make-docs = { cmd = "doxygen --version && cd docs && make" }
 
 [tool.pixi.feature.pack]
 dependencies = { pixi-pack = "*" }
@@ -126,7 +121,7 @@ tasks.test = "tools/bazel test //upkie/..."
 
 [tool.pixi.environments]
 default = { features = [], solve-group = "default" }
-dev = { features = ["test"], solve-group = "default" }
+dev = { features = ["dev"], solve-group = "default" }
 docs = { features = ["docs"], solve-group = "default" }
 pack = { features = ["pack"], solve-group = "default" }
 test = { features = ["test"], solve-group = "default" }
