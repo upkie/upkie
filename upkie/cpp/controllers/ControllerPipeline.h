@@ -32,7 +32,7 @@ class ControllerPipeline {
    *
    * \param controller New controller to append.
    */
-  void append_controller(std::shared_ptr<Controller> controller) {
+  void append(std::shared_ptr<Controller> controller) {
     controllers_.push_back(std::shared_ptr<Controller>(controller));
   }
 
