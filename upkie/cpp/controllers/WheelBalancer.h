@@ -34,6 +34,12 @@ class WheelBalancer : public Controller {
 
     //! Spine timestep in [s]
     double dt;
+
+    //! Fall pitch angle in [rad]
+    double fall_pitch = 1.0;
+
+    //! Wheel radius in [m]
+    double wheel_radius;
   };
 
   /*! Initialize controller.
@@ -67,6 +73,9 @@ class WheelBalancer : public Controller {
  private:
   //! Controller parameters.
   Parameters params_;
+
+  //! Ground velocity offset used for balancing, in [m] / [s]
+  double ground_velocity_;
 };
 
 }  // namespace upkie::cpp::controllers

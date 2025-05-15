@@ -207,6 +207,7 @@ int run_spine(const char* argv0, const CommandLineArguments& args) {
 
   WheelBalancer::Parameters balancer_params;
   balancer_params.dt = 1.0 / kSpineFrequency;
+  balancer_params.wheel_radius = 0.06;  // [m]
   auto balancer = std::make_shared<WheelBalancer>(balancer_params);
   controllers.append(balancer);
 
