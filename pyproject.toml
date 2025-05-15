@@ -111,24 +111,22 @@ upkie_description = ">=2.1.0"
 [tool.pixi.pypi-dependencies]
 upkie = { path = ".", editable = true }
 
-[tool.pixi.feature.docs.dependencies]
-doxygen = "<=1.9.5"
-graphviz = "*"
-make = "*"
-pinocchio = "*"
-stable-baselines3 = "*"
+[tool.pixi.feature.docs]
+dependencies= { doxygen = "<=1.9.5", graphviz = "*", make = "*", pinocchio = "*", stable-baselines3 = "*" }
+tasks.doxygen-version = "doxygen --version"
+tasks.make-docs = { cmd = "cd docs && make", depends-on = ["doxygen-version"] }
 
-[tool.pixi.feature.docs.tasks]
-doxygen-version = "doxygen --version"
-make-docs = { cmd = "cd docs && make", depends-on = ["doxygen-version"] }
+[tool.pixi.feature.pack]
+dependencies = { pixi-pack = "*" }
+tasks.pack-to-aarch64 = "pixi-pack pack -e default --platform linux-aarch64 --ignore-pypi-errors"
 
-[tool.pixi.feature.pack.dependencies]
-pixi-pack = "*"
-
-[tool.pixi.feature.pack.tasks]
-pack-to-aarch64 = "pixi-pack pack -e default --platform linux-aarch64 --ignore-pypi-errors"
+[tool.pixi.feature.test]
+dependencies = { pinocchio = "*", "stable-baselines3" = ">2.3.0" }
+tasks.test = "tools/bazel test //upkie/..."
 
 [tool.pixi.environments]
 default = { features = [], solve-group = "default" }
+dev = { features = ["test"], solve-group = "default" }
 docs = { features = ["docs"], solve-group = "default" }
 pack = { features = ["pack"], solve-group = "default" }
+test = { features = ["test"], solve-group = "default" }
