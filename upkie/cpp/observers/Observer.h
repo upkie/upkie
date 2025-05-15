@@ -22,7 +22,7 @@ class Observer {
 
   //! Prefix of outputs in the observation dictionary.
   virtual inline std::string prefix() const noexcept {
-    return "unknown_source";
+    return "unknown_observer";
   }
 
   /*! Reset observer.
