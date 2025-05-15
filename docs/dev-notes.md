@@ -1,6 +1,13 @@
 # Developer notes {#dev-notes}
 
-## From newbie to sourcie
+## Pixi workflow
+
+A workflow based on [Pixi](https://pixi.sh/) is under development. Once feature-complete, it should provide a simpler alternative to the legacy workflow based on GNU Make and conda environments. Here is what you can do now:
+
+- Check all unit tests: `pixi run test`
+- Open a shell in a fully configured environment: `pixi shell -e dev`
+
+## Legacy source workflow
 
 While newcomers will likely run `start_simulation.sh` and import the `upkie` package in Python, as you get acquainted with the robot and develop your own agents (by forking [upkie/new\_agent](https://github.com/upkie/new_agent)), you may want to contribute some features back to the upstream repository. Here is a short guide on compiling from source to do that.
 
