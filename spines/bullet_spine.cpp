@@ -33,8 +33,8 @@ namespace spines::bullet {
 
 using palimpsest::Dictionary;
 using upkie::cpp::actuation::BulletInterface;
+using upkie::cpp::controllers::ControllerPipeline;
 using upkie::cpp::observers::BaseOrientation;
-using upkie::cpp::observers::ControllerPipeline;
 using upkie::cpp::observers::FloorContact;
 using upkie::cpp::observers::ObserverPipeline;
 using upkie::cpp::observers::WheelOdometry;

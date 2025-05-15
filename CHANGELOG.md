@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Development workflow based on Pixi
+- cpp: Controller pipeline run by the spine after observers
 
 ### Fixed
 
