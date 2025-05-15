@@ -113,15 +113,15 @@ dependencies = { pinocchio = "*", "stable-baselines3" = ">2.3.0" }
 
 [tool.pixi.feature.docs]
 dependencies = { doxygen = "<=1.9.5", graphviz = "*", make = "*", pinocchio = "*", "stable-baselines3" = "*" }
-tasks.make-docs = { cmd = "doxygen --version && cd docs && make" }
+tasks = { make-docs = "doxygen --version && cd docs && make" }
 
 [tool.pixi.feature.pack]
 dependencies = { pixi-pack = "*" }
-tasks.pack-to-aarch64 = "pixi-pack pack -e default --platform linux-aarch64 --ignore-pypi-errors"
+tasks = { pack-to-aarch64 = "pixi-pack pack -e default --platform linux-aarch64 --ignore-pypi-errors" }
 
 [tool.pixi.feature.test]
 dependencies = { pinocchio = "*", "stable-baselines3" = ">2.3.0" }
-tasks.test = "tools/bazel test //upkie/..."
+tasks = { test = "tools/bazel test //upkie/..." }
 
 [tool.pixi.environments]
 default = { features = [], solve-group = "default" }

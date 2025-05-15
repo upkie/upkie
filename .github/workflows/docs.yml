@@ -24,7 +24,7 @@ jobs:
                   sudo apt install inkscape
 
             - name: "Install pixi environment"
-              uses: prefix-dev/setup-pixi@v0.8.0
+              uses: prefix-dev/setup-pixi@v0.8.8
               with:
                   environments: docs
                   activate-environment: true
