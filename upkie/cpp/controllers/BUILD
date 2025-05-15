@@ -28,6 +28,15 @@ cc_library(
 )
 
 cc_library(
+    name = "wheel_balancer",
+    hdrs = ["WheelBalancer.h"],
+    srcs = ["WheelBalancer.cpp"],
+    deps = [
+        ":controller",
+    ],
+)
+
+cc_library(
     name = "controllers",
     deps = [
         ":controller_pipeline",

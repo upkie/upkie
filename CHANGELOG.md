@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Breaking:** Rename `UpkieServos` to `UpkieSpineServos`
 - envs: Drop Gymnasium environment versioning
+- spines: Factor common observers and sensors between spines
 
 ## [8.1.1] - 2025-07-21
 
