@@ -62,9 +62,7 @@ The Python code is the same whether we run in simulation or on a real Upkie. Hea
 Upkie has environments compatible with the [Gymnasium API](https://gymnasium.farama.org/), for instance:
 
 - `UpkieGroundVelocity`: keep legs straight and balance with the wheels.
-- `UpkieServoPositions`: joint position control.
-- `UpkieServoTorques`: joint torque control.
-- `UpkieServos`: control joint servos directly, including feedforward torques, position and velocity feedback.
+- `UpkieServos`: control joint servos directly with torque feedforward and position-velocity feedback.
 
 Check out the full [list of environments](https://upkie.github.io/upkie/gym-environments.html) for details.
 
@@ -97,6 +95,8 @@ If you built an Upkie or use parts of this project in your works, please cite th
   year = {2025}
 }
 ```
+
+Don't forget to add yourself to the BibTeX above and to `CITATION.cff` if you contribute to this repository.
 
 ## See also
 

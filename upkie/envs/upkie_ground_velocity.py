@@ -100,10 +100,6 @@ class UpkieGroundVelocity(gym.Wrapper):
     ## Observation space.
     observation_space: gym.spaces.Box
 
-    ## \var version
-    ## Environment version number.
-    version = 4
-
     ## \var wheel_radius
     ## Wheel radius in [m].
     wheel_radius: float
