@@ -78,8 +78,6 @@ ignore = [
     "D401",  # good for methods but not for class docstrings
     "D405",  # British-style section names are also "proper"!
 ]
-per-file-ignores = { "*/tests/*.py" = ["D"] }
-pydocstyle = { convention = "numpy" }
 select = [
     # pyflakes
     "F",
@@ -91,6 +89,12 @@ select = [
     # pydocstyle
     "D"
 ]
+
+[tool.ruff.lint.per-file-ignores]
+"*/tests/*.py" = ["D"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
 
 [tool.pixi.project]
 channels = ["conda-forge"]
@@ -105,10 +109,10 @@ scipy = ">=1.10.0"
 upkie_description = ">=2.1.0"
 
 [tool.pixi.feature.dev]
-dependencies = { pinocchio = "*", stable-baselines3 = ">2.3.0" }
+dependencies = { pinocchio = "*", "stable-baselines3" = ">2.3.0" }
 
 [tool.pixi.feature.docs]
-dependencies = { doxygen = "<=1.9.5", graphviz = "*", make = "*", pinocchio = "*", stable-baselines3 = "*" }
+dependencies = { doxygen = "<=1.9.5", graphviz = "*", make = "*", pinocchio = "*", "stable-baselines3" = "*" }
 tasks.make-docs = { cmd = "doxygen --version && cd docs && make" }
 
 [tool.pixi.feature.pack]
@@ -116,7 +120,7 @@ dependencies = { pixi-pack = "*" }
 tasks.pack-to-aarch64 = "pixi-pack pack -e default --platform linux-aarch64 --ignore-pypi-errors"
 
 [tool.pixi.feature.test]
-dependencies = { pinocchio = "*", stable-baselines3 = ">2.3.0" }
+dependencies = { pinocchio = "*", "stable-baselines3" = ">2.3.0" }
 tasks.test = "tools/bazel test //upkie/..."
 
 [tool.pixi.environments]
