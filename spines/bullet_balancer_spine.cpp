@@ -16,8 +16,8 @@
 #include "spines/common/sensors.h"
 #include "upkie/cpp/actuation/BulletInterface.h"
 #include "upkie/cpp/controllers/ControllerPipeline.h"
-#include "upkie/cpp/controllers/StopWheels.h"
 #include "upkie/cpp/controllers/WheelBalancer.h"
+#include "upkie/cpp/controllers/WheelStopper.h"
 #include "upkie/cpp/observers/ObserverPipeline.h"
 #include "upkie/cpp/sensors/SensorPipeline.h"
 #include "upkie/cpp/spine/Spine.h"
@@ -33,8 +33,8 @@ using spines::common::make_observers;
 using spines::common::make_sensors;
 using upkie::cpp::actuation::BulletInterface;
 using upkie::cpp::controllers::ControllerPipeline;
-using upkie::cpp::controllers::StopWheels;
 using upkie::cpp::controllers::WheelBalancer;
+using upkie::cpp::controllers::WheelStopper;
 using upkie::cpp::observers::ObserverPipeline;
 using upkie::cpp::sensors::SensorPipeline;
 using upkie::cpp::spine::Spine;
@@ -192,7 +192,7 @@ int run_spine(const char* argv0, const CommandLineArguments& args) {
 
   Spine::Parameters params;
   params.frequency = kSpineFrequency;
-  params.log_path = get_log_path(args.log_dir, "bullet_spine");
+  params.log_path = get_log_path(args.log_dir, "bullet_balancer_spine");
   params.shm_name = args.shm_name;
   spdlog::info("Spine data logged to {}", params.log_path);
 
@@ -202,8 +202,8 @@ int run_spine(const char* argv0, const CommandLineArguments& args) {
 
   ControllerPipeline controllers;
 
-  auto stop_wheels = std::make_shared<StopWheels>();
-  controllers.append(stop_wheels);
+  auto wheel_stopper = std::make_shared<WheelStopper>();
+  controllers.append(wheel_stopper);
 
   WheelBalancer::Parameters balancer_params;
   balancer_params.dt = 1.0 / kSpineFrequency;
