@@ -92,6 +92,13 @@ class TestUpkieServos(unittest.TestCase):
             places=5,
         )
 
+        action[not_wheel]["feedforward_torque"] = 1e20
+        self.env.step(action)
+        self.assertAlmostEqual(
+            self.env._spine.action["servo"][not_wheel]["feedforward_torque"],
+            self.env.action_space[not_wheel]["feedforward_torque"].high[0],
+            places=5,
+        )
 
 if __name__ == "__main__":
     unittest.main()
