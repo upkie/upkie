@@ -16,14 +16,14 @@ namespace upkie::cpp::controllers {
 
 using palimpsest::Dictionary;
 
-//! Reset wheel commands to no position and zero velocity
-class StopWheels : public Controller {
+//! Reset wheel commands to no position and zero velocity.
+class WheelStopper : public Controller {
  public:
   /*! Initialize controller.
    *
    * \param[in] params Controller parameters.
    */
-  explicit StopWheels();
+  explicit WheelStopper();
 
   //! Name of the controller.
   inline std::string name() const noexcept final {

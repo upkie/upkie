@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2025 Inria
 
-#include "upkie/cpp/controllers/StopWheels.h"
+#include "upkie/cpp/controllers/WheelStopper.h"
 
 namespace upkie::cpp::controllers {
 
-StopWheels::StopWheels() {}
+WheelStopper::WheelStopper() {}
 
-void StopWheels::reset(const Dictionary& config) {}
+void WheelStopper::reset(const Dictionary& config) {}
 
-void StopWheels::read(const Dictionary& observation, const Dictionary& action) {
-}
+void WheelStopper::read(const Dictionary& observation,
+                        const Dictionary& action) {}
 
-void StopWheels::write(Dictionary& action) {
+void WheelStopper::write(Dictionary& action) {
   for (const auto& wheel : {"left_wheel", "right_wheel"}) {
     auto& servo_action = action("servo")(wheel);
     servo_action("feedforward_torque") = 0.0;  // [N.m]
