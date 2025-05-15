@@ -23,9 +23,9 @@
 #include "upkie/cpp/utils/get_log_path.h"
 #include "upkie/cpp/version.h"
 
-namespace spines::bullet {
-
 using palimpsest::Dictionary;
+using spines::common::make_observers;
+using spines::common::make_sensors;
 using upkie::cpp::actuation::BulletInterface;
 using upkie::cpp::controllers::ControllerPipeline;
 using upkie::cpp::observers::ObserverPipeline;
@@ -205,9 +205,8 @@ int run_spine(const char* argv0, const CommandLineArguments& args) {
   spdlog::info("Spine data logged to {}", params.log_path);
 
   BulletInterface interface = make_actuation_interface(argv0, args);
-  SensorPipeline sensors =
-      common::make_sensors(/* joystick_required = */ false);
-  ObserverPipeline observers = common::make_observers(args.spine_frequency);
+  SensorPipeline sensors = make_sensors(/* joystick_required = */ false);
+  ObserverPipeline observers = make_observers(args.spine_frequency);
   ControllerPipeline controllers;
   Spine spine(params, interface, sensors, observers, controllers);
   if (args.nb_substeps == 0u) {
@@ -220,10 +219,8 @@ int run_spine(const char* argv0, const CommandLineArguments& args) {
   return EXIT_SUCCESS;
 }
 
-}  // namespace spines::bullet
-
 int main(int argc, char** argv) {
-  spines::bullet::CommandLineArguments args({argv + 1, argv + argc});
+  CommandLineArguments args({argv + 1, argv + argc});
   if (args.error) {
     return EXIT_FAILURE;
   } else if (args.help) {
@@ -233,6 +230,5 @@ int main(int argc, char** argv) {
     std::cout << "Upkie bullet spine " << upkie::cpp::kVersion << "\n";
     return EXIT_SUCCESS;
   }
-
-  return spines::bullet::run_spine(argv[0], args);
+  return run_spine(argv[0], args);
 }
