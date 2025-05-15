@@ -233,6 +233,5 @@ int main(int argc, char** argv) {
     std::cout << "Upkie bullet spine " << upkie::cpp::kVersion << "\n";
     return EXIT_SUCCESS;
   }
-
   return run_spine(argv[0], args);
 }
