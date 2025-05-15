@@ -12,6 +12,7 @@
 #include <vector>
 
 #include "upkie/cpp/actuation/MockInterface.h"
+#include "upkie/cpp/controllers/ControllerPipeline.h"
 #include "upkie/cpp/observers/BaseOrientation.h"
 #include "upkie/cpp/observers/FloorContact.h"
 #include "upkie/cpp/observers/ObserverPipeline.h"
@@ -31,6 +32,7 @@ namespace spines::mock {
 
 using palimpsest::Dictionary;
 using upkie::cpp::actuation::MockInterface;
+using upkie::cpp::controllers::ControllerPipeline;
 using upkie::cpp::observers::BaseOrientation;
 using upkie::cpp::observers::FloorContact;
 using upkie::cpp::observers::ObserverPipeline;
@@ -162,6 +164,9 @@ int run_spine(const CommandLineArguments& args) {
   const double dt = 1.0 / args.spine_frequency;
   MockInterface actuation(dt);
 
+  // Empty controller pipeline
+  ControllerPipeline controllers;
+
   // Spine
   Spine::Parameters spine_params;
   spine_params.cpu = args.spine_cpu;
@@ -169,7 +174,7 @@ int run_spine(const CommandLineArguments& args) {
   spine_params.log_path =
       upkie::cpp::utils::get_log_path(args.log_dir, "mock_spine");
   spdlog::info("Spine data logged to {}", spine_params.log_path);
-  Spine spine(spine_params, actuation, sensors, observers);
+  Spine spine(spine_params, actuation, sensors, observers, controllers);
   spine.run();
 
   return EXIT_SUCCESS;

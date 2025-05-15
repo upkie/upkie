@@ -16,6 +16,7 @@
 #include <vector>
 
 #include "upkie/cpp/actuation/Pi3HatInterface.h"
+#include "upkie/cpp/controllers/ControllerPipeline.h"
 #include "upkie/cpp/observers/BaseOrientation.h"
 #include "upkie/cpp/observers/FloorContact.h"
 #include "upkie/cpp/observers/ObserverPipeline.h"
@@ -33,6 +34,7 @@ namespace spines::pi3hat {
 using Pi3Hat = ::mjbots::pi3hat::Pi3Hat;
 using palimpsest::Dictionary;
 using upkie::cpp::actuation::Pi3HatInterface;
+using upkie::cpp::controllers::ControllerPipeline;
 using upkie::cpp::observers::BaseOrientation;
 using upkie::cpp::observers::FloorContact;
 using upkie::cpp::observers::ObserverPipeline;
@@ -200,6 +202,9 @@ int run_spine(const CommandLineArguments& args) {
   auto odometry = std::make_shared<WheelOdometry>(odometry_params);
   observers.append_observer(odometry);
 
+  // Empty controller pipeline
+  ControllerPipeline controllers;
+
   try {
     // pi3hat configuration
     Pi3Hat::Configuration pi3hat_config;
@@ -218,7 +223,7 @@ int run_spine(const CommandLineArguments& args) {
     spine_params.log_path =
         upkie::cpp::utils::get_log_path(args.log_dir, "pi3hat_spine");
     spdlog::info("Spine data logged to {}", spine_params.log_path);
-    Spine spine(spine_params, interface, sensors, observers);
+    Spine spine(spine_params, interface, sensors, observers, controllers);
     spine.run();
   } catch (const ::mjbots::pi3hat::Error& error) {
     std::string message = error.what();
