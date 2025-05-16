@@ -33,6 +33,7 @@ cc_library(
     srcs = ["WheelBalancer.cpp"],
     deps = [
         ":controller",
+        "//upkie/cpp/utils:low_pass_filter",
     ],
 )
 
