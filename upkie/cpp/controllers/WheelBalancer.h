@@ -33,54 +33,55 @@ class WheelBalancer : public Controller {
       spdlog::info("Applying \"wheel_balancer\" runtime configuration");
       const auto& config = global_config("wheel_balancer");
 
-      fall_pitch = config.get("fall_pitch", 1.0);
-      max_ground_velocity = config.get("max_ground_velocity", 2.0);
-      pitch_damping = config.get("pitch_damping", 0.);
-      pitch_stiffness = config.get("pitch_stiffness", 0.);
-      position_damping = config.get("position_damping", 0.);
-      position_stiffness = config.get("position_stiffness", 0.);
-      wheel_radius = config.get("wheel_radius", 0.06);
+      fall_pitch = config.get<double>("fall_pitch", fall_pitch);
+      max_ground_velocity =
+          config.get("max_ground_velocity", max_ground_velocity);
+      pitch_damping = config.get("pitch_damping", pitch_damping);
+      pitch_stiffness = config.get("pitch_stiffness", pitch_stiffness);
+      position_damping = config.get("position_damping", position_damping);
+      position_stiffness = config.get("position_stiffness", position_stiffness);
+      wheel_radius = config.get("wheel_radius", wheel_radius);
     }
 
-    //! Spine timestep in [s]
+    //! Spine timestep in [s].
     double dt;
 
-    //! Fall pitch angle in [rad]
-    double fall_pitch;
+    //! Fall pitch angle in [rad].
+    double fall_pitch = 1.0;
 
     //! Maximum ground velocity, in [m] / [s].
-    double max_ground_velocity;
+    double max_ground_velocity = 2.0;
 
     /*! Pitch error (normalized) damping gain.
      *
      * Corresponds to the proportional term of the velocity PI controller,
      * equivalent to the derivative term of the acceleration PD controller.
      */
-    double pitch_damping;
+    double pitch_damping = 1.0;
 
     /*! Pitch error (normalized) stiffness gain.
      *
      * Corresponds to the integral term of the velocity PI controller,
      * equivalent to the proportional term of the acceleration PD controller.
      */
-    double pitch_stiffness;
+    double pitch_stiffness = 20.0;
 
     /*! Position error (normalized) damping gain.
      *
      * Corresponds to the proportional term of the velocity PI controller,
      * equivalent to the derivative term of the acceleration PD controller.
      */
-    double position_damping;
+    double position_damping = 0.5;
 
     /*! Position error (normalized) stiffness gain.
      *
      * Corresponds to the integral term of the velocity PI controller,
      * equivalent to the proportional term of the acceleration PD controller.
      */
-    double position_stiffness;
+    double position_stiffness = 1.5;
 
-    //! Wheel radius in [m]
-    double wheel_radius;
+    //! Wheel radius in [m].
+    double wheel_radius = 0.06;
   };
 
   /*! Initialize controller.
