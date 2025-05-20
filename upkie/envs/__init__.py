@@ -12,8 +12,8 @@
 import gymnasium as gym
 
 from .upkie_ground_velocity import UpkieGroundVelocity
-from .upkie_servo_positions import UpkieServoPositions
-from .upkie_servo_torques import UpkieServoTorques
+from .upkie_mock_servos import UpkieMockServos
+from .upkie_spine_servos import UpkieSpineServos
 from .upkie_servos import UpkieServos
 
 
@@ -23,19 +23,18 @@ def register() -> None:
     """
     # Environments
     envs = (
-        ("UpkieServoPositions", UpkieServoPositions),
-        ("UpkieServoTorques", UpkieServoTorques),
-        ("UpkieServos", UpkieServos),
+        ("UpkieMockServos", UpkieMockServos),
+        ("UpkieSpineServos", UpkieSpineServos),
     )
     for env_name, env_class in envs:
         gym.envs.registration.register(
-            id=f"{env_name}-v{env_class.version}",
+            id=env_name,
             entry_point=f"upkie.envs:{env_name}",
         )
 
     # Wrappers
     gym.envs.registration.register(
-        id=f"UpkieGroundVelocity-v{UpkieGroundVelocity.version}",
+        id="UpkieGroundVelocity",
         entry_point=(
             "upkie.envs.upkie_ground_velocity:make_upkie_ground_velocity"
         ),
@@ -44,8 +43,8 @@ def register() -> None:
 
 __all__ = [
     "UpkieGroundVelocity",
-    "UpkieServoPositions",
-    "UpkieServoTorques",
+    "UpkieMockServos",
+    "UpkieSpineServos",
     "UpkieServos",
     "register",
 ]
