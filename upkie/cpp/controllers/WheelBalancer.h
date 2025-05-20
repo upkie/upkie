@@ -33,6 +33,7 @@ class WheelBalancer : public Controller {
       spdlog::info("Applying \"wheel_balancer\" runtime configuration");
       const auto& config = global_config("wheel_balancer");
 
+      contact_radius = config.get<double>("contact_radius", contact_radius);
       fall_pitch = config.get<double>("fall_pitch", fall_pitch);
       max_ground_velocity =
           config.get("max_ground_velocity", max_ground_velocity);
@@ -40,8 +41,12 @@ class WheelBalancer : public Controller {
       pitch_stiffness = config.get("pitch_stiffness", pitch_stiffness);
       position_damping = config.get("position_damping", position_damping);
       position_stiffness = config.get("position_stiffness", position_stiffness);
+      stiff_yaw_velocity = config.get("stiff_yaw_velocity", stiff_yaw_velocity);
       wheel_radius = config.get("wheel_radius", wheel_radius);
     }
+
+    //! Half the distance between the two wheels, in meters.
+    double contact_radius = 0.1524;
 
     //! Spine timestep in [s].
     double dt;
@@ -57,7 +62,7 @@ class WheelBalancer : public Controller {
      * Corresponds to the proportional term of the velocity PI controller,
      * equivalent to the derivative term of the acceleration PD controller.
      */
-    double pitch_damping = 1.0;
+    double pitch_damping = 1.8;
 
     /*! Pitch error (normalized) stiffness gain.
      *
@@ -71,14 +76,17 @@ class WheelBalancer : public Controller {
      * Corresponds to the proportional term of the velocity PI controller,
      * equivalent to the derivative term of the acceleration PD controller.
      */
-    double position_damping = 0.5;
+    double position_damping = 0.7;
 
     /*! Position error (normalized) stiffness gain.
      *
      * Corresponds to the integral term of the velocity PI controller,
      * equivalent to the proportional term of the acceleration PD controller.
      */
-    double position_stiffness = 1.5;
+    double position_stiffness = 1.6;
+
+    //! Magnitude of yaw velocity in [rad] / [s] above which legs get stiffer.
+    double stiff_yaw_velocity = 0.1;
 
     //! Wheel radius in [m].
     double wheel_radius = 0.06;
@@ -124,6 +132,9 @@ class WheelBalancer : public Controller {
 
   //! Target ground position in [m].
   double target_ground_position_;
+
+  //! Target yaw velocity in [rad] / [s].
+  double target_yaw_velocity_;
 };
 
 }  // namespace upkie::cpp::controllers
