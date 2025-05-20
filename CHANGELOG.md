@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Added
 
 - docs: Install `libtinfo5` when building from source on Debian-based distros
+- envs: Add `env.get_bullet_action`
 - examples: Domain randomization by environment wrapping
 - sensors: Sensor pipeline that runs at every spine cycle
 
@@ -39,6 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update palimpsest to version 2.3.2
 - cpp: Spine constructor now takes an additional sensor-pipeline argument
 - envs: Hard-code spine retries to ten attempts
+- envs: Rename `env.bullet_extra` to `env.set_bullet_action`
 
 ### Fixed
 
