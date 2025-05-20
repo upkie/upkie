@@ -9,9 +9,11 @@
 
 namespace upkie::cpp::controllers {
 
-const double kAirReturnPeriod = 1.0;       // [s]
-const double kMaxIntegralVelocity = 10.0;  // [m] / [s]
-const double kMaxTargetDistance = 1.0;     // [m]
+constexpr double kAirReturnPeriod = 1.0;       // [s]
+constexpr double kMaxIntegralVelocity = 10.0;  // [m] / [s]
+constexpr double kMaxTargetDistance = 1.0;     // [m]
+constexpr double kGainScale = 2.0;
+constexpr double kTurningGainScale = 2.0;
 
 using upkie::cpp::utils::low_pass_filter;
 
@@ -19,7 +21,8 @@ WheelBalancer::WheelBalancer(const Parameters& params)
     : params_(params),
       ground_velocity_(0.0),
       integral_velocity_(0.0),
-      target_ground_position_(0.0) {}
+      target_ground_position_(0.0),
+      target_yaw_velocity_(0.0) {}
 
 void WheelBalancer::reset(const Dictionary& config) {
   params_.configure(config);
@@ -27,14 +30,16 @@ void WheelBalancer::reset(const Dictionary& config) {
   ground_velocity_ = 0.0;
   integral_velocity_ = 0.0;
   target_ground_position_ = 0.0;
+  target_yaw_velocity_ = 0.0;
 }
 
 void WheelBalancer::read(const Dictionary& observation,
                          const Dictionary& action) {
   double target_ground_velocity = 0.0;
-  if (action.has("wheel_balancer")) {
+  if (action.has("bullet")) {
     target_ground_velocity =
-        action("wheel_balancer").get("target_ground_velocity", 0.0);
+        action("bullet").get("target_ground_velocity", 0.0);
+    target_yaw_velocity_ = action("bullet").get("target_yaw_velocity", 0.0);
   }
 
   const double dt = params_.dt;
@@ -82,11 +87,27 @@ void WheelBalancer::read(const Dictionary& observation,
 }
 
 void WheelBalancer::write(Dictionary& action) {
-  const double ref_wheel_velocity = ground_velocity_ / params_.wheel_radius;
+  const double wheel_radius = params_.wheel_radius;
+  const double ref_wheel_velocity = ground_velocity_ / wheel_radius;
   double& left_wheel_velocity = action("servo")("left_wheel")("velocity");
   double& right_wheel_velocity = action("servo")("right_wheel")("velocity");
   left_wheel_velocity += ref_wheel_velocity;
   right_wheel_velocity -= ref_wheel_velocity;
+
+  const double yaw_to_wheel = params_.contact_radius / wheel_radius;
+  left_wheel_velocity += yaw_to_wheel * target_yaw_velocity_;
+  right_wheel_velocity += yaw_to_wheel * target_yaw_velocity_;
+
+  const double turning_prob =
+      (std::abs(target_yaw_velocity_) > params_.stiff_yaw_velocity) ? 1.0 : 0.0;
+  const double kp_scale = kGainScale + kTurningGainScale * turning_prob;
+  const double kd_scale = kGainScale + kTurningGainScale * turning_prob;
+  for (const auto& name :
+       {"left_hip", "left_knee", "right_hip", "right_knee"}) {
+    auto& servo_action = action("servo")(name);
+    servo_action("kp_scale") = kp_scale;
+    servo_action("kd_scale") = kd_scale;
+  }
 }
 
 }  // namespace upkie::cpp::controllers
