@@ -31,6 +31,7 @@ help:
 build: clean_broken_links  ## build Raspberry Pi targets
 	$(BAZEL) build --config=pi64 //spines:mock_spine
 	$(BAZEL) build --config=pi64 //spines:pi3hat_spine
+	$(BAZEL) build --config=pi64 //spines:pi3hat_balancer_spine
 
 .PHONY: check_upkie_name
 check_upkie_name:
@@ -55,6 +56,10 @@ clean_broken_links:
 .PHONY: run_bullet_spine
 run_bullet_spine:  ## run the Bullet simulation spine
 	$(BAZEL) run //spines:bullet_spine -- --show
+
+.PHONY: run_bullet_balancer_spine
+run_bullet_balancer_spine:  ## run the balancer Bullet simulation spine
+	$(BAZEL) run //spines:bullet_balancer_spine -- --show
 
 # This rule is handy if the target Upkie is not connected to the Internet
 .PHONY: set_date
@@ -104,6 +109,9 @@ run_mock_spine:  ### run the mock spine on the Raspberry Pi
 # NB: run_pi3hat_spine is used in build instructions
 run_pi3hat_spine:  ### run the pi3hat spine on the Raspberry Pi
 	$(RASPUNZEL) run -s //spines:pi3hat_spine
+
+run_pi3hat_balancer_spine:  ### run the pi3hat balancer spine on the Raspberry Pi
+	$(RASPUNZEL) run -s //spines:pi3hat_balancer_spine
 
 # DEV HELPERS
 # ===========
