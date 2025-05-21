@@ -35,34 +35,12 @@ py_library(
 )
 
 py_library(
-    name = "upkie_servo_positions",
-    srcs = [
-        "upkie_servo_positions.py",
-    ],
-    deps = [
-        ":upkie_servos",
-    ],
-)
-
-py_library(
-    name = "upkie_servo_torques",
-    srcs = [
-        "upkie_servo_torques.py",
-    ],
-    deps = [
-        ":upkie_servos",
-    ],
-)
-
-py_library(
     name = "envs",
     srcs = [
         "__init__.py",
     ],
     deps = [
         ":upkie_ground_velocity",
-        ":upkie_servo_positions",
-        ":upkie_servo_torques",
         ":upkie_servos",
     ],
 )
