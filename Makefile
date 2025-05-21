@@ -59,7 +59,7 @@ run_bullet_spine:  ## run the Bullet simulation spine
 
 .PHONY: run_bullet_balancer_spine
 run_bullet_balancer_spine:  ## run the balancer Bullet simulation spine
-	$(BAZEL) run //spines:bullet_balancer_spine -- --show
+	$(BAZEL) run //spines/balancer_spine:bullet -- --show
 
 # This rule is handy if the target Upkie is not connected to the Internet
 .PHONY: set_date
