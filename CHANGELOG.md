@@ -9,12 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- envs: Add `UpkieMockServos` environment
+- envs: Add `Upkie-Servos-Mock` environment
 - utils: Joystick utility class
 
 ### Changed
 
-- **Breaking:** Rename `UpkieServos` to `UpkieSpineServos`
+- **Breaking:** Rename `UpkieServos` to `Upkie-Servos-Spine`
 - envs: Drop Gymnasium environment versioning
 - spines: Factor common observers and sensors between spines
 
