@@ -18,12 +18,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Development workflow based on Pixi
 - cpp: Controller pipeline run by the spine after observers
-- envs: Add `UpkieMockServos` environment
+- envs: Add `Upkie-Servos-Mock` environment
 - utils: Joystick utility class
 
 ### Changed
 
-- **Breaking:** Rename `UpkieServos` to `UpkieSpineServos`
+- **Breaking:** Rename `UpkieServos` to `Upkie-Servos-Spine`
 - cpp: Spines now take a controller pipeline as constructor argument
 - envs: Wait one second when resetting environments on the Raspberry Pi (thanks to @Tordjx)
 

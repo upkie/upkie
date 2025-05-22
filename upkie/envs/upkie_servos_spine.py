@@ -19,7 +19,7 @@ from upkie.utils.robot_state import RobotState
 from .upkie_servos import UpkieServos
 
 
-class UpkieSpineServos(UpkieServos):
+class UpkieServosSpine(UpkieServos):
     r"""!
     Upkie servo environment connected to a simulation or real spine.
 
