@@ -179,6 +179,7 @@ class UpkieServosSpine(UpkieServos):
 
         # Prepare spine action
         spine_action = self.__get_spine_action(action)
+        self.__bonus_action["log"] = self.log_dict
         for key in ("bullet", "log"):
             if not self.__bonus_action[key]:
                 continue
@@ -247,18 +248,6 @@ class UpkieServosSpine(UpkieServos):
                 )
             spine_action["servo"][joint.name] = servo_action
         return spine_action
-
-    def log(self, name: str, entry) -> None:
-        r"""!
-        Log a new entry to the "log" key of the action dictionary.
-
-        \param name Name of the entry.
-        \param entry Dictionary to log along with the actual action.
-        """
-        if isinstance(entry, dict):
-            self.__bonus_action["log"][name] = entry.copy()
-        else:  # logging values directly
-            self.__bonus_action["log"][name] = entry
 
     def get_bullet_action(self) -> dict:
         r"""!
