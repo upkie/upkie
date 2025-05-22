@@ -11,9 +11,7 @@
 
 import gymnasium as gym
 
-from .upkie_ground_velocity import UpkieGroundVelocity
 from .upkie_servos_mock import UpkieServosMock
-from .upkie_servos import UpkieServos
 from .upkie_servos_spine import UpkieServosSpine
 
 
@@ -34,9 +32,9 @@ def register() -> None:
 
     # Wrappers
     gym.envs.registration.register(
-        id="UpkieGroundVelocity",
+        id="Upkie-GroundVelocity-Spine",
         entry_point=(
-            "upkie.envs.upkie_ground_velocity:make_upkie_ground_velocity"
+            "upkie.envs.upkie_ground_velocity:make_upkie_ground_velocity_spine"
         ),
     )
 
