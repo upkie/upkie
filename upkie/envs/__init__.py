@@ -12,9 +12,9 @@
 import gymnasium as gym
 
 from .upkie_ground_velocity import UpkieGroundVelocity
-from .upkie_mock_servos import UpkieMockServos
+from .upkie_servos_mock import UpkieServosMock
 from .upkie_servos import UpkieServos
-from .upkie_spine_servos import UpkieServosSpine
+from .upkie_servos_spine import UpkieServosSpine
 
 
 def register() -> None:
