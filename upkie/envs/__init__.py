@@ -23,8 +23,8 @@ def register() -> None:
     """
     # Environments
     envs = (
-        ("UpkieMockServos", UpkieMockServos),
-        ("UpkieSpineServos", UpkieSpineServos),
+        ("Upkie-Servos-Mock", UpkieServosMock),
+        ("Upkie-Servos-Spine", UpkieServosSpine),
     )
     for env_name, env_class in envs:
         gym.envs.registration.register(

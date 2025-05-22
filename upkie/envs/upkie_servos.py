@@ -9,16 +9,16 @@ from typing import Optional, Tuple
 import gymnasium as gym
 import numpy as np
 import upkie_description
-from loop_rate_limiters import RateLimiter
 
-from upkie.exceptions import UpkieException
 from upkie.model import Model
 from upkie.utils.robot_state import RobotState
 
+from .upkie_base import UpkieBase
 
-class UpkieServos(gym.Env):
+
+class UpkieServos(UpkieBase):
     r"""!
-    Base Upkie environment where actions command servomotors directly.
+    Upkie environment where actions command servomotors directly.
 
     \anchor upkie_servos_description
 
@@ -104,18 +104,9 @@ class UpkieServos(gym.Env):
     functions.
     """
 
-    __frequency: Optional[float]
-    __rate: Optional[RateLimiter]
-    __regulate_frequency: bool
-
     ## \var action_space
     ## Action space.
     action_space: gym.spaces.dict.Dict
-
-    ## \var init_state
-    ## Initial state for the floating base of the robot, which may be
-    ## randomized upon resets.
-    init_state: RobotState
 
     ## \var model
     ## Robot model read from its URDF description.
@@ -151,12 +142,12 @@ class UpkieServos(gym.Env):
         \throw SpineError If the spine did not respond after the prescribed
             number of trials.
         """
-        if regulate_frequency and frequency is None:
-            raise UpkieException(f"{regulate_frequency=} but {frequency=}")
-        if init_state is None:
-            init_state = RobotState(
-                position_base_in_world=np.array([0.0, 0.0, 0.6])
-            )
+        super().__init__(
+            frequency=frequency,
+            frequency_checks=frequency_checks,
+            init_state=init_state,
+            regulate_frequency=regulate_frequency,
+        )
 
         action_space = {}
         neutral_action = {}
@@ -272,31 +263,10 @@ class UpkieServos(gym.Env):
         self.observation_space = gym.spaces.Dict(servo_space)
 
         # Class attributes
-        self.__frequency = frequency
-        self.__frequency_checks = frequency_checks
         self.__max_action = max_action
         self.__min_action = min_action
         self.__neutral_action = neutral_action
-        self.__rate = None
-        self.__regulate_frequency = regulate_frequency
-        self.init_state = init_state
         self.model = model
-
-    @property
-    def dt(self) -> Optional[float]:
-        """!
-        Regulated period of the control loop in seconds, or `None` if there
-        is no loop frequency regulation.
-        """
-        return 1.0 / self.__frequency if self.__frequency is not None else None
-
-    @property
-    def frequency(self) -> Optional[float]:
-        """!
-        Regulated frequency of the control loop in Hz, or `None` if there is
-        no loop frequency regulation.
-        """
-        return self.__frequency
 
     def get_neutral_action(self) -> dict:
         r"""!
@@ -305,14 +275,6 @@ class UpkieServos(gym.Env):
         \return Neutral action where servos don't move.
         """
         return self.__neutral_action.copy()
-
-    def log(self, name: str, entry) -> None:
-        r"""!
-        Log a new entry to the spine, if one is connected.
-
-        \param name Name of the entry.
-        \param entry Dictionary to log along with the actual action.
-        """
 
     def reset(
         self,
@@ -331,17 +293,8 @@ class UpkieServos(gym.Env):
             - `info`: Dictionary with auxiliary diagnostic information. For
               Upkie this is the full observation dictionary sent by the spine.
         """
-        super().reset(seed=seed)
-
-    def __reset_rate(self):
-        if self.__regulate_frequency:
-            rate_name = f"{self.__class__.__name__} rate limiter"
-            self.__rate = RateLimiter(
-                self.__frequency,
-                name=rate_name,
-                warn=self.__frequency_checks,
-            )
-        return {}, {}
+        observation, info = super().reset(seed=seed, options=options)
+        return observation, info
 
     def __reset_init_state(self):
         init_state, np_random = self.init_state, self.np_random
@@ -367,12 +320,3 @@ class UpkieServos(gym.Env):
         if self.__regulate_frequency:
             self.__rate.sleep()  # wait until clock tick to send the action
             self.log("rate", {"slack": self.__rate.slack})
-
-    def update_init_rand(self, **kwargs) -> None:
-        r"""!
-        Update initial-state randomization.
-
-        Keyword arguments are forwarded as is to \ref
-        upkie.utils.robot_state_randomization.RobotStateRandomization.update.
-        """
-        self.init_state.randomization.update(**kwargs)
