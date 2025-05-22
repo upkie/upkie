@@ -20,6 +20,7 @@ from upkie.utils.filters import low_pass_filter
 from upkie.utils.spdlog import logging
 
 from .upkie_servos import UpkieServos
+from .upkie_servos_spine import UpkieServosSpine
 
 
 class UpkieGroundVelocity(gym.Wrapper):
@@ -328,9 +329,9 @@ class UpkieGroundVelocity(gym.Wrapper):
         return observation, reward, terminated, truncated, info
 
 
-def make_upkie_ground_velocity(**kwargs):
+def make_upkie_ground_velocity_spine(**kwargs):
     r"""!
-    Make a new ground-velocity environment.
+    Make a new ground-velocity environment around a servos spine.
 
     This function is meant to be called by `gymnasium.make()` rather than to be
     called directly.
@@ -356,5 +357,5 @@ def make_upkie_ground_velocity(**kwargs):
         for key, value in kwargs.items()
         if key not in ground_velocity_kwargs
     }
-    env = UpkieServos(**servos_kwargs)
-    return UpkieGroundVelocity(env, **ground_velocity_kwargs)
+    servos_env = UpkieServosSpine(**servos_kwargs)
+    return UpkieGroundVelocity(servos_env, **ground_velocity_kwargs)
