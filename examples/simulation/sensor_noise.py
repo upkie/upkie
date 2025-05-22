@@ -21,7 +21,7 @@ JOINT_NOISE = {
 if __name__ == "__main__":
     upkie.envs.register()
     with gym.make(
-        "UpkieGroundVelocity-v4",
+        "Upkie-GroundVelocity-Spine",
         frequency=200.0,
         spine_config={
             "bullet": {

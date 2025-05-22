@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Inria
 
-"""Tiny example: balancing by PD feedback to wheel velocities."""
+"""Balancing an upkie by PD feedback to wheel velocities."""
 
 import gymnasium as gym
 
@@ -13,7 +13,7 @@ import upkie.envs
 upkie.envs.register()
 
 if __name__ == "__main__":
-    with gym.make("UpkieGroundVelocity-v4", frequency=200.0) as env:
+    with gym.make("Upkie-GroundVelocity-Spine", frequency=200.0) as env:
         observation, _ = env.reset()  # connects to the spine
         action = 0.0 * env.action_space.sample()
         for step in range(1_000_000):
