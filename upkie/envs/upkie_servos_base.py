@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Inria
 
-from typing import Optional, Tuple
+from typing import Optional
 
 import gymnasium as gym
 import numpy as np
@@ -16,7 +16,7 @@ from upkie.utils.robot_state import RobotState
 from .upkie_base import UpkieBase
 
 
-class UpkieServos(UpkieBase):
+class UpkieServosBase(UpkieBase):
     r"""!
     Upkie environment where actions command servomotors directly.
 

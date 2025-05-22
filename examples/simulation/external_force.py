@@ -60,5 +60,5 @@ def run(env: upkie.envs.UpkieGroundVelocity):
 
 
 if __name__ == "__main__":
-    with gym.make("UpkieGroundVelocity-v4", frequency=200.0) as env:
+    with gym.make("Upkie-GroundVelocity-Spine", frequency=200.0) as env:
         run(env)

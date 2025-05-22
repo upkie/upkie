@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Breaking:** Rename `UpkieGroundVelocity` to `Upkie-GroundVelocity-Spine`
 - **Breaking:** Rename `UpkieServos` to `Upkie-Servos-Spine`
 - envs: Rename `UpkieGroundVelocity` to `Upkie-GroundVelocity-Spine`
 - envs: Drop Gymnasium environment versioning

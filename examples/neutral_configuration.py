@@ -43,7 +43,7 @@ def reset_to_neutral(env: upkie.envs.UpkieServos):
 
 
 if __name__ == "__main__":
-    with gym.make("UpkieServos-v5", frequency=200.0) as env:
+    with gym.make("Upkie-Servos-Spine", frequency=200.0) as env:
         last_action = reset_to_neutral(env)
         while True:  # hold configuration until the agent is interrupted
             env.step(last_action)

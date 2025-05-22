@@ -4,7 +4,6 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Inria
 
-import abc
 from typing import Optional, Tuple
 
 import gymnasium as gym
@@ -16,12 +15,13 @@ from upkie.model import Model
 from upkie.utils.robot_state import RobotState
 
 
-class UpkieBase(gym.Env, abc.ABC):
+class UpkieBase(gym.Env):
     r"""!
     Base class with features shared by all Upkie environments.
 
     Those features are:
 
+    - Logging of numerical values and dictionaries
     - Loop frequency regulation
     - Initial state randomization
     """
@@ -34,6 +34,10 @@ class UpkieBase(gym.Env, abc.ABC):
     ## Initial state for the floating base of the robot, which may be
     ## randomized upon resets.
     init_state: RobotState
+
+    ## \var log_dic
+    ## Logging dictionary, forwarded in action dictionaries sent to a spine.
+    log_dict: dict
 
     ## \var model
     ## Robot model read from its URDF description.
@@ -78,6 +82,7 @@ class UpkieBase(gym.Env, abc.ABC):
         self.__rate = None
         self.__regulate_frequency = regulate_frequency
         self.init_state = init_state
+        self.log_dict = {}
 
     @property
     def dt(self) -> Optional[float]:
@@ -103,14 +108,17 @@ class UpkieBase(gym.Env, abc.ABC):
         """
         return self.__neutral_action.copy()
 
-    @abc.abstractmethod
     def log(self, name: str, entry) -> None:
         r"""!
-        Log a new entry to the spine, if one is connected.
+        Log a new entry.
 
         \param name Name of the entry.
-        \param entry Dictionary to log along with the actual action.
+        \param entry Dictionary to log.
         """
+        if isinstance(entry, dict):
+            self.log_dict["log"][name] = entry.copy()
+        else:  # logging values directly
+            self.log_dict["log"][name] = entry
 
     def reset(
         self,

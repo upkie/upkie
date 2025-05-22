@@ -18,7 +18,7 @@ NB_STEPS = 100
 
 
 if __name__ == "__main__":
-    with gym.make("UpkieGroundVelocity-v4", frequency=200.0) as env:
+    with gym.make("Upkie-GroundVelocity-Spine", frequency=200.0) as env:
         trajectories = []
         action = 0.0 * env.action_space.sample()
         for i in range(NB_RUNS):
