@@ -112,5 +112,5 @@ def run(env: gym.Env, nb_env_steps: int = 10_000) -> None:
 
 
 if __name__ == "__main__":
-    with gym.make("Upkie-GroundVelocity-Spine", frequency=200.0) as env:
+    with gym.make("UpkieGroundVelocity", frequency=200.0) as env:
         run(env)

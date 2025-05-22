@@ -329,7 +329,7 @@ class UpkieGroundVelocity(gym.Wrapper):
         return observation, reward, terminated, truncated, info
 
 
-def make_upkie_ground_velocity_spine(**kwargs):
+def make_upkie_ground_velocity(**kwargs):
     r"""!
     Make a new ground-velocity environment around a servos spine.
 

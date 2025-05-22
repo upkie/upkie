@@ -39,7 +39,7 @@ def add_domain_randomization(
 
 
 if __name__ == "__main__":
-    with gym.make("Upkie-GroundVelocity-Spine", frequency=200.0) as spine_env:
+    with gym.make("UpkieGroundVelocity", frequency=200.0) as spine_env:
         env = add_domain_randomization(spine_env)
         observation, _ = env.reset()
         gain = np.array([10.0, 1.0, 0.0, 0.1])
