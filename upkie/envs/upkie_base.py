@@ -21,7 +21,6 @@ class UpkieBase(gym.Env):
 
     Those features are:
 
-    - Logging of numerical values and dictionaries
     - Loop frequency regulation
     - Initial state randomization
     """
@@ -34,10 +33,6 @@ class UpkieBase(gym.Env):
     ## Initial state for the floating base of the robot, which may be
     ## randomized upon resets.
     init_state: RobotState
-
-    ## \var log_dic
-    ## Logging dictionary, forwarded in action dictionaries sent to a spine.
-    log_dict: dict
 
     ## \var model
     ## Robot model read from its URDF description.
@@ -82,7 +77,6 @@ class UpkieBase(gym.Env):
         self.__rate = None
         self.__regulate_frequency = regulate_frequency
         self.init_state = init_state
-        self.log_dict = {}
 
     @property
     def dt(self) -> Optional[float]:
@@ -107,18 +101,6 @@ class UpkieBase(gym.Env):
         \return Neutral action where servos don't move.
         """
         return self.__neutral_action.copy()
-
-    def log(self, name: str, entry) -> None:
-        r"""!
-        Log a new entry.
-
-        \param name Name of the entry.
-        \param entry Dictionary to log.
-        """
-        if isinstance(entry, dict):
-            self.log_dict["log"][name] = entry.copy()
-        else:  # logging values directly
-            self.log_dict["log"][name] = entry
 
     def reset(
         self,
@@ -153,7 +135,6 @@ class UpkieBase(gym.Env):
         """
         if self.__regulate_frequency:
             self.__rate.sleep()  # wait until clock tick to send the action
-            self.log("rate", {"slack": self.__rate.slack})
 
     def update_init_rand(self, **kwargs) -> None:
         r"""!
