@@ -129,7 +129,6 @@ class UpkieSpineServos(UpkieServos):
             # real robot can take time.
             time.sleep(1.0)
 
-        self.__reset_rate()
         self.__reset_init_state()
         spine_observation = self._spine.start(self._spine_config)
         observation = self.__get_observation(spine_observation)
