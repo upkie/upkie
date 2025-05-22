@@ -11,14 +11,14 @@ from multiprocessing.shared_memory import SharedMemory
 
 import numpy as np
 
-from upkie.envs import UpkieServos
+from upkie.envs.upkie_servos_spine import UpkieServosSpine
 from upkie.envs.tests.mock_spine import MockSpine
 
 
-class TestUpkieServos(unittest.TestCase):
+class TestUpkieServosSpine(unittest.TestCase):
     def setUp(self):
         shared_memory = SharedMemory(name=None, size=42, create=True)
-        self.env = UpkieServos(
+        self.env = UpkieServosSpine(
             frequency=100.0,
             shm_name=shared_memory._name,
         )
@@ -99,6 +99,7 @@ class TestUpkieServos(unittest.TestCase):
             self.env.action_space[not_wheel]["feedforward_torque"].high[0],
             places=5,
         )
+
 
 if __name__ == "__main__":
     unittest.main()
