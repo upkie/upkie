@@ -32,9 +32,9 @@ def register() -> None:
 
     # Wrappers
     gym.envs.registration.register(
-        id="Upkie-GroundVelocity-Spine",
+        id="UpkieGroundVelocity",
         entry_point=(
-            "upkie.envs.upkie_ground_velocity:make_upkie_ground_velocity_spine"
+            "upkie.envs.upkie_ground_velocity:make_upkie_ground_velocity"
         ),
     )
 
