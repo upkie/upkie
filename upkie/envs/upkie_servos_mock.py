@@ -15,7 +15,7 @@ from upkie.utils.robot_state import RobotState
 from .upkie_servos import UpkieServos
 
 
-class UpkieMockServos(UpkieServos):
+class UpkieServosMock(UpkieServos):
     r"""!
     Upkie servo environment that mimicks commanding servos perfectly.
 
