@@ -23,11 +23,11 @@ class UpkieServosSpine(UpkieServos):
     r"""!
     Upkie servo environment connected to a simulation or real spine.
 
-    See [UpkieServos](\ref upkie_servos_description) for a description of the
-    action and observation spaces of servo environments.
+    Check out the base [servo environment](\ref upkie_servos_description) for a
+    description of the action and observation spaces.
     """
 
-    __bonus_action: dict
+    __bullet_action: dict
     _spine: SpineInterface
     _spine_config: dict
 
@@ -86,7 +86,7 @@ class UpkieServosSpine(UpkieServos):
             nested_update(merged_spine_config, spine_config)
 
         # Class attributes
-        self.__bonus_action = {"bullet": {}, "log": {}}
+        self.__bullet_action = {}
         self._spine = SpineInterface(shm_name, retries=10)
         self._spine_config = merged_spine_config
 
@@ -179,13 +179,10 @@ class UpkieServosSpine(UpkieServos):
 
         # Prepare spine action
         spine_action = self.__get_spine_action(action)
-        self.__bonus_action["log"] = self.log_dict
-        for key in ("bullet", "log"):
-            if not self.__bonus_action[key]:
-                continue
-            spine_action[key] = {}
-            spine_action[key].update(self.__bonus_action[key])
-            self.__bonus_action[key].clear()
+        if self.__bullet_action:
+            spine_action["bullet"] = {}
+            spine_action["bullet"].update(self.__bullet_action)
+            self.__bullet_action.clear()
 
         # Send action to and get observation from the spine
         spine_observation = self._spine.set_action(spine_action)
@@ -255,7 +252,7 @@ class UpkieServosSpine(UpkieServos):
 
         \return Upcoming simulator action.
         """
-        return self.__bonus_action["bullet"]
+        return self.__bullet_action
 
     def set_bullet_action(self, bullet_action: dict) -> None:
         r"""!
@@ -266,4 +263,4 @@ class UpkieServosSpine(UpkieServos):
 
         \param bullet_action Action dictionary processed by the Bullet spine.
         """
-        self.__bonus_action["bullet"] = bullet_action.copy()
+        self.__bullet_action = bullet_action.copy()
