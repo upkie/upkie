@@ -117,7 +117,7 @@ tasks = { make-docs = "doxygen --version && cd docs && make" }
 
 [tool.pixi.feature.pack]
 dependencies = { pixi-pack = "*" }
-tasks = { pack-to-aarch64 = "pixi-pack pack -e default --platform linux-aarch64 --ignore-pypi-errors" }
+tasks = { pack-to-aarch64 = "pixi-pack pack -e default --platform linux-aarch64 --ignore-pypi-non-wheel" }
 
 [tool.pixi.feature.test]
 dependencies = { "stable-baselines3" = ">2.3.0" }
