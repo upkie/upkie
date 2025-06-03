@@ -28,7 +28,6 @@ py_library(
         "upkie_ground_velocity.py",
     ],
     deps = [
-        "//upkie/envs/rewards",
         "//upkie/utils:filters",
         ":upkie_servos",
     ],
