@@ -23,7 +23,7 @@ class TestUpkieEnvs(unittest.TestCase):
         shared_memory = SharedMemory(name=None, size=42, create=True)
         upkie.envs.register()
         for env_name in upkie.envs.__all__:
-            if env_name in ("register", "UpkieBaseEnv"):
+            if env_name in ("register", "UpkieEnv"):
                 continue
             kwargs = {}
             if env_name.startswith("Upkie"):
