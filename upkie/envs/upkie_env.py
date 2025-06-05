@@ -15,7 +15,7 @@ from upkie.model import Model
 from upkie.utils.robot_state import RobotState
 
 
-class UpkieBase(gym.Env):
+class UpkieEnv(gym.Env):
     r"""!
     Base class with features shared by all Upkie environments.
 

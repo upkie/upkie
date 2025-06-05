@@ -23,6 +23,13 @@ py_library(
 )
 
 py_library(
+    name = "joystick",
+    srcs = ["joystick.py"],
+    deps = [
+    ],
+)
+
+py_library(
     name = "nested_update",
     srcs = ["nested_update.py"],
 )
@@ -59,6 +66,7 @@ py_library(
     deps = [
         ":clamp",
         ":filters",
+        ":joystick",
         ":nested_update",
         ":raspi",
         ":robot_state",
