@@ -16,7 +16,7 @@ from upkie.utils.robot_state import RobotState
 from .upkie_base import UpkieBase
 
 
-class UpkieServosBase(UpkieBase):
+class UpkieServos(UpkieBase):
     r"""!
     Upkie environment where actions command servomotors directly.
 
@@ -263,9 +263,9 @@ class UpkieServosBase(UpkieBase):
         self.observation_space = gym.spaces.Dict(servo_space)
 
         # Class attributes
-        self.__max_action = max_action
-        self.__min_action = min_action
-        self.__neutral_action = neutral_action
+        self._max_action = max_action
+        self._min_action = min_action
+        self._neutral_action = neutral_action
         self.model = model
 
     def get_neutral_action(self) -> dict:
@@ -274,4 +274,4 @@ class UpkieServosBase(UpkieBase):
 
         \return Neutral action where servos don't move.
         """
-        return self.__neutral_action.copy()
+        return self._neutral_action.copy()
