@@ -230,7 +230,7 @@ class UpkieServosSpine(UpkieServos):
                     env_action[joint.name][key]
                     if key in env_action[joint.name]
                     and (not self.ACTION_MASK or key in self.ACTION_MASK)
-                    else self.__neutral_action[joint.name][key]
+                    else self._neutral_action[joint.name][key]
                 )
                 action_value = (
                     action.item()
@@ -239,8 +239,8 @@ class UpkieServosSpine(UpkieServos):
                 )
                 servo_action[key] = clamp_and_warn(
                     action_value,
-                    self.__min_action[joint.name][key],
-                    self.__max_action[joint.name][key],
+                    self._min_action[joint.name][key],
+                    self._max_action[joint.name][key],
                     label=f"{joint.name}: {key}",
                 )
             spine_action["servo"][joint.name] = servo_action
