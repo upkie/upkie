@@ -53,14 +53,6 @@ clean: clean_broken_links  ## clean all local build and intermediate files
 clean_broken_links:
 	find -L $(CURDIR) -type l ! -exec test -e {} \; -delete
 
-.PHONY: run_bullet_spine
-run_bullet_spine:  ## run the Bullet simulation spine
-	$(BAZEL) run //spines:bullet_spine -- --show
-
-.PHONY: run_bullet_balancer_spine
-run_bullet_balancer_spine:  ## run the balancer Bullet simulation spine
-	$(BAZEL) run //spines/balancer_spine:bullet -- --show
-
 # This rule is handy if the target Upkie is not connected to the Internet
 .PHONY: set_date
 set_date: check_upkie_name

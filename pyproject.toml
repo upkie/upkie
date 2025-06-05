@@ -123,6 +123,12 @@ tasks = { pack-to-aarch64 = "pixi-pack pack -e default --platform linux-aarch64 
 dependencies = { "stable-baselines3" = ">2.3.0" }
 tasks = { test = "tools/bazel test //upkie/..." }
 
+[tool.pixi.tasks.bullet_spine]
+cmd = "./tools/bazelisk run //spines:bullet_spine -- --show"
+
+[tool.pixi.tasks.bullet_balancer_spine]
+cmd = "./tools/bazelisk run //spines/balancer_spine:bullet -- --show"
+
 [tool.pixi.environments]
 default = { features = [], solve-group = "default" }
 dev = { features = ["dev"], solve-group = "default" }
