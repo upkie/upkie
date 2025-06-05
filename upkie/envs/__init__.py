@@ -41,4 +41,6 @@ def register() -> None:
 
 __all__ = [
     "register",
+    "UpkieServosMock",
+    "UpkieServosSpine",
 ]
