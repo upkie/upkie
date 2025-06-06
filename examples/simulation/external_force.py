@@ -8,6 +8,7 @@
 
 import gymnasium as gym
 import numpy as np
+
 import upkie.envs
 
 upkie.envs.register()
@@ -59,5 +60,5 @@ def run(env: upkie.envs.UpkieGroundVelocity):
 
 
 if __name__ == "__main__":
-    with gym.make("UpkieGroundVelocity-v4", frequency=200.0) as env:
+    with gym.make("UpkieGroundVelocity", frequency=200.0) as env:
         run(env)

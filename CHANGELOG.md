@@ -11,15 +11,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Development workflow based on Pixi
 - cpp: Controller pipeline run by the spine after observers
+- envs: Add `Upkie-Servos-Mock` environment
+- utils: Joystick utility class
 
 ### Changed
 
+- **Breaking:** Rename `UpkieServos` to `Upkie-Servos-Spine`
 - cpp: Spines now take a controller pipeline as constructor argument
+- envs: Drop Gymnasium environment versioning
+- spines: Factor common observers and sensors between spines
 
 ### Fixed
 
 - CICD: Update release workflow images to `ubuntu-latest`
 - Spine: Fix full-logger issue when substepping a simulation spine
+
+### Removed
+
+- envs: Remove UpkieServoPositions and UpkieServoTorques environments
+- envs: Remove `log` function from spine environment
 
 ### Removed
 

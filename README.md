@@ -45,7 +45,7 @@ import upkie.envs
 
 upkie.envs.register()
 
-with gym.make("UpkieGroundVelocity-v4", frequency=200.0) as env:
+with gym.make("UpkieGroundVelocity", frequency=200.0) as env:
     observation, _ = env.reset()
     gain = np.array([10.0, 1.0, 0.0, 0.1])
     for step in range(1_000_000):
@@ -95,6 +95,8 @@ If you built an Upkie or use parts of this project in your works, please cite th
   year = {2025}
 }
 ```
+
+Don't forget to add yourself to the BibTeX above and to `CITATION.cff` if you contribute to this repository.
 
 ## See also
 
