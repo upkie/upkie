@@ -45,11 +45,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - envs: Remove UpkieServoPositions and UpkieServoTorques environments
-- envs: Remove `log` function from spine environment
-
-### Removed
-
 - envs: Remove UpkieServoPositions and UpkieServoTorques environments
+- envs: Remove `log` function from spine environment
+- envs: Remove observation-based reward wrapper
 
 ## [8.0.0] - 2025-05-08
 
