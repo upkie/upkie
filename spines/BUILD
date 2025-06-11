@@ -7,6 +7,26 @@ load("//tools/lint:lint.bzl", "add_lint_tests")
 package(default_visibility = ["//visibility:public"])
 
 cc_binary(
+    name = "bullet_balancer_spine",
+    srcs = [
+        "bullet_balancer_spine.cpp",
+    ],
+    data = [
+        "@upkie_description",
+    ],
+    deps = [
+        "//spines/common",
+        "//upkie/cpp/actuation:bullet_interface",
+        "//upkie/cpp/controllers:wheel_balancer",
+        "//upkie/cpp/controllers:wheel_stopper",
+        "//upkie/cpp/spine",
+        "//upkie/cpp/utils:clear_shared_memory",
+        "//upkie/cpp/utils:get_log_path",
+        "//upkie/cpp:version",
+    ],
+)
+
+cc_binary(
     name = "bullet_spine",
     srcs = [
         "bullet_spine.cpp",
@@ -15,10 +35,8 @@ cc_binary(
         "@upkie_description",
     ],
     deps = [
+        "//spines/common",
         "//upkie/cpp/actuation:bullet_interface",
-        "//upkie/cpp/observers",
-        "//upkie/cpp/observers:history_observer",
-        "//upkie/cpp/sensors",
         "//upkie/cpp/spine",
         "//upkie/cpp/utils:clear_shared_memory",
         "//upkie/cpp/utils:get_log_path",
@@ -38,6 +56,7 @@ cc_binary(
         "//upkie/cpp/spine",
         "//upkie/cpp/utils:get_log_path",
         "//upkie/cpp:version",
+        "//spines/common",
     ] + select({
         "//:pi64_config": [
             "@org_llvm_libcxx//:libcxx",
@@ -48,11 +67,36 @@ cc_binary(
 )
 
 cc_binary(
+    name = "pi3hat_balancer_spine",
+    srcs = [
+        "pi3hat_balancer_spine.cpp",
+    ],
+    deps = [
+        "//spines/common",
+        "//upkie/cpp/controllers:wheel_balancer",
+        "//upkie/cpp/controllers:wheel_stopper",
+        "//upkie/cpp/observers",
+        "//upkie/cpp/sensors",
+        "//upkie/cpp/spine",
+        "//upkie/cpp/utils:get_log_path",
+        "//upkie/cpp:version",
+    ] + select({
+        "//:pi64_config": ["//upkie/cpp/actuation:pi3hat_interface"],
+        "//conditions:default": [],
+    }),
+    target_compatible_with = select({
+        "//:pi64_config": [],
+        "//conditions:default": ["@platforms//:incompatible"],
+    }),
+)
+
+cc_binary(
     name = "pi3hat_spine",
     srcs = [
         "pi3hat_spine.cpp",
     ],
     deps = [
+        "//spines/common",
         "//upkie/cpp/observers",
         "//upkie/cpp/sensors",
         "//upkie/cpp/spine",
