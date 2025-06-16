@@ -59,12 +59,12 @@ The Python code is the same whether we run in simulation or on a real Upkie. Hea
 
 ## Gymnasium environments
 
-Upkie has environments compatible with the [Gymnasium API](https://gymnasium.farama.org/), for instance:
+Upkie has environments compatible with the Gymnasium API:
 
 - `UpkieGroundVelocity`: keep legs straight and balance with the wheels.
 - `UpkieServos`: control joint servos directly with torque feedforward and position-velocity feedback.
 
-Check out the full [list of environments](https://upkie.github.io/upkie/gym-environments.html) for details.
+The documentation has a [list of all available environments](https://upkie.github.io/upkie/gym-environments.html).
 
 ## Agents
 
