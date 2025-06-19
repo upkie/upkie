@@ -27,7 +27,7 @@ def register() -> None:
     for env_name, env_class in envs:
         gym.envs.registration.register(
             id=env_name,
-            entry_point=f"upkie.envs:{env_name}",
+            entry_point=f"upkie.envs:{env_class.__name__}",
         )
 
     # Wrappers
