@@ -10,7 +10,7 @@ import gymnasium as gym
 import numpy as np
 
 import upkie.envs
-from upkie.control.mpc_balancer import MPCBalancer
+from upkie.control import MPCBalancer
 
 upkie.envs.register()
 
@@ -21,12 +21,12 @@ if __name__ == "__main__":
     mpc_balancer = MPCBalancer()
     with gym.make("UpkieGroundVelocity", frequency=200.0) as env:
         _, info = env.reset()  # connects to the spine
-        dt = env.unwrapped.dt
         action = np.zeros(env.action_space.shape)
         for step in range(10_000):
-            spine_observation = info["spine_observation"]
             action[0] = mpc_balancer.compute_ground_velocity(
-                TARGET_GROUND_VELOCITY, spine_observation, dt
+                target_ground_velocity=0.5,  # m/s
+                spine_observation=info["spine_observation"],
+                dt=env.unwrapped.dt,
             )
             _, _, terminated, truncated, info = env.step(action)
             if terminated or truncated:
