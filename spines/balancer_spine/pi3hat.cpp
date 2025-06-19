@@ -19,6 +19,8 @@
 #include "spines/common/sensors.h"
 #include "upkie/cpp/actuation/Pi3HatInterface.h"
 #include "upkie/cpp/controllers/ControllerPipeline.h"
+#include "upkie/cpp/controllers/WheelBalancer.h"
+#include "upkie/cpp/controllers/WheelStopper.h"
 #include "upkie/cpp/observers/ObserverPipeline.h"
 #include "upkie/cpp/sensors/CpuTemperature.h"
 #include "upkie/cpp/sensors/Joystick.h"
@@ -28,12 +30,17 @@
 #include "upkie/cpp/utils/realtime.h"
 #include "upkie/cpp/version.h"
 
+//! Spine frequency in Hz.
+constexpr unsigned kSpineFrequency = 1000u;
+
 using Pi3Hat = ::mjbots::pi3hat::Pi3Hat;
 using palimpsest::Dictionary;
 using spines::common::make_observers;
 using spines::common::make_sensors;
 using upkie::cpp::actuation::Pi3HatInterface;
 using upkie::cpp::controllers::ControllerPipeline;
+using upkie::cpp::controllers::WheelBalancer;
+using upkie::cpp::controllers::WheelStopper;
 using upkie::cpp::observers::ObserverPipeline;
 using upkie::cpp::sensors::CpuTemperature;
 using upkie::cpp::sensors::Joystick;
@@ -70,9 +77,6 @@ class CommandLineArguments {
       } else if (arg == "--spine-cpu") {
         spine_cpu = std::stol(args.at(++i));
         spdlog::info("Command line: spine_cpu = {}", spine_cpu);
-      } else if (arg == "--spine-frequency") {
-        spine_frequency = std::stol(args.at(++i));
-        spdlog::info("Command line: spine_frequency = {} Hz", spine_frequency);
       } else {
         spdlog::error("Unknown argument: {}", arg);
         error = true;
@@ -104,8 +108,6 @@ class CommandLineArguments {
               << "    Name for IPC shared memory file.\n";
     std::cout << "--spine-cpu <cpuid>\n"
               << "    CPUID for the spine thread (default: 1).\n";
-    std::cout << "--spine-frequency <frequency>\n"
-              << "    Spine frequency in Hz.\n";
     std::cout << "-v, --version\n"
               << "    Print out the spine version number.\n";
     std::cout << "\n";
@@ -133,9 +135,6 @@ class CommandLineArguments {
   //! CPUID for the spine thread (-1 to disable realtime).
   int spine_cpu = 1;
 
-  //! Spine frequency in Hz.
-  unsigned spine_frequency = 1000u;
-
   //! Error flag.
   bool version = false;
 };
@@ -158,8 +157,18 @@ int run_spine(const CommandLineArguments& args) {
   }
 
   SensorPipeline sensors = make_sensors(/* joystick_required = */ true);
-  ObserverPipeline observers = make_observers(args.spine_frequency);
+  ObserverPipeline observers = make_observers(kSpineFrequency);
+
   ControllerPipeline controllers;
+
+  auto wheel_stopper = std::make_shared<WheelStopper>();
+  controllers.append(wheel_stopper);
+
+  WheelBalancer::Parameters balancer_params;
+  balancer_params.dt = 1.0 / kSpineFrequency;
+  balancer_params.wheel_radius = 0.06;  // [m]
+  auto balancer = std::make_shared<WheelBalancer>(balancer_params);
+  controllers.append(balancer);
 
   try {
     // pi3hat configuration
@@ -175,9 +184,9 @@ int run_spine(const CommandLineArguments& args) {
     // Spine
     Spine::Parameters spine_params;
     spine_params.cpu = args.spine_cpu;
-    spine_params.frequency = args.spine_frequency;
+    spine_params.frequency = kSpineFrequency;
     spine_params.log_path =
-        upkie::cpp::utils::get_log_path(args.log_dir, "pi3hat_spine");
+        upkie::cpp::utils::get_log_path(args.log_dir, "pi3hat_balancer_spine");
     spdlog::info("Spine data logged to {}", spine_params.log_path);
     Spine spine(spine_params, interface, sensors, observers, controllers);
     spine.run();
