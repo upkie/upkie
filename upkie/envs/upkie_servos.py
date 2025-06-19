@@ -8,9 +8,10 @@ from typing import Any, Optional, Set, Tuple
 
 import gymnasium as gym
 import numpy as np
-import upkie.config
 import upkie_description
 from loop_rate_limiters import RateLimiter
+
+import upkie.config
 from upkie.exceptions import UpkieException
 from upkie.model import Model
 from upkie.spine import SpineInterface
