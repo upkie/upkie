@@ -11,7 +11,6 @@ from qpmpc import MPCQP, Plan
 from qpmpc.systems import WheeledInvertedPendulum
 from qpsolvers import solve_problem
 
-from upkie.exceptions import FallDetected
 from upkie.utils.clamp import clamp_and_warn
 from upkie.utils.filters import low_pass_filter
 from upkie.utils.spdlog import logging
@@ -90,7 +89,6 @@ class MPCBalancer:
         mpc_problem.initial_state = np.zeros(4)
         mpc_qp = MPCQP(mpc_problem)
         workspace = ProxQPWorkspace(mpc_qp)
-        self.__nb_fall_steps = 0
         self.commanded_velocity = 0.0
         self.fall_pitch = fall_pitch
         self.max_ground_velocity = max_ground_velocity
@@ -99,21 +97,6 @@ class MPCBalancer:
         self.pendulum = pendulum
         self.warm_start = warm_start
         self.workspace = workspace
-
-    def raise_if_fallen(self, base_pitch: float) -> None:
-        """Raise an exception if the robot has fallen.
-
-        Args:
-            base_pitch: Current base pitch angle, in radians.
-        """
-        if abs(base_pitch) > self.fall_pitch:
-            self.__nb_fall_steps += 1
-            if self.__nb_fall_steps > 1:
-                raise FallDetected(
-                    f"Base angle {base_pitch=:.3} rad denotes a fall"
-                )
-        else:  # abs(base_pitch) < self.fall_pitch:
-            self.__nb_fall_steps = 0
 
     def compute_ground_velocity(
         self,
@@ -138,7 +121,9 @@ class MPCBalancer:
         ground_position = spine_observation["wheel_odometry"]["position"]
         ground_velocity = spine_observation["wheel_odometry"]["velocity"]
 
-        self.raise_if_fallen(base_pitch)
+        fallen = abs(base_pitch) > self.fall_pitch
+        if fallen:
+            logging.warning(f"Base angle {base_pitch=:.3} rad denotes a fall")
 
         # NB: state structure comes from WheeledInvertedPendulum
         cur_state = np.array(
@@ -167,7 +152,7 @@ class MPCBalancer:
             logging.warning("No solution found to the MPC problem")
         plan = Plan(self.mpc_problem, qpsol)
 
-        if not floor_contact:
+        if fallen or not floor_contact:
             self.commanded_velocity = low_pass_filter(
                 prev_output=self.commanded_velocity,
                 cutoff_period=0.1,
@@ -177,7 +162,7 @@ class MPCBalancer:
         elif plan.is_empty:
             logging.error("Solver found no solution to the MPC problem")
             logging.info("Re-sending previous ground velocity")
-        else:  # plan was found
+        else:  # all good, plan was found
             self.pendulum.state = cur_state
             commanded_accel = plan.first_input[0]
             self.commanded_velocity = clamp_and_warn(
