@@ -69,16 +69,21 @@ class TrajectoryPlayer:
         timescale: float,
     ):
         assert 0 < timescale < 1.05
-        action = neutral_action.copy()
+        initial_action = neutral_action.copy()
+        initial_action["left_wheel"]["position"] = np.nan
+        initial_action["right_wheel"]["position"] = np.nan
+        initial_action["left_wheel"]["velocity"] = 0.0
+        initial_action["right_wheel"]["velocity"] = 0.0
         upper_leg_joints = [
             f"{side}_{name}"
             for side in ("left", "right")
             for name in ("hip", "knee")
         ]
-        self.action = action
-        self.data = trajectory.step(0)
+        self.__action = initial_action
+        self.data = None
         self.dt = dt
-        self.rem_reset_steps = None
+        self.playback = False
+        self.rem_reset_steps = 0
         self.reset_duration = reset_duration
         self.timescale = timescale
         self.trajectory = trajectory
@@ -87,41 +92,43 @@ class TrajectoryPlayer:
     def reset(self, init_state: dict):
         for joint in self.upper_leg_joints:
             position = init_state[joint]["position"]
-            self.action[joint]["position"] = position
-            self.action[joint]["velocity"] = -position / self.reset_duration
+            self.__action[joint]["position"] = position
+            self.__action[joint]["velocity"] = -position / self.reset_duration
         self.rem_reset_steps = int(self.reset_duration / self.dt)
+        self.data = self.trajectory.reset()
+        self.playback = False
 
     def step_reset(self):
-        if self.rem_reset_steps < 0:
-            return
         for joint in self.upper_leg_joints:
             if self.rem_reset_steps > 0:
-                action_vel = self.action[joint]["velocity"]
-                self.action[joint]["position"] += action_vel * self.dt
-            else:  # self.rem_reset_steps == 0
-                self.action[joint]["position"] = 0.0
-                self.action[joint]["velocity"] = 0.0
+                action_vel = self.__action[joint]["velocity"]
+                self.__action[joint]["position"] += action_vel * self.dt
+            else:  # self.rem_reset_steps <= 0
+                self.__action[joint]["position"] = 0.0
+                self.__action[joint]["velocity"] = 0.0
         self.rem_reset_steps -= 1
 
     def step_trajectory(self):
-        self.action["left_hip"]["position"] = self.data["q_opt_7"]
-        self.action["left_knee"]["position"] = self.data["q_opt_8"]
-        self.action["right_hip"]["position"] = self.data["q_opt_10"]
-        self.action["right_knee"]["position"] = self.data["q_opt_11"]
+        self.__action["left_hip"]["position"] = self.data["q_opt_7"]
+        self.__action["left_knee"]["position"] = self.data["q_opt_8"]
+        self.__action["right_hip"]["position"] = self.data["q_opt_10"]
+        self.__action["right_knee"]["position"] = self.data["q_opt_11"]
 
         s_dot = self.timescale
-        self.action["left_hip"]["velocity"] = s_dot * self.data["v_opt_6"]
-        self.action["left_knee"]["velocity"] = s_dot * self.data["v_opt_7"]
-        self.action["right_hip"]["velocity"] = s_dot * self.data["v_opt_9"]
-        self.action["right_knee"]["velocity"] = s_dot * self.data["v_opt_10"]
+        self.__action["left_hip"]["velocity"] = s_dot * self.data["v_opt_6"]
+        self.__action["left_knee"]["velocity"] = s_dot * self.data["v_opt_7"]
+        self.__action["right_hip"]["velocity"] = s_dot * self.data["v_opt_9"]
+        self.__action["right_knee"]["velocity"] = s_dot * self.data["v_opt_10"]
 
         ds = s_dot * self.dt
         self.data = self.trajectory.step(ds)
+        if self.trajectory.terminated:
+            self.reset(init_state=self.__action)
 
     def step(self) -> dict:
         if self.rem_reset_steps > 0:
             self.step_reset()
-        elif not self.trajectory.terminated:
+        elif self.playback:
             self.step_trajectory()
         return deepcopy(self.__action)
 
