@@ -6,6 +6,7 @@
 
 """Play a precomputed joint trajectory while balancing with the wheels."""
 
+from copy import deepcopy
 from pathlib import Path
 from typing import Dict, Optional
 
@@ -117,13 +118,7 @@ class TrajectoryPlayer:
             self.step_reset()
         elif not self.trajectory.terminated:
             self.step_trajectory()
-            if self.trajectory.terminated:
-                self.reset(init_state=self.action)
-        self.action["left_wheel"]["position"] = np.nan
-        self.action["right_wheel"]["position"] = np.nan
-        self.action["left_wheel"]["velocity"] = 0.0
-        self.action["right_wheel"]["velocity"] = 0.0
-        return self.action
+        return deepcopy(self.__action)
 
 
 if __name__ == "__main__":
