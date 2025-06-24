@@ -125,8 +125,18 @@ class TrajectoryPlayer:
         if self.trajectory.terminated:
             self.reset(init_state=self.__action)
 
-    def step(self) -> dict:
-        if self.rem_reset_steps > 0:
+    def check_joystick(self, spine_observation: dict) -> None:
+        if "joystick" not in spine_observation:
+            return
+        joystick = spine_observation["joystick"]
+        if joystick.get("cross_button", False):
+            self.reset(self.__action)
+        elif joystick.get("square_button", False):
+            self.playback = True
+
+    def step(self, spine_observation: dict) -> dict:
+        self.check_joystick(spine_observation)
+        if self.rem_reset_steps >= 0:
             self.step_reset()
         elif self.playback:
             self.step_trajectory()
@@ -135,7 +145,7 @@ class TrajectoryPlayer:
 
 if __name__ == "__main__":
     mpc_balancer = MPCBalancer(fall_pitch=1.5)
-    trajectory = SeriesStepper("upkie_jump.csv", max_time=0.2)
+    trajectory = SeriesStepper("upkie_jump.csv", max_time=0.5)
     with gym.make("Upkie-Servos-Spine", frequency=200.0) as env:
         observation, info = env.reset()  # connects to the spine
         player = TrajectoryPlayer(
@@ -143,11 +153,11 @@ if __name__ == "__main__":
             dt=env.unwrapped.dt,
             trajectory=trajectory,
             timescale=0.1,
-            reset_duration=2.0,
+            reset_duration=3.0,
         )
         player.reset(observation)
-        for i in range(10_000):
-            action = player.step()
+        while True:
+            action = player.step(spine_observation=info["spine_observation"])
             ground_velocity = mpc_balancer.compute_ground_velocity(
                 target_ground_velocity=0.0,  # m/s
                 spine_observation=info["spine_observation"],
