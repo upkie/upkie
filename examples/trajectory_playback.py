@@ -40,6 +40,11 @@ class SeriesStepper:
             return True
         return self.cur_index >= len(self.timestamps) - 1
 
+    def reset(self) -> Dict[str, float]:
+        self.cur_index = 0
+        self.cur_time = self.timestamps[0]
+        return self.step(0)
+
     def step(self, dt: float) -> Dict[str, float]:
         if self.max_time is not None and self.cur_time >= self.max_time:
             return self.data.iloc[self.cur_index].to_dict()
