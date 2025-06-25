@@ -9,7 +9,6 @@ from .add_lag_to_action import AddLagToAction
 from .differentiate_action import DifferentiateAction
 from .noisify_action import NoisifyAction
 from .noisify_observation import NoisifyObservation
-from .observation_based_reward import ObservationBasedReward
 from .random_push import RandomPush
 
 __all__ = [
@@ -18,6 +17,5 @@ __all__ = [
     "DifferentiateAction",
     "NoisifyAction",
     "NoisifyObservation",
-    "ObservationBasedReward",
     "RandomPush",
 ]

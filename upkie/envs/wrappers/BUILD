@@ -15,7 +15,6 @@ py_library(
         "differentiate_action.py",
         "noisify_action.py",
         "noisify_observation.py",
-        "observation_based_reward.py",
         "random_push.py",
     ],
     deps = [
