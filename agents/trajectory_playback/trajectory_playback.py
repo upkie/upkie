@@ -160,7 +160,7 @@ class TrajectoryPlayer:
 
 if __name__ == "__main__":
     mpc_balancer = MPCBalancer(fall_pitch=1.5)
-    trajectory = SeriesStepper("upkie_jump.csv", max_time=0.5)
+    trajectory = SeriesStepper("upkie_jump_v2_vel_limits.csv", max_time=0.5)
     with gym.make("Upkie-Servos-Spine", frequency=200.0) as env:
         observation, info = env.reset()  # connects to the spine
         player = TrajectoryPlayer(
