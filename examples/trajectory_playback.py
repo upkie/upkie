@@ -8,7 +8,7 @@
 
 from copy import deepcopy
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Dict
 
 import gymnasium as gym
 import numpy as np
@@ -21,12 +21,17 @@ upkie.envs.register()
 
 
 class SeriesStepper:
-    def __init__(self, csv_path: Path, max_time: Optional[float] = None):
+    def __init__(self, csv_path: Path, max_time: float = 1e20):
         data = pd.read_csv(csv_path)
         timestamps = data.iloc[:, 0].values
         last = len(timestamps) - 1
         if not all(timestamps[i] <= timestamps[i + 1] for i in range(last)):
             raise ValueError("Timestamps in the CSV file should be be sorted.")
+        max_time = (
+            timestamps[last]
+            if max_time is None
+            else min(max_time, timestamps[last])
+        )
 
         self.cur_index = 0
         self.cur_time = timestamps[0]
@@ -36,7 +41,7 @@ class SeriesStepper:
 
     @property
     def terminated(self) -> bool:
-        if self.max_time is not None and self.cur_time >= self.max_time:
+        if self.cur_time >= self.max_time:
             return True
         return self.cur_index >= len(self.timestamps) - 1
 
@@ -46,7 +51,7 @@ class SeriesStepper:
         return self.step(0)
 
     def step(self, dt: float) -> Dict[str, float]:
-        if self.max_time is not None and self.cur_time >= self.max_time:
+        if self.cur_time >= self.max_time:
             return self.data.iloc[self.cur_index].to_dict()
         self.cur_time += dt
         last_index = len(self.timestamps) - 1
