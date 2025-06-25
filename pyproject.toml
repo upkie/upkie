@@ -108,8 +108,11 @@ numpy = ">=1.24.3"
 scipy = ">=1.10.0"
 upkie_description = ">=2.1.0"
 
-[tool.pixi.feature.dev]
-dependencies = { "stable-baselines3" = ">2.3.0" }
+[tool.pixi.feature.full.dependencies]
+proxsuite = ">=0.4.1"
+qpmpc = ">=3.0.1,<4"
+qpsolvers = ">=4.3.3"
+stable-baselines3 = ">2.3.0"
 
 [tool.pixi.feature.docs]
 dependencies = { doxygen = "<=1.9.5", graphviz = "*", make = "*", "stable-baselines3" = "*" }
@@ -117,7 +120,7 @@ tasks = { make-docs = "doxygen --version && cd docs && make" }
 
 [tool.pixi.feature.pack]
 dependencies = { pixi-pack = "*" }
-tasks = { pack-to-upkie = "pixi-pack pack -e default --platform linux-aarch64 --ignore-pypi-non-wheel" }
+tasks = { pack-full = "pixi-pack pack -e full --platform linux-aarch64 --ignore-pypi-non-wheel" }
 
 [tool.pixi.feature.test]
 dependencies = { "stable-baselines3" = ">2.3.0" }
@@ -131,7 +134,7 @@ cmd = "./tools/bazelisk run //spines/balancer_spine:bullet -- --show"
 
 [tool.pixi.environments]
 default = { features = [], solve-group = "default" }
-dev = { features = ["dev"], solve-group = "default" }
+full = { features = ["full"], solve-group = "default" }
 docs = { features = ["docs"], solve-group = "default" }
 pack = { features = ["pack"], solve-group = "default" }
 test = { features = ["test"], solve-group = "default" }
