@@ -55,11 +55,16 @@ class SeriesStepper:
             return self.data.iloc[self.cur_index].to_dict()
         self.cur_time += dt
         last_index = len(self.timestamps) - 1
+        print_message = False
         while (
             self.cur_index < last_index
             and self.timestamps[self.cur_index] < self.cur_time
         ):
             self.cur_index += 1
+            if self.cur_index % 100 == 0:
+                print_message = True
+        if print_message:
+            print(f"Trajectory playback is now at t = {self.cur_time:.1} s")
         return self.data.iloc[self.cur_index].to_dict()
 
 
@@ -100,7 +105,7 @@ class TrajectoryPlayer:
             self.__action[joint]["position"] = position
             self.__action[joint]["velocity"] = -position / self.reset_duration
         self.rem_reset_steps = int(self.reset_duration / self.dt)
-        self.data = self.trajectory.reset()
+        self.data = None
         self.playback = False
 
     def step_reset(self):
@@ -133,10 +138,15 @@ class TrajectoryPlayer:
     def check_joystick(self, spine_observation: dict) -> None:
         if "joystick" not in spine_observation:
             return
+
         joystick = spine_observation["joystick"]
         if joystick.get("cross_button", False):
             self.reset(self.__action)
-        elif joystick.get("square_button", False):
+
+        ready_to_play = not self.playback and self.rem_reset_steps < 1
+        if joystick.get("square_button", False) and ready_to_play:
+            print("Starting trajectory playback...")
+            self.data = self.trajectory.reset()
             self.playback = True
 
     def step(self, spine_observation: dict) -> dict:
