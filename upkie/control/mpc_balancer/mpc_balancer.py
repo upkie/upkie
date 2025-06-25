@@ -169,6 +169,6 @@ class MPCBalancer:
                 self.commanded_velocity + commanded_accel * dt / 2.0,
                 lower=-self.max_ground_velocity,
                 upper=+self.max_ground_velocity,
-                label="commanded_velocity",
+                label="MPCBalancer.commanded_velocity",
             )
         return self.commanded_velocity
