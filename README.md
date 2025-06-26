@@ -45,7 +45,7 @@ import upkie.envs
 
 upkie.envs.register()
 
-with gym.make("UpkieGroundVelocity-v4", frequency=200.0) as env:
+with gym.make("UpkieGroundVelocity", frequency=200.0) as env:
     observation, _ = env.reset()
     gain = np.array([10.0, 1.0, 0.0, 0.1])
     for step in range(1_000_000):
@@ -59,12 +59,12 @@ The Python code is the same whether we run in simulation or on a real Upkie. Hea
 
 ## Gymnasium environments
 
-Upkie has environments compatible with the [Gymnasium API](https://gymnasium.farama.org/), for instance:
+Upkie has environments compatible with the Gymnasium API:
 
 - `UpkieGroundVelocity`: keep legs straight and balance with the wheels.
 - `UpkieServos`: control joint servos directly with torque feedforward and position-velocity feedback.
 
-Check out the full [list of environments](https://upkie.github.io/upkie/gym-environments.html) for details.
+The documentation has a [list of all available environments](https://upkie.github.io/upkie/gym-environments.html).
 
 ## Agents
 
@@ -95,6 +95,8 @@ If you built an Upkie or use parts of this project in your works, please cite th
   year = {2025}
 }
 ```
+
+Don't forget to add yourself to the BibTeX above and to `CITATION.cff` if you contribute to this repository.
 
 ## See also
 

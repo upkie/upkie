@@ -12,41 +12,34 @@
 #include <string>
 #include <vector>
 
+#include "spines/common/observers.h"
+#include "spines/common/sensors.h"
 #include "upkie/cpp/actuation/BulletInterface.h"
 #include "upkie/cpp/controllers/ControllerPipeline.h"
-#include "upkie/cpp/observers/BaseOrientation.h"
-#include "upkie/cpp/observers/FloorContact.h"
+#include "upkie/cpp/controllers/WheelBalancer.h"
+#include "upkie/cpp/controllers/WheelStopper.h"
 #include "upkie/cpp/observers/ObserverPipeline.h"
-#include "upkie/cpp/observers/WheelOdometry.h"
-#include "upkie/cpp/sensors/CpuTemperature.h"
 #include "upkie/cpp/sensors/SensorPipeline.h"
 #include "upkie/cpp/spine/Spine.h"
 #include "upkie/cpp/utils/clear_shared_memory.h"
 #include "upkie/cpp/utils/get_log_path.h"
 #include "upkie/cpp/version.h"
 
-#ifndef __APPLE__
-#include "upkie/cpp/sensors/Joystick.h"
-#endif
-
-namespace spines::bullet {
+//! Spine frequency in Hz.
+constexpr unsigned kSpineFrequency = 1000u;
 
 using palimpsest::Dictionary;
+using spines::common::make_observers;
+using spines::common::make_sensors;
 using upkie::cpp::actuation::BulletInterface;
 using upkie::cpp::controllers::ControllerPipeline;
-using upkie::cpp::observers::BaseOrientation;
-using upkie::cpp::observers::FloorContact;
+using upkie::cpp::controllers::WheelBalancer;
+using upkie::cpp::controllers::WheelStopper;
 using upkie::cpp::observers::ObserverPipeline;
-using upkie::cpp::observers::WheelOdometry;
-using upkie::cpp::sensors::CpuTemperature;
 using upkie::cpp::sensors::SensorPipeline;
 using upkie::cpp::spine::Spine;
 using upkie::cpp::utils::clear_shared_memory;
 using upkie::cpp::utils::get_log_path;
-
-#ifndef __APPLE__
-using upkie::cpp::sensors::Joystick;
-#endif
 
 //! Command-line arguments for the Bullet spine.
 class CommandLineArguments {
@@ -73,15 +66,10 @@ class CommandLineArguments {
         spdlog::info("Command line: shm_name = {}", shm_name);
       } else if (arg == "--show") {
         show = true;
-      } else if (arg == "--space") {
-        space = true;
       } else if (arg == "--extra-urdf-path") {
         extra_urdf_paths.push_back(args.at(++i));
         spdlog::info("Command line: extra-urdf-path = {}",
                      extra_urdf_paths.back());
-      } else if (arg == "--spine-frequency") {
-        spine_frequency = std::stol(args.at(++i));
-        spdlog::info("Command line: spine_frequency = {} Hz", spine_frequency);
       } else if (arg == "--robot-variant") {
         robot_variant = args.at(++i);
         spdlog::info("Command line: robot_variant = {}", robot_variant);
@@ -119,12 +107,8 @@ class CommandLineArguments {
               << "    Name for IPC shared memory file.\n";
     std::cout << "--show\n"
               << "    Show the Bullet GUI.\n";
-    std::cout << "--space\n"
-              << "    No ground, no gravity, fly like an eagle!\n";
     std::cout << "--extra-urdf-path\n"
               << "    Load extra URDFs into the environment.\n";
-    std::cout << "--spine-frequency <frequency>\n"
-              << "    Spine frequency in Hertz (default: 1000 Hz).\n";
     std::cout << "--robot-variant <variant>\n"
               << "    Robot variant (default: '').\n";
     std::cout << "--inertia-randomization <epsilon>\n"
@@ -153,17 +137,11 @@ class CommandLineArguments {
   //! Show Bullet GUI
   bool show = false;
 
-  //! Space mode (no ground, no gravity)
-  bool space = false;
-
   //! Extra URDF paths
   std::vector<std::string> extra_urdf_paths;
 
   //! Robot variant
   std::string robot_variant;
-
-  //! Spine frequency in Hz.
-  unsigned spine_frequency = 1000u;
 
   //! Mass randomization ratio in [%]
   double inertia_randomization = 0.0;
@@ -172,52 +150,6 @@ class CommandLineArguments {
   bool version = false;
 };
 
-/*! Connect sensors to the observation pipeline.
- *
- * \param[in] interface Actuation interface.
- */
-SensorPipeline make_sensors(const BulletInterface& interface) {
-  SensorPipeline sensors;
-
-  auto cpu_temperature = std::make_shared<CpuTemperature>();
-  sensors.connect_sensor(cpu_temperature);
-
-#ifndef __APPLE__
-  auto joystick = std::make_shared<Joystick>();
-  if (joystick->present()) {
-    spdlog::info("Joystick found");
-    sensors.connect_sensor(joystick);
-  }
-#endif
-
-  return sensors;
-}
-
-/*! Append observers (in a given order) to the observation pipeline.
- *
- * \param[in] spine_frequency Spine frequency in [Hz].
- */
-ObserverPipeline make_observers(unsigned spine_frequency) {
-  ObserverPipeline observation;
-
-  BaseOrientation::Parameters base_orientation_params;
-  auto base_orientation =
-      std::make_shared<BaseOrientation>(base_orientation_params);
-  observation.append_observer(base_orientation);
-
-  FloorContact::Parameters floor_contact_params;
-  floor_contact_params.dt = 1.0 / spine_frequency;
-  auto floor_contact = std::make_shared<FloorContact>(floor_contact_params);
-  observation.append_observer(floor_contact);
-
-  WheelOdometry::Parameters odometry_params;
-  odometry_params.dt = 1.0 / spine_frequency;
-  auto odometry = std::make_shared<WheelOdometry>(odometry_params);
-  observation.append_observer(odometry);
-
-  return observation;
-}
-
 /*! Create the actuation interface.
  *
  * \param[in] argv0 Name of spine binary from the command line.
@@ -225,12 +157,12 @@ ObserverPipeline make_observers(unsigned spine_frequency) {
  */
 BulletInterface make_actuation_interface(const char* argv0,
                                          const CommandLineArguments& args) {
-  const double base_altitude = args.space ? 0.0 : 0.6;  // [m]
+  const double base_altitude = 0.6;  // [m]
   BulletInterface::Parameters params(Dictionary{});
   params.argv0 = argv0;
-  params.dt = 1.0 / args.spine_frequency;
-  params.floor = !args.space;
-  params.gravity = !args.space;
+  params.dt = 1.0 / kSpineFrequency;
+  params.floor = true;
+  params.gravity = true;
   params.gui = args.show;
   params.inertia_randomization = args.inertia_randomization;
   params.position_base_in_world = Eigen::Vector3d(0., 0., base_altitude);
@@ -259,15 +191,26 @@ int run_spine(const char* argv0, const CommandLineArguments& args) {
   // error afterwards.
 
   Spine::Parameters params;
-  params.frequency = args.spine_frequency;
-  params.log_path = get_log_path(args.log_dir, "bullet_spine");
+  params.frequency = kSpineFrequency;
+  params.log_path = get_log_path(args.log_dir, "bullet_balancer_spine");
   params.shm_name = args.shm_name;
   spdlog::info("Spine data logged to {}", params.log_path);
 
   BulletInterface interface = make_actuation_interface(argv0, args);
-  SensorPipeline sensors = make_sensors(interface);
-  ObserverPipeline observers = make_observers(args.spine_frequency);
+  SensorPipeline sensors = make_sensors(/* joystick_required = */ false);
+  ObserverPipeline observers = make_observers(kSpineFrequency);
+
   ControllerPipeline controllers;
+
+  auto wheel_stopper = std::make_shared<WheelStopper>();
+  controllers.append(wheel_stopper);
+
+  WheelBalancer::Parameters balancer_params;
+  balancer_params.dt = 1.0 / kSpineFrequency;
+  balancer_params.wheel_radius = 0.06;  // [m]
+  auto balancer = std::make_shared<WheelBalancer>(balancer_params);
+  controllers.append(balancer);
+
   Spine spine(params, interface, sensors, observers, controllers);
   if (args.nb_substeps == 0u) {
     spine.run();
@@ -279,10 +222,8 @@ int run_spine(const char* argv0, const CommandLineArguments& args) {
   return EXIT_SUCCESS;
 }
 
-}  // namespace spines::bullet
-
 int main(int argc, char** argv) {
-  spines::bullet::CommandLineArguments args({argv + 1, argv + argc});
+  CommandLineArguments args({argv + 1, argv + argc});
   if (args.error) {
     return EXIT_FAILURE;
   } else if (args.help) {
@@ -292,6 +233,5 @@ int main(int argc, char** argv) {
     std::cout << "Upkie bullet spine " << upkie::cpp::kVersion << "\n";
     return EXIT_SUCCESS;
   }
-
-  return spines::bullet::run_spine(argv[0], args);
+  return run_spine(argv[0], args);
 }
