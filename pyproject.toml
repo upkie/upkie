@@ -120,7 +120,13 @@ tasks = { make-docs = "doxygen --version && cd docs && make" }
 
 [tool.pixi.feature.pack]
 dependencies = { pixi-pack = "*" }
-tasks = { pack-full = "pixi-pack pack -e full --platform linux-aarch64 --ignore-pypi-non-wheel" }
+
+[tool.pixi.feature.pack.tasks.pack]
+args = [
+    { "arg" = "environment", "default" = "full" },
+    { "arg" = "platform", "default" = "linux-aarch64" },
+]
+cmd = "pixi-pack pack --environment {{ environment }} --platform {{ platform }} --ignore-pypi-non-wheel"
 
 [tool.pixi.feature.test]
 dependencies = { "stable-baselines3" = ">2.3.0" }
