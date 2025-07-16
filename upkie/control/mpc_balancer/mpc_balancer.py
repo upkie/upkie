@@ -91,6 +91,7 @@ class MPCBalancer:
         workspace = ProxQPWorkspace(mpc_qp)
         self.commanded_velocity = 0.0
         self.fall_pitch = fall_pitch
+        self.fallen = False
         self.max_ground_velocity = max_ground_velocity
         self.mpc_problem = mpc_problem
         self.mpc_qp = mpc_qp
@@ -122,8 +123,9 @@ class MPCBalancer:
         ground_velocity = spine_observation["wheel_odometry"]["velocity"]
 
         fallen = abs(base_pitch) > self.fall_pitch
-        if fallen:
+        if fallen and not self.fallen:
             logging.warning(f"Base angle {base_pitch=:.3} rad denotes a fall")
+        self.fallen = fallen
 
         # NB: state structure comes from WheeledInvertedPendulum
         cur_state = np.array(
