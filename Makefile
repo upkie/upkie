@@ -108,7 +108,7 @@ run_balancer_spine_pi3hat:  ### run the pi3hat balancer spine on the Raspberry P
 # ===========
 
 .PHONY: coverage
-coverage:  # check unit test coverage and open the resulting HTML report
+coverage:  ## check unit test coverage and open the resulting HTML report
 	$(BAZEL) coverage --combined_report=lcov --compilation_mode=fastbuild --instrument_test_targets //...
 	@if [ -z "$(shell which genhtml)" ]; then\
 		echo "ERROR: genhtml not found, is lcov installed?"; \
@@ -118,10 +118,10 @@ coverage:  # check unit test coverage and open the resulting HTML report
 	fi
 
 .PHONY: lint
-lint:
+lint:  ## lint code in the repository
 	$(BAZEL) test --config lint //...
 	ruff check $(CURDIR)/upkie
 
 .PHONY: test
-test:
+test:  ## run all unit tests
 	$(BAZEL) test //...
