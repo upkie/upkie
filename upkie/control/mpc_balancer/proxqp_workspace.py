@@ -10,7 +10,9 @@ from qpmpc import MPCQP
 
 
 class ProxQPWorkspace:
-    """Workspace data for ProxQP."""
+    r"""!
+    Workspace data for ProxQP.
+    """
 
     def __init__(
         self,
@@ -18,13 +20,13 @@ class ProxQPWorkspace:
         update_preconditioner: bool = True,
         verbose: bool = False,
     ):
-        """Initialize the workspace.
+        r"""!
+        Initialize the workspace.
 
-        Args:
-            mpc_qp: Model predictive control problem.
-            update_preconditioner: If set, ask ProxQP to update preconditioners
-                at each solve.
-            verbose: If set, print out debug information.
+        \param mpc_qp Model predictive control problem.
+        \param update_preconditioner If set, ask ProxQP to update
+            preconditioners at each solve.
+        \param verbose If set, print out debug information.
         """
         n_eq = 0
         n_in = mpc_qp.h.size // 2  # WheeledInvertedPendulum structure
@@ -52,13 +54,11 @@ class ProxQPWorkspace:
         self.solver = solver
 
     def solve(self, mpc_qp: MPCQP) -> qpsolvers.Solution:
-        """Solve a given MPC QP.
+        r"""!
+        Solve a given MPC QP.
 
-        Args:
-            mpc_qp: Model predictive control problem to solve.
-
-        Returns:
-            Solution found by the solver.
+        \param mpc_qp Model predictive control problem to solve.
+        \return Solution found by the solver.
         """
         self.solver.update(
             g=mpc_qp.q,

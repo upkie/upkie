@@ -23,15 +23,13 @@ def get_target_states(
     state: np.ndarray,
     target_ground_velocity: float,
 ):
-    """Define the reference state trajectory over the receding horizon.
+    r"""!
+    Define the reference state trajectory over the receding horizon.
 
-    Args:
-        pendulum: Wheeled inverted pendulum model.
-        state: Initial state of the pendulum at the beginning of the horizon.
-        target_ground_velocity: Target ground velocity in [m] / [s].
-
-    Returns:
-        Goal state at the end of the horizon.
+    \param pendulum Wheeled inverted pendulum model.
+    \param state Initial state of the pendulum at the beginning of the horizon.
+    \param target_ground_velocity Target ground velocity in [m] / [s].
+    \return Goal state at the end of the horizon.
     """
     nx = pendulum.STATE_DIM
     T = pendulum.sampling_period
@@ -43,7 +41,9 @@ def get_target_states(
 
 
 class MPCBalancer:
-    """Model-predictive control sagittal balancer."""
+    r"""!
+    Model-predictive control sagittal balancer.
+    """
 
     def __init__(
         self,
@@ -58,21 +58,21 @@ class MPCBalancer:
         terminal_cost_weight: float = 1.0,
         warm_start: bool = True,
     ):
-        """Initialize balancer.
+        r"""!
+        Initialize balancer.
 
-        Args:
-            fall_pitch: Fall pitch threshold, in radians.
-            leg_length: Leg length in [m].
-            max_ground_accel: Maximum commanded ground acceleration no matter
-                what, in [m] / [s]².
-            max_ground_velocity: Maximum commanded ground velocity no matter
-                what, in [m] / [s].
-            nb_timesteps: Number of MPC steps.
-            sampling_period: Duration of an MPC step in seconds.
-            stage_input_cost_weight: Weight for the stage input cost.
-            stage_state_cost_weight: Weight for the stage state cost.
-            terminal_cost_weight: Weight for the terminal cost.
-            warm_start: If set, use the warm-starting feature of ProxQP.
+        \param fall_pitch Fall pitch threshold, in radians.
+        \param leg_length Leg length in [m].
+        \param max_ground_accel Maximum commanded ground acceleration no matter
+            what, in [m] / [s]².
+        \param max_ground_velocity Maximum commanded ground velocity no matter
+            what, in [m] / [s].
+        \param nb_timesteps Number of MPC steps.
+        \param sampling_period Duration of an MPC step in seconds.
+        \param stage_input_cost_weight Weight for the stage input cost.
+        \param stage_state_cost_weight Weight for the stage state cost.
+        \param terminal_cost_weight Weight for the terminal cost.
+        \param warm_start If set, use the warm-starting feature of ProxQP.
         """
         super().__init__()
         pendulum = WheeledInvertedPendulum(
@@ -105,15 +105,13 @@ class MPCBalancer:
         spine_observation: dict,
         dt: float,
     ) -> float:
-        """Compute a new ground velocity.
+        r"""!
+        Compute a new ground velocity.
 
-        Args:
-            target_ground_velocity: Target ground velocity in [m] / [s].
-            spine_observation: Latest observation dictionary from a spine.
-            dt: Time in [s] until next cycle.
-
-        Returns:
-            New ground velocity, in [m] / [s].
+        \param target_ground_velocity Target ground velocity in [m] / [s].
+        \param spine_observation Latest observation dictionary from a spine.
+        \param dt Time in [s] until next cycle.
+        \return New ground velocity, in [m] / [s].
         """
         floor_contact = spine_observation["floor_contact"]["contact"]
         base_orientation = spine_observation["base_orientation"]
