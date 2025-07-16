@@ -6,6 +6,7 @@
 #include <palimpsest/Dictionary.h>
 
 #include <Eigen/Core>
+#include <limits>
 #include <map>
 #include <string>
 #include <vector>
@@ -23,7 +24,7 @@ class WheelStopper : public Controller {
    *
    * \param[in] params Controller parameters.
    */
-  explicit WheelStopper();
+  WheelStopper();
 
   //! Name of the controller.
   inline std::string name() const noexcept final {

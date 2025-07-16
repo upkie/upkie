@@ -2,6 +2,10 @@
 // Copyright 2022 Stéphane Caron
 // Copyright 2023 Inria
 
+#pragma once
+
+#include <memory>
+
 #include "upkie/cpp/exceptions/UpkieError.h"
 #include "upkie/cpp/sensors/CpuTemperature.h"
 #include "upkie/cpp/sensors/SensorPipeline.h"
