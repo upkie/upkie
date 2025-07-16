@@ -10,11 +10,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Development workflow based on Pixi
+- control: Create `upkie.control` submodule
+- control: Import MPC balancer class from the Pink balancer
 - cpp: Controller pipeline run by the spine after observers
+- envs: Add `Upkie-Servos-Mock` environment
+- utils: Joystick utility class
 
 ### Changed
 
+- **Breaking:** Rename `UpkieServos` to `Upkie-Servos-Spine`
 - cpp: Spines now take a controller pipeline as constructor argument
+- envs: Drop Gymnasium environment versioning
+- spines: Factor common observers and sensors between spines
 
 ### Fixed
 
@@ -24,6 +31,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - envs: Remove UpkieServoPositions and UpkieServoTorques environments
+- envs: Remove UpkieServoPositions and UpkieServoTorques environments
+- envs: Remove `log` function from spine environment
+- envs: Remove observation-based reward wrapper
 
 ## [8.0.0] - 2025-05-08
 
