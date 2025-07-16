@@ -11,8 +11,8 @@ from multiprocessing.shared_memory import SharedMemory
 
 import numpy as np
 
-from upkie.envs.upkie_servos_spine import UpkieServosSpine
 from upkie.envs.tests.mock_spine import MockSpine
+from upkie.envs.upkie_servos_spine import UpkieServosSpine
 
 
 class TestUpkieServosSpine(unittest.TestCase):
