@@ -5,6 +5,7 @@
 # Copyright 2023 Inria
 
 from typing import Any, Optional, Set, Tuple
+import time
 
 import gymnasium as gym
 import numpy as np
@@ -18,6 +19,7 @@ from upkie.spine import SpineInterface
 from upkie.utils.clamp import clamp_and_warn
 from upkie.utils.nested_update import nested_update
 from upkie.utils.robot_state import RobotState
+from upkie.utils.raspi import on_raspi
 
 
 class UpkieServos(gym.Env):
@@ -382,6 +384,13 @@ class UpkieServos(gym.Env):
         """
         super().reset(seed=seed)
         self._spine.stop()
+        if on_raspi():
+            # If we start the spine right after it stops, it can cause an issue
+            # where some moteus controllers fault with a (blinking red +
+            # stationary green) error code. For now we assume resetting on the
+            # real robot can take time.
+            time.sleep(1.0)
+
         self.__reset_rate()
         self.__reset_init_state()
         spine_observation = self._spine.start(self._spine_config)
