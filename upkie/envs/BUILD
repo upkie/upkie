@@ -16,6 +16,7 @@ py_library(
         "//upkie/model",
         "//upkie/spine",
         "//upkie/utils:nested_update",
+        "//upkie/utils:raspi",
         "//upkie/utils:robot_state",
         "//upkie/utils:spdlog",
         "//upkie:exceptions",
