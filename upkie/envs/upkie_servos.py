@@ -4,8 +4,8 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Inria
 
-from typing import Any, Optional, Set, Tuple
 import time
+from typing import Any, Optional, Set, Tuple
 
 import gymnasium as gym
 import numpy as np
@@ -18,8 +18,8 @@ from upkie.model import Model
 from upkie.spine import SpineInterface
 from upkie.utils.clamp import clamp_and_warn
 from upkie.utils.nested_update import nested_update
-from upkie.utils.robot_state import RobotState
 from upkie.utils.raspi import on_raspi
+from upkie.utils.robot_state import RobotState
 
 
 class UpkieServos(gym.Env):
