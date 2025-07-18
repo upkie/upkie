@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - cpp: Spines now take a controller pipeline as constructor argument
+- envs: Wait one second when resetting environments on the Raspberry Pi (thanks to @Tordjx)
 
 ### Fixed
 
