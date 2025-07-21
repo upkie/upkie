@@ -25,6 +25,7 @@ py_test(
     srcs = ["upkie_servos_spine_test.py"],
     deps = [
         "//upkie/envs",
+        "//upkie/utils:raspi",
         ":mock_spine",
     ],
 )
