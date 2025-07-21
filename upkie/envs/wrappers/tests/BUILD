@@ -63,6 +63,7 @@ py_test(
         "//upkie/envs",
         "//upkie/envs/tests:mock_spine",
         "//upkie/envs/wrappers",
+        "//upkie/utils:raspi",
         ":envs",
     ],
 )
