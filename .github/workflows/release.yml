@@ -16,7 +16,7 @@ jobs:
 
           - name: "Install dependencies"
             run: |
-                sudo apt install libtinfo5
+                sudo apt-get install libtinfo5
 
             - name: "Build the pi3hat spine"
               run: |
@@ -37,7 +37,7 @@ jobs:
 
           - name: "Install dependencies"
             run: |
-                sudo apt install libtinfo5
+                sudo apt-get install libtinfo5
 
           - name: "Build linux bullet spine artifact"
             run: |

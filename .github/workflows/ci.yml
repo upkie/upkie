@@ -23,7 +23,7 @@ jobs:
 
             - name: "Install dependencies"
               run: |
-                  sudo apt install libncurses5
+                  sudo apt-get install libncurses5
 
             - name: "Build pi3hat spine artifact"
               run: |
@@ -115,7 +115,7 @@ jobs:
             - name: "Install dependencies"
               run: |
                   # See https://github.com/orgs/upkie/discussions/42
-                  sudo apt install libtinfo5
+                  sudo apt-get install libtinfo5
 
             - name: "Build Raspberry Pi targets"
               env:
