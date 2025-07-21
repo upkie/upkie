@@ -5,6 +5,7 @@ on:
     release:
         types:
             - created
+            - edited
 
 jobs:
     pi3hat_spine:
