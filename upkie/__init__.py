@@ -8,7 +8,7 @@
 
 from . import config, envs, model, spine, utils
 
-__version__ = "8.0.0"
+__version__ = "8.1.0"
 
 __all__ = [
     "config",
