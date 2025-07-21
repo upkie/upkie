@@ -7,11 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [8.1.1] - 2025-07-21
+
 ### Changed
 
 - CICD: Re-trigger release workflow when a release is edited
 
-## [8.1.0] - 2025-05-08
+## [8.1.0] - 2025-07-21
 
 ### Added
 
@@ -794,7 +796,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Starting this changelog.
 
-[unreleased]: https://github.com/upkie/upkie/compare/v8.1.0...HEAD
+[unreleased]: https://github.com/upkie/upkie/compare/v8.1.1...HEAD
+[8.1.1]: https://github.com/upkie/upkie/compare/v8.1.0...v8.1.1
 [8.1.0]: https://github.com/upkie/upkie/compare/v8.0.0...v8.1.0
 [8.0.0]: https://github.com/upkie/upkie/compare/v7.0.0...v8.0.0
 [7.0.0]: https://github.com/upkie/upkie/compare/v6.1.0...v7.0.0
