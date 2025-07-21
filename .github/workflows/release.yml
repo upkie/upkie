@@ -14,9 +14,9 @@ jobs:
             - name: "Checkout sources"
               uses: actions/checkout@v4
 
-          - name: "Install dependencies"
-            run: |
-                sudo apt-get install libtinfo5
+            - name: "Install dependencies"
+              run: |
+                  sudo apt-get install libtinfo5
 
             - name: "Build the pi3hat spine"
               run: |
