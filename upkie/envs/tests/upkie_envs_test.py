@@ -27,13 +27,13 @@ class TestUpkieEnvs(unittest.TestCase):
             for env_id in gym.envs.registry.keys()
             if env_id.startswith("Upkie")
         ]
-        for env_name in upkie_envs:
-            if env_name in ("register", "UpkieEnv"):
+        for env_id in upkie_envs:
+            if env_id in ("register", "UpkieEnv"):
                 continue
             kwargs = {}
-            if env_name.startswith("Upkie"):
+            if env_id.startswith("Upkie") and ("Spine" in env_id or "Ground" in env_id):
                 kwargs["shm_name"] = shared_memory._name
-            gym.make(env_name, **kwargs)
+            gym.make(env_id, **kwargs)
         shared_memory.close()
 
 
