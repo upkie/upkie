@@ -50,6 +50,8 @@ cc_library(
     name = "controllers",
     deps = [
         ":controller_pipeline",
+        ":wheel_balancer",
+        ":wheel_stopper",
     ],
 )
 
