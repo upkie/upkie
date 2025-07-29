@@ -105,3 +105,16 @@ Guards (in blue), *i.e.* conditions required to trigger a transition, may involv
 - `stop_cycles`: the number of stop commands cycled in the current state (only available in "stop" and "shutdown" states).
 
 Read/write operations from/to the shared memory are indicated in red.
+
+## Design notes
+
+### N1: Single spine binary
+
+We want a single spine binary per interface: Bullet, pi3hat, etc. That binary may offer several observer and controller pipelines, configured via the command line. 
+
+- Pros:
+    - Combinatorial complexity in distributing, installing and running different spines.
+    - Allows `Upkie-Spine-*` Gymnasium environment names
+    - Simpler for users, especially newcomers.
+- Cons:
+    - Combinatorial complexity makes the code branching.

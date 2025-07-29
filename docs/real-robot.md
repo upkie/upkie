@@ -64,7 +64,7 @@ Log into the Pi and run a pi3hat spine:
 ```console
 $ ssh user@upkie
 user@upkie:~$ cd upkie
-user@upkie:upkie$ make run_servo_spine_pi3hat
+user@upkie:upkie$ make run_pi3hat_spine
 ```
 
 Once the spine is running, you can run any agent in a separate shell on the robot, for example the PID balancer from the examples directory:

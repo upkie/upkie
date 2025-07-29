@@ -29,8 +29,8 @@ help:
 
 .PHONY: build
 build: clean_broken_links  ## build Raspberry Pi targets
-	$(BAZEL) build --config=pi64 //spines/servo_spine:mock
-	$(BAZEL) build --config=pi64 //spines/servo_spine:pi3hat
+	$(BAZEL) build --config=pi64 //spines:mock_spine
+	$(BAZEL) build --config=pi64 //spines:pi3hat_spine
 
 .PHONY: check_upkie_name
 check_upkie_name:
@@ -98,15 +98,12 @@ unpack_pixi_env:  ### unpack Python environment
 		exit 1; \
 	}
 
-run_servo_spine_mock:  ### run the mock spine on the Raspberry Pi
-	$(RASPUNZEL) run -s //spines/servo_spine:mock
+run_mock_spine:  ### run the mock spine on the Raspberry Pi
+	$(RASPUNZEL) run -s //spines:mock_spine
 
-# NB: run_servo_spine_pi3hat is used in build instructions
-run_servo_spine_pi3hat:  ### run the pi3hat spine on the Raspberry Pi
-	$(RASPUNZEL) run -s //spines/servo_spine:pi3hat
-
-run_balancer_spine_pi3hat:  ### run the pi3hat balancer spine on the Raspberry Pi
-	$(RASPUNZEL) run -s //spines/servo_spine:pi3hat
+# NB: run_pi3hat_spine is used in build instructions
+run_pi3hat_spine:  ### run the pi3hat spine on the Raspberry Pi
+	$(RASPUNZEL) run -s //spines:pi3hat_spine
 
 # DEV HELPERS
 # ===========
