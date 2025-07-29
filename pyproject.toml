@@ -118,6 +118,15 @@ stable-baselines3 = ">2.3.0"
 dependencies = { doxygen = "<=1.9.5", graphviz = "*", make = "*", "stable-baselines3" = "*" }
 tasks = { make-docs = "doxygen --version && cd docs && make" }
 
+[tool.pixi.feature.lint]
+dependencies.six = "*"
+dependencies.ruff = ">=0.4.3"
+tasks.lint-bazel = { cmd = "./tools/bazelisk test --config lint //upkie/..." }
+tasks.lint-ruff = { cmd = "ruff check upkie" }
+tasks.format-check = { cmd = "ruff format --check upkie" }
+tasks.format = { cmd = "ruff format upkie" }
+tasks.lint = { depends-on = ["lint-bazel", "lint-ruff", "format-check"] }
+
 [tool.pixi.feature.pack]
 dependencies = { pixi-pack = ">=0.7.2" }
 tasks.pack = "pixi-pack --environment full --platform linux-aarch64 --ignore-pypi-non-wheel"
@@ -129,12 +138,13 @@ tasks = { test = "tools/bazel test //upkie/..." }
 [tool.pixi.tasks.bullet_spine]
 cmd = "./tools/bazelisk run //spines:bullet_spine -- --show"
 
-[tool.pixi.tasks.bullet_balancer_spine]
-cmd = "./tools/bazelisk run //spines/balancer_spine:bullet -- --show"
+[tool.pixi.tasks.bullet_wheel_balancer]
+cmd = "./tools/bazelisk run //spines:bullet_spine -- --pipeline wheel_balancer --show"
 
 [tool.pixi.environments]
 default = { features = [], solve-group = "default" }
-full = { features = ["full"], solve-group = "default" }
 docs = { features = ["docs"], solve-group = "default" }
+full = { features = ["full"], solve-group = "default" }
+lint = { features = ["lint"], solve-group = "default" }
 pack = { features = ["pack"], solve-group = "default" }
 test = { features = ["test"], solve-group = "default" }

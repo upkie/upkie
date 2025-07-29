@@ -122,7 +122,3 @@ coverage:  ## check unit test coverage and open the resulting HTML report
 lint:  ## lint code in the repository
 	$(BAZEL) test --config lint //...
 	ruff check $(CURDIR)/upkie
-
-.PHONY: test
-test:  ## run all unit tests
-	$(BAZEL) test //...
