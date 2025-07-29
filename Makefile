@@ -77,8 +77,8 @@ upload: check_upkie_name build set_date  ## upload built targets to the Raspberr
 		--exclude tools/raspios \
 		--progress $(CURDIR)/ ${UPKIE_NAME}:$(PROJECT_NAME)/
 
-pack_env:  ## pack pixi environment to environment.tar
-	pixi run pack-to-upkie
+pack_pixi_env:  ## pack pixi environment to environment.tar
+	pixi run pack
 
 # REMOTE TARGETS
 # ==============
@@ -91,8 +91,12 @@ check_mamba_setup:
         exit 1; \
 	fi
 
-unpack_env: check_mamba_setup  ### unpack pixi environment from environment.tar
-	pixi-pack unpack environment.tar -e upkie -o ${MAMBA_ROOT_PREFIX}/envs
+unpack_pixi_env:  ### unpack Python environment
+	@pixi-unpack environment.tar -e upkie -o ${MAMBA_ROOT_PREFIX}/envs || { \
+		echo "Error: pixi-pack not found"; \
+		echo "See https://github.com/Quantco/pixi-pack?tab=readme-ov-file#-installation"; \
+		exit 1; \
+	}
 
 run_servo_spine_mock:  ### run the mock spine on the Raspberry Pi
 	$(RASPUNZEL) run -s //spines/servo_spine:mock

@@ -119,14 +119,8 @@ dependencies = { doxygen = "<=1.9.5", graphviz = "*", make = "*", "stable-baseli
 tasks = { make-docs = "doxygen --version && cd docs && make" }
 
 [tool.pixi.feature.pack]
-dependencies = { pixi-pack = "*" }
-
-[tool.pixi.feature.pack.tasks.pack]
-args = [
-    { "arg" = "environment", "default" = "full" },
-    { "arg" = "platform", "default" = "linux-aarch64" },
-]
-cmd = "pixi-pack pack --environment {{ environment }} --platform {{ platform }} --ignore-pypi-non-wheel"
+dependencies = { pixi-pack = ">=0.7.2" }
+tasks.pack = "pixi-pack --environment full --platform linux-aarch64 --ignore-pypi-non-wheel"
 
 [tool.pixi.feature.test]
 dependencies = { "stable-baselines3" = ">2.3.0" }
