@@ -22,7 +22,12 @@ class TestUpkieEnvs(unittest.TestCase):
             gym.make("Upkie-Servos-NotFound")
         shared_memory = SharedMemory(name=None, size=42, create=True)
         upkie.envs.register()
-        for env_name in upkie.envs.__all__:
+        upkie_envs = [
+            env_id
+            for env_id in gym.envs.registry.keys()
+            if env_id.startswith("Upkie")
+        ]
+        for env_name in upkie_envs:
             if env_name in ("register", "UpkieEnv"):
                 continue
             kwargs = {}

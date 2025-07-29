@@ -49,6 +49,7 @@ py_library(
         "upkie_servos_spine.py",
     ],
     deps = [
+        "//upkie/utils:raspi",
         ":upkie_servos",
     ],
 )
