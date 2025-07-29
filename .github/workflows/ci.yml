@@ -27,7 +27,7 @@ jobs:
 
             - name: "Build pi3hat spine artifact"
               run: |
-                  tools/bazelisk build --verbose_failures --config=pi64 //spines/servo_spine:pi3hat
+                  tools/bazelisk build --verbose_failures --config=pi64 //spines:pi3hat_spine
 
             - name: "Prepare artifacts directory"
               run: |
