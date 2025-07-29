@@ -76,6 +76,18 @@ class SynchronousClock {
 
   //! Last sleep duration in seconds.
   double slack_;
+
+  //! Time of last skip warning to rate-limit messages.
+  std::chrono::time_point<std::chrono::steady_clock> last_skip_warning_time_;
+
+  //! Minimum time between skip warnings in seconds.
+  static constexpr double kSkipWarningInterval_ = 1.0;
+
+  //! Desired tick frequency in [Hz].
+  double frequency_;
+
+  //! Accumulated skip count since last warning.
+  int accumulated_skip_count_;
 };
 
 }  // namespace upkie::cpp::utils

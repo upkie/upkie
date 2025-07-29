@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - **Breaking:** Rename `UpkieServos` to `Upkie-Servos-Spine`
-- envs: Rename `UpkieGroundVelocity` to `Upkie-GroundVelocity-Spine`
+- cpp: Limit rate of SynchronousClock skip warnings and report frequency drop
 - envs: Drop Gymnasium environment versioning
 - spines: Factor common observers and sensors between spines
 

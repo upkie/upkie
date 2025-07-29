@@ -123,9 +123,8 @@ dependencies.six = "*"
 dependencies.ruff = ">=0.4.3"
 tasks.lint-bazel = { cmd = "./tools/bazelisk test --config lint //upkie/..." }
 tasks.lint-ruff = { cmd = "ruff check upkie" }
-tasks.format-check = { cmd = "ruff format --check upkie" }
-tasks.format = { cmd = "ruff format upkie" }
-tasks.lint = { depends-on = ["lint-bazel", "lint-ruff", "format-check"] }
+tasks.lint-ruff-format = { cmd = "ruff format --check upkie" }
+tasks.lint = { depends-on = ["lint-bazel", "lint-ruff", "lint-ruff-format"] }
 
 [tool.pixi.feature.pack]
 dependencies = { pixi-pack = ">=0.7.2" }
