@@ -142,6 +142,11 @@ class Joystick:
         self.prefix = prefix
 
     def write(self, observation: dict):
+        r"""!
+        Write joystick readings to an observation dictionary.
+
+        \param[out] observation Observation dictionary.
+        """
         evbuf = self.jsdev.read(8)
         if evbuf:
             time, value, type, number = struct.unpack("IhBB", evbuf)
