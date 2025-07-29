@@ -12,10 +12,13 @@
 #include <string>
 #include <vector>
 
+#include "spines/common/controllers.h"
 #include "spines/common/observers.h"
 #include "spines/common/sensors.h"
 #include "upkie/cpp/actuation/BulletInterface.h"
 #include "upkie/cpp/controllers/ControllerPipeline.h"
+#include "upkie/cpp/controllers/WheelBalancer.h"
+#include "upkie/cpp/controllers/WheelStopper.h"
 #include "upkie/cpp/observers/ObserverPipeline.h"
 #include "upkie/cpp/sensors/SensorPipeline.h"
 #include "upkie/cpp/spine/Spine.h"
@@ -24,10 +27,13 @@
 #include "upkie/cpp/version.h"
 
 using palimpsest::Dictionary;
+using spines::common::make_controllers;
 using spines::common::make_observers;
 using spines::common::make_sensors;
 using upkie::cpp::actuation::BulletInterface;
 using upkie::cpp::controllers::ControllerPipeline;
+using upkie::cpp::controllers::WheelBalancer;
+using upkie::cpp::controllers::WheelStopper;
 using upkie::cpp::observers::ObserverPipeline;
 using upkie::cpp::sensors::SensorPipeline;
 using upkie::cpp::spine::Spine;
@@ -207,7 +213,24 @@ int run_spine(const char* argv0, const CommandLineArguments& args) {
   BulletInterface interface = make_actuation_interface(argv0, args);
   SensorPipeline sensors = make_sensors(/* joystick_required = */ false);
   ObserverPipeline observers = make_observers(args.spine_frequency);
-  ControllerPipeline controllers;
+  ControllerPipeline controllers =
+      make_controllers(args.pipeline, args.spine_frequency);
+
+  if (args.pipeline == "wheel_balancer") {
+    spdlog::info("Initializing the \"wheel_balancer\" controller pipeline");
+    auto wheel_stopper = std::make_shared<WheelStopper>();
+    controllers.append(wheel_stopper);
+
+    WheelBalancer::Parameters balancer_params;
+    balancer_params.dt = 1.0 / args.spine_frequency;
+    balancer_params.wheel_radius = 0.06;  // [m]
+    auto balancer = std::make_shared<WheelBalancer>(balancer_params);
+    controllers.append(balancer);
+  } else if (args.pipeline != "") {
+    spdlog::error("Unknown controller pipeline: \"{}\"", args.pipeline);
+    return EXIT_FAILURE;
+  }
+
   Spine spine(params, interface, sensors, observers, controllers);
   if (args.nb_substeps == 0u) {
     spine.run();
