@@ -11,6 +11,7 @@
 #include <string>
 #include <vector>
 
+#include "spines/common/controllers.h"
 #include "spines/common/observers.h"
 #include "spines/common/sensors.h"
 #include "upkie/cpp/actuation/MockInterface.h"
@@ -23,6 +24,7 @@
 #include "upkie/cpp/version.h"
 
 using palimpsest::Dictionary;
+using spines::common::make_controllers;
 using spines::common::make_observers;
 using spines::common::make_sensors;
 using upkie::cpp::actuation::MockInterface;

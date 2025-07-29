@@ -15,6 +15,7 @@
 #include <string>
 #include <vector>
 
+#include "spines/common/controllers.h"
 #include "spines/common/observers.h"
 #include "spines/common/sensors.h"
 #include "upkie/cpp/actuation/Pi3HatInterface.h"
@@ -30,6 +31,7 @@
 
 using Pi3Hat = ::mjbots::pi3hat::Pi3Hat;
 using palimpsest::Dictionary;
+using spines::common::make_controllers;
 using spines::common::make_observers;
 using spines::common::make_sensors;
 using upkie::cpp::actuation::Pi3HatInterface;
