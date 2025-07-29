@@ -54,12 +54,26 @@ class CommandLineArguments {
         help = true;
       } else if (arg == "-v" || arg == "--version") {
         version = true;
+      } else if (arg == "--extra-urdf-path") {
+        extra_urdf_paths.push_back(args.at(++i));
+        spdlog::info("Command line: extra-urdf-path = {}",
+                     extra_urdf_paths.back());
+      } else if (arg == "--inertia-randomization") {
+        inertia_randomization = std::stod(args.at(++i));
+        spdlog::info("Command line: inertia_randomization = {} [kg]",
+                     inertia_randomization);
       } else if (arg == "--log-dir") {
         log_dir = args.at(++i);
         spdlog::info("Command line: log_dir = {}", log_dir);
       } else if (arg == "--nb-substeps") {
         nb_substeps = std::stol(args.at(++i));
         spdlog::info("Command line: nb_substeps = {}", nb_substeps);
+      } else if (arg == "--pipeline") {
+        pipeline = args.at(++i);
+        spdlog::info("Command line: pipeline = {}", pipeline);
+      } else if (arg == "--robot-variant") {
+        robot_variant = args.at(++i);
+        spdlog::info("Command line: robot_variant = {}", robot_variant);
       } else if (arg == "--shm-name") {
         shm_name = args.at(++i);
         spdlog::info("Command line: shm_name = {}", shm_name);
@@ -67,20 +81,9 @@ class CommandLineArguments {
         show = true;
       } else if (arg == "--space") {
         space = true;
-      } else if (arg == "--extra-urdf-path") {
-        extra_urdf_paths.push_back(args.at(++i));
-        spdlog::info("Command line: extra-urdf-path = {}",
-                     extra_urdf_paths.back());
       } else if (arg == "--spine-frequency") {
         spine_frequency = std::stol(args.at(++i));
         spdlog::info("Command line: spine_frequency = {} Hz", spine_frequency);
-      } else if (arg == "--robot-variant") {
-        robot_variant = args.at(++i);
-        spdlog::info("Command line: robot_variant = {}", robot_variant);
-      } else if (arg == "--inertia-randomization") {
-        inertia_randomization = std::stod(args.at(++i));
-        spdlog::info("Command line: inertia_randomization = {} [kg]",
-                     inertia_randomization);
       } else {
         spdlog::error("Unknown argument: {}", arg);
         error = true;
@@ -100,27 +103,29 @@ class CommandLineArguments {
     std::cout << "Usage: " << name << " [options]\n";
     std::cout << "\n";
     std::cout << "Optional arguments:\n\n";
+    std::cout << "--extra-urdf-path\n"
+              << "    Load extra URDFs into the environment.\n";
     std::cout << "-h, --help\n"
               << "    Print this help and exit.\n";
+    std::cout << "--inertia-randomization <epsilon>\n"
+              << "    Randomize inertia of the robot links.\n";
     std::cout << "--log-dir <path>\n"
               << "    Path to a directory for output logs.\n";
     std::cout << "--nb-substeps <k>\n"
               << "    Number of simulation steps per action. "
               << "Makes spine pausing.\n";
+    std::cout << "--pipeline <name>\n"
+              << "    Pipeline name (e.g., 'wheel_balancer').\n";
+    std::cout << "--robot-variant <variant>\n"
+              << "    Robot variant (default: '').\n";
     std::cout << "--shm-name <name>\n"
               << "    Name for IPC shared memory file.\n";
     std::cout << "--show\n"
               << "    Show the Bullet GUI.\n";
     std::cout << "--space\n"
               << "    No ground, no gravity, fly like an eagle!\n";
-    std::cout << "--extra-urdf-path\n"
-              << "    Load extra URDFs into the environment.\n";
     std::cout << "--spine-frequency <frequency>\n"
               << "    Spine frequency in Hertz (default: 1000 Hz).\n";
-    std::cout << "--robot-variant <variant>\n"
-              << "    Robot variant (default: '').\n";
-    std::cout << "--inertia-randomization <epsilon>\n"
-              << "    Randomize inertia of the robot links.\n";
     std::cout << "-v, --version\n"
               << "    Print out the spine version number.\n";
     std::cout << "\n";
@@ -130,14 +135,26 @@ class CommandLineArguments {
   //! Error flag
   bool error = false;
 
+  //! Extra URDF paths
+  std::vector<std::string> extra_urdf_paths;
+
   //! Help flag
   bool help = false;
+
+  //! Mass randomization ratio in [%]
+  double inertia_randomization = 0.0;
 
   //! Log directory
   std::string log_dir = "";
 
   //! Number of simulation substeps
   unsigned nb_substeps = 0u;
+
+  //! Pipeline name
+  std::string pipeline = "";
+
+  //! Robot variant
+  std::string robot_variant;
 
   //! Name for the shared memory file
   std::string shm_name = "/upkie";
@@ -148,17 +165,8 @@ class CommandLineArguments {
   //! Space mode (no ground, no gravity)
   bool space = false;
 
-  //! Extra URDF paths
-  std::vector<std::string> extra_urdf_paths;
-
-  //! Robot variant
-  std::string robot_variant;
-
   //! Spine frequency in Hz.
   unsigned spine_frequency = 1000u;
-
-  //! Mass randomization ratio in [%]
-  double inertia_randomization = 0.0;
 
   //! Version flag
   bool version = false;

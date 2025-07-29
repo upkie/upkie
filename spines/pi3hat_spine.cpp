@@ -64,6 +64,9 @@ class CommandLineArguments {
       } else if (arg == "--log-dir") {
         log_dir = args.at(++i);
         spdlog::info("Command line: log_dir = {}", log_dir);
+      } else if (arg == "--pipeline") {
+        pipeline = args.at(++i);
+        spdlog::info("Command line: pipeline = {}", pipeline);
       } else if (arg == "--shm-name") {
         shm_name = args.at(++i);
         spdlog::info("Command line: shm_name = {}", shm_name);
@@ -100,6 +103,8 @@ class CommandLineArguments {
               << "    CPUID for the CAN thread (default: 2).\n";
     std::cout << "--log-dir <path>\n"
               << "    Path to a directory for output logs.\n";
+    std::cout << "--pipeline <name>\n"
+              << "    Pipeline name (e.g., 'wheel_balancer').\n";
     std::cout << "--shm-name <name>\n"
               << "    Name for IPC shared memory file.\n";
     std::cout << "--spine-cpu <cpuid>\n"
@@ -126,6 +131,9 @@ class CommandLineArguments {
 
   //! Log directory
   std::string log_dir = "";
+
+  //! Pipeline name
+  std::string pipeline = "";
 
   //! Name for the shared memory file.
   std::string shm_name = "/upkie";

@@ -48,6 +48,9 @@ class CommandLineArguments {
       } else if (arg == "--log-dir") {
         log_dir = args.at(++i);
         spdlog::info("Command line: log_dir = {}", log_dir);
+      } else if (arg == "--pipeline") {
+        pipeline = args.at(++i);
+        spdlog::info("Command line: pipeline = {}", pipeline);
       } else if (arg == "--spine-cpu") {
         spine_cpu = std::stol(args.at(++i));
         spdlog::info("Command line: spine_cpu = {}", spine_cpu);
@@ -75,6 +78,8 @@ class CommandLineArguments {
     std::cout << "Optional arguments:\n\n";
     std::cout << "-h, --help\n"
               << "    Print this help and exit.\n";
+    std::cout << "--pipeline <name>\n"
+              << "    Pipeline name (e.g., 'wheel_balancer').\n";
     std::cout << "--spine-cpu <cpuid>\n"
               << "    CPUID for the spine thread (default: -1).\n";
     std::cout << "--spine-frequency <frequency>\n"
@@ -93,6 +98,9 @@ class CommandLineArguments {
 
   //! Log directory
   std::string log_dir = "";
+
+  //! Pipeline name
+  std::string pipeline = "";
 
   //! CPUID for the spine thread (-1 to disable realtime).
   int spine_cpu = -1;
@@ -113,13 +121,12 @@ int run_spine(const CommandLineArguments& args) {
 
   SensorPipeline sensors = make_sensors(/* joystick_required = */ false);
   ObserverPipeline observers = make_observers(args.spine_frequency);
+  ControllerPipeline controllers =
+      make_controllers(args.pipeline, args.spine_frequency);
 
   // Mock actuators
   const double dt = 1.0 / args.spine_frequency;
   MockInterface actuation(dt);
-
-  // Empty controller pipeline
-  ControllerPipeline controllers;
 
   // Spine
   Spine::Parameters spine_params;
