@@ -35,11 +35,7 @@ user@upkie:upkie$ python examples/pi_balancer.py
 
 ### Build from source {#build-from-source}
 
-If your operating system is a Debian-based Linux distribution like Ubuntu 20.04, you will need to install the following dependency (also discussed in [#42](https://github.com/orgs/upkie/discussions/42)):
-
-```console
-sudo apt install libtinfo5  # only needed for Debian-based Linux distributions
-```
+**Note to Linux developers:** if your operating system is a Debian-based Linux distribution, you will need to install `libtinfo5` (also ). On Ubuntu 20.04 or 22.04 it should be as simple as `sudo apt install libtinfo5`. For Ubuntu 24.04 see the related discussion [upkie#42](https://github.com/orgs/upkie/discussions/42).
 
 To build the pi3hat spine locally from source, use the Makefile at the root of the repository as follows:
 
