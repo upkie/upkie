@@ -159,7 +159,8 @@ int run_spine(const CommandLineArguments& args) {
 
   SensorPipeline sensors = make_sensors(/* joystick_required = */ true);
   ObserverPipeline observers = make_observers(args.spine_frequency);
-  ControllerPipeline controllers;
+  ControllerPipeline controllers =
+      make_controllers(args.pipeline, args.spine_frequency);
 
   try {
     // pi3hat configuration

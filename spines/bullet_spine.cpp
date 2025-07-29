@@ -216,21 +216,6 @@ int run_spine(const char* argv0, const CommandLineArguments& args) {
   ControllerPipeline controllers =
       make_controllers(args.pipeline, args.spine_frequency);
 
-  if (args.pipeline == "wheel_balancer") {
-    spdlog::info("Initializing the \"wheel_balancer\" controller pipeline");
-    auto wheel_stopper = std::make_shared<WheelStopper>();
-    controllers.append(wheel_stopper);
-
-    WheelBalancer::Parameters balancer_params;
-    balancer_params.dt = 1.0 / args.spine_frequency;
-    balancer_params.wheel_radius = 0.06;  // [m]
-    auto balancer = std::make_shared<WheelBalancer>(balancer_params);
-    controllers.append(balancer);
-  } else if (args.pipeline != "") {
-    spdlog::error("Unknown controller pipeline: \"{}\"", args.pipeline);
-    return EXIT_FAILURE;
-  }
-
   Spine spine(params, interface, sensors, observers, controllers);
   if (args.nb_substeps == 0u) {
     spine.run();

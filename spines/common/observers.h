@@ -18,7 +18,7 @@ using upkie::cpp::observers::FloorContact;
 using upkie::cpp::observers::ObserverPipeline;
 using upkie::cpp::observers::WheelOdometry;
 
-/*! Prepare the controller pipeline.
+/*! Prepare the observer pipeline.
  *
  * \param[in] spine_frequency Spine frequency in [Hz].
  */
