@@ -107,5 +107,5 @@ fi
 
 if [[ -n "${REBUILD}" ]]; then
     echo "🏗️  Building the simulation spine from source..."
-    (cd "${SCRIPTDIR}" && "${SCRIPTDIR}"/tools/bazelisk run //spines/servo_spine:bullet -- "${SPINE_ARGS[@]}")
+    (cd "${SCRIPTDIR}" && "${SCRIPTDIR}"/tools/bazelisk run //spines:bullet_spine -- "${SPINE_ARGS[@]}")
 fi
