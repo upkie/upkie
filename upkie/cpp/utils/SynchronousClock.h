@@ -50,6 +50,9 @@ class SynchronousClock {
   //! Get the last sleep duration duration in seconds.
   double slack() const noexcept { return slack_; }
 
+  //! Get skip warning interval in seconds (for testing).
+  static constexpr double skip_warning_interval() noexcept { return kSkipWarningInterval_; }
+
  private:
   /*! Measure period between two calls to `wait_for_next_tick`.
    *
