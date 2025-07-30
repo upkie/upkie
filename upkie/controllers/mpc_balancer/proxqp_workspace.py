@@ -14,6 +14,14 @@ class ProxQPWorkspace:
     Workspace data for ProxQP.
     """
 
+    ## \var solver
+    ## ProxQP solver instance.
+    solver: proxqp.dense.QP
+
+    ## \var update_preconditioner
+    ## Flag to update preconditioners at each solve.
+    update_preconditioner: bool
+
     def __init__(
         self,
         mpc_qp: MPCQP,

@@ -7,7 +7,7 @@
 """Wheel balancing using model predictive control with the ProxQP solver."""
 
 import numpy as np
-from qpmpc import MPCQP, Plan
+from qpmpc import MPCQP, MPCProblem, Plan
 from qpmpc.systems import WheeledInvertedPendulum
 from qpsolvers import solve_problem
 
@@ -44,6 +44,42 @@ class MPCBalancer:
     r"""!
     Model-predictive control sagittal balancer.
     """
+
+    ## \var commanded_velocity
+    ## Current commanded ground velocity in [m] / [s].
+    commanded_velocity: float
+
+    ## \var fall_pitch
+    ## Pitch angle threshold for fall detection in [rad].
+    fall_pitch: float
+
+    ## \var fallen
+    ## Flag indicating whether the robot has fallen.
+    fallen: bool
+
+    ## \var max_ground_velocity
+    ## Maximum ground velocity constraint in [m] / [s].
+    max_ground_velocity: float
+
+    ## \var mpc_problem
+    ## Model predictive control problem definition.
+    mpc_problem: MPCProblem
+
+    ## \var mpc_qp
+    ## Quadratic program formulation of the MPC problem.
+    mpc_qp: MPCQP
+
+    ## \var pendulum
+    ## Wheeled inverted pendulum model.
+    pendulum: WheeledInvertedPendulum
+
+    ## \var warm_start
+    ## Flag to enable warm-starting the QP solver.
+    warm_start: bool
+
+    ## \var workspace
+    ## ProxQP solver workspace for the MPC optimization.
+    workspace: ProxQPWorkspace
 
     def __init__(
         self,

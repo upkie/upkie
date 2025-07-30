@@ -6,15 +6,15 @@ Spines compute observation dictionaries from sensor measurements by applying *ob
 
 | Observation key | Description |
 |-----------------|-------------|
-| `imu.angular_velocity` | [Body angular velocity](\ref upkie::cpp::actuation::ImuData::angular_velocity_imu_in_imu) of the IMU frame in [rad] / [s] |
-| `imu.linear_acceleration` | [Linear acceleration](\ref upkie::cpp::actuation::ImuData::linear_acceleration_imu_in_imu) of the IMU, with gravity filtered out, in [m] / [s]² |
-| `imu.orientation` | [Orientation of the IMU frame](\ref upkie::cpp::actuation::ImuData::orientation_imu_in_ars) in the [ARS](\ref ars) frame as a unit quaternion (w, x, y, z) |
-| `imu.raw_angular_velocity` | [Raw angular velocity](\ref upkie::cpp::actuation::ImuData::raw_angular_velocity) measured by the gyroscope of the IMU, in [rad] / [s] |
-| `imu.raw_linear_acceleration` | [Raw linear acceleration](\ref upkie::cpp::actuation::ImuData::raw_linear_acceleration) measured by the accelerometer of the IMU, in [m] / [s]² |
+| `imu.angular_velocity` | [Body angular velocity](\ref upkie::cpp::interfaces::ImuData::angular_velocity_imu_in_imu) of the IMU frame in [rad] / [s] |
+| `imu.linear_acceleration` | [Linear acceleration](\ref upkie::cpp::interfaces::ImuData::linear_acceleration_imu_in_imu) of the IMU, with gravity filtered out, in [m] / [s]² |
+| `imu.orientation` | [Orientation of the IMU frame](\ref upkie::cpp::interfaces::ImuData::orientation_imu_in_ars) in the [ARS](\ref ars) frame as a unit quaternion (w, x, y, z) |
+| `imu.raw_angular_velocity` | [Raw angular velocity](\ref upkie::cpp::interfaces::ImuData::raw_angular_velocity) measured by the gyroscope of the IMU, in [rad] / [s] |
+| `imu.raw_linear_acceleration` | [Raw linear acceleration](\ref upkie::cpp::interfaces::ImuData::raw_linear_acceleration) measured by the accelerometer of the IMU, in [m] / [s]² |
 
 The inertial measurement unit (IMU) mounted on the [pi3hat](https://mjbots.com/products/mjbots-pi3hat-r4-5) combines an accelerometer and a gyroscope. These raw measurements are converted onboard by an unscented Kalman filter (based on a standard quasi-static assumption) that outputs observed quantities with respect to an attitude reference system (ARS) frame.
 
-Upkie spines always report [IMU observations](\ref upkie::cpp::actuation::ImuData).
+Upkie spines always report [IMU observations](\ref upkie::cpp::interfaces::ImuData).
 
 ### World frame {#world-frame}
 
