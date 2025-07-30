@@ -7,16 +7,14 @@
 
 """Control wheels to track ground and yaw velocity targets."""
 
-from typing import Literal
-
 import gin
 import numpy as np
 
+from upkie.control.mpc_balancer import MPCBalancer
 from upkie.utils.clamp import clamp, clamp_abs
 from upkie.utils.filters import abs_bounded_derivative_filter
 
 from .remote_control import RemoteControl
-from .sagittal_balance import MPCBalancer, SagittalBalancer
 
 
 @gin.configurable
@@ -37,7 +35,7 @@ class WheelController:
     """
 
     left_wheeled: bool
-    sagittal_balancer: SagittalBalancer
+    sagittal_balancer: MPCBalancer
     target_ground_velocity: float
     target_yaw_velocity: float
     turning_deadband: float
@@ -47,8 +45,10 @@ class WheelController:
 
     def __init__(
         self,
-        balancer_class: Literal["MPCBalancer"],
+        fall_pitch: float,
         left_wheeled: bool,
+        max_ground_accel: float,
+        max_ground_velocity: float,
         turning_deadband: float,
         turning_decision_time: float,
         wheel_radius: float,
@@ -56,8 +56,7 @@ class WheelController:
         """Initialize balancer.
 
         Args:
-            balancer_class: String indicating the SagittalBalancer class to
-                instantiate.
+            fall_pitch: Fall pitch threshold, in radians.
             left_wheeled: Set to True (default) if the robot is left wheeled,
                 that is, a positive turn of the left wheel results in forward
                 motion. Set to False for a right-wheeled variant.
@@ -66,9 +65,15 @@ class WheelController:
             turning_decision_time: Minimum duration in [s] for the turning
                 probability to switch from zero to one and converesly.
             wheel_radius: Wheel radius in [m].
+            max_ground_accel: Maximum commanded ground acceleration.
+            max_ground_velocity: Maximum commanded ground velocity.
         """
         assert 0.0 <= turning_deadband <= 1.0
-        sagittal_balancer = MPCBalancer()
+        sagittal_balancer = MPCBalancer(
+            fall_pitch=fall_pitch,
+            max_ground_accel=max_ground_accel,
+            max_ground_velocity=max_ground_velocity,
+        )
         self.left_wheeled = left_wheeled
         self.remote_control = RemoteControl()
         self.sagittal_balancer = sagittal_balancer
@@ -85,14 +90,11 @@ class WheelController:
         Returns:
             Log data as a dictionary.
         """
-        log_dict = self.sagittal_balancer.log()
-        log_dict.update(
-            {
-                "target_ground_velocity": self.target_ground_velocity,
-                "target_yaw_velocity": self.target_yaw_velocity,
-            }
-        )
-        return log_dict
+        return {
+            "commanded_velocity": self.sagittal_balancer.commanded_velocity,
+            "target_ground_velocity": self.target_ground_velocity,
+            "target_yaw_velocity": self.target_yaw_velocity,
+        }
 
     def cycle(self, observation: dict, dt: float) -> dict:
         """Compute a new ground velocity.
