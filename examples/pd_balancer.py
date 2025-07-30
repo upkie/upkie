@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Inria
 
-"""Balancing an upkie by PD feedback to wheel velocities."""
+"""Balancing an Upkie by PD feedback to wheel velocities."""
 
 import gymnasium as gym
 

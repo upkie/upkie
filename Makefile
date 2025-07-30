@@ -52,6 +52,9 @@ clean: clean_broken_links  ## clean all local build and intermediate files
 clean_broken_links:
 	find -L $(CURDIR) -type l ! -exec test -e {} \; -delete
 
+pack_pixi_env:  ## pack pixi environment to environment.tar
+	pixi run pack
+
 # This rule is handy if the target Upkie is not connected to the Internet
 .PHONY: set_date
 set_date: check_upkie_name
@@ -77,9 +80,6 @@ upload: check_upkie_name build set_date  ## upload built targets to the Raspberr
 		--exclude tools/raspios \
 		--progress $(CURDIR)/ ${UPKIE_NAME}:$(PROJECT_NAME)/
 
-pack_pixi_env:  ## pack pixi environment to environment.tar
-	pixi run pack
-
 # REMOTE TARGETS
 # ==============
 
@@ -104,6 +104,13 @@ run_mock_spine:  ### run the mock spine on the Raspberry Pi
 # NB: run_pi3hat_spine is used in build instructions
 run_pi3hat_spine:  ### run the pi3hat spine on the Raspberry Pi
 	$(RASPUNZEL) run -s //spines:pi3hat_spine
+
+unpack_pixi_env:  ### unpack Python environment
+	@pixi-unpack environment.tar -e upkie -o ${MAMBA_ROOT_PREFIX}/envs || { \
+		echo "Error: pixi-pack not found"; \
+		echo "See https://github.com/Quantco/pixi-pack?tab=readme-ov-file#-installation"; \
+		exit 1; \
+	}
 
 # DEV HELPERS
 # ===========
