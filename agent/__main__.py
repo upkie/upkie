@@ -16,10 +16,12 @@ from loop_rate_limiters import RateLimiter
 
 import upkie.config
 from upkie.spine import SpineInterface
+from upkie.utils.clamp import clamp
 from upkie.utils.raspi import configure_agent_process, on_raspi
 from upkie.utils.spdlog import logging
 
-from .whole_body_controller import WholeBodyController
+from .height_controller import HeightController
+from .wheel_controller import WheelController
 
 
 def parse_command_line_arguments() -> argparse.Namespace:
@@ -45,10 +47,13 @@ def parse_command_line_arguments() -> argparse.Namespace:
     return parser.parse_args()
 
 
+@gin.configurable
 def run(
     spine: SpineInterface,
     spine_config: dict,
-    controller: WholeBodyController,
+    gain_scale: float,
+    turning_gain_scale: float,
+    visualize: bool,
     frequency: float = 200.0,
 ) -> None:
     r"""!
@@ -56,14 +61,38 @@ def run(
 
     \param spine Interface to the spine.
     \param spine_config Spine configuration dictionary.
-    \param controller Whole-body controller.
+    \param gain_scale PD gain scale for hip and knee joints.
+    \param turning_gain_scale Additional gain scaling applied when turning.
+    \param visualize If true, open a MeshCat visualizer on the side.
     \param frequency Control frequency in Hz.
     """
+    gain_scale = clamp(gain_scale, 0.1, 2.0)
+    height_controller = HeightController(visualize=visualize)
+    wheel_controller = WheelController()
+
     dt = 1.0 / frequency
     rate = RateLimiter(frequency, "controller")
     observation = spine.start(spine_config)
+
     while True:
-        action = controller.cycle(observation, dt)
+        leg_action = height_controller.cycle(observation, dt)
+        wheel_action = wheel_controller.cycle(observation, dt)
+        servo_action = {
+            "left_hip": leg_action["servo"]["left_hip"],
+            "left_knee": leg_action["servo"]["left_knee"],
+            "left_wheel": wheel_action["servo"]["left_wheel"],
+            "right_hip": leg_action["servo"]["right_hip"],
+            "right_knee": leg_action["servo"]["right_knee"],
+            "right_wheel": wheel_action["servo"]["right_wheel"],
+        }
+        turning_prob = wheel_controller.turning_probability
+        kp_scale = gain_scale + turning_gain_scale * turning_prob
+        kd_scale = gain_scale + turning_gain_scale * turning_prob
+        for joint_name in ["left_hip", "left_knee", "right_hip", "right_knee"]:
+            servo_action[joint_name]["kp_scale"] = kp_scale
+            servo_action[joint_name]["kd_scale"] = kd_scale
+
+        action = {"servo": servo_action}
         observation = spine.set_action(action)
         rate.sleep()
 
@@ -96,7 +125,6 @@ if __name__ == "__main__":
         configure_agent_process()
 
     spine = SpineInterface(retries=10)
-    controller = WholeBodyController(visualize=args.visualize)
     spine_config = upkie.config.SPINE_CONFIG.copy()
     # spine_config["base_orientation"] = {
     #     "rotation_base_to_imu": np.array(
@@ -112,24 +140,29 @@ if __name__ == "__main__":
         0.2,
         0.0,
     ]
-    wheel_controller = controller.wheel_controller
-    wheel_radius = wheel_controller.wheel_radius
+
+    # Create temporary controllers to access configuration
+    temp_wheel_controller = WheelController()
+    wheel_radius = temp_wheel_controller.wheel_radius
     wheel_odometry = spine_config["wheel_odometry"]
-    left_sign: float = 1.0 if wheel_controller.left_wheeled else -1.0
+    left_sign: float = 1.0 if temp_wheel_controller.left_wheeled else -1.0
     right_sign = -left_sign
     wheel_odometry["signed_radius"]["left_wheel"] = left_sign * wheel_radius
     wheel_odometry["signed_radius"]["right_wheel"] = right_sign * wheel_radius
 
-    max_rc_vel = wheel_controller.remote_control.max_linear_velocity
-    max_ground_vel = wheel_controller.sagittal_balancer.max_ground_velocity
-    logging.info(f"Knees bend {controller.height_controller.knee_side}")
+    max_rc_vel = temp_wheel_controller.remote_control.max_linear_velocity
+    max_ground_vel = (
+        temp_wheel_controller.sagittal_balancer.max_ground_velocity
+    )
+    temp_height_controller = HeightController(visualize=False)
+    logging.info(f"Knees bend {temp_height_controller.knee_side}")
     logging.info(f"Max. remote-control velocity: {max_rc_vel} m/s")
     logging.info(f"Max. commanded velocity: {max_ground_vel} m/s")
     logging.info(f"Wheel radius: {wheel_radius} m")
     logging.info(f"Additional spine config:\n\n{spine_config}\n\n")
 
     try:
-        run(spine, spine_config, controller)
+        run(spine, spine_config, visualize=args.visualize)
     except KeyboardInterrupt:
         logging.info("Caught a keyboard interrupt")
     except Exception:
