@@ -12,6 +12,7 @@ __version__ = "8.1.1"
 
 __all__ = [
     "config",
+    "control",
     "envs",
     "model",
     "spine",

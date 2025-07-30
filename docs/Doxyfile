@@ -873,6 +873,8 @@ INPUT                  = README.md \
                          docs/dev-notes.md \
                          upkie \
                          upkie/config \
+                         upkie/control \
+                         upkie/control/mpc_balancer \
                          upkie/cpp \
                          upkie/cpp/exceptions \
                          upkie/cpp/interfaces \
