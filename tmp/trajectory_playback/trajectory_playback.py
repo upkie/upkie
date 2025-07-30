@@ -15,7 +15,7 @@ import numpy as np
 import pandas as pd
 
 import upkie.envs
-from upkie.control import MPCBalancer
+from upkie.controllers import MPCBalancer
 
 upkie.envs.register()
 

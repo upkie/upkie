@@ -10,7 +10,7 @@
 import gin
 import numpy as np
 
-from upkie.control.mpc_balancer import MPCBalancer
+from upkie.controllers.mpc_balancer import MPCBalancer
 from upkie.utils.clamp import clamp, clamp_abs
 from upkie.utils.filters import abs_bounded_derivative_filter
 

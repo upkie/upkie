@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2025 Inria
 #
-## \namespace upkie.control.mpc_balancer
+## \namespace upkie.controllers.mpc_balancer
 ## \brief Wheel balancing by model predictive control.
 
 from .mpc_balancer import MPCBalancer

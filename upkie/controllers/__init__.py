@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2025 Inria
 #
-## \namespace upkie.control
+## \namespace upkie.controllers
 ## \brief Functions and classes related to balance control.
 
 from .mpc_balancer import MPCBalancer

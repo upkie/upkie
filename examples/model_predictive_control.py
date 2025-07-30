@@ -10,7 +10,7 @@ import gymnasium as gym
 import numpy as np
 
 import upkie.envs
-from upkie.control import MPCBalancer
+from upkie.controllers import MPCBalancer
 
 upkie.envs.register()
 
