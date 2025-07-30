@@ -13,7 +13,7 @@ import numpy as np
 
 from upkie.envs import UpkieSpineServos
 from upkie.envs.tests.mock_spine import MockSpine
-from upkie.envs.upkie_ground_velocity import UpkieGroundVelocity
+from upkie.envs.wrappers.pendulum import Pendulum
 
 
 class TestUpkieGroundVelocity(unittest.TestCase):
@@ -24,7 +24,7 @@ class TestUpkieGroundVelocity(unittest.TestCase):
             shm_name=shared_memory._name,
         )
         servos_env._spine = MockSpine()
-        ground_velocity_env = UpkieGroundVelocity(
+        ground_velocity_env = Pendulum(
             servos_env,
             fall_pitch=1.0,
             max_ground_velocity=1.0,

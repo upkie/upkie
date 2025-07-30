@@ -22,6 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Breaking:** Rename `UpkieServos` to `Upkie-Servos-Spine`
 - **Breaking:** cpp: Rename actuation namespace to interfaces
+- **Breaking:** envs: Rename `UpkieGroundVelocity` wrapper to `Pendulum`
+- **Breaking:** envs: Rename all environments
 - Clean up Python cache directories upon `make clean`
 - Move coverage and lint rules from the Makefile to Pixi tasks
 - cpp: Limit rate of SynchronousClock skip warnings and report frequency drop

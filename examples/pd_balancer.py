@@ -13,7 +13,7 @@ import upkie.envs
 upkie.envs.register()
 
 if __name__ == "__main__":
-    with gym.make("UpkieGroundVelocity", frequency=200.0) as env:
+    with gym.make("Upkie-Spine-Pendulum", frequency=200.0) as env:
         observation, _ = env.reset()  # connects to the spine
         action = 0.0 * env.action_space.sample()
         for step in range(1_000_000):

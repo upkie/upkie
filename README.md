@@ -53,7 +53,7 @@ import upkie.envs
 
 upkie.envs.register()
 
-with gym.make("UpkieGroundVelocity", frequency=200.0) as env:
+with gym.make("Upkie-Spine-Pendulum", frequency=200.0) as env:
     observation, _ = env.reset()
     gain = np.array([10.0, 1.0, 0.0, 0.1])
     for step in range(1_000_000):

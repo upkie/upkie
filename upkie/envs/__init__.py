@@ -19,16 +19,16 @@ def register() -> None:
     Environments are named as `Upkie-<Interface>-<ActionSpace>`.
     """
     gym.envs.registration.register(
-        id="Upkie-Mock-GroundVelocity",
-        entry_point=("upkie.envs.entry_points:make_mock_ground_velocity"),
+        id="Upkie-Mock-Pendulum",
+        entry_point=("upkie.envs.entry_points:wrap_mock_pendulum"),
     )
     gym.envs.registration.register(
         id="Upkie-Mock-Servos",
         entry_point="upkie.envs.upkie_mock_env:UpkieMockEnv",
     )
     gym.envs.registration.register(
-        id="Upkie-Spine-GroundVelocity",
-        entry_point=("upkie.envs.entry_points:make_spine_ground_velocity"),
+        id="Upkie-Spine-Pendulum",
+        entry_point=("upkie.envs.entry_points:wrap_spine_pendulum"),
     )
     gym.envs.registration.register(
         id="Upkie-Spine-Servos",

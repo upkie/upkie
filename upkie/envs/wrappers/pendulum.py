@@ -21,15 +21,14 @@ from upkie.utils.filters import low_pass_filter
 from upkie.utils.spdlog import logging
 
 
-class WheeledInvertedPendulum(gym.Wrapper):
+class Pendulum(gym.Wrapper):
     r"""!
     Wrapper to make Upkie act as a wheeled inverted pendulum.
 
     \anchor upkie_ground_velocity_description
 
-    When this wrapper is applied to an environment, Upkie keeps its legs
-    straight and actions only affect wheel velocities. This way, it behaves
-    like a <a
+    When this wrapper is applied, Upkie keeps its legs straight and actions
+    only affect wheel velocities. This way, it behaves like a <a
     href="https://scaron.info/robotics/wheeled-inverted-pendulum-model.html">wheeled
     inverted pendulum</a>. This ground-velocity environment is used for
     instance by the [MPC balancer](https://github.com/upkie/mpc_balancer/) and

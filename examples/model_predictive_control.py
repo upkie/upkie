@@ -19,7 +19,7 @@ TARGET_GROUND_VELOCITY = 0.5  # m/s
 
 if __name__ == "__main__":
     mpc_balancer = MPCBalancer()
-    with gym.make("UpkieGroundVelocity", frequency=200.0) as env:
+    with gym.make("Upkie-Spine-Pendulum", frequency=200.0) as env:
         _, info = env.reset()  # connects to the spine
         action = np.zeros(env.action_space.shape)
         for step in range(10_000):
