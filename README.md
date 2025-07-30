@@ -79,14 +79,14 @@ There are other examples in the [examples](https://github.com/upkie/upkie/tree/m
 
 ### Agents
 
-There are other Upkie agents coming with their own repositories:
+There are other Upkie agents available in their own repositories:
 
 - [MPC balancer](https://github.com/upkie/mpc_balancer): balance in place using model predictive control.
 - [Pink balancer](https://github.com/upkie/pink_balancer): a more advanced agent that can crouch and stand up while balancing.
-- [PPO balancer](https://github.com/upkie/ppo_balancer): balance in place with a policy trained by reinforcement learning.
-- [PID balancer](https://github.com/stephane-caron/upkie_pid_balancer): legacy agent used to test new Upkies with minimal dependencies.
+- [PPO balancer](https://github.com/upkie/ppo_balancer): balance in place with a neural-network policy trained by reinforcement learning.
+- [PID balancer](https://github.com/stephane-caron/upkie_pid_balancer): a legacy agent that balances by proportional-integral feedback to wheel velocities.
 
-If you make your own, feel free to open a PR to link it from here. There is a [new\_agent](https://github.com/upkie/new_agent) template to get started.
+If you make your own agent, feel free to open a PR to link it from here. There is a [new\_agent](https://github.com/upkie/new_agent) template to get started. (Or you can fork this entire repository, for example if you plan to make changes to the `upkie` module rather than using it as a dependency.)
 
 ### Contributing
 
