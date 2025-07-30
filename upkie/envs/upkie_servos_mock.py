@@ -23,6 +23,10 @@ class UpkieServosMock(UpkieServos):
     action and observation spaces of servo environments.
     """
 
+    ## \var joystick
+    ## Joystick interface for manual control (None if no joystick available).
+    joystick: Optional[object]
+
     def __init__(
         self,
         frequency: Optional[float] = 200.0,

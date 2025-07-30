@@ -19,8 +19,7 @@ namespace moteus {
 /*! Position command.
  *
  * \note Default values here are also the initial joint values for the mock
- * interface. See the documentation at
- * \ref upkie::cpp::interfaces::MockInterface::ServoState::step.
+ * interface.
  */
 struct PositionCommand {
   //! Target position in [rev].

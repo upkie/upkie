@@ -21,7 +21,8 @@ class Joystick:
     Joystick class used by mock spines to mimick the C++ Joystick sensor.
     """
 
-    # These constants were borrowed from linux/input.h
+    ## \var AXIS_NAMES
+    ## Mapping from axis codes to axis names (borrowed from linux/input.h).
     AXIS_NAMES = {
         0x00: "x",
         0x01: "y",
@@ -51,6 +52,8 @@ class Joystick:
         0x28: "misc",
     }
 
+    ## \var BUTTON_NAMES
+    ## Mapping from button codes to button names.
     BUTTON_NAMES = {
         0x120: "trigger",
         0x121: "thumb",
@@ -90,6 +93,30 @@ class Joystick:
         0x2C2: "dpad_up",
         0x2C3: "dpad_down",
     }
+
+    ## \var axis_map
+    ## List of axis names in order.
+    axis_map: list
+
+    ## \var axis_states
+    ## Dictionary mapping axis names to their current values.
+    axis_states: dict
+
+    ## \var button_map
+    ## List of button names in order.
+    button_map: list
+
+    ## \var button_states
+    ## Dictionary mapping button names to their current states.
+    button_states: dict
+
+    ## \var jsdev
+    ## File descriptor for the joystick device.
+    jsdev: int
+
+    ## \var prefix
+    ## Prefix string for observation keys.
+    prefix: str
 
     def __init__(self, device_path: str, prefix: str = "joystick"):
         r"""!
