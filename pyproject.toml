@@ -96,7 +96,8 @@ tasks.agent = "python -m agent"
 
 [tool.pixi.feature.docs]
 dependencies = { doxygen = "<=1.9.5", graphviz = "*", make = "*", "stable-baselines3" = "*" }
-tasks.make-docs = "doxygen --version && cd docs && make"
+tasks.docs-make = "doxygen --version && cd docs && make"
+tasks.docs-open = { cmd = "xdg-open docs/html/index.html", depends-on = ["docs-make"] }
 
 [tool.pixi.feature.lint]
 dependencies = { six = "*", ruff = ">=0.4.3" }
