@@ -47,10 +47,12 @@ check_upkie_name:
 .PHONY: clean
 clean: clean_broken_links  ## clean all local build and intermediate files
 	$(BAZEL) clean --expunge
+	find $(CURDIR) -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
+	rm -rf $(CURDIR)/cache $(CURDIR)/dist
 
 .PHONY: clean_broken_links
 clean_broken_links:
-	find -L $(CURDIR) -type l ! -exec test -e {} \; -delete
+	find -L $(CURDIR) -type l ! -exec test -e {} \; -delete 2>/dev/null || true
 
 pack_pixi_env:  ## pack pixi environment to environment.tar
 	pixi run pack
