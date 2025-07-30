@@ -8,9 +8,7 @@ from typing import Optional
 
 import gymnasium as gym
 import numpy as np
-import upkie_description
 
-from upkie.model import Model
 from upkie.utils.robot_state import RobotState
 
 from .upkie_env import UpkieEnv
@@ -108,10 +106,6 @@ class UpkieServos(UpkieEnv):
     ## Action space.
     action_space: gym.spaces.dict.Dict
 
-    ## \var model
-    ## Robot model read from its URDF description.
-    model: Model
-
     ## \var observation_space
     ## Observation space.
     observation_space: gym.spaces.dict.Dict
@@ -155,8 +149,7 @@ class UpkieServos(UpkieEnv):
         min_action = {}
         servo_space = {}
 
-        model = Model(upkie_description.URDF_PATH)
-        for joint in model.joints:
+        for joint in self.model.joints:
             action_space[joint.name] = gym.spaces.Dict(
                 {
                     "position": gym.spaces.Box(
@@ -266,7 +259,6 @@ class UpkieServos(UpkieEnv):
         self._max_action = max_action
         self._min_action = min_action
         self._neutral_action = neutral_action
-        self.model = model
 
     def get_neutral_action(self) -> dict:
         r"""!

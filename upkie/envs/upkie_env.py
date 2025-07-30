@@ -8,6 +8,7 @@ from typing import Optional, Tuple
 
 import gymnasium as gym
 import numpy as np
+import upkie_description
 from loop_rate_limiters import RateLimiter
 
 from upkie.exceptions import UpkieException
@@ -70,6 +71,7 @@ class UpkieEnv(gym.Env):
             init_state = RobotState(
                 position_base_in_world=np.array([0.0, 0.0, 0.6])
             )
+        model = Model(upkie_description.URDF_PATH)
 
         # Class attributes
         self.__frequency = frequency
@@ -77,6 +79,7 @@ class UpkieEnv(gym.Env):
         self.__rate = None
         self.__regulate_frequency = regulate_frequency
         self.init_state = init_state
+        self.model = model
 
     @property
     def dt(self) -> Optional[float]:

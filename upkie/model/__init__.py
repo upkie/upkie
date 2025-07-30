@@ -5,7 +5,7 @@
 # Copyright 2024 Inria
 #
 ## \namespace upkie.model
-## \brief Robot model.
+## \brief Robot model parsed from its URDF description.
 
 from .model import Model
 
