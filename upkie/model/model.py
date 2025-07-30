@@ -38,6 +38,19 @@ class Model:
     ## Wheel joints.
     wheel_joints: Tuple[float]
 
+    ## \var UPPER_LEG_JOINT_NAMES
+    ## Upper-leg (hip and knee) joint names.
+    UPPER_LEG_JOINT_NAMES: Tuple[str, str, str, str] = (
+        "left_hip",
+        "left_knee",
+        "right_hip",
+        "right_knee",
+    )
+
+    ## \var WHEEL_JOINT_NAMES
+    ## Wheel joint names.
+    WHEEL_JOINT_NAMES: Tuple[str, str] = ("left_wheel", "right_wheel")
+
     def __init__(self, urdf_path: str):
         r"""!
         Constructor for the robot model wrapper.
@@ -74,13 +87,10 @@ class Model:
         upper_leg_joints = tuple(
             joint
             for joint in joints
-            if joint.name
-            in ("left_hip", "left_knee", "right_hip", "right_knee")
+            if joint.name in self.UPPER_LEG_JOINT_NAMES
         )
         wheel_joints = tuple(
-            joint
-            for joint in joints
-            if joint.name in ("left_wheel", "right_wheel")
+            joint for joint in joints if joint.name in self.WHEEL_JOINT_NAMES
         )
         self.joints = joints
         self.rotation_ars_to_world = np.diag([1.0, -1.0, -1.0])

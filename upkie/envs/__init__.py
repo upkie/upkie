@@ -11,36 +11,31 @@
 
 import gymnasium as gym
 
-from .upkie_servos_mock import UpkieServosMock
-from .upkie_servos_spine import UpkieServosSpine
-
 
 def register() -> None:
     """!
     Register Upkie environments with Gymnasium.
-    """
-    # Environments
-    envs = (
-        ("Upkie-Servos-Mock", UpkieServosMock),
-        ("Upkie-Servos-Spine", UpkieServosSpine),
-    )
-    for env_id, env_class in envs:
-        gym.envs.registration.register(
-            id=env_id,
-            entry_point=f"upkie.envs:{env_class.__name__}",
-        )
 
-    # Wrappers
+    Environments are named as `Upkie-<Interface>-<ActionSpace>`.
+    """
     gym.envs.registration.register(
-        id="UpkieGroundVelocity",
-        entry_point=(
-            "upkie.envs.upkie_ground_velocity:make_upkie_ground_velocity"
-        ),
+        id="Upkie-Mock-GroundVelocity",
+        entry_point=("upkie.envs.entry_points:make_mock_ground_velocity"),
+    )
+    gym.envs.registration.register(
+        id="Upkie-Mock-Servos",
+        entry_point="upkie.envs.upkie_mock_env:UpkieMockEnv",
+    )
+    gym.envs.registration.register(
+        id="Upkie-Spine-GroundVelocity",
+        entry_point=("upkie.envs.entry_points:make_spine_ground_velocity"),
+    )
+    gym.envs.registration.register(
+        id="Upkie-Spine-Servos",
+        entry_point="upkie.envs.upkie_spine_env:UpkieSpineEnv",
     )
 
 
 __all__ = [
     "register",
-    "UpkieServosMock",
-    "UpkieServosSpine",
 ]

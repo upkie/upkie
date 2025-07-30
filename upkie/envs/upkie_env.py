@@ -8,11 +8,10 @@ from typing import Optional, Tuple
 
 import gymnasium as gym
 import numpy as np
-import upkie_description
 from loop_rate_limiters import RateLimiter
 
+from upkie.envs.pipelines import Pipeline, ServoPipeline
 from upkie.exceptions import UpkieException
-from upkie.model import Model
 from upkie.utils.robot_state import RobotState
 
 
@@ -20,10 +19,16 @@ class UpkieEnv(gym.Env):
     r"""!
     Base class with features shared by all Upkie environments.
 
-    Those features are:
+    Upkie environments do a number of things under the hood:
 
-    - Loop frequency regulation
-    - Initial state randomization
+    - Communication with the spine process.
+    - Initial state randomization (e.g. when training a policy).
+    - Loop frequency regulation (optional).
+
+    Note that Upkie environments are made to run on a single CPU thread. The
+    downside for reinforcement learning is that computations are not massively
+    parallel. The upside is that it simplifies deployment to the real robot, as
+    it relies on the same spine interface that runs on real robots.
     """
 
     __frequency: Optional[float]
@@ -35,15 +40,12 @@ class UpkieEnv(gym.Env):
     ## randomized upon resets.
     init_state: RobotState
 
-    ## \var model
-    ## Robot model read from its URDF description.
-    model: Model
-
     def __init__(
         self,
         frequency: Optional[float] = 200.0,
         frequency_checks: bool = True,
         init_state: Optional[RobotState] = None,
+        pipeline: Optional[Pipeline] = None,
         regulate_frequency: bool = True,
     ) -> None:
         r"""!
@@ -58,6 +60,8 @@ class UpkieEnv(gym.Env):
             control loop runs slower than the desired `frequency`. Set this
             parameter to false to disable these warnings.
         \param init_state Initial state of the robot, only used in simulation.
+        \param pipeline Spine dictionary interface selected via the --pipeline
+            command-line argument of the spine binary, if any.
         \param regulate_frequency If set (default), the environment will
             regulate the control loop frequency to the value prescribed in
             `frequency`.
@@ -71,15 +75,27 @@ class UpkieEnv(gym.Env):
             init_state = RobotState(
                 position_base_in_world=np.array([0.0, 0.0, 0.6])
             )
-        model = Model(upkie_description.URDF_PATH)
+        if pipeline is None:
+            pipeline = ServoPipeline()
 
         # Class attributes
         self.__frequency = frequency
         self.__frequency_checks = frequency_checks
+        self.__pipeline = pipeline
         self.__rate = None
         self.__regulate_frequency = regulate_frequency
+        self.action_space = pipeline.action_space
         self.init_state = init_state
-        self.model = model
+        self.observation_space = pipeline.observation_space
+
+    def get_env_observation(self, spine_observation):
+        return self.__pipeline.get_env_observation(spine_observation)
+
+    def get_neutral_action(self):
+        return self.__pipeline.get_neutral_action()
+
+    def get_spine_action(self, env_action):
+        return self.__pipeline.get_spine_action(env_action)
 
     @property
     def dt(self) -> Optional[float]:
@@ -96,14 +112,6 @@ class UpkieEnv(gym.Env):
         no loop frequency regulation.
         """
         return self.__frequency
-
-    def get_neutral_action(self) -> dict:
-        r"""!
-        Get the neutral action where servos don't move.
-
-        \return Neutral action where servos don't move.
-        """
-        return self.__neutral_action.copy()
 
     def reset(
         self,

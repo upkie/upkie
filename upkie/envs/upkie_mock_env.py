@@ -9,18 +9,16 @@ from typing import Optional, Tuple
 
 import numpy as np
 
+from upkie.envs.pipelines import Pipeline
 from upkie.utils.joystick import Joystick
 from upkie.utils.robot_state import RobotState
 
-from .upkie_servos import UpkieServos
+from .upkie_env import UpkieEnv
 
 
-class UpkieServosMock(UpkieServos):
+class UpkieMockEnv(UpkieEnv):
     r"""!
-    Upkie servo environment that mimicks commanding servos perfectly.
-
-    See [UpkieServos](\ref upkie_servos_description) for a description of the
-    action and observation spaces of servo environments.
+    Upkie environment that mimicks perfect commands.
     """
 
     ## \var joystick
@@ -32,6 +30,7 @@ class UpkieServosMock(UpkieServos):
         frequency: Optional[float] = 200.0,
         frequency_checks: bool = True,
         init_state: Optional[RobotState] = None,
+        pipeline: Optional[Pipeline] = None,
         regulate_frequency: bool = True,
     ) -> None:
         r"""!
@@ -46,6 +45,8 @@ class UpkieServosMock(UpkieServos):
             control loop runs slower than the desired `frequency`. Set this
             parameter to false to disable these warnings.
         \param init_state Initial state of the robot, only used in simulation.
+        \param pipeline Spine dictionary interface selected via the --pipeline
+            command-line argument of the spine binary, if any.
         \param regulate_frequency If set (default), the environment will
             regulate the control loop frequency to the value prescribed in
             `frequency`.
@@ -57,6 +58,7 @@ class UpkieServosMock(UpkieServos):
             frequency=frequency,
             frequency_checks=frequency_checks,
             init_state=init_state,
+            pipeline=pipeline,
             regulate_frequency=regulate_frequency,
         )
 
@@ -117,7 +119,7 @@ class UpkieServosMock(UpkieServos):
         """
         super().reset(seed=seed)
         spine_observation = self.__spine_observation
-        observation = self.__get_observation(spine_observation)
+        observation = self.get_env_observation(spine_observation)
         info = {"spine_observation": spine_observation}
         return observation, info
 
@@ -158,29 +160,9 @@ class UpkieServosMock(UpkieServos):
 
         # Process spine observation
         spine_observation = self.__spine_observation
-        observation = self.__get_observation(spine_observation)
+        observation = self.get_env_observation(spine_observation)
         reward = 1.0  # ready for e.g. an ObservationBasedReward wrapper
         terminated = False
         truncated = False  # will be handled by e.g. a TimeLimit wrapper
         info = {"spine_observation": spine_observation}
         return observation, reward, terminated, truncated, info
-
-    def __get_observation(self, spine_observation: dict) -> dict:
-        r"""!
-        Extract environment observation from spine observation dictionary.
-
-        \param spine_observation Full observation dictionary from the spine.
-        \return Environment observation.
-        """
-        # If creating a new object turns out to be too slow we can switch to
-        # updating in-place.
-        return {
-            joint.name: {
-                key: np.array(
-                    [spine_observation["servo"][joint.name][key]],
-                    dtype=float,
-                )
-                for key in self.observation_space[joint.name]
-            }
-            for joint in self.model.joints
-        }

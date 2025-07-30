@@ -11,7 +11,7 @@ from multiprocessing.shared_memory import SharedMemory
 
 import numpy as np
 
-from upkie.envs import UpkieServosSpine
+from upkie.envs import UpkieSpineServos
 from upkie.envs.tests.mock_spine import MockSpine
 from upkie.envs.upkie_ground_velocity import UpkieGroundVelocity
 
@@ -19,7 +19,7 @@ from upkie.envs.upkie_ground_velocity import UpkieGroundVelocity
 class TestUpkieGroundVelocity(unittest.TestCase):
     def setUp(self):
         shared_memory = SharedMemory(name=None, size=42, create=True)
-        servos_env = UpkieServosSpine(
+        servos_env = UpkieSpineServos(
             frequency=100.0,
             shm_name=shared_memory._name,
         )

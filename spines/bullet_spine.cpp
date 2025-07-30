@@ -15,10 +15,10 @@
 #include "spines/common/controllers.h"
 #include "spines/common/observers.h"
 #include "spines/common/sensors.h"
-#include "upkie/cpp/interfaces/BulletInterface.h"
 #include "upkie/cpp/controllers/ControllerPipeline.h"
 #include "upkie/cpp/controllers/WheelBalancer.h"
 #include "upkie/cpp/controllers/WheelStopper.h"
+#include "upkie/cpp/interfaces/BulletInterface.h"
 #include "upkie/cpp/observers/ObserverPipeline.h"
 #include "upkie/cpp/sensors/SensorPipeline.h"
 #include "upkie/cpp/spine/Spine.h"
@@ -30,10 +30,10 @@ using palimpsest::Dictionary;
 using spines::common::make_controllers;
 using spines::common::make_observers;
 using spines::common::make_sensors;
-using upkie::cpp::interfaces::BulletInterface;
 using upkie::cpp::controllers::ControllerPipeline;
 using upkie::cpp::controllers::WheelBalancer;
 using upkie::cpp::controllers::WheelStopper;
+using upkie::cpp::interfaces::BulletInterface;
 using upkie::cpp::observers::ObserverPipeline;
 using upkie::cpp::sensors::SensorPipeline;
 using upkie::cpp::spine::Spine;
@@ -151,7 +151,7 @@ class CommandLineArguments {
   unsigned nb_substeps = 0u;
 
   //! Pipeline name
-  std::string pipeline = "";
+  std::string pipeline = "servo";
 
   //! Robot variant
   std::string robot_variant;

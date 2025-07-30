@@ -14,23 +14,22 @@ from typing import Dict, Optional, Tuple
 import gymnasium as gym
 import numpy as np
 
+from upkie.envs.upkie_env import UpkieEnv
 from upkie.exceptions import UpkieException
 from upkie.utils.clamp import clamp_and_warn
 from upkie.utils.filters import low_pass_filter
 from upkie.utils.spdlog import logging
 
-from .upkie_servos import UpkieServos
-from .upkie_servos_spine import UpkieServosSpine
 
-
-class UpkieGroundVelocity(gym.Wrapper):
+class WheeledInvertedPendulum(gym.Wrapper):
     r"""!
-    Environment where Upkie is used as a wheeled inverted pendulum.
+    Wrapper to make Upkie act as a wheeled inverted pendulum.
 
     \anchor upkie_ground_velocity_description
 
-    With this environment, Upkie keeps its legs straight and actions only
-    affect wheel velocities. This way, it behaves like a <a
+    When this wrapper is applied to an environment, Upkie keeps its legs
+    straight and actions only affect wheel velocities. This way, it behaves
+    like a <a
     href="https://scaron.info/robotics/wheeled-inverted-pendulum-model.html">wheeled
     inverted pendulum</a>. This ground-velocity environment is used for
     instance by the [MPC balancer](https://github.com/upkie/mpc_balancer/) and
@@ -84,8 +83,8 @@ class UpkieGroundVelocity(gym.Wrapper):
     action_space: gym.spaces.Box
 
     ## \var env
-    ## Internal \ref upkie.envs.upkie_servos.UpkieServos environment.
-    env: UpkieServos
+    ## Internal \ref upkie.envs.upkie_env.UpkieEnv environment.
+    env: UpkieEnv
 
     ## \var fall_pitch
     ## Fall detection pitch angle, in radians.
@@ -107,7 +106,7 @@ class UpkieGroundVelocity(gym.Wrapper):
 
     def __init__(
         self,
-        env: UpkieServos,
+        env: UpkieEnv,
         fall_pitch: float = 1.0,
         left_wheeled: bool = True,
         max_ground_velocity: float = 1.0,
@@ -116,7 +115,7 @@ class UpkieGroundVelocity(gym.Wrapper):
         r"""!
         Initialize environment.
 
-        \param env UpkieServos environment to command servomotors.
+        \param env Upkie environment to command servomotors.
         \param fall_pitch Fall detection pitch angle, in radians.
         \param left_wheeled Set to True (default) if the robot is left wheeled,
             that is, a positive turn of the left wheel results in forward
@@ -210,7 +209,7 @@ class UpkieGroundVelocity(gym.Wrapper):
         for joint in self.env.model.upper_leg_joints:
             position = spine_observation["servo"][joint.name]["position"]
             self.__leg_servo_action[joint.name]["position"] = position
-        observation = self.__get_observation(spine_observation)
+        observation = self.get_env_observation(spine_observation)
         return observation, info
 
     def __get_leg_servo_action(self) -> Dict[str, Dict[str, float]]:
@@ -323,39 +322,7 @@ class UpkieGroundVelocity(gym.Wrapper):
         servo_action = self.__get_servo_action(action)
         _, reward, terminated, truncated, info = self.env.step(servo_action)
         spine_observation = info["spine_observation"]
-        observation = self.__get_observation(spine_observation)
+        observation = self.get_env_observation(spine_observation)
         if self.__detect_fall(spine_observation):
             terminated = True
         return observation, reward, terminated, truncated, info
-
-
-def make_upkie_ground_velocity(**kwargs):
-    r"""!
-    Make a new ground-velocity environment around a servos spine.
-
-    This function is meant to be called by `gymnasium.make()` rather than to be
-    called directly.
-
-    \param kwargs Keyword arguments forwarded to both the \ref
-        upkie.envs.upkie_ground_velocity.UpkieGroundVelocity and internal \ref
-        upkie.envs.upkie_servos.UpkieServos environments.
-    \return New ground-velocity environment.
-    """
-    ground_velocity_kwargs = {
-        key: value
-        for key, value in kwargs.items()
-        if key
-        in (
-            "fall_pitch",
-            "left_wheeled",
-            "max_ground_velocity",
-            "wheel_radius",
-        )
-    }
-    servos_kwargs = {
-        key: value
-        for key, value in kwargs.items()
-        if key not in ground_velocity_kwargs
-    }
-    servos_env = UpkieServosSpine(**servos_kwargs)
-    return UpkieGroundVelocity(servos_env, **ground_velocity_kwargs)

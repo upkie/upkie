@@ -14,8 +14,8 @@
 #include "spines/common/controllers.h"
 #include "spines/common/observers.h"
 #include "spines/common/sensors.h"
-#include "upkie/cpp/interfaces/MockInterface.h"
 #include "upkie/cpp/controllers/ControllerPipeline.h"
+#include "upkie/cpp/interfaces/MockInterface.h"
 #include "upkie/cpp/observers/ObserverPipeline.h"
 #include "upkie/cpp/sensors/SensorPipeline.h"
 #include "upkie/cpp/spine/Spine.h"
@@ -27,8 +27,8 @@ using palimpsest::Dictionary;
 using spines::common::make_controllers;
 using spines::common::make_observers;
 using spines::common::make_sensors;
-using upkie::cpp::interfaces::MockInterface;
 using upkie::cpp::controllers::ControllerPipeline;
+using upkie::cpp::interfaces::MockInterface;
 using upkie::cpp::observers::ObserverPipeline;
 using upkie::cpp::sensors::SensorPipeline;
 using upkie::cpp::spine::Spine;
@@ -102,7 +102,7 @@ class CommandLineArguments {
   std::string log_dir = "";
 
   //! Pipeline name
-  std::string pipeline = "";
+  std::string pipeline = "servo";
 
   //! CPUID for the spine thread (-1 to disable realtime).
   int spine_cpu = -1;

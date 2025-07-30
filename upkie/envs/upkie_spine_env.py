@@ -5,48 +5,34 @@
 # Copyright 2023 Inria
 
 import time
-from typing import Optional, Set, Tuple
+from typing import Optional, Tuple
 
 import numpy as np
 
 import upkie.config
+from upkie.envs.pipelines import Pipeline
+from upkie.envs.upkie_env import UpkieEnv
 from upkie.spine import SpineInterface
-from upkie.utils.clamp import clamp_and_warn
 from upkie.utils.nested_update import nested_update
 from upkie.utils.raspi import on_raspi
 from upkie.utils.robot_state import RobotState
 
-from .upkie_servos import UpkieServos
 
-
-class UpkieServosSpine(UpkieServos):
+class UpkieSpineEnv(UpkieEnv):
     r"""!
-    Upkie servo environment connected to a simulation or real spine.
-
-    Check out the base [servo environment](\ref upkie_servos_description) for a
-    description of the action and observation spaces.
+    Upkie environment connected to a simulation or real spine.
     """
 
     __bullet_action: dict
     _spine: SpineInterface
     _spine_config: dict
 
-    ACTION_KEYS: Tuple[str, str, str, str, str, str] = (
-        "position",
-        "velocity",
-        "feedforward_torque",
-        "kp_scale",
-        "kd_scale",
-        "maximum_torque",
-    )
-
-    ACTION_MASK: Set[str] = set()
-
     def __init__(
         self,
         frequency: Optional[float] = 200.0,
         frequency_checks: bool = True,
         init_state: Optional[RobotState] = None,
+        pipeline: Optional[Pipeline] = None,
         regulate_frequency: bool = True,
         shm_name: str = "/upkie",
         spine_config: Optional[dict] = None,
@@ -63,6 +49,8 @@ class UpkieServosSpine(UpkieServos):
             control loop runs slower than the desired `frequency`. Set this
             parameter to false to disable these warnings.
         \param init_state Initial state of the robot, only used in simulation.
+        \param pipeline Spine dictionary interface selected via the --pipeline
+            command-line argument of the spine binary, if any.
         \param regulate_frequency If set (default), the environment will
             regulate the control loop frequency to the value prescribed in
             `frequency`.
@@ -131,7 +119,7 @@ class UpkieServosSpine(UpkieServos):
 
         self.__reset_init_state()
         spine_observation = self._spine.start(self._spine_config)
-        observation = self.__get_observation(spine_observation)
+        observation = self.get_env_observation(spine_observation)
         info = {"spine_observation": spine_observation}
         return observation, info
 
@@ -178,7 +166,7 @@ class UpkieServosSpine(UpkieServos):
         super().step()
 
         # Prepare spine action
-        spine_action = self.__get_spine_action(action)
+        spine_action = self.get_spine_action(action)
         if self.__bullet_action:
             spine_action["bullet"] = {}
             spine_action["bullet"].update(self.__bullet_action)
@@ -188,63 +176,12 @@ class UpkieServosSpine(UpkieServos):
         spine_observation = self._spine.set_action(spine_action)
 
         # Process spine observation
-        observation = self.__get_observation(spine_observation)
+        observation = self.get_env_observation(spine_observation)
         reward = 1.0  # ready for e.g. an ObservationBasedReward wrapper
         terminated = False
         truncated = False  # will be handled by e.g. a TimeLimit wrapper
         info = {"spine_observation": spine_observation}
         return observation, reward, terminated, truncated, info
-
-    def __get_observation(self, spine_observation: dict) -> dict:
-        r"""!
-        Extract environment observation from spine observation dictionary.
-
-        \param spine_observation Full observation dictionary from the spine.
-        \return Environment observation.
-        """
-        # If creating a new object turns out to be too slow we can switch to
-        # updating in-place.
-        return {
-            joint.name: {
-                key: np.array(
-                    [spine_observation["servo"][joint.name][key]],
-                    dtype=float,
-                )
-                for key in self.observation_space[joint.name]
-            }
-            for joint in self.model.joints
-        }
-
-    def __get_spine_action(self, env_action: dict) -> dict:
-        r"""!
-        Convert environment action to a spine action dictionary.
-
-        \param env_action Environment action.
-        \return Spine action dictionary.
-        """
-        spine_action = {"servo": {}}
-        for joint in self.model.joints:
-            servo_action = {}
-            for key in self.ACTION_KEYS:
-                action = (
-                    env_action[joint.name][key]
-                    if key in env_action[joint.name]
-                    and (not self.ACTION_MASK or key in self.ACTION_MASK)
-                    else self._neutral_action[joint.name][key]
-                )
-                action_value = (
-                    action.item()
-                    if isinstance(action, np.ndarray)
-                    else float(action)
-                )
-                servo_action[key] = clamp_and_warn(
-                    action_value,
-                    self._min_action[joint.name][key],
-                    self._max_action[joint.name][key],
-                    label=f"{joint.name}: {key}",
-                )
-            spine_action["servo"][joint.name] = servo_action
-        return spine_action
 
     def get_bullet_action(self) -> dict:
         r"""!

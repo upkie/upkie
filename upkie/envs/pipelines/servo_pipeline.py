@@ -4,34 +4,24 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Inria
 
-from typing import Optional
+from typing import Tuple
 
 import gymnasium as gym
 import numpy as np
+import upkie_description
 
 from upkie.exceptions import UpkieRuntimeError
-from upkie.utils.robot_state import RobotState
+from upkie.model import Model
+from upkie.utils.clamp import clamp_and_warn
 
-from .upkie_env import UpkieEnv
 
-
-class UpkieServos(UpkieEnv):
+class ServoPipeline:
     r"""!
-    Upkie environment where actions command servomotors directly.
+    Upkie pipeline where actions command servomotors directly.
 
-    \anchor upkie_servos_description
+    \anchor upkie_servo_pipeline
 
-    Actions and observations correspond to the moteus servo API. Under the
-    hood, the environment provides a number of features:
-
-    - Communication with the spine process.
-    - Initial state randomization (e.g. when training a policy).
-    - Loop frequency regulation (optional).
-
-    Note that Upkie environments are made to run on a single CPU thread. The
-    downside for reinforcement learning is that computations are not massively
-    parallel. The upside is that it simplifies deployment to the real robot, as
-    it relies on the same spine interface that runs on real robots.
+    Actions and observations correspond to the moteus servo API.
 
     ### Action space
 
@@ -103,47 +93,33 @@ class UpkieServos(UpkieEnv):
     functions.
     """
 
+    ACTION_KEYS: Tuple[str, str, str, str, str, str] = (
+        "position",
+        "velocity",
+        "feedforward_torque",
+        "kp_scale",
+        "kd_scale",
+        "maximum_torque",
+    )
+
     ## \var action_space
     ## Action space.
     action_space: gym.spaces.dict.Dict
+
+    ## \var model
+    ## Robot model read from its URDF description.
+    model: Model
 
     ## \var observation_space
     ## Observation space.
     observation_space: gym.spaces.dict.Dict
 
-    def __init__(
-        self,
-        frequency: Optional[float] = 200.0,
-        frequency_checks: bool = True,
-        max_gain_scale: float = 5.0,
-        init_state: Optional[RobotState] = None,
-        regulate_frequency: bool = True,
-    ) -> None:
+    def __init__(self, max_gain_scale: float = 5.0) -> None:
         r"""!
         Initialize environment.
 
-        \param frequency Regulated frequency of the control loop, in Hz. Can be
-            prescribed even when `regulate_frequency` is unset, in which case
-            `self.dt` will be defined but the loop frequency will not be
-            regulated.
-        \param frequency_checks If `regulate_frequency` is set and this
-            parameter is true (default), a warning is issued every time the
-            control loop runs slower than the desired `frequency`. Set this
-            parameter to false to disable these warnings.
-        \param init_state Initial state of the robot, only used in simulation.
-        \param regulate_frequency If set (default), the environment will
-            regulate the control loop frequency to the value prescribed in
-            `frequency`.
-
-        \throw SpineError If the spine did not respond after the prescribed
-            number of trials.
+        \param max_gain_scale Maximum value for kp or kd gain scales.
         """
-        super().__init__(
-            frequency=frequency,
-            frequency_checks=frequency_checks,
-            init_state=init_state,
-            regulate_frequency=regulate_frequency,
-        )
         if not (0.0 < max_gain_scale < 10.0):
             raise UpkieRuntimeError("Invalid value {max_gain_scale =}")
 
@@ -153,7 +129,8 @@ class UpkieServos(UpkieEnv):
         min_action = {}
         servo_space = {}
 
-        for joint in self.model.joints:
+        model = Model(upkie_description.URDF_PATH)
+        for joint in model.joints:
             action_space[joint.name] = gym.spaces.Dict(
                 {
                     "position": gym.spaces.Box(
@@ -253,16 +230,33 @@ class UpkieServos(UpkieEnv):
                 "maximum_torque": 0.0,
             }
 
-        # gymnasium.Env: action_space
-        self.action_space = gym.spaces.Dict(action_space)
-
-        # gymnasium.Env: observation_space
-        self.observation_space = gym.spaces.Dict(servo_space)
-
         # Class attributes
         self._max_action = max_action
         self._min_action = min_action
         self._neutral_action = neutral_action
+        self.action_space = gym.spaces.Dict(action_space)
+        self.model = model
+        self.observation_space = gym.spaces.Dict(servo_space)
+
+    def get_env_observation(self, spine_observation: dict) -> dict:
+        r"""!
+        Extract environment observation from spine observation dictionary.
+
+        \param spine_observation Full observation dictionary from the spine.
+        \return Environment observation.
+        """
+        # If creating a new object turns out to be too slow we can switch to
+        # updating in-place.
+        return {
+            joint.name: {
+                key: np.array(
+                    [spine_observation["servo"][joint.name][key]],
+                    dtype=float,
+                )
+                for key in self.observation_space[joint.name]
+            }
+            for joint in self.model.joints
+        }
 
     def get_neutral_action(self) -> dict:
         r"""!
@@ -271,3 +265,33 @@ class UpkieServos(UpkieEnv):
         \return Neutral action where servos don't move.
         """
         return self._neutral_action.copy()
+
+    def get_spine_action(self, env_action: dict) -> dict:
+        r"""!
+        Convert environment action to a spine action dictionary.
+
+        \param env_action Environment action.
+        \return Spine action dictionary.
+        """
+        spine_action = {"servo": {}}
+        for joint in self.model.joints:
+            servo_action = {}
+            for key in self.ACTION_KEYS:
+                action = (
+                    env_action[joint.name][key]
+                    if key in env_action[joint.name]
+                    else self._neutral_action[joint.name][key]
+                )
+                action_value = (
+                    action.item()
+                    if isinstance(action, np.ndarray)
+                    else float(action)
+                )
+                servo_action[key] = clamp_and_warn(
+                    action_value,
+                    self._min_action[joint.name][key],
+                    self._max_action[joint.name][key],
+                    label=f"{joint.name}: {key}",
+                )
+            spine_action["servo"][joint.name] = servo_action
+        return spine_action
