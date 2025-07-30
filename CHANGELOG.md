@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Move coverage and lint rules from the Makefile to Pixi tasks
 - cpp: Limit rate of SynchronousClock skip warnings and report frequency drop
 - envs: All environments now have a robot model attribute
+- envs: Allow gain scales larger than one in servo environments
 - envs: Drop Gymnasium environment versioning
 - spines: Factor common observers and sensors between spines
 - utils: Generalize `abs_bounded_derivative_filter` to vector inputs

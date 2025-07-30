@@ -9,6 +9,7 @@ from typing import Optional
 import gymnasium as gym
 import numpy as np
 
+from upkie.exceptions import UpkieRuntimeError
 from upkie.utils.robot_state import RobotState
 
 from .upkie_env import UpkieEnv
@@ -114,6 +115,7 @@ class UpkieServos(UpkieEnv):
         self,
         frequency: Optional[float] = 200.0,
         frequency_checks: bool = True,
+        max_gain_scale: float = 5.0,
         init_state: Optional[RobotState] = None,
         regulate_frequency: bool = True,
     ) -> None:
@@ -142,6 +144,8 @@ class UpkieServos(UpkieEnv):
             init_state=init_state,
             regulate_frequency=regulate_frequency,
         )
+        if not (0.0 < max_gain_scale < 10.0):
+            raise UpkieRuntimeError("Invalid value {max_gain_scale =}")
 
         action_space = {}
         neutral_action = {}
@@ -172,13 +176,13 @@ class UpkieServos(UpkieEnv):
                     ),
                     "kp_scale": gym.spaces.Box(
                         low=0.0,
-                        high=1.0,
+                        high=max_gain_scale,
                         shape=(1,),
                         dtype=float,
                     ),
                     "kd_scale": gym.spaces.Box(
                         low=0.0,
-                        high=1.0,
+                        high=max_gain_scale,
                         shape=(1,),
                         dtype=float,
                     ),
@@ -236,8 +240,8 @@ class UpkieServos(UpkieEnv):
                 "position": joint.limit.upper,
                 "velocity": joint.limit.velocity,
                 "feedforward_torque": joint.limit.effort,
-                "kp_scale": 1.0,
-                "kd_scale": 1.0,
+                "kp_scale": max_gain_scale,
+                "kd_scale": max_gain_scale,
                 "maximum_torque": joint.limit.effort,
             }
             min_action[joint.name] = {
