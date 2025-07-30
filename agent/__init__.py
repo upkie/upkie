@@ -5,9 +5,3 @@
 # Copyright 2024 Inria
 
 """Default agent for Upkie wheeled bipeds."""
-
-from .whole_body_controller import WholeBodyController
-
-__all__ = [
-    "WholeBodyController",
-]

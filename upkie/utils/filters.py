@@ -8,18 +8,18 @@
 Basic digital filters.
 """
 
-from typing import Tuple
+import numpy as np
+from typing import Tuple, TypeVar
 
-from .clamp import clamp
+T = TypeVar("T", float, np.ndarray)
 
 
 def abs_bounded_derivative_filter(
-    prev_output: float,
-    new_input: float,
+    prev_output: T,
+    new_input: T,
     dt: float,
-    max_output: float,
-    max_derivative: float,
-) -> float:
+    max_derivative: T,
+) -> T:
     r"""!
     Filter signal so that the absolute values of its output and output
     derivative stay within bounds.
@@ -27,7 +27,6 @@ def abs_bounded_derivative_filter(
     \param prev_output Previous filter output, or initial value.
     \param new_input New filter input.
     \param dt Sampling period in [s].
-    \param max_output Maximum absolute value of the output.
     \param max_derivative Maximum absolute value of the output derivative.
     \return New filter output.
     """
@@ -35,32 +34,29 @@ def abs_bounded_derivative_filter(
         prev_output,
         new_input,
         dt,
-        (-max_output, max_output),
         (-max_derivative, max_derivative),
     )
 
 
 def bounded_derivative_filter(
-    prev_output: float,
-    new_input: float,
+    prev_output: T,
+    new_input: T,
     dt: float,
-    output_bounds: Tuple[float, float],
-    derivative_bounds: Tuple[float, float],
-) -> float:
+    derivative_bounds: Tuple[T, T],
+) -> T:
     r"""!
     Filter signal so that its output and output derivative stay within bounds.
 
     \param prev_output Previous filter output, or initial value.
     \param new_input New filter input.
     \param dt Sampling period in [s].
-    \param output_bounds Min and max value for the output.
     \param derivative_bounds Min and max value for the output derivative.
     \return New filter output.
     """
     derivative = (new_input - prev_output) / dt
-    derivative = clamp(derivative, *derivative_bounds)
+    derivative = np.clip(derivative, *derivative_bounds)
     output = prev_output + derivative * dt
-    return clamp(output, *output_bounds)
+    return output
 
 
 def low_pass_filter(

@@ -11,6 +11,8 @@ from typing import Literal
 
 import gin
 import numpy as np
+
+from upkie.utils.clamp import clamp, clamp_abs
 from upkie.utils.filters import abs_bounded_derivative_filter
 
 from .remote_control import RemoteControl
@@ -157,12 +159,15 @@ class WheelController:
             unfiltered_velocity = -max_velocity * axis_value
         except KeyError:
             unfiltered_velocity = 0.0
-        self.target_ground_velocity = abs_bounded_derivative_filter(
-            self.target_ground_velocity,
-            unfiltered_velocity,
-            dt,
+        unclipped_ground_velocity = abs_bounded_derivative_filter(
+            prev_output=self.target_ground_velocity,
+            new_input=unfiltered_velocity,
+            dt=dt,
+            max_derivative=self.remote_control.max_linear_accel,
+        )
+        self.target_ground_velocity = clamp_abs(
+            unclipped_ground_velocity,
             self.remote_control.max_linear_velocity,
-            self.remote_control.max_linear_accel,
         )
 
     def update_target_yaw_velocity(self, observation: dict, dt: float) -> None:
@@ -180,13 +185,13 @@ class WheelController:
         joystick_sign = np.sign(joystick_value)
 
         turning_intent = joystick_abs / self.turning_deadband
-        self.turning_probability = abs_bounded_derivative_filter(
-            self.turning_probability,
-            turning_intent,  # might be > 1.0
-            dt,
-            max_output=1.0,  # output is <= 1.0
+        unclipped_probability = abs_bounded_derivative_filter(
+            prev_output=self.turning_probability,
+            new_input=turning_intent,  # might be > 1.0
+            dt=dt,
             max_derivative=1.0 / self.turning_decision_time,
         )
+        self.turning_probability = clamp(unclipped_probability, 0.0, 1.0)
 
         velocity_ratio = (joystick_abs - self.turning_deadband) / (
             1.0 - self.turning_deadband
@@ -198,12 +203,15 @@ class WheelController:
         turn_not_sure_yet = self.turning_probability < 0.99
         if turn_hasnt_started and turn_not_sure_yet:
             velocity = 0.0
-        self.target_yaw_velocity = abs_bounded_derivative_filter(
-            self.target_yaw_velocity,
-            velocity,
-            dt,
+        unclipped_yaw_velocity = abs_bounded_derivative_filter(
+            prev_output=self.target_yaw_velocity,
+            new_input=velocity,
+            dt=dt,
+            max_derivative=self.remote_control.max_yaw_accel,
+        )
+        self.target_yaw_velocity = clamp_abs(
+            unclipped_yaw_velocity,
             self.remote_control.max_yaw_velocity,
-            self.remote_control.max_yaw_accel,
         )
         if abs(self.target_yaw_velocity) > 0.01:  # still turning
             self.turning_probability = 1.0

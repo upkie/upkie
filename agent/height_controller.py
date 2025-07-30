@@ -16,10 +16,10 @@ from pink import solve_ik
 from pink.tasks import FrameTask, PostureTask
 from pink.utils import custom_configuration_vector
 from pink.visualization import start_meshcat_visualizer
-from upkie.utils.clamp import clamp
-from upkie.utils.spdlog import logging
 
-from .utils import abs_bounded_derivative_filter
+from upkie.utils.clamp import clamp
+from upkie.utils.filters import abs_bounded_derivative_filter
+from upkie.utils.spdlog import logging
 
 
 def observe_configuration(

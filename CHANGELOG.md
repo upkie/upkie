@@ -25,6 +25,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - cpp: Limit rate of SynchronousClock skip warnings and report frequency drop
 - envs: Drop Gymnasium environment versioning
 - spines: Factor common observers and sensors between spines
+- utils: Generalize `abs_bounded_derivative_filter` to vector inputs
+- utils: Generalize `bounded_derivative_filter` to vector inputs
+
+### Removed
+
+- **Breaking:** Remove output bound from `abs_bounded_derivative_filter`
+- **Breaking:** Remove output bound from `bounded_derivative_filter`
 
 ## [8.1.1] - 2025-07-21
 
