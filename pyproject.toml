@@ -54,6 +54,7 @@ exclude = [
     "CONTRIBUTING.md",
     "CPPLINT.cfg",
     "WORKSPACE",
+    "agent/",
     "examples/",
     "logs/",
     "spines/",
@@ -110,11 +111,11 @@ tasks.pack = "pixi-pack --environment agent --platform linux-aarch64 --ignore-py
 
 [tool.pixi.feature.test]
 dependencies = { lcov = "*", "stable-baselines3" = ">2.3.0" }
-tasks.test = "tools/bazel test //upkie/..."
 tasks.coverage-generate = { cmd = "./tools/bazelisk coverage --combined_report=lcov --compilation_mode=fastbuild --instrument_test_targets //..." }
 tasks.coverage-report = { cmd = "genhtml bazel-out/_coverage/_coverage_report.dat -o bazel-out/_coverage" }
 tasks.coverage-open = { cmd = "xdg-open bazel-out/_coverage/index.html" }
 tasks.coverage = { depends-on = ["coverage-generate", "coverage-report", "coverage-open"] }
+tasks.test = "tools/bazel test //upkie/..."
 
 [tool.pixi.tasks.bullet]
 cmd = "./tools/bazelisk run //spines:bullet_spine -- --show"
