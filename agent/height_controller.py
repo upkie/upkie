@@ -25,15 +25,13 @@ from upkie.utils.spdlog import logging
 def observe_configuration(
     observation, configuration, servo_layout
 ) -> NDArray[float]:
-    """Compute configuration vector from a new observation.
+    r"""!
+    Compute configuration vector from a new observation.
 
-    Args:
-        observation: Observation dictionary.
-        configuration: Previous configuration.
-        servo_layout: Robot servo layout.
-
-    Returns:
-        Configuration vector from observation.
+    \param observation Observation dictionary.
+    \param configuration Previous configuration.
+    \param servo_layout Robot servo layout.
+    \return Configuration vector from observation.
     """
     q = configuration.q.copy()
     for joint, servo in servo_layout.items():
@@ -45,15 +43,13 @@ def observe_configuration(
 
 
 def serialize_to_servo_action(configuration, velocity, servo_layout) -> dict:
-    """Serialize robot state for the spine.
+    r"""!
+    Serialize robot state for the spine.
 
-    Args:
-        configuration: Robot configuration.
-        velocity: Robot velocity in tangent space.
-        servo_layout: Robot servo layout.
-
-    Returns:
-        Dictionary of position and velocity targets for each joint.
+    \param configuration Robot configuration.
+    \param velocity Robot velocity in tangent space.
+    \param servo_layout Robot servo layout.
+    \return Dictionary of position and velocity targets for each joint.
     """
     target = {}
     model = configuration.model
@@ -70,10 +66,10 @@ def serialize_to_servo_action(configuration, velocity, servo_layout) -> dict:
 
 
 def add_target_frames(visualizer):
-    """Add target frames for visualization.
+    r"""!
+    Add target frames for visualization.
 
-    Args:
-        visualizer: Meshcat viewer wrapper.
+    \param visualizer Meshcat viewer wrapper.
     """
     viewer = visualizer.viewer
     meshcat_shapes.frame(viewer["left_contact_target"], opacity=0.5)
@@ -84,18 +80,8 @@ def add_target_frames(visualizer):
 
 @gin.configurable
 class HeightController:
-    """Compute leg inverse kinematics.
-
-    Attributes:
-        knees_forward: Set to True to bend knees forward rather than backward.
-        max_crouch_height: Maximum distance along the vertical axis that the
-            robot goes down while crouching, in [m].
-        max_init_joint_velocity: Maximum joint velocity during the initial
-            phase, in [rad] / [s].
-        robot: Robot model used for inverse kinematics.
-        target_position_wheel_in_rest: Target position in the rest frame.
-        tasks: Dictionary of inverse kinematics tasks.
-        transform_rest_to_world: Rest frame pose for each end effector.
+    r"""!
+    Compute leg inverse kinematics.
     """
 
     height_difference: float = 0.0
@@ -121,21 +107,21 @@ class HeightController:
         max_lean_velocity: float,
         visualize: bool,
     ):
-        """Create controller.
+        r"""!
+        Create controller.
 
-        Args:
-            knees_forward: Set to True to bend knees forward rather than
-                backward.
-            max_crouch_height: Maximum distance along the vertical axis that
-                the robot goes down while crouching, in [m].
-            max_crouch_velocity: Maximum vertical velocity in [m] / [s].
-            max_init_joint_velocity: Maximum joint velocity during the initial
-                phase, in [rad] / [s].
-            max_height_difference: Maximum height difference between the two
-                wheel contact points, in [m].
-            max_lean_velocity: Maximum leaning (to the side) velocity, in [m] /
-                [s].
-            visualize: If true, open a MeshCat visualizer on the side.
+        \param knees_forward Set to True to bend knees forward rather than
+            backward.
+        \param max_crouch_height Maximum distance along the vertical axis that
+            the robot goes down while crouching, in [m].
+        \param max_crouch_velocity Maximum vertical velocity in [m] / [s].
+        \param max_init_joint_velocity Maximum joint velocity during the
+            initial phase, in [rad] / [s].
+        \param max_height_difference Maximum height difference between the two
+            wheel contact points, in [m].
+        \param max_lean_velocity Maximum leaning (to the side) velocity,
+            in [m] / [s].
+        \param visualize If true, open a MeshCat visualizer on the side.
         """
         robot = upkie_description.load_in_pinocchio(root_joint=None)
         neutral_configuration = pink.Configuration(
@@ -245,14 +231,12 @@ class HeightController:
     def get_next_height_from_joystick(
         self, observation: dict, dt: float
     ) -> float:
-        """Update target base height from joystick inputs.
+        r"""!
+        Update target base height from joystick inputs.
 
-        Args:
-            observation: Observation from the spine.
-            dt: Duration in seconds until next cycle.
-
-        Returns:
-            New height target, in meters.
+        \param observation Observation from the spine.
+        \param dt Duration in seconds until next cycle.
+        \return New height target, in meters.
         """
         try:
             axis_value: float = observation["joystick"]["pad_axis"][1]
@@ -267,14 +251,12 @@ class HeightController:
     def get_next_height_difference_from_joystick(
         self, observation: dict, dt: float
     ):
-        """Update the height difference from joystick inputs.
+        r"""!
+        Update the height difference from joystick inputs.
 
-        Args:
-            observation: Observation from the spine.
-            dt: Duration in seconds until next cycle.
-
-        Returns:
-            New height difference, in meters.
+        \param observation Observation from the spine.
+        \param dt Duration in seconds until next cycle.
+        \return New height difference, in meters.
         """
         try:
             axis_value: float = observation["joystick"]["pad_axis"][0]
@@ -286,11 +268,11 @@ class HeightController:
         return delta
 
     def update_target_height(self, observation: dict, dt: float) -> None:
-        """Update target base height from joystick inputs.
+        r"""!
+        Update target base height from joystick inputs.
 
-        Args:
-            observation: Observation from the spine.
-            dt: Duration in seconds until next cycle.
+        \param observation Observation from the spine.
+        \param dt Duration in seconds until next cycle.
         """
         height = self.get_next_height_from_joystick(observation, dt)
         self.target_height = clamp(height, 0.0, self.max_crouch_height)
@@ -318,11 +300,11 @@ class HeightController:
             )
 
     def update_ik_targets(self, observation: dict, dt: float) -> None:
-        """Update IK frame targets from individual target positions.
+        r"""!
+        Update IK frame targets from individual target positions.
 
-        Args:
-            observation: Observation from the spine.
-            dt: Duration in seconds until next cycle.
+        \param observation Observation from the spine.
+        \param dt Duration in seconds until next cycle.
         """
         for target in ["left_contact", "right_contact"]:
             transform_common_to_rest = pin.SE3(
@@ -341,7 +323,9 @@ class HeightController:
             self.tasks[target].set_target(transform_target_to_world)
 
     def _observe_ground_positions(self, observation: dict) -> None:
-        """Observe the transform from right to left ground frames."""
+        r"""!
+        Observe the transform from right to left ground frames.
+        """
         transform_left_to_world = self.tasks[
             "left_contact"
         ].transform_target_to_world
@@ -366,14 +350,13 @@ class HeightController:
             )
 
     def cycle(self, observation: dict, dt: float) -> dict:
-        """Compute action for a new cycle.
+        r"""!
+        Compute action for a new cycle.
 
-        Args:
-            observation: Latest observation.
-            dt: Duration in seconds until next cycle.
-
-        Returns:
-            Dictionary with the new action and some internal state for logging.
+        \param observation Latest observation.
+        \param dt Duration in seconds until next cycle.
+        \return Dictionary with the new action and some internal state for
+            logging.
         """
         servo_action = self.get_ik_servo_action(observation, dt)  # always run
         if not self.__initialized:
@@ -382,14 +365,13 @@ class HeightController:
         return action
 
     def get_ik_servo_action(self, observation: dict, dt: float) -> dict:
-        """Compute leg motion by differential inverse kinematics.
+        r"""!
+        Compute leg motion by differential inverse kinematics.
 
-        Args:
-            observation: Latest observation.
-            dt: Duration in seconds until next cycle.
-
-        Returns:
-            Dictionary with the new action and some internal state for logging.
+        \param observation Latest observation.
+        \param dt Duration in seconds until next cycle.
+        \return Dictionary with the new action and some internal state for
+            logging.
         """
         self.update_target_height(observation, dt)
         self.update_ik_targets(observation, dt)
@@ -408,14 +390,12 @@ class HeightController:
         )
 
     def get_init_servo_action(self, observation: dict, dt: float) -> dict:
-        """Initial phase where we return legs to the neutral configuration.
+        r"""!
+        Initial phase where we return legs to the neutral configuration.
 
-        Args:
-            observation: Observation from the spine.
-            dt: Duration in seconds until next cycle.
-
-        Returns:
-            Dictionary with the new action.
+        \param observation Observation from the spine.
+        \param dt Duration in seconds until next cycle.
+        \return Dictionary with the new action.
         """
         if self.q_init is None:
             self.q_init = observe_configuration(

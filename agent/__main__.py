@@ -11,8 +11,9 @@ import traceback
 from pathlib import Path
 
 import gin
-import upkie.config
 from loop_rate_limiters import RateLimiter
+
+import upkie.config
 from upkie.spine import SpineInterface
 from upkie.utils.raspi import configure_agent_process, on_raspi
 from upkie.utils.spdlog import logging
@@ -21,10 +22,10 @@ from .whole_body_controller import WholeBodyController
 
 
 def parse_command_line_arguments() -> argparse.Namespace:
-    """Parse command line arguments.
+    r"""!
+    Parse command line arguments.
 
-    Returns:
-        Command-line arguments.
+    \return Command-line arguments.
     """
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -49,13 +50,13 @@ def run(
     controller: WholeBodyController,
     frequency: float = 200.0,
 ) -> None:
-    """Read observations and send actions to the spine.
+    r"""!
+    Read observations and send actions to the spine.
 
-    Args:
-        spine: Interface to the spine.
-        spine_config: Spine configuration dictionary.
-        controller: Whole-body controller.
-        frequency: Control frequency in Hz.
+    \param spine Interface to the spine.
+    \param spine_config Spine configuration dictionary.
+    \param controller Whole-body controller.
+    \param frequency Control frequency in Hz.
     """
     dt = 1.0 / frequency
     rate = RateLimiter(frequency, "controller")
@@ -66,20 +67,28 @@ def run(
         rate.sleep()
 
 
-if __name__ == "__main__":
-    args = parse_command_line_arguments()
-
-    # Agent configuration
-    hostname = socket.gethostname()
+def read_gin_configuration(args.config: Optional[str]):
     config_dir = Path(__file__).parent / "config"
-    gin.parse_config_file(config_dir / "base.gin")
 
-    host_config = Path.home() / ".config" / "upkie" / "pink_balancer.gin"
-    if host_config.exists():
-        gin.parse_config_file(host_config)
+    default_config = config_dir / "default.gin"
+    gin.parse_config_file(default_config)
+
+    hostname = socket.gethostname()
+    hostname_config = config_dir / f"{hostname}.gin"
+    if hostname_config.exists():
+        gin.parse_config_file(hostname_config)
+
+    local_config = Path.home() / ".config" / "upkie" / "pink_balancer.gin"
+    if local_config.exists():
+        gin.parse_config_file(local_config)
 
     if args.config is not None:
         gin.parse_config_file(config_dir / f"{args.config}.gin")
+
+
+if __name__ == "__main__":
+    args = parse_command_line_arguments()
+    read_gin_configuration(args.config)
 
     # On Raspberry Pi, configure the process to run on a separate CPU core
     if on_raspi():

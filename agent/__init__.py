@@ -4,4 +4,5 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2024 Inria
 
-"""Default agent for Upkie wheeled bipeds."""
+## \namespace agent
+## \brief Default agent for Upkie wheeled bipeds.
