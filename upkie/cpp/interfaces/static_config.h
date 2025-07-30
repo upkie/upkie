@@ -3,10 +3,10 @@
 
 #pragma once
 
-#include "upkie/cpp/actuation/moteus/PositionResolution.h"
-#include "upkie/cpp/actuation/moteus/QueryCommand.h"
+#include "upkie/cpp/interfaces/moteus/PositionResolution.h"
+#include "upkie/cpp/interfaces/moteus/QueryCommand.h"
 
-namespace upkie::cpp::actuation::static_config {
+namespace upkie::cpp::interfaces::static_config {
 
 /*! Resolution settings for all servo commands.
  *
@@ -71,4 +71,4 @@ inline const ServoLayout servo_layout() noexcept {
   return layout;
 }
 
-}  // namespace upkie::cpp::actuation::static_config
+}  // namespace upkie::cpp::interfaces::static_config

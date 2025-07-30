@@ -5,7 +5,7 @@
 
 #include <string>
 
-namespace upkie::cpp::actuation::bullet {
+namespace upkie::cpp::interfaces::bullet {
 
 /*! Contact information for a single link.
  *
@@ -17,4 +17,4 @@ struct ContactData {
   int num_contact_points;
 };
 
-}  // namespace upkie::cpp::actuation::bullet
+}  // namespace upkie::cpp::interfaces::bullet

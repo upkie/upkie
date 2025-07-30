@@ -7,10 +7,10 @@
 
 #include <Eigen/Geometry>
 
-#include "upkie/cpp/actuation/pi3hat/imu_eigen.h"
+#include "upkie/cpp/interfaces/pi3hat/imu_eigen.h"
 
 //! Utility functions used in the pi3hat interface.
-namespace upkie::cpp::actuation::pi3hat {
+namespace upkie::cpp::interfaces::pi3hat {
 
 //! Attitude data type from the mjbots library.
 using Attitude = ::mjbots::pi3hat::Attitude;
@@ -89,4 +89,4 @@ inline Eigen::Vector3d get_bias_dps(const Attitude& attitude) noexcept {
   return {b_x, b_y, b_z};
 }
 
-}  // namespace upkie::cpp::actuation::pi3hat
+}  // namespace upkie::cpp::interfaces::pi3hat

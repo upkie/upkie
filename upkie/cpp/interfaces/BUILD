@@ -32,7 +32,7 @@ cc_library(
         "ServoProperties.h",
     ],
     deps = [
-        "//upkie/cpp/actuation/moteus",
+        "//upkie/cpp/interfaces/moteus",
         "//upkie/cpp/exceptions",
     ],
 )
@@ -56,7 +56,7 @@ cc_library(
         "Interface.cpp",
     ],
     deps = [
-        "//upkie/cpp/actuation/moteus",
+        "//upkie/cpp/interfaces/moteus",
         "//upkie/cpp/exceptions",
         ":default_action",
         ":imu",
@@ -74,7 +74,7 @@ cc_library(
         "MockInterface.cpp",
     ],
     deps = [
-        "//upkie/cpp/actuation:interface",
+        "//upkie/cpp/interfaces:interface",
         "//upkie/cpp/utils:synchronous_clock",
         "@eigen",
     ],
@@ -89,12 +89,12 @@ cc_library(
         "BulletInterface.cpp",
     ],
     data = [
-        "//upkie/cpp/actuation/bullet/plane",
+        "//upkie/cpp/interfaces/bullet/plane",
     ],
     deps = [
-        "//upkie/cpp/actuation/bullet",
-        "//upkie/cpp/actuation/bullet:robot_simulator",
-        "//upkie/cpp/actuation:interface",
+        "//upkie/cpp/interfaces/bullet",
+        "//upkie/cpp/interfaces/bullet:robot_simulator",
+        "//upkie/cpp/interfaces:interface",
         "//upkie/cpp/utils:synchronous_clock",
         "@bazel_tools//tools/cpp/runfiles",
         "@bullet",
@@ -113,7 +113,7 @@ cc_library(
         "//conditions:default": [],
     }),
     deps = [
-        "//upkie/cpp/actuation/pi3hat:utils",
+        "//upkie/cpp/interfaces/pi3hat:utils",
         "//upkie/cpp/utils:realtime",
         ":interface",
     ] + select({
@@ -126,7 +126,7 @@ cc_library(
 )
 
 cc_library(
-    name = "actuation",
+    name = "interfaces",
     deps = [
         ":bullet_interface",
         ":mock_interface",

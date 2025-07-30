@@ -12,7 +12,7 @@ cc_test(
       "imu_test.cpp",
     ],
     deps = [
-        "//upkie/cpp/actuation/pi3hat:utils",
+        "//upkie/cpp/interfaces/pi3hat:utils",
         "@bazel_tools//tools/cpp/runfiles",
         "@googletest//:main",
     ],

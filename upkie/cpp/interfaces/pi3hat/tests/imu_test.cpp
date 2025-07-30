@@ -8,9 +8,9 @@
 #include <string>
 
 #include "gtest/gtest.h"
-#include "upkie/cpp/actuation/pi3hat/imu_eigen.h"
+#include "upkie/cpp/interfaces/pi3hat/imu_eigen.h"
 
-namespace upkie::cpp::actuation::pi3hat {
+namespace upkie::cpp::interfaces::pi3hat {
 
 TEST(IMU, RawAngularVelocity) {
   Eigen::Vector3d rate_dps = {180.0, -90.0, -0.0};
@@ -113,4 +113,4 @@ TEST(IMU, RawLinearAccelerationQuarterXTurn) {
   ASSERT_NEAR(imu_accel_mps2.z(), 0.2, 1e-12);
 }
 
-}  // namespace upkie::cpp::actuation::pi3hat
+}  // namespace upkie::cpp::interfaces::pi3hat

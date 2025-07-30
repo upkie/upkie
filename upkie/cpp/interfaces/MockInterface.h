@@ -11,10 +11,10 @@
 #include <map>
 #include <string>
 
-#include "upkie/cpp/actuation/Interface.h"
-#include "upkie/cpp/actuation/moteus/protocol.h"
+#include "upkie/cpp/interfaces/Interface.h"
+#include "upkie/cpp/interfaces/moteus/protocol.h"
 
-namespace upkie::cpp::actuation {
+namespace upkie::cpp::interfaces {
 
 //! Interface whose internal state perfectly tracks commands.
 class MockInterface : public Interface {
@@ -64,4 +64,4 @@ class MockInterface : public Interface {
   std::map<int, moteus::QueryResult> query_results_;
 };
 
-}  // namespace upkie::cpp::actuation
+}  // namespace upkie::cpp::interfaces

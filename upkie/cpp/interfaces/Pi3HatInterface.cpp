@@ -8,12 +8,12 @@
  *     Copyright 2020 Josh Pieper, jjp@pobox.com.
  */
 
-#include "upkie/cpp/actuation/Pi3HatInterface.h"
+#include "upkie/cpp/interfaces/Pi3HatInterface.h"
 
-#include "upkie/cpp/actuation/ImuData.h"
-#include "upkie/cpp/actuation/pi3hat/imu.h"
+#include "upkie/cpp/interfaces/ImuData.h"
+#include "upkie/cpp/interfaces/pi3hat/imu.h"
 
-namespace upkie::cpp::actuation {
+namespace upkie::cpp::interfaces {
 
 Pi3HatInterface::Pi3HatInterface(
     const int can_cpu,
@@ -177,4 +177,4 @@ void Pi3HatInterface::update_imu_data() {
       imu_data_.linear_acceleration_imu_in_imu);
 }
 
-}  // namespace upkie::cpp::actuation
+}  // namespace upkie::cpp::interfaces

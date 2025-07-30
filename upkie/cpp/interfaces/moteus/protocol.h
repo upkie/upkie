@@ -18,15 +18,15 @@
 #include <limits>
 #include <tuple>
 
-#include "upkie/cpp/actuation/moteus/Data.h"
-#include "upkie/cpp/actuation/moteus/Mode.h"
-#include "upkie/cpp/actuation/moteus/Output.h"
-#include "upkie/cpp/actuation/moteus/PositionCommand.h"
-#include "upkie/cpp/actuation/moteus/PositionResolution.h"
-#include "upkie/cpp/actuation/moteus/QueryResult.h"
-#include "upkie/cpp/actuation/moteus/Resolution.h"
-#include "upkie/cpp/actuation/moteus/ServoCommand.h"
-#include "upkie/cpp/actuation/moteus/ServoReply.h"
+#include "upkie/cpp/interfaces/moteus/Data.h"
+#include "upkie/cpp/interfaces/moteus/Mode.h"
+#include "upkie/cpp/interfaces/moteus/Output.h"
+#include "upkie/cpp/interfaces/moteus/PositionCommand.h"
+#include "upkie/cpp/interfaces/moteus/PositionResolution.h"
+#include "upkie/cpp/interfaces/moteus/QueryResult.h"
+#include "upkie/cpp/interfaces/moteus/Resolution.h"
+#include "upkie/cpp/interfaces/moteus/ServoCommand.h"
+#include "upkie/cpp/interfaces/moteus/ServoReply.h"
 
 /* @file
  *
@@ -34,7 +34,7 @@
  * CAN-FD packets for the moteus brushless servo.
  */
 
-namespace upkie::cpp::actuation {
+namespace upkie::cpp::interfaces {
 
 namespace moteus {
 
@@ -655,4 +655,4 @@ inline QueryResult ParseQueryResult(const uint8_t* data, size_t size) {
 
 }  // namespace moteus
 
-}  // namespace upkie::cpp::actuation
+}  // namespace upkie::cpp::interfaces

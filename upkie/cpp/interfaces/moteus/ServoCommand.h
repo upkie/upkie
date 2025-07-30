@@ -10,12 +10,12 @@
 
 #pragma once
 
-#include "upkie/cpp/actuation/moteus/Mode.h"
-#include "upkie/cpp/actuation/moteus/PositionCommand.h"
-#include "upkie/cpp/actuation/moteus/PositionResolution.h"
-#include "upkie/cpp/actuation/moteus/QueryCommand.h"
+#include "upkie/cpp/interfaces/moteus/Mode.h"
+#include "upkie/cpp/interfaces/moteus/PositionCommand.h"
+#include "upkie/cpp/interfaces/moteus/PositionResolution.h"
+#include "upkie/cpp/interfaces/moteus/QueryCommand.h"
 
-namespace upkie::cpp::actuation {
+namespace upkie::cpp::interfaces {
 
 namespace moteus {
 
@@ -39,4 +39,4 @@ struct ServoCommand {
 
 }  // namespace moteus
 
-}  // namespace upkie::cpp::actuation
+}  // namespace upkie::cpp::interfaces

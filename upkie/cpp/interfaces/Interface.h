@@ -10,14 +10,14 @@
 #include <string>
 #include <vector>
 
-#include "upkie/cpp/actuation/ImuData.h"
-#include "upkie/cpp/actuation/ServoLayout.h"
-#include "upkie/cpp/actuation/moteus/Data.h"
-#include "upkie/cpp/actuation/moteus/Output.h"
-#include "upkie/cpp/actuation/static_config.h"
+#include "upkie/cpp/interfaces/ImuData.h"
+#include "upkie/cpp/interfaces/ServoLayout.h"
+#include "upkie/cpp/interfaces/moteus/Data.h"
+#include "upkie/cpp/interfaces/moteus/Output.h"
+#include "upkie/cpp/interfaces/static_config.h"
 
 //! Send actions to actuators or simulators.
-namespace upkie::cpp::actuation {
+namespace upkie::cpp::interfaces {
 
 using palimpsest::Dictionary;
 
@@ -159,4 +159,4 @@ class Interface {
   std::map<int, std::string> servo_name_map_;
 };
 
-}  // namespace upkie::cpp::actuation
+}  // namespace upkie::cpp::interfaces

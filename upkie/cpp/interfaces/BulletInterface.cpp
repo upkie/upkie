@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2022 Stéphane Caron
 
-#include "upkie/cpp/actuation/BulletInterface.h"
+#include "upkie/cpp/interfaces/BulletInterface.h"
 
 #include <algorithm>
 #include <iostream>
@@ -9,11 +9,11 @@
 #include <string>
 
 #include "tools/cpp/runfiles/runfiles.h"
-#include "upkie/cpp/actuation/bullet/gravity.h"
-#include "upkie/cpp/actuation/bullet/read_imu_data.h"
-#include "upkie/cpp/actuation/bullet/utils.h"
+#include "upkie/cpp/interfaces/bullet/gravity.h"
+#include "upkie/cpp/interfaces/bullet/read_imu_data.h"
+#include "upkie/cpp/interfaces/bullet/utils.h"
 
-namespace upkie::cpp::actuation {
+namespace upkie::cpp::interfaces {
 
 using bazel::tools::cpp::runfiles::Runfiles;
 using bullet::bullet_from_eigen;
@@ -31,7 +31,7 @@ std::string find_plane_urdf(const std::string argv0) {
         "Could not retrieve the package path to plane.urdf: " + error);
   }
   return runfiles->Rlocation(
-      "upkie/upkie/cpp/actuation/bullet/plane/plane.urdf");
+      "upkie/upkie/cpp/interfaces/bullet/plane/plane.urdf");
 }
 
 BulletInterface::BulletInterface(const Parameters& params)
@@ -636,4 +636,4 @@ void BulletInterface::apply_external_forces() {
   }
 }
 
-}  // namespace upkie::cpp::actuation
+}  // namespace upkie::cpp::interfaces

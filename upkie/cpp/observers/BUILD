@@ -39,7 +39,7 @@ cc_library(
     hdrs = ["observe_servos.h"],
     srcs = ["observe_servos.cpp"],
     deps = [
-        "//upkie/cpp/actuation/moteus",
+        "//upkie/cpp/interfaces/moteus",
         "//upkie/cpp/exceptions",
         "@palimpsest",
     ],

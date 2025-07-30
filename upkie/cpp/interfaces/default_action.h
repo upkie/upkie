@@ -3,7 +3,7 @@
 
 #pragma once
 
-namespace upkie::cpp::actuation {
+namespace upkie::cpp::interfaces {
 
 //! Default values for servo actions.
 namespace default_action {
@@ -30,4 +30,4 @@ constexpr double kMaximumTorque = 1.0;
 
 }  // namespace default_action
 
-}  // namespace upkie::cpp::actuation
+}  // namespace upkie::cpp::interfaces

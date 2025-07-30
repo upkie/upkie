@@ -874,10 +874,11 @@ INPUT                  = README.md \
                          upkie \
                          upkie/config \
                          upkie/cpp \
-                         upkie/cpp/actuation \
-                         upkie/cpp/actuation/bullet \
-                         upkie/cpp/actuation/pi3hat \
                          upkie/cpp/exceptions \
+                         upkie/cpp/interfaces \
+                         upkie/cpp/interfaces/bullet \
+                         upkie/cpp/interfaces/moteus \
+                         upkie/cpp/interfaces/pi3hat \
                          upkie/cpp/observers \
                          upkie/cpp/sensors \
                          upkie/cpp/spine \

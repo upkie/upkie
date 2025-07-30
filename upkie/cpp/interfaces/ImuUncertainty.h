@@ -8,7 +8,7 @@
 #include <Eigen/Core>
 #include <random>
 
-namespace upkie::cpp::actuation {
+namespace upkie::cpp::interfaces {
 
 using palimpsest::Dictionary;
 
@@ -70,4 +70,4 @@ struct ImuUncertainty {
   }
 };
 
-}  // namespace upkie::cpp::actuation
+}  // namespace upkie::cpp::interfaces

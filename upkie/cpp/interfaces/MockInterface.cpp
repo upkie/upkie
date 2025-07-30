@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2022 Stéphane Caron
 
-#include "upkie/cpp/actuation/MockInterface.h"
+#include "upkie/cpp/interfaces/MockInterface.h"
 
 using std::chrono::duration_cast;
 using std::chrono::microseconds;
 
-namespace upkie::cpp::actuation {
+namespace upkie::cpp::interfaces {
 
 MockInterface::MockInterface(const double dt) : Interface(), dt_(dt) {
   query_results_.clear();
@@ -60,4 +60,4 @@ void MockInterface::cycle(std::function<void(const moteus::Output&)> callback) {
   callback(output);
 }
 
-}  // namespace upkie::cpp::actuation
+}  // namespace upkie::cpp::interfaces

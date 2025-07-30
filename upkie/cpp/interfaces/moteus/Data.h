@@ -10,11 +10,11 @@
 
 #pragma once
 
-#include "upkie/cpp/actuation/moteus/ServoCommand.h"
-#include "upkie/cpp/actuation/moteus/ServoReply.h"
-#include "upkie/cpp/actuation/moteus/Span.h"
+#include "upkie/cpp/interfaces/moteus/ServoCommand.h"
+#include "upkie/cpp/interfaces/moteus/ServoReply.h"
+#include "upkie/cpp/interfaces/moteus/Span.h"
 
-namespace upkie::cpp::actuation {
+namespace upkie::cpp::interfaces {
 
 namespace moteus {
 
@@ -33,4 +33,4 @@ struct Data {
 
 }  // namespace moteus
 
-}  // namespace upkie::cpp::actuation
+}  // namespace upkie::cpp::interfaces

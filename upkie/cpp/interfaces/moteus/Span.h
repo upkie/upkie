@@ -10,7 +10,7 @@
 
 #pragma once
 
-namespace upkie::cpp::actuation {
+namespace upkie::cpp::interfaces {
 
 namespace moteus {
 
@@ -68,4 +68,4 @@ class Span {
 
 }  // namespace moteus
 
-}  // namespace upkie::cpp::actuation
+}  // namespace upkie::cpp::interfaces

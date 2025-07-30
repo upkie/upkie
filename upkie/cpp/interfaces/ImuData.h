@@ -6,7 +6,7 @@
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 
-namespace upkie::cpp::actuation {
+namespace upkie::cpp::interfaces {
 
 //! Data from the onboard inertial measurement unit (IMU).
 struct ImuData {
@@ -71,4 +71,4 @@ struct ImuData {
   Eigen::Vector3d linear_velocity_imu_in_world = Eigen::Vector3d::Zero();
 };
 
-}  // namespace upkie::cpp::actuation
+}  // namespace upkie::cpp::interfaces

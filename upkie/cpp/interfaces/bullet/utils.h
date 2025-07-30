@@ -12,7 +12,7 @@
 #include "RobotSimulator/b3RobotSimulatorClientAPI.h"
 
 //! Bullet utility functions used in the simulation interface.
-namespace upkie::cpp::actuation::bullet {
+namespace upkie::cpp::interfaces::bullet {
 
 /*! Convert an Eigen quaternion to a Bullet one.
  *
@@ -165,4 +165,4 @@ inline Eigen::Vector3d compute_position_com_in_world(
   return weighted_sum / mass;
 }
 
-}  // namespace upkie::cpp::actuation::bullet
+}  // namespace upkie::cpp::interfaces::bullet

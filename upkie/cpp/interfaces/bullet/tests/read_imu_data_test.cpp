@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2022 Stéphane Caron
 
-#include "upkie/cpp/actuation/bullet/read_imu_data.h"
+#include "upkie/cpp/interfaces/bullet/read_imu_data.h"
 
 #include <map>
 #include <memory>
@@ -10,12 +10,12 @@
 #include "RobotSimulator/b3RobotSimulatorClientAPI.h"
 #include "gtest/gtest.h"
 #include "tools/cpp/runfiles/runfiles.h"
-#include "upkie/cpp/actuation/ImuData.h"
-#include "upkie/cpp/actuation/bullet/utils.h"
+#include "upkie/cpp/interfaces/ImuData.h"
+#include "upkie/cpp/interfaces/bullet/utils.h"
 
 using bazel::tools::cpp::runfiles::Runfiles;
 
-namespace upkie::cpp::actuation::bullet {
+namespace upkie::cpp::interfaces::bullet {
 
 class BulletReadImuDataTest : public ::testing::Test {
  protected:
@@ -104,4 +104,4 @@ TEST_F(BulletReadImuDataTest, RawIMULinearAcceleration) {
   ASSERT_NEAR(imu_data.linear_acceleration_imu_in_imu.z(), 0.0, 1e-10);
 }
 
-}  // namespace upkie::cpp::actuation::bullet
+}  // namespace upkie::cpp::interfaces::bullet

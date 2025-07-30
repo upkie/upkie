@@ -13,16 +13,16 @@
 #include <string>
 #include <vector>
 
-#include "upkie/cpp/actuation/ImuUncertainty.h"
-#include "upkie/cpp/actuation/Interface.h"
-#include "upkie/cpp/actuation/bullet/ContactData.h"
-#include "upkie/cpp/actuation/bullet/ExternalForce.h"
-#include "upkie/cpp/actuation/bullet/JointProperties.h"
-#include "upkie/cpp/actuation/bullet/RobotSimulator.h"
-#include "upkie/cpp/actuation/moteus/Output.h"
-#include "upkie/cpp/actuation/moteus/ServoReply.h"
+#include "upkie/cpp/interfaces/ImuUncertainty.h"
+#include "upkie/cpp/interfaces/Interface.h"
+#include "upkie/cpp/interfaces/bullet/ContactData.h"
+#include "upkie/cpp/interfaces/bullet/ExternalForce.h"
+#include "upkie/cpp/interfaces/bullet/JointProperties.h"
+#include "upkie/cpp/interfaces/bullet/RobotSimulator.h"
+#include "upkie/cpp/interfaces/moteus/Output.h"
+#include "upkie/cpp/interfaces/moteus/ServoReply.h"
 
-namespace upkie::cpp::actuation {
+namespace upkie::cpp::interfaces {
 
 //! Actuation interface for the Bullet simulator.
 class BulletInterface : public Interface {
@@ -433,4 +433,4 @@ class BulletInterface : public Interface {
   std::map<int, bullet::ExternalForce> external_forces_;
 };
 
-}  // namespace upkie::cpp::actuation
+}  // namespace upkie::cpp::interfaces

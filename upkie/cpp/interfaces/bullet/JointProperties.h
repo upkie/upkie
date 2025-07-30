@@ -7,7 +7,7 @@
 
 #include "RobotSimulator/b3RobotSimulatorClientAPI.h"
 
-namespace upkie::cpp::actuation::bullet {
+namespace upkie::cpp::interfaces::bullet {
 
 using palimpsest::Dictionary;
 
@@ -58,4 +58,4 @@ struct JointProperties {
   }
 };
 
-}  // namespace upkie::cpp::actuation::bullet
+}  // namespace upkie::cpp::interfaces::bullet

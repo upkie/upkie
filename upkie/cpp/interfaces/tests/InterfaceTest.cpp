@@ -7,10 +7,10 @@
 #include <vector>
 
 #include "gtest/gtest.h"
-#include "upkie/cpp/actuation/Interface.h"
 #include "upkie/cpp/exceptions/PositionCommandError.h"
+#include "upkie/cpp/interfaces/Interface.h"
 
-namespace upkie::cpp::actuation {
+namespace upkie::cpp::interfaces {
 
 using exceptions::PositionCommandError;
 
@@ -182,4 +182,4 @@ TEST_F(InterfaceTest, MaximumTorques) {
   }
 }
 
-}  // namespace upkie::cpp::actuation
+}  // namespace upkie::cpp::interfaces

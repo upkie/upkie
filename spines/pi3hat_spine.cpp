@@ -18,7 +18,7 @@
 #include "spines/common/controllers.h"
 #include "spines/common/observers.h"
 #include "spines/common/sensors.h"
-#include "upkie/cpp/actuation/Pi3HatInterface.h"
+#include "upkie/cpp/interfaces/Pi3HatInterface.h"
 #include "upkie/cpp/controllers/ControllerPipeline.h"
 #include "upkie/cpp/observers/ObserverPipeline.h"
 #include "upkie/cpp/sensors/CpuTemperature.h"
@@ -34,7 +34,7 @@ using palimpsest::Dictionary;
 using spines::common::make_controllers;
 using spines::common::make_observers;
 using spines::common::make_sensors;
-using upkie::cpp::actuation::Pi3HatInterface;
+using upkie::cpp::interfaces::Pi3HatInterface;
 using upkie::cpp::controllers::ControllerPipeline;
 using upkie::cpp::observers::ObserverPipeline;
 using upkie::cpp::sensors::CpuTemperature;

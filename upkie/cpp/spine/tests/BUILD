@@ -13,7 +13,7 @@ cc_test(
         "*.h",
     ]),
     deps = [
-        "//upkie/cpp/actuation:mock_interface",
+        "//upkie/cpp/interfaces:mock_interface",
         "//upkie/cpp/observers/tests:observers",
         "//upkie/cpp/observers:observer_pipeline",
         "//upkie/cpp/spine:agent_interface",

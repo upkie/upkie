@@ -8,7 +8,7 @@
 
 #include "upkie/cpp/exceptions/UpkieError.h"
 
-namespace upkie::cpp::actuation {
+namespace upkie::cpp::interfaces {
 
 //! Servo properties.
 struct ServoProperties {
@@ -19,4 +19,4 @@ struct ServoProperties {
   double maximum_torque;
 };
 
-}  // namespace upkie::cpp::actuation
+}  // namespace upkie::cpp::interfaces

@@ -9,9 +9,9 @@
 
 #include "gtest/gtest.h"
 #include "tools/cpp/runfiles/runfiles.h"
-#include "upkie/cpp/actuation/BulletInterface.h"
+#include "upkie/cpp/interfaces/BulletInterface.h"
 
-namespace upkie::cpp::actuation {
+namespace upkie::cpp::interfaces {
 
 using bazel::tools::cpp::runfiles::Runfiles;
 
@@ -28,7 +28,7 @@ class BulletInterfaceEnvBodies : public ::testing::Test {
     params.floor = false;   // wheels roll freely during testing
     params.gravity = true;  // default, just a reminder
     params.env_urdf_paths = {runfiles->Rlocation(
-        "upkie/upkie/cpp/actuation/bullet/plane/plane.urdf")};
+        "upkie/upkie/cpp/interfaces/bullet/plane/plane.urdf")};
     params.robot_urdf_path =
         runfiles->Rlocation("upkie_description/urdf/upkie.urdf");
     interface_ = std::make_unique<BulletInterface>(params);
@@ -81,4 +81,4 @@ TEST_F(BulletInterfaceEnvBodies, MonitorEnvBodies) {
   ASSERT_EQ(bodies("plane").get<Eigen::Quaterniond>("orientation").z(), 0.);
 }
 
-}  // namespace upkie::cpp::actuation
+}  // namespace upkie::cpp::interfaces

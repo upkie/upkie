@@ -7,7 +7,7 @@
 
 #include <Eigen/Geometry>
 
-namespace upkie::cpp::actuation::pi3hat {
+namespace upkie::cpp::interfaces::pi3hat {
 
 /*! Standard gravity constant used in the mjbots pi3hat firmware.
  *
@@ -55,4 +55,4 @@ inline Eigen::Vector3d get_raw_linear_acceleration(
   return current_accel_mps2;
 }
 
-}  // namespace upkie::cpp::actuation::pi3hat
+}  // namespace upkie::cpp::interfaces::pi3hat

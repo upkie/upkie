@@ -10,9 +10,9 @@
 
 #pragma once
 
-#include "upkie/cpp/actuation/moteus/QueryResult.h"
+#include "upkie/cpp/interfaces/moteus/QueryResult.h"
 
-namespace upkie::cpp::actuation {
+namespace upkie::cpp::interfaces {
 
 namespace moteus {
 
@@ -27,4 +27,4 @@ struct ServoReply {
 
 }  // namespace moteus
 
-}  // namespace upkie::cpp::actuation
+}  // namespace upkie::cpp::interfaces

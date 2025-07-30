@@ -6,9 +6,9 @@
 #include <string>
 
 #include "LinearMath/btVector3.h"
-#include "upkie/cpp/actuation/ImuData.h"
+#include "upkie/cpp/interfaces/ImuData.h"
 
-namespace upkie::cpp::actuation::bullet {
+namespace upkie::cpp::interfaces::bullet {
 
 //! Parameters for a call to Bullet's applyExternalForce
 struct ExternalForce {
@@ -19,4 +19,4 @@ struct ExternalForce {
   btVector3 force;
 };
 
-}  // namespace upkie::cpp::actuation::bullet
+}  // namespace upkie::cpp::interfaces::bullet

@@ -8,9 +8,9 @@
 #include <vector>
 
 #include "gtest/gtest.h"
-#include "upkie/cpp/actuation/Pi3HatInterface.h"
+#include "upkie/cpp/interfaces/Pi3HatInterface.h"
 
-namespace upkie::cpp::actuation {
+namespace upkie::cpp::interfaces {
 
 TEST(Pi3HatInterface, Create) {
   ServoLayout layout;
@@ -31,4 +31,4 @@ TEST(Pi3HatInterface, Create) {
   Pi3HatInterface interface(layout, kCanCpu, pi3hat_config);
 }
 
-}  // namespace upkie::cpp::actuation
+}  // namespace upkie::cpp::interfaces

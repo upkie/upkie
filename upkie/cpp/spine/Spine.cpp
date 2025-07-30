@@ -25,9 +25,9 @@
 namespace upkie::cpp::spine {
 
 using palimpsest::Dictionary;
-using upkie::cpp::actuation::moteus::Output;
+using upkie::cpp::interfaces::moteus::Output;
 
-Spine::Spine(const Parameters& params, actuation::Interface& actuation,
+Spine::Spine(const Parameters& params, interfaces::Interface& actuation,
              SensorPipeline& sensors, ObserverPipeline& observers,
              ControllerPipeline& controllers)
     : frequency_(params.frequency),

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2022 Stéphane Caron
 
-#include "upkie/cpp/actuation/bullet/utils.h"
+#include "upkie/cpp/interfaces/bullet/utils.h"
 
 #include <map>
 #include <memory>
@@ -13,7 +13,7 @@
 
 using bazel::tools::cpp::runfiles::Runfiles;
 
-namespace upkie::cpp::actuation::bullet {
+namespace upkie::cpp::interfaces::bullet {
 
 class BulletUtilsTest : public ::testing::Test {
  protected:
@@ -98,4 +98,4 @@ TEST_F(BulletUtilsTest, ComputeCenterOfMass) {
   ASSERT_NEAR(com.z(), -0.2455, 1e-4);
 }
 
-}  // namespace upkie::cpp::actuation::bullet
+}  // namespace upkie::cpp::interfaces::bullet

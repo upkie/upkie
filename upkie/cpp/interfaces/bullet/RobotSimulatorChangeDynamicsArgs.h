@@ -3,7 +3,7 @@
 
 #pragma once
 
-namespace upkie::cpp::actuation::bullet {
+namespace upkie::cpp::interfaces::bullet {
 
 //! Structure which contains the new link properties
 struct RobotSimulatorChangeDynamicsArgs {
@@ -58,4 +58,4 @@ struct RobotSimulatorChangeDynamicsArgs {
         m_localInertiaDiagonal{0, 0, 0} {}
 };
 
-}  // namespace upkie::cpp::actuation::bullet
+}  // namespace upkie::cpp::interfaces::bullet

@@ -9,7 +9,7 @@
  *     Copyright 2020 Josh Pieper, jjp@pobox.com.
  */
 
-#include "upkie/cpp/actuation/Interface.h"
+#include "upkie/cpp/interfaces/Interface.h"
 
 #include <palimpsest/Dictionary.h>
 
@@ -18,12 +18,12 @@
 #include <string>
 #include <vector>
 
-#include "upkie/cpp/actuation/default_action.h"
-#include "upkie/cpp/actuation/moteus/Mode.h"
-#include "upkie/cpp/actuation/moteus/ServoCommand.h"
 #include "upkie/cpp/exceptions/PositionCommandError.h"
+#include "upkie/cpp/interfaces/default_action.h"
+#include "upkie/cpp/interfaces/moteus/Mode.h"
+#include "upkie/cpp/interfaces/moteus/ServoCommand.h"
 
-namespace upkie::cpp::actuation {
+namespace upkie::cpp::interfaces {
 
 using exceptions::PositionCommandError;
 
@@ -125,4 +125,4 @@ void Interface::write_position_commands(const Dictionary& action) {
   }
 }
 
-}  // namespace upkie::cpp::actuation
+}  // namespace upkie::cpp::interfaces

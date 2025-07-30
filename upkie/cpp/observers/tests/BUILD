@@ -14,7 +14,7 @@ cc_test(
         "*.h",
     ]),
     deps = [
-        "//upkie/cpp/actuation/moteus",
+        "//upkie/cpp/interfaces/moteus",
         "//upkie/cpp/exceptions",
         "//upkie/cpp/observers",
         "@eigen",

@@ -9,9 +9,9 @@
 #include "RobotSimulator/b3RobotSimulatorClientAPI.h"
 #include "SharedMemory/PhysicsClientC_API.h"
 #include "SharedMemory/b3RobotSimulatorClientAPI_InternalData.h"
-#include "upkie/cpp/actuation/bullet/RobotSimulatorChangeDynamicsArgs.h"
+#include "upkie/cpp/interfaces/bullet/RobotSimulatorChangeDynamicsArgs.h"
 
-namespace upkie::cpp::actuation::bullet {
+namespace upkie::cpp::interfaces::bullet {
 
 //! Child class to enable modification of inertia matrices.
 class RobotSimulatorClientAPI : public b3RobotSimulatorClientAPI {
@@ -31,4 +31,4 @@ class RobotSimulatorClientAPI : public b3RobotSimulatorClientAPI {
                       RobotSimulatorChangeDynamicsArgs& args);
 };
 
-}  // namespace upkie::cpp::actuation::bullet
+}  // namespace upkie::cpp::interfaces::bullet

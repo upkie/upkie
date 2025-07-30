@@ -10,11 +10,11 @@
 #include <string>
 
 #include "RobotSimulator/b3RobotSimulatorClientAPI.h"
-#include "upkie/cpp/actuation/ImuData.h"
-#include "upkie/cpp/actuation/bullet/gravity.h"
+#include "upkie/cpp/interfaces/ImuData.h"
+#include "upkie/cpp/interfaces/bullet/gravity.h"
 
 //! Bullet utility functions used in the simulation interface.
-namespace upkie::cpp::actuation::bullet {
+namespace upkie::cpp::interfaces::bullet {
 
 /*! Compute groundtruth IMU quantities from the IMU link state.
  *
@@ -90,4 +90,4 @@ inline void read_imu_data(ImuData& imu_data, b3RobotSimulatorClientAPI& bullet,
   imu_data.linear_velocity_imu_in_world = linear_velocity_imu_in_world;
 }
 
-}  // namespace upkie::cpp::actuation::bullet
+}  // namespace upkie::cpp::interfaces::bullet

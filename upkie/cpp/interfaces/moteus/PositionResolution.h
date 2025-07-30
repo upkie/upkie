@@ -10,9 +10,9 @@
 
 #pragma once
 
-#include "upkie/cpp/actuation/moteus/Resolution.h"
+#include "upkie/cpp/interfaces/moteus/Resolution.h"
 
-namespace upkie::cpp::actuation {
+namespace upkie::cpp::interfaces {
 
 namespace moteus {
 
@@ -29,4 +29,4 @@ struct PositionResolution {
 
 }  // namespace moteus
 
-}  // namespace upkie::cpp::actuation
+}  // namespace upkie::cpp::interfaces

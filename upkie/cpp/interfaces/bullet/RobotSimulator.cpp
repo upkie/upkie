@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2024 Inria
 
-#include "upkie/cpp/actuation/bullet/RobotSimulator.h"
+#include "upkie/cpp/interfaces/bullet/RobotSimulator.h"
 
 #include <iostream>
 
-namespace upkie::cpp::actuation::bullet {
+namespace upkie::cpp::interfaces::bullet {
 
 bool RobotSimulatorClientAPI::changeDynamics(
     int bodyUniqueId, int linkIndex,
@@ -78,4 +78,4 @@ bool RobotSimulatorClientAPI::changeDynamics(
   return true;
 }
 
-}  // namespace upkie::cpp::actuation::bullet
+}  // namespace upkie::cpp::interfaces::bullet

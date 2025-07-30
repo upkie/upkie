@@ -6,9 +6,9 @@
 #include <map>
 #include <string>
 
-#include "upkie/cpp/actuation/ServoProperties.h"
+#include "upkie/cpp/interfaces/ServoProperties.h"
 
-namespace upkie::cpp::actuation {
+namespace upkie::cpp::interfaces {
 
 //! Map between servos, their busses and the joints they actuate.
 class ServoLayout {
@@ -50,4 +50,4 @@ class ServoLayout {
   std::map<int, ServoProperties> servo_props_map_;
 };
 
-}  // namespace upkie::cpp::actuation
+}  // namespace upkie::cpp::interfaces

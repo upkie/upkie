@@ -5,9 +5,9 @@
 #include <vector>
 
 #include "gtest/gtest.h"
-#include "upkie/cpp/actuation/ImuUncertainty.h"
+#include "upkie/cpp/interfaces/ImuUncertainty.h"
 
-namespace upkie::cpp::actuation {
+namespace upkie::cpp::interfaces {
 
 class ImuUncertaintyTest : public ::testing::Test {
  protected:
@@ -42,4 +42,4 @@ TEST_F(ImuUncertaintyTest, PureBias) {
   ASSERT_LT((angular_velocity - imu_uncertainty.gyroscope_bias).norm(), 1e-10);
 }
 
-}  // namespace upkie::cpp::actuation
+}  // namespace upkie::cpp::interfaces

@@ -4,10 +4,10 @@
 #include <map>
 
 #include "gtest/gtest.h"
-#include "upkie/cpp/actuation/MockInterface.h"
-#include "upkie/cpp/actuation/moteus/protocol.h"
+#include "upkie/cpp/interfaces/MockInterface.h"
+#include "upkie/cpp/interfaces/moteus/protocol.h"
 
-namespace upkie::cpp::actuation {
+namespace upkie::cpp::interfaces {
 
 TEST(MockInterfaceTest, CycleCallsCallback) {
   const double dt = 1e-3;
@@ -20,4 +20,4 @@ TEST(MockInterfaceTest, CycleCallsCallback) {
   ASSERT_TRUE(callback_called);
 }
 
-}  // namespace upkie::cpp::actuation
+}  // namespace upkie::cpp::interfaces

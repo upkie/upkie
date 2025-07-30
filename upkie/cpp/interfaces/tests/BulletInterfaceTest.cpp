@@ -10,10 +10,10 @@
 
 #include "gtest/gtest.h"
 #include "tools/cpp/runfiles/runfiles.h"
-#include "upkie/cpp/actuation/BulletInterface.h"
-#include "upkie/cpp/actuation/bullet/gravity.h"
+#include "upkie/cpp/interfaces/BulletInterface.h"
+#include "upkie/cpp/interfaces/bullet/gravity.h"
 
-namespace upkie::cpp::actuation {
+namespace upkie::cpp::interfaces {
 
 using bazel::tools::cpp::runfiles::Runfiles;
 
@@ -450,4 +450,4 @@ TEST_F(BulletInterfaceTest, ResetJointConfiguration) {
   ASSERT_THROW(interface_->reset(config), std::runtime_error);  // exn
 }
 
-}  // namespace upkie::cpp::actuation
+}  // namespace upkie::cpp::interfaces

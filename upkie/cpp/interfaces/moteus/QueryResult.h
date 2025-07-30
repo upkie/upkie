@@ -12,9 +12,9 @@
 
 #include <limits>
 
-#include "upkie/cpp/actuation/moteus/Mode.h"
+#include "upkie/cpp/interfaces/moteus/Mode.h"
 
-namespace upkie::cpp::actuation {
+namespace upkie::cpp::interfaces {
 
 namespace moteus {
 
@@ -52,4 +52,4 @@ struct QueryResult {
 
 }  // namespace moteus
 
-}  // namespace upkie::cpp::actuation
+}  // namespace upkie::cpp::interfaces

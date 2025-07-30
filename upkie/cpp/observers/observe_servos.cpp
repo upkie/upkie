@@ -11,8 +11,8 @@
 
 namespace upkie::cpp::observers {
 
-using upkie::cpp::actuation::moteus::ServoReply;
 using upkie::cpp::exceptions::ServoError;
+using upkie::cpp::interfaces::moteus::ServoReply;
 
 void observe_servos(palimpsest::Dictionary& observation,
                     const std::map<int, std::string>& servo_name_map,

@@ -47,7 +47,7 @@ cc_library(
         "@//conditions:default": [],
     }),
     deps = [
-        "//upkie/cpp/actuation:interface",
+        "//upkie/cpp/interfaces:interface",
         "//upkie/cpp/controllers:controller_pipeline",
         "//upkie/cpp/exceptions",
         "//upkie/cpp/observers:observe_servos",
