@@ -145,18 +145,26 @@ T Saturate(double value, double scale) {
   return static_cast<T>(scaled);
 }
 
+//! CAN frame data structure for the moteus protocol.
 struct CanFrame {
+  //! Frame data buffer (up to 64 bytes)
   uint8_t data[64] = {};
+
+  //! Actual size of data in the frame
   uint8_t size = 0;
 };
 
+//! Writer for CAN frame data in the moteus protocol.
 class WriteCanFrame {
  public:
+  //! Construct writer from a CAN frame.
   explicit WriteCanFrame(CanFrame* frame)
       : data_(&frame->data[0]), size_(&frame->size) {}
 
+  //! Construct writer from raw data buffer and size pointer.
   WriteCanFrame(uint8_t* data, uint8_t* size) : data_(data), size_(size) {}
 
+  //! Write a value to the CAN frame buffer, casting it to type T.
   template <typename T, typename X>
   void Write(X value_in) {
     T value = static_cast<T>(value_in);
@@ -172,6 +180,14 @@ class WriteCanFrame {
     *size_ += sizeof(value);
   }
 
+  /*! Write a scaled value based on its resolution type.
+   *
+   * \param value The value to write.
+   * \param int8_scale Scale factor for 8-bit integer encoding.
+   * \param int16_scale Scale factor for 16-bit integer encoding.
+   * \param int32_scale Scale factor for 32-bit integer encoding.
+   * \param res Resolution type for encoding the value.
+   */
   void WriteMapped(double value, double int8_scale, double int16_scale,
                    double int32_scale, Resolution res) {
     switch (res) {
@@ -197,30 +213,37 @@ class WriteCanFrame {
     }
   }
 
+  //! Write a position value with appropriate scaling.
   void WritePosition(double value, Resolution res) {
     WriteMapped(value, 0.01, 0.0001, 0.00001, res);
   }
 
+  //! Write a velocity value with appropriate scaling.
   void WriteVelocity(double value, Resolution res) {
     WriteMapped(value, 0.1, 0.00025, 0.00001, res);
   }
 
+  //! Write a torque value with appropriate scaling.
   void WriteTorque(double value, Resolution res) {
     WriteMapped(value, 0.5, 0.01, 0.001, res);
   }
 
+  //! Write a PWM value with appropriate scaling.
   void WritePwm(double value, Resolution res) {
     WriteMapped(value, 1.0 / 127.0, 1.0 / 32767.0, 1.0 / 2147483647.0, res);
   }
 
+  //! Write a voltage value with appropriate scaling.
   void WriteVoltage(double value, Resolution res) {
     WriteMapped(value, 0.5, 0.1, 0.001, res);
   }
 
+  //! Write a temperature value with appropriate scaling.
   void WriteTemperature(float value, Resolution res) {
     WriteMapped(value, 1.0, 0.1, 0.001, res);
   }
 
+  //! Write a time value with appropriate scaling.
   void WriteTime(float value, Resolution res) {
     WriteMapped(value, 0.01, 0.001, 0.000001, res);
   }
@@ -235,6 +258,13 @@ class WriteCanFrame {
 template <size_t N>
 class WriteCombiner {
  public:
+  /*! Construct a write combiner.
+   *
+   * \param frame CAN frame writer to use for output.
+   * \param base_command Base command code for the operation.
+   * \param start_register Starting register address.
+   * \param resolutions Array of resolution settings for each register.
+   */
   template <typename T>
   WriteCombiner(WriteCanFrame* frame, int8_t base_command, T start_register,
                 std::array<Resolution, N> resolutions)
@@ -249,6 +279,10 @@ class WriteCombiner {
     }
   }
 
+  /*! Check if a register value should be written and handle framing.
+   *
+   * \return True if the current register value should be written to the frame.
+   */
   bool MaybeWrite() {
     const auto this_offset = offset_;
     offset_++;
@@ -316,14 +350,19 @@ class WriteCombiner {
   size_t offset_ = 0;
 };
 
+//! Parser for multiplex data in the moteus protocol.
 class MultiplexParser {
  public:
+  //! Construct parser from a CAN frame.
   explicit MultiplexParser(const CanFrame* frame)
       : data_(&frame->data[0]), size_(frame->size) {}
 
+  //! Construct parser from raw data buffer.
   MultiplexParser(const uint8_t* data, uint8_t size)
       : data_(data), size_(size) {}
 
+  //! Parse next register value from the multiplex data.
+  //! \return Tuple of (success, register_id, resolution).
   std::tuple<bool, uint32_t, Resolution> next() {
     if (offset_ >= size_) {
       // We are done.
@@ -405,6 +444,8 @@ class MultiplexParser {
     return std::make_tuple(false, 0, Resolution::kInt8);
   }
 
+  //! Read a value of type T from the current offset in the data buffer.
+  //! \return The value read from the buffer.
   template <typename T>
   T Read() {
     if (offset_ + sizeof(T) > size_) {
@@ -417,6 +458,8 @@ class MultiplexParser {
     return result;
   }
 
+  //! Convert minimum values to NaN for invalid/missing data.
+  //! \return NaN if value is minimum for type T, otherwise the value as double.
   template <typename T>
   double Nanify(T value) {
     if (value == std::numeric_limits<T>::min()) {
@@ -425,6 +468,14 @@ class MultiplexParser {
     return value;
   }
 
+  /*! Read and scale a value based on its resolution type.
+   *
+   * \param res Resolution type of the value to read.
+   * \param int8_scale Scale factor for 8-bit integer values.
+   * \param int16_scale Scale factor for 16-bit integer values.
+   * \param int32_scale Scale factor for 32-bit integer values.
+   * \return The scaled value as a double.
+   */
   double ReadMapped(Resolution res, double int8_scale, double int16_scale,
                     double int32_scale) {
     switch (res) {
@@ -447,42 +498,91 @@ class MultiplexParser {
     throw std::logic_error("unreachable");
   }
 
+  /*! Read an integer value based on its resolution type.
+   *
+   * \param res Resolution type of the value to read.
+   * \return The integer value.
+   */
   int ReadInt(Resolution res) {
     return static_cast<int>(ReadMapped(res, 1.0, 1.0, 1.0));
   }
 
+  /*! Read a position value with appropriate scaling.
+   *
+   * \param res Resolution type of the value to read.
+   * \return The position value in appropriate units.
+   */
   double ReadPosition(Resolution res) {
     return ReadMapped(res, 0.01, 0.0001, 0.00001);
   }
 
+  /*! Read a velocity value with appropriate scaling.
+   *
+   * \param res Resolution type of the value to read.
+   * \return The velocity value in appropriate units.
+   */
   double ReadVelocity(Resolution res) {
     return ReadMapped(res, 0.1, 0.00025, 0.00001);
   }
 
+  /*! Read a torque value with appropriate scaling.
+   *
+   * \param res Resolution type of the value to read.
+   * \return The torque value in appropriate units.
+   */
   double ReadTorque(Resolution res) {
     return ReadMapped(res, 0.5, 0.01, 0.001);
   }
 
+  /*! Read a PWM value with appropriate scaling.
+   *
+   * \param res Resolution type of the value to read.
+   * \return The PWM value in appropriate units.
+   */
   double ReadPwm(Resolution res) {
     return ReadMapped(res, 1.0 / 127.0, 1.0 / 32767.0, 1.0 / 2147483647.0);
   }
 
+  /*! Read a voltage value with appropriate scaling.
+   *
+   * \param res Resolution type of the value to read.
+   * \return The voltage value in appropriate units.
+   */
   double ReadVoltage(Resolution res) {
     return ReadMapped(res, 0.5, 0.1, 0.001);
   }
 
+  /*! Read a temperature value with appropriate scaling.
+   *
+   * \param res Resolution type of the value to read.
+   * \return The temperature value in appropriate units.
+   */
   double ReadTemperature(Resolution res) {
     return ReadMapped(res, 1.0, 0.1, 0.001);
   }
 
+  /*! Read a time value with appropriate scaling.
+   *
+   * \param res Resolution type of the value to read.
+   * \return The time value in appropriate units.
+   */
   double ReadTime(Resolution res) {
     return ReadMapped(res, 0.01, 0.001, 0.000001);
   }
 
+  /*! Read a current value with appropriate scaling.
+   *
+   * \param res Resolution type of the value to read.
+   * \return The current value in appropriate units.
+   */
   double ReadCurrent(Resolution res) {
     return ReadMapped(res, 1.0, 0.1, 0.001);
   }
 
+  /*! Skip over a value of the given resolution without reading it.
+   *
+   * \param res Resolution type of the value to skip.
+   */
   void Ignore(Resolution res) { offset_ += ResolutionSize(res); }
 
  private:

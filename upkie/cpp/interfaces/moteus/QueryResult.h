@@ -18,6 +18,7 @@ namespace upkie::cpp::interfaces {
 
 namespace moteus {
 
+//! Result data from moteus query commands.
 struct QueryResult {
   //! Control mode
   Mode mode = Mode::kStopped;
@@ -45,8 +46,13 @@ struct QueryResult {
    */
   bool rezero_state = false;
 
+  //! Supply voltage in [V].
   double voltage = std::numeric_limits<double>::quiet_NaN();
+
+  //! Controller temperature in [°C].
   double temperature = std::numeric_limits<double>::quiet_NaN();
+
+  //! Fault code (0 = no fault).
   int fault = 0;
 };
 

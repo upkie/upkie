@@ -31,7 +31,7 @@ class Span {
   //! Get pointer to first element
   T* data() { return ptr_; }
 
-  //! Const-variant of \ref data
+  //! Const-variant of data()
   T* data() const { return ptr_; }
 
   //! Get size of allocated area

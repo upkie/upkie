@@ -19,17 +19,32 @@ namespace moteus {
 /*! Position command.
  *
  * \note Default values here are also the initial joint values for the mock
- * interface. See the documentation at \ref
- * upkie::cpp::MockInterface::ServoState::step.
+ * interface. See the documentation at
+ * \ref upkie::cpp::interfaces::MockInterface::ServoState::step.
  */
 struct PositionCommand {
+  //! Target position in [rev].
   double position = 0.0;
+
+  //! Target velocity in [rev] / [s].
   double velocity = 0.0;
+
+  //! Feedforward torque in [N m].
   double feedforward_torque = 0.0;
+
+  //! Proportional gain scaling factor.
   double kp_scale = 1.0;
+
+  //! Derivative gain scaling factor.
   double kd_scale = 1.0;
+
+  //! Maximum torque limit in [N m].
   double maximum_torque = 0.0;
+
+  //! Stop position in [rev].
   double stop_position = std::numeric_limits<double>::quiet_NaN();
+
+  //! Watchdog timeout in [s].
   double watchdog_timeout = 0.0;
 };
 
