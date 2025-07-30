@@ -9,6 +9,7 @@ import argparse
 import socket
 import traceback
 from pathlib import Path
+from typing import Optional
 
 import gin
 from loop_rate_limiters import RateLimiter
@@ -67,7 +68,7 @@ def run(
         rate.sleep()
 
 
-def read_gin_configuration(args.config: Optional[str]):
+def read_gin_configuration(cli_config: Optional[str]):
     config_dir = Path(__file__).parent / "config"
 
     default_config = config_dir / "default.gin"
@@ -82,8 +83,8 @@ def read_gin_configuration(args.config: Optional[str]):
     if local_config.exists():
         gin.parse_config_file(local_config)
 
-    if args.config is not None:
-        gin.parse_config_file(config_dir / f"{args.config}.gin")
+    if cli_config is not None:
+        gin.parse_config_file(config_dir / f"{cli_config}.gin")
 
 
 if __name__ == "__main__":
