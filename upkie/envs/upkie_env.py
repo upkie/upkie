@@ -89,19 +89,6 @@ class UpkieEnv(gym.Env):
         self.init_state = init_state
         self.observation_space = pipeline.observation_space
 
-    def get_env_observation(self, spine_observation):
-        return self.__pipeline.get_env_observation(spine_observation)
-
-    def get_neutral_action(self):
-        return self.__pipeline.get_neutral_action()
-
-    def get_spine_action(self, env_action):
-        return self.__pipeline.get_spine_action(env_action)
-
-    @property
-    def model(self) -> Model:
-        return self.__pipeline.model
-
     @property
     def dt(self) -> Optional[float]:
         """!
@@ -117,6 +104,19 @@ class UpkieEnv(gym.Env):
         no loop frequency regulation.
         """
         return self.__frequency
+
+    def get_env_observation(self, spine_observation):
+        return self.__pipeline.get_env_observation(spine_observation)
+
+    def get_neutral_action(self):
+        return self.__pipeline.get_neutral_action()
+
+    def get_spine_action(self, env_action):
+        return self.__pipeline.get_spine_action(env_action)
+
+    @property
+    def model(self) -> Model:
+        return self.__pipeline.model
 
     def reset(
         self,

@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - cpp: Add documentation to the moteus actuation interface
 - cpp: Controller pipeline run by the spine after observers
 - envs: Add `Upkie-Servos-Mock` environment
+- envs: Add internal `pipelines` submodule for spine pipelines
 - utils: Joystick utility class
 
 ### Changed
