@@ -55,29 +55,30 @@ with gym.make("UpkieGroundVelocity", frequency=200.0) as env:
             observation, _ = env.reset()
 ```
 
-The Python code is the same whether we run in simulation or on a real Upkie. Head over to the [examples](https://github.com/upkie/upkie/tree/main/examples) directory for more use cases.
+Other Gymnasium environments provide various levels of absraction to control the robot. They are listed in the [Gym environments](https://upkie.github.io/upkie/gym-environments.html) page of the documentation.
 
-## Gymnasium environments
+## Examples
 
-Upkie has environments compatible with the Gymnasium API:
+There are other examples in the [examples](https://github.com/upkie/upkie/tree/main/examples), for instance:
 
-- `UpkieGroundVelocity`: keep legs straight and balance with the wheels.
-- `UpkieServos`: control joint servos directly with torque feedforward and position-velocity feedback.
-
-The documentation has a [list of all available environments](https://upkie.github.io/upkie/gym-environments.html).
+- Domain randomization: shows how to add domain-randomization wrappers to an Upkie environment.
+- Lying genuflection: genuflect while lying on a horizontal floor.
+- Neutral configuration: reset smoothly to the neutral (straight legs) configuration.
+- PD balancer: balance by proportional-derivative feedback to wheel velocities.
+- Torque balancer: balance by proportional control from base pitch to wheel torques.
 
 ## Agents
 
-Larger Upkie agents have their own repositories:
+There are other Upkie agents coming with their own repositories:
 
 - [MPC balancer](https://github.com/upkie/mpc_balancer): balance in place using model predictive control.
 - [Pink balancer](https://github.com/upkie/pink_balancer): a more advanced agent that can crouch and stand up while balancing.
 - [PPO balancer](https://github.com/upkie/ppo_balancer): balance in place with a policy trained by reinforcement learning.
-- [PID balancer](https://github.com/upkie/pid_balancer): legacy agent used to test new Upkies with minimal dependencies.
+- [PID balancer](https://github.com/stephane-caron/upkie_pid_balancer): legacy agent used to test new Upkies with minimal dependencies.
 
-Head over to the [new\_agent](https://github.com/upkie/new_agent) template to create your own, and feel free to open a PR here to add your agent to the list.
+If you make your own, feel free to open a PR to link it from here. There is a [new\_agent](https://github.com/upkie/new_agent) template to get started.
 
-## How can I participate?
+## Contributing
 
 Contributions are welcome to both the hardware and software of Upkies! If you are a developer/maker with some robotics experience looking to hack on open source, check out the [contribution guidelines](CONTRIBUTING.md). On the software side, you can also report any bug you encounter in the [issue tracker](https://github.com/upkie/upkie/issues).
 
