@@ -66,6 +66,9 @@ class UpkieServosMock(UpkieServos):
                 "angular_velocity": [-2e-3, 3e2, 1e-8],
                 "linear_velocity": [1e3, 2e2, 3e1],
             },
+            "floor_contact": {
+                "contact": True,
+            },
             "imu": {
                 "orientation": [1.0, 0.0, 0.0, 0.0],
                 "angular_velocity": [0.0, 0.0, 0.0],
