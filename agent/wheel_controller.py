@@ -19,28 +19,43 @@ from .remote_control import RemoteControl
 
 @gin.configurable
 class WheelController:
-    """Base class for wheel balancers.
-
-    Attributes:
-        sagittal_balancer: Internal controller for sagittal balance.
-        target_ground_velocity: Target ground sagittal velocity in [m] / [s].
-        target_yaw_velocity: Target yaw velocity in [rad] / [s].
-        turning_deadband: Joystick axis value between 0.0 and 1.0 below which
-            legs stiffen but the turning motion doesn't start.
-        turning_probability: Probability that the user wants to turn based on
-            the joystick axis value.
-        turning_decision_time: Minimum duration in [s] for the turning
-            probability to switch from zero to one and converesly.
-        wheel_radius: Wheel radius in [m].
+    r"""!
+    Base class for wheel balancers.
     """
 
+    ## \var left_wheeled
+    ## Set to True if the robot is left wheeled, that is, a positive turn of the
+    ## left wheel results in forward motion. Set to False for a right-wheeled variant.
     left_wheeled: bool
+
+    ## \var sagittal_balancer
+    ## Internal controller for sagittal balance.
     sagittal_balancer: MPCBalancer
+
+    ## \var target_ground_velocity
+    ## Target ground sagittal velocity in [m] / [s].
     target_ground_velocity: float
+
+    ## \var target_yaw_velocity
+    ## Target yaw velocity in [rad] / [s].
     target_yaw_velocity: float
+
+    ## \var turning_deadband
+    ## Joystick axis value between 0.0 and 1.0 below which legs stiffen but the
+    ## turning motion doesn't start.
     turning_deadband: float
+
+    ## \var turning_decision_time
+    ## Minimum duration in [s] for the turning probability to switch from zero to
+    ## one and conversely.
     turning_decision_time: float
+
+    ## \var turning_probability
+    ## Probability that the user wants to turn based on the joystick axis value.
     turning_probability: float
+
+    ## \var wheel_radius
+    ## Wheel radius in [m].
     wheel_radius: float
 
     def __init__(
@@ -53,20 +68,20 @@ class WheelController:
         turning_decision_time: float,
         wheel_radius: float,
     ):
-        """Initialize balancer.
+        r"""!
+        Initialize balancer.
 
-        Args:
-            fall_pitch: Fall pitch threshold, in radians.
-            left_wheeled: Set to True (default) if the robot is left wheeled,
-                that is, a positive turn of the left wheel results in forward
-                motion. Set to False for a right-wheeled variant.
-            turning_deadband: Joystick axis value between 0.0 and 1.0 below
-                which legs stiffen but the turning motion doesn't start.
-            turning_decision_time: Minimum duration in [s] for the turning
-                probability to switch from zero to one and converesly.
-            wheel_radius: Wheel radius in [m].
-            max_ground_accel: Maximum commanded ground acceleration.
-            max_ground_velocity: Maximum commanded ground velocity.
+        \param fall_pitch Fall pitch threshold, in radians.
+        \param left_wheeled Set to True (default) if the robot is left wheeled,
+            that is, a positive turn of the left wheel results in forward
+            motion. Set to False for a right-wheeled variant.
+        \param turning_deadband Joystick axis value between 0.0 and 1.0 below
+            which legs stiffen but the turning motion doesn't start.
+        \param turning_decision_time Minimum duration in [s] for the turning
+            probability to switch from zero to one and converesly.
+        \param wheel_radius Wheel radius in [m].
+        \param max_ground_accel Maximum commanded ground acceleration.
+        \param max_ground_velocity Maximum commanded ground velocity.
         """
         assert 0.0 <= turning_deadband <= 1.0
         sagittal_balancer = MPCBalancer(
@@ -85,10 +100,10 @@ class WheelController:
         self.wheel_radius = wheel_radius
 
     def log(self) -> dict:
-        """Log internal state to a dictionary.
+        r"""!
+        Log internal state to a dictionary.
 
-        Returns:
-            Log data as a dictionary.
+        \return Log data as a dictionary.
         """
         return {
             "commanded_velocity": self.sagittal_balancer.commanded_velocity,
@@ -97,14 +112,12 @@ class WheelController:
         }
 
     def cycle(self, observation: dict, dt: float) -> dict:
-        """Compute a new ground velocity.
+        r"""!
+        Compute a new ground velocity.
 
-        Args:
-            observation: Latest observation.
-            dt: Time in [s] until next cycle.
-
-        Returns:
-            New ground velocity, in [m] / [s].
+        \param observation Latest observation.
+        \param dt Time in [s] until next cycle.
+        \return New ground velocity, in [m] / [s].
         """
         self.update_target_ground_velocity(observation, dt)
         self.update_target_yaw_velocity(observation, dt)
@@ -142,14 +155,13 @@ class WheelController:
     def update_target_ground_velocity(
         self, observation: dict, dt: float
     ) -> None:
-        """Update target ground velocity from joystick input.
+        r"""!
+        Update target ground velocity from joystick input.
 
-        Args:
-            observation: Latest observation.
-            dt: Time in [s] until next cycle.
+        \param observation Latest observation.
+        \param dt Time in [s] until next cycle.
 
-        Note:
-            The target ground velocity is commanded by both the left axis and
+        \note The target ground velocity is commanded by both the left axis and
             right trigger of the joystick. When the right trigger is unpressed,
             the commanded velocity is set from the left axis, interpolating
             from 0 to 50% of its maximum configured value. Pressing the right
@@ -173,11 +185,11 @@ class WheelController:
         )
 
     def update_target_yaw_velocity(self, observation: dict, dt: float) -> None:
-        """Update target yaw velocity from joystick input.
+        r"""!
+        Update target yaw velocity from joystick input.
 
-        Args:
-            observation: Latest observation.
-            dt: Time in [s] until next cycle.
+        \param observation Latest observation.
+        \param dt Time in [s] until next cycle.
         """
         try:
             joystick_value = observation["joystick"]["right_axis"][0]

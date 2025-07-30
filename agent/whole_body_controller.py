@@ -6,6 +6,7 @@
 # Copyright 2023-2024 Inria
 
 import gin
+
 from upkie.utils.clamp import clamp
 
 from .height_controller import HeightController
@@ -14,28 +15,30 @@ from .wheel_controller import WheelController
 
 @gin.configurable
 class WholeBodyController:
-    """Coordinate leg inverse kinematics and wheel balancing.
-
-    Attributes:
-        gain_scale: PD gain scale for hip and knee joints.
-        turning_gain_scale: Additional gain scale added when the robot is
-            turning to keep the legs stiff while the ground pulls them apart.
+    r"""!
+    Coordinate leg inverse kinematics and wheel balancing.
     """
 
+    ## \var gain_scale
+    ## PD gain scale for hip and knee joints.
     gain_scale: float
+
+    ## \var turning_gain_scale
+    ## Additional gain scale added when the robot is turning to keep the legs
+    ## stiff while the ground pulls them apart.
     turning_gain_scale: float
 
     def __init__(
         self, gain_scale: float, turning_gain_scale: float, visualize: bool
     ):
-        """Create controller.
+        r"""!
+        Create controller.
 
-        Args:
-            gain_scale: PD gain scale for hip and knee joints.
-            turning_gain_scale: Additional gain scale added when the robot
-                is turning to keep the legs stiff in spite of the ground
-                pulling them apart.
-            visualize: If true, open a MeshCat visualizer on the side.
+        \param gain_scale PD gain scale for hip and knee joints.
+        \param turning_gain_scale Additional gain scale added when the robot
+            is turning to keep the legs stiff in spite of the ground
+            pulling them apart.
+        \param visualize If true, open a MeshCat visualizer on the side.
         """
         self.gain_scale = clamp(gain_scale, 0.1, 2.0)
         self.height_controller = HeightController(visualize=visualize)
@@ -43,14 +46,12 @@ class WholeBodyController:
         self.wheel_controller = WheelController()
 
     def cycle(self, observation: dict, dt: float) -> dict:
-        """Compute action for a new cycle.
+        r"""!
+        Compute action for a new cycle.
 
-        Args:
-            observation: Latest observation.
-            dt: Duration in seconds until next cycle.
-
-        Returns:
-            Dictionary with the new action and some logging.
+        \param observation Latest observation.
+        \param dt Duration in seconds until next cycle.
+        \return Dictionary with the new action and some logging.
         """
         leg_action = self.height_controller.cycle(observation, dt)
         wheel_action = self.wheel_controller.cycle(observation, dt)
