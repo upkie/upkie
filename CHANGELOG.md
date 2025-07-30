@@ -9,8 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- agent: Add `start_agent.sh` script to the repository
 - agent: Import default agent from the Pink balancer
-- Development workflow based on Pixi
 - control: Create `upkie.control` submodule
 - control: Import MPC balancer class from the Pink balancer
 - cpp: Controller pipeline run by the spine after observers
