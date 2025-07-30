@@ -4,34 +4,34 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Inria
 
-"""Test UpkieGroundVelocity."""
+"""Test Pendulum wrapper."""
 
 import unittest
 from multiprocessing.shared_memory import SharedMemory
 
 import numpy as np
 
-from upkie.envs import UpkieSpineServos
+from upkie.envs.upkie_spine_env import UpkieSpineEnv
 from upkie.envs.tests.mock_spine import MockSpine
 from upkie.envs.wrappers.pendulum import Pendulum
 
 
-class TestUpkieGroundVelocity(unittest.TestCase):
+class PendulumTestCase(unittest.TestCase):
     def setUp(self):
         shared_memory = SharedMemory(name=None, size=42, create=True)
-        servos_env = UpkieSpineServos(
+        servos_env = UpkieSpineEnv(
             frequency=100.0,
             shm_name=shared_memory._name,
         )
         servos_env._spine = MockSpine()
-        ground_velocity_env = Pendulum(
+        pendulum = Pendulum(
             servos_env,
             fall_pitch=1.0,
             max_ground_velocity=1.0,
         )
         shared_memory.close()
         self.servos_env = servos_env
-        self.env = ground_velocity_env
+        self.env = pendulum
 
     def test_reset(self):
         observation, info = self.env.reset()

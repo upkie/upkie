@@ -14,7 +14,7 @@ import gymnasium as gym
 import upkie.envs
 
 
-class TestUpkieEnvs(unittest.TestCase):
+class UpkieEnvsTestCase(unittest.TestCase):
     def test_registration(self):
         with self.assertRaises(gym.error.NameNotFound):
             # runs in the same test so that we make sure this is executed
@@ -31,9 +31,7 @@ class TestUpkieEnvs(unittest.TestCase):
             if env_id in ("register", "UpkieEnv"):
                 continue
             kwargs = {}
-            if env_id.startswith("Upkie") and (
-                "Spine" in env_id or "Ground" in env_id
-            ):
+            if env_id.startswith("Upkie") and "Spine" in env_id:
                 kwargs["shm_name"] = shared_memory._name
             gym.make(env_id, **kwargs)
         shared_memory.close()

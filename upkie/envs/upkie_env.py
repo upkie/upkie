@@ -12,6 +12,7 @@ from loop_rate_limiters import RateLimiter
 
 from upkie.envs.pipelines import Pipeline, ServoPipeline
 from upkie.exceptions import UpkieException
+from upkie.model import Model
 from upkie.utils.robot_state import RobotState
 
 
@@ -96,6 +97,10 @@ class UpkieEnv(gym.Env):
 
     def get_spine_action(self, env_action):
         return self.__pipeline.get_spine_action(env_action)
+
+    @property
+    def model(self) -> Model:
+        return self.__pipeline.model
 
     @property
     def dt(self) -> Optional[float]:

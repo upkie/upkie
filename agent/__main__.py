@@ -15,7 +15,6 @@ import gymnasium as gym
 
 import upkie.config
 import upkie.envs
-from upkie.model import Model
 from upkie.utils.clamp import clamp
 from upkie.utils.raspi import configure_agent_process, on_raspi
 from upkie.utils.spdlog import logging
@@ -94,9 +93,9 @@ def run(
             turning_prob = wheel_controller.turning_probability
             kp_scale = gain_scale + turning_gain_scale * turning_prob
             kd_scale = gain_scale + turning_gain_scale * turning_prob
-            for joint_name in Model.UPPER_LEG_JOINT_NAMES:
-                action[joint_name]["kp_scale"] = kp_scale
-                action[joint_name]["kd_scale"] = kd_scale
+            for joint in env.unwrapped.model.upper_leg_joints:
+                action[joint.name]["kp_scale"] = kp_scale
+                action[joint.name]["kd_scale"] = kd_scale
 
             _, _, terminated, truncated, info = env.step(action)
             spine_observation = info["spine_observation"]

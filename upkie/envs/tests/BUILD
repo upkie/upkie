@@ -21,17 +21,8 @@ py_test(
 )
 
 py_test(
-    name = "upkie_servos_spine_test",
-    srcs = ["upkie_servos_spine_test.py"],
-    deps = [
-        "//upkie/envs",
-        ":mock_spine",
-    ],
-)
-
-py_test(
-    name = "upkie_ground_velocity_test",
-    srcs = ["upkie_ground_velocity_test.py"],
+    name = "upkie_spine_env_test",
+    srcs = ["upkie_spine_env_test.py"],
     deps = [
         "//upkie/envs",
         ":mock_spine",

@@ -57,6 +57,15 @@ py_test(
 )
 
 py_test(
+    name = "pendulum_test",
+    srcs = ["pendulum_test.py"],
+    deps = [
+        "//upkie/envs",
+        "//upkie/envs/tests:mock_spine",
+    ],
+)
+
+py_test(
     name = "random_push_test",
     srcs = ["random_push_test.py"],
     deps = [

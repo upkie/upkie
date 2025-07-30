@@ -11,7 +11,7 @@ from multiprocessing.shared_memory import SharedMemory
 
 import numpy as np
 
-from upkie.envs import UpkieSpineServos
+from upkie.envs.upkie_spine_env import UpkieSpineEnv
 from upkie.envs.tests.mock_spine import MockSpine
 from upkie.envs.wrappers.pendulum import Pendulum
 from upkie.envs.wrappers.random_push import RandomPush
@@ -21,7 +21,7 @@ from upkie.envs.wrappers.tests.envs import ConstantObservationEnv
 class RandomPushTestCase(unittest.TestCase):
     def setUp(self):
         shared_memory = SharedMemory(name=None, size=42, create=True)
-        servos_env = UpkieSpineServos(
+        servos_env = UpkieSpineEnv(
             frequency=100.0,
             shm_name=shared_memory._name,
         )

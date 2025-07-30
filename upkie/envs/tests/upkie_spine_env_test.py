@@ -12,13 +12,13 @@ from multiprocessing.shared_memory import SharedMemory
 import numpy as np
 
 from upkie.envs.tests.mock_spine import MockSpine
-from upkie.envs.upkie_spine_servos import UpkieSpineServos
+from upkie.envs.upkie_spine_env import UpkieSpineEnv
 
 
-class TestUpkieSpineServos(unittest.TestCase):
+class UpkieSpineEnvTestCase(unittest.TestCase):
     def setUp(self):
         shared_memory = SharedMemory(name=None, size=42, create=True)
-        self.env = UpkieSpineServos(
+        self.env = UpkieSpineEnv(
             frequency=100.0,
             shm_name=shared_memory._name,
         )

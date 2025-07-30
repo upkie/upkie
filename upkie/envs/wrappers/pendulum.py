@@ -165,7 +165,7 @@ class Pendulum(gym.Wrapper):
         self.left_wheeled = left_wheeled
         self.wheel_radius = wheel_radius
 
-    def __get_observation(self, spine_observation: dict) -> np.ndarray:
+    def __get_env_observation(self, spine_observation: dict) -> np.ndarray:
         r"""!
         Extract environment observation from spine observation dictionary.
 
@@ -208,7 +208,7 @@ class Pendulum(gym.Wrapper):
         for joint in self.env.model.upper_leg_joints:
             position = spine_observation["servo"][joint.name]["position"]
             self.__leg_servo_action[joint.name]["position"] = position
-        observation = self.get_env_observation(spine_observation)
+        observation = self.__get_env_observation(spine_observation)
         return observation, info
 
     def __get_leg_servo_action(self) -> Dict[str, Dict[str, float]]:
@@ -252,7 +252,7 @@ class Pendulum(gym.Wrapper):
             servo_action[joint.name]["maximum_torque"] = joint.limit.effort
         return servo_action
 
-    def __get_servo_action(self, action: np.ndarray) -> Dict[str, dict]:
+    def __get_spine_action(self, action: np.ndarray) -> Dict[str, dict]:
         r"""!
         Convert environment action to a spine action dictionary.
 
@@ -318,10 +318,10 @@ class Pendulum(gym.Wrapper):
             - `info`: Dictionary with additional information, reporting in
               particular the full observation dictionary coming from the spine.
         """
-        servo_action = self.__get_servo_action(action)
-        _, reward, terminated, truncated, info = self.env.step(servo_action)
+        spine_action = self.__get_spine_action(action)
+        _, reward, terminated, truncated, info = self.env.step(spine_action)
         spine_observation = info["spine_observation"]
-        observation = self.get_env_observation(spine_observation)
+        observation = self.__get_env_observation(spine_observation)
         if self.__detect_fall(spine_observation):
             terminated = True
         return observation, reward, terminated, truncated, info

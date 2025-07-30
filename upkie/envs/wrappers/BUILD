@@ -15,10 +15,15 @@ py_library(
         "differentiate_action.py",
         "noisify_action.py",
         "noisify_observation.py",
+        "pendulum.py",
         "random_push.py",
     ],
     deps = [
+        "//upkie/envs:upkie_env",
+        "//upkie/model",
+        "//upkie/utils:clamp",
         "//upkie/utils:filters",
+        "//upkie/utils:spdlog",
         "//upkie:exceptions",
     ],
 )
