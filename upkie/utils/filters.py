@@ -8,8 +8,9 @@
 Basic digital filters.
 """
 
-import numpy as np
 from typing import Tuple, TypeVar
+
+import numpy as np
 
 T = TypeVar("T", float, np.ndarray)
 

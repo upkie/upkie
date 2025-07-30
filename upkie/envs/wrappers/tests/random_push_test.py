@@ -12,8 +12,8 @@ from multiprocessing.shared_memory import SharedMemory
 import numpy as np
 
 from upkie.envs import UpkieServosSpine
-from upkie.envs.upkie_ground_velocity import UpkieGroundVelocity
 from upkie.envs.tests.mock_spine import MockSpine
+from upkie.envs.upkie_ground_velocity import UpkieGroundVelocity
 from upkie.envs.wrappers.random_push import RandomPush
 from upkie.envs.wrappers.tests.envs import ConstantObservationEnv
 
