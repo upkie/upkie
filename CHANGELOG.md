@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Breaking:** Rename `UpkieServos` to `Upkie-Servos-Spine`
 - Clean up Python cache directories upon `make clean`
+- Move coverage and lint rules from the Makefile to Pixi tasks
 - cpp: Limit rate of SynchronousClock skip warnings and report frequency drop
 - envs: Drop Gymnasium environment versioning
 - spines: Factor common observers and sensors between spines

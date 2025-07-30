@@ -85,14 +85,6 @@ upload: check_upkie_name build set_date  ## upload built targets to the Raspberr
 # REMOTE TARGETS
 # ==============
 
-check_mamba_setup:
-	@ if [ -z "${MAMBA_ROOT_PREFIX}" ]; then \
-        echo "ERROR: Either MAMBA_EXE or MAMBA_ROOT_PREFIX is not set."; \
-        echo "Is Micromamba installed?"; \
-        echo "See https://mamba.readthedocs.io/en/latest/installation/micromamba-installation.html"; \
-        exit 1; \
-	fi
-
 run_agent:  ### run agent
 	@if [ -f $(CURDIR)/activate.sh ]; then \
 		echo "Running agent from packed environment..."; \
@@ -115,21 +107,3 @@ unpack_pixi_env:  ### unpack Python environment
 		echo "See https://github.com/Quantco/pixi-pack?tab=readme-ov-file#-installation"; \
 		exit 1; \
 	}
-
-# DEV HELPERS
-# ===========
-
-.PHONY: coverage
-coverage:  ## check unit test coverage and open the resulting HTML report
-	$(BAZEL) coverage --combined_report=lcov --compilation_mode=fastbuild --instrument_test_targets //...
-	@if [ -z "$(shell which genhtml)" ]; then\
-		echo "ERROR: genhtml not found, is lcov installed?"; \
-	else \
-		genhtml $(COVERAGE_DIR)/_coverage_report.dat -o $(COVERAGE_DIR); \
-		xdg-open $(COVERAGE_DIR)/index.html; \
-	fi
-
-.PHONY: lint
-lint:  ## lint code in the repository
-	$(BAZEL) test --config lint //...
-	ruff check $(CURDIR)/upkie
