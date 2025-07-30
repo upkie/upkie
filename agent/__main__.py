@@ -7,15 +7,14 @@
 
 import argparse
 import socket
-import traceback
 from pathlib import Path
 from typing import Optional
 
 import gin
-from loop_rate_limiters import RateLimiter
+import gymnasium as gym
 
 import upkie.config
-from upkie.spine import SpineInterface
+import upkie.envs
 from upkie.utils.clamp import clamp
 from upkie.utils.raspi import configure_agent_process, on_raspi
 from upkie.utils.spdlog import logging
@@ -49,7 +48,6 @@ def parse_command_line_arguments() -> argparse.Namespace:
 
 @gin.configurable
 def run(
-    spine: SpineInterface,
     spine_config: dict,
     gain_scale: float,
     turning_gain_scale: float,
@@ -57,44 +55,52 @@ def run(
     frequency: float = 200.0,
 ) -> None:
     r"""!
-    Read observations and send actions to the spine.
+    Run agent using the Upkie-Servos-Spine environment.
 
-    \param spine Interface to the spine.
     \param spine_config Spine configuration dictionary.
     \param gain_scale PD gain scale for hip and knee joints.
     \param turning_gain_scale Additional gain scaling applied when turning.
     \param visualize If true, open a MeshCat visualizer on the side.
     \param frequency Control frequency in Hz.
     """
+    upkie.envs.register()
+
     gain_scale = clamp(gain_scale, 0.1, 2.0)
     height_controller = HeightController(visualize=visualize)
     wheel_controller = WheelController()
 
     dt = 1.0 / frequency
-    rate = RateLimiter(frequency, "controller")
-    observation = spine.start(spine_config)
 
-    while True:
-        leg_action = height_controller.cycle(observation, dt)
-        wheel_action = wheel_controller.cycle(observation, dt)
-        servo_action = {
-            "left_hip": leg_action["servo"]["left_hip"],
-            "left_knee": leg_action["servo"]["left_knee"],
-            "left_wheel": wheel_action["servo"]["left_wheel"],
-            "right_hip": leg_action["servo"]["right_hip"],
-            "right_knee": leg_action["servo"]["right_knee"],
-            "right_wheel": wheel_action["servo"]["right_wheel"],
-        }
-        turning_prob = wheel_controller.turning_probability
-        kp_scale = gain_scale + turning_gain_scale * turning_prob
-        kd_scale = gain_scale + turning_gain_scale * turning_prob
-        for joint_name in ["left_hip", "left_knee", "right_hip", "right_knee"]:
-            servo_action[joint_name]["kp_scale"] = kp_scale
-            servo_action[joint_name]["kd_scale"] = kd_scale
+    with gym.make(
+        "Upkie-Servos-Spine", frequency=frequency, spine_config=spine_config
+    ) as env:
+        _, info = env.reset()
+        spine_observation = info["spine_observation"]
 
-        action = {"servo": servo_action}
-        observation = spine.set_action(action)
-        rate.sleep()
+        while True:
+            leg_action = height_controller.cycle(spine_observation, dt)
+            wheel_action = wheel_controller.cycle(spine_observation, dt)
+            action = {
+                "left_hip": leg_action["servo"]["left_hip"],
+                "left_knee": leg_action["servo"]["left_knee"],
+                "left_wheel": wheel_action["servo"]["left_wheel"],
+                "right_hip": leg_action["servo"]["right_hip"],
+                "right_knee": leg_action["servo"]["right_knee"],
+                "right_wheel": wheel_action["servo"]["right_wheel"],
+            }
+            turning_prob = wheel_controller.turning_probability
+            kp_scale = gain_scale + turning_gain_scale * turning_prob
+            kd_scale = gain_scale + turning_gain_scale * turning_prob
+            for joint in env.unwrapped.model.upper_leg_joints:
+                action[joint.name]["kp_scale"] = kp_scale
+                action[joint.name]["kd_scale"] = kd_scale
+
+            _, _, terminated, truncated, info = env.step(action)
+            spine_observation = info["spine_observation"]
+
+            if terminated or truncated:
+                _, info = env.reset()
+                spine_observation = info["spine_observation"]
 
 
 def read_gin_configuration(cli_config: Optional[str]):
@@ -124,7 +130,6 @@ if __name__ == "__main__":
     if on_raspi():
         configure_agent_process()
 
-    spine = SpineInterface(retries=10)
     spine_config = upkie.config.SPINE_CONFIG.copy()
     # spine_config["base_orientation"] = {
     #     "rotation_base_to_imu": np.array(
@@ -162,20 +167,6 @@ if __name__ == "__main__":
     logging.info(f"Additional spine config:\n\n{spine_config}\n\n")
 
     try:
-        run(spine, spine_config, visualize=args.visualize)
+        run(spine_config, visualize=args.visualize)
     except KeyboardInterrupt:
-        logging.info("Caught a keyboard interrupt")
-    except Exception:
-        logging.error("Controller raised an exception")
-        print("")
-        traceback.print_exc()
-        print("")
-
-    logging.info("Stopping the spine...")
-    try:
-        spine.stop()
-    except Exception:
-        logging.error("Error while stopping the spine!")
-        print("")
-        traceback.print_exc()
-        print("")
+        logging.info("Terminating in response to keyboard interrupt")
