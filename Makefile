@@ -93,12 +93,14 @@ check_mamba_setup:
         exit 1; \
 	fi
 
-unpack_pixi_env:  ### unpack Python environment
-	@pixi-unpack environment.tar -e upkie -o ${MAMBA_ROOT_PREFIX}/envs || { \
-		echo "Error: pixi-pack not found"; \
-		echo "See https://github.com/Quantco/pixi-pack?tab=readme-ov-file#-installation"; \
-		exit 1; \
-	}
+run_agent:  ### run agent
+	@if [ -f $(CURDIR)/activate.sh ]; then \
+		echo "Running agent from packed environment..."; \
+		. $(CURDIR)/activate.sh && python agent/main.py; \
+	else \
+		echo "Running agent directly..."; \
+		python agent/main.py; \
+	fi
 
 run_mock_spine:  ### run the mock spine on the Raspberry Pi
 	$(RASPUNZEL) run -s //spines:mock_spine
