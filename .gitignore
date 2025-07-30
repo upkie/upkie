@@ -1,10 +1,12 @@
 *.egg-info
 .pixi
 __pycache__
+activate.sh
 bazel-*
 cache/
 dist/
 docs/html/
+env/
 environment.tar
 tools/bazel
 tools/logs/*.mpack
