@@ -11,9 +11,10 @@ import pybullet
 import pybullet_data
 import upkie_description
 
-from upkie.config import SPINE_CONFIG
+from upkie.config import BULLET_CONFIG
 from upkie.envs.pipelines import Pipeline
 from upkie.model import Model
+from upkie.utils.nested_update import nested_update
 from upkie.utils.robot_state import RobotState
 
 from .upkie_env import UpkieEnv
