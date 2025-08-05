@@ -223,7 +223,6 @@ class UpkiePyBulletEnv(UpkieEnv):
                     kd_scale,
                     maximum_torque,
                 )
-                print(f"{joint_name=}, {joint_torque=}, {joint_idx=}")
                 pybullet.setJointMotorControl2(
                     self._robot_id,
                     joint_idx,
