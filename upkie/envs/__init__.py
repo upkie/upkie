@@ -34,6 +34,14 @@ def register() -> None:
         id="Upkie-Spine-Servos",
         entry_point="upkie.envs.upkie_spine_env:UpkieSpineEnv",
     )
+    gym.envs.registration.register(
+        id="Upkie-PyBullet-Pendulum",
+        entry_point=("upkie.envs.entry_points:wrap_pybullet_pendulum"),
+    )
+    gym.envs.registration.register(
+        id="Upkie-PyBullet-Servos",
+        entry_point="upkie.envs.upkie_pybullet_env:UpkiePyBulletEnv",
+    )
 
 
 __all__ = [

@@ -8,6 +8,7 @@ from upkie.envs.pipelines import ServoPipeline
 from upkie.envs.wrappers import Pendulum
 
 from .upkie_mock_env import UpkieMockEnv
+from .upkie_pybullet_env import UpkiePyBulletEnv
 from .upkie_spine_env import UpkieSpineEnv
 
 
@@ -42,7 +43,7 @@ def wrap_pendulum(EnvClass, **kwargs):
         if key not in pendulum_keys and key not in servo_keys
     }
     servo_pipeline = ServoPipeline(**servo_kwargs)
-    env = EnvClass(servo_pipeline, **env_kwargs)
+    env = EnvClass(pipeline=servo_pipeline, **env_kwargs)
     return Pendulum(env, **pendulum_kwargs)
 
 
@@ -52,3 +53,7 @@ def wrap_mock_pendulum(**kwargs):
 
 def wrap_spine_pendulum(**kwargs):
     return wrap_pendulum(UpkieSpineEnv, **kwargs)
+
+
+def wrap_pybullet_pendulum(**kwargs):
+    return wrap_pendulum(UpkiePyBulletEnv, **kwargs)
