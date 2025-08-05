@@ -4,21 +4,12 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Inria
 
+from .bullet_config import BULLET_CONFIG
+
 ## \var SPINE_CONFIG
 ## Spine configuration dictionary used as defaults by Gymnasium environments.
 SPINE_CONFIG = {
-    "bullet": {
-        "follower_camera": False,
-        "gui": True,
-        "reset": {
-            "orientation_base_in_world": [1.0, 0.0, 0.0, 0.0],
-            "position_base_in_world": [0.0, 0.0, 0.6],
-        },
-        "torque_control": {
-            "kp": 20.0,
-            "kd": 1.0,
-        },
-    },
+    "bullet": BULLET_CONFIG,
     "floor_contact": {
         "upper_leg_torque_threshold": 10.0,
     },
