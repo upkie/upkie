@@ -48,12 +48,12 @@ inline void read_imu_data(ImuData& imu_data, b3RobotSimulatorClientAPI& bullet,
       rotation_world_to_ars * rotation_imu_to_world;
   Eigen::Quaterniond orientation_imu_in_ars(rotation_imu_to_ars);
 
+  // Extract velocities
   Eigen::Vector3d linear_velocity_imu_in_world = {
       link_state.m_worldLinearVelocity[0],
       link_state.m_worldLinearVelocity[1],
       link_state.m_worldLinearVelocity[2],
   };
-
   Eigen::Vector3d angular_velocity_imu_to_world_in_world = {
       link_state.m_worldAngularVelocity[0],
       link_state.m_worldAngularVelocity[1],

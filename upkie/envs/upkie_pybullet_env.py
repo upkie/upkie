@@ -18,11 +18,14 @@ except ModuleNotFoundError:
 
 from upkie.config import BULLET_CONFIG
 from upkie.envs.pipelines import Pipeline
-from upkie.exceptions import MissingOptionalDependency
+from upkie.exceptions import MissingOptionalDependency, UpkieRuntimeError
 from upkie.model import Model
 from upkie.utils.nested_update import nested_update
 from upkie.utils.robot_state import RobotState
-from upkie.utils.rotations import rotation_matrix_from_quaternion
+from upkie.utils.rotations import (
+    quaternion_from_rotation_matrix,
+    rotation_matrix_from_quaternion,
+)
 
 from .upkie_env import UpkieEnv
 
@@ -109,8 +112,9 @@ class UpkiePyBulletEnv(UpkieEnv):
             baseOrientation=[0, 0, 0, 1],
         )
 
-        # Build joint index mapping
+        # Build joint index mapping and find IMU link
         self._joint_indices = {}
+        self._imu_link_index = -1
         for bullet_idx in range(pybullet.getNumJoints(self._robot_id)):
             joint_info = pybullet.getJointInfo(self._robot_id, bullet_idx)
             joint_name = joint_info[1].decode("utf-8")
@@ -123,6 +127,16 @@ class UpkiePyBulletEnv(UpkieEnv):
                     pybullet.VELOCITY_CONTROL,
                     force=0,
                 )
+
+            link_name = joint_info[12].decode("utf-8")
+            if link_name == "imu":
+                self._imu_link_index = bullet_idx
+
+        if self._imu_link_index < 0:
+            raise UpkieRuntimeError("Robot does not have a link named 'imu'")
+
+        # Initialize previous IMU velocity for acceleration computation
+        self.__previous_imu_linear_velocity = np.zeros(3)
 
         if gui:  # Enable GUI if it is request
             pybullet.configureDebugVisualizer(pybullet.COV_ENABLE_RENDERING, 1)
@@ -272,30 +286,30 @@ class UpkiePyBulletEnv(UpkieEnv):
     def _get_spine_observation(self) -> dict:
         """Get observation in spine format from PyBullet simulation."""
         base_orientation = self.__get_base_orientation_observation()
+        imu = self.__get_imu_observation()
         floor_contact = self.__get_floor_contact_observation()
         servo_obs = self.__get_servo_observations()
         wheel_odometry = self.__get_wheel_odometry_observation(servo_obs)
+
         return {
-            "base_orientation": base_orientation["base_orientation"],
+            "base_orientation": base_orientation,
             "floor_contact": floor_contact,
-            "imu": base_orientation["imu"],
+            "imu": imu,
             "servo": servo_obs,
             "wheel_odometry": wheel_odometry,
         }
 
     def __get_base_orientation_observation(self) -> dict:
-        """Get base orientation and IMU observations from PyBullet."""
         # Get base state
-        (
-            position_base_in_world,
-            bullet_quat_base_in_world,
-        ) = pybullet.getBasePositionAndOrientation(self._robot_id)
+        position_base_in_world, bullet_quat_base_in_world = (
+            pybullet.getBasePositionAndOrientation(self._robot_id)
+        )
         (
             linear_velocity_base_to_world_in_world,
             angular_velocity_base_to_world_in_world,
         ) = pybullet.getBaseVelocity(self._robot_id)
 
-        # Convert quaternion from Bullet format
+        # Convert quaternion from Bullet format [x,y,z,w] to [w,x,y,z]
         quat_base_to_world = [
             bullet_quat_base_in_world[3],  # w
             bullet_quat_base_in_world[0],  # x
@@ -307,7 +321,7 @@ class UpkiePyBulletEnv(UpkieEnv):
         qw, qx, qy, qz = quat_base_to_world
         pitch = np.arcsin(2 * (qw * qy - qz * qx))
 
-        # Calculate the body (not spatial) angular velocity
+        # Transform angular velocity from world frame to base frame
         rotation_base_to_world = rotation_matrix_from_quaternion(
             quat_base_to_world
         )
@@ -317,22 +331,73 @@ class UpkiePyBulletEnv(UpkieEnv):
         )
 
         return {
-            "base_orientation": {
-                "pitch": pitch,
-                "angular_velocity": list(angular_velocity_base_in_base),
-                "linear_velocity": list(
-                    linear_velocity_base_to_world_in_world
-                ),
-            },
-            "imu": {
-                "orientation": quat_base_to_world,
-                "angular_velocity": list(angular_velocity_base_in_base),
-                "linear_acceleration": [0.0, 0.0, -9.81],  # dummy vector
-            },
+            "pitch": pitch,
+            "angular_velocity": list(angular_velocity_base_in_base),
+            "linear_velocity": list(linear_velocity_base_to_world_in_world),
+        }
+
+    def __get_imu_observation(self) -> dict:
+        link_state = pybullet.getLinkState(
+            self._robot_id,
+            self._imu_link_index,
+            computeLinkVelocity=True,
+            computeForwardKinematics=True,
+        )
+
+        orientation_imu_in_world = np.array(
+            [
+                link_state[5][3],  # w
+                link_state[5][0],  # x
+                link_state[5][1],  # y
+                link_state[5][2],  # z
+            ]
+        )
+
+        # The attitude reference system frame has +x forward, +y right and +z
+        # down, whereas our world frame has +x forward, +y left and +z up:
+        # https://github.com/mjbots/pi3hat/blob/master/docs/reference.md#orientation
+        rotation_world_to_ars = np.diag([1.0, -1.0, -1.0])
+
+        rotation_imu_to_world = rotation_matrix_from_quaternion(
+            orientation_imu_in_world
+        )
+        rotation_imu_to_ars = rotation_world_to_ars @ rotation_imu_to_world
+        quat_imu_in_ars = quaternion_from_rotation_matrix(rotation_imu_to_ars)
+
+        # Extract velocities
+        linear_velocity_imu_in_world = np.array(link_state[6])
+        angular_velocity_imu_to_world_in_world = np.array(link_state[7])
+
+        # Compute linear acceleration in the world frame by discrete
+        # differentiation
+        linear_acceleration_imu_in_world = (
+            linear_velocity_imu_in_world - self.__previous_imu_linear_velocity
+        ) / self.dt
+        self.__previous_imu_linear_velocity = linear_velocity_imu_in_world
+
+        # Transform angular velocity to IMU frame (C++ lines 68-70)
+        rotation_world_to_imu = rotation_imu_to_world.T
+        angular_velocity_imu_in_imu = (
+            rotation_world_to_imu @ angular_velocity_imu_to_world_in_world
+        )
+
+        # Accelerometer readings (before and after filtering)
+        linear_acceleration_imu_in_imu = (
+            rotation_world_to_imu @ linear_acceleration_imu_in_world
+        )
+        gravity_in_world = np.array([0.0, 0.0, -9.81])
+        proper_acceleration_in_imu = rotation_world_to_imu @ (
+            linear_acceleration_imu_in_world - gravity_in_world
+        )
+
+        return {
+            "orientation": list(quat_imu_in_ars),
+            "angular_velocity": list(angular_velocity_imu_in_imu),
+            "linear_acceleration": linear_acceleration_imu_in_imu,
+            "raw_linear_acceleration": list(proper_acceleration_in_imu),
         }
 
     def __get_floor_contact_observation(self) -> dict:
-        """Detect floor contact based on base height."""
         position_base_in_world, _ = pybullet.getBasePositionAndOrientation(
             self._robot_id
         )
@@ -342,7 +407,6 @@ class UpkiePyBulletEnv(UpkieEnv):
         }
 
     def __get_servo_observations(self) -> dict:
-        """Get servo state observations from PyBullet joints."""
         servo_obs = {}
         for joint_name, joint_idx in self._joint_indices.items():
             joint_state = pybullet.getJointState(
@@ -361,7 +425,6 @@ class UpkiePyBulletEnv(UpkieEnv):
         return servo_obs
 
     def __get_wheel_odometry_observation(self, servo_obs: dict) -> dict:
-        """Compute wheel odometry from wheel servo observations."""
         left_wheel_pos = servo_obs["left_wheel"]["position"]
         right_wheel_pos = servo_obs["right_wheel"]["position"]
         left_wheel_vel = servo_obs["left_wheel"]["velocity"]
