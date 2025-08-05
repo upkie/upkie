@@ -271,6 +271,20 @@ class UpkiePyBulletEnv(UpkieEnv):
 
     def _get_spine_observation(self) -> dict:
         """Get observation in spine format from PyBullet simulation."""
+        base_orientation = self.__get_base_orientation_observation()
+        floor_contact = self.__get_floor_contact_observation()
+        servo_obs = self.__get_servo_observations()
+        wheel_odometry = self.__get_wheel_odometry_observation(servo_obs)
+        return {
+            "base_orientation": base_orientation["base_orientation"],
+            "floor_contact": floor_contact,
+            "imu": base_orientation["imu"],
+            "servo": servo_obs,
+            "wheel_odometry": wheel_odometry,
+        }
+
+    def __get_base_orientation_observation(self) -> dict:
+        """Get base orientation and IMU observations from PyBullet."""
         # Get base state
         (
             position_base_in_world,
@@ -281,23 +295,19 @@ class UpkiePyBulletEnv(UpkieEnv):
             angular_velocity_base_to_world_in_world,
         ) = pybullet.getBaseVelocity(self._robot_id)
 
-        def quat_from_bullet(bullet_quat: list):
-            return [
-                bullet_quat_base_in_world[3],  # w
-                bullet_quat_base_in_world[0],  # x
-                bullet_quat_base_in_world[1],  # y
-                bullet_quat_base_in_world[2],  # z
-            ]
+        # Convert quaternion from Bullet format
+        quat_base_to_world = [
+            bullet_quat_base_in_world[3],  # w
+            bullet_quat_base_in_world[0],  # x
+            bullet_quat_base_in_world[1],  # y
+            bullet_quat_base_in_world[2],  # z
+        ]
 
         # Calculate pitch angle directly from quaternion
-        quat_base_to_world = quat_from_bullet(bullet_quat_base_in_world)
         qw, qx, qy, qz = quat_base_to_world
         pitch = np.arcsin(2 * (qw * qy - qz * qx))
 
-        # Transform angular velocity from world frame to base frame
-        # base_ang_vel is angular_velocity_base_to_world_in_world
-        # We need angular_velocity_base_to_world_in_base
-        # This requires applying the inverse rotation (world to base)
+        # Calculate the body (not spatial) angular velocity
         rotation_base_to_world = rotation_matrix_from_quaternion(
             quat_base_to_world
         )
@@ -306,10 +316,33 @@ class UpkiePyBulletEnv(UpkieEnv):
             angular_velocity_base_to_world_in_world
         )
 
-        # Simplified floor contact detection
-        contact = position_base_in_world[2] < 0.8
+        return {
+            "base_orientation": {
+                "pitch": pitch,
+                "angular_velocity": list(angular_velocity_base_in_base),
+                "linear_velocity": list(
+                    linear_velocity_base_to_world_in_world
+                ),
+            },
+            "imu": {
+                "orientation": quat_base_to_world,
+                "angular_velocity": list(angular_velocity_base_in_base),
+                "linear_acceleration": [0.0, 0.0, -9.81],  # dummy vector
+            },
+        }
 
-        # Observe joint states
+    def __get_floor_contact_observation(self) -> dict:
+        """Detect floor contact based on base height."""
+        position_base_in_world, _ = pybullet.getBasePositionAndOrientation(
+            self._robot_id
+        )
+        contact = position_base_in_world[2] < 0.8
+        return {
+            "contact": contact,
+        }
+
+    def __get_servo_observations(self) -> dict:
+        """Get servo state observations from PyBullet joints."""
         servo_obs = {}
         for joint_name, joint_idx in self._joint_indices.items():
             joint_state = pybullet.getJointState(
@@ -325,12 +358,15 @@ class UpkiePyBulletEnv(UpkieEnv):
                 "temperature": 42.0,  # dummy value
                 "voltage": 18.0,  # dummy value
             }
+        return servo_obs
 
-        # Approximate wheel odometry from wheel positions
+    def __get_wheel_odometry_observation(self, servo_obs: dict) -> dict:
+        """Compute wheel odometry from wheel servo observations."""
         left_wheel_pos = servo_obs["left_wheel"]["position"]
         right_wheel_pos = servo_obs["right_wheel"]["position"]
         left_wheel_vel = servo_obs["left_wheel"]["velocity"]
         right_wheel_vel = servo_obs["right_wheel"]["velocity"]
+
         wheel_radius = 0.06  # approximate wheel radius in meters
         ground_position = (
             0.5 * (left_wheel_pos - right_wheel_pos) * wheel_radius
@@ -339,30 +375,10 @@ class UpkiePyBulletEnv(UpkieEnv):
             0.5 * (left_wheel_vel - right_wheel_vel) * wheel_radius
         )
 
-        spine_observation = {
-            "base_orientation": {
-                "pitch": pitch,
-                "angular_velocity": list(angular_velocity_base_in_base),
-                "linear_velocity": list(
-                    linear_velocity_base_to_world_in_world
-                ),
-            },
-            "floor_contact": {
-                "contact": contact,
-            },
-            "imu": {
-                "orientation": quat_base_to_world,
-                "angular_velocity": list(angular_velocity_base_in_base),
-                "linear_acceleration": [0.0, 0.0, -9.81],  # dummy vector
-            },
-            "servo": servo_obs,
-            "wheel_odometry": {
-                "position": ground_position,
-                "velocity": ground_velocity,
-            },
+        return {
+            "position": ground_position,
+            "velocity": ground_velocity,
         }
-
-        return spine_observation
 
     def compute_joint_torque(
         self,
