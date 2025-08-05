@@ -64,16 +64,16 @@ class UpkiePyBulletEnv(UpkieEnv):
         pybullet_mode = pybullet.GUI if gui else pybullet.DIRECT
         self._bullet = pybullet.connect(pybullet_mode)
 
-        if gui:  # Disable GUI during initialization
-            pybullet.configureDebugVisualizer(pybullet.COV_ENABLE_GUI, 0)
-            pybullet.configureDebugVisualizer(
-                pybullet.COV_ENABLE_TINY_RENDERER, 0
-            )
-            pybullet.configureDebugVisualizer(pybullet.COV_ENABLE_RENDERING, 0)
+        # Disable scene during initialization
+        pybullet.configureDebugVisualizer(pybullet.COV_ENABLE_GUI, 0)
+        pybullet.configureDebugVisualizer(pybullet.COV_ENABLE_RENDERING, 0)
+        pybullet.configureDebugVisualizer(pybullet.COV_ENABLE_SHADOWS, 0)
 
         # Set up simulator parameters
-        pybullet.setGravity(0, 0, -9.81)
         pybullet.setAdditionalSearchPath(pybullet_data.getDataPath())
+        pybullet.setGravity(0, 0, -9.81)
+        pybullet.setRealTimeSimulation(False)  # making sure
+        pybullet.setTimeStep(self.dt)
 
         # Load ground plane
         self._plane_id = pybullet.loadURDF("plane.urdf")
