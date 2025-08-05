@@ -16,6 +16,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - cpp: Add documentation to the moteus actuation interface
 - cpp: Controller pipeline run by the spine after observers
 - envs: Add internal `pipelines` submodule for spine pipelines
+- envs: New `Upkie-PyBullet-Pendulum` environment
+- envs: New `Upkie-PyBullet-Servos` environment
+- envs: New `Upkie-Servos-Mock` environment
 - examples: Trying a PyBullet simulation environment
 - model: List joint names in `Model` class
 - utils: Joystick utility class
