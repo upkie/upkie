@@ -18,6 +18,30 @@ class Model:
     Robot model parsed from its URDF description.
     """
 
+    ## \var JOINT_NAMES
+    ## List of joint names
+    JOINT_NAMES: Tuple[str, str, str, str, str, str] = (
+        "left_hip",
+        "left_knee",
+        "left_wheel",
+        "right_hip",
+        "right_knee",
+        "right_wheel",
+    )
+
+    ## \var UPPER_LEG_JOINT_NAMES
+    ## Upper-leg (hip and knee) joint names.
+    UPPER_LEG_JOINT_NAMES: Tuple[str, str, str, str] = (
+        "left_hip",
+        "left_knee",
+        "right_hip",
+        "right_knee",
+    )
+
+    ## \var WHEEL_JOINT_NAMES
+    ## Wheel joint names.
+    WHEEL_JOINT_NAMES: Tuple[str, str] = ("left_wheel", "right_wheel")
+
     ## \var joints
     ## Joints of the robot model.
     joints: List[Joint]
@@ -37,30 +61,6 @@ class Model:
     ## \var wheel_joints
     ## Wheel joints.
     wheel_joints: Tuple[float]
-
-    ## JOINT_NAMES
-    ## List of joint names
-    JOINT_NAMES: Tuple[str, str, str, str, str, str] = (
-        "left_hip",
-        "left_knee",
-        "left_wheel",
-        "right_hip",
-        "right_knee",
-        "right_wheel",
-    )
-
-    ## UPPER_LEG_JOINT_NAMES
-    ## Upper-leg (hip and knee) joint names.
-    UPPER_LEG_JOINT_NAMES: Tuple[str, str, str, str] = (
-        "left_hip",
-        "left_knee",
-        "right_hip",
-        "right_knee",
-    )
-
-    ## WHEEL_JOINT_NAMES
-    ## Wheel joint names.
-    WHEEL_JOINT_NAMES: Tuple[str, str] = ("left_wheel", "right_wheel")
 
     def __init__(self, urdf_path: str):
         r"""!
@@ -103,6 +103,9 @@ class Model:
         wheel_joints = tuple(
             joint for joint in joints if joint.name in self.WHEEL_JOINT_NAMES
         )
+        self.JOINT_NAMES = Model.JOINT_NAMES  # for Doxygen
+        self.UPPER_LEG_JOINT_NAMES = Model.UPPER_LEG_JOINT_NAMES  # for Doxygen
+        self.WHEEL_JOINT_NAMES = Model.WHEEL_JOINT_NAMES  # for Doxygen
         self.joints = joints
         self.rotation_ars_to_world = np.diag([1.0, -1.0, -1.0])
         self.rotation_base_to_imu = np.diag([-1.0, 1.0, -1.0])
