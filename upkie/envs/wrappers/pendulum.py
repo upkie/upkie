@@ -25,7 +25,7 @@ class Pendulum(gym.Wrapper):
     r"""!
     Wrapper to make Upkie act as a wheeled inverted pendulum.
 
-    \anchor upkie_ground_velocity_description
+    \anchor upkie_pendulum_description
 
     When this wrapper is applied, Upkie keeps its legs straight and actions
     only affect wheel velocities. This way, it behaves like a <a

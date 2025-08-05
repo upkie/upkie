@@ -2,7 +2,13 @@
 
 Upkie has environments compatible with the [Gymnasium API](https://gymnasium.farama.org/):
 
-- [UpkieGroundVelocity](\ref upkie_ground_velocity_description): behave like a wheeled inverted pendulum.
-- [UpkieServos](\ref upkie_servo_pipeline): control joint servos directly with torque feedforward and position-velocity feedback.
+| Environment ID            | Interface | Action and observation spaces |
+|---------------------------|-----------|-------------------|
+| `Upkie-Mock-Pendulum`     | Mock      | [Pendulum](\ref upkie_pendulum_description) |
+| `Upkie-Mock-Servos`       | Mock      | [Servos](\ref upkie_servos_description) |
+| `Upkie-Spine-Pendulum`    | Spine     | [Pendulum](\ref upkie_pendulum_description) |
+| `Upkie-Spine-Servos`      | Spine     | [Servos](\ref upkie_servos_description) |
+| `Upkie-PyBullet-Pendulum` | PyBullet  | [Pendulum](\ref upkie_pendulum_description) |
+| `Upkie-PyBullet-Servos`   | PyBullet  | [Servos](\ref upkie_servos_description) |
 
 While each environment has its own observation and action spaces, all of them also report full [spine observations](\ref observations) in their `info` dictionaries.

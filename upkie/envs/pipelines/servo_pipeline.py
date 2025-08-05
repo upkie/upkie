@@ -19,7 +19,7 @@ class ServoPipeline:
     r"""!
     Upkie pipeline where actions command servomotors directly.
 
-    \anchor upkie_servo_pipeline
+    \anchor upkie_servos_description
 
     Actions and observations correspond to the moteus servo API.
 
