@@ -177,7 +177,7 @@ class UpkieSpineEnv(UpkieEnv):
 
         # Process spine observation
         observation = self.get_env_observation(spine_observation)
-        reward = 1.0  # ready for e.g. an ObservationBasedReward wrapper
+        reward = 1.0  # reward can be decided by a wrapper
         terminated = False
         truncated = False  # will be handled by e.g. a TimeLimit wrapper
         info = {"spine_observation": spine_observation}
