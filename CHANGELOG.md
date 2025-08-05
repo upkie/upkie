@@ -15,8 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - control: Import MPC balancer class from the Pink balancer
 - cpp: Add documentation to the moteus actuation interface
 - cpp: Controller pipeline run by the spine after observers
-- envs: Add `Upkie-Servos-Mock` environment
 - envs: Add internal `pipelines` submodule for spine pipelines
+- examples: Trying a PyBullet simulation environment
 - utils: Joystick utility class
 
 ### Changed
