@@ -326,18 +326,17 @@ class UpkiePyBulletEnv(UpkieEnv):
                 "voltage": 18.0,  # dummy value
             }
 
-        # Calculate wheel odometry (simplified)
-        left_wheel_pos = servo_obs.get("left_wheel", {}).get("position", 0.0)
-        right_wheel_pos = servo_obs.get("right_wheel", {}).get("position", 0.0)
+        # Approximate wheel odometry from wheel positions
+        left_wheel_pos = servo_obs["left_wheel"]["position"]
+        right_wheel_pos = servo_obs["right_wheel"]["position"]
+        left_wheel_vel = servo_obs["left_wheel"]["velocity"]
+        right_wheel_vel = servo_obs["right_wheel"]["velocity"]
         wheel_radius = 0.06  # approximate wheel radius in meters
         ground_position = (
-            (left_wheel_pos + right_wheel_pos) * 0.5 * wheel_radius
+            0.5 * (left_wheel_pos - right_wheel_pos) * wheel_radius
         )
-
-        left_wheel_vel = servo_obs.get("left_wheel", {}).get("velocity", 0.0)
-        right_wheel_vel = servo_obs.get("right_wheel", {}).get("velocity", 0.0)
         ground_velocity = (
-            (left_wheel_vel + right_wheel_vel) * 0.5 * wheel_radius
+            0.5 * (left_wheel_vel - right_wheel_vel) * wheel_radius
         )
 
         spine_observation = {
