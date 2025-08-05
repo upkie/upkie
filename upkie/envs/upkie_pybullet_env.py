@@ -7,12 +7,18 @@
 from typing import Optional, Tuple
 
 import numpy as np
-import pybullet
-import pybullet_data
 import upkie_description
+
+try:
+    import pybullet
+    import pybullet_data
+except ModuleNotFoundError:
+    pybullet = None
+    pybullet_data = None
 
 from upkie.config import BULLET_CONFIG
 from upkie.envs.pipelines import Pipeline
+from upkie.exceptions import MissingOptionalDependency
 from upkie.model import Model
 from upkie.utils.nested_update import nested_update
 from upkie.utils.robot_state import RobotState
@@ -71,6 +77,8 @@ class UpkiePyBulletEnv(UpkieEnv):
             nested_update(self.__bullet_config, bullet_config)
 
         # Initialize PyBullet
+        if pybullet is None:
+            raise MissingOptionalDependency("PyBullet not found")
         pybullet_mode = pybullet.GUI if gui else pybullet.DIRECT
         self._bullet = pybullet.connect(pybullet_mode)
 
