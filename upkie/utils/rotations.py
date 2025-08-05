@@ -11,10 +11,11 @@ Convert between various rotation representations.
 from typing import Tuple
 
 import numpy as np
+from scipy.spatial.transform import Rotation as ScipyRotation
 
 
 def rotation_matrix_from_quaternion(
-    quat: Tuple[float, float, float, float]
+    quat: Tuple[float, float, float, float],
 ) -> np.ndarray:
     r"""!
     Convert a unit quaternion to the matrix representing the same rotation.
@@ -49,3 +50,16 @@ def rotation_matrix_from_quaternion(
             ],
         ]
     )
+
+
+def quaternion_from_rotation_matrix(rotation_matrix: np.ndarray) -> np.ndarray:
+    r"""!
+    Convert a rotation matrix to a unit quaternion for the same rotation.
+
+    \param rotation_matrix Rotation matrix to convert.
+    \return Unit quaternion in `[w, x, y, z]` format.
+    """
+    if rotation_matrix.shape != (3, 3):
+        raise ValueError(f"Expected 3x3 matrix, got {rotation_matrix.shape}")
+    rotation = ScipyRotation.from_matrix(rotation_matrix)
+    return rotation.as_quat(scalar_first=True)

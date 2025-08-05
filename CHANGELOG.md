@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - examples: Trying a PyBullet simulation environment
 - model: List joint names in `Model` class
 - utils: Joystick utility class
+- utils: Wrap quaternion conversion function from SciPy
 
 ### Changed
 
