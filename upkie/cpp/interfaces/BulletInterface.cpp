@@ -500,6 +500,8 @@ double BulletInterface::compute_joint_torque(
     const double target_position, const double target_velocity,
     const double kp_scale, const double kd_scale, const double maximum_torque) {
   assert(!std::isnan(target_velocity));
+
+  // Read in measurements and torque-control gains
   const bullet::JointProperties& joint_props = joint_properties_[joint_name];
   const auto& measurements = servo_reply_[joint_name].result;
   const double measured_position = measurements.position * (2.0 * M_PI);
@@ -507,6 +509,8 @@ double BulletInterface::compute_joint_torque(
   const double kp = kp_scale * params_.torque_control_kp;
   const double kd = kd_scale * params_.torque_control_kd;
   const double tau_max = std::min(maximum_torque, joint_props.maximum_torque);
+
+  // Compute joint torque
   double torque = feedforward_torque;
   torque += kd * (target_velocity - measured_velocity);
   if (!std::isnan(target_position)) {
