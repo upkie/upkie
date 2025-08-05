@@ -87,15 +87,15 @@ class UpkiePyBulletEnv(UpkieEnv):
 
         # Build joint index mapping
         self._joint_indices = {}
-        for i in range(pybullet.getNumJoints(self._robot_id)):
-            joint_info = pybullet.getJointInfo(self._robot_id, i)
+        for bullet_idx in range(pybullet.getNumJoints(self._robot_id)):
+            joint_info = pybullet.getJointInfo(self._robot_id, bullet_idx)
             joint_name = joint_info[1].decode("utf-8")
             if joint_name in Model.JOINT_NAMES:
-                self._joint_indices[joint_name] = i
+                self._joint_indices[joint_name] = bullet_idx
                 # Disable velocity controllers to enable torque control
                 pybullet.setJointMotorControl2(
                     self._robot_id,
-                    i,
+                    bullet_idx,
                     pybullet.VELOCITY_CONTROL,
                     force=0,
                 )
@@ -214,14 +214,14 @@ class UpkiePyBulletEnv(UpkieEnv):
             if joint_name in self._joint_indices:
                 joint_idx = self._joint_indices[joint_name]
                 target_position: float = servo_action["position"]
-                target_velocity = servo_action["velocity"]
-                feedforward_torque = servo_action.get(
+                target_velocity: float = servo_action["velocity"]
+                feedforward_torque: float = servo_action.get(
                     "feedforward_torque", 0.0
                 )
-                kp_scale = servo_action.get("kp_scale", 1.0)
-                kd_scale = servo_action.get("kd_scale", 1.0)
-                maximum_torque = servo_action["maximum_torque"]
-                joint_torque = self.compute_joint_torque(
+                kp_scale: float = servo_action.get("kp_scale", 1.0)
+                kd_scale: float = servo_action.get("kd_scale", 1.0)
+                maximum_torque: float = servo_action["maximum_torque"]
+                joint_torque: float = self.compute_joint_torque(
                     joint_name,
                     feedforward_torque,
                     target_position,
@@ -258,12 +258,10 @@ class UpkiePyBulletEnv(UpkieEnv):
         )
         base_lin_vel, base_ang_vel = pybullet.getBaseVelocity(self._robot_id)
 
-        # Convert quaternion from PyBullet [x,y,z,w] to [w,x,y,z]
-        base_ori_wxyz = [base_ori[3], base_ori[0], base_ori[1], base_ori[2]]
-
         # Calculate pitch from quaternion
-        w, x, y, z = base_ori_wxyz
-        pitch = np.arcsin(2 * (w * y - z * x))
+        base_ori_wxyz = [base_ori[3], base_ori[0], base_ori[1], base_ori[2]]
+        qw, qx, qy, qz = base_ori_wxyz
+        pitch = np.arcsin(2 * (qw * qy - qz * qx))
 
         # Check floor contact (simplified - check if base is close to ground)
         contact = base_pos[2] < 0.8  # approximate contact detection
@@ -274,10 +272,9 @@ class UpkiePyBulletEnv(UpkieEnv):
             joint_state = pybullet.getJointState(
                 self._robot_id, joint_idx, physicsClientId=self._bullet
             )
-            position = joint_state[0]
-            velocity = joint_state[1]
-            torque = joint_state[3]  # applied torque
-
+            position = joint_state[0]  # in [rad]
+            velocity = joint_state[1]  # in [rad] / [s]
+            torque = joint_state[3]  # in [N m]
             servo_obs[joint_name] = {
                 "position": position,
                 "velocity": velocity,
@@ -312,7 +309,7 @@ class UpkiePyBulletEnv(UpkieEnv):
             "imu": {
                 "orientation": base_ori_wxyz,
                 "angular_velocity": list(base_ang_vel),
-                "linear_acceleration": [0.0, 0.0, -9.81],  # simplified
+                "linear_acceleration": [0.0, 0.0, -9.81],  # dummy vector
             },
             "number": 0,
             "servo": servo_obs,
@@ -353,6 +350,7 @@ class UpkiePyBulletEnv(UpkieEnv):
         """
         assert not np.isnan(target_velocity)
 
+        # Read in measurements from the simulator
         joint_idx = self._joint_indices[joint_name]
         joint_state = pybullet.getJointState(self._robot_id, joint_idx)
         measured_position = joint_state[0]  # already in radians in PyBullet
@@ -369,7 +367,5 @@ class UpkiePyBulletEnv(UpkieEnv):
         torque += kd * (target_velocity - measured_velocity)
         if not np.isnan(target_position):
             torque += kp * (target_position - measured_position)
-
-        # Clamp torque to maximum limit
         torque = np.clip(torque, -maximum_torque, maximum_torque)
         return torque
