@@ -38,7 +38,7 @@ class Model:
     ## Wheel joints.
     wheel_joints: Tuple[float]
 
-    ## \var JOINT_NAMES
+    ## JOINT_NAMES
     ## List of joint names
     JOINT_NAMES: Tuple[str, str, str, str, str, str] = (
         "left_hip",
@@ -49,7 +49,7 @@ class Model:
         "right_wheel",
     )
 
-    ## \var UPPER_LEG_JOINT_NAMES
+    ## UPPER_LEG_JOINT_NAMES
     ## Upper-leg (hip and knee) joint names.
     UPPER_LEG_JOINT_NAMES: Tuple[str, str, str, str] = (
         "left_hip",
@@ -58,7 +58,7 @@ class Model:
         "right_knee",
     )
 
-    ## \var WHEEL_JOINT_NAMES
+    ## WHEEL_JOINT_NAMES
     ## Wheel joint names.
     WHEEL_JOINT_NAMES: Tuple[str, str] = ("left_wheel", "right_wheel")
 

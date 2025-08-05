@@ -110,6 +110,9 @@ tasks.lint = { depends-on = ["lint-bazel", "lint-ruff", "lint-ruff-format"] }
 dependencies = { pixi-pack = ">=0.7.2" }
 tasks.pack = "pixi-pack --environment agent --platform linux-aarch64 --ignore-pypi-non-wheel"
 
+[tool.pixi.feature.pybullet]
+dependencies = { "pybullet" = "*" }
+
 [tool.pixi.feature.test]
 dependencies = { lcov = "*", "stable-baselines3" = ">2.3.0" }
 tasks.coverage-generate = { cmd = "./tools/bazelisk coverage --combined_report=lcov --compilation_mode=fastbuild --instrument_test_targets //..." }
@@ -130,6 +133,7 @@ default = { features = [], solve-group = "default" }
 docs = { features = ["docs"], solve-group = "default" }
 lint = { features = ["lint"], solve-group = "default" }
 pack = { features = ["pack"], solve-group = "default" }
+pybullet = { features = ["agent", "pybullet"], solve-group = "default" }
 test = { features = ["test"], solve-group = "default" }
 
 [tool.ruff]
