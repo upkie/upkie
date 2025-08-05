@@ -22,6 +22,7 @@ from upkie.exceptions import MissingOptionalDependency
 from upkie.model import Model
 from upkie.utils.nested_update import nested_update
 from upkie.utils.robot_state import RobotState
+from upkie.utils.rotations import rotation_matrix_from_quaternion
 
 from .upkie_env import UpkieEnv
 
@@ -35,7 +36,7 @@ class UpkiePyBulletEnv(UpkieEnv):
         self,
         frequency: Optional[float] = 200.0,
         frequency_checks: bool = True,
-        gui: bool = False,
+        gui: bool = True,
         init_state: Optional[RobotState] = None,
         pipeline: Optional[Pipeline] = None,
         regulate_frequency: bool = True,
