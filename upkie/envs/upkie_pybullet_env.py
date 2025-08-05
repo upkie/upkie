@@ -272,20 +272,44 @@ class UpkiePyBulletEnv(UpkieEnv):
     def _get_spine_observation(self) -> dict:
         """Get observation in spine format from PyBullet simulation."""
         # Get base state
-        base_pos, base_ori = pybullet.getBasePositionAndOrientation(
-            self._robot_id
-        )
-        base_lin_vel, base_ang_vel = pybullet.getBaseVelocity(self._robot_id)
+        (
+            position_base_in_world,
+            bullet_quat_base_in_world,
+        ) = pybullet.getBasePositionAndOrientation(self._robot_id)
+        (
+            linear_velocity_base_to_world_in_world,
+            angular_velocity_base_to_world_in_world,
+        ) = pybullet.getBaseVelocity(self._robot_id)
 
-        # Calculate pitch from quaternion
-        base_ori_wxyz = [base_ori[3], base_ori[0], base_ori[1], base_ori[2]]
-        qw, qx, qy, qz = base_ori_wxyz
+        def quat_from_bullet(bullet_quat: list):
+            return [
+                bullet_quat_base_in_world[3],  # w
+                bullet_quat_base_in_world[0],  # x
+                bullet_quat_base_in_world[1],  # y
+                bullet_quat_base_in_world[2],  # z
+            ]
+
+        # Calculate pitch angle directly from quaternion
+        quat_base_to_world = quat_from_bullet(bullet_quat_base_in_world)
+        qw, qx, qy, qz = quat_base_to_world
         pitch = np.arcsin(2 * (qw * qy - qz * qx))
 
-        # Check floor contact (simplified - check if base is close to ground)
-        contact = base_pos[2] < 0.8  # approximate contact detection
+        # Transform angular velocity from world frame to base frame
+        # base_ang_vel is angular_velocity_base_to_world_in_world
+        # We need angular_velocity_base_to_world_in_base
+        # This requires applying the inverse rotation (world to base)
+        rotation_base_to_world = rotation_matrix_from_quaternion(
+            quat_base_to_world
+        )
+        rotation_world_to_base = rotation_base_to_world.T
+        angular_velocity_base_in_base = rotation_world_to_base @ np.array(
+            angular_velocity_base_to_world_in_world
+        )
 
-        # Get joint states
+        # Simplified floor contact detection
+        contact = position_base_in_world[2] < 0.8
+
+        # Observe joint states
         servo_obs = {}
         for joint_name, joint_idx in self._joint_indices.items():
             joint_state = pybullet.getJointState(
@@ -306,35 +330,36 @@ class UpkiePyBulletEnv(UpkieEnv):
         left_wheel_pos = servo_obs.get("left_wheel", {}).get("position", 0.0)
         right_wheel_pos = servo_obs.get("right_wheel", {}).get("position", 0.0)
         wheel_radius = 0.06  # approximate wheel radius in meters
-        wheel_position = (
+        ground_position = (
             (left_wheel_pos + right_wheel_pos) * 0.5 * wheel_radius
         )
 
         left_wheel_vel = servo_obs.get("left_wheel", {}).get("velocity", 0.0)
         right_wheel_vel = servo_obs.get("right_wheel", {}).get("velocity", 0.0)
-        wheel_velocity = (
+        ground_velocity = (
             (left_wheel_vel + right_wheel_vel) * 0.5 * wheel_radius
         )
 
         spine_observation = {
             "base_orientation": {
                 "pitch": pitch,
-                "angular_velocity": list(base_ang_vel),
-                "linear_velocity": list(base_lin_vel),
+                "angular_velocity": list(angular_velocity_base_in_base),
+                "linear_velocity": list(
+                    linear_velocity_base_to_world_in_world
+                ),
             },
             "floor_contact": {
                 "contact": contact,
             },
             "imu": {
-                "orientation": base_ori_wxyz,
-                "angular_velocity": list(base_ang_vel),
+                "orientation": quat_base_to_world,
+                "angular_velocity": list(angular_velocity_base_in_base),
                 "linear_acceleration": [0.0, 0.0, -9.81],  # dummy vector
             },
-            "number": 0,
             "servo": servo_obs,
             "wheel_odometry": {
-                "position": wheel_position,
-                "velocity": wheel_velocity,
+                "position": ground_position,
+                "velocity": ground_velocity,
             },
         }
 
