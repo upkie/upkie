@@ -113,17 +113,37 @@ class UpkieEnv(gym.Env):
         """
         return self.__frequency
 
-    def get_env_observation(self, spine_observation):
+    def get_env_observation(self, spine_observation: dict):
+        r"""!
+        Get Gym environment observation from spine observation.
+
+        \param[in] spine_observation Spine observation dictionary.
+        \return Gym environment observation.
+        """
         return self.__pipeline.get_env_observation(spine_observation)
 
     def get_neutral_action(self):
+        r"""!
+        Get neutral action for this environment.
+        """
         return self.__pipeline.get_neutral_action()
 
-    def get_spine_action(self, env_action):
+    def get_spine_action(self, env_action) -> dict:
+        r"""!
+        Get spine action from Gym environment action.
+
+        \param[in] env_action Gym environment action.
+        \return Spine action dictionary.
+        """
         return self.__pipeline.get_spine_action(env_action)
 
     @property
     def model(self) -> Model:
+        r"""!
+        Robot model read from its URDF description.
+
+        \return Robot model.
+        """
         return self.__pipeline.model
 
     def reset(
