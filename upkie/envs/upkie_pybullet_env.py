@@ -300,7 +300,6 @@ class UpkiePyBulletEnv(UpkieEnv):
         }
 
     def __get_base_orientation_observation(self) -> dict:
-        # Get base state
         position_base_in_world, bullet_quat_base_in_world = (
             pybullet.getBasePositionAndOrientation(self._robot_id)
         )
@@ -309,7 +308,7 @@ class UpkiePyBulletEnv(UpkieEnv):
             angular_velocity_base_to_world_in_world,
         ) = pybullet.getBaseVelocity(self._robot_id)
 
-        # Convert quaternion from Bullet format [x,y,z,w] to [w,x,y,z]
+        # Convert quaternion from Bullet format
         quat_base_to_world = [
             bullet_quat_base_in_world[3],  # w
             bullet_quat_base_in_world[0],  # x
@@ -344,7 +343,8 @@ class UpkiePyBulletEnv(UpkieEnv):
             computeForwardKinematics=True,
         )
 
-        orientation_imu_in_world = np.array(
+        # Convert quaternion from Bullet format
+        quat_imu_in_world = np.array(
             [
                 link_state[5][3],  # w
                 link_state[5][0],  # x
@@ -359,7 +359,7 @@ class UpkiePyBulletEnv(UpkieEnv):
         rotation_world_to_ars = np.diag([1.0, -1.0, -1.0])
 
         rotation_imu_to_world = rotation_matrix_from_quaternion(
-            orientation_imu_in_world
+            quat_imu_in_world
         )
         rotation_imu_to_ars = rotation_world_to_ars @ rotation_imu_to_world
         quat_imu_in_ars = quaternion_from_rotation_matrix(rotation_imu_to_ars)

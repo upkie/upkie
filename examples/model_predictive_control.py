@@ -14,17 +14,19 @@ from upkie.controllers import MPCBalancer
 
 upkie.envs.register()
 
-TARGET_GROUND_VELOCITY = 0.5  # m/s
+TARGET_GROUND_VELOCITY = 0.0  # m/s
 
 
 if __name__ == "__main__":
     mpc_balancer = MPCBalancer()
-    with gym.make("Upkie-Spine-Pendulum", frequency=200.0) as env:
+    with gym.make(
+        "Upkie-PyBullet-Pendulum", frequency=200.0, nb_substeps=5
+    ) as env:
         _, info = env.reset()  # connects to the spine
         action = np.zeros(env.action_space.shape)
         for step in range(10_000):
             action[0] = mpc_balancer.compute_ground_velocity(
-                target_ground_velocity=0.5,  # m/s
+                target_ground_velocity=TARGET_GROUND_VELOCITY,  # m/s
                 spine_observation=info["spine_observation"],
                 dt=env.unwrapped.dt,
             )
