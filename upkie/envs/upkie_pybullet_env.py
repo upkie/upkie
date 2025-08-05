@@ -41,6 +41,7 @@ class UpkiePyBulletEnv(UpkieEnv):
         pipeline: Optional[Pipeline] = None,
         regulate_frequency: bool = True,
         bullet_config: Optional[dict] = None,
+        nb_substeps: Optional[int] = None,
     ) -> None:
         r"""!
         Initialize environment.
@@ -63,6 +64,7 @@ class UpkiePyBulletEnv(UpkieEnv):
         \param bullet_config Additional bullet configuration overriding the
             default `upkie.config.BULLET_CONFIG`. The combined configuration
             dictionary is used for PyBullet simulation setup.
+        \param nb_substeps Number of substeps for the PyBullet simulation.
         """
         super().__init__(
             frequency=frequency,
@@ -76,6 +78,9 @@ class UpkiePyBulletEnv(UpkieEnv):
         self.__bullet_config = BULLET_CONFIG.copy()
         if bullet_config is not None:
             nested_update(self.__bullet_config, bullet_config)
+        self.__nb_substeps = (
+            nb_substeps if nb_substeps is not None else int(1000.0 / frequency)
+        )
 
         # Initialize PyBullet
         if pybullet is None:
@@ -92,7 +97,7 @@ class UpkiePyBulletEnv(UpkieEnv):
         pybullet.setAdditionalSearchPath(pybullet_data.getDataPath())
         pybullet.setGravity(0, 0, -9.81)
         pybullet.setRealTimeSimulation(False)  # making sure
-        pybullet.setTimeStep(self.dt)
+        pybullet.setTimeStep(self.dt / self.__nb_substeps)
 
         # Load ground plane
         self._plane_id = pybullet.loadURDF("plane.urdf")
@@ -139,7 +144,7 @@ class UpkiePyBulletEnv(UpkieEnv):
         """!
         Disconnect PyBullet properly.
         """
-        if self._bullet is not None:
+        if hasattr(self, "_bullet") and self._bullet is not None:
             pybullet.disconnect()
             self._bullet = None
 
@@ -228,36 +233,31 @@ class UpkiePyBulletEnv(UpkieEnv):
         # Regulate loop frequency, if applicable
         super().step()
 
-        # Set motor torques for all joints
-        for joint_name, servo_action in action.items():
-            if joint_name in self._joint_indices:
-                joint_idx = self._joint_indices[joint_name]
-                target_position: float = servo_action["position"]
-                target_velocity: float = servo_action["velocity"]
-                feedforward_torque: float = servo_action.get(
-                    "feedforward_torque", 0.0
-                )
-                kp_scale: float = servo_action.get("kp_scale", 1.0)
-                kd_scale: float = servo_action.get("kd_scale", 1.0)
-                maximum_torque: float = servo_action["maximum_torque"]
-                joint_torque: float = self.compute_joint_torque(
-                    joint_name,
-                    feedforward_torque,
-                    target_position,
-                    target_velocity,
-                    kp_scale,
-                    kd_scale,
-                    maximum_torque,
-                )
-                pybullet.setJointMotorControl2(
-                    self._robot_id,
-                    joint_idx,
-                    pybullet.TORQUE_CONTROL,
-                    force=joint_torque,
-                )
+        for _ in range(self.__nb_substeps):
+            # Update motor torques at each substep
+            for joint_name, servo_action in action.items():
+                if joint_name in self._joint_indices:
+                    joint_idx = self._joint_indices[joint_name]
+                    joint_torque: float = self.compute_joint_torque(
+                        joint_name,
+                        feedforward_torque=servo_action.get(
+                            "feedforward_torque", 0.0
+                        ),
+                        target_position=servo_action["position"],
+                        target_velocity=servo_action["velocity"],
+                        kp_scale=servo_action.get("kp_scale", 1.0),
+                        kd_scale=servo_action.get("kd_scale", 1.0),
+                        maximum_torque=servo_action["maximum_torque"],
+                    )
+                    pybullet.setJointMotorControl2(
+                        self._robot_id,
+                        joint_idx,
+                        pybullet.TORQUE_CONTROL,
+                        force=joint_torque,
+                    )
 
-        # Step the simulation
-        pybullet.stepSimulation()
+            # Step the simulation
+            pybullet.stepSimulation()
 
         # Get observation
         spine_observation = self._get_spine_observation()
