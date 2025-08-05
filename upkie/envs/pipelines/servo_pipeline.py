@@ -14,8 +14,10 @@ from upkie.exceptions import UpkieRuntimeError
 from upkie.model import Model
 from upkie.utils.clamp import clamp_and_warn
 
+from .pipeline import Pipeline
 
-class ServoPipeline:
+
+class ServoPipeline(Pipeline):
     r"""!
     Upkie pipeline where actions command servomotors directly.
 
@@ -102,17 +104,9 @@ class ServoPipeline:
         "maximum_torque",
     )
 
-    ## \var action_space
-    ## Action space.
-    action_space: gym.spaces.dict.Dict
-
     ## \var model
     ## Robot model read from its URDF description.
     model: Model
-
-    ## \var observation_space
-    ## Observation space.
-    observation_space: gym.spaces.dict.Dict
 
     def __init__(self, max_gain_scale: float = 5.0) -> None:
         r"""!
@@ -231,12 +225,22 @@ class ServoPipeline:
             }
 
         # Class attributes
+        self.__action_space = gym.spaces.Dict(action_space)
+        self.__observation_space = gym.spaces.Dict(servo_space)
         self._max_action = max_action
         self._min_action = min_action
         self._neutral_action = neutral_action
-        self.action_space = gym.spaces.Dict(action_space)
         self.model = model
-        self.observation_space = gym.spaces.Dict(servo_space)
+
+    @property
+    def action_space(self):
+        """Action space."""
+        return self.__action_space
+
+    @property
+    def observation_space(self):
+        """Observation space."""
+        return self.__observation_space
 
     def get_env_observation(self, spine_observation: dict) -> dict:
         r"""!

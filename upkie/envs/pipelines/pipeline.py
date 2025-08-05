@@ -11,13 +11,17 @@ class Pipeline(ABC):
     Interface to a spine pipeline.
     """
 
-    ## \var action_space
-    ## Action space.
-    action_space: object
+    @property
+    @abstractmethod
+    def action_space(self):
+        """Action space of the pipeline."""
+        pass
 
-    ## \var observation_space
-    ## Observation space.
-    observation_space: object
+    @property
+    @abstractmethod
+    def observation_space(self):
+        """Observation space of the pipeline."""
+        pass
 
     @abstractmethod
     def get_env_observation(self, spine_observation: dict):

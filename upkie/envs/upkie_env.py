@@ -36,10 +36,18 @@ class UpkieEnv(gym.Env):
     __rate: Optional[RateLimiter]
     __regulate_frequency: bool
 
+    ## \var action_space
+    ## Action space of the environment.
+    action_space: gym.Space
+
     ## \var init_state
     ## Initial state for the floating base of the robot, which may be
     ## randomized upon resets.
     init_state: RobotState
+
+    ## \var observation_space
+    ## Observation space of the environment.
+    observation_space: gym.Space
 
     def __init__(
         self,
