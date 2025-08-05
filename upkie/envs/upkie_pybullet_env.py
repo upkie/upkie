@@ -92,6 +92,13 @@ class UpkiePyBulletEnv(UpkieEnv):
             joint_name = joint_info[1].decode("utf-8")
             if joint_name in Model.JOINT_NAMES:
                 self._joint_indices[joint_name] = i
+                # Disable velocity controllers to enable torque control
+                pybullet.setJointMotorControl2(
+                    self._robot_id,
+                    i,
+                    pybullet.VELOCITY_CONTROL,
+                    force=0,
+                )
 
         if gui:  # Enable GUI if it is request
             pybullet.configureDebugVisualizer(pybullet.COV_ENABLE_RENDERING, 1)
@@ -202,7 +209,7 @@ class UpkiePyBulletEnv(UpkieEnv):
         # Regulate loop frequency, if applicable
         super().step()
 
-        # Apply servo actions to all joints
+        # Set motor torques for all joints
         for joint_name, servo_action in action.items():
             if joint_name in self._joint_indices:
                 joint_idx = self._joint_indices[joint_name]
