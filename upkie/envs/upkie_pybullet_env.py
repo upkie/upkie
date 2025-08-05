@@ -33,6 +33,7 @@ class UpkiePyBulletEnv(UpkieEnv):
         init_state: Optional[RobotState] = None,
         pipeline: Optional[Pipeline] = None,
         regulate_frequency: bool = True,
+        bullet_config: Optional[dict] = None,
     ) -> None:
         r"""!
         Initialize environment.
@@ -52,6 +53,9 @@ class UpkiePyBulletEnv(UpkieEnv):
         \param regulate_frequency If set (default), the environment will
             regulate the control loop frequency to the value prescribed in
             `frequency`.
+        \param bullet_config Additional bullet configuration overriding the
+            default `upkie.config.BULLET_CONFIG`. The combined configuration
+            dictionary is used for PyBullet simulation setup.
         """
         super().__init__(
             frequency=frequency,
@@ -60,6 +64,11 @@ class UpkiePyBulletEnv(UpkieEnv):
             pipeline=pipeline,
             regulate_frequency=regulate_frequency,
         )
+
+        # Save combined simulator configuration
+        self.__bullet_config = BULLET_CONFIG.copy()
+        if bullet_config is not None:
+            nested_update(self.__bullet_config, bullet_config)
 
         # Initialize PyBullet
         pybullet_mode = pybullet.GUI if gui else pybullet.DIRECT
@@ -357,9 +366,9 @@ class UpkiePyBulletEnv(UpkieEnv):
         measured_position = joint_state[0]  # already in radians in PyBullet
         measured_velocity = joint_state[1]  # already in rad/s in PyBullet
 
-        # Use kp and kd gains from the global spine configuration
-        torque_control_kp = SPINE_CONFIG["bullet"]["torque_control"]["kp"]
-        torque_control_kd = SPINE_CONFIG["bullet"]["torque_control"]["kd"]
+        # Use kp and kd gains from the bullet configuration
+        torque_control_kp = self.__bullet_config["torque_control"]["kp"]
+        torque_control_kd = self.__bullet_config["torque_control"]["kd"]
         kp = kp_scale * torque_control_kp
         kd = kd_scale * torque_control_kd
 
