@@ -22,14 +22,14 @@ def select_gym_environment():
     print("Select your Gymnasium environment:")
     print(
         "1. Upkie-Spine-Pendulum      \t"
-        "requires a running spine (e.g. from ./start_simulation.sh)"
+        "requires a running spine, e.g. from ./start_simulation.sh"
     )
     print("2. Upkie-PyBullet-Pendulum \tself-contained PyBullet simulation")
-    print("2. Upkie-Genesis-Pendulum \tself-contained Genesis simulation")
+    print("3. Upkie-Genesis-Pendulum \tself-contained Genesis simulation")
 
     env_kwargs = {
         "frequency": 200.0,
-        "frequency_checks": False,
+        "frequency_checks": True,
     }
 
     while True:
@@ -38,7 +38,11 @@ def select_gym_environment():
             if choice == "1":
                 return ("Upkie-Spine-Pendulum", env_kwargs)
             elif choice == "2":
-                env_kwargs.update({"nb_substeps": 5,})
+                env_kwargs.update(
+                    {
+                        "nb_substeps": 5,
+                    }
+                )
                 return ("Upkie-PyBullet-Pendulum", env_kwargs)
             elif choice == "3":
                 return ("Upkie-Genesis-Pendulum", env_kwargs)

@@ -240,8 +240,13 @@ class UpkieGenesisEnv(UpkieEnv):
             dofs_idx_local=dofs_idx_local,
         )
 
-        # Step the simulation
+        # Step the simulation with timing
+        import time
+        start_time = time.perf_counter()
         self._scene.step()
+        end_time = time.perf_counter()
+        step_time = (end_time - start_time) * 1000  # Convert to milliseconds
+        print(f"Genesis step time: {step_time:.2f} ms")
 
         # Get observation
         spine_observation = self._get_spine_observation()
