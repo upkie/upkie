@@ -9,16 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- agent: Add `start_agent.sh` script to the repository
+- agent: Add `start_mpc_balancer.sh` script to the repository
 - agent: Import MPC balancer from previous Pink balancer
 - control: Create `upkie.controllers` submodule
 - control: Import MPC balancer class from the Pink balancer
 - cpp: Add documentation to the moteus actuation interface
 - cpp: Controller pipeline run by the spine after observers
 - envs: Add internal `pipelines` submodule for spine pipelines
+- envs: New `Upkie-Mock-Pendulum` environment
+- envs: New `Upkie-Mock-Servos` environment
 - envs: New `Upkie-PyBullet-Pendulum` environment
 - envs: New `Upkie-PyBullet-Servos` environment
-- envs: New `Upkie-Servos-Mock` environment
 - examples: Trying a PyBullet simulation environment
 - logging: Add `disable_warnings` helper function
 - model: List joint names in `Model` class
@@ -27,11 +28,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- **Breaking:** Move logging from `upkie.utils.spdlog` to `upkie.logging`
-- **Breaking:** Rename `UpkieServos` to `Upkie-Servos-Spine`
-- **Breaking:** cpp: Rename actuation namespace to interfaces
-- **Breaking:** envs: Rename `UpkieGroundVelocity` wrapper to `Pendulum`
-- **Breaking:** envs: Rename all environments
+- **Breaking:** Rename `Upkie-Spine-Pendulum` environment from `UpkieGroundVelocity`
+- **Breaking:** Rename `Upkie-Spine-Servos` environment from `UpkieServos`
+- **Breaking:** Rename `UpkieGroundVelocity` wrapper to `Pendulum`
+- **Breaking:** Rename `interfaces` C++ namespace from `actuation`
+- **Breaking:** Rename `upkie.logging` submodule from `upkie.utils.spdlog`
 - Clean up Python cache directories upon `make clean`
 - Move coverage and lint rules from the Makefile to Pixi tasks
 - cpp: Limit rate of SynchronousClock skip warnings and report frequency drop
