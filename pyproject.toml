@@ -54,7 +54,7 @@ exclude = [
     "CONTRIBUTING.md",
     "CPPLINT.cfg",
     "WORKSPACE",
-    "agent/",
+    "agents/",
     "examples/",
     "logs/",
     "spines/",
@@ -82,17 +82,24 @@ numpy = ">=1.24.3"
 scipy = ">=1.10.0"
 upkie_description = ">=2.1.0"
 
-[tool.pixi.feature.agent.dependencies]
+[tool.pixi.feature.agent-mpc-balancer.dependencies]
 gin-config = ">=0.5.0"
 meshcat-shapes = ">=0.3.0"
 pink = ">=3.0.0,<4"
 pinocchio = ">=3.1.0,<4"
 proxsuite = ">=0.4.1"
 qpmpc = ">=3.0.1,<4"
-qpsolvers = ">=4.3.3"
 
-[tool.pixi.feature.agent]
-tasks.agent = "python -m agent"
+[tool.pixi.feature.agent-mpc-balancer]
+tasks.mpc_balancer= "python -m agents.mpc_balancer"
+
+[tool.pixi.feature.agent-trajectory-player.dependencies]
+gin-config = ">=0.5.0"
+meshcat-shapes = ">=0.3.0"
+pandas = "*"
+pink = ">=3.0.0,<4"
+proxsuite = ">=0.4.1"
+qpmpc = ">=3.0.1,<4"
 
 [tool.pixi.feature.docs]
 dependencies = { doxygen = "<=1.9.5", graphviz = "*", make = "*", "stable-baselines3" = "*" }
@@ -108,10 +115,16 @@ tasks.lint = { depends-on = ["lint-bazel", "lint-ruff", "lint-ruff-format"] }
 
 [tool.pixi.feature.pack]
 dependencies = { pixi-pack = ">=0.7.2" }
-tasks.pack = "pixi-pack --environment agent --platform linux-aarch64 --ignore-pypi-non-wheel"
+tasks.pack = "pixi-pack --environment agent-mpc-balancer --platform linux-aarch64 --ignore-pypi-non-wheel"
 
-[tool.pixi.feature.pybullet]
-dependencies = { "pybullet" = "*" }
+[tool.pixi.feature.pybullet.dependencies]
+gin-config = ">=0.5.0"
+meshcat-shapes = ">=0.3.0"
+pink = ">=3.0.0,<4"
+pinocchio = ">=3.1.0,<4"
+proxsuite = ">=0.4.1"
+pybullet = "*"
+qpmpc = ">=3.0.1,<4"
 
 [tool.pixi.feature.test]
 dependencies = { lcov = "*", "stable-baselines3" = ">2.3.0" }
@@ -128,12 +141,13 @@ cmd = "./tools/bazelisk run //spines:bullet_spine -- --show"
 cmd = "./tools/bazelisk run //spines:bullet_spine -- --pipeline wheel_balancer --show"
 
 [tool.pixi.environments]
-agent = { features = ["agent"], solve-group = "default" }
+agent-mpc-balancer = { features = ["agent-mpc-balancer"], solve-group = "default" }
+agent-trajectory-player = { features = ["agent-trajectory-player"], solve-group = "default" }
 default = { features = [], solve-group = "default" }
 docs = { features = ["docs"], solve-group = "default" }
 lint = { features = ["lint"], solve-group = "default" }
 pack = { features = ["pack"], solve-group = "default" }
-pybullet = { features = ["agent", "pybullet"], solve-group = "default" }
+pybullet = { features = ["pybullet"], solve-group = "default" }
 test = { features = ["test"], solve-group = "default" }
 
 [tool.ruff]

@@ -14,10 +14,10 @@ This repository contains all the materials needed to build and control an Upkie:
 
 ## Getting started
 
-Upkies come with a default *agent* that can balance and roam around. You can try it out in simulation by:
+Upkies come with a model predictive controller that can balance and roam around. You can try it out in simulation by:
 
 ```console
-./start_agent.sh
+./start_mpc_balancer.sh
 ```
 
 Once the agent is running, you can direct your Upkie using a gamepad 🎮

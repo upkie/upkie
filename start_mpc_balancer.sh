@@ -82,8 +82,8 @@ SIMULATION_PID=$!
 sleep 2
 
 # Start agent in the background
-echo "🚀 Starting agent..."
-$PIXI_CMD run agent &
+echo "🚀 Starting agent 'mpc_balancer'..."
+$PIXI_CMD run mpc_balancer &
 AGENT_PID=$!
 
 # Wait for either process to exit
