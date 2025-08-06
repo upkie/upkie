@@ -8,6 +8,7 @@ dist/
 docs/html/
 env/
 environment.tar
+logs/
 tools/bazel
 tools/logs/*.mpack
 tools/logs/*.tar.*
