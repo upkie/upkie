@@ -10,7 +10,7 @@ from multiprocessing import resource_tracker
 from multiprocessing.shared_memory import SharedMemory
 
 from ..exceptions import SpineError
-from ..utils.spdlog import upkie_logger
+from ..logging import logger
 
 
 def wait_for_shared_memory(
@@ -31,7 +31,7 @@ def wait_for_shared_memory(
 
     for trial in range(retries):
         if trial > 0:
-            upkie_logger.info(
+            logger.info(
                 f"Waiting for spine /{shm_name} to start "
                 f"(trial {trial} / {retries})..."
             )

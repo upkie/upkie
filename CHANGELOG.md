@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Breaking:** Move logging from `upkie.utils.spdlog` to `upkie.logging`
 - **Breaking:** Rename `UpkieServos` to `Upkie-Servos-Spine`
 - **Breaking:** cpp: Rename actuation namespace to interfaces
 - **Breaking:** envs: Rename `UpkieGroundVelocity` wrapper to `Pendulum`

@@ -17,9 +17,9 @@ from pink.tasks import FrameTask, PostureTask
 from pink.utils import custom_configuration_vector
 from pink.visualization import start_meshcat_visualizer
 
+from upkie.logging import logger
 from upkie.utils.clamp import clamp
-from upkie.utils.filters import abs_bounded_derivative_filter
-from upkie.utils.spdlog import upkie_logger
+from upkie.utils.filter import abs_bounded_derivative_filter
 
 
 def observe_configuration(
@@ -238,7 +238,7 @@ class HeightController:
             visualizer = start_meshcat_visualizer(robot)
             add_target_frames(visualizer)
 
-        upkie_logger.info("Initializing Upkie to its neutral configuration...")
+        logger.info("Initializing Upkie to its neutral configuration...")
 
         self.__initialized = False
         self.ik_configuration = neutral_configuration
@@ -447,7 +447,7 @@ class HeightController:
         # Difference is also OK, configuration space is a vector space
         q_diff = self.q_init - self.ik_configuration.q
         if np.linalg.norm(q_diff, ord=1) < 1e-5:
-            upkie_logger.info("Upkie initialized to the neutral configuration")
+            logger.info("Upkie initialized to the neutral configuration")
             self.__initialized = True
         return_configuration = pink.Configuration(
             self.robot.model, self.robot.data, self.q_init

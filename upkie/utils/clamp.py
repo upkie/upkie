@@ -10,7 +10,7 @@ Clamping functions.
 
 from typing import Optional
 
-from .spdlog import logging
+from ..logging import logger
 
 
 def clamp(
@@ -51,9 +51,9 @@ def clamp_and_warn(value: float, lower: float, upper: float, label: str):
     \param label Label to describe the value.
     """
     if value < lower:
-        logging.warning(f"{label}={value} clamped to {lower=}")
+        logger.warning(f"{label}={value} clamped to {lower=}")
         return lower
     elif value > upper:
-        logging.warning(f"{label}={value} clamped to {upper=}")
+        logger.warning(f"{label}={value} clamped to {upper=}")
         return upper
     return value

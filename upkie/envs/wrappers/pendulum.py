@@ -16,9 +16,9 @@ import numpy as np
 
 from upkie.envs.upkie_env import UpkieEnv
 from upkie.exceptions import UpkieException
+from upkie.logging import logger
 from upkie.utils.clamp import clamp_and_warn
 from upkie.utils.filters import low_pass_filter
-from upkie.utils.spdlog import upkie_logger
 
 
 class Pendulum(gym.Wrapper):
@@ -285,7 +285,7 @@ class Pendulum(gym.Wrapper):
         """
         pitch = spine_observation["base_orientation"]["pitch"]
         if abs(pitch) > self.fall_pitch:
-            upkie_logger.warning(
+            logger.warning(
                 "Fall detected (pitch=%.2f rad, fall_pitch=%.2f rad)",
                 abs(pitch),
                 self.fall_pitch,
