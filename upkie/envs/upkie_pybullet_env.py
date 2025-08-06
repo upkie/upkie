@@ -86,7 +86,7 @@ class UpkiePyBulletEnv(UpkieEnv):
         )
 
         # Initialize PyBullet
-        if pybullet is None:
+        if pybullet is None or pybullet_data is None:
             raise MissingOptionalDependency("PyBullet not found")
         pybullet_mode = pybullet.GUI if gui else pybullet.DIRECT
         self._bullet = pybullet.connect(pybullet_mode)
