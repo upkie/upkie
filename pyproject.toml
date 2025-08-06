@@ -110,6 +110,7 @@ rl-zoo3 = "*"
 
 [tool.pixi.feature.agent-rl-baselines3-zoo]
 tasks.rl-baselines3-train = "python -m agents.rl_baselines3_zoo"
+tasks.rl-baselines3-enjoy = "python agents/rl_baselines3_zoo/enjoy.py"
 
 [tool.pixi.feature.docs]
 dependencies = { doxygen = "<=1.9.5", graphviz = "*", make = "*", "stable-baselines3" = "*" }
