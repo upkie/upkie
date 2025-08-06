@@ -10,9 +10,11 @@ from pathlib import Path
 from rl_zoo3.train import train as rl_zoo3_train
 
 import upkie.envs
+import upkie.logging
 
 if __name__ == "__main__":
     upkie.envs.register()
+    upkie.logging.disable_warnings()
 
     custom_args = (
         ["--env", "Upkie-PyBullet-Pendulum"],

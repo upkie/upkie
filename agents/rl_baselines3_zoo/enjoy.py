@@ -12,6 +12,7 @@ import gymnasium as gym
 from stable_baselines3 import PPO
 
 import upkie.envs
+import upkie.logging
 
 
 def find_latest_model(
@@ -94,9 +95,8 @@ def parse_command_line_arguments() -> argparse.Namespace:
 def main():
     """Main function to run trained policy."""
     args = parse_command_line_arguments()
-
-    # Register Upkie environments
     upkie.envs.register()
+    upkie.logging.disable_warnings()
 
     # Find model path
     if args.model_path:

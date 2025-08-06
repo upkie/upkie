@@ -52,18 +52,25 @@ class SpdlogFormatter(logging.Formatter):
         return formatter.format(record)
 
 
-# Create dedicated Upkie logger
-upkie_logger = logging.getLogger("upkie")
-upkie_logger.setLevel(logging.INFO)
+# Create a dedicated "upkie" logger
+logger = logging.getLogger("upkie")
+logger.setLevel(logging.INFO)
 handler = logging.StreamHandler()
 handler.setLevel(logging.DEBUG)
 handler.setFormatter(SpdlogFormatter())
-upkie_logger.addHandler(handler)
+logger.addHandler(handler)
 
 # Prevent propagation to root logger to avoid duplicate messages
-upkie_logger.propagate = False
+logger.propagate = False
+
+
+def disable_warnings() -> None:
+    """!
+    Disable all warnings from the upkie module.
+    """
+    logger.setLevel("ERROR")
 
 
 __all__ = [
-    "upkie_logger",
+    "logger",
 ]
