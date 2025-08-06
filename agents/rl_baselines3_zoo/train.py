@@ -22,6 +22,7 @@ if __name__ == "__main__":
         ["--eval-freq", "-1"],
         ["--env-kwargs", "gui:False", "regulate_frequency:False"],
         ["--tensorboard-log", "./logs/tensorboard/"],
+        ["--vec-env", "subproc"],
     )
 
     for args in custom_args:

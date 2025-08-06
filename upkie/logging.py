@@ -68,7 +68,7 @@ def disable_warnings() -> None:
     """!
     Disable all warnings from the upkie module.
     """
-    logger.setLevel("ERROR")
+    logger.setLevel(logging.ERROR)
 
 
 __all__ = [

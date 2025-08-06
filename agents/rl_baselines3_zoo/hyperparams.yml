@@ -2,6 +2,7 @@
 
 Upkie-PyBullet-Pendulum:
     n_timesteps: 1_000_000
+    n_envs: 4
     policy: 'MlpPolicy'
     n_steps: 2048
     batch_size: 64
