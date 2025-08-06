@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Major:** Add Gymnasium environments with the Genesis simulator
+- **Major:** Add Gymnasium environments with the PyBullet simulator
 - agent: Add `start_mpc_balancer.sh` script to the repository
 - agent: Import MPC balancer from previous Pink balancer
 - control: Create `upkie.controllers` submodule

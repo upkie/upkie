@@ -7,6 +7,7 @@
 from upkie.envs.pipelines import ServoPipeline
 from upkie.envs.wrappers import Pendulum
 
+from .upkie_genesis_env import UpkieGenesisEnv
 from .upkie_mock_env import UpkieMockEnv
 from .upkie_pybullet_env import UpkiePyBulletEnv
 from .upkie_spine_env import UpkieSpineEnv
@@ -45,6 +46,13 @@ def wrap_pendulum(EnvClass, **kwargs):
     servo_pipeline = ServoPipeline(**servo_kwargs)
     env = EnvClass(pipeline=servo_pipeline, **env_kwargs)
     return Pendulum(env, **pendulum_kwargs)
+
+
+def wrap_genesis_pendulum(**kwargs):
+    r"""!
+    Add pendulum wrapper around an UpkieGenesisEnv environment.
+    """
+    return wrap_pendulum(UpkieGenesisEnv, **kwargs)
 
 
 def wrap_mock_pendulum(**kwargs):
