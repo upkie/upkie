@@ -107,6 +107,9 @@ class UpkieGenesisEnv(UpkieEnv):
                 substeps=1,
                 gravity=[0.0, 0.0, -9.81],
             ),
+            profiling_options=genesis.options.ProfilingOptions(
+                show_FPS=False,
+            ),
             show_viewer=gui,
         )
 

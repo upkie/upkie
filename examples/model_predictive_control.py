@@ -38,11 +38,7 @@ def select_gym_environment():
             if choice == "1":
                 return ("Upkie-Spine-Pendulum", env_kwargs)
             elif choice == "2":
-                env_kwargs.update(
-                    {
-                        "nb_substeps": 5,
-                    }
-                )
+                env_kwargs["nb_substeps"] = 5
                 return ("Upkie-PyBullet-Pendulum", env_kwargs)
             elif choice == "3":
                 return ("Upkie-Genesis-Pendulum", env_kwargs)
