@@ -11,8 +11,8 @@ from multiprocessing.shared_memory import SharedMemory
 
 import numpy as np
 
-from upkie.envs.upkie_spine_env import UpkieSpineEnv
 from upkie.envs.tests.mock_spine import MockSpine
+from upkie.envs.upkie_spine_env import UpkieSpineEnv
 from upkie.envs.wrappers.pendulum import Pendulum
 
 

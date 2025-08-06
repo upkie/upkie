@@ -48,12 +48,21 @@ def wrap_pendulum(EnvClass, **kwargs):
 
 
 def wrap_mock_pendulum(**kwargs):
+    r"""!
+    Add pendulum wrapper around an UpkieMockEnv environment.
+    """
     return wrap_pendulum(UpkieMockEnv, **kwargs)
 
 
-def wrap_spine_pendulum(**kwargs):
-    return wrap_pendulum(UpkieSpineEnv, **kwargs)
-
-
 def wrap_pybullet_pendulum(**kwargs):
+    r"""!
+    Add pendulum wrapper around an UpkiePyBulletEnv environment.
+    """
     return wrap_pendulum(UpkiePyBulletEnv, **kwargs)
+
+
+def wrap_spine_pendulum(**kwargs):
+    r"""!
+    Add pendulum wrapper around an UpkieSpineEnv environment.
+    """
+    return wrap_pendulum(UpkieSpineEnv, **kwargs)

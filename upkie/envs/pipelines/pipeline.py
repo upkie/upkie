@@ -6,6 +6,7 @@
 
 from abc import ABC, abstractmethod
 
+
 class Pipeline(ABC):
     r"""!
     Interface to a spine pipeline.
