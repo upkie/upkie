@@ -101,6 +101,16 @@ pink = ">=3.0.0,<4"
 proxsuite = ">=0.4.1"
 qpmpc = ">=3.0.1,<4"
 
+[tool.pixi.feature.agent-rl-baselines3-zoo.dependencies]
+stable-baselines3 = ">=2.3.0"
+tensorboard = "*"
+
+[tool.pixi.feature.agent-rl-baselines3-zoo.pypi-dependencies]
+rl-zoo3 = "*"
+
+[tool.pixi.feature.agent-rl-baselines3-zoo]
+tasks.rl-baselines3-train = "python -m agents.rl_baselines3_zoo"
+
 [tool.pixi.feature.docs]
 dependencies = { doxygen = "<=1.9.5", graphviz = "*", make = "*", "stable-baselines3" = "*" }
 tasks.docs-make = "doxygen --version && cd docs && make"
@@ -142,6 +152,7 @@ cmd = "./tools/bazelisk run //spines:bullet_spine -- --pipeline wheel_balancer -
 
 [tool.pixi.environments]
 agent-mpc-balancer = { features = ["agent-mpc-balancer"], solve-group = "default" }
+agent-rl-baselines3-zoo = { features = ["agent-rl-baselines3-zoo", "pybullet"], solve-group = "default" }
 agent-trajectory-player = { features = ["agent-trajectory-player"], solve-group = "default" }
 default = { features = [], solve-group = "default" }
 docs = { features = ["docs"], solve-group = "default" }
