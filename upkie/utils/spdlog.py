@@ -52,15 +52,18 @@ class SpdlogFormatter(logging.Formatter):
         return formatter.format(record)
 
 
-logger = logging.getLogger()
-logger.setLevel(logging.INFO)
+# Create dedicated Upkie logger
+upkie_logger = logging.getLogger("upkie")
+upkie_logger.setLevel(logging.INFO)
 handler = logging.StreamHandler()
 handler.setLevel(logging.DEBUG)
 handler.setFormatter(SpdlogFormatter())
-logger.addHandler(handler)
-logging.basicConfig(level=logging.INFO)
+upkie_logger.addHandler(handler)
+
+# Prevent propagation to root logger to avoid duplicate messages
+upkie_logger.propagate = False
 
 
 __all__ = [
-    "logging",
+    "upkie_logger",
 ]

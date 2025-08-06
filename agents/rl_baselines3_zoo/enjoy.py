@@ -121,11 +121,9 @@ def main():
         print(f"Error: Algorithm {args.algo} not supported yet")
         return
 
-    # Create environment
+    # Create environment and run episodes
     with gym.make(args.env, gui=True, frequency=200) as env:
         print(f"Running {args.episodes} episodes")
-
-        # Run episodes
         for episode in range(args.episodes):
             obs, info = env.reset()
             episode_reward = 0
@@ -135,13 +133,9 @@ def main():
             print(f"\nEpisode {episode + 1}/{args.episodes}")
 
             while not done:
-                # Get action from trained policy
                 action, _ = model.predict(obs, deterministic=True)
-
-                # Step environment
                 obs, reward, terminated, truncated, info = env.step(action)
                 done = terminated or truncated
-
                 episode_reward += reward
                 steps += 1
 

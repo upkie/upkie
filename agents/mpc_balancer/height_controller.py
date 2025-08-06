@@ -19,7 +19,7 @@ from pink.visualization import start_meshcat_visualizer
 
 from upkie.utils.clamp import clamp
 from upkie.utils.filters import abs_bounded_derivative_filter
-from upkie.utils.spdlog import logging
+from upkie.utils.spdlog import upkie_logger
 
 
 def observe_configuration(
@@ -238,7 +238,7 @@ class HeightController:
             visualizer = start_meshcat_visualizer(robot)
             add_target_frames(visualizer)
 
-        logging.info("Initializing Upkie to its neutral configuration...")
+        upkie_logger.info("Initializing Upkie to its neutral configuration...")
 
         self.__initialized = False
         self.ik_configuration = neutral_configuration
@@ -391,8 +391,7 @@ class HeightController:
 
         \param observation Latest observation.
         \param dt Duration in seconds until next cycle.
-        \return Dictionary with the new action and some internal state for
-            logging.
+        \return Dictionary with the new action.
         """
         servo_action = self.get_ik_servo_action(observation, dt)  # always run
         if not self.__initialized:
@@ -406,8 +405,7 @@ class HeightController:
 
         \param observation Latest observation.
         \param dt Duration in seconds until next cycle.
-        \return Dictionary with the new action and some internal state for
-            logging.
+        \return Dictionary with the new action.
         """
         self.update_target_height(observation, dt)
         self.update_ik_targets(observation, dt)
@@ -449,7 +447,7 @@ class HeightController:
         # Difference is also OK, configuration space is a vector space
         q_diff = self.q_init - self.ik_configuration.q
         if np.linalg.norm(q_diff, ord=1) < 1e-5:
-            logging.info("Upkie initialized to the neutral configuration")
+            upkie_logger.info("Upkie initialized to the neutral configuration")
             self.__initialized = True
         return_configuration = pink.Configuration(
             self.robot.model, self.robot.data, self.q_init

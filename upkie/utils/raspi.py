@@ -13,7 +13,7 @@ import sys
 
 from upkie.exceptions import UpkieRuntimeError
 
-from .spdlog import logging
+from .spdlog import upkie_logger
 
 __AGENT_CPUID: int = 3
 __MODEL_PATH: str = "/sys/firmware/devicetree/base/model"
@@ -44,7 +44,7 @@ def configure_agent_process() -> None:
             "Cannot configure agent process from an interpreter"
         )
     if os.geteuid() != 0:
-        logging.info("Re-running as root to set the CPU affinity")
+        upkie_logger.info("Re-running as root to set the CPU affinity")
         args = ["sudo", "-E", sys.executable] + sys.argv + [os.environ]
         os.execlpe("sudo", *args)
     os.sched_setaffinity(0, {__AGENT_CPUID})

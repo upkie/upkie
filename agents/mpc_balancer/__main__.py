@@ -17,7 +17,7 @@ import upkie.config
 import upkie.envs
 from upkie.utils.clamp import clamp
 from upkie.utils.raspi import configure_agent_process, on_raspi
-from upkie.utils.spdlog import logging
+from upkie.utils.spdlog import upkie_logger
 
 from .height_controller import HeightController
 from .wheel_controller import WheelController
@@ -162,13 +162,13 @@ if __name__ == "__main__":
         temp_wheel_controller.sagittal_balancer.max_ground_velocity
     )
     temp_height_controller = HeightController(visualize=False)
-    logging.info(f"Knees bend {temp_height_controller.knee_side}")
-    logging.info(f"Max. remote-control velocity: {max_rc_vel} m/s")
-    logging.info(f"Max. commanded velocity: {max_ground_vel} m/s")
-    logging.info(f"Wheel radius: {wheel_radius} m")
-    logging.info(f"Additional spine config:\n\n{spine_config}\n\n")
+    upkie_logger.info(f"Knees bend {temp_height_controller.knee_side}")
+    upkie_logger.info(f"Max. remote-control velocity: {max_rc_vel} m/s")
+    upkie_logger.info(f"Max. commanded velocity: {max_ground_vel} m/s")
+    upkie_logger.info(f"Wheel radius: {wheel_radius} m")
+    upkie_logger.info(f"Additional spine config:\n\n{spine_config}\n\n")
 
     try:
         run(spine_config, visualize=args.visualize)
     except KeyboardInterrupt:
-        logging.info("Terminating in response to keyboard interrupt")
+        upkie_logger.info("Terminating in response to keyboard interrupt")

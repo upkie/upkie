@@ -13,7 +13,7 @@ from qpsolvers import solve_problem
 
 from upkie.utils.clamp import clamp_and_warn
 from upkie.utils.filters import low_pass_filter
-from upkie.utils.spdlog import logging
+from upkie.utils.spdlog import upkie_logger
 
 from .proxqp_workspace import ProxQPWorkspace
 
@@ -158,7 +158,7 @@ class MPCBalancer:
 
         fallen = abs(base_pitch) > self.fall_pitch
         if fallen and not self.fallen:
-            logging.warning(f"Base angle {base_pitch=:.3} rad denotes a fall")
+            upkie_logger.warning(f"Base angle {base_pitch=:.3} rad denotes a fall")
         self.fallen = fallen
 
         # NB: state structure comes from WheeledInvertedPendulum
@@ -185,7 +185,7 @@ class MPCBalancer:
         else:  # not self.warm_start
             qpsol = solve_problem(self.mpc_qp.problem, solver="proxqp")
         if not qpsol.found:
-            logging.warning("No solution found to the MPC problem")
+            upkie_logger.warning("No solution found to the MPC problem")
         plan = Plan(self.mpc_problem, qpsol)
 
         if fallen or not floor_contact:
@@ -196,8 +196,8 @@ class MPCBalancer:
                 dt=dt,
             )
         elif plan.is_empty:
-            logging.error("Solver found no solution to the MPC problem")
-            logging.info("Re-sending previous ground velocity")
+            upkie_logger.error("Solver found no solution to the MPC problem")
+            upkie_logger.info("Re-sending previous ground velocity")
         else:  # all good, plan was found
             self.pendulum.state = cur_state
             commanded_accel = plan.first_input[0]

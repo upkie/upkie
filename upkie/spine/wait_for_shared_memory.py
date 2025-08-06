@@ -5,12 +5,12 @@
 # Copyright 2022 Stéphane Caron
 # Copyright 2024 Inria
 
-import logging
 import time
 from multiprocessing import resource_tracker
 from multiprocessing.shared_memory import SharedMemory
 
 from ..exceptions import SpineError
+from ..utils.spdlog import upkie_logger
 
 
 def wait_for_shared_memory(
@@ -31,7 +31,7 @@ def wait_for_shared_memory(
 
     for trial in range(retries):
         if trial > 0:
-            logging.info(
+            upkie_logger.info(
                 f"Waiting for spine /{shm_name} to start "
                 f"(trial {trial} / {retries})..."
             )
