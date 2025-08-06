@@ -25,19 +25,25 @@ def select_gym_environment():
         "requires a running spine (e.g. from ./start_simulation.sh)"
     )
     print("2. Upkie-PyBullet-Pendulum \tself-contained PyBullet simulation")
+    print("2. Upkie-Genesis-Pendulum \tself-contained Genesis simulation")
+
+    env_kwargs = {
+        "frequency": 200.0,
+        "frequency_checks": False,
+    }
 
     while True:
         try:
-            choice = input("Enter your choice (1 or 2): ").strip()
+            choice = input("Enter your choice (1, 2 or 3): ").strip()
             if choice == "1":
-                return "Upkie-Spine-Pendulum", {"frequency": 200.0}
+                return ("Upkie-Spine-Pendulum", env_kwargs)
             elif choice == "2":
-                return "Upkie-PyBullet-Pendulum", {
-                    "frequency": 200.0,
-                    "nb_substeps": 5,
-                }
+                env_kwargs.update({"nb_substeps": 5,})
+                return ("Upkie-PyBullet-Pendulum", env_kwargs)
+            elif choice == "3":
+                return ("Upkie-Genesis-Pendulum", env_kwargs)
             else:
-                print("Invalid choice. Please enter 1 or 2.")
+                print("Invalid choice. Please enter 1, 2 or 3.")
         except KeyboardInterrupt:
             exit(0)
 
