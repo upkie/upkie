@@ -37,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breaking:** Rename `UpkieGroundVelocity` wrapper to `Pendulum`
 - **Breaking:** Rename `interfaces` C++ namespace from `actuation`
 - **Breaking:** Rename `upkie.logging` submodule from `upkie.utils.spdlog`
+- CICD: Switch to Pixi in CI workflow
 - CICD: Switch to pytest for Python unit tests
 - Clean up Python cache directories upon `make clean`
 - Move coverage and lint rules from the Makefile to Pixi tasks

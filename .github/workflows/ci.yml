@@ -124,38 +124,22 @@ jobs:
                   make build
 
     coverage:
-        name: "Coverage"
+        name: "Code coverage"
         runs-on: ubuntu-22.04
-
-        defaults:
-            run:
-                # See https://github.com/mamba-org/setup-micromamba?tab=readme-ov-file#about-login-shells
-                shell: bash -leo pipefail {0}
 
         steps:
             - name: "Checkout sources"
               uses: actions/checkout@v4
 
-            - name: "Install Conda environment with Micromamba"
-              uses: mamba-org/setup-micromamba@v1
+            - name: "Setup Pixi"
+              uses: prefix-dev/setup-pixi@v0.8.8
               with:
-                  micromamba-version: '1.5.8-0'
-                  environment-name: upkie_coverage_env
-                  create-args: >-
-                      python=3.12
-                      gymnasium>=1.0.0
-                      loop-rate-limiters
-                      msgpack-python
-                      numpy
-                      scipy
-                      stable-baselines3>2.3.0
-                      upkie_description
-                  cache-environment: true
-                  post-cleanup: 'all'
+                  pixi-version: v0.44.0
+                  cache: true
 
-            - name: "Test coverage"
+            - name: "Run coverage tests"
               run: |
-                  tools/bazelisk coverage --combined_report=lcov --compilation_mode=fastbuild --instrument_test_targets //...
+                  pixi run coverage-ci
 
             - name: "Submit report to Coveralls"
               uses: coverallsapp/github-action@v2
@@ -172,32 +156,15 @@ jobs:
             - name: "Checkout sources"
               uses: actions/checkout@v4
 
-            - name: "Setup Python environment"
-              uses: actions/setup-python@v5
+            - name: "Setup Pixi"
+              uses: prefix-dev/setup-pixi@v0.8.8
               with:
-                python-version: '3.12'
-
-            - name: "Install dependencies"
-              run: pip install ruff six
+                  pixi-version: v0.44.0
+                  cache: true
 
             - name: "Check code formatting"
-              env:
-                  BAZELISK_GITHUB_TOKEN: ${{ secrets.BAZELISK_GITHUB_TOKEN }}
               run: |
-                  tools/bazelisk test --compilation_mode=fastbuild --config lint //...
-
-            - name: "Check Python code formatting"
-              run: |
-                  ruff check upkie
-
-            - name: "Check shell scripts formatting"
-              run: |
-                  find . \
-                      -type f \
-                      -not \( -path '*/.git/*' -prune \) \
-                      -not \( -path '*/wiki/*' -prune \) \
-                      -exec sh -c 'head -n 1 {} | grep -q "#!/.*sh"' {} \; \
-                      -exec shellcheck {} \;
+                  pixi run lint
 
     test:
         name: "Test on Linux with Python ${{ matrix.python-version }}"
@@ -207,37 +174,25 @@ jobs:
             matrix:
                 python-version: ["3.9", "3.10", "3.11", "3.12"]
 
-        defaults:
-            run:
-                # See https://github.com/mamba-org/setup-micromamba?tab=readme-ov-file#about-login-shells
-                shell: bash -leo pipefail {0}
-
         steps:
             - name: "Checkout sources"
               uses: actions/checkout@v4
 
-            - name: "Install Conda environment with Micromamba"
-              uses: mamba-org/setup-micromamba@v1
+            - name: "Setup Pixi"
+              uses: prefix-dev/setup-pixi@v0.8.8
               with:
-                  micromamba-version: '1.5.8-0'
-                  environment-name: upkie_test_env
-                  create-args: >-
-                      python=${{ matrix.python-version }}
-                      gymnasium>=1.0.0
-                      loop-rate-limiters
-                      msgpack-python
-                      numpy
-                      scipy
-                      stable-baselines3>2.3.0
-                      upkie_description
-                  cache-environment: true
-                  post-cleanup: 'all'
+                  pixi-version: v0.44.0
+                  cache: true
 
-            - name: "Check unit tests"
+            - name: "Check C++ unit tests"
               env:
                   BAZELISK_GITHUB_TOKEN: ${{ secrets.BAZELISK_GITHUB_TOKEN }}
               run: |
-                  tools/bazelisk test --compilation_mode=fastbuild //...
+                  pixi run test-cpp
+
+            - name: "Check Python unit tests"
+              run: |
+                  pixi run test-python
 
     ci_success:
         name: "CI success"
