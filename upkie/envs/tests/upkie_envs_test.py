@@ -33,6 +33,13 @@ class UpkieEnvsTestCase(unittest.TestCase):
             kwargs = {}
             if env_id.startswith("Upkie") and "Spine" in env_id:
                 kwargs["shm_name"] = shared_memory._name
+            if "PyBullet" in env_id:
+                kwargs["gui"] = False
+            if "Genesis" in env_id:
+                # We don't test Genesis as of 0.3.0 as it would put the
+                # following constraints on the test environment: python<3.12
+                # (for pymeshlab), remove linux-aarch64 from platforms
+                continue
             gym.make(env_id, **kwargs)
         shared_memory.close()
 
