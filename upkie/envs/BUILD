@@ -17,6 +17,22 @@ py_library(
 )
 
 py_library(
+    name = "upkie_genesis_env",
+    srcs = [
+        "upkie_genesis_env.py",
+    ],
+    deps = [
+        "//upkie/config",
+        "//upkie/envs/pipelines",
+        "//upkie/model",
+        "//upkie/utils",
+        "//upkie:exceptions",
+        ":upkie_env",
+        "@upkie_description",
+    ],
+)
+
+py_library(
     name = "upkie_mock_env",
     srcs = [
         "upkie_mock_env.py",
@@ -25,6 +41,22 @@ py_library(
         "//upkie/envs/pipelines",
         "//upkie/utils",
         ":upkie_env",
+    ],
+)
+
+py_library(
+    name = "upkie_pybullet_env",
+    srcs = [
+        "upkie_pybullet_env.py",
+    ],
+    deps = [
+        "//upkie/config",
+        "//upkie/envs/pipelines",
+        "//upkie/model",
+        "//upkie/utils",
+        "//upkie:exceptions",
+        ":upkie_env",
+        "@upkie_description",
     ],
 )
 
@@ -48,11 +80,13 @@ py_library(
         "entry_points.py",
     ],
     deps = [
-        ":upkie_env",
-        ":upkie_mock_env",
-        ":upkie_spine_env",
         "//upkie/envs/pipelines",
         "//upkie/envs/wrappers",
+        ":upkie_env",
+        ":upkie_genesis_env",
+        ":upkie_mock_env",
+        ":upkie_pybullet_env",
+        ":upkie_spine_env",
     ],
 )
 
