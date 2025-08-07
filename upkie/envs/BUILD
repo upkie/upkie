@@ -21,6 +21,9 @@ py_library(
     srcs = [
         "upkie_genesis_env.py",
     ],
+    data = [
+        "@upkie_description",
+    ],
     deps = [
         "//upkie/config",
         "//upkie/envs/pipelines",
@@ -28,7 +31,6 @@ py_library(
         "//upkie/utils",
         "//upkie:exceptions",
         ":upkie_env",
-        "@upkie_description",
     ],
 )
 
@@ -49,6 +51,9 @@ py_library(
     srcs = [
         "upkie_pybullet_env.py",
     ],
+    data = [
+        "@upkie_description",
+    ],
     deps = [
         "//upkie/config",
         "//upkie/envs/pipelines",
@@ -56,7 +61,6 @@ py_library(
         "//upkie/utils",
         "//upkie:exceptions",
         ":upkie_env",
-        "@upkie_description",
     ],
 )
 
