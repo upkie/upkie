@@ -4,6 +4,7 @@
 #pragma once
 
 #include <memory>
+#include <string>
 
 #include "upkie/cpp/controllers/ControllerPipeline.h"
 #include "upkie/cpp/controllers/WheelBalancer.h"
