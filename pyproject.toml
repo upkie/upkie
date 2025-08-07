@@ -161,6 +161,7 @@ qpmpc = ">=3.0.1,<4"
 [tool.pixi.feature.test.dependencies]
 lcov = "*"
 pybullet = ">=3"
+pytest = "*"
 "stable-baselines3" = ">2.3.0"
 
 [tool.pixi.feature.test.tasks]
@@ -168,7 +169,9 @@ coverage-generate = { cmd = "./tools/bazelisk coverage --combined_report=lcov --
 coverage-report = { cmd = "genhtml bazel-out/_coverage/_coverage_report.dat -o bazel-out/_coverage" }
 coverage-open = { cmd = "xdg-open bazel-out/_coverage/index.html" }
 coverage = { depends-on = ["coverage-generate", "coverage-report", "coverage-open"] }
-test = "tools/bazel test //upkie/..."
+test-cpp = "tools/bazel test //upkie/..."
+test-python = "pytest tests/"
+test = { depends-on = ["test-cpp", "test-python"] }
 
 [tool.pixi.tasks]
 spines-bullet = "./tools/bazelisk run //spines:bullet_spine -- --show"
