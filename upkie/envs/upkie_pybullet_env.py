@@ -38,7 +38,7 @@ class UpkiePyBulletEnv(UpkieEnv):
     def __init__(
         self,
         frequency: Optional[float] = 200.0,
-        frequency_checks: bool = True,
+        frequency_checks: bool = False,
         gui: bool = True,
         init_state: Optional[RobotState] = None,
         pipeline: Optional[Pipeline] = None,
@@ -54,9 +54,10 @@ class UpkiePyBulletEnv(UpkieEnv):
             `self.dt` will be defined but the loop frequency will not be
             regulated.
         \param frequency_checks If `regulate_frequency` is set and this
-            parameter is true (default), a warning is issued every time the
-            control loop runs slower than the desired `frequency`. Set this
-            parameter to false to disable these warnings.
+            parameter is `True`, a warning will be issued every time the
+            control loop runs slower than the desired `frequency`. This check
+            is disabled by default in this environment as the simulation step
+            is executed inside the control loop.
         \param gui If True, run PyBullet with GUI. If False, run headless.
         \param init_state Initial state of the robot, only used in simulation.
         \param pipeline Spine dictionary interface selected via the --pipeline

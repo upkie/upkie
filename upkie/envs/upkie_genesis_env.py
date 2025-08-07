@@ -35,7 +35,7 @@ class UpkieGenesisEnv(UpkieEnv):
         self,
         backend: str = "gpu",
         frequency: Optional[float] = 200.0,
-        frequency_checks: bool = True,
+        frequency_checks: bool = False,
         genesis_config: Optional[dict] = None,
         gui: bool = True,
         init_state: Optional[RobotState] = None,
@@ -51,9 +51,10 @@ class UpkieGenesisEnv(UpkieEnv):
             `self.dt` will be defined but the loop frequency will not be
             regulated.
         \param frequency_checks If `regulate_frequency` is set and this
-            parameter is true (default), a warning is issued every time the
-            control loop runs slower than the desired `frequency`. Set this
-            parameter to false to disable these warnings.
+            parameter is True, a warning will be issued every time the control
+            loop runs slower than the desired `frequency`. This check is
+            disabled by default in this environment as the simulation step is
+            executed inside the control loop.
         \param genesis_config Additional Genesis configuration overriding the
             default configuration. The combined configuration dictionary is
             used for Genesis simulation setup.

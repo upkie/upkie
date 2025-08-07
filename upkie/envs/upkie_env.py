@@ -51,11 +51,11 @@ class UpkieEnv(gym.Env):
 
     def __init__(
         self,
-        frequency: Optional[float] = 200.0,
-        frequency_checks: bool = True,
-        init_state: Optional[RobotState] = None,
-        pipeline: Optional[Pipeline] = None,
-        regulate_frequency: bool = True,
+        frequency: Optional[float],
+        frequency_checks: bool,
+        init_state: Optional[RobotState],
+        pipeline: Optional[Pipeline],
+        regulate_frequency: bool,
     ) -> None:
         r"""!
         Initialize environment.
@@ -65,9 +65,8 @@ class UpkieEnv(gym.Env):
             `self.dt` will be defined but the loop frequency will not be
             regulated.
         \param frequency_checks If `regulate_frequency` is set and this
-            parameter is true (default), a warning is issued every time the
-            control loop runs slower than the desired `frequency`. Set this
-            parameter to false to disable these warnings.
+            parameter is `True`, a warning will be issued every time the
+            control loop runs slower than the desired `frequency`.
         \param init_state Initial state of the robot, only used in simulation.
         \param pipeline Spine dictionary interface selected via the --pipeline
             command-line argument of the spine binary, if any.

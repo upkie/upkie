@@ -41,9 +41,10 @@ class UpkieMockEnv(UpkieEnv):
             `self.dt` will be defined but the loop frequency will not be
             regulated.
         \param frequency_checks If `regulate_frequency` is set and this
-            parameter is true (default), a warning is issued every time the
-            control loop runs slower than the desired `frequency`. Set this
-            parameter to false to disable these warnings.
+            parameter is True, a warning will be issued every time the control
+            loop runs slower than the desired `frequency`. This check is
+            enabled by default in this environment as its purpose is to
+            evaluate agent performance.
         \param init_state Initial state of the robot, only used in simulation.
         \param pipeline Spine dictionary interface selected via the --pipeline
             command-line argument of the spine binary, if any.
