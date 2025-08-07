@@ -121,51 +121,58 @@ class TrajectoryPlayer:
             for side in ("left", "right")
             for name in ("hip", "knee")
         ]
-        self.__action = initial_action
+        self._action = initial_action
+        self.all_joints = self.upper_leg_joints + self.wheel_joints
         self.data = None
         self.dt = dt
-        self.playback = False
+        self.is_playing = False
         self.rem_reset_steps = 0
         self.reset_duration = reset_duration
         self.timescale = timescale
         self.trajectory = trajectory
         self.upper_leg_joints = upper_leg_joints
+        self.wheel_joints = ["left_wheel", "right_wheel"]
 
     def reset(self, init_state: dict):
         for joint in self.upper_leg_joints:
             position = init_state[joint]["position"]
-            self.__action[joint]["position"] = position
-            self.__action[joint]["velocity"] = -position / self.reset_duration
+            self._action[joint]["position"] = position
+            self._action[joint]["velocity"] = -position / self.reset_duration
+        for joint in self.wheel_joints:
+            self._action[joint]["position"] = np.nan
+            self._action[joint]["velocity"] = 0.0
         self.rem_reset_steps = int(self.reset_duration / self.dt)
         self.data = None
-        self.playback = False
+        self.is_playing = False
 
     def step_reset(self):
         for joint in self.upper_leg_joints:
             if self.rem_reset_steps > 0:
-                action_vel = self.__action[joint]["velocity"]
-                self.__action[joint]["position"] += action_vel * self.dt
+                action_vel = self._action[joint]["velocity"]
+                self._action[joint]["position"] += action_vel * self.dt
             else:  # self.rem_reset_steps <= 0
-                self.__action[joint]["position"] = 0.0
-                self.__action[joint]["velocity"] = 0.0
+                self._action[joint]["position"] = 0.0
+                self._action[joint]["velocity"] = 0.0
         self.rem_reset_steps -= 1
 
     def step_trajectory(self):
-        self.__action["left_hip"]["position"] = self.data["q_opt_7"]
-        self.__action["left_knee"]["position"] = self.data["q_opt_8"]
-        self.__action["right_hip"]["position"] = self.data["q_opt_10"]
-        self.__action["right_knee"]["position"] = self.data["q_opt_11"]
+        self._action["left_hip"]["position"] = self.data["q_opt_7"]
+        self._action["left_knee"]["position"] = self.data["q_opt_8"]
+        self._action["right_hip"]["position"] = self.data["q_opt_10"]
+        self._action["right_knee"]["position"] = self.data["q_opt_11"]
 
         s_dot = self.timescale
-        self.__action["left_hip"]["velocity"] = s_dot * self.data["v_opt_6"]
-        self.__action["left_knee"]["velocity"] = s_dot * self.data["v_opt_7"]
-        self.__action["right_hip"]["velocity"] = s_dot * self.data["v_opt_9"]
-        self.__action["right_knee"]["velocity"] = s_dot * self.data["v_opt_10"]
+        self._action["left_hip"]["velocity"] = s_dot * self.data["v_opt_6"]
+        self._action["left_knee"]["velocity"] = s_dot * self.data["v_opt_7"]
+        self._action["left_wheel"]["velocity"] = 0.0 * self.data["v_opt_8"]
+        self._action["right_hip"]["velocity"] = s_dot * self.data["v_opt_9"]
+        self._action["right_knee"]["velocity"] = s_dot * self.data["v_opt_10"]
+        self._action["right_wheel"]["velocity"] = 0.0 * self.data["v_opt_11"]
 
         ds = s_dot * self.dt
         self.data = self.trajectory.step(ds)
         if self.trajectory.terminated:
-            self.reset(init_state=self.__action)
+            self.reset(init_state=self._action)
 
     def check_joystick(self, spine_observation: dict) -> None:
         if "joystick" not in spine_observation:
@@ -173,21 +180,21 @@ class TrajectoryPlayer:
 
         joystick = spine_observation["joystick"]
         if joystick.get("cross_button", False):
-            self.reset(self.__action)
+            self.reset(self._action)
 
-        ready_to_play = not self.playback and self.rem_reset_steps < 1
+        ready_to_play = not self.is_playing and self.rem_reset_steps < 1
         if joystick.get("square_button", False) and ready_to_play:
             print("Starting trajectory playback...")
             self.data = self.trajectory.reset()
-            self.playback = True
+            self.is_playing = True
 
     def step(self, spine_observation: dict) -> dict:
         self.check_joystick(spine_observation)
         if self.rem_reset_steps >= 0:
             self.step_reset()
-        elif self.playback:
+        elif self.is_playing:
             self.step_trajectory()
-        return deepcopy(self.__action)
+        return deepcopy(self._action)
 
 
 if __name__ == "__main__":
