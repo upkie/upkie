@@ -69,6 +69,7 @@ py_test(
     name = "random_push_test",
     srcs = ["random_push_test.py"],
     deps = [
+        "//upkie/config",
         "//upkie/envs",
         "//upkie/envs/tests:mock_spine",
         "//upkie/envs/wrappers",

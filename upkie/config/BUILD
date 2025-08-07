@@ -10,6 +10,7 @@ py_library(
     name = "config",
     srcs = [
         "__init__.py",
+        "bullet_config.py",
         "spine_config.py",
     ],
 )
