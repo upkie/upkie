@@ -10,7 +10,7 @@ py_library(
     name = "clamp",
     srcs = ["clamp.py"],
     deps = [
-        ":spdlog",
+        "//upkie:logging",
     ],
 )
 
@@ -39,7 +39,7 @@ py_library(
     srcs = ["raspi.py"],
     deps = [
         "//upkie:exceptions",
-        ":spdlog",
+        "//upkie:logging",
     ],
 )
 
@@ -57,11 +57,6 @@ py_library(
 )
 
 py_library(
-    name = "spdlog",
-    srcs = ["spdlog.py"],
-)
-
-py_library(
     name = "utils",
     deps = [
         ":clamp",
@@ -71,7 +66,6 @@ py_library(
         ":raspi",
         ":robot_state",
         ":rotations",
-        ":spdlog",
     ],
 )
 

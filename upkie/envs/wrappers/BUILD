@@ -23,8 +23,8 @@ py_library(
         "//upkie/model",
         "//upkie/utils:clamp",
         "//upkie/utils:filters",
-        "//upkie/utils:spdlog",
         "//upkie:exceptions",
+        "//upkie:logging",
     ],
 )
 

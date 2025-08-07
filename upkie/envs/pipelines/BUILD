@@ -16,10 +16,10 @@ py_library(
     deps = [
         "//upkie/config",
         "//upkie/model",
-        "//upkie/utils:clamp",  
+        "//upkie/utils:clamp",
         "//upkie/utils:nested_update",
-        "//upkie/utils:spdlog",
         "//upkie:exceptions",
+        "//upkie:logging",
     ],
 )
 

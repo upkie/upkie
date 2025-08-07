@@ -12,6 +12,11 @@ py_library(
 )
 
 py_library(
+    name = "logging",
+    srcs = ["logging.py"],
+)
+
+py_library(
     name = "upkie",
     srcs = [
         "__init__.py",
@@ -22,6 +27,7 @@ py_library(
         "//upkie/spine",
         "//upkie/utils",
         ":exceptions",
+        ":logging",
     ],
 )
 
