@@ -168,6 +168,7 @@ pytest = "*"
 coverage-generate = { cmd = "./tools/bazelisk coverage --combined_report=lcov --compilation_mode=fastbuild --instrument_test_targets //..." }
 coverage-report = { cmd = "genhtml bazel-out/_coverage/_coverage_report.dat -o bazel-out/_coverage" }
 coverage-open = { cmd = "xdg-open bazel-out/_coverage/index.html" }
+coverage-ci = { depends-on = ["coverage-generate", "coverage-report"] }
 coverage = { depends-on = ["coverage-generate", "coverage-report", "coverage-open"] }
 test-cpp = "tools/bazel test //upkie/..."
 test-python = "pytest tests/"
