@@ -4,5 +4,5 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2024 Inria
 
-## \namespace agent
-## \brief Default agent for Upkie wheeled bipeds.
+## \namespace agents.mpc_balancer
+## \brief Balance Upkie wheeled bipeds by model predictive control.

@@ -109,8 +109,8 @@ tensorboard = "*"
 rl-zoo3 = "*"
 
 [tool.pixi.feature.agent-rl-baselines3-zoo]
-tasks.rl-baselines3-train = "python agents/rl_baselines3_zoo/train.py"
-tasks.rl-baselines3-enjoy = "python agents/rl_baselines3_zoo/enjoy.py"
+tasks.agent-rlb3-balancer-train = "python agents/rlb3_balancer/train.py"
+tasks.agent-rlb3-balancer-enjoy = "python agents/rlb3_balancer/enjoy.py"
 
 [tool.pixi.feature.docs]
 dependencies = { doxygen = "<=1.9.5", graphviz = "*", make = "*", "stable-baselines3" = "*" }

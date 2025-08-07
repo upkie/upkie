@@ -4,5 +4,5 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2025 Inria
 
-## \namespace agents.rl_baselines3_zoo
+## \namespace agents.rlb3_balancer
 ## \brief RL Baselines3 Zoo agent for training new balancing policies.
