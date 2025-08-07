@@ -67,6 +67,7 @@ class UpkieSpineEnv(UpkieEnv):
             frequency=frequency,
             frequency_checks=frequency_checks,
             init_state=init_state,
+            pipeline=pipeline,
             regulate_frequency=regulate_frequency,
         )
 

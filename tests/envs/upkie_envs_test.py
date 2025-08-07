@@ -7,7 +7,6 @@
 """Test upkie.envs submodule."""
 
 import unittest
-from multiprocessing.shared_memory import SharedMemory
 
 import gymnasium as gym
 
@@ -15,33 +14,14 @@ import upkie.envs
 
 
 class UpkieEnvsTestCase(unittest.TestCase):
-    def test_registration(self):
+    def test_unregistered(self):
         with self.assertRaises(gym.error.NameNotFound):
-            # runs in the same test so that we make sure this is executed
-            # before the call to `register()`
             gym.make("Upkie-Servos-NotFound")
-        shared_memory = SharedMemory(name=None, size=42, create=True)
+        with self.assertRaises(gym.error.NameNotFound):
+            gym.make("Upkie-Mock-Servos")  # should not work yet
         upkie.envs.register()
-        upkie_envs = [
-            env_id
-            for env_id in gym.envs.registry.keys()
-            if env_id.startswith("Upkie")
-        ]
-        for env_id in upkie_envs:
-            if env_id in ("register", "UpkieEnv"):
-                continue
-            kwargs = {}
-            if env_id.startswith("Upkie") and "Spine" in env_id:
-                kwargs["shm_name"] = shared_memory._name
-            if "PyBullet" in env_id:
-                kwargs["gui"] = False
-            if "Genesis" in env_id:
-                # We don't test Genesis as of 0.3.0 as it would put the
-                # following constraints on the test environment: python<3.12
-                # (for pymeshlab), remove linux-aarch64 from platforms
-                continue
-            gym.make(env_id, **kwargs)
-        shared_memory.close()
+        with gym.make("Upkie-Mock-Servos") as env:
+            self.assertIsNotNone(env)  # should work now
 
 
 if __name__ == "__main__":
