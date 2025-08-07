@@ -90,8 +90,8 @@ pinocchio = ">=3.1.0,<4"
 proxsuite = ">=0.4.1"
 qpmpc = ">=3.0.1,<4"
 
-[tool.pixi.feature.agent-mpc-balancer]
-tasks.mpc_balancer= "python -m agents.mpc_balancer"
+[tool.pixi.feature.agent-mpc-balancer.tasks]
+agent-mpc_balancer= "python -m agents.mpc_balancer"
 
 [tool.pixi.feature.agent-trajectory-player.dependencies]
 gin-config = ">=0.5.0"
@@ -101,32 +101,53 @@ pink = ">=3.0.0,<4"
 proxsuite = ">=0.4.1"
 qpmpc = ">=3.0.1,<4"
 
-[tool.pixi.feature.agent-rl-baselines3-zoo.dependencies]
+[tool.pixi.feature.agent-trajectory-player.tasks.agent-trajectory_player]
+args = ["csv_path"]
+cmd = "python agents/trajectory_player/run.py {{ csv_path }}"
+
+[tool.pixi.feature.agent-rlb3-balancer.dependencies]
 stable-baselines3 = ">=2.3.0"
 tensorboard = "*"
 
-[tool.pixi.feature.agent-rl-baselines3-zoo.pypi-dependencies]
+[tool.pixi.feature.agent-rlb3-balancer.pypi-dependencies]
+pybullet = ">=3"
 rl-zoo3 = "*"
 
-[tool.pixi.feature.agent-rl-baselines3-zoo]
-tasks.agent-rlb3-balancer-train = "python agents/rlb3_balancer/train.py"
-tasks.agent-rlb3-balancer-enjoy = "python agents/rlb3_balancer/enjoy.py"
+[tool.pixi.feature.agent-rlb3-balancer]
+tasks.agent-rlb3_balancer-train = "python agents/rlb3_balancer/train.py"
+tasks.agent-rlb3_balancer-enjoy = "python agents/rlb3_balancer/enjoy.py"
 
-[tool.pixi.feature.docs]
-dependencies = { doxygen = "<=1.9.5", graphviz = "*", make = "*", "stable-baselines3" = "*" }
-tasks.docs-make = "doxygen --version && cd docs && make"
-tasks.docs-open = { cmd = "xdg-open docs/html/index.html", depends-on = ["docs-make"] }
+[tool.pixi.feature.docs.dependencies]
+doxygen = "<=1.9.5"
+graphviz = "*"
+make = "*"
+"stable-baselines3" = "*"
 
-[tool.pixi.feature.lint]
-dependencies = { six = "*", ruff = ">=0.4.3" }
-tasks.lint-bazel = { cmd = "./tools/bazelisk test --config lint //upkie/..." }
-tasks.lint-ruff = { cmd = "ruff check upkie" }
-tasks.lint-ruff-format = { cmd = "ruff format --check upkie" }
-tasks.lint = { depends-on = ["lint-bazel", "lint-ruff", "lint-ruff-format"] }
+[tool.pixi.feature.docs.tasks]
+docs-make = "doxygen --version && cd docs && make"
+docs-open = { cmd = "xdg-open docs/html/index.html", depends-on = ["docs-make"] }
 
-[tool.pixi.feature.pack]
-dependencies = { pixi-pack = ">=0.7.2" }
-tasks.pack = "pixi-pack --environment agent-mpc-balancer --platform linux-aarch64 --ignore-pypi-non-wheel"
+[tool.pixi.feature.lint.dependencies]
+six = "*"
+ruff = ">=0.4.3"
+
+[tool.pixi.feature.lint.tasks]
+lint-bazel = { cmd = "./tools/bazelisk test --config lint //upkie/..." }
+lint-ruff = { cmd = "ruff check upkie" }
+lint-ruff-format = { cmd = "ruff format --check upkie" }
+lint = { depends-on = ["lint-bazel", "lint-ruff", "lint-ruff-format"] }
+
+[tool.pixi.feature.pack.dependencies]
+gin-config = ">=0.5.0"
+meshcat-shapes = ">=0.3.0"
+pink = ">=3.0.0,<4"
+pinocchio = ">=3.1.0,<4"
+pixi-pack = ">=0.7.2"
+proxsuite = ">=0.4.1"
+qpmpc = ">=3.0.1,<4"
+
+[tool.pixi.feature.pack.tasks]
+pack = "pixi-pack --environment raspi --platform linux-aarch64 --ignore-pypi-non-wheel"
 
 [tool.pixi.feature.pybullet.dependencies]
 gin-config = ">=0.5.0"
@@ -149,15 +170,13 @@ coverage-open = { cmd = "xdg-open bazel-out/_coverage/index.html" }
 coverage = { depends-on = ["coverage-generate", "coverage-report", "coverage-open"] }
 test = "tools/bazel test //upkie/..."
 
-[tool.pixi.tasks.bullet]
-cmd = "./tools/bazelisk run //spines:bullet_spine -- --show"
-
-[tool.pixi.tasks.bullet-wheel_balancer]
-cmd = "./tools/bazelisk run //spines:bullet_spine -- --pipeline wheel_balancer --show"
+[tool.pixi.tasks]
+spines-bullet = "./tools/bazelisk run //spines:bullet_spine -- --show"
+spines-mock = "./tools/bazelisk run //spines:mock_spine"
 
 [tool.pixi.environments]
 agent-mpc-balancer = { features = ["agent-mpc-balancer"], solve-group = "default" }
-agent-rl-baselines3-zoo = { features = ["agent-rl-baselines3-zoo", "pybullet"], solve-group = "default" }
+agent-rlb3-balancer = { features = ["agent-rlb3-balancer"], solve-group = "default" }
 agent-trajectory-player = { features = ["agent-trajectory-player"], solve-group = "default" }
 default = { features = [], solve-group = "default" }
 docs = { features = ["docs"], solve-group = "default" }
