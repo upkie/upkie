@@ -132,7 +132,7 @@ six = "*"
 ruff = ">=0.4.3"
 
 [tool.pixi.feature.lint.tasks]
-lint-bazel = { cmd = "./tools/bazelisk test --config lint //upkie/..." }
+lint-bazel = { cmd = "tools/bazelisk test --config lint //upkie/..." }
 lint-ruff = { cmd = "ruff check upkie" }
 lint-ruff-format = { cmd = "ruff format --check upkie" }
 lint = { depends-on = ["lint-bazel", "lint-ruff", "lint-ruff-format"] }
@@ -165,18 +165,18 @@ pytest = "*"
 "stable-baselines3" = ">2.3.0"
 
 [tool.pixi.feature.test.tasks]
-coverage-generate = { cmd = "./tools/bazelisk coverage --combined_report=lcov --compilation_mode=fastbuild --instrument_test_targets //..." }
+coverage-generate = { cmd = "tools/bazelisk coverage --combined_report=lcov --compilation_mode=fastbuild --instrument_test_targets //..." }
 coverage-report = { cmd = "genhtml bazel-out/_coverage/_coverage_report.dat -o bazel-out/_coverage" }
 coverage-open = { cmd = "xdg-open bazel-out/_coverage/index.html" }
 coverage-ci = { depends-on = ["coverage-generate", "coverage-report"] }
 coverage = { depends-on = ["coverage-generate", "coverage-report", "coverage-open"] }
-test-cpp = "tools/bazel test //upkie/..."
+test-cpp = "tools/bazelisk test //upkie/..."
 test-python = "pytest tests/"
 test = { depends-on = ["test-cpp", "test-python"] }
 
 [tool.pixi.tasks]
-spines-bullet = "./tools/bazelisk run //spines:bullet_spine -- --show"
-spines-mock = "./tools/bazelisk run //spines:mock_spine"
+spines-bullet = "tools/bazelisk run //spines:bullet_spine -- --show"
+spines-mock = "tools/bazelisk run //spines:mock_spine"
 
 [tool.pixi.environments]
 agent-mpc-balancer = { features = ["agent-mpc-balancer"], solve-group = "default" }
