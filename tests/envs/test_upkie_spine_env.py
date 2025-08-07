@@ -11,6 +11,8 @@ from multiprocessing.shared_memory import SharedMemory
 
 import numpy as np
 
+import gymnasium as gym
+import upkie.envs
 from upkie.envs.tests.mock_spine import MockSpine
 from upkie.envs.upkie_spine_env import UpkieSpineEnv
 
@@ -99,6 +101,15 @@ class UpkieSpineEnvTestCase(unittest.TestCase):
             self.env.action_space[not_wheel]["feedforward_torque"].high[0],
             places=5,
         )
+
+    def test_registration(self):
+        shared_memory = SharedMemory(name=None, size=42, create=True)
+        upkie.envs.register()
+        with gym.make(
+            "Upkie-Spine-Servos", shm_name=shared_memory._name
+        ) as env:
+            self.assertIsNotNone(env)
+        shared_memory.close()
 
 
 if __name__ == "__main__":
