@@ -40,5 +40,5 @@ def run(env: upkie.envs.UpkieServos):
 
 
 if __name__ == "__main__":
-    with gym.make("Upkie-Servos-Spine", frequency=200.0) as env:
+    with gym.make("Upkie-Spine-Servos", frequency=200.0) as env:
         run(env)

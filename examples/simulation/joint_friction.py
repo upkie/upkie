@@ -25,7 +25,7 @@ JOINT_PROPS = {
 if __name__ == "__main__":
     upkie.envs.register()
     with gym.make(
-        "Upkie-Servos-Spine",
+        "Upkie-Spine-Servos",
         frequency=200.0,
         init_state=RobotState(
             orientation_base_in_world=ScipyRotation.from_quat(
