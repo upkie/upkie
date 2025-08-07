@@ -17,15 +17,40 @@ py_library(
 )
 
 py_library(
+    name = "upkie_mock_env",
+    srcs = [
+        "upkie_mock_env.py",
+    ],
+    deps = [
+        "//upkie/envs/pipelines",
+        "//upkie/utils",
+        ":upkie_env",
+    ],
+)
+
+py_library(
+    name = "upkie_spine_env",
+    srcs = [
+        "upkie_spine_env.py",
+    ],
+    deps = [
+        "//upkie/envs/pipelines",
+        "//upkie/spine",
+        "//upkie/utils",
+        ":upkie_env",
+    ],
+)
+
+py_library(
     name = "envs",
     srcs = [
         "__init__.py",
         "entry_points.py",
-        "upkie_mock_env.py",
-        "upkie_spine_env.py",
     ],
     deps = [
         ":upkie_env",
+        ":upkie_mock_env",
+        ":upkie_spine_env",
         "//upkie/envs/pipelines",
         "//upkie/envs/wrappers",
     ],
