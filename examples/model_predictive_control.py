@@ -14,7 +14,8 @@ from upkie.controllers import MPCBalancer
 
 upkie.envs.register()
 
-TARGET_GROUND_VELOCITY = 0.0  # m/s
+NB_STEPS = 5_000
+TARGET_GROUND_VELOCITY = 0.3  # m/s
 
 
 def select_gym_environment():
@@ -34,7 +35,7 @@ def select_gym_environment():
 
     while True:
         try:
-            choice = input("Enter your choice (1, 2 or 3): ").strip()
+            choice = input("Enter your choice: ").strip()
             if choice == "1":
                 return ("Upkie-Spine-Pendulum", env_kwargs)
             elif choice == "2":
@@ -43,7 +44,7 @@ def select_gym_environment():
             elif choice == "3":
                 return ("Upkie-Genesis-Pendulum", env_kwargs)
             else:
-                print("Invalid choice. Please enter 1, 2 or 3.")
+                print("Invalid choice. Please select 1, 2 or 3.")
         except KeyboardInterrupt:
             exit(0)
 
@@ -58,11 +59,12 @@ if __name__ == "__main__":
             _, info = env.reset()  # connects to the spine
             action = np.zeros(env.action_space.shape)
 
-            print("Running MPC balancing for 10,000 steps...")
+            print("\n--\n")
+            print(f"Running MPC balancing for {NB_STEPS} steps...")
             print(f"Target ground velocity: {TARGET_GROUND_VELOCITY} m/s")
             print("Press Ctrl+C to stop early.\n")
 
-            for step in range(10_000):
+            for step in range(NB_STEPS):
                 action[0] = mpc_balancer.compute_ground_velocity(
                     target_ground_velocity=TARGET_GROUND_VELOCITY,  # m/s
                     spine_observation=info["spine_observation"],
@@ -71,7 +73,7 @@ if __name__ == "__main__":
                 _, _, terminated, truncated, info = env.step(action)
 
                 # Print progress every 1000 steps
-                if (step + 1) % 1000 == 0:
+                if (step + 1) % (NB_STEPS // 10) == 0:
                     ground_pos = info["spine_observation"]["wheel_odometry"][
                         "position"
                     ]
