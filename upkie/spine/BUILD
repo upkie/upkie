@@ -17,6 +17,7 @@ py_library(
     ],
     deps = [
         "//upkie:exceptions",
+        "//upkie:logging",
     ],
 )
 
