@@ -12,6 +12,7 @@ py_library(
         "upkie_env.py",
     ],
     deps = [
+        "//upkie/envs/pipelines",
         "//upkie/utils:robot_state",
     ],
 )
