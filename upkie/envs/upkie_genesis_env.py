@@ -82,7 +82,10 @@ class UpkieGenesisEnv(UpkieEnv):
 
         # Initialize Genesis
         if genesis is None:
-            raise MissingOptionalDependency("Genesis not found")
+            raise MissingOptionalDependency(
+                "Genesis not found, "
+                "you can install it e.g. by `pip install genesis-world`"
+            )
         if backend == "gpu":
             genesis.init(backend=genesis.gpu)
         elif backend == "cpu":
@@ -108,7 +111,7 @@ class UpkieGenesisEnv(UpkieEnv):
                 gravity=[0.0, 0.0, -9.81],
             ),
             profiling_options=genesis.options.ProfilingOptions(
-                show_FPS=False,
+                show_FPS=True,
             ),
             show_viewer=gui,
         )
@@ -245,11 +248,12 @@ class UpkieGenesisEnv(UpkieEnv):
 
         # Step the simulation with timing
         import time
+
         start_time = time.perf_counter()
         self._scene.step()
         end_time = time.perf_counter()
         step_time = (end_time - start_time) * 1000  # Convert to milliseconds
-        print(f"Genesis step time: {step_time:.2f} ms")
+        # print(f"Genesis step time: {step_time:.2f} ms")
 
         # Get observation
         spine_observation = self._get_spine_observation()

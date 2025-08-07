@@ -134,12 +134,12 @@ meshcat-shapes = ">=0.3.0"
 pink = ">=3.0.0,<4"
 pinocchio = ">=3.1.0,<4"
 proxsuite = ">=0.4.1"
-pybullet = "*"
+pybullet = ">=3"
 qpmpc = ">=3.0.1,<4"
 
 [tool.pixi.feature.test.dependencies]
 lcov = "*"
-pybullet = "*"
+pybullet = ">=3"
 "stable-baselines3" = ">2.3.0"
 
 [tool.pixi.feature.test.tasks]
