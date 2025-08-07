@@ -37,7 +37,12 @@ class DifferentiateActionTestCase(unittest.TestCase):
                 min_derivative=-0.1,
                 max_derivative=0.1,
             )
-            check_env(diff_env)
+            norm_diff_env = gym.wrappers.RescaleAction(
+                diff_env,
+                min_action=np.float32(-1.0),
+                max_action=np.float32(1.0),
+            )
+            check_env(norm_diff_env)
         except ImportError:
             pass
 

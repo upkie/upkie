@@ -28,6 +28,7 @@ class AddLagToActionTestCase(unittest.TestCase):
             from stable_baselines3.common.env_checker import check_env
 
             env = gym.make("Pendulum-v1")
+            env = gym.wrappers.RescaleAction(env, min_action=-1, max_action=1)
             lpf_env = AddLagToAction(env, time_constant=1.0)
             check_env(lpf_env)
         except ImportError:

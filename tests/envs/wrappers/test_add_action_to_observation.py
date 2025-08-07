@@ -31,6 +31,7 @@ class AddActionToObservationTestCase(unittest.TestCase):
             from stable_baselines3.common.env_checker import check_env
 
             env = gym.make("Pendulum-v1")
+            env = gym.wrappers.RescaleAction(env, min_action=-1, max_action=1)
             wrapped_env = AddActionToObservation(env)
             check_env(wrapped_env)
         except ImportError:

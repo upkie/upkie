@@ -27,6 +27,7 @@ class NoisifyActionTestCase(unittest.TestCase):
             from stable_baselines3.common.env_checker import check_env
 
             env = gym.make("Pendulum-v1")
+            env = gym.wrappers.RescaleAction(env, min_action=-1, max_action=1)
             noisy_env = NoisifyAction(env, noise=np.full(1, 0.42))
             check_env(noisy_env)
         except ImportError:
