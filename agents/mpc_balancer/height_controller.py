@@ -19,7 +19,7 @@ from pink.visualization import start_meshcat_visualizer
 
 from upkie.logging import logger
 from upkie.utils.clamp import clamp
-from upkie.utils.filter import abs_bounded_derivative_filter
+from upkie.utils.filters import abs_bounded_derivative_filter
 
 
 def observe_configuration(
