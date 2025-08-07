@@ -9,12 +9,12 @@
 import unittest
 from multiprocessing.shared_memory import SharedMemory
 
+import gymnasium as gym
 import numpy as np
 
-import gymnasium as gym
-import upkie.envs
 from upkie.envs.tests.mock_spine import MockSpine
 from upkie.envs.upkie_spine_env import UpkieSpineEnv
+from upkie.exceptions import UpkieTimeoutError
 
 
 class UpkieSpineEnvTestCase(unittest.TestCase):
@@ -103,13 +103,14 @@ class UpkieSpineEnvTestCase(unittest.TestCase):
         )
 
     def test_registration(self):
-        shared_memory = SharedMemory(name=None, size=42, create=True)
-        upkie.envs.register()
-        with gym.make(
-            "Upkie-Spine-Servos", shm_name=shared_memory._name
-        ) as env:
-            self.assertIsNotNone(env)
-        shared_memory.close()
+        shm = SharedMemory(name=None, size=42, create=True)
+        env = gym.make("Upkie-Spine-Servos", shm_name=shm._name)
+        self.assertIsNotNone(env)
+        try:
+            del env  # we delete it explicitly
+        except UpkieTimeoutError:  # to catch this exception
+            pass  # which is ok: there is no spine, thus no response
+        shm.close()
 
 
 if __name__ == "__main__":

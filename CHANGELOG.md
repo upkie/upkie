@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - envs: New `Upkie-PyBullet-Servos` environment
 - examples: Trying a Genesis simulation environment
 - examples: Trying a PyBullet simulation environment
+- exceptions: Raise `UpkieTimeoutError` upon spine timeout
 - logging: Add `disable_warnings` helper function
 - model: List joint names in `Model` class
 - utils: Joystick utility class

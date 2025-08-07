@@ -50,3 +50,9 @@ class UpkieRuntimeError(UpkieException, RuntimeError):
     """!
     Runtime error, for instance an invalid call to a library function.
     """
+
+
+class UpkieTimeoutError(UpkieException, TimeoutError):
+    """!
+    Raised when something times out, typically the spine not responding.
+    """

@@ -10,12 +10,9 @@ import unittest
 
 import gymnasium as gym
 
-import upkie.envs
-
 
 class UpkieMockEnvTestCase(unittest.TestCase):
     def test_registration(self):
-        upkie.envs.register()
         with gym.make("Upkie-Mock-Servos") as env:
             self.assertIsNotNone(env)
 

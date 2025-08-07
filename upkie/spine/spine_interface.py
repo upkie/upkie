@@ -15,7 +15,7 @@ from time import perf_counter_ns
 
 import msgpack
 
-from ..exceptions import PerformanceIssue, SpineError
+from ..exceptions import PerformanceIssue, SpineError, UpkieTimeoutError
 from .request import Request
 from .serialize import serialize
 from .wait_for_shared_memory import wait_for_shared_memory
@@ -143,7 +143,7 @@ class SpineInterface:
             # Fun fact: `not in set` is 3-4x faster than `!=` on the raspi
             # perf_counter_ns clocks ~1 us on the raspi
             if perf_counter_ns() > stop:
-                raise TimeoutError(
+                raise UpkieTimeoutError(
                     "Spine did not process request within "
                     f"{timeout_ns / 1e6:.1f} ms, is it stopped?"
                 )
