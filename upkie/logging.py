@@ -25,12 +25,12 @@ class SpdlogFormatter(logging.Formatter):
         BOLD_RED: str = "\033[31;1m"
         BOLD_WHITE: str = "\033[37;1m"
         BOLD_YELLOW: str = "\033[33;1m"
+        CRITICAL_RED: str = "\033[41m"
         GREEN: str = "\033[32m"
-        ON_RED: str = "\033[41m"
         RESET: str = "\033[0m"
 
         self.level_format: dict = {
-            logging.CRITICAL: f"[{ON_RED}{BOLD_WHITE}critical{RESET}]",
+            logging.CRITICAL: f"[{CRITICAL_RED}{BOLD_WHITE}critical{RESET}]",
             logging.DEBUG: "[debug]",
             logging.ERROR: f"[{BOLD_RED}error{RESET}]",
             logging.INFO: f"[{GREEN}info{RESET}]",
@@ -44,11 +44,11 @@ class SpdlogFormatter(logging.Formatter):
         \param record Record to format.
         """
         custom_format = (
-            "[%(asctime)s] "
+            "[%(name)s] [%(asctime)s] "
             + self.level_format.get(record.levelno, "[???]")
             + " %(message)s (%(filename)s:%(lineno)d)"
         )
-        formatter = logging.Formatter(custom_format)
+        formatter = logging.Formatter(custom_format, datefmt="%H:%M:%S")
         return formatter.format(record)
 
 
