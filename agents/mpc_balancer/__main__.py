@@ -55,7 +55,7 @@ def run(
     frequency: float = 200.0,
 ) -> None:
     r"""!
-    Run agent using the Upkie-Servos-Spine environment.
+    Run agent using a spine environment.
 
     \param spine_config Spine configuration dictionary.
     \param gain_scale PD gain scale for hip and knee joints.

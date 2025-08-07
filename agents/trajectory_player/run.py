@@ -6,6 +6,7 @@
 
 """Play a precomputed joint trajectory while balancing with the wheels."""
 
+import argparse
 from copy import deepcopy
 from pathlib import Path
 from typing import Dict
@@ -20,28 +21,59 @@ from upkie.controllers import MPCBalancer
 upkie.envs.register()
 
 
+def parse_command_line_arguments() -> argparse.Namespace:
+    """
+    Parse command line arguments.
+
+    Returns:
+        Command-line arguments.
+    """
+    parser = argparse.ArgumentParser(
+        description="Play a precomputed joint trajectory while balancing"
+    )
+    parser.add_argument(
+        "csv_path",
+        help="path to the trajectory CSV file",
+        type=str,  # will be a Path
+    )
+    parser.add_argument(
+        "--max-duration",
+        help="maximum duration played from the input trajectory",
+        type=float,
+    )
+    parser.add_argument(
+        "--timescale",
+        help="time scaling applied to the input trajectory",
+        default=0.1,
+        type=float,
+    )
+    args = parser.parse_args()
+    args.csv_path = Path(args.csv_path)
+    return args
+
+
 class SeriesStepper:
-    def __init__(self, csv_path: Path, max_time: float = 1e20):
+    def __init__(self, csv_path: Path, max_duration: float = 1e10):
         data = pd.read_csv(csv_path)
         timestamps = data.iloc[:, 0].values
         last = len(timestamps) - 1
         if not all(timestamps[i] <= timestamps[i + 1] for i in range(last)):
             raise ValueError("Timestamps in the CSV file should be be sorted.")
-        max_time = (
+        max_duration = (
             timestamps[last]
-            if max_time is None
-            else min(max_time, timestamps[last])
+            if max_duration is None
+            else min(max_duration, timestamps[last])
         )
 
         self.cur_index = 0
         self.cur_time = timestamps[0]
-        self.max_time = max_time
+        self.max_duration = max_duration
         self.data = data
         self.timestamps = timestamps
 
     @property
     def terminated(self) -> bool:
-        if self.cur_time >= self.max_time:
+        if self.cur_time >= self.max_duration:
             return True
         return self.cur_index >= len(self.timestamps) - 1
 
@@ -51,7 +83,7 @@ class SeriesStepper:
         return self.step(0)
 
     def step(self, dt: float) -> Dict[str, float]:
-        if self.cur_time >= self.max_time:
+        if self.cur_time >= self.max_duration:
             return self.data.iloc[self.cur_index].to_dict()
         self.cur_time += dt
         last_index = len(self.timestamps) - 1
@@ -159,15 +191,16 @@ class TrajectoryPlayer:
 
 
 if __name__ == "__main__":
+    args = parse_command_line_arguments()
     mpc_balancer = MPCBalancer(fall_pitch=1.5)
-    trajectory = SeriesStepper("upkie_jump_v2_vel_limits.csv", max_time=0.5)
-    with gym.make("Upkie-Servos-Spine", frequency=200.0) as env:
+    trajectory = SeriesStepper(args.csv_path, max_duration=args.max_duration)
+    with gym.make("Upkie-Spine-Servos", frequency=200.0) as env:
         observation, info = env.reset()  # connects to the spine
         player = TrajectoryPlayer(
             neutral_action=env.unwrapped.get_neutral_action(),
             dt=env.unwrapped.dt,
             trajectory=trajectory,
-            timescale=0.1,
+            timescale=args.timescale,
             reset_duration=3.0,
         )
         player.reset(observation)
