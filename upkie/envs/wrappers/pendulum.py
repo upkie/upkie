@@ -140,7 +140,7 @@ class Pendulum(gym.Wrapper):
             ],
             dtype=float,
         )
-        action_limit = np.array([max_ground_velocity], dtype=float)
+        action_limit = np.array([max_ground_velocity], dtype=np.float32)
 
         # gymnasium.Env: observation_space
         self.observation_space = gym.spaces.Box(
