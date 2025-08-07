@@ -17,6 +17,7 @@ class ActionObserverEnv(gym.Env):
     verification that the wrapper correctly modifies actions by observing
     the output.
     """
+
     def __init__(self):
         action_space = spaces.Box(0.0, 2.0, shape=(1,))
         self.action_space = action_space
@@ -43,6 +44,7 @@ class ConstantObservationEnv(gym.Env):
     This environment always returns the same observation value regardless
     of the action taken. It also stores PyBullet actions for testing purposes.
     """
+
     def __init__(self, constant: float):
         self.action_space = spaces.Box(-1.0, 1.0, shape=(1,))
         self.observation_space = spaces.Box(0.0, 2.0, shape=(1,))
@@ -86,6 +88,7 @@ class MockSpine:
     requiring actual hardware or external processes. It provides mock
     observations and handles actions for testing purposes.
     """
+
     def __init__(self):
         self.observation = {
             "base_orientation": {
