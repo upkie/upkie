@@ -149,6 +149,18 @@ qpmpc = ">=3.0.1,<4"
 [tool.pixi.feature.pack.tasks]
 pack = "pixi-pack --environment raspi --platform linux-aarch64 --ignore-pypi-non-wheel"
 
+[tool.pixi.feature.py39]
+dependencies = { python = "3.9.*" }
+
+[tool.pixi.feature.py310]
+dependencies = { python = "3.10.*" }
+
+[tool.pixi.feature.py311]
+dependencies = { python = "3.11.*" }
+
+[tool.pixi.feature.py312]
+dependencies = { python = "3.12.*" }
+
 [tool.pixi.feature.pybullet.dependencies]
 gin-config = ">=0.5.0"
 meshcat-shapes = ">=0.3.0"
@@ -169,7 +181,7 @@ coverage-generate = { cmd = "tools/bazelisk coverage --combined_report=lcov --co
 coverage-report = { cmd = "genhtml bazel-out/_coverage/_coverage_report.dat -o bazel-out/_coverage" }
 coverage-open = { cmd = "xdg-open bazel-out/_coverage/index.html" }
 coverage-ci = { depends-on = ["coverage-generate", "coverage-report"] }
-coverage = { depends-on = ["coverage-generate", "coverage-report", "coverage-open"] }
+coverage = { depends-on = ["coverage-ci", "coverage-open"] }
 test-cpp = "tools/bazelisk test //upkie/..."
 test-python = "pytest tests/"
 test = { depends-on = ["test-cpp", "test-python"] }
@@ -187,7 +199,11 @@ docs = { features = ["docs"], solve-group = "default" }
 lint = { features = ["lint"], solve-group = "default" }
 pack = { features = ["pack"], solve-group = "default" }
 pybullet = { features = ["pybullet"], solve-group = "default" }
-test = { features = ["test"], solve-group = "default" }
+test-cpp = { features = ["test"], solve-group = "py39" }
+test-py310 = { features = ["py310", "test"], solve-group = "py310" }
+test-py311 = { features = ["py311", "test"], solve-group = "py311" }
+test-py312 = { features = ["py312", "test"], solve-group = "py312" }
+test-py39 = { features = ["py39", "test"], solve-group = "py39" }
 
 [tool.ruff]
 line-length = 79
