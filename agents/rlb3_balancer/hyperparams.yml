@@ -13,7 +13,7 @@ Upkie-PyBullet-Pendulum:
     learning_rate: 0.0003
     clip_range: 0.2
     normalize: true
-    policy_kwargs: 
+    policy_kwargs:
         net_arch: [64, 64]
     env_wrapper:
         - wrappers.silence_warnings
