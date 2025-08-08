@@ -114,8 +114,8 @@ pybullet = ">=3"
 rl-zoo3 = "*"
 
 [tool.pixi.feature.agent-rlb3-balancer]
-tasks.agent-rlb3_balancer-train = "python agents/rlb3_balancer/train.py"
-tasks.agent-rlb3_balancer-enjoy = "python agents/rlb3_balancer/enjoy.py"
+tasks.agent-rlb3_trainer-train = "python agents/rlb3_trainer/train.py"
+tasks.agent-rlb3_trainer-enjoy = "python agents/rlb3_trainer/enjoy.py"
 
 [tool.pixi.feature.coverage.dependencies]
 lcov = "*"
