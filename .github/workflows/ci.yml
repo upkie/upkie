@@ -191,6 +191,7 @@ jobs:
 
     test-python:
         name: "Test with ${{ matrix.pyenv }} on ${{ matrix.os }}"
+        runs-on: ${{ matrix.os }}
 
         strategy:
             matrix:
