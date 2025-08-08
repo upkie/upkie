@@ -140,7 +140,7 @@ jobs:
 
             - name: "Run coverage tests"
               run: |
-                  pixi run -e test-cpp coverage-ci
+                  pixi run -e test-cpp coverage-report
 
             - name: "Submit report to Coveralls"
               uses: coverallsapp/github-action@v2

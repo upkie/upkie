@@ -18,11 +18,29 @@ class ActionObserverEnv(gym.Env):
     the output.
     """
 
+    ## \var action_space
+    ## Action space.
+    action_space: object
+
+    ## \var dt
+    ## Timestep in seconds.
+    dt: float
+
+    ## \var observation_space
+    ## Observation space.
+    observation_space: object
+
     def __init__(self):
+        r"""!
+        Initialize the ActionObserverEnv.
+
+        Sets up action and observation spaces as identical Box spaces,
+        and initializes the time step.
+        """
         action_space = spaces.Box(0.0, 2.0, shape=(1,))
         self.action_space = action_space
-        self.observation_space = action_space
         self.dt = 1e-3
+        self.observation_space = action_space
 
     def step(self, action):
         r"""!
@@ -45,7 +63,24 @@ class ConstantObservationEnv(gym.Env):
     of the action taken. It also stores PyBullet actions for testing purposes.
     """
 
+    ## \var action_space
+    ## Action space.
+    action_space: object
+
+    ## \var constant
+    ## Internal constant.
+    constant: float
+
+    ## \var observation_space
+    ## Observation space.
+    observation_space: object
+
     def __init__(self, constant: float):
+        r"""!
+        Initialize the ConstantObservationEnv.
+
+        \param constant The constant observation value to return.
+        """
         self.action_space = spaces.Box(-1.0, 1.0, shape=(1,))
         self.observation_space = spaces.Box(0.0, 2.0, shape=(1,))
         self.constant = constant
@@ -89,7 +124,22 @@ class MockSpine:
     observations and handles actions for testing purposes.
     """
 
+    ## \var action
+    ## Action dictionary.
+    action: dict
+
+    ## \var observation
+    ## Observation dictionary.
+    observation: dict
+
     def __init__(self):
+        r"""!
+        Initialize the MockSpine.
+
+        Sets up mock observation data structure with default values
+        for base orientation, IMU, servos, and wheel odometry.
+        """
+        self.action = {}
         self.observation = {
             "base_orientation": {
                 "pitch": 0.1,
@@ -141,7 +191,7 @@ class MockSpine:
         """
         pass
 
-    def set_action(self, action) -> dict:
+    def set_action(self, action: dict) -> dict:
         r"""!
         Set an action and get the next observation.
 
