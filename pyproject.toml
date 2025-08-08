@@ -117,6 +117,14 @@ rl-zoo3 = "*"
 tasks.agent-rlb3_balancer-train = "python agents/rlb3_balancer/train.py"
 tasks.agent-rlb3_balancer-enjoy = "python agents/rlb3_balancer/enjoy.py"
 
+[tool.pixi.feature.coverage.dependencies]
+lcov = "*"
+
+[tool.pixi.feature.coverage.tasks]
+coverage-generate = { cmd = "tools/bazelisk coverage --combined_report=lcov --compilation_mode=fastbuild --instrument_test_targets //..." }
+coverage-report = { cmd = "genhtml bazel-out/_coverage/_coverage_report.dat -o bazel-out/_coverage", depends-on = ["coverage-generate"] }
+coverage-open = { cmd = "xdg-open bazel-out/_coverage/index.html", depends-on = ["coverage-report"] }
+
 [tool.pixi.feature.docs.dependencies]
 doxygen = "<=1.9.5"
 graphviz = "*"
@@ -170,38 +178,33 @@ proxsuite = ">=0.4.1"
 pybullet = ">=3"
 qpmpc = ">=3.0.1,<4"
 
-[tool.pixi.feature.test.dependencies]
-lcov = "*"
+[tool.pixi.feature.test-python.dependencies]
 pybullet = ">=3"
 pytest = "*"
 "stable-baselines3" = ">2.3.0"
 
-[tool.pixi.feature.test.tasks]
-coverage-generate = { cmd = "tools/bazelisk coverage --combined_report=lcov --compilation_mode=fastbuild --instrument_test_targets //..." }
-coverage-report = { cmd = "genhtml bazel-out/_coverage/_coverage_report.dat -o bazel-out/_coverage", depends-on = ["coverage-generate"] }
-coverage-open = { cmd = "xdg-open bazel-out/_coverage/index.html", depends-on = ["coverage-report"] }
-test-cpp = "tools/bazelisk test //upkie/..."
+[tool.pixi.feature.test-python.tasks]
 test-python = "pytest tests/"
-test = { depends-on = ["test-cpp", "test-python"] }
 
 [tool.pixi.tasks]
 spines-bullet = "tools/bazelisk run //spines:bullet_spine -- --show"
 spines-mock = "tools/bazelisk run //spines:mock_spine"
+test-cpp = "tools/bazelisk test //upkie/..."
 
 [tool.pixi.environments]
 agent-mpc-balancer = { features = ["agent-mpc-balancer"], solve-group = "default" }
 agent-rlb3-balancer = { features = ["agent-rlb3-balancer"], solve-group = "default" }
 agent-trajectory-player = { features = ["agent-trajectory-player"], solve-group = "default" }
+coverage = { features = ["coverage"], solve-group = "default" }
 default = { features = [], solve-group = "default" }
 docs = { features = ["docs"], solve-group = "default" }
 lint = { features = ["lint"], solve-group = "default" }
 pack = { features = ["pack"], solve-group = "default" }
 pybullet = { features = ["pybullet"], solve-group = "default" }
-test-cpp = { features = ["test"], solve-group = "py39" }
-test-py310 = { features = ["py310", "test"], solve-group = "py310" }
-test-py311 = { features = ["py311", "test"], solve-group = "py311" }
-test-py312 = { features = ["py312", "test"], solve-group = "py312" }
-test-py39 = { features = ["py39", "test"], solve-group = "py39" }
+test-py310 = { features = ["py310", "test-python"], solve-group = "py310" }
+test-py311 = { features = ["py311", "test-python"], solve-group = "py311" }
+test-py312 = { features = ["py312", "test-python"], solve-group = "py312" }
+test-py39 = { features = ["py39", "test-python"], solve-group = "py39" }
 
 [tool.ruff]
 line-length = 79

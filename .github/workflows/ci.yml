@@ -183,7 +183,6 @@ jobs:
               uses: prefix-dev/setup-pixi@v0.8.8
               with:
                   pixi-version: v0.44.0
-                  environments: test-cpp
                   cache: true
 
             - name: "Run unit tests"
@@ -225,7 +224,8 @@ jobs:
             - build_raspi
             - coverage
             - lint
-            - test
+            - test-cpp
+            - test-python
 
         steps:
             - run: echo "CI workflow completed successfully"
