@@ -135,11 +135,12 @@ jobs:
               uses: prefix-dev/setup-pixi@v0.8.14
               with:
                   pixi-version: v0.49.0
+                  environments: test-cpp
                   cache: true
 
             - name: "Run coverage tests"
               run: |
-                  pixi run coverage-ci
+                  pixi run -e test-cpp coverage-ci
 
             - name: "Submit report to Coveralls"
               uses: coverallsapp/github-action@v2
@@ -194,7 +195,7 @@ jobs:
 
         strategy:
             matrix:
-                os: [ubuntu-latest]
+                os: [ubuntu-latest, macos-latest]
                 pyenv: [py39, py310, py311, py312]
 
         steps:
