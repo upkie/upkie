@@ -11,8 +11,8 @@ import unittest
 import gymnasium as gym
 import numpy as np
 
+from upkie.envs.testing import ConstantObservationEnv
 from upkie.envs.wrappers.noisify_observation import NoisifyObservation
-from upkie.envs.wrappers.tests.envs import ConstantObservationEnv
 
 
 class NoisifyObservationTestCase(unittest.TestCase):

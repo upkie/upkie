@@ -11,8 +11,8 @@ import unittest
 import gymnasium as gym
 import numpy as np
 
+from upkie.envs.testing import ActionObserverEnv
 from upkie.envs.wrappers.differentiate_action import DifferentiateAction
-from upkie.envs.wrappers.tests.envs import ActionObserverEnv
 
 
 class DifferentiateActionTestCase(unittest.TestCase):

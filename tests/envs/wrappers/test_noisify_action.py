@@ -11,8 +11,8 @@ import unittest
 import gymnasium as gym
 import numpy as np
 
+from upkie.envs.testing import ActionObserverEnv
 from upkie.envs.wrappers.noisify_action import NoisifyAction
-from upkie.envs.wrappers.tests.envs import ActionObserverEnv
 
 
 class NoisifyActionTestCase(unittest.TestCase):

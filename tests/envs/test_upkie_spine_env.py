@@ -12,7 +12,7 @@ from multiprocessing.shared_memory import SharedMemory
 import gymnasium as gym
 import numpy as np
 
-from upkie.envs.tests.mock_spine import MockSpine
+from upkie.envs.testing import MockSpine
 from upkie.envs.upkie_spine_env import UpkieSpineEnv
 from upkie.exceptions import UpkieTimeoutError
 

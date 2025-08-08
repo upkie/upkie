@@ -11,10 +11,10 @@ import unittest
 import gymnasium as gym
 import numpy as np
 
+from upkie.envs.testing import ConstantObservationEnv
 from upkie.envs.wrappers.add_action_to_observation import (
     AddActionToObservation,
 )
-from upkie.envs.wrappers.tests.envs import ConstantObservationEnv
 
 
 class AddActionToObservationTestCase(unittest.TestCase):
