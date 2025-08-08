@@ -167,16 +167,22 @@ jobs:
                   pixi run lint
 
     test-cpp:
-        name: "Test the C++ library on ${{ matrix.os }}"
+        name: "Test C++ library on ${{ matrix.os }}"
         runs-on: ${{ matrix.os }}
 
         strategy:
             matrix:
-                os: [ubuntu-22.04]
+                os: [ubuntu-22.04, ubuntu-24.04]
 
         steps:
             - name: "Checkout sources"
               uses: actions/checkout@v4
+
+            - name: "Install libtinfo5 for Ubuntu 24.04"
+              if: matrix.os == 'ubuntu-24.04'
+              run: |
+                  wget http://archive.ubuntu.com/ubuntu/pool/universe/n/ncurses/libtinfo5_6.3-2ubuntu0.1_amd64.deb
+                  sudo dpkg -i libtinfo5_6.3-2ubuntu0.1_amd64.deb
 
             - name: "Setup Pixi"
               uses: prefix-dev/setup-pixi@v0.8.8
@@ -189,7 +195,7 @@ jobs:
                   pixi run test-cpp
 
     test-python:
-        name: "Test the Python library with ${{ matrix.pyenv }} on ${{ matrix.os }}"
+        name: "Test Python library with ${{ matrix.pyenv }} on ${{ matrix.os }}"
         runs-on: ${{ matrix.os }}
 
         strategy:
