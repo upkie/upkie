@@ -1,5 +1,7 @@
 # Gym environments {#gym-environments}
 
+[TOC]
+
 Upkie has environments compatible with the [Gymnasium API](https://gymnasium.farama.org/):
 
 | Environment ID            | Interface | Action and observation spaces |

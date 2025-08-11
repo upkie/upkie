@@ -1,5 +1,7 @@
 # Simulation {#simulation}
 
+[TOC]
+
 ## Bullet spine {#bullet-spine}
 
 The Bullet spine runs agents in the [Bullet 3](https://github.com/bulletphysics/bullet3) simulator. It can be started as a standalone process that will keep on running while waiting for agents to connect.

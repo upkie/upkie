@@ -15,7 +15,7 @@ from .upkie_spine_env import UpkieSpineEnv
 
 def wrap_pendulum(EnvClass, **kwargs):
     r"""!
-    Make a new ground-velocity environment around an Upkie environment.
+    Make a pendulum environment around a servo environment.
 
     This function is meant to be called by `gymnasium.make()` rather than to be
     called directly.
@@ -23,7 +23,7 @@ def wrap_pendulum(EnvClass, **kwargs):
     \param kwargs Keyword arguments forwarded to both the
         \ref upkie.envs.wrappers.pendulum.Pendulum wrapper and the internal
         Upkie environment.
-    \return New ground-velocity environment.
+    \return Pendulum environment.
     """
     pendulum_keys = {
         "fall_pitch",

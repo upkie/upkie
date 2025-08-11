@@ -1,5 +1,7 @@
 # Developer notes {#dev-notes}
 
+[TOC]
+
 ## Pixi workflow
 
 A workflow based on [Pixi](https://pixi.sh/) is under development. Once feature-complete, it should provide a simpler alternative to the legacy workflow based on GNU Make and conda environments. Here is what you can do now:

@@ -457,7 +457,7 @@ class UpkiePyBulletEnv(UpkieEnv):
         kd_scale: float,
         maximum_torque: float,
     ) -> float:
-        r"""!\
+        r"""!
         Reproduce the moteus position controller in PyBullet.
 
         \param joint_name Name of the joint.

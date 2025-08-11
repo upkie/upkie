@@ -28,7 +28,8 @@ from .upkie_env import UpkieEnv
 
 class UpkieGenesisEnv(UpkieEnv):
     """!
-    Upkie environment using Genesis physics simulation.
+    Upkie environment using the
+    [Genesis](https://genesis-embodied-ai.github.io/) physics simulator.
     """
 
     def __init__(
@@ -419,7 +420,7 @@ class UpkieGenesisEnv(UpkieEnv):
         kd_scale: float,
         maximum_torque: float,
     ) -> float:
-        r"""!\
+        r"""!
         Reproduce the moteus position controller in Genesis.
 
         \param joint_name Name of the joint.

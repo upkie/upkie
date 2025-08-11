@@ -1,5 +1,7 @@
 # Observations {#observations}
 
+[TOC]
+
 Spines compute observation dictionaries from sensor measurements by applying *observers* one after the other in a sequence called the *observer pipeline*. This page lists the outputs of available observers, using shorthands `a.b.c` for nested dictionary keys `observation["a"]["b"]["c"]`.
 
 ## Inertial measurement unit

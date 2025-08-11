@@ -1,5 +1,7 @@
 # Real robot {#real-robot}
 
+[TOC]
+
 There are two real-robot spines: the mock spine, and the pi3hat spine.
 
 ## Mock spine {#mock-spine}

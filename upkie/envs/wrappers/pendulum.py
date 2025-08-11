@@ -5,8 +5,8 @@
 # Copyright 2022 Stéphane Caron
 # Copyright 2023 Inria
 
-## \namespace upkie.envs.upkie_ground_velocity
-## \brief Ground-velocity Gymnasium environment.
+## \namespace upkie.envs.wrappers.pendulum
+## \brief Environment where Upkie behaves like a wheeled inverted pendulum.
 
 import math
 from typing import Dict, Optional, Tuple
@@ -30,9 +30,7 @@ class Pendulum(gym.Wrapper):
     When this wrapper is applied, Upkie keeps its legs straight and actions
     only affect wheel velocities. This way, it behaves like a <a
     href="https://scaron.info/robotics/wheeled-inverted-pendulum-model.html">wheeled
-    inverted pendulum</a>. This ground-velocity environment is used for
-    instance by the [MPC balancer](https://github.com/upkie/mpc_balancer/) and
-    [PPO balancer](https://github.com/upkie/ppo_balancer) agents.
+    inverted pendulum</a>.
 
     \note For reinforcement learning with neural-network policies: the
     observation space and action space are not normalized.
