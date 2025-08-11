@@ -43,9 +43,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CICD: Switch to Pixi in CI workflow
 - CICD: Switch to pytest for Python unit tests
 - Clean up Python cache directories upon `make clean`
-- Install C++ dependencies up from mpacklog.cpp
 - Move coverage and lint rules from the Makefile to Pixi tasks
+- cpp: Install C++ dependencies up from mpacklog.cpp
 - cpp: Limit rate of SynchronousClock skip warnings and report frequency drop
+- cpp: Update mpacklog.cpp to version 3.1.2
 - envs: Allow gain scales larger than one in servo environments
 - envs: Drop Gymnasium environment versioning
 - examples: Allow users to select the Gymnasium environment in MPC example
@@ -59,7 +60,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Breaking:** Remove output bound from `abs_bounded_derivative_filter`
 - **Breaking:** Remove output bound from `bounded_derivative_filter`
-- Remove redundant palimpsest Bazel package that is already upstream from mpacklog
+- cpp: Remove palimpsest Bazel package that is already upstream from mpacklog
 
 ## [8.1.1] - 2025-07-21
 
