@@ -42,6 +42,7 @@ class UpkieGenesisEnv(UpkieEnv):
         init_state: Optional[RobotState] = None,
         pipeline: Optional[Pipeline] = None,
         regulate_frequency: bool = True,
+        show_FPS: bool = False,
         substeps: int = 1,
     ) -> None:
         r"""!
@@ -67,6 +68,7 @@ class UpkieGenesisEnv(UpkieEnv):
         \param regulate_frequency If set (default), the environment will
             regulate the control loop frequency to the value prescribed in
             `frequency`.
+        \param show_FPS If True, Genesis will print out an FPS counter.
         \param substeps Number of simulation substeps per environment step.
             Higher values increase simulation accuracy at the cost of
             computational performance.
@@ -117,7 +119,7 @@ class UpkieGenesisEnv(UpkieEnv):
                 gravity=[0.0, 0.0, -9.81],
             ),
             profiling_options=genesis.options.ProfilingOptions(
-                show_FPS=True,
+                show_FPS=show_FPS,
             ),
             show_viewer=gui,
         )
