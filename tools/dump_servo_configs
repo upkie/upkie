@@ -1,24 +1,93 @@
 #!/bin/bash
 #
+# Dump servo configurations on an Upkie robot.
+#
 # Copyright 2024 Inria
 
-PI3HAT_CFG="1=1,2,3;3=4,5,6"
+set -euo pipefail
 
-OUTDIR="."
-while getopts "o:" opt; do
-    case ${opt} in
-        o )
-            OUTDIR="$OPTARG"
-            ;;
-        \? )
-            echo "Usage: $0 [-o output_directory]"
-            exit 1
-            ;;
-    esac
-done
+readonly PI3HAT_CFG="1=1,2,3;3=4,5,6"
+readonly SERVO_COUNT=6
 
-for i in {1..6}; do
-    OUTPUT="${OUTDIR}/servo-${i}.cfg"
-    echo "Dumping servo ${i} config to ${OUTPUT}"
-    (set -x; sudo moteus_tool --pi3hat-cfg "${PI3HAT_CFG}" -t "$i" --dump-config > "${OUTPUT}")
-done
+show_usage() {
+    cat <<EOF
+Usage: $0 OUTPUT_DIRECTORY
+
+Dump configuration for all servo motors (1-${SERVO_COUNT}) using moteus_tool.
+
+ARGUMENTS:
+    OUTPUT_DIRECTORY    Directory for config files
+
+OPTIONS:
+    -h                  Show this help message
+
+EXAMPLES:
+    $0 .                # Dump to current directory
+    $0 configs/         # Dump to configs/ directory
+
+EOF
+}
+
+main() {
+    while getopts "h" opt; do
+        case ${opt} in
+            h)
+                show_usage
+                exit 0
+                ;;
+            *)
+                show_usage >&2
+                exit 1
+                ;;
+        esac
+    done
+    shift $((OPTIND-1))
+
+    if [[ $# -ne 1 ]]; then
+        echo "Error: Exactly one argument (output directory) is required" >&2
+        show_usage >&2
+        exit 1
+    fi
+
+    local outdir="$1"
+
+    mkdir -p "$outdir"
+
+    if ! command -v moteus_tool >/dev/null 2>&1; then
+        echo "Error: moteus_tool not found in PATH" >&2
+        exit 1
+    fi
+
+    echo "Dumping servo configurations to: $outdir"
+    echo "Using Upkie's pi3hat config: $PI3HAT_CFG"
+    echo
+
+    local failed_servos=()
+
+    for i in $(seq 1 $SERVO_COUNT); do
+        local output="${outdir}/servo-${i}.cfg"
+        printf "Servo %d: " "$i"
+
+        if sudo moteus_tool --pi3hat-cfg "$PI3HAT_CFG" -t "$i" --dump-config >"$output" 2>&1; then
+            echo "✓ $output"
+        else
+            echo "✗ Failed"
+            local failed_output="${outdir}/servo-${i}.cfg.failed"
+            mv "$output" "$failed_output" 2>/dev/null || true
+            echo "   Error output saved to: $failed_output"
+            failed_servos+=("$i")
+        fi
+    done
+
+    if [[ ${#failed_servos[@]} -eq 0 ]]; then
+        echo
+        echo "All servo configurations dumped successfully!"
+    else
+        echo
+        echo "Failed to dump configurations for servo(s): ${failed_servos[*]}" >&2
+        echo "Check the .failed files for error details"
+        exit 1
+    fi
+}
+
+main "$@"

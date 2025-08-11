@@ -50,6 +50,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - examples: Allow users to select the Gymnasium environment in MPC example
 - logging: Use an "upkie" logger rather than the global logger
 - spines: Factor common observers and sensors between spines
+- tools: Update script to dump moteus servo configurations
 - utils: Generalize `abs_bounded_derivative_filter` to vector inputs
 - utils: Generalize `bounded_derivative_filter` to vector inputs
 
