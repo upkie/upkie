@@ -42,6 +42,7 @@ class UpkieGenesisEnv(UpkieEnv):
         init_state: Optional[RobotState] = None,
         pipeline: Optional[Pipeline] = None,
         regulate_frequency: bool = True,
+        substeps: int = 1,
     ) -> None:
         r"""!
         Initialize environment.
@@ -66,6 +67,9 @@ class UpkieGenesisEnv(UpkieEnv):
         \param regulate_frequency If set (default), the environment will
             regulate the control loop frequency to the value prescribed in
             `frequency`.
+        \param substeps Number of simulation substeps per environment step.
+            Higher values increase simulation accuracy at the cost of
+            computational performance.
         """
         super().__init__(
             frequency=frequency,
@@ -109,7 +113,7 @@ class UpkieGenesisEnv(UpkieEnv):
             ),
             sim_options=genesis.options.SimOptions(
                 dt=self.dt,
-                substeps=1,
+                substeps=substeps,
                 gravity=[0.0, 0.0, -9.81],
             ),
             profiling_options=genesis.options.ProfilingOptions(
