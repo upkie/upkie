@@ -172,7 +172,7 @@ class UpkieGenesisEnv(UpkieEnv):
         super().reset(seed=seed)
 
         # Build the scene if it was not already built
-        if not hasattr(self._scene, "_built") or not self._scene._built:
+        if not self._scene.is_built:
             self._scene.build()
 
         self._reset_robot_state()
