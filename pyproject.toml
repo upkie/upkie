@@ -153,9 +153,10 @@ pinocchio = ">=3.1.0,<4"
 pixi-pack = ">=0.7.2"
 proxsuite = ">=0.4.1"
 qpmpc = ">=3.0.1,<4"
+stable-baselines3 = ">=2.3.0"
 
 [tool.pixi.feature.pack.tasks]
-pack = "pixi-pack --environment raspi --platform linux-aarch64 --ignore-pypi-non-wheel"
+pack = "pixi-pack --environment pack --platform linux-aarch64 --ignore-pypi-non-wheel"
 
 [tool.pixi.feature.py39]
 dependencies = { python = "3.9.*" }

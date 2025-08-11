@@ -35,17 +35,13 @@ clean:  ## Clean up logs smaller than 100 KiB
 
 .PHONY: compress
 compress:  ## Compress logs
-	@for i in *.mpack; do \
-		echo "Compressing $$i..."; \
-		tar jcf $$i.tar.bz2 $$i; \
-		rm -f $$i; \
-	done
+	bzip2 *.mpack
+
+.PHONY: fetch_logs
+fetch_logs: check_upkie_name  ## Download logs and remove them from the remote directory afterwards
+	rsync -auvz --progress --exclude Makefile ${UPKIE_NAME}:$(REMOTE_PATH)/ $(CURDIR)/
+	-ssh ${UPKIE_NAME} rm -f $(REMOTE_PATH)/\*.mpack
 
 .PHONY: foxplot_last
 foxplot_last:  ## Plot latest log
 	foxplot $(shell ls *.mpack | tail -n 1)
-
-.PHONY: pull
-pull: check_upkie_name  ## Download logs and remove them from the remote directory afterwards
-	rsync -auvz --progress --exclude Makefile ${UPKIE_NAME}:$(REMOTE_PATH)/ $(CURDIR)/
-	-ssh ${UPKIE_NAME} rm -f $(REMOTE_PATH)/\*.mpack
