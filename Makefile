@@ -70,7 +70,7 @@ set_date: deprecation_warning check_upkie_name
 # Running `raspunzel -s` can create __pycache__ directories owned by root
 # that rsync is not allowed to remove. We therefore give permissions first.
 .PHONY: upload
-upload: deprecation_warning check_upkie_name build set_date  ## upload built targets to the Raspberry Pi
+upload: deprecation_warning check_upkie_name build  ## upload built targets to the Raspberry Pi
 	ssh ${UPKIE_NAME} mkdir -p $(PROJECT_NAME)
 	ssh ${UPKIE_NAME} sudo find $(PROJECT_NAME) -type d -name __pycache__ -user root -exec chmod go+wx {} "\;"
 	rsync -Lrtu --delete-after --delete-excluded \
@@ -82,6 +82,7 @@ upload: deprecation_warning check_upkie_name build set_date  ## upload built tar
 		--exclude bazel-out/ \
 		--exclude bazel-testlogs/ \
 		--exclude cache/ \
+		--exclude logs/ \
 		--exclude tools/bazel \
 		--exclude tools/logs/\*.mpack \
 		--exclude tools/raspios \
