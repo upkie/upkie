@@ -31,7 +31,7 @@ Click on the robot in the simulator window to apply external forces and see how 
 
 ## Creating your own agent
 
-The software for Upkies is packaged into an `upkie` library for you to develop your own agents. You can install it:
+Software for Upkies is packaged into an `upkie` library. You can install it:
 
 - From conda-forge: `conda install -c conda-forge upkie`
 - From PyPI: `pip install upkie`
@@ -99,7 +99,7 @@ If you built an Upkie or use parts of this project in your works, please cite th
 ```bibtex
 @software{upkie,
   title = {{Upkie open source wheeled biped robot}},
-  author = {Caron, St\'{e}phane and Perrin-Gilbert, Nicolas and Ledoux, Viviane and G\"{o}kbakan, \"{Umit} Bora and Raverdy, Pierre-Guillaume and Raffin, Antonin and Tordjman--Levavasseur, Valentin},
+  author = {Caron, St\'{e}phane and Perrin-Gilbert, Nicolas and Ledoux, Viviane and G\"{o}kbakan, \"{U}mit Bora and Raverdy, Pierre-Guillaume and Raffin, Antonin and Tordjman--Levavasseur, Valentin},
   url = {https://github.com/upkie/upkie},
   license = {Apache-2.0},
   version = {8.1.1},
@@ -107,7 +107,7 @@ If you built an Upkie or use parts of this project in your works, please cite th
 }
 ```
 
-Don't forget to add yourself to the BibTeX above and to `CITATION.cff` if you contribute to this repository.
+Don't forget to add yourself to the BibTeX above and to `CITATION.cff` if you contribute to the project.
 
 ## See also
 
