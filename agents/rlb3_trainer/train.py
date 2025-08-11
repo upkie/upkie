@@ -44,6 +44,7 @@ def parse_command_line_arguments() -> Tuple[argparse.Namespace, List[str]]:
         description="Upkie RL Training", add_help=False
     )
     parser.add_argument(
+        "-e",
         "--env",
         choices=["Upkie-PyBullet-Pendulum", "Upkie-Genesis-Pendulum"],
         help="Environment to train on",
