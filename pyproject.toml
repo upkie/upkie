@@ -91,7 +91,7 @@ proxsuite = ">=0.4.1"
 qpmpc = ">=3.0.1,<4"
 
 [tool.pixi.feature.agent-mpc-balancer.tasks]
-agent-mpc_balancer= "python -m agents.mpc_balancer"
+upkie-locomotion = "python -m agents.mpc_balancer"
 
 [tool.pixi.feature.agent-trajectory-player.dependencies]
 gin-config = ">=0.5.0"
@@ -101,21 +101,20 @@ pink = ">=3.0.0,<4"
 proxsuite = ">=0.4.1"
 qpmpc = ">=3.0.1,<4"
 
-[tool.pixi.feature.agent-trajectory-player.tasks.agent-trajectory_player]
-args = ["csv_path"]
-cmd = "python agents/trajectory_player/run.py {{ csv_path }}"
+[tool.pixi.feature.agent-trajectory-player.tasks]
+upkie-jolly-jumper = "python agents/trajectory_player/run.py agents/trajectory_player/trajectories/upkie_jump_v3.csv"
 
 [tool.pixi.feature.agent-rlb3-trainer.dependencies]
+pybullet = ">=3"
 stable-baselines3 = ">=2.3.0"
 tensorboard = "*"
 
 [tool.pixi.feature.agent-rlb3-trainer.pypi-dependencies]
-pybullet = ">=3"
-rl-zoo3 = "*"
+rl-zoo3 = ">=2.6.0"
 
-[tool.pixi.feature.agent-rlb3-trainer]
-tasks.agent-rlb3_trainer-train = "python agents/rlb3_trainer/train.py"
-tasks.agent-rlb3_trainer-enjoy = "python agents/rlb3_trainer/enjoy.py"
+[tool.pixi.feature.agent-rlb3-trainer.tasks]
+upkie-train-policy = "python agents/rlb3_trainer/train.py"
+upkie-enjoy-policy = "python agents/rlb3_trainer/enjoy.py"
 
 [tool.pixi.feature.coverage.dependencies]
 lcov = "*"
