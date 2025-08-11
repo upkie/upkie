@@ -56,9 +56,8 @@ clean_broken_links:
 pack_pixi_env:  ## pack pixi environment to environment.tar
 	pixi run pack
 
-# This rule is handy if the target Upkie is not connected to the Internet
 .PHONY: set_date
-set_date: check_upkie_name
+set_date: check_upkie_name  ## set Upkie's date if it is not connected to the Internet
 	ssh ${UPKIE_NAME} sudo date -s "$(CURDATE)"
 
 # Running `raspunzel -s` can create __pycache__ directories owned by root
@@ -85,13 +84,13 @@ upload: check_upkie_name build  ## upload built targets to the Raspberry Pi
 # REMOTE TARGETS
 # ==============
 
-run_agent:  ### run agent
+run_mpc_balancer:  ### run agent
 	@if [ -f $(CURDIR)/activate.sh ]; then \
-		echo "Running agent from packed environment..."; \
-		. $(CURDIR)/activate.sh && python agent/main.py; \
+		echo "Running MPC balancer from packed environment..."; \
+		. $(CURDIR)/activate.sh && python -m agents.mpc_balancer; \
 	else \
-		echo "Running agent directly..."; \
-		python agent/main.py; \
+		echo "Running MPC balancer directly..."; \
+		python -m agents.mpc_balancer; \
 	fi
 
 run_mock_spine:  ### run the mock spine on the Raspberry Pi
