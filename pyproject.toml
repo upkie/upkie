@@ -105,15 +105,15 @@ qpmpc = ">=3.0.1,<4"
 args = ["csv_path"]
 cmd = "python agents/trajectory_player/run.py {{ csv_path }}"
 
-[tool.pixi.feature.agent-rlb3-balancer.dependencies]
+[tool.pixi.feature.agent-rlb3-trainer.dependencies]
 stable-baselines3 = ">=2.3.0"
 tensorboard = "*"
 
-[tool.pixi.feature.agent-rlb3-balancer.pypi-dependencies]
+[tool.pixi.feature.agent-rlb3-trainer.pypi-dependencies]
 pybullet = ">=3"
 rl-zoo3 = "*"
 
-[tool.pixi.feature.agent-rlb3-balancer]
+[tool.pixi.feature.agent-rlb3-trainer]
 tasks.agent-rlb3_trainer-train = "python agents/rlb3_trainer/train.py"
 tasks.agent-rlb3_trainer-enjoy = "python agents/rlb3_trainer/enjoy.py"
 
@@ -194,7 +194,7 @@ test-cpp = "tools/bazelisk test //upkie/..."
 
 [tool.pixi.environments]
 agent-mpc-balancer = { features = ["agent-mpc-balancer"], solve-group = "default" }
-agent-rlb3-balancer = { features = ["agent-rlb3-balancer"], solve-group = "default" }
+agent-rlb3-trainer = { features = ["agent-rlb3-trainer"], solve-group = "default" }
 agent-trajectory-player = { features = ["agent-trajectory-player"], solve-group = "default" }
 coverage = { features = ["coverage"], solve-group = "default" }
 default = { features = [], solve-group = "default" }
