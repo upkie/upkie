@@ -30,7 +30,7 @@ def select_gym_environment():
 
     env_kwargs = {
         "frequency": 200.0,
-        "frequency_checks": True,
+        "frequency_checks": False,  # simulation steps run within env steps
     }
 
     while True:
