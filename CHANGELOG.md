@@ -49,13 +49,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CICD: Switch to pytest for Python unit tests
 - Clean up Python cache directories upon `make clean`
 - Restrict Bazel to C++ tasks and use Pixi for Python tasks in development workflow
-- cpp: Install C++ dependencies up from mpacklog.cpp
+- cpp: Fix Bazel imports of C++ packages going up the dependency tree
 - cpp: Limit rate of SynchronousClock skip warnings and report frequency drop
 - cpp: Update mpacklog.cpp to version 3.1.2
 - envs: Allow gain scales larger than one in servo environments
+- envs: Allow parallel simulations, clearing up the CPU bottleneck
 - envs: Class `UpkieServos` is now a subclass of `UpkieEnv`
 - envs: Drop Gymnasium environment versioning
-- envs: Remove the CPU bottleneck, allowing parallel simulations.
 - examples: Allow users to select the Gymnasium environment in MPC example
 - examples: Rename PyBullet lying genuflection example
 - logging: Use an "upkie" logger rather than the global logger
