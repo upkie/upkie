@@ -2,9 +2,8 @@
 # -*- coding: utf-8 -*-
 #
 # SPDX-License-Identifier: Apache-2.0
-# Copyright 2025 Inria
 
-from typing import Optional, Tuple
+from typing import Optional
 
 import numpy as np
 import upkie_description
@@ -17,7 +16,6 @@ except ModuleNotFoundError:
     pybullet_data = None
 
 from upkie.config import BULLET_CONFIG
-from upkie.envs.pipelines import Pipeline
 from upkie.exceptions import MissingOptionalDependency, UpkieRuntimeError
 from upkie.model import Model
 from upkie.utils.nested_update import nested_update
@@ -27,63 +25,39 @@ from upkie.utils.rotations import (
     rotation_matrix_from_quaternion,
 )
 
-from .upkie_env import UpkieEnv
+from .backend import Backend
 
 
-class UpkiePyBulletEnv(UpkieEnv):
+class PyBulletBackend(Backend):
     r"""!
-    Upkie environment using PyBullet physics simulation.
+    Backend using PyBullet physics simulation.
     """
 
     def __init__(
         self,
-        frequency: Optional[float] = 200.0,
-        frequency_checks: bool = False,
-        gui: bool = True,
-        init_state: Optional[RobotState] = None,
-        pipeline: Optional[Pipeline] = None,
-        regulate_frequency: bool = True,
+        dt: float,
         bullet_config: Optional[dict] = None,
+        gui: bool = True,
         nb_substeps: Optional[int] = None,
     ) -> None:
         r"""!
-        Initialize environment.
+        Initialize PyBullet backend.
 
-        \param frequency Regulated frequency of the control loop, in Hz. Can be
-            prescribed even when `regulate_frequency` is unset, in which case
-            `self.dt` will be defined but the loop frequency will not be
-            regulated.
-        \param frequency_checks If `regulate_frequency` is set and this
-            parameter is `True`, a warning will be issued every time the
-            control loop runs slower than the desired `frequency`. This check
-            is disabled by default in this environment as the simulation step
-            is executed inside the control loop.
-        \param gui If True, run PyBullet with GUI. If False, run headless.
-        \param init_state Initial state of the robot, only used in simulation.
-        \param pipeline Spine dictionary interface selected via the --pipeline
-            command-line argument of the spine binary, if any.
-        \param regulate_frequency If set (default), the environment will
-            regulate the control loop frequency to the value prescribed in
-            `frequency`.
+        \param dt Simulation time step in seconds.
         \param bullet_config Additional bullet configuration overriding the
             default `upkie.config.BULLET_CONFIG`. The combined configuration
             dictionary is used for PyBullet simulation setup.
+        \param gui If True, run PyBullet with GUI. If False, run headless.
         \param nb_substeps Number of substeps for the PyBullet simulation.
         """
-        super().__init__(
-            frequency=frequency,
-            frequency_checks=frequency_checks,
-            init_state=init_state,
-            pipeline=pipeline,
-            regulate_frequency=regulate_frequency,
-        )
-
-        # Save combined simulator configuration
+        # Combine dictionaries for simulator configuration
         self.__bullet_config = BULLET_CONFIG.copy()
         if bullet_config is not None:
             nested_update(self.__bullet_config, bullet_config)
-        self.__nb_substeps = (
-            nb_substeps if nb_substeps is not None else int(1000.0 / frequency)
+
+        # Default number of substeps corresponds to the 1 kHz spine frequency
+        nb_substeps: int = (
+            nb_substeps if nb_substeps is not None else int(1000.0 * dt)
         )
 
         # Initialize PyBullet
@@ -104,7 +78,7 @@ class UpkiePyBulletEnv(UpkieEnv):
         pybullet.setAdditionalSearchPath(pybullet_data.getDataPath())
         pybullet.setGravity(0, 0, -9.81)
         pybullet.setRealTimeSimulation(False)  # making sure
-        pybullet.setTimeStep(self.dt / self.__nb_substeps)
+        pybullet.setTimeStep(dt / nb_substeps)
 
         # Load ground plane
         self._plane_id = pybullet.loadURDF("plane.urdf")
@@ -116,7 +90,8 @@ class UpkiePyBulletEnv(UpkieEnv):
             baseOrientation=[0, 0, 0, 1],
         )
 
-        # Build joint index mapping and find IMU link
+        # Initialize model and build joint index mapping
+        self.__model = Model(upkie_description.URDF_PATH)
         self._joint_indices = {}
         self._imu_link_index = -1
         for bullet_idx in range(pybullet.getNumJoints(self._robot_id)):
@@ -142,7 +117,7 @@ class UpkiePyBulletEnv(UpkieEnv):
         # Initialize previous IMU velocity for acceleration computation
         self.__previous_imu_linear_velocity = np.zeros(3)
 
-        if gui:  # Enable GUI if it is request
+        if gui:  # Enable GUI if it is requested
             pybullet.configureDebugVisualizer(pybullet.COV_ENABLE_RENDERING, 1)
             pybullet.configureDebugVisualizer(pybullet.COV_ENABLE_SHADOWS, 0)
             pybullet.resetDebugVisualizerCamera(
@@ -152,9 +127,13 @@ class UpkiePyBulletEnv(UpkieEnv):
                 cameraTargetPosition=[0, 0, 0.6],
             )
 
+        # Internal attributes
+        self.__dt = dt
+        self.__nb_substeps = nb_substeps
+
     def __del__(self):
         """!
-        Disconnect PyBullet when deleting the environment instance.
+        Disconnect PyBullet when deleting the backend instance.
         """
         self.close()
 
@@ -166,51 +145,32 @@ class UpkiePyBulletEnv(UpkieEnv):
             pybullet.disconnect()
             self._bullet = None
 
-    def reset(
-        self,
-        seed: Optional[int] = None,
-        options: Optional[dict] = None,
-    ) -> Tuple[dict, dict]:
+    def reset(self, init_state: RobotState) -> dict:
         r"""!
-        Resets the PyBullet simulation and get an initial observation.
+        Reset the PyBullet simulation and get an initial observation.
 
-        \param seed Number used to initialize the environment's internal random
-            number generator.
-        \param options Currently unused.
-        \return
-            - `observation`: Initial vectorized observation, i.e. an element
-              of the environment's `observation_space`.
-            - `info`: Dictionary with auxiliary diagnostic information. For
-              Upkie this is the full observation dictionary sent by the spine.
+        \param init_state Initial state of the robot (optional).
+        \return Initial spine observation dictionary.
         """
-        super().reset(seed=seed)
-        self._reset_robot_state()
+        self.__reset_robot_state(init_state)
         pybullet.stepSimulation()
-        spine_observation = self._get_spine_observation()
-        observation = self.get_env_observation(spine_observation)
-        info = {"spine_observation": spine_observation}
-        return observation, info
+        return self.get_spine_observation()
 
-    def _reset_robot_state(self):
-        """Reset robot to initial state with randomization."""
-        init_state, np_random = self.init_state, self.np_random
-
-        # Sample initial position and orientation
-        position = init_state.sample_position(np_random)
-        orientation_matrix = init_state.sample_orientation(np_random)
-        qx, qy, qz, qw = orientation_matrix.as_quat()
-        orientation_quat = [qx, qy, qz, qw]
-
-        # Sample initial velocities
-        linear_velocity = init_state.sample_linear_velocity(np_random)
-        angular_velocity = init_state.sample_angular_velocity(np_random)
-
-        # Reset base pose and velocity
+    def __reset_robot_state(self, init_state: RobotState):
+        # Reset base position and orientation
+        position = init_state.position_base_in_world
+        orientation_quat = init_state.orientation_base_in_world.as_quat()
+        qx, qy, qz, qw = orientation_quat
+        orientation_quat_bullet = [qx, qy, qz, qw]
         pybullet.resetBasePositionAndOrientation(
             self._robot_id,
             position,
-            orientation_quat,
+            orientation_quat_bullet,
         )
+
+        # Reset base velocity
+        linear_velocity = init_state.linear_velocity_base_to_world_in_world
+        angular_velocity = init_state.angular_velocity_base_in_base
         pybullet.resetBaseVelocity(
             self._robot_id,
             linear_velocity,
@@ -218,7 +178,7 @@ class UpkiePyBulletEnv(UpkieEnv):
         )
 
         # Reset joint states
-        for joint in self.model.joints:
+        for joint in self.__model.joints:
             bullet_joint_idx = self._joint_indices[joint.name]
             pybullet.resetJointState(
                 self._robot_id,
@@ -226,34 +186,17 @@ class UpkiePyBulletEnv(UpkieEnv):
                 init_state.joint_configuration[joint.idx_q],
             )
 
-    def step(self, action: dict) -> Tuple[dict, float, bool, bool, dict]:
+    def step(self, action: dict) -> dict:
         r"""!
-        Run one timestep of the environment's dynamics.
+        Apply action and step the PyBullet simulation.
 
-        When the end of the episode is reached, you are responsible for calling
-        `reset()` to reset the environment's state.
-
-        \param action Action from the agent.
-        \return
-            - `observation`: Observation of the environment, i.e. an element
-              of its `observation_space`.
-            - `reward`: Reward returned after taking the action.
-            - `terminated`: Whether the agent reached a terminal state,
-              which may be a good or a bad thing. When true, the user needs to
-              call `reset()`.
-            - `truncated`: Whether the episode is reaching max number of
-              steps. This boolean can signal a premature end of the episode,
-              i.e. before a terminal state is reached. When true, the user
-              needs to call `reset()`.
-            - `info`: Dictionary with additional information, reporting in
-              particular the full observation dictionary coming from the spine.
+        \param action Action dictionary in spine format.
+        \return Spine observation dictionary after the step.
         """
-        # Regulate loop frequency, if applicable
-        super().step()
-
         for _ in range(self.__nb_substeps):
             # Update motor torques at each substep
-            for joint_name, servo_action in action.items():
+            servo_actions = action.get("servo", {})
+            for joint_name, servo_action in servo_actions.items():
                 if joint_name in self._joint_indices:
                     joint_idx = self._joint_indices[joint_name]
                     joint_torque: float = self.compute_joint_torque(
@@ -277,17 +220,9 @@ class UpkiePyBulletEnv(UpkieEnv):
             # Step the simulation
             pybullet.stepSimulation()
 
-        # Get observation
-        spine_observation = self._get_spine_observation()
-        observation = self.get_env_observation(spine_observation)
-        reward = 1.0  # reward can be decided by a wrapper
-        terminated = False
-        truncated = False  # will be handled by e.g. a TimeLimit wrapper
-        info = {"spine_observation": spine_observation}
+        return self.get_spine_observation()
 
-        return observation, reward, terminated, truncated, info
-
-    def _get_spine_observation(self) -> dict:
+    def get_spine_observation(self) -> dict:
         """Get observation in spine format from PyBullet simulation."""
         base_orientation = self.__get_base_orientation_observation()
         imu = self.__get_imu_observation()
@@ -376,7 +311,7 @@ class UpkiePyBulletEnv(UpkieEnv):
         # differentiation
         linear_acceleration_imu_in_world = (
             linear_velocity_imu_in_world - self.__previous_imu_linear_velocity
-        ) / self.dt
+        ) / self.__dt
         self.__previous_imu_linear_velocity = linear_velocity_imu_in_world
 
         # Transform angular velocity to IMU frame (C++ lines 68-70)
