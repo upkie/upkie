@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Inria
 
-"""Test Pendulum wrapper."""
+"""Test UpkiePendulum wrapper."""
 
 import unittest
 from multiprocessing.shared_memory import SharedMemory
@@ -14,7 +14,7 @@ import numpy as np
 from upkie.envs.backends import SpineBackend
 from upkie.envs.testing import MockSpine
 from upkie.envs.upkie_servos import UpkieServos
-from upkie.envs.wrappers.pendulum import Pendulum
+from upkie.envs.upkie_pendulum import UpkiePendulum
 
 
 class PendulumTestCase(unittest.TestCase):
@@ -26,7 +26,7 @@ class PendulumTestCase(unittest.TestCase):
             frequency=100.0,
         )
         self.backend._spine = MockSpine()
-        pendulum = Pendulum(
+        pendulum = UpkiePendulum(
             servos_env,
             fall_pitch=1.0,
             max_ground_velocity=1.0,
