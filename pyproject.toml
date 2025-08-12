@@ -196,13 +196,13 @@ qpmpc = ">=3.0.1,<4"
 [tool.pixi.feature.pybullet.tasks]
 simulator-pybullet = "python examples/model_predictive_control.py --env Upkie-PyBullet-Pendulum"
 
-[tool.pixi.feature.test-python.dependencies]
+[tool.pixi.feature.test.dependencies]
 pybullet = ">=3"
 pytest = "*"
 "stable-baselines3" = ">2.3.0"
 
-[tool.pixi.feature.test-python.tasks]
-test-python = "pytest tests/"
+[tool.pixi.feature.test.tasks]
+test = "pytest tests/"
 
 [tool.pixi.environments]
 agent-mpc-balancer = { features = ["agent-mpc-balancer"], solve-group = "default" }
@@ -215,10 +215,10 @@ genesis = { features = ["genesis"], solve-group = "genesis" }
 lint = { features = ["lint"], solve-group = "default" }
 pack = { features = ["pack"], solve-group = "default" }
 pybullet = { features = ["pybullet"], solve-group = "default" }
-test-py310 = { features = ["py310", "test-python"], solve-group = "py310" }
-test-py311 = { features = ["py311", "test-python"], solve-group = "py311" }
-test-py312 = { features = ["py312", "test-python"], solve-group = "py312" }
-test-py39 = { features = ["py39", "test-python"], solve-group = "py39" }
+test-py310 = { features = ["py310", "test"], solve-group = "py310" }
+test-py311 = { features = ["py311", "test"], solve-group = "py311" }
+test-py312 = { features = ["py312", "test"], solve-group = "py312" }
+test-py39 = { features = ["py39", "test"], solve-group = "py39" }
 
 [tool.ruff]
 line-length = 79
