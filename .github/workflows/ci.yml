@@ -184,15 +184,9 @@ jobs:
                   wget http://archive.ubuntu.com/ubuntu/pool/universe/n/ncurses/libtinfo5_6.3-2ubuntu0.1_amd64.deb
                   sudo dpkg -i libtinfo5_6.3-2ubuntu0.1_amd64.deb
 
-            - name: "Setup Pixi"
-              uses: prefix-dev/setup-pixi@v0.8.8
-              with:
-                  pixi-version: v0.49.0
-                  cache: true
-
             - name: "Run unit tests"
               run: |
-                  pixi run test-cpp
+                  tools/bazelisk test //upkie/...
 
     test-python:
         name: "Test Python library with ${{ matrix.pyenv }} on ${{ matrix.os }}"

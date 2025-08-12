@@ -189,11 +189,6 @@ pytest = "*"
 [tool.pixi.feature.test-python.tasks]
 test-python = "pytest tests/"
 
-[tool.pixi.tasks]
-spines-bullet = "tools/bazelisk run //spines:bullet_spine -- --show"
-spines-mock = "tools/bazelisk run //spines:mock_spine"
-test-cpp = "tools/bazelisk test //upkie/..."
-
 [tool.pixi.environments]
 agent-mpc-balancer = { features = ["agent-mpc-balancer"], solve-group = "default" }
 agent-rlb3-trainer = { features = ["agent-rlb3-trainer"], solve-group = "default" }

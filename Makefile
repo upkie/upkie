@@ -53,15 +53,21 @@ clean: clean_broken_links  ## clean all local build and intermediate files
 clean_broken_links:
 	find -L $(CURDIR) -type l ! -exec test -e {} \; -delete 2>/dev/null || true
 
+.PHONY: pack_pixi_env
 pack_pixi_env:  ## pack pixi environment to environment.tar
 	pixi run pack
 
+.PHONY: run_bullet_spine
 run_bullet_spine:  ## build and run the Bullet spine
 	$(BAZEL) run //spines:bullet_spine -- --show
 
 .PHONY: set_date
 set_date: check_upkie_name  ## set Upkie's date if it is not connected to the Internet
 	ssh ${UPKIE_NAME} sudo date -s "$(CURDATE)"
+
+.PHONY: test_cpp
+test_cpp:  ## run C++ unit tests
+	$(BAZEL) test //upkie/...
 
 # Running `raspunzel -s` can create __pycache__ directories owned by root
 # that rsync is not allowed to remove. We therefore give permissions first.
@@ -78,6 +84,7 @@ upload: check_upkie_name build  ## upload built targets to the Raspberry Pi
 		--exclude bazel-out/ \
 		--exclude bazel-testlogs/ \
 		--exclude cache/ \
+		--exclude docs/ \
 		--exclude logs/ \
 		--exclude tools/bazel \
 		--exclude tools/logs/\*.mpack \
