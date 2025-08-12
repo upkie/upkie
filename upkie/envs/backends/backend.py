@@ -4,7 +4,6 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from abc import ABC, abstractmethod
-from typing import Optional
 
 from upkie.utils.robot_state import RobotState
 
@@ -27,11 +26,11 @@ class Backend(ABC):
         """
 
     @abstractmethod
-    def reset(self, init_state: Optional[RobotState] = None) -> dict:
+    def reset(self, init_state: RobotState) -> dict:
         r"""!
         Reset the backend to an initial state.
 
-        \param init_state Initial robot state (optional).
+        \param init_state Initial robot state.
         \return Initial spine observation dictionary.
         """
 

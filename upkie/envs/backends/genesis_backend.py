@@ -143,10 +143,11 @@ class GenesisBackend(Backend):
         self._scene.step()
         return self.get_spine_observation()
 
-    def _reset_robot_state(self, init_state: RobotState):
+    def _reset_robot_state(self, init_state: RobotState) -> None:
         r"""!
-        Reset robot to initial state with randomization.
+        Reset robot to an initial state.
 
+        \param init_state Initial state of the robot.
         """
         # Reset base position and orientation in the world frame
         position = init_state.position_base_in_world

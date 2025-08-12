@@ -6,7 +6,15 @@
 """Backend implementations for Upkie environments."""
 
 from .backend import Backend
+from .genesis_backend import GenesisBackend
+from .mock_backend import MockBackend
+from .pybullet_backend import PyBulletBackend
+from .spine_backend import SpineBackend
 
 __all__ = [
     "Backend",
+    "GenesisBackend",
+    "MockBackend",
+    "PyBulletBackend",
+    "SpineBackend",
 ]
