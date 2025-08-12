@@ -178,6 +178,9 @@ proxsuite = ">=0.4.1"
 pybullet = ">=3"
 qpmpc = ">=3.0.1,<4"
 
+[tool.pixi.feature.pybullet.tasks]
+pybullet-simulation = "python examples/model_predictive_control.py --env Upkie-PyBullet-Pendulum"
+
 [tool.pixi.feature.test-python.dependencies]
 pybullet = ">=3"
 pytest = "*"
