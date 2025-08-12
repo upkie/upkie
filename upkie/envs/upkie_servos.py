@@ -17,7 +17,7 @@ from upkie.utils.robot_state import RobotState
 from .upkie_env import UpkieEnv
 
 
-class UpkieServosEnv(UpkieEnv):
+class UpkieServos(UpkieEnv):
     r"""!
     Upkie environment where actions command servomotors directly.
 
