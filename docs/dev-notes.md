@@ -2,6 +2,18 @@
 
 [TOC]
 
+## Attitude reference system {#ars}
+
+The attitude reference system (ARS) frame is an inertial frame of reference used by the IMU filter onboard the pi3hat. It has its x-axis pointing forward, y-axis pointing to the right and z-axis pointing down ([details](https://github.com/mjbots/pi3hat/blob/ab632c82bd501b9fcb6f8200df0551989292b7a1/docs/reference.md#orientation)). This is not the convention we use in the world frame, and the rotation matrix from the ARS frame to the world frame is:
+
+\f$
+R_{WA} = \begin{bmatrix}
+    1 & 0 & 0 \\
+    0 & -1 & 0 \\
+    0 & 0 & -1 \\
+\end{bmatrix}
+\f$
+
 ## Pixi workflow
 
 A workflow based on [Pixi](https://pixi.sh/) is under development. Once feature-complete, it should provide a simpler alternative to the legacy workflow based on GNU Make and conda environments. Here is what you can do now:

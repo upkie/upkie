@@ -41,10 +41,10 @@ Internally, the floor contact observer relies on two wheel contact observers, on
 
 | Observation key    | Description |
 |--------------------|-------------|
-| `inertia`          | ... |
-| `abs_torque`       | ... |
-| `contact`          | ... |
-| `abs_acceleration` | ... |
+| `abs_acceleration` | Low-pass filtered absolute wheel acceleration in [rad] / [s]² |
+| `abs_torque`       | Low-pass filtered absolute wheel torque in [N m] |
+| `contact`          | Current contact state (boolean) |
+| `inertia`          | Apparent inertia I = |torque| / |acceleration| at the wheel |
 
 ## History observer {#history-observer}
 
@@ -88,19 +88,7 @@ observer_pipeline.append_observer(linear_acceleration_history);
 
 The inertial measurement unit (IMU) mounted on the [pi3hat](https://mjbots.com/products/mjbots-pi3hat-r4-5) combines an accelerometer and a gyroscope. These raw measurements are converted onboard by an unscented Kalman filter (based on a standard quasi-static assumption) that outputs observed quantities with respect to an attitude reference system (ARS) frame.
 
-There are three main frames to keep in mind when considering the IMU: the frame of the IMU sensor itself, the world frame, and the ARS frame. The world frame is an inertial frame of reference we refer to in various observers. It has an x-axis pointing forward, a y-axis pointing to the left and a z-axis vertical and pointing up (*i.e.*, against the gravity vector).
-
-### Attitude reference system {#ars}
-
-The attitude reference system (ARS) frame is an inertial frame of reference used by the the IMU filte. It has its x-axis pointing forward, y-axis pointing to the right and z-axis pointing down ([details](https://github.com/mjbots/pi3hat/blob/ab632c82bd501b9fcb6f8200df0551989292b7a1/docs/reference.md#orientation)). This is not the convention we use in the world frame, and the rotation matrix from the ARS frame to the world frame is:
-
-\f$
-R_{WA} = \begin{bmatrix}
-    1 & 0 & 0 \\
-    0 & -1 & 0 \\
-    0 & 0 & -1 \\
-\end{bmatrix}
-\f$
+There are three main frames to keep in mind when considering the IMU: the frame of the IMU sensor itself, the world frame, and the [attitude reference system](\ref ars) (ARS) frame. The world frame is an inertial frame of reference we refer to in various observers. It has an x-axis pointing forward, a y-axis pointing to the left and a z-axis vertical and pointing up (*i.e.*, against the gravity vector).
 
 ## Servo
 

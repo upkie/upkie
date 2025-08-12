@@ -18,7 +18,7 @@ using palimpsest::Dictionary;
 /*! Get the orientation of the base frame with respect to the world frame.
 
  * \param quat_imu_in_ars Quaternion representing the rotation matrix from the
- *     IMU frame to the  attitude reference system (ARS) frame, in `[w, x, y,
+ *     IMU frame to the attitude reference system (ARS) frame, in `[w, x, y,
  *     z]` format.
  * \param rotation_base_to_imu Rotation matrix from the base frame to the IMU
  *     frame. When not specified, the default Upkie mounting orientation is
