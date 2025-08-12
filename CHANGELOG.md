@@ -48,6 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CICD: Switch to Pixi in CI workflow
 - CICD: Switch to pytest for Python unit tests
 - Clean up Python cache directories upon `make clean`
+- Restrict Bazel to C++ tasks and use Pixi for Python tasks in development workflow
 - cpp: Install C++ dependencies up from mpacklog.cpp
 - cpp: Limit rate of SynchronousClock skip warnings and report frequency drop
 - cpp: Update mpacklog.cpp to version 3.1.2
