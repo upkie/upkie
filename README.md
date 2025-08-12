@@ -71,9 +71,19 @@ Other Gymnasium environments provide various levels of absraction to control the
 
 ## Going further
 
+### Agents
+
+Upkie comes with [agents](https://github.com/upkie/upkie/tree/main/agents) that implement behaviors 
+
+- **MPC balancer:** balancing and locomotion by model predictive control.
+- **RLB3 trainer:** train and evaluate balancing policies by reinforcement learning.
+- **Trajectory player:** play pre-computed trajectories while balancing with the wheels.
+
+You can make your own agents by forking this repository or using the [new\_agent](https://github.com/upkie/new_agent) template to get started.
+
 ### Examples
 
-There are other examples in the [examples](https://github.com/upkie/upkie/tree/main/examples), for instance:
+There are smaller standalone examples in the [examples](https://github.com/upkie/upkie/tree/main/examples) directory. For instance:
 
 - Domain randomization: shows how to add domain-randomization wrappers to an Upkie environment.
 - Lying genuflection: genuflect while lying on a horizontal floor.
@@ -81,16 +91,24 @@ There are other examples in the [examples](https://github.com/upkie/upkie/tree/m
 - PD balancer: balance by proportional-derivative feedback to wheel velocities.
 - Torque balancer: balance by proportional control from base pitch to wheel torques.
 
-### Agents
+### Tasks
 
-There are other Upkie agents available in their own repositories:
+Upkies come with a set of default behaviors that you can try out by running Pixi tasks. You will need to [install `pixi`](https://pixi.sh/latest/#installation) for this.
 
-- [MPC balancer](https://github.com/upkie/mpc_balancer): balance in place using model predictive control.
-- [Pink balancer](https://github.com/upkie/pink_balancer): a more advanced agent that can crouch and stand up while balancing.
-- [PPO balancer](https://github.com/upkie/ppo_balancer): balance in place with a neural-network policy trained by reinforcement learning.
-- [PID balancer](https://github.com/stephane-caron/upkie_pid_balancer): a legacy agent that balances by proportional-integral feedback to wheel velocities.
+| Task name | Agent | Behavior |
+|-----------|-------|----------|
+| `upkie-enjoy-policy` |  RLB3 trainer | Evaluate the latest policy trained by reinforcement learning |
+| `upkie-jolly-jumper` |  Trajectory player | Play a pre-recorded trajectory (WIP) |
+| `upkie-mpc-balancer` |  MPC balancer | Run the MPC balancer |
+| `upkie-train-policy` |  RLB3 trainer | Train a new balancing policy by reinforcement learning |
 
-If you make your own agent, feel free to open a PR to link it from here. There is a [new\_agent](https://github.com/upkie/new_agent) template to get started. (Or you can fork this entire repository, for example if you plan to make changes to the `upkie` module rather than using it as a dependency.)
+To run a task, simply call:
+
+```console
+pixi run upkie-<task-name>
+```
+
+Tasks are available both on your machine and on your Upkie's Raspberry Pi (Pixi comes pre-installed on the SD card image).
 
 ### Contributing
 
