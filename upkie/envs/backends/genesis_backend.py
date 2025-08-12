@@ -3,6 +3,9 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
+## \namespace upkie.envs.backends.genesis_backend
+## \brief Backend using the Genesis physics simulator.
+
 from typing import Optional
 
 import numpy as np
@@ -11,6 +14,7 @@ import upkie_description
 try:
     import genesis as genesis
 except ModuleNotFoundError:
+    ## Genesis physics simulation library, or None if it is not installed.
     genesis = None
 
 from upkie.config import BULLET_CONFIG

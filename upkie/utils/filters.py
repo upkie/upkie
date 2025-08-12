@@ -4,6 +4,9 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2022 Stéphane Caron
 
+## \namespace upkie.utils.filters
+## \brief Basic digital filters.
+
 """!
 Basic digital filters.
 """

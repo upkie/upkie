@@ -5,10 +5,8 @@
 # Copyright 2022 Stéphane Caron
 # Copyright 2023 Inria
 
-"""!
-Import `logging` from this module to use logging from Python standard library
-with formatting similar to spdlog.
-"""
+## \namespace upkie.logging
+## \brief Custom logging formatter and logger for the library.
 
 import logging
 

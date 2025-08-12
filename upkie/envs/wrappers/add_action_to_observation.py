@@ -4,6 +4,9 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Inria
 
+## \namespace upkie.envs.wrappers.add_action_to_observation
+## \brief Append last action vector to the observation vector.
+
 import gymnasium as gym
 import numpy as np
 

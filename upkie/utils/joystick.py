@@ -8,6 +8,9 @@
 # Based on information from:
 # https://www.kernel.org/doc/Documentation/input/joystick-api.txt
 
+## \namespace upkie.utils.joystick
+## \brief Joystick class used by mock spines to mimick the C++ Joystick sensor.
+
 import array
 import os
 import struct

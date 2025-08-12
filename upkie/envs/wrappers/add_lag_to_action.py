@@ -4,6 +4,9 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Inria
 
+## \namespace upkie.envs.wrappers.add_lag_to_action
+## \brief Model lag as a low-pass filter on the action of an environment.
+
 from typing import Tuple, Union
 
 import gymnasium as gym

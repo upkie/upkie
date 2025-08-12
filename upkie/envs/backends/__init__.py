@@ -3,6 +3,9 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
+## \namespace upkie.envs.backends
+## \brief Backend implementations for Upkie environments.
+
 """Backend implementations for Upkie environments."""
 
 from .backend import Backend

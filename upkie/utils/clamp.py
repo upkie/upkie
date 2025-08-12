@@ -4,6 +4,9 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2022 Stéphane Caron
 
+## \namespace upkie.utils.clamp
+## \brief Clamping functions.
+
 r"""!
 Clamping functions.
 """

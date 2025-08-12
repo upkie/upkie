@@ -3,6 +3,9 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
+## \namespace upkie.envs.backends.backend
+## \brief Interface to a backend for Upkie environments.
+
 from abc import ABC, abstractmethod
 
 from upkie.utils.robot_state import RobotState

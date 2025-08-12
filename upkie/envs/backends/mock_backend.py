@@ -3,6 +3,9 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
+## \namespace upkie.envs.backends.mock_backend
+## \brief Backend that mimics perfect commands for testing.
+
 from pathlib import Path
 from typing import Optional
 
