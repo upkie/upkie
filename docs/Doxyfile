@@ -886,7 +886,7 @@ INPUT                  = README.md \
                          upkie/cpp/spine \
                          upkie/cpp/utils \
                          upkie/envs \
-                         upkie/envs/pipelines \
+                         upkie/envs/backends \
                          upkie/envs/wrappers \
                          upkie/model \
                          upkie/spine \
