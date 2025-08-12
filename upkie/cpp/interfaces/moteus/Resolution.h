@@ -14,6 +14,7 @@ namespace upkie::cpp::interfaces {
 
 namespace moteus {
 
+//! Data resolution types in the moteus protocol.
 enum class Resolution {
   kInt8,
   kInt16,

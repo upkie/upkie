@@ -47,7 +47,7 @@ enum {
   kCurrentRegisterMapVersion = 4,
 };
 
-//! Multiplex register types for moteus protocol communication.
+//! Multiplex register types in the moteus protocol.
 enum Multiplex : uint32_t {
   kWriteBase = 0x00,
   kWriteInt8 = 0x00,
@@ -131,6 +131,7 @@ enum Register : uint32_t {
   kRezero = 0x130,
 };
 
+//! Saturate a double value to fit within the range of type T after scaling.
 template <typename T>
 T Saturate(double value, double scale) {
   if (!std::isfinite(value)) {
@@ -618,12 +619,22 @@ class MultiplexParser {
   uint32_t current_register_ = 0;
 };
 
+/*! Emit a stop command to set the moteus servo to stopped mode.
+ *
+ * \param[out] frame CAN frame to write the stop command to.
+ */
 inline void EmitStopCommand(WriteCanFrame* frame) {
   frame->Write<int8_t>(Multiplex::kWriteInt8 | 0x01);
   frame->Write<int8_t>(Register::kMode);
   frame->Write<int8_t>(Mode::kStopped);
 }
 
+/*! Emit position command to control the servo position.
+ *
+ * \param[out] frame CAN frame to write the position command to.
+ * \param[in] command Position command parameters (position, velocity, etc.).
+ * \param[in] resolution Data resolution settings for command parameters.
+ */
 inline void EmitPositionCommand(WriteCanFrame* frame,
                                 const PositionCommand& command,
                                 const PositionResolution& resolution) {
@@ -673,6 +684,12 @@ inline void EmitPositionCommand(WriteCanFrame* frame,
   }
 }
 
+/*! Emit a query command to request data from moteus servos.
+ *
+ * \param[out] frame CAN frame to write the query command to.
+ * \param[in] command Query command specifying which data to request and
+ *     at which resolutions to apply to the returned fields.
+ */
 inline void EmitQueryCommand(WriteCanFrame* frame,
                              const QueryCommand& command) {
   {
@@ -699,6 +716,7 @@ inline void EmitQueryCommand(WriteCanFrame* frame,
   }
 }
 
+//! Parse query result data received from moteus servo into structured format.
 inline QueryResult ParseQueryResult(const uint8_t* data, size_t size) {
   MultiplexParser parser(data, size);
 
