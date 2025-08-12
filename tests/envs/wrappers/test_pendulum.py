@@ -11,19 +11,21 @@ from multiprocessing.shared_memory import SharedMemory
 
 import numpy as np
 
+from upkie.envs.backends import SpineBackend
 from upkie.envs.testing import MockSpine
-from upkie.envs.upkie_spine_env import UpkieSpineEnv
+from upkie.envs.upkie_servos import UpkieServos
 from upkie.envs.wrappers.pendulum import Pendulum
 
 
 class PendulumTestCase(unittest.TestCase):
     def setUp(self):
         shared_memory = SharedMemory(name=None, size=42, create=True)
-        servos_env = UpkieSpineEnv(
+        self.backend = SpineBackend(shm_name=shared_memory._name)
+        servos_env = UpkieServos(
+            backend=self.backend,
             frequency=100.0,
-            shm_name=shared_memory._name,
         )
-        servos_env._spine = MockSpine()
+        self.backend._spine = MockSpine()
         pendulum = Pendulum(
             servos_env,
             fall_pitch=1.0,
@@ -47,7 +49,7 @@ class PendulumTestCase(unittest.TestCase):
         observation, reward, terminated, truncated, _ = self.env.step(action)
         self.assertNotEqual(reward, 0.0)  # non-zero base velocity
 
-        spine_observation = self.servos_env._spine.observation
+        spine_observation = self.backend._spine.observation
         base_orientation = spine_observation["base_orientation"]
         base_orientation["pitch"] = 0.0
         base_orientation["angular_velocity"] = [0.0, 0.0, 0.0]
@@ -67,7 +69,7 @@ class PendulumTestCase(unittest.TestCase):
         _, _ = self.env.reset()
         action = np.zeros(self.env.action_space.shape)
         _, _, _, _, _ = self.env.step(action)
-        spine_action = self.servos_env._spine.action
+        spine_action = self.backend._spine.action
         servo_action = spine_action["servo"]
         model = self.env.get_wrapper_attr("model")
         for joint in model.upper_leg_joints:
@@ -81,7 +83,7 @@ class PendulumTestCase(unittest.TestCase):
         _, _ = self.env.reset()
         action = np.full(self.env.action_space.shape, 1111.1)
         _, _, _, _, _ = self.env.step(action)
-        spine_action = self.servos_env._spine.action
+        spine_action = self.backend._spine.action
         servo_action = spine_action["servo"]
         max_ground_velocity = self.env.action_space.high[0]
         model = self.env.get_wrapper_attr("model")
