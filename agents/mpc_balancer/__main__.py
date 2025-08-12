@@ -116,7 +116,7 @@ def read_gin_configuration(cli_config: Optional[str]):
     if hostname_config.exists():
         gin.parse_config_file(hostname_config)
 
-    local_config = Path.home() / ".config" / "upkie" / "pink_balancer.gin"
+    local_config = Path.home() / ".config" / "upkie" / "mpc_balancer.gin"
     if local_config.exists():
         gin.parse_config_file(local_config)
 

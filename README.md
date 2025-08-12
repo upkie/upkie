@@ -93,7 +93,7 @@ There are smaller standalone examples in the [examples](https://github.com/upkie
 
 ### Tasks
 
-Upkies come with a set of default behaviors that you can try out by running Pixi tasks. You will need to [install `pixi`](https://pixi.sh/latest/#installation) for this.
+Upkies come with a set of default behaviors that you can executed as Pixi tasks. To get started, make sure you have [installed `pixi`](https://pixi.sh/latest/#installation).
 
 | Task name | Agent | Behavior |
 |-----------|-------|----------|
@@ -102,7 +102,7 @@ Upkies come with a set of default behaviors that you can try out by running Pixi
 | `upkie-mpc-balancer` |  MPC balancer | Run the MPC balancer |
 | `upkie-train-policy` |  RLB3 trainer | Train a new balancing policy by reinforcement learning |
 
-To run a task, simply call:
+Call Pixi to execute a task:
 
 ```console
 pixi run upkie-<task-name>
