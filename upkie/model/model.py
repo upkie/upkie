@@ -4,10 +4,11 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2024 Inria
 
-from typing import List, Tuple
+from typing import List, Optional, Tuple
 from xml.etree import ElementTree
 
 import numpy as np
+import upkie_description
 
 from .joint import Joint
 from .joint_limit import JointLimit
@@ -62,12 +63,15 @@ class Model:
     ## Wheel joints.
     wheel_joints: Tuple[float]
 
-    def __init__(self, urdf_path: str):
+    def __init__(self, urdf_path: Optional[str] = None):
         r"""!
         Constructor for the robot model wrapper.
 
-        \param[in] urdf_path Path to the robot description.
+        \param[in] urdf_path Path to the robot description. If None, defaults
+            to the description from `upkie_description`.
         """
+        if urdf_path is None:
+            urdf_path = upkie_description.URDF_PATH
         tree = ElementTree.parse(urdf_path)
         joint_tags = [
             child for child in tree.getroot() if child.tag == "joint"

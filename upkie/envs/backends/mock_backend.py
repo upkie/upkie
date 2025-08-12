@@ -19,6 +19,10 @@ class MockBackend(Backend):
     Backend that mimics perfect commands for testing.
     """
 
+    ## \var joystick
+    ## Joystick interface for writing mock observations, or None if no joystick device found.
+    joystick: Optional[Joystick]
+
     def __init__(self, js_path: str = "/dev/input/js0") -> None:
         r"""!
         Initialize mock backend.

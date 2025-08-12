@@ -91,7 +91,7 @@ class PyBulletBackend(Backend):
         )
 
         # Initialize model and build joint index mapping
-        self.__model = Model(upkie_description.URDF_PATH)
+        self.__model = Model()
         self._joint_indices = {}
         self._imu_link_index = -1
         for bullet_idx in range(pybullet.getNumJoints(self._robot_id)):

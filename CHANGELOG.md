@@ -41,19 +41,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breaking:** Rename `UpkieGroundVelocity` wrapper to `Pendulum`
 - **Breaking:** Rename `interfaces` C++ namespace from `actuation`
 - **Breaking:** Rename `upkie.logging` submodule from `upkie.utils.spdlog`
+- CICD: Move coverage and lint rules from the Makefile to Pixi tasks
 - CICD: Separate jobs for C++ and Python library testing
 - CICD: Switch to Pixi in CI workflow
 - CICD: Switch to pytest for Python unit tests
 - Clean up Python cache directories upon `make clean`
-- envs: Remove the CPU bottleneck, allowing parallel simulations.
-- Move coverage and lint rules from the Makefile to Pixi tasks
 - cpp: Install C++ dependencies up from mpacklog.cpp
 - cpp: Limit rate of SynchronousClock skip warnings and report frequency drop
 - cpp: Update mpacklog.cpp to version 3.1.2
 - envs: Allow gain scales larger than one in servo environments
 - envs: Drop Gymnasium environment versioning
+- envs: Remove the CPU bottleneck, allowing parallel simulations.
 - examples: Allow users to select the Gymnasium environment in MPC example
 - logging: Use an "upkie" logger rather than the global logger
+- model: Load the URDF description from `upkie_description` by default
 - spines: Factor common observers and sensors between spines
 - tools: Update script to dump moteus servo configurations
 - utils: Generalize `abs_bounded_derivative_filter` to vector inputs
