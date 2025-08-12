@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Inria
 
-"""Tests for UpkieServos environment."""
+"""Tests for UpkieServos environment with SpineBackend."""
 
 import unittest
 from multiprocessing.shared_memory import SharedMemory
@@ -12,20 +12,22 @@ from multiprocessing.shared_memory import SharedMemory
 import gymnasium as gym
 import numpy as np
 
+from upkie.envs.backends import SpineBackend
 from upkie.envs.testing import MockSpine
-from upkie.envs.upkie_spine_env import UpkieSpineEnv
+from upkie.envs.upkie_servos import UpkieServos
 from upkie.exceptions import UpkieTimeoutError
 
 
-class UpkieSpineEnvTestCase(unittest.TestCase):
+class SpineBackendTestCase(unittest.TestCase):
     def setUp(self):
         shared_memory = SharedMemory(name=None, size=42, create=True)
-        self.env = UpkieSpineEnv(
+        self.backend = SpineBackend(shm_name=shared_memory._name)
+        self.env = UpkieServos(
+            backend=self.backend,
             frequency=100.0,
-            shm_name=shared_memory._name,
         )
         shared_memory.close()
-        self.env._spine = MockSpine()
+        self.backend._spine = MockSpine()
 
     def test_reset(self):
         observation, info = self.env.reset()
@@ -75,13 +77,13 @@ class UpkieSpineEnvTestCase(unittest.TestCase):
         action[not_wheel]["position"] = np.nan
         self.env.step(action)
         self.assertTrue(
-            np.isnan(self.env._spine.action["servo"][not_wheel]["position"])
+            np.isnan(self.backend._spine.action["servo"][not_wheel]["position"])
         )
 
         action[not_wheel]["position"] = 0.5
         self.env.step(action)
         self.assertAlmostEqual(
-            self.env._spine.action["servo"][not_wheel]["position"],
+            self.backend._spine.action["servo"][not_wheel]["position"],
             0.5,
             places=5,
         )
@@ -89,7 +91,7 @@ class UpkieSpineEnvTestCase(unittest.TestCase):
         action[not_wheel]["position"] = 5e5
         self.env.step(action)
         self.assertAlmostEqual(
-            self.env._spine.action["servo"][not_wheel]["position"],
+            self.backend._spine.action["servo"][not_wheel]["position"],
             self.env.action_space[not_wheel]["position"].high[0],
             places=5,
         )
@@ -97,7 +99,7 @@ class UpkieSpineEnvTestCase(unittest.TestCase):
         action[not_wheel]["feedforward_torque"] = 1e20
         self.env.step(action)
         self.assertAlmostEqual(
-            self.env._spine.action["servo"][not_wheel]["feedforward_torque"],
+            self.backend._spine.action["servo"][not_wheel]["feedforward_torque"],
             self.env.action_space[not_wheel]["feedforward_torque"].high[0],
             places=5,
         )
