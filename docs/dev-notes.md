@@ -23,7 +23,7 @@ A workflow based on [Pixi](https://pixi.sh/) is under development. Once feature-
 
 ## Legacy source workflow
 
-While newcomers will likely run `start_simulation.sh` and import the `upkie` package in Python, as you get acquainted with the robot and develop your own agents (by forking [upkie/new\_agent](https://github.com/upkie/new_agent)), you may want to contribute some features back to the upstream repository. Here is a short guide on compiling from source to do that.
+While newcomers will likely run `start_simulation.sh` and import the `upkie` package in Python, as you get acquainted with the robot and develop your own agents (in your fork of the repository or using the [new\_agent](https://github.com/upkie/new_agent) template), you may want to contribute some features back upstream. Here is a short guide on compiling from source to do that.
 
 ### Build environment setup {#setup-build}
 
@@ -41,29 +41,13 @@ export UPKIE_NAME="michel-strogoff"
 
 An IP address will also work.
 
-To make sure your build environment works, try to run a [bullet spine](\ref bullet-spine) from source:
+To make sure your build environment works, try to rebuild the [pi3hat spine](\ref pi3hat-spine) from source:
 
 ```
-make run_bullet_spine
+make build
 ```
 
-Once the simulation builds and runs successfully, move onto building the [pi3hat spine](\ref pi3hat-spine) from source, upload it and run it on your robot.
-
-### Using the local Python module
-
-If you make changes to the `upkie` Python module, you will want to make Python import your local version rather than the one installed from conda-forge or PyPI. There are two ways to do so. One of them is to re-install the package locally, using `pip` from the root of (your local copy of) the repository:
-
-```
-cd upkie
-pip install -U .
-```
-
-Another one is to simply link the module from the directory you are working in. For instance, in the examples directory:
-
-```
-cd upkie/examples
-ln -s ../upkie ./
-```
+Once the spine is buildt and runs successfully, upload it by `make upload` and check that it runs on the Raspberry Pi of your Upkie.
 
 ## Inter-process communication
 
