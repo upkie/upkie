@@ -15,7 +15,9 @@ try:
     import pybullet
     import pybullet_data
 except ModuleNotFoundError:
+    ## PyBullet physics simulation library, or None if it is not installed.
     pybullet = None
+    ## PyBullet data package, or None if PyBullet is not installed.
     pybullet_data = None
 
 from upkie.config import BULLET_CONFIG

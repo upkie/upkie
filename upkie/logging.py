@@ -50,15 +50,17 @@ class SpdlogFormatter(logging.Formatter):
         return formatter.format(record)
 
 
-# Create a dedicated "upkie" logger
+## Main logger instance for the Upkie library.
 logger = logging.getLogger("upkie")
 logger.setLevel(logging.INFO)
+
+## Stream handler for console output with custom formatting.
 handler = logging.StreamHandler()
 handler.setLevel(logging.DEBUG)
 handler.setFormatter(SpdlogFormatter())
 logger.addHandler(handler)
 
-# Prevent propagation to root logger to avoid duplicate messages
+## Prevent propagation to root logger to avoid duplicate messages
 logger.propagate = False
 
 

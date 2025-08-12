@@ -15,6 +15,7 @@ from typing import Tuple, TypeVar
 
 import numpy as np
 
+## Generic type variable for type annotation of filter functions.
 T = TypeVar("T", float, np.ndarray)
 
 
