@@ -12,6 +12,7 @@
 import gymnasium as gym
 
 from .upkie_env import UpkieEnv
+from .upkie_pendulum import UpkiePendulum
 from .upkie_servos import UpkieServos
 
 
@@ -57,6 +58,7 @@ def register() -> None:
 
 __all__ = [
     "UpkieEnv",
+    "UpkiePendulum",
     "UpkieServos",
     "register",
 ]

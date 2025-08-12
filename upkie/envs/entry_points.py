@@ -10,7 +10,7 @@ from upkie.envs.backends import (
     PyBulletBackend,
     SpineBackend,
 )
-from upkie.envs.wrappers import Pendulum
+from upkie.envs.upkie_pendulum import UpkiePendulum
 
 from .upkie_servos import UpkieServos
 
@@ -118,9 +118,9 @@ def wrap_pendulum(make_env_func, **kwargs):
 
     \param make_env_func Function that creates the base servo environment.
     \param kwargs Keyword arguments forwarded to both the
-        \ref upkie.envs.wrappers.pendulum.Pendulum wrapper and the internal
+        \ref upkie.envs.upkie_pendulum.UpkiePendulum wrapper and the internal
         Upkie environment.
-    \return Pendulum environment.
+    \return UpkiePendulum environment.
     """
     pendulum_keys = {
         "fall_pitch",
@@ -137,7 +137,7 @@ def wrap_pendulum(make_env_func, **kwargs):
         if key not in pendulum_keys
     }
     env = make_env_func(**env_kwargs)
-    return Pendulum(env, **pendulum_kwargs)
+    return UpkiePendulum(env, **pendulum_kwargs)
 
 
 def wrap_genesis_pendulum(**kwargs):

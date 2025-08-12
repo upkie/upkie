@@ -14,7 +14,7 @@ import numpy as np
 from upkie.envs.backends import SpineBackend
 from upkie.envs.testing import ConstantObservationEnv, MockSpine
 from upkie.envs.upkie_servos import UpkieServos
-from upkie.envs.wrappers.pendulum import Pendulum
+from upkie.envs.upkie_pendulum import UpkiePendulum
 from upkie.envs.wrappers.random_push import RandomPush
 
 
@@ -27,7 +27,7 @@ class RandomPushTestCase(unittest.TestCase):
             frequency=100.0,
         )
         backend._spine = MockSpine()
-        ground_velocity_env = Pendulum(
+        ground_velocity_env = UpkiePendulum(
             servos_env,
             fall_pitch=1.0,
             max_ground_velocity=1.0,

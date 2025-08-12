@@ -4,6 +4,9 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Inria
 
+## \namespace upkie.envs.upkie_servos
+## \brief Upkie environment where actions command servomotors directly.
+
 from typing import Optional, Tuple
 
 import gymnasium as gym
