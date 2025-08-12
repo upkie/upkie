@@ -43,7 +43,10 @@ class RandomPush(gym.Wrapper):
             return a 3D NumPy array.
         """
         super().__init__(env)
-        if not env.has_wrapper_attr("set_bullet_action"):
+        if not (
+            hasattr(env.unwrapped, "set_bullet_action")
+            or env.has_wrapper_attr("set_bullet_action")
+        ):
             raise UpkieException(
                 "Wrapped environment must have a `set_bullet_action` method"
             )

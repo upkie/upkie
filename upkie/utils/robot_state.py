@@ -172,3 +172,26 @@ class RobotState:
         """
         position_rand_in_world = self.randomization.sample_position(np_random)
         return self.position_base_in_world + position_rand_in_world
+
+    def sample_state(self, np_random: np.random.Generator) -> "RobotState":
+        r"""!
+        Sample a randomized robot state around this state.
+
+        \param[in] np_random NumPy random number generator.
+        \return Sampled robot state with randomization applied.
+        """
+        sampled_angular_velocity = self.sample_angular_velocity(np_random)
+        sampled_joint_configuration = self.joint_configuration
+        sampled_joint_velocity = self.joint_velocity
+        sampled_linear_velocity = self.sample_linear_velocity(np_random)
+        sampled_orientation = self.sample_orientation(np_random)
+        sampled_position = self.sample_position(np_random)
+        return RobotState(
+            angular_velocity_base_in_base=sampled_angular_velocity,
+            joint_configuration=sampled_joint_configuration,
+            joint_velocity=sampled_joint_velocity,
+            linear_velocity_base_to_world_in_world=sampled_linear_velocity,
+            orientation_base_in_world=sampled_orientation,
+            position_base_in_world=sampled_position,
+            randomization=self.randomization,
+        )
