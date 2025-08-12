@@ -78,17 +78,19 @@ upload: check_upkie_name build  ## upload built targets to the Raspberry Pi
 	rsync -Lrtu --delete-after --delete-excluded \
 		--exclude .mypy_cache/ \
 		--exclude .pixi \
+		--exclude .pytest_cache \
+		--exclude .ruff_cache \
 		--exclude __pycache__ \
 		--exclude bazel-$(CURDIR_NAME) \
 		--exclude bazel-$(PROJECT_NAME)/ \
 		--exclude bazel-out/ \
 		--exclude bazel-testlogs/ \
 		--exclude cache/ \
-		--exclude docs/ \
-		--exclude logs/ \
+		--exclude docs/html \
+		--exclude logs/\*.mpack \
+		--exclude logs/ppo \
+		--exclude logs/tensorboard \
 		--exclude tools/bazel \
-		--exclude tools/logs/\*.mpack \
-		--exclude tools/raspios \
 		--progress $(CURDIR)/ ${UPKIE_NAME}:$(PROJECT_NAME)/
 
 # REMOTE TARGETS
