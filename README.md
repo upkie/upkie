@@ -1,4 +1,4 @@
-# Upkie wheeled biped robot
+# Upkie wheeled biped robots
 
 <img src="https://github.com/upkie/upkie/assets/1189580/2fc5ee4a-81b0-425c-83df-558c7147cc59" align="right" width="250" />
 
@@ -8,9 +8,13 @@
 [![Conda version](https://img.shields.io/conda/vn/conda-forge/upkie.svg)](https://anaconda.org/conda-forge/upkie)
 [![PyPI version](https://img.shields.io/pypi/v/upkie)](https://pypi.org/project/upkie/)
 
-**Upkie** is an open source wheeled biped robot. It has wheels for balancing and legs to negotiate uneven terrains. Upkies are designed to be buildable with off-the-shelf tools and components, like mjbots actuators. You can develop in Python or C++, on Linux or macOS, then deploy your agent to the robot's Raspberry Pi. Here are some videos of [Upkies in action](https://www.youtube.com/@upkie).
+**Upkies** are open-source wheeled biped robots. They have wheels for balancing and legs to negotiate uneven terrains. Upkies are designed to be buildable with off-the-shelf tools and components, like mjbots actuators. You can develop in Python or C++, on Linux or macOS, then deploy your behaviors to the robot's Raspberry Pi. Here are some instances of [Upkies in action](https://www.youtube.com/@upkie).
 
-This repository contains all the materials needed to build and control an Upkie: [build instructions](https://github.com/upkie/upkie/wiki), [documentation](https://upkie.github.io/upkie/) and [examples](https://github.com/upkie/upkie/tree/main/examples). Questions are welcome in the [discussions forum](https://github.com/upkie/upkie/discussions) or in the [chat room](https://matrix.to/#/#upkie:matrix.org).
+This repository contains all the materials needed to build and control an Upkie. Questions are welcome in the [discussions forum](https://github.com/upkie/upkie/discussions) or in the [chat room](https://matrix.to/#/#upkie:matrix.org).
+
+## Building your own Upkie
+
+Step by step instructions to build a new Upkie from scratch are available in the [Wiki](https://github.com/upkie/upkie/wiki).
 
 ## Getting started
 
@@ -29,14 +33,14 @@ Once the agent is running, you can direct your Upkie using a gamepad 🎮
 
 Click on the robot in the simulator window to apply external forces and see how the robot reacts.
 
-## Creating your own agent
+## Creating your own behaviors
 
-Software for Upkies is packaged into an `upkie` library. You can install it:
+Software for Upkies comes is packaged in an `upkie` Python library. You can install it:
 
 - From conda-forge: `conda install -c conda-forge upkie`
 - From PyPI: `pip install upkie`
 
-Your agent will interact with another process, called the *spine*, that will be either a simulation or your robot's actuators. Let's start a Bullet simulation spine:
+When running on the real robot, your code will command the robot's actuators via another process called the *spine*. There are also simulation spines for testing before deploying to a robot. Let's start a Bullet simulation spine:
 
 <img src="https://raw.githubusercontent.com/upkie/upkie/refs/heads/main/docs/images/bullet-spine.png" height="100" align="right" />
 
@@ -44,7 +48,7 @@ Your agent will interact with another process, called the *spine*, that will be 
 ./start_simulation.sh
 ```
 
-Now that the simulation spine is running, we can control the robot in Python, for example:
+Now that we have a spine is running, we can control the robot in Python. For example:
 
 ```python
 import gymnasium as gym
@@ -90,7 +94,7 @@ If you make your own agent, feel free to open a PR to link it from here. There i
 
 ### Contributing
 
-Contributions are welcome to both the hardware and software of Upkies! If you are a developer/maker with some robotics experience looking to hack on open source, check out the [contribution guidelines](CONTRIBUTING.md). On the software side, you can also report any bug you encounter in the [issue tracker](https://github.com/upkie/upkie/issues).
+Contributions are welcome to both the hardware and software of Upkies! Check out the [contribution guidelines](CONTRIBUTING.md).
 
 ## Citation
 
