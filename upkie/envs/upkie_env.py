@@ -4,6 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Inria
 
+from abc import ABC, abstractmethod
 from typing import Optional, Tuple
 
 import gymnasium as gym
@@ -16,7 +17,7 @@ from upkie.model import Model
 from upkie.utils.robot_state import RobotState
 
 
-class UpkieEnv(gym.Env):
+class UpkieEnv(gym.Env, ABC):
     r"""!
     Base class with features shared by all Upkie environments.
 
@@ -105,39 +106,29 @@ class UpkieEnv(gym.Env):
         """
         return self.__frequency
 
+    @abstractmethod
     def get_env_observation(self, spine_observation: dict):
         r"""!
         Get Gym environment observation from spine observation.
 
-        \note Subclasses should implement this method.
-
         \param[in] spine_observation Spine observation dictionary.
         \return Gym environment observation.
         """
-        raise NotImplementedError(
-            "Subclasses must implement get_env_observation"
-        )
 
+    @abstractmethod
     def get_neutral_action(self):
         r"""!
         Get neutral action for this environment.
-
-        \note Subclasses should implement this method.
         """
-        raise NotImplementedError(
-            "Subclasses must implement get_neutral_action"
-        )
 
+    @abstractmethod
     def get_spine_action(self, env_action) -> dict:
         r"""!
         Get spine action from Gym environment action.
 
-        \note Subclasses should implement this method.
-
         \param[in] env_action Gym environment action.
         \return Spine action dictionary.
         """
-        raise NotImplementedError("Subclasses must implement get_spine_action")
 
     def reset(
         self,
