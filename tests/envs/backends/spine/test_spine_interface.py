@@ -14,7 +14,7 @@ from multiprocessing.shared_memory import SharedMemory
 
 import msgpack
 
-from upkie.spine import Request, SpineInterface, serialize
+from upkie.envs.backends.spine import Request, SpineInterface, serialize
 
 wait_pre_monkeypatch = SpineInterface._wait_for_spine
 

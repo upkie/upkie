@@ -11,12 +11,12 @@ import time
 from typing import Optional
 
 import upkie.config
-from upkie.spine import SpineInterface
 from upkie.utils.nested_update import nested_update
 from upkie.utils.raspi import on_raspi
 from upkie.utils.robot_state import RobotState
 
 from .backend import Backend
+from .spine import SpineInterface
 
 
 class SpineBackend(Backend):

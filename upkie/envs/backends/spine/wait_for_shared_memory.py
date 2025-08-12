@@ -9,8 +9,8 @@ import time
 from multiprocessing import resource_tracker
 from multiprocessing.shared_memory import SharedMemory
 
-from ..exceptions import SpineError
-from ..logging import logger
+from upkie.exceptions import SpineError
+from upkie.logging import logger
 
 
 def wait_for_shared_memory(

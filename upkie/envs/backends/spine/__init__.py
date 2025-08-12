@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2022 Stéphane Caron
 
-## \namespace upkie.spine
+## \namespace upkie.envs.backends.spine
 ## \brief Python interface to interact with a spine.
 
 from .request import Request

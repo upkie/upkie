@@ -38,9 +38,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- **Breaking:** Rename `Upkie-Spine-Pendulum` Gym environment from `UpkieGroundVelocity`
-- **Breaking:** Rename `Upkie-Spine-Servos` Gym environment from `UpkieServos`
-- **Breaking:** Rename `UpkieGroundVelocity` wrapper to `Pendulum`
+- **Breaking:** Move `upkie.spine` submodule to `upkie.envs.backends.spine`
+- **Breaking:** Rename `UpkieGroundVelocity` Gymnasium environment to `Upkie-Spine-Pendulum`
+- **Breaking:** Rename `UpkieGroundVelocity` wrapper to `UpkiePendulum`
+- **Breaking:** Rename `UpkieServos` Gymnasium environment to `Upkie-Spine-Servos`
 - **Breaking:** Rename `interfaces` C++ namespace from `actuation`
 - **Breaking:** Rename `upkie.logging` submodule from `upkie.utils.spdlog`
 - CICD: Move coverage and lint rules from the Makefile to Pixi tasks

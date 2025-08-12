@@ -15,7 +15,8 @@ from time import perf_counter_ns
 
 import msgpack
 
-from ..exceptions import PerformanceIssue, SpineError, UpkieTimeoutError
+from upkie.exceptions import PerformanceIssue, SpineError, UpkieTimeoutError
+
 from .request import Request
 from .serialize import serialize
 from .wait_for_shared_memory import wait_for_shared_memory

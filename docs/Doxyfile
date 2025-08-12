@@ -886,9 +886,9 @@ INPUT                  = README.md \
                          upkie/cpp/utils \
                          upkie/envs \
                          upkie/envs/backends \
+                         upkie/envs/backends/spine \
                          upkie/envs/wrappers \
                          upkie/model \
-                         upkie/spine \
                          upkie/utils \
                          CONTRIBUTING.md
 
