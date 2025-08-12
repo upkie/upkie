@@ -140,22 +140,35 @@ class Joystick:
         ioctl(jsdev, 0x80016A12, buf)  # JSIOCGBUTTONS
         num_buttons = buf[0]
 
-        # Get the axis map.
+        # Build the axis map
         buf = array.array("B", [0] * 0x40)
         ioctl(jsdev, 0x80406A32, buf)  # JSIOCGAXMAP
-
         axis_map = []
-        axis_states = {}
+        axis_states = {
+            "x": 0.0,
+            "y": 0.0,
+            "rx": 0.0,
+            "ry": 0.0,
+            "throttle": 0.0,
+            "brake": 0.0,
+        }
         for axis in buf[:num_axes]:
             axis_name = Joystick.AXIS_NAMES.get(axis, "unknown(0x%02x)" % axis)
             axis_map.append(axis_name)
             axis_states[axis_name] = 0.0
 
-        # Get the button map.
+        # Build the button map
         buf = array.array("H", [0] * 200)
         ioctl(jsdev, 0x80406A34, buf)  # JSIOCGBTNMAP
         button_map = []
-        button_states = {}
+        button_states = {
+            "a": 0,
+            "b": 0,
+            "x": 0,
+            "y": 0,
+            "tl": 0,
+            "tr": 0,
+        }
         for btn in buf[:num_buttons]:
             btn_name = Joystick.BUTTON_NAMES.get(btn, "unknown(0x%03x)" % btn)
             button_map.append(btn_name)
