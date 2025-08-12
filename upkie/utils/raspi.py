@@ -4,29 +4,46 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Inria
 
-"""!
-Functions to work on the onboard Raspberry Pi.
-"""
+## \namespace upkie.utils.raspi
+## \brief Functions to work on the onboard Raspberry Pi.
 
 import os
 import sys
+from pathlib import Path
 
 from upkie.exceptions import UpkieRuntimeError
 
 from ..logging import logger
 
-__AGENT_CPUID: int = 3
-__MODEL_PATH: str = "/sys/firmware/devicetree/base/model"
-__ON_RASPI: bool = False
+## CPU ID for agent processes on Raspberry Pi.
+__AGENT_CPUID = 3
 
-if os.path.exists(__MODEL_PATH):
-    with open(__MODEL_PATH, "r", encoding="utf-8") as fh:
-        line = fh.readline()
-        __ON_RASPI = line.startswith("Raspberry")
+## Path to device tree model file for Raspberry Pi detection.
+__MODEL_PATH = Path("/sys/firmware/devicetree/base/model")
+
+## Boolean flag indicating if running on Raspberry Pi hardware.
+__ON_RASPI = False
+
+
+def _detect_raspi() -> bool:
+    r"""!
+    Detect if running on Raspberry Pi by reading device tree model.
+
+    \return True if running on Raspberry Pi, False otherwise.
+    """
+    if __MODEL_PATH.exists():
+        with __MODEL_PATH.open("r") as fh:
+            line = fh.readline()
+            return line.startswith("Raspberry")
+    return False
+
+
+# Initialize the module-level flag
+__ON_RASPI = _detect_raspi()
 
 
 def on_raspi() -> bool:
-    """!
+    r"""!
     Check whether we are running on a Raspberry Pi.
     """
     return __ON_RASPI

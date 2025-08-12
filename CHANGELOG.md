@@ -64,6 +64,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - tools: Update script to dump moteus servo configurations
 - utils: Generalize `abs_bounded_derivative_filter` to vector inputs
 - utils: Generalize `bounded_derivative_filter` to vector inputs
+- utils: Use `pathlib` rather than `os.path` in Raspberry Pi detection
 
 ### Removed
 
