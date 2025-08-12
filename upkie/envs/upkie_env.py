@@ -187,10 +187,43 @@ class UpkieEnv(gym.Env):
 
     def step(self, action: dict) -> Tuple[dict, float, bool, bool, dict]:
         r"""!
-        Regulate the control loop frequency, if applicable.
+        Run one timestep of the environment's dynamics.
+
+        When the end of the episode is reached, you are responsible for calling
+        `reset()` to reset the environment's state.
+
+        \param action Action from the agent.
+        \return
+            - `observation`: Observation of the environment, i.e. an element
+              of its `observation_space`.
+            - `reward`: Reward returned after taking the action.
+            - `terminated`: Whether the agent reached a terminal state,
+              which may be a good or a bad thing. When true, the user needs to
+              call `reset()`.
+            - `truncated`: Whether the episode is reaching max number of
+              steps. This boolean can signal a premature end of the episode,
+              i.e. before a terminal state is reached. When true, the user
+              needs to call `reset()`.
+            - `info`: Dictionary with additional information, reporting in
+              particular the full observation dictionary coming from the
+              backend.
         """
+        # Regulate loop frequency, if applicable
         if self.__regulate_frequency:
             self.__rate.sleep()  # wait until clock tick to send the action
+
+        # Convert environment action to spine action and apply it
+        spine_action = self.get_spine_action(action)
+        spine_observation = self.__backend.step(spine_action)
+
+        # Get observation
+        observation = self.get_env_observation(spine_observation)
+        reward = 1.0  # reward can be decided by a wrapper
+        terminated = False
+        truncated = False  # will be handled by e.g. a TimeLimit wrapper
+        info = {"spine_observation": spine_observation}
+
+        return observation, reward, terminated, truncated, info
 
     def update_init_rand(self, **kwargs) -> None:
         r"""!
