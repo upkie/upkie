@@ -4,22 +4,22 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Inria
 
-from typing import Tuple
+from typing import Optional, Tuple
 
 import gymnasium as gym
 import numpy as np
-import upkie_description
 
+from upkie.envs.backends import Backend
 from upkie.exceptions import UpkieRuntimeError
-from upkie.model import Model
 from upkie.utils.clamp import clamp_and_warn
+from upkie.utils.robot_state import RobotState
 
-from .pipeline import Pipeline
+from .upkie_env import UpkieEnv
 
 
-class ServoPipeline(Pipeline):
+class UpkieServosEnv(UpkieEnv):
     r"""!
-    Upkie pipeline where actions command servomotors directly.
+    Upkie environment where actions command servomotors directly.
 
     \anchor upkie_servos_description
 
@@ -90,7 +90,7 @@ class ServoPipeline(Pipeline):
     - `temperature`: Servo temperature in degree Celsius.
     - `voltage`: Power bus voltage of the servo, in [V].
 
-    Full observations from the spine (detailed in \ref observations) are also
+    Full observations from the backend (detailed in \ref observations) are also
     available in the `info` dictionary returned by the reset and step
     functions.
     """
@@ -104,27 +104,76 @@ class ServoPipeline(Pipeline):
         "maximum_torque",
     )
 
-    ## \var model
-    ## Robot model read from its URDF description.
-    model: Model
+    ## \var action_space
+    ## Action space of the environment.
+    action_space: gym.Space
 
-    def __init__(self, max_gain_scale: float = 5.0) -> None:
+    ## \var observation_space
+    ## Observation space of the environment.
+    observation_space: gym.Space
+
+    def __init__(
+        self,
+        backend: Backend,
+        frequency: Optional[float] = 200.0,
+        frequency_checks: bool = True,
+        init_state: Optional[RobotState] = None,
+        regulate_frequency: bool = True,
+        max_gain_scale: float = 5.0,
+    ) -> None:
         r"""!
-        Initialize environment.
+        Initialize servos environment.
 
+        \param backend Backend for interfacing with a simulator or a spine.
+        \param frequency Regulated frequency of the control loop, in Hz. Can be
+            prescribed even when `regulate_frequency` is unset, in which case
+            `self.dt` will be defined but the loop frequency will not be
+            regulated.
+        \param frequency_checks If `regulate_frequency` is set and this
+            parameter is `True`, a warning will be issued every time the
+            control loop runs slower than the desired `frequency`.
+        \param init_state Initial state of the robot, only used in simulation.
+        \param regulate_frequency If set (default), the environment will
+            regulate the control loop frequency to the value prescribed in
+            `frequency`.
         \param max_gain_scale Maximum value for kp or kd gain scales.
         """
         if not (0.0 < max_gain_scale < 10.0):
             raise UpkieRuntimeError("Invalid value {max_gain_scale =}")
 
+        # Initialize base class but override action/observation spaces
+        super().__init__(
+            backend=backend,
+            frequency=frequency,
+            frequency_checks=frequency_checks,
+            init_state=init_state,
+            regulate_frequency=regulate_frequency,
+        )
+
+        # Initialize action and observation spaces
+        (
+            action_space,
+            observation_space,
+            neutral_action,
+            max_action,
+            min_action,
+        ) = self.__create_servo_spaces(max_gain_scale)
+
+        # Override with servo-specific spaces
+        self.action_space = action_space
+        self.observation_space = observation_space
+        self._max_action = max_action
+        self._min_action = min_action
+        self._neutral_action = neutral_action
+
+    def __create_servo_spaces(self, max_gain_scale: float):
         action_space = {}
         neutral_action = {}
         max_action = {}
         min_action = {}
         servo_space = {}
 
-        model = Model(upkie_description.URDF_PATH)
-        for joint in model.joints:
+        for joint in self.model.joints:
             action_space[joint.name] = gym.spaces.Dict(
                 {
                     "position": gym.spaces.Box(
@@ -224,23 +273,13 @@ class ServoPipeline(Pipeline):
                 "maximum_torque": 0.0,
             }
 
-        # Class attributes
-        self.__action_space = gym.spaces.Dict(action_space)
-        self.__observation_space = gym.spaces.Dict(servo_space)
-        self._max_action = max_action
-        self._min_action = min_action
-        self._neutral_action = neutral_action
-        self.model = model
-
-    @property
-    def action_space(self):
-        """Action space."""
-        return self.__action_space
-
-    @property
-    def observation_space(self):
-        """Observation space."""
-        return self.__observation_space
+        return (
+            gym.spaces.Dict(action_space),
+            gym.spaces.Dict(servo_space),
+            neutral_action,
+            max_action,
+            min_action,
+        )
 
     def get_env_observation(self, spine_observation: dict) -> dict:
         r"""!
