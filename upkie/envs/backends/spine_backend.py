@@ -19,6 +19,11 @@ from .backend import Backend
 class SpineBackend(Backend):
     r"""!
     Backend connected to a simulation or real spine.
+
+    Note that the spine backend is made to run on a single CPU thread. This is
+    not a good fit for reinforcement learning, in most cases, but it is
+    convenient for running exactly the same code that will be deployed to the
+    real robot.
     """
 
     def __init__(

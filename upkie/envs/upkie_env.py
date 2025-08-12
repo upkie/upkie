@@ -10,7 +10,7 @@ import gymnasium as gym
 import numpy as np
 from loop_rate_limiters import RateLimiter
 
-from upkie.envs.pipelines import Pipeline, ServoPipeline
+from upkie.envs.backends import Backend
 from upkie.exceptions import UpkieException
 from upkie.model import Model
 from upkie.utils.robot_state import RobotState
@@ -22,19 +22,15 @@ class UpkieEnv(gym.Env):
 
     Upkie environments do a number of things under the hood:
 
-    - Communication with the spine process.
+    - Communication with backends (simulators or spines).
     - Initial state randomization (e.g. when training a policy).
     - Loop frequency regulation (optional).
-
-    Note that Upkie environments are made to run on a single CPU thread. The
-    downside for reinforcement learning is that computations are not massively
-    parallel. The upside is that it simplifies deployment to the real robot, as
-    it relies on the same spine interface that runs on real robots.
     """
 
     __frequency: Optional[float]
     __rate: Optional[RateLimiter]
     __regulate_frequency: bool
+    __backend: Backend
 
     ## \var action_space
     ## Action space of the environment.

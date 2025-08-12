@@ -19,7 +19,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - control: Import MPC balancer class from the Pink balancer
 - cpp: Add documentation to the moteus actuation interface
 - cpp: Controller pipeline run by the spine after observers
-- envs: Add internal `pipelines` submodule for spine pipelines
+- envs: Add Genesis backend
+- envs: Add PyBullet backend
+- envs: Add internal `upkie.envs.backends` submodule
 - envs: New `Upkie-Mock-Pendulum` environment
 - envs: New `Upkie-Mock-Servos` environment
 - envs: New `Upkie-PyBullet-Pendulum` environment
@@ -43,6 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CICD: Switch to Pixi in CI workflow
 - CICD: Switch to pytest for Python unit tests
 - Clean up Python cache directories upon `make clean`
+- envs: Remove the CPU bottleneck, allowing parallel simulations.
 - Move coverage and lint rules from the Makefile to Pixi tasks
 - cpp: Install C++ dependencies up from mpacklog.cpp
 - cpp: Limit rate of SynchronousClock skip warnings and report frequency drop
