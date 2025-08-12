@@ -5,7 +5,7 @@
 # Copyright 2022 Stéphane Caron
 # Copyright 2023 Inria
 
-## \namespace upkie.envs.wrappers.pendulum
+## \namespace upkie.envs.upkie_pendulum
 ## \brief Environment where Upkie behaves like a wheeled inverted pendulum.
 
 import math
@@ -21,7 +21,7 @@ from upkie.utils.clamp import clamp_and_warn
 from upkie.utils.filters import low_pass_filter
 
 
-class Pendulum(gym.Wrapper):
+class UpkiePendulum(gym.Wrapper):
     r"""!
     Wrapper to make Upkie act as a wheeled inverted pendulum.
 
