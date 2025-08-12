@@ -149,14 +149,19 @@ class PyBulletBackend(Backend):
         r"""!
         Reset the PyBullet simulation and get an initial observation.
 
-        \param init_state Initial state of the robot (optional).
+        \param init_state Initial state of the robot.
         \return Initial spine observation dictionary.
         """
-        self.__reset_robot_state(init_state)
+        self._reset_robot_state(init_state)
         pybullet.stepSimulation()
         return self.get_spine_observation()
 
-    def __reset_robot_state(self, init_state: RobotState):
+    def _reset_robot_state(self, init_state: RobotState):
+        r"""!
+        Reset robot to an initial state.
+
+        \param init_state Initial state of the robot.
+        """
         # Reset base position and orientation
         position = init_state.position_base_in_world
         orientation_quat = init_state.orientation_base_in_world.as_quat()

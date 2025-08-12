@@ -84,11 +84,10 @@ class UpkieEnv(gym.Env):
         self.__frequency_checks = frequency_checks
         self.__rate = None
         self.__regulate_frequency = regulate_frequency
+        self.action_space = None  # subclasses should set this
         self.init_state = init_state
-
-        # Subclasses should set action_space and observation_space
-        self.action_space = None
-        self.observation_space = None
+        self.model = Model()
+        self.observation_space = None  # subclasses should set this
 
     @property
     def dt(self) -> Optional[float]:
@@ -139,17 +138,6 @@ class UpkieEnv(gym.Env):
         \return Spine action dictionary.
         """
         raise NotImplementedError("Subclasses must implement get_spine_action")
-
-    @property
-    def model(self) -> Model:
-        r"""!
-        Robot model read from its URDF description.
-
-        \note Subclasses should implement this property.
-
-        \return Robot model.
-        """
-        raise NotImplementedError("Subclasses must implement model property")
 
     def reset(
         self,

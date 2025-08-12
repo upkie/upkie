@@ -15,13 +15,17 @@ class Pipeline(ABC):
     @property
     @abstractmethod
     def action_space(self):
-        """Action space of the pipeline."""
+        r"""!
+        Action space of the pipeline.
+        """
         pass
 
     @property
     @abstractmethod
     def observation_space(self):
-        """Observation space of the pipeline."""
+        r"""!
+        Observation space of the pipeline.
+        """
         pass
 
     @abstractmethod
