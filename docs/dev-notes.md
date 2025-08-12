@@ -110,9 +110,9 @@ Read/write operations from/to the shared memory are indicated in red.
 
 ## Design notes
 
-### N1: Single spine binary
+### Single spine binary
 
-We want a single spine binary per interface: Bullet, pi3hat, etc. That binary may offer several observer and controller pipelines, configured via the command line. 
+We want a single spine binary per interface: Bullet, pi3hat, etc. That binary may offer several observer and controller pipelines, configured via the command line.
 
 - Pros:
     - Combinatorial complexity in distributing, installing and running different spines.
@@ -120,3 +120,22 @@ We want a single spine binary per interface: Bullet, pi3hat, etc. That binary ma
     - Simpler for users, especially newcomers.
 - Cons:
     - Combinatorial complexity makes the code branching.
+
+### Source code headers
+
+All C++ source files should start with the license line:
+
+```cpp
+// SPDX-License-Identifier: Apache-2.0
+```
+
+All Python source files should start with the following four lines:
+
+```py
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+#
+# SPDX-License-Identifier: Apache-2.0
+```
+
+Optionally, license lines can be followed by copyright lines corresponding to the various contributions to the file (those are optional as in most legal systems copyright is automatically conferred upon the creation of an original work, without the need for a notice), and author lines to identify the individuals who contributed them.
