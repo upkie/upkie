@@ -3,7 +3,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-from typing import Optional, Tuple
+from typing import Optional
 
 import numpy as np
 import upkie_description
@@ -14,8 +14,8 @@ except ModuleNotFoundError:
     genesis = None
 
 from upkie.config import BULLET_CONFIG
-from upkie.envs.pipelines import Pipeline
 from upkie.exceptions import MissingOptionalDependency, UpkieRuntimeError
+from upkie.model import Model
 from upkie.utils.nested_update import nested_update
 from upkie.utils.robot_state import RobotState
 from upkie.utils.rotations import (
@@ -23,68 +23,40 @@ from upkie.utils.rotations import (
     rotation_matrix_from_quaternion,
 )
 
-from .upkie_env import UpkieEnv
+from .backend import Backend
 
 
-class UpkieGenesisEnv(UpkieEnv):
+class GenesisBackend(Backend):
     """!
-    Upkie environment using the
-    [Genesis](https://genesis-embodied-ai.github.io/) physics simulator.
+    Backend using the [Genesis](https://genesis-embodied-ai.github.io/) physics
+    simulator.
     """
 
     def __init__(
         self,
+        dt: float,
         backend: str = "gpu",
-        frequency: Optional[float] = 200.0,
-        frequency_checks: bool = False,
         genesis_config: Optional[dict] = None,
         gui: bool = True,
-        init_state: Optional[RobotState] = None,
-        pipeline: Optional[Pipeline] = None,
-        regulate_frequency: bool = True,
-        show_FPS: bool = False,
+        show_fps: bool = False,
         substeps: int = 1,
     ) -> None:
         r"""!
-        Initialize environment.
+        Initialize Genesis backend.
 
+        \param dt Simulation time step in seconds.
         \param backend Genesis backend to use ("cpu" or "gpu").
-        \param frequency Regulated frequency of the control loop, in Hz. Can be
-            prescribed even when `regulate_frequency` is unset, in which case
-            `self.dt` will be defined but the loop frequency will not be
-            regulated.
-        \param frequency_checks If `regulate_frequency` is set and this
-            parameter is True, a warning will be issued every time the control
-            loop runs slower than the desired `frequency`. This check is
-            disabled by default in this environment as the simulation step is
-            executed inside the control loop.
         \param genesis_config Additional Genesis configuration overriding the
             default configuration. The combined configuration dictionary is
             used for Genesis simulation setup.
         \param gui If True, run Genesis with GUI. If False, run headless.
-        \param init_state Initial state of the robot, only used in simulation.
-        \param pipeline Spine dictionary interface selected via the --pipeline
-            command-line argument of the spine binary, if any.
-        \param regulate_frequency If set (default), the environment will
-            regulate the control loop frequency to the value prescribed in
-            `frequency`.
-        \param show_FPS If True, Genesis will print out an FPS counter.
+        \param show_fps If True, Genesis will print out an FPS counter.
         \param substeps Number of simulation substeps per environment step.
             Higher values increase simulation accuracy at the cost of
             computational performance.
         """
-        super().__init__(
-            frequency=frequency,
-            frequency_checks=frequency_checks,
-            init_state=init_state,
-            pipeline=pipeline,
-            regulate_frequency=regulate_frequency,
-        )
-
         # Save combined simulator configuration
-        self.__genesis_config = (
-            BULLET_CONFIG.copy()
-        )  # Reuse bullet config structure
+        self.__genesis_config = BULLET_CONFIG.copy()  # reusing this for now
         if genesis_config is not None:
             nested_update(self.__genesis_config, genesis_config)
 
@@ -114,12 +86,12 @@ class UpkieGenesisEnv(UpkieEnv):
                 else None
             ),
             sim_options=genesis.options.SimOptions(
-                dt=self.dt,
+                dt=dt,
                 substeps=substeps,
                 gravity=[0.0, 0.0, -9.81],
             ),
             profiling_options=genesis.options.ProfilingOptions(
-                show_FPS=show_FPS,
+                show_FPS=show_fps,
             ),
             show_viewer=gui,
         )
@@ -132,18 +104,20 @@ class UpkieGenesisEnv(UpkieEnv):
             )
         )
 
-        # List of joint indices in the robot entity
+        # Initialize model and joint indices
+        self.__model = Model()
         self._joint_indices = {}
-        for joint in self.model.joints:
-            joint = self._robot.get_joint(joint.name)
-            self._joint_indices[joint.name] = int(*joint.dofs_idx_local)
+        for joint in self.__model.joints:
+            joint_entity = self._robot.get_joint(joint.name)
+            self._joint_indices[joint.name] = int(*joint_entity.dofs_idx_local)
 
         # Other attributes
+        self.__dt = dt
         self.__previous_imu_linear_velocity = np.zeros(3)
 
     def __del__(self):
         """!
-        Clean up Genesis when deleting the environment instance.
+        Clean up Genesis when deleting the backend instance.
         """
         self.close()
 
@@ -154,44 +128,30 @@ class UpkieGenesisEnv(UpkieEnv):
         if hasattr(self, "_scene") and self._scene is not None:
             self._scene = None
 
-    def reset(
-        self,
-        seed: Optional[int] = None,
-        options: Optional[dict] = None,
-    ) -> Tuple[dict, dict]:
+    def reset(self, init_state: RobotState) -> dict:
         r"""!
-        Resets the Genesis simulation and get an initial observation.
+        Reset the Genesis simulation and get an initial observation.
 
-        \param seed Number used to initialize the environment's internal random
-            number generator.
-        \param options Currently unused.
-        \return
-            - `observation`: Initial vectorized observation, i.e. an element
-              of the environment's `observation_space`.
-            - `info`: Dictionary with auxiliary diagnostic information. For
-              Upkie this is the full observation dictionary sent by the spine.
+        \param init_state Initial state of the robot.
+        \return Initial spine observation dictionary.
         """
-        super().reset(seed=seed)
-
         # Build the scene if it was not already built
         if not self._scene.is_built:
             self._scene.build()
 
-        self._reset_robot_state()
+        self._reset_robot_state(init_state)
         self._scene.step()
-        spine_observation = self._get_spine_observation()
-        observation = self.get_env_observation(spine_observation)
-        info = {"spine_observation": spine_observation}
-        return observation, info
+        return self.get_spine_observation()
 
-    def _reset_robot_state(self):
-        """Reset robot to initial state with randomization."""
-        init_state, np_random = self.init_state, self.np_random
+    def _reset_robot_state(self, init_state: RobotState):
+        r"""!
+        Reset robot to initial state with randomization.
 
-        # Reset base pose in the world frame
-        position = init_state.sample_position(np_random)
-        orientation_matrix = init_state.sample_orientation(np_random)
-        qx, qy, qz, qw = orientation_matrix.as_quat()
+        """
+        # Reset base position and orientation in the world frame
+        position = init_state.position_base_in_world
+        orientation_quat = init_state.orientation_base_in_world.as_quat()
+        qx, qy, qz, qw = orientation_quat
         self._robot.set_pos(position)
         self._robot.set_quat([qw, qx, qy, qz])
 
@@ -202,42 +162,25 @@ class UpkieGenesisEnv(UpkieEnv):
         dofs_position = []
         dofs_velocity = []
         dofs_idx = []
-        for joint in self.model.joints:
+        for joint in self.__model.joints:
             dofs_idx.append(self._joint_indices[joint.name])
             dofs_position.append(init_state.joint_configuration[joint.idx_q])
             dofs_velocity.append(init_state.joint_velocity[joint.idx_v])
         self._robot.set_dofs_position(dofs_position, dofs_idx_local=dofs_idx)
         self._robot.set_dofs_velocity(dofs_velocity, dofs_idx_local=dofs_idx)
 
-    def step(self, action: dict) -> Tuple[dict, float, bool, bool, dict]:
+    def step(self, action: dict) -> dict:
         r"""!
-        Run one timestep of the environment's dynamics.
+        Apply action and step the Genesis simulation.
 
-        When the end of the episode is reached, you are responsible for calling
-        `reset()` to reset the environment's state.
-
-        \param action Action from the agent.
-        \return
-            - `observation`: Observation of the environment, i.e. an element
-              of its `observation_space`.
-            - `reward`: Reward returned after taking the action.
-            - `terminated`: Whether the agent reached a terminal state,
-              which may be a good or a bad thing. When true, the user needs to
-              call `reset()`.
-            - `truncated`: Whether the episode is reaching max number of
-              steps. This boolean can signal a premature end of the episode,
-              i.e. before a terminal state is reached. When true, the user
-              needs to call `reset()`.
-            - `info`: Dictionary with additional information, reporting in
-              particular the full observation dictionary coming from the spine.
+        \param action Action dictionary in spine format.
+        \return Spine observation dictionary after the step.
         """
-        # Regulate loop frequency, if applicable
-        super().step()
-
         # Apply motor torques
         joint_torques = []
         dofs_idx_local = []
-        for joint_name, servo_action in action.items():
+        servo_actions = action.get("servo", {})
+        for joint_name, servo_action in servo_actions.items():
             joint_torque = self.compute_joint_torque(
                 joint_name,
                 feedforward_torque=servo_action.get("feedforward_torque", 0.0),
@@ -257,17 +200,9 @@ class UpkieGenesisEnv(UpkieEnv):
         # Step the simulation
         self._scene.step()
 
-        # Get observation
-        spine_observation = self._get_spine_observation()
-        observation = self.get_env_observation(spine_observation)
-        reward = 1.0  # reward can be decided by a wrapper
-        terminated = False
-        truncated = False  # will be handled by e.g. a TimeLimit wrapper
-        info = {"spine_observation": spine_observation}
+        return self.get_spine_observation()
 
-        return observation, reward, terminated, truncated, info
-
-    def _get_spine_observation(self) -> dict:
+    def get_spine_observation(self) -> dict:
         """Get observation in spine format from Genesis simulation."""
         base_orientation = self.__get_base_orientation_observation()
         imu = self.__get_imu_observation()
@@ -327,7 +262,7 @@ class UpkieGenesisEnv(UpkieEnv):
         rotation_base_to_world = rotation_matrix_from_quaternion(
             quat_base_to_world
         )
-        rotation_imu_to_base = self.model.rotation_base_to_imu.T
+        rotation_imu_to_base = self.__model.rotation_base_to_imu.T
         rotation_imu_to_world = rotation_base_to_world @ rotation_imu_to_base
         rotation_imu_to_ars = rotation_world_to_ars @ rotation_imu_to_world
         quat_imu_in_ars = quaternion_from_rotation_matrix(rotation_imu_to_ars)
@@ -336,7 +271,7 @@ class UpkieGenesisEnv(UpkieEnv):
         linear_velocity_imu = linear_velocity_base_to_world_in_world
         linear_acceleration_imu_in_world = (
             linear_velocity_imu - self.__previous_imu_linear_velocity
-        ) / self.dt
+        ) / self.__dt
         self.__previous_imu_linear_velocity = linear_velocity_imu
 
         # Transform angular velocity to IMU frame
