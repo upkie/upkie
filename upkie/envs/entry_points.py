@@ -25,9 +25,7 @@ def make_genesis_servos_env(**kwargs):
     \param kwargs Keyword arguments forwarded to the environment and backend.
     \return UpkieServos with GenesisBackend.
     """
-    backend_keys = {
-        "backend", "genesis_config", "gui", "show_FPS", "substeps"
-    }
+    backend_keys = {"backend", "genesis_config", "gui", "show_FPS", "substeps"}
     backend_kwargs = {
         key: value for key, value in kwargs.items() if key in backend_keys
     }
@@ -67,9 +65,7 @@ def make_pybullet_servos_env(**kwargs):
     \param kwargs Keyword arguments forwarded to the environment and backend.
     \return UpkieServos with PyBulletBackend.
     """
-    backend_keys = {
-        "gui", "bullet_config", "nb_substeps"
-    }
+    backend_keys = {"gui", "bullet_config", "nb_substeps"}
     backend_kwargs = {
         key: value for key, value in kwargs.items() if key in backend_keys
     }
@@ -95,9 +91,7 @@ def make_spine_servos_env(**kwargs):
     \param kwargs Keyword arguments forwarded to the environment and backend.
     \return UpkieServos with SpineBackend.
     """
-    backend_keys = {
-        "shm_name", "spine_config"
-    }
+    backend_keys = {"shm_name", "spine_config"}
     backend_kwargs = {
         key: value for key, value in kwargs.items() if key in backend_keys
     }
@@ -132,9 +126,7 @@ def wrap_pendulum(make_env_func, **kwargs):
         key: value for key, value in kwargs.items() if key in pendulum_keys
     }
     env_kwargs = {
-        key: value
-        for key, value in kwargs.items()
-        if key not in pendulum_keys
+        key: value for key, value in kwargs.items() if key not in pendulum_keys
     }
     env = make_env_func(**env_kwargs)
     return UpkiePendulum(env, **pendulum_kwargs)
