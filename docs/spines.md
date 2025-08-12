@@ -1,8 +1,22 @@
-# Real robot {#real-robot}
+# Spines {#spines}
 
 [TOC]
 
 There are two real-robot spines: the mock spine, and the pi3hat spine.
+
+## Bullet spine {#bullet-spine}
+
+The Bullet spine runs agents in the [Bullet 3](https://github.com/bulletphysics/bullet3) simulator. It can be started as a standalone process that will keep on running while waiting for agents to connect.
+
+The easiest way to start a simulation spine is to run the simulation script from the repository:
+
+<img src="bullet-spine.png" height="100" align="right" />
+
+```console
+./start_simulation.sh
+```
+
+The script will run pre-compiled binaries, downloading them from the latest release if necessary.
 
 ## Mock spine {#mock-spine}
 
@@ -10,20 +24,18 @@ The mock spine is useful to run an agent on the robot without firing up the actu
 
 ## Pi3hat spine {#pi3hat-spine}
 
-The pi3hat spine is the one that runs on the real robot, where a [pi3hat r4.5](https://mjbots.com/products/mjbots-pi3hat-r4-5) is mounted on top of the onboard Raspberry Pi computer. To run this spine, you can either download it from GitHub, or build it locally from source.
+The pi3hat spine is the one that runs on the real robot, where a [pi3hat r4.5](https://mjbots.com/products/mjbots-pi3hat-r4-5) is mounted on top of the onboard Raspberry Pi computer. To run this spine, you can either download it from GitHub, or [build it locally from source](\ref cpp-dev-workflow).
 
-### Download the latest release {#download-the-latest-release}
-
-Assuming your robot is connected to the Internet, you can get the latest pi3hat spine from GitHub using the `upkie_tool` command-line utility:
+To download the latest release, assuming your robot is connected to the Internet, you use the `upkie_tool` command-line utility:
 
 ```console
 $ ssh user@upkie
 user@upkie:~$ upkie_tool update
 ```
 
-Alternatively, you can manually go to the [Release page](https://github.com/upkie/upkie/releases), download `pi3hat_spine` from the Assets of the latest release and `scp` it to the `/usr/local/bin` directory of your robot.
+Alternatively, you can manually go to the [Release page](https://github.com/upkie/upkie/releases), download `pi3hat_spine` from the assets of the latest release and `scp` it to `/usr/local/bin` on your robot.
 
-Once the spine is installed, start it from a command-line on the robot:
+Once the spine is installed, start it from the command line:
 
 ```console
 user@upkie:~$ pi3hat_spine
@@ -32,41 +44,5 @@ user@upkie:~$ pi3hat_spine
 You can then run any agent in a separate shell on the robot, for example the PID balancer from the examples directory:
 
 ```console
-user@upkie:upkie$ python examples/pi_balancer.py
-```
-
-### Build from source {#build-from-source}
-
-**Note to Linux developers:** if your operating system is a Debian-based Linux distribution, you will need to install `libtinfo5` (also ). On Ubuntu 20.04 or 22.04 it should be as simple as `sudo apt install libtinfo5`. For Ubuntu 24.04 see the related discussion [upkie#42](https://github.com/orgs/upkie/discussions/42).
-
-To build the pi3hat spine locally from source, use the Makefile at the root of the repository as follows:
-
-```console
-make build
-```
-
-Make sure there is no error during this step. It should conclude with a success info, like so:
-
-```
-INFO: Build completed successfully, 1 total action
-```
-
-Next, you can upload the built spine to your robot by:
-
-```console
-make upload UPKIE_NAME=your_upkie
-```
-
-Log into the Pi and run a pi3hat spine:
-
-```console
-$ ssh user@upkie
-user@upkie:~$ cd upkie
-user@upkie:upkie$ make run_pi3hat_spine
-```
-
-Once the spine is running, you can run any agent in a separate shell on the robot, for example the PID balancer from the examples directory:
-
-```console
-user@upkie:upkie$ python examples/pi_balancer.py
+user@upkie:upkie$ python -m agents.mpc_balancer
 ```

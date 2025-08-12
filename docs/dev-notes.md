@@ -14,20 +14,13 @@ R_{WA} = \begin{bmatrix}
 \end{bmatrix}
 \f$
 
-## Pixi workflow
-
-A workflow based on [Pixi](https://pixi.sh/) is under development. Once feature-complete, it should provide a simpler alternative to the legacy workflow based on GNU Make and conda environments. Here is what you can do now:
-
-- Check all unit tests: `pixi run test`
-- Open a shell in a fully configured environment: `pixi shell -e dev`
-
-## Legacy source workflow
+## Development workflow {#dev-workflow}
 
 While newcomers will likely run `start_simulation.sh` and import the `upkie` package in Python, as you get acquainted with the robot and develop your own agents (in your fork of the repository or using the [new\_agent](https://github.com/upkie/new_agent) template), you may want to contribute some features back upstream. Here is a short guide on compiling from source to do that.
 
-### Build environment setup {#setup-build}
+### C++ development {#cpp-dev-workflow}
 
-First, setup a build environment following the instructions for your system:
+The C++ development workflow consists of Makefile rules. First, setup a build environment following the instructions for your system:
 
 - [Fedora](https://github.com/orgs/upkie/discussions/100)
 - [macOs](https://github.com/orgs/upkie/discussions/159)
@@ -47,7 +40,34 @@ To make sure your build environment works, try to rebuild the [pi3hat spine](\re
 make build
 ```
 
-Once the spine is buildt and runs successfully, upload it by `make upload` and check that it runs on the Raspberry Pi of your Upkie.
+You can then upload it by `make upload` and check that it runs on the Raspberry Pi of your Upkie:
+
+```console
+$ ssh user@upkie
+user@upkie:~$ cd upkie
+user@upkie:upkie$ make run_pi3hat_spine
+```
+
+Once the spine is running, you can run any agent in a separate shell on the robot, for example the PID balancer from the examples directory:
+
+```console
+user@upkie:upkie$ python -m agents.mpc_balancer
+```
+
+### Python development {#python-dev-workflow}
+
+The Python development workflow is based on [Pixi](https://pixi.sh/). You can list the available tasks with a dry:
+
+```
+pixi run
+```
+
+For instance:
+
+- Build and open the documentation: `pixi run docs-open`
+- Check linting: `pixi run lint`
+- Check unit tests: `pixi run -e test-py12 test-python`
+- Open a shell in a fully configured environment: `pixi shell`
 
 ## Inter-process communication
 
@@ -104,7 +124,7 @@ Guards (in blue), *i.e.* conditions required to trigger a transition, may involv
 
 Read/write operations from/to the shared memory are indicated in red.
 
-## Design notes
+## [Advanced] Design notes
 
 ### Single spine binary
 
