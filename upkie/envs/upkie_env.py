@@ -27,10 +27,10 @@ class UpkieEnv(gym.Env):
     - Loop frequency regulation (optional).
     """
 
+    __backend: Backend
     __frequency: Optional[float]
     __rate: Optional[RateLimiter]
     __regulate_frequency: bool
-    __backend: Backend
 
     ## \var action_space
     ## Action space of the environment.
@@ -47,15 +47,16 @@ class UpkieEnv(gym.Env):
 
     def __init__(
         self,
+        backend: Backend,
         frequency: Optional[float],
         frequency_checks: bool,
         init_state: Optional[RobotState],
-        pipeline: Optional[Pipeline],
         regulate_frequency: bool,
     ) -> None:
         r"""!
         Initialize environment.
 
+        \param backend Backend for interfacing with a simulator or a spine.
         \param frequency Regulated frequency of the control loop, in Hz. Can be
             prescribed even when `regulate_frequency` is unset, in which case
             `self.dt` will be defined but the loop frequency will not be
@@ -64,14 +65,11 @@ class UpkieEnv(gym.Env):
             parameter is `True`, a warning will be issued every time the
             control loop runs slower than the desired `frequency`.
         \param init_state Initial state of the robot, only used in simulation.
-        \param pipeline Spine dictionary interface selected via the --pipeline
-            command-line argument of the spine binary, if any.
         \param regulate_frequency If set (default), the environment will
             regulate the control loop frequency to the value prescribed in
             `frequency`.
 
-        \throw SpineError If the spine did not respond after the prescribed
-            number of trials.
+        \throw UpkieException If the configuration is invalid.
         """
         if regulate_frequency and frequency is None:
             raise UpkieException(f"{regulate_frequency=} but {frequency=}")
@@ -79,18 +77,18 @@ class UpkieEnv(gym.Env):
             init_state = RobotState(
                 position_base_in_world=np.array([0.0, 0.0, 0.6])
             )
-        if pipeline is None:
-            pipeline = ServoPipeline()
 
         # Class attributes
+        self.__backend = backend
         self.__frequency = frequency
         self.__frequency_checks = frequency_checks
-        self.__pipeline = pipeline
         self.__rate = None
         self.__regulate_frequency = regulate_frequency
-        self.action_space = pipeline.action_space
         self.init_state = init_state
-        self.observation_space = pipeline.observation_space
+
+        # Subclasses should set action_space and observation_space
+        self.action_space = None
+        self.observation_space = None
 
     @property
     def dt(self) -> Optional[float]:
@@ -112,34 +110,46 @@ class UpkieEnv(gym.Env):
         r"""!
         Get Gym environment observation from spine observation.
 
+        \note Subclasses should implement this method.
+
         \param[in] spine_observation Spine observation dictionary.
         \return Gym environment observation.
         """
-        return self.__pipeline.get_env_observation(spine_observation)
+        raise NotImplementedError(
+            "Subclasses must implement get_env_observation"
+        )
 
     def get_neutral_action(self):
         r"""!
         Get neutral action for this environment.
+
+        \note Subclasses should implement this method.
         """
-        return self.__pipeline.get_neutral_action()
+        raise NotImplementedError(
+            "Subclasses must implement get_neutral_action"
+        )
 
     def get_spine_action(self, env_action) -> dict:
         r"""!
         Get spine action from Gym environment action.
 
+        \note Subclasses should implement this method.
+
         \param[in] env_action Gym environment action.
         \return Spine action dictionary.
         """
-        return self.__pipeline.get_spine_action(env_action)
+        raise NotImplementedError("Subclasses must implement get_spine_action")
 
     @property
     def model(self) -> Model:
         r"""!
         Robot model read from its URDF description.
 
+        \note Subclasses should implement this property.
+
         \return Robot model.
         """
-        return self.__pipeline.model
+        raise NotImplementedError("Subclasses must implement model property")
 
     def reset(
         self,
@@ -147,16 +157,17 @@ class UpkieEnv(gym.Env):
         options: Optional[dict] = None,
     ) -> Tuple[dict, dict]:
         r"""!
-        Resets the spine and get an initial observation.
+        Resets the backend and get an initial observation.
 
-        \param seed Number used to initialize the environment’s internal random
+        \param seed Number used to initialize the environment's internal random
             number generator.
         \param options Currently unused.
         \return
             - `observation`: Initial vectorized observation, i.e. an element
               of the environment's `observation_space`.
             - `info`: Dictionary with auxiliary diagnostic information. For
-              Upkie this is the full observation dictionary sent by the spine.
+              Upkie this is the full observation dictionary sent by the
+              backend.
         """
         super().reset(seed=seed)
         if self.__regulate_frequency:
@@ -166,9 +177,15 @@ class UpkieEnv(gym.Env):
                 name=rate_name,
                 warn=self.__frequency_checks,
             )
-        return {}, {}
 
-    def step(self) -> None:
+        # Sample initial state and reset backend
+        sampled_init_state = self.init_state.sample_state(self.np_random)
+        spine_observation = self.__backend.reset(sampled_init_state)
+        observation = self.get_env_observation(spine_observation)
+        info = {"spine_observation": spine_observation}
+        return observation, info
+
+    def step(self, action: dict) -> Tuple[dict, float, bool, bool, dict]:
         r"""!
         Regulate the control loop frequency, if applicable.
         """
