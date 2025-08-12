@@ -20,7 +20,7 @@ AMPLITUDE = 1.0  # in radians
 if __name__ == "__main__":
     upkie.envs.register()
     with gym.make(
-        "Upkie-Spine-Servos",
+        "Upkie-PyBullet-Servos",
         frequency=200.0,
         init_state=RobotState(
             orientation_base_in_world=ScipyRotation.from_quat(
