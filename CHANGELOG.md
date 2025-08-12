@@ -36,8 +36,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- **Breaking:** Rename `Upkie-Spine-Pendulum` environment from `UpkieGroundVelocity`
-- **Breaking:** Rename `Upkie-Spine-Servos` environment from `UpkieServos`
+- **Breaking:** Rename `Upkie-Spine-Pendulum` Gym environment from `UpkieGroundVelocity`
+- **Breaking:** Rename `Upkie-Spine-Servos` Gym environment from `UpkieServos`
 - **Breaking:** Rename `UpkieGroundVelocity` wrapper to `Pendulum`
 - **Breaking:** Rename `interfaces` C++ namespace from `actuation`
 - **Breaking:** Rename `upkie.logging` submodule from `upkie.utils.spdlog`
@@ -50,6 +50,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - cpp: Limit rate of SynchronousClock skip warnings and report frequency drop
 - cpp: Update mpacklog.cpp to version 3.1.2
 - envs: Allow gain scales larger than one in servo environments
+- envs: Base class for environments is now `UpkieEnv`
+- envs: Class `UpkieServos` is now a subclass of `UpkieEnv`
 - envs: Drop Gymnasium environment versioning
 - envs: Remove the CPU bottleneck, allowing parallel simulations.
 - examples: Allow users to select the Gymnasium environment in MPC example
