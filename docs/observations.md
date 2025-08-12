@@ -108,12 +108,12 @@ Actuators on the robot are [qdd100 beta 3](https://mjbots.com/products/qdd100-be
 - Joint velocity, obtained by filtering joint angle measurements (not a direct measurement)
 - Joint torque, estimated from sensed phase currents (with a model that includes [stator magnetic saturation](https://jpieper.com/2020/07/31/dealing-with-stator-magnetic-saturation/))
 
-## Simulation
+## Simulation-only
 
 - Observer: when using a simulation interface
 - Spine observation key: `sim`
 
-Simulation spines may report additional observations:
+Simulation spines may report the following additional observations.
 
 ### Floating base
 
