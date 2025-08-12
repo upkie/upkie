@@ -8,6 +8,11 @@
  *     SPDX-License-Identifier: Apache-2.0
  */
 
+/*! \namespace upkie.cpp.interfaces.moteus
+ *
+ * \brief Interface to moteus controllers used in pi3hat spines.
+ */
+
 #pragma once
 
 #include <array>
@@ -42,6 +47,7 @@ enum {
   kCurrentRegisterMapVersion = 4,
 };
 
+//! Multiplex register types for moteus protocol communication.
 enum Multiplex : uint32_t {
   kWriteBase = 0x00,
   kWriteInt8 = 0x00,
@@ -72,6 +78,7 @@ enum Multiplex : uint32_t {
   kNop = 0x50,
 };
 
+//! Register addresses for moteus servo control and monitoring.
 enum Register : uint32_t {
   kMode = 0x000,
   kPosition = 0x001,
@@ -253,8 +260,7 @@ class WriteCanFrame {
   uint8_t* const size_;
 };
 
-/// Determines how to group registers when encoding them to minimize
-/// the required bytes.
+//! Groups registers when encoding them to minimize the required bytes.
 template <size_t N>
 class WriteCombiner {
  public:

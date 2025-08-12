@@ -1,6 +1,11 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2022 Stéphane Caron
 
+/*! \namespace upkie.cpp.interfaces.bullet
+ *
+ * \brief Bullet utility functions used in the simulation interface.
+ */
+
 #pragma once
 
 #include <spdlog/spdlog.h>
@@ -11,7 +16,6 @@
 
 #include "RobotSimulator/b3RobotSimulatorClientAPI.h"
 
-//! Bullet utility functions used in the simulation interface.
 namespace upkie::cpp::interfaces::bullet {
 
 /*! Convert an Eigen quaternion to a Bullet one.

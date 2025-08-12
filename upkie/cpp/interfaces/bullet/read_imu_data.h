@@ -13,7 +13,6 @@
 #include "upkie/cpp/interfaces/ImuData.h"
 #include "upkie/cpp/interfaces/bullet/gravity.h"
 
-//! Bullet utility functions used in the simulation interface.
 namespace upkie::cpp::interfaces::bullet {
 
 /*! Compute groundtruth IMU quantities from the IMU link state.

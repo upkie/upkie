@@ -1,6 +1,11 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2024 Stéphane Caron
 
+/*! \namespace upkie.cpp.interfaces.pi3hat
+ *
+ * \brief Utility functions specific to the pi3hat interface.
+ */
+
 #pragma once
 
 #include <mjbots/pi3hat/pi3hat.h>
