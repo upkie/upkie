@@ -56,6 +56,9 @@ clean_broken_links:
 pack_pixi_env:  ## pack pixi environment to environment.tar
 	pixi run pack
 
+run_bullet_spine:  ## build and run the Bullet spine
+	$(BAZEL) run //spines:bullet_spine -- --show
+
 .PHONY: set_date
 set_date: check_upkie_name  ## set Upkie's date if it is not connected to the Internet
 	ssh ${UPKIE_NAME} sudo date -s "$(CURDATE)"
