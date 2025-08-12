@@ -24,7 +24,7 @@ def register() -> None:
     )
     gym.envs.registration.register(
         id="Upkie-Mock-Servos",
-        entry_point="upkie.envs.upkie_mock_env:UpkieMockEnv",
+        entry_point="upkie.envs.entry_points:make_mock_servos_env",
     )
     gym.envs.registration.register(
         id="Upkie-Spine-Pendulum",
@@ -32,7 +32,7 @@ def register() -> None:
     )
     gym.envs.registration.register(
         id="Upkie-Spine-Servos",
-        entry_point="upkie.envs.upkie_spine_env:UpkieSpineEnv",
+        entry_point="upkie.envs.entry_points:make_spine_servos_env",
     )
     gym.envs.registration.register(
         id="Upkie-PyBullet-Pendulum",
@@ -40,7 +40,7 @@ def register() -> None:
     )
     gym.envs.registration.register(
         id="Upkie-PyBullet-Servos",
-        entry_point="upkie.envs.upkie_pybullet_env:UpkiePyBulletEnv",
+        entry_point="upkie.envs.entry_points:make_pybullet_servos_env",
     )
     gym.envs.registration.register(
         id="Upkie-Genesis-Pendulum",
@@ -48,7 +48,7 @@ def register() -> None:
     )
     gym.envs.registration.register(
         id="Upkie-Genesis-Servos",
-        entry_point="upkie.envs.upkie_genesis_env:UpkieGenesisEnv",
+        entry_point="upkie.envs.entry_points:make_genesis_servos_env",
     )
 
 
