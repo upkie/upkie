@@ -91,7 +91,7 @@ proxsuite = ">=0.4.1"
 qpmpc = ">=3.0.1,<4"
 
 [tool.pixi.feature.agent-mpc-balancer.tasks]
-upkie-locomotion = "python -m agents.mpc_balancer"
+upkie-mpc = "python -m agents.mpc_balancer"
 
 [tool.pixi.feature.agent-trajectory-player.dependencies]
 gin-config = ">=0.5.0"
