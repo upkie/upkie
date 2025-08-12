@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - envs: New `Upkie-Mock-Servos` environment
 - envs: New `Upkie-PyBullet-Pendulum` environment
 - envs: New `Upkie-PyBullet-Servos` environment
+- examples: Genesis lying genuflection example
 - examples: Trying a Genesis simulation environment
 - examples: Trying a PyBullet simulation environment
 - exceptions: Raise `UpkieTimeoutError` upon spine timeout
@@ -55,6 +56,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - envs: Drop Gymnasium environment versioning
 - envs: Remove the CPU bottleneck, allowing parallel simulations.
 - examples: Allow users to select the Gymnasium environment in MPC example
+- examples: Rename PyBullet lying genuflection example
 - logging: Use an "upkie" logger rather than the global logger
 - model: Load the URDF description from `upkie_description` by default
 - spines: Factor common observers and sensors between spines
