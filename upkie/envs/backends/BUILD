@@ -11,6 +11,10 @@ py_library(
     srcs = [
         "__init__.py",
         "backend.py",
+        "genesis_backend.py",
+        "mock_backend.py",
+        "pybullet_backend.py",
+        "spine_backend.py",
     ],
     deps = [
         "//upkie/config",

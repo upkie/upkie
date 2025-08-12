@@ -16,7 +16,7 @@ def register() -> None:
     """!
     Register Upkie environments with Gymnasium.
 
-    Environments are named as `Upkie-<Interface>-<ActionSpace>`.
+    Environments are named as `Upkie-<Backend>-<ActionSpace>`.
     """
     gym.envs.registration.register(
         id="Upkie-Mock-Pendulum",
