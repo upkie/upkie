@@ -4,7 +4,6 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2025 Inria
 
-## \var BULLET_CONFIG
 ## Bullet simulation configuration dictionary.
 BULLET_CONFIG = {
     "follower_camera": False,

@@ -6,7 +6,6 @@
 
 from .bullet_config import BULLET_CONFIG
 
-## \var SPINE_CONFIG
 ## Spine configuration dictionary used as defaults by Gymnasium environments.
 SPINE_CONFIG = {
     "bullet": BULLET_CONFIG,

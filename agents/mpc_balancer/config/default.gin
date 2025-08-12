@@ -17,6 +17,7 @@ RemoteControl.max_yaw_velocity = 1.0                 # [rad] / [s]
 
 WheelController.fall_pitch = 1.0                     # [rad]
 WheelController.left_wheeled = True
+WheelController.leg_length = 0.58                    # [m]
 WheelController.max_ground_accel = 10.0              # [m] / [s]²
 WheelController.max_ground_velocity = 3.0            # [m] / [s]
 WheelController.turning_deadband = 0.3

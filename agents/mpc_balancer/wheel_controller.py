@@ -24,13 +24,14 @@ class WheelController:
     """
 
     ## \var left_wheeled
-    ## Set to True if the robot is left wheeled, that is, a positive turn of the
-    ## left wheel results in forward motion. Set to False for a right-wheeled variant.
+    ## Set to True if the robot is left wheeled, that is, a positive turn of
+    ## the ## left wheel results in forward motion. Set to False for a
+    ## right-wheeled variant.
     left_wheeled: bool
 
-    ## \var sagittal_balancer
+    ## \var mpc_balancer
     ## Internal controller for sagittal balance.
-    sagittal_balancer: MPCBalancer
+    mpc_balancer: MPCBalancer
 
     ## \var target_ground_velocity
     ## Target ground sagittal velocity in [m] / [s].
@@ -46,12 +47,12 @@ class WheelController:
     turning_deadband: float
 
     ## \var turning_decision_time
-    ## Minimum duration in [s] for the turning probability to switch from zero to
-    ## one and conversely.
+    ## Minimum duration in [s] for the turning probability to switch from zero
+    ## to one and conversely.
     turning_decision_time: float
 
     ## \var turning_probability
-    ## Probability that the user wants to turn based on the joystick axis value.
+    ## Probability the user wants to turn based on the joystick axis value.
     turning_probability: float
 
     ## \var wheel_radius
@@ -62,6 +63,7 @@ class WheelController:
         self,
         fall_pitch: float,
         left_wheeled: bool,
+        leg_length: float,
         max_ground_accel: float,
         max_ground_velocity: float,
         turning_deadband: float,
@@ -75,6 +77,7 @@ class WheelController:
         \param left_wheeled Set to True (default) if the robot is left wheeled,
             that is, a positive turn of the left wheel results in forward
             motion. Set to False for a right-wheeled variant.
+        \param leg_length Leg length in [m].
         \param turning_deadband Joystick axis value between 0.0 and 1.0 below
             which legs stiffen but the turning motion doesn't start.
         \param turning_decision_time Minimum duration in [s] for the turning
@@ -84,14 +87,15 @@ class WheelController:
         \param max_ground_velocity Maximum commanded ground velocity.
         """
         assert 0.0 <= turning_deadband <= 1.0
-        sagittal_balancer = MPCBalancer(
+        mpc_balancer = MPCBalancer(
+            leg_length=leg_length,
             fall_pitch=fall_pitch,
             max_ground_accel=max_ground_accel,
             max_ground_velocity=max_ground_velocity,
         )
         self.left_wheeled = left_wheeled
         self.remote_control = RemoteControl()
-        self.sagittal_balancer = sagittal_balancer
+        self.mpc_balancer = mpc_balancer
         self.target_ground_velocity = 0.0
         self.target_yaw_velocity = 0.0
         self.turning_deadband = turning_deadband
@@ -106,7 +110,7 @@ class WheelController:
         \return Log data as a dictionary.
         """
         return {
-            "commanded_velocity": self.sagittal_balancer.commanded_velocity,
+            "commanded_velocity": self.mpc_balancer.commanded_velocity,
             "target_ground_velocity": self.target_ground_velocity,
             "target_yaw_velocity": self.target_yaw_velocity,
         }
@@ -122,7 +126,7 @@ class WheelController:
         self.update_target_ground_velocity(observation, dt)
         self.update_target_yaw_velocity(observation, dt)
 
-        ground_velocity = self.sagittal_balancer.compute_ground_velocity(
+        ground_velocity = self.mpc_balancer.compute_ground_velocity(
             self.target_ground_velocity, observation, dt
         )
 

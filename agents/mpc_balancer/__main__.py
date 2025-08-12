@@ -158,9 +158,7 @@ if __name__ == "__main__":
     wheel_odometry["signed_radius"]["right_wheel"] = right_sign * wheel_radius
 
     max_rc_vel = temp_wheel_controller.remote_control.max_linear_velocity
-    max_ground_vel = (
-        temp_wheel_controller.sagittal_balancer.max_ground_velocity
-    )
+    max_ground_vel = temp_wheel_controller.mpc_balancer.max_ground_velocity
     temp_height_controller = HeightController(visualize=False)
     logger.info(f"Knees bend {temp_height_controller.knee_side}")
     logger.info(f"Max. remote-control velocity: {max_rc_vel} m/s")
