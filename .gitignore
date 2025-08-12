@@ -8,9 +8,13 @@ dist/
 docs/html/
 env/
 environment.tar
-logs/
+logs/**/*.0
+logs/**/*.csv
+logs/**/*.mpack
+logs/**/*.pkl
+logs/**/*.yml
+logs/**/*.txt
+logs/**/*.zip
 sandbox/
 tools/bazel
-tools/logs/*.mpack
-tools/logs/*.tar.*
 wiki/

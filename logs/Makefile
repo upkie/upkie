@@ -2,9 +2,6 @@
 # Copyright 2023 Inria
 #
 # Convenience Makefile to synchronize Upkie log files
-#
-# Put this Makefile in the directory to synchronize and run `make download` to
-# download the latest logs from the robot.
 
 # Customize remote path to taste
 REMOTE_PATH = logs
