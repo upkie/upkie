@@ -210,7 +210,7 @@ jobs:
 
             - name: "Check unit tests"
               run: |
-                  pixi run -e test-${{ matrix.pyenv }} test-python
+                  pixi run -e test-${{ matrix.pyenv }} test
 
     ci_success:
         name: "CI success"

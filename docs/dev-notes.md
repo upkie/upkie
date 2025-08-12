@@ -66,7 +66,7 @@ For instance:
 
 - Build and open the documentation: `pixi run docs-open`
 - Check linting: `pixi run lint`
-- Check unit tests: `pixi run -e test-py12 test-python`
+- Check unit tests: `pixi run -e test-py12 test`
 - Open a shell in a fully configured environment: `pixi shell`
 
 ## Inter-process communication
