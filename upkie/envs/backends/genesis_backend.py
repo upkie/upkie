@@ -62,8 +62,8 @@ class GenesisBackend(Backend):
         self._scene = genesis.Scene(
             viewer_options=(
                 genesis.options.ViewerOptions(
-                    camera_pos=[2.0, 0.0, 1.2],
-                    camera_lookat=[0.0, 0.0, 0.6],
+                    camera_pos=[1.4, -1.4, 1.6],
+                    camera_lookat=[0.0, 0.0, 0.3],
                     camera_up=[0.0, 0.0, 1.0],
                     max_FPS=None,  # redundant with the rate limiter
                 )

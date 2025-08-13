@@ -25,7 +25,7 @@ def make_genesis_servos_env(**kwargs):
     \param kwargs Keyword arguments forwarded to the environment and backend.
     \return UpkieServos with GenesisBackend.
     """
-    backend_keys = {"genesis_init", "gui", "show_fps", "substeps"}
+    backend_keys = {"genesis_init", "gui", "substeps"}
     backend_kwargs = {
         key: value for key, value in kwargs.items() if key in backend_keys
     }

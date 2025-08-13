@@ -126,10 +126,10 @@ class PyBulletBackend(Backend):
             pybullet.configureDebugVisualizer(pybullet.COV_ENABLE_RENDERING, 1)
             pybullet.configureDebugVisualizer(pybullet.COV_ENABLE_SHADOWS, 0)
             pybullet.resetDebugVisualizerCamera(
-                cameraDistance=2.0,
+                cameraDistance=1.0,
                 cameraYaw=45,
                 cameraPitch=-30,
-                cameraTargetPosition=[0, 0, 0.6],
+                cameraTargetPosition=[0, 0, 0.3],
             )
 
         # Internal attributes
