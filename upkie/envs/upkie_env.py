@@ -108,7 +108,7 @@ class UpkieEnv(gym.Env, ABC):
 
     @property
     def dt(self) -> Optional[float]:
-        """!
+        r"""!
         Regulated period of the control loop in seconds, or `None` if there
         is no loop frequency regulation.
         """
@@ -116,7 +116,7 @@ class UpkieEnv(gym.Env, ABC):
 
     @property
     def frequency(self) -> Optional[float]:
-        """!
+        r"""!
         Regulated frequency of the control loop in Hz, or `None` if there is
         no loop frequency regulation.
         """

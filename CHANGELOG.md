@@ -70,6 +70,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - exceptions: Fix error message reporting of UpkieError base class
+- exceptions: Make sure we stop the spine even upon interruption
 - spines: Add exception handling to all three spines
 - spines: Handle empty user replies when no joystick is found
 - utils: Fix incorrect check on inability to set affinity from an interpreter

@@ -52,13 +52,18 @@ class SpineBackend(Backend):
         self._spine_config = merged_spine_config
 
     def __del__(self):
-        """!
-        Stop the spine when deleting the backend instance.
+        r"""!
+        Stop the spine properly when destructing the backend instance.
         """
-        self.close()
+        try:
+            self.close()
+        except (KeyboardInterrupt, SystemExit):
+            # Critical: ensure spine stops even if the process is interrupted
+            # We don't re-raise, as exceptions from destructors are not great
+            self.close()
 
     def close(self) -> None:
-        """!
+        r"""!
         Stop the spine properly.
         """
         if hasattr(self, "_spine"):  # in case SpineError was raised in ctor

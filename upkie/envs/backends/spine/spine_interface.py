@@ -139,11 +139,11 @@ class SpineInterface:
             nanoseconds.
         \raise SpineError If the request read from spine has an error flag.
         """
-        stop = perf_counter_ns() + timeout_ns
+        timeout_counter = perf_counter_ns() + timeout_ns
         while self._read_request() not in self._stop_waiting:  # sets are fast
             # Fun fact: `not in set` is 3-4x faster than `!=` on the raspi
             # perf_counter_ns clocks ~1 us on the raspi
-            if perf_counter_ns() > stop:
+            if perf_counter_ns() > timeout_counter:
                 raise UpkieTimeoutError(
                     "Spine did not process request within "
                     f"{timeout_ns / 1e6:.1f} ms, is it stopped?"
