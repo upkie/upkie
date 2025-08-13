@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - control: Import MPC balancer class from the Pink balancer
 - cpp: Add documentation to the moteus actuation interface
 - cpp: Controller pipeline run by the spine after observers
+- deps: Add dependency on PyYAML
 - envs: Abstract base class for environments named `UpkieEnv`
 - envs: Add Genesis backend
 - envs: Add PyBullet backend
