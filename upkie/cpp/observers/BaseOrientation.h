@@ -18,7 +18,7 @@ using palimpsest::Dictionary;
 /*! Get the orientation of the base frame with respect to the world frame.
 
  * \param quat_imu_in_ars Quaternion representing the rotation matrix from the
- *     IMU frame to the  attitude reference system (ARS) frame, in `[w, x, y,
+ *     IMU frame to the attitude reference system (ARS) frame, in `[w, x, y,
  *     z]` format.
  * \param rotation_base_to_imu Rotation matrix from the base frame to the IMU
  *     frame. When not specified, the default Upkie mounting orientation is
@@ -230,7 +230,7 @@ class BaseOrientation : public Observer {
   //! Pitch angle of the base frame in the world frame
   double pitch_base_in_world_;
 
-  //! Body angular velocity of the base frame in [rad] / [s]
+  //! Body angular velocity of the base frame in rad/s
   Eigen::Vector3d angular_velocity_base_in_base_;
 };
 

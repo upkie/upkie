@@ -6,14 +6,14 @@
 
 """Python module to control Upkie wheeled bipeds."""
 
-from . import config, envs, model, spine, utils
+from . import config, envs, model, utils
 
-__version__ = "8.1.1"
+__version__ = "9.0.0"
 
 __all__ = [
     "config",
+    "control",
     "envs",
     "model",
-    "spine",
     "utils",
 ]

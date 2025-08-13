@@ -11,33 +11,54 @@
 
 import gymnasium as gym
 
-from .upkie_ground_velocity import UpkieGroundVelocity
+from .upkie_env import UpkieEnv
+from .upkie_pendulum import UpkiePendulum
 from .upkie_servos import UpkieServos
 
 
 def register() -> None:
     """!
     Register Upkie environments with Gymnasium.
-    """
-    # Environments
-    envs = (("UpkieServos", UpkieServos),)
-    for env_name, env_class in envs:
-        gym.envs.registration.register(
-            id=f"{env_name}-v{env_class.version}",
-            entry_point=f"upkie.envs:{env_name}",
-        )
 
-    # Wrappers
+    Environments are named as `Upkie-<Backend>-<ActionSpace>`.
+    """
     gym.envs.registration.register(
-        id=f"UpkieGroundVelocity-v{UpkieGroundVelocity.version}",
-        entry_point=(
-            "upkie.envs.upkie_ground_velocity:make_upkie_ground_velocity"
-        ),
+        id="Upkie-Mock-Pendulum",
+        entry_point=("upkie.envs.entry_points:wrap_mock_pendulum"),
+    )
+    gym.envs.registration.register(
+        id="Upkie-Mock-Servos",
+        entry_point="upkie.envs.entry_points:make_mock_servos_env",
+    )
+    gym.envs.registration.register(
+        id="Upkie-Spine-Pendulum",
+        entry_point=("upkie.envs.entry_points:wrap_spine_pendulum"),
+    )
+    gym.envs.registration.register(
+        id="Upkie-Spine-Servos",
+        entry_point="upkie.envs.entry_points:make_spine_servos_env",
+    )
+    gym.envs.registration.register(
+        id="Upkie-PyBullet-Pendulum",
+        entry_point=("upkie.envs.entry_points:wrap_pybullet_pendulum"),
+    )
+    gym.envs.registration.register(
+        id="Upkie-PyBullet-Servos",
+        entry_point="upkie.envs.entry_points:make_pybullet_servos_env",
+    )
+    gym.envs.registration.register(
+        id="Upkie-Genesis-Pendulum",
+        entry_point=("upkie.envs.entry_points:wrap_genesis_pendulum"),
+    )
+    gym.envs.registration.register(
+        id="Upkie-Genesis-Servos",
+        entry_point="upkie.envs.entry_points:make_genesis_servos_env",
     )
 
 
 __all__ = [
-    "UpkieGroundVelocity",
+    "UpkieEnv",
+    "UpkiePendulum",
     "UpkieServos",
     "register",
 ]

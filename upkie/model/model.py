@@ -4,10 +4,13 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2024 Inria
 
-from typing import List, Tuple
+from typing import List, Optional, Tuple
 from xml.etree import ElementTree
 
 import numpy as np
+import upkie_description
+
+from upkie.config import ROBOT_CONFIG
 
 from .joint import Joint
 from .joint_limit import JointLimit
@@ -17,6 +20,30 @@ class Model:
     """!
     Robot model parsed from its URDF description.
     """
+
+    ## \var JOINT_NAMES
+    ## List of joint names
+    JOINT_NAMES: Tuple[str, str, str, str, str, str] = (
+        "left_hip",
+        "left_knee",
+        "left_wheel",
+        "right_hip",
+        "right_knee",
+        "right_wheel",
+    )
+
+    ## \var UPPER_LEG_JOINT_NAMES
+    ## Upper-leg (hip and knee) joint names.
+    UPPER_LEG_JOINT_NAMES: Tuple[str, str, str, str] = (
+        "left_hip",
+        "left_knee",
+        "right_hip",
+        "right_knee",
+    )
+
+    ## \var WHEEL_JOINT_NAMES
+    ## Wheel joint names.
+    WHEEL_JOINT_NAMES: Tuple[str, str] = ("left_wheel", "right_wheel")
 
     ## \var joints
     ## Joints of the robot model.
@@ -38,12 +65,16 @@ class Model:
     ## Wheel joints.
     wheel_joints: Tuple[float]
 
-    def __init__(self, urdf_path: str):
+    def __init__(self, urdf_path: Optional[str] = None):
         r"""!
         Constructor for the robot model wrapper.
 
-        \param[in] urdf_path Path to the robot description.
+        \param[in] urdf_path Path to the robot description. If None, defaults
+            to the description from `upkie_description`.
         """
+        if urdf_path is None:
+            urdf_path = upkie_description.URDF_PATH
+
         tree = ElementTree.parse(urdf_path)
         joint_tags = [
             child for child in tree.getroot() if child.tag == "joint"
@@ -54,6 +85,7 @@ class Model:
             for child in joint
             if child.tag == "limit"
         ]
+
         joints = []
         for idx, (joint, limit) in enumerate(limits):
             joint_name = joint.attrib["name"]
@@ -74,16 +106,20 @@ class Model:
         upper_leg_joints = tuple(
             joint
             for joint in joints
-            if joint.name
-            in ("left_hip", "left_knee", "right_hip", "right_knee")
+            if joint.name in self.UPPER_LEG_JOINT_NAMES
         )
         wheel_joints = tuple(
-            joint
-            for joint in joints
-            if joint.name in ("left_wheel", "right_wheel")
+            joint for joint in joints if joint.name in self.WHEEL_JOINT_NAMES
         )
+
+        # Redefine class attributes as instance attributes for Doxygen
+        self.JOINT_NAMES = Model.JOINT_NAMES
+        self.UPPER_LEG_JOINT_NAMES = Model.UPPER_LEG_JOINT_NAMES
+        self.WHEEL_JOINT_NAMES = Model.WHEEL_JOINT_NAMES
+
+        # Instance attributes
         self.joints = joints
         self.rotation_ars_to_world = np.diag([1.0, -1.0, -1.0])
-        self.rotation_base_to_imu = np.diag([-1.0, 1.0, -1.0])
+        self.rotation_base_to_imu = ROBOT_CONFIG["rotation_base_to_imu"]
         self.upper_leg_joints = upper_leg_joints
         self.wheel_joints = wheel_joints

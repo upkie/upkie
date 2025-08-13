@@ -14,8 +14,8 @@
 #include <string>
 #include <vector>
 
-#include "upkie/cpp/actuation/Interface.h"
 #include "upkie/cpp/controllers/ControllerPipeline.h"
+#include "upkie/cpp/interfaces/Interface.h"
 #include "upkie/cpp/observers/ObserverPipeline.h"
 #include "upkie/cpp/sensors/SensorPipeline.h"
 #include "upkie/cpp/spine/AgentInterface.h"
@@ -47,9 +47,9 @@ constexpr size_t kMebibytes = 1 << 20;
 class Spine {
   using ControllerPipeline = upkie::cpp::controllers::ControllerPipeline;
   using ObserverPipeline = upkie::cpp::observers::ObserverPipeline;
-  using Output = upkie::cpp::actuation::moteus::Output;
+  using Output = upkie::cpp::interfaces::moteus::Output;
   using SensorPipeline = upkie::cpp::sensors::SensorPipeline;
-  using ServoReply = upkie::cpp::actuation::moteus::ServoReply;
+  using ServoReply = upkie::cpp::interfaces::moteus::ServoReply;
 
  public:
   //! Spine parameters.
@@ -80,7 +80,7 @@ class Spine {
    * \param[in, out] controllers Pipeline of controllers to run, in order, at
    *     each cycle of the spine loop.
    */
-  Spine(const Parameters& params, actuation::Interface& interface,
+  Spine(const Parameters& params, interfaces::Interface& interface,
         SensorPipeline& sensors, ObserverPipeline& observers,
         ControllerPipeline& controllers);
 
@@ -142,7 +142,7 @@ class Spine {
   //! End cycle: write agent outputs, apply state machine transition
   void end_cycle();
 
-  /*! Log internal dictionary
+  /*! Log internal working dictionary.
    *
    * \param[in] clock Spine loop clock, if running in real time.
    */
@@ -159,7 +159,7 @@ class Spine {
    * The actuation interface communicates over the CAN-FD bus on real robots.
    * Otherwise, it can be for instance a mock or a simulator interface.
    */
-  actuation::Interface& actuation_;
+  interfaces::Interface& actuation_;
 
   //! Shared memory mapping for inter-process communication.
   AgentInterface agent_interface_;

@@ -1,0 +1,28 @@
+# -*- python -*-
+#
+# SPDX-License-Identifier: Apache-2.0
+
+HeightController.knees_forward = True
+HeightController.max_crouch_height = 0.08            # m
+HeightController.max_crouch_velocity = 0.05          # m/s
+HeightController.max_height_difference = 0.02        # m
+HeightController.max_init_joint_velocity = 0.1       # rad/s
+HeightController.max_lean_velocity = 0.04            # m/s
+HeightController.visualize = False
+
+RemoteControl.max_linear_accel = 1.2                 # m/s²
+RemoteControl.max_linear_velocity = 1.5              # m/s
+RemoteControl.max_yaw_accel = 10.0                   # rad/s²
+RemoteControl.max_yaw_velocity = 1.0                 # rad/s
+
+WheelController.fall_pitch = 1.0                     # rad
+WheelController.left_wheeled = True
+WheelController.leg_length = 0.58                    # m
+WheelController.max_ground_accel = 10.0              # m/s²
+WheelController.max_ground_velocity = 3.0            # m/s
+WheelController.turning_deadband = 0.3
+WheelController.turning_decision_time = 0.2          # s
+WheelController.wheel_radius = 0.06                  # m
+
+run.gain_scale = 2.0
+run.turning_gain_scale = 2.0

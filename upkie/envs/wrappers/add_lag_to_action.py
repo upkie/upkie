@@ -4,6 +4,9 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Inria
 
+## \namespace upkie.envs.wrappers.add_lag_to_action
+## \brief Model lag as a low-pass filter on the action of an environment.
+
 from typing import Tuple, Union
 
 import gymnasium as gym
@@ -83,7 +86,7 @@ class AddLagToAction(gym.Wrapper):
 
         \param action Action from the agent.
         \return Tuple with (observation, reward, terminated, truncated,info).
-            See \ref upkie.envs.upkie_servos.UpkieServos.step for details.
+            See \ref upkie.envs.upkie_env.UpkieEnv.step for details.
         """
         dt = self.env.unwrapped.dt
         if self.time_constant <= 2.0 * dt:

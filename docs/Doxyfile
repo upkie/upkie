@@ -38,7 +38,7 @@ PROJECT_NAME           = upkie
 # could be handy for archiving the generated documentation or if some version
 # control system is used.
 
-PROJECT_NUMBER         = 8.1.1
+PROJECT_NUMBER         = 9.0.0
 
 # Using the PROJECT_BRIEF tag one can provide an optional one line description
 # for a project that appears at the top of each page and should give viewer a
@@ -151,7 +151,7 @@ ALWAYS_DETAILED_SEC    = NO
 # operators of the base classes will not be shown.
 # The default value is: NO.
 
-INLINE_INHERITED_MEMB  = NO
+INLINE_INHERITED_MEMB  = YES
 
 # If the FULL_PATH_NAMES tag is set to YES, doxygen will prepend the full path
 # before files name in the file list and in the header files. If set to NO the
@@ -246,7 +246,7 @@ INHERIT_DOCS           = YES
 # of the file/class/namespace that contains it.
 # The default value is: NO.
 
-SEPARATE_MEMBER_PAGES  = NO
+SEPARATE_MEMBER_PAGES  = YES
 
 # The TAB_SIZE tag can be used to set the number of spaces in a tab. Doxygen
 # uses this value to replace tabs by spaces in code fragments.
@@ -601,7 +601,7 @@ CASE_SENSE_NAMES       = YES
 # scope will be hidden.
 # The default value is: NO.
 
-HIDE_SCOPE_NAMES       = NO
+HIDE_SCOPE_NAMES       = YES
 
 # If the HIDE_COMPOUND_REFERENCE tag is set to NO (default) then doxygen will
 # append additional text to a page's title, such as Class Reference. If set to
@@ -660,7 +660,7 @@ SORT_BRIEF_DOCS        = NO
 # detailed member documentation.
 # The default value is: NO.
 
-SORT_MEMBERS_CTORS_1ST = NO
+SORT_MEMBERS_CTORS_1ST = YES
 
 # If the SORT_GROUP_NAMES tag is set to YES then doxygen will sort the hierarchy
 # of group names into alphabetical order. If set to NO the group names will
@@ -868,24 +868,27 @@ INPUT                  = README.md \
                          docs/gym-environments.md \
                          docs/kinematics.md \
                          docs/observations.md \
-                         docs/simulation.md \
-                         docs/real-robot.md \
+                         docs/spines.md \
                          docs/dev-notes.md \
                          upkie \
                          upkie/config \
+                         upkie/controllers \
+                         upkie/controllers/mpc_balancer \
                          upkie/cpp \
-                         upkie/cpp/actuation \
-                         upkie/cpp/actuation/bullet \
-                         upkie/cpp/actuation/pi3hat \
                          upkie/cpp/exceptions \
+                         upkie/cpp/interfaces \
+                         upkie/cpp/interfaces/bullet \
+                         upkie/cpp/interfaces/moteus \
+                         upkie/cpp/interfaces/pi3hat \
                          upkie/cpp/observers \
                          upkie/cpp/sensors \
                          upkie/cpp/spine \
                          upkie/cpp/utils \
                          upkie/envs \
+                         upkie/envs/backends \
+                         upkie/envs/backends/spine \
                          upkie/envs/wrappers \
                          upkie/model \
-                         upkie/spine \
                          upkie/utils \
                          CONTRIBUTING.md
 
@@ -1308,7 +1311,9 @@ HTML_STYLESHEET        =
 # list). For an example see the documentation.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-HTML_EXTRA_STYLESHEET  = docs/doxygen-awesome.css
+HTML_EXTRA_STYLESHEET  = docs/css/doxygen-awesome.css \
+                         docs/css/doxygen-awesome-sidebar-only.css \
+                         docs/css/doxygen-awesome-sidebar-only-darkmode-toggle.css
 
 # The HTML_EXTRA_FILES tag can be used to specify one or more extra images or
 # other source files which should be copied to the HTML output directory. Note
@@ -1320,6 +1325,15 @@ HTML_EXTRA_STYLESHEET  = docs/doxygen-awesome.css
 
 HTML_EXTRA_FILES       =
 
+# The HTML_COLORSTYLE tag is used to specify the color theme for the HTML output.
+# When using Doxygen versions 1.9.5 and later, this setting is required when using
+# custom themes like Doxygen Awesome to ensure proper color scheme handling.
+# Possible values are: LIGHT, DARK, AUTO_LIGHT, and AUTO_DARK.
+# The default value is: AUTO_LIGHT.
+# This tag requires that the tag GENERATE_HTML is set to YES.
+
+HTML_COLORSTYLE        = LIGHT  # used by Doxygen Awesome when Doxygen >= 1.9.5
+
 # The HTML_COLORSTYLE_HUE tag controls the color of the HTML output. Doxygen
 # will adjust the colors in the style sheet and background images according to
 # this color. Hue is specified as an angle on a colorwheel, see
@@ -1329,7 +1343,7 @@ HTML_EXTRA_FILES       =
 # Minimum value: 0, maximum value: 359, default value: 220.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-HTML_COLORSTYLE_HUE    = 220
+HTML_COLORSTYLE_HUE    = 209
 
 # The HTML_COLORSTYLE_SAT tag controls the purity (or saturation) of the colors
 # in the HTML output. For a value of 0 the output will use grayscales only. A
@@ -1337,7 +1351,7 @@ HTML_COLORSTYLE_HUE    = 220
 # Minimum value: 0, maximum value: 255, default value: 100.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-HTML_COLORSTYLE_SAT    = 100
+HTML_COLORSTYLE_SAT    = 255
 
 # The HTML_COLORSTYLE_GAMMA tag controls the gamma correction applied to the
 # luminance component of the colors in the HTML output. Values below 100
@@ -1348,7 +1362,7 @@ HTML_COLORSTYLE_SAT    = 100
 # Minimum value: 40, maximum value: 240, default value: 80.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-HTML_COLORSTYLE_GAMMA  = 80
+HTML_COLORSTYLE_GAMMA  = 113
 
 # If the HTML_TIMESTAMP tag is set to YES then the footer of each generated HTML
 # page will contain the date and time when the page was generated. Setting this
@@ -1590,7 +1604,7 @@ ECLIPSE_DOC_ID         = org.doxygen.Project
 # The default value is: NO.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-DISABLE_INDEX          = NO
+DISABLE_INDEX          = NO  # used by Doxygen Awesome
 
 # The GENERATE_TREEVIEW tag is used to specify whether a tree-like index
 # structure should be generated to display hierarchical information. If the tag
@@ -1607,7 +1621,18 @@ DISABLE_INDEX          = NO
 # The default value is: NO.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-GENERATE_TREEVIEW      = YES
+GENERATE_TREEVIEW      = YES  # used by Doxygen Awesome
+
+# When GENERATE_TREEVIEW is set to YES, the FULL_SIDEBAR option determines if
+# the side bar is limited to only the treeview area (value NO) or if it should
+# extend to the full height of the window (value YES). Setting this to YES
+# gives a layout similar to e.g. https://docs.readthedocs.io with more room for
+# contents, but less room for the project logo, title, and description.
+# If GENERATE_TREEVIEW is set to NO, this option has no effect.
+# The default value is: NO.
+# This tag requires that the tag GENERATE_HTML is set to YES.
+
+FULL_SIDEBAR = NO  # used by Doxygen Awesome
 
 # The ENUM_VALUES_PER_LINE tag can be used to set the number of enum values that
 # doxygen will group on one line in the generated HTML documentation.
@@ -2564,7 +2589,7 @@ DIRECTORY_GRAPH        = YES
 # The default value is: png.
 # This tag requires that the tag HAVE_DOT is set to YES.
 
-DOT_IMAGE_FORMAT       = png
+DOT_IMAGE_FORMAT       = svg
 
 # If DOT_IMAGE_FORMAT is set to svg, then this option can be set to YES to
 # enable generation of interactive SVG images that allow zooming and panning.
@@ -2655,7 +2680,7 @@ MAX_DOT_GRAPH_DEPTH    = 0
 # The default value is: NO.
 # This tag requires that the tag HAVE_DOT is set to YES.
 
-DOT_TRANSPARENT        = NO
+DOT_TRANSPARENT        = YES
 
 # Set the DOT_MULTI_TARGETS tag to YES to allow dot to generate multiple output
 # files in one run (i.e. multiple -o and -T options on the command line). This

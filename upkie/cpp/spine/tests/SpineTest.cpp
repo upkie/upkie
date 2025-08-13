@@ -12,7 +12,7 @@
 #include <vector>
 
 #include "gtest/gtest.h"
-#include "upkie/cpp/actuation/MockInterface.h"
+#include "upkie/cpp/interfaces/MockInterface.h"
 #include "upkie/cpp/observers/ObserverPipeline.h"
 #include "upkie/cpp/observers/tests/SchwiftyObserver.h"
 #include "upkie/cpp/observers/tests/ThrowingObserver.h"
@@ -35,7 +35,7 @@ class TestSpine : public upkie::cpp::spine::Spine {
   //! Check whether all servo commands are stops.
   bool all_commands_are_stops() {
     for (const auto& command : actuation_.commands()) {
-      if (command.mode != actuation::moteus::Mode::kStopped) {
+      if (command.mode != interfaces::moteus::Mode::kStopped) {
         return false;
       }
     }
@@ -67,7 +67,7 @@ class SpineTest : public ::testing::Test {
     params_.shm_size = 2048;
 
     const double dt = 1.0 / params_.frequency;
-    actuation_interface_ = std::make_unique<actuation::MockInterface>(dt);
+    actuation_interface_ = std::make_unique<interfaces::MockInterface>(dt);
 
     schwifty_observer_ = std::make_unique<observers::SchwiftyObserver>();
     observers_.append_observer(schwifty_observer_);
@@ -131,7 +131,7 @@ class SpineTest : public ::testing::Test {
   TestSpine::Parameters params_;
 
   //! Test actuator interface
-  std::unique_ptr<actuation::MockInterface> actuation_interface_;
+  std::unique_ptr<interfaces::MockInterface> actuation_interface_;
 
   //! Test observer
   std::shared_ptr<observers::SchwiftyObserver> schwifty_observer_;

@@ -15,6 +15,6 @@
 namespace upkie::cpp {
 
 //! Software version number.
-constexpr std::string_view kVersion = "8.1.1";
+constexpr std::string_view kVersion = "9.0.0";
 
 }  // namespace upkie::cpp

@@ -22,7 +22,7 @@ upkie.envs.register()
 
 def add_domain_randomization(
     env: gym.Env,
-    action_noise: float = 0.05,  # [m] / [s]
+    action_noise: float = 0.05,  # m/s
     observation_noise: float = 0.01,  # mixed units (*^_^*)
 ) -> gym.Wrapper:
     obs_ones = np.ones(env.observation_space.shape)
@@ -39,8 +39,8 @@ def add_domain_randomization(
 
 
 if __name__ == "__main__":
-    with gym.make("UpkieGroundVelocity-v4", frequency=200.0) as vanilla_env:
-        env = add_domain_randomization(vanilla_env)
+    with gym.make("Upkie-Spine-Pendulum", frequency=200.0) as spine_env:
+        env = add_domain_randomization(spine_env)
         observation, _ = env.reset()
         gain = np.array([10.0, 1.0, 0.0, 0.1])
         for step in range(1_000_000):

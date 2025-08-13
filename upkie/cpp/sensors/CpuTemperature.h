@@ -9,7 +9,7 @@
 
 namespace upkie::cpp::sensors {
 
-//! Characters required to read the temperature in [mC] from the kernel.
+//! Characters required to read the temperature in mC from the kernel.
 constexpr unsigned kCpuTemperatureBufferSize = 12;
 
 /*! Sensor for CPU temperature readings.

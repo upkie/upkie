@@ -19,13 +19,13 @@ AMPLITUDE = 1.0  # in radians
 
 JOINT_PROPS = {
     # The following value is completely arbitrary :)
-    "friction": 0.1,  # kinetic joint friction in [N m], this value
+    "friction": 0.1,  # kinetic joint friction in N⋅m, this value
 }
 
 if __name__ == "__main__":
     upkie.envs.register()
     with gym.make(
-        "UpkieServos-v5",
+        "Upkie-Spine-Servos",
         frequency=200.0,
         init_state=RobotState(
             orientation_base_in_world=ScipyRotation.from_quat(

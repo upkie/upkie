@@ -1,0 +1,42 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2022 Stéphane Caron
+/*
+ * This file incorporates work covered by the following copyright and
+ * permission notice:
+ *
+ *     SPDX-License-Identifier: Apache-2.0
+ *     Copyright 2020 Josh Pieper, jjp@pobox.com.
+ */
+
+#pragma once
+
+#include "upkie/cpp/interfaces/moteus/Mode.h"
+#include "upkie/cpp/interfaces/moteus/PositionCommand.h"
+#include "upkie/cpp/interfaces/moteus/PositionResolution.h"
+#include "upkie/cpp/interfaces/moteus/QueryCommand.h"
+
+namespace upkie::cpp::interfaces {
+
+namespace moteus {
+
+//! Command sent to a servo
+struct ServoCommand {
+  //! Servo identifier
+  int id = 0;
+
+  //! Servo mode
+  moteus::Mode mode = moteus::Mode::kStopped;
+
+  //! Position commands, used when mode == kPosition (or kZeroVelocity)
+  moteus::PositionCommand position;
+
+  //! Resolution for each \ref position field
+  moteus::PositionResolution resolution;
+
+  //! Resolution required for each reply field in \ref ServoReply::result
+  moteus::QueryCommand query;
+};
+
+}  // namespace moteus
+
+}  // namespace upkie::cpp::interfaces

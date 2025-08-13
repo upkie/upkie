@@ -16,7 +16,7 @@ from upkie.utils.robot_state import RobotState
 if __name__ == "__main__":
     upkie.envs.register()
     with gym.make(
-        "UpkieServos-v4",
+        "Upkie-Spine-Servos",
         frequency=200.0,
         init_state=RobotState(
             orientation_base_in_world=ScipyRotation.from_quat(

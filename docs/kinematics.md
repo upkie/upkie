@@ -1,5 +1,7 @@
 # Kinematics {#kinematics}
 
+[TOC]
+
 This page is about the geometry and joint properties of Upkies. Mechanics and electronics are discussed in the [Hardware wiki](https://github.com/upkie/upkie/wiki).
 
 ## Frames {#frames}

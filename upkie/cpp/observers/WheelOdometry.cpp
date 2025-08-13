@@ -39,9 +39,9 @@ double WheelOdometry::compute_average_velocity(const Dictionary& floor_contact,
     if (!wheel_contact) {
       continue;
     }
-    const double wheel_velocity = servo(wheel)("velocity");  // [rad] / [s]
+    const double wheel_velocity = servo(wheel)("velocity");  // rad/s
     const double signed_radius = wheel_radius_pair.second;
-    const double linear_velocity = signed_radius * wheel_velocity;  // [m] / [s]
+    const double linear_velocity = signed_radius * wheel_velocity;  // m/s
     velocity_sum += linear_velocity;
     ++nb_wheels_in_contact;
   }

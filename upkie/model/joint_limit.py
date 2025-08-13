@@ -21,11 +21,11 @@ class JointLimit:
     upper: float
 
     ## \var velocity
-    ## Velocity limit of the joint, in [rad] / [s].
+    ## Velocity limit of the joint, in rad/s.
     velocity: float
 
     ## \var effort
-    ## Torque limit of the joint, in [N m].
+    ## Torque limit of the joint, in N⋅m.
     effort: float
 
     def __init__(

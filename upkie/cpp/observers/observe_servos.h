@@ -9,11 +9,11 @@
 #include <string>
 #include <vector>
 
-#include "upkie/cpp/actuation/moteus/protocol.h"
+#include "upkie/cpp/interfaces/moteus/protocol.h"
 
 namespace upkie::cpp::observers {
 
-using upkie::cpp::actuation::moteus::ServoReply;
+using upkie::cpp::interfaces::moteus::ServoReply;
 
 /*! Observe servo measurements.
  *

@@ -18,7 +18,7 @@ NB_STEPS = 100
 
 
 if __name__ == "__main__":
-    with gym.make("UpkieGroundVelocity-v4", frequency=200.0) as env:
+    with gym.make("Upkie-Spine-Pendulum", frequency=200.0) as env:
         trajectories = []
         action = 0.0 * env.action_space.sample()
         for i in range(NB_RUNS):
@@ -38,5 +38,5 @@ if __name__ == "__main__":
         plt.grid(True)
         plt.plot(trange, np.array(trajectories).T)
         plt.ylim(-0.03, 0.03)
-        plt.legend(("pitch [rad]",))
+        plt.legend(("pitch (rad)",))
         plt.show(block=True)

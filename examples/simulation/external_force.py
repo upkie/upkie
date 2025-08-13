@@ -8,7 +8,9 @@
 
 import gymnasium as gym
 import numpy as np
+
 import upkie.envs
+from upkie.envs.upkie_pendulum import UpkiePendulum
 
 upkie.envs.register()
 
@@ -35,7 +37,7 @@ def get_vertical_force(
     return lift * mass * 9.81  # in [N]
 
 
-def run(env: upkie.envs.UpkieGroundVelocity):
+def run(env: UpkiePendulum):
     torso_force_in_world = np.zeros(3)
     bullet_action = {
         "external_forces": {
@@ -59,5 +61,5 @@ def run(env: upkie.envs.UpkieGroundVelocity):
 
 
 if __name__ == "__main__":
-    with gym.make("UpkieGroundVelocity-v4", frequency=200.0) as env:
+    with gym.make("Upkie-Spine-Pendulum", frequency=200.0) as env:
         run(env)

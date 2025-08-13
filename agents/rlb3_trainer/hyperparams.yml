@@ -1,0 +1,37 @@
+# Hyperparameters for Upkie environments
+
+Upkie-PyBullet-Pendulum:
+    n_timesteps: 1_000_000
+    n_envs: 8
+    policy: 'MlpPolicy'
+    n_steps: 2048
+    batch_size: 64
+    gae_lambda: 0.95
+    gamma: 0.99
+    n_epochs: 10
+    ent_coef: 0.0
+    learning_rate: 0.0003
+    clip_range: 0.2
+    normalize: true
+    policy_kwargs:
+        net_arch: [64, 64]
+    env_wrapper:
+        - wrappers.silence_warnings
+
+Upkie-Genesis-Pendulum:
+    n_timesteps: 1_000_000
+    n_envs: 4
+    policy: 'MlpPolicy'
+    n_steps: 2048
+    batch_size: 64
+    gae_lambda: 0.95
+    gamma: 0.99
+    n_epochs: 10
+    ent_coef: 0.0
+    learning_rate: 0.0003
+    clip_range: 0.2
+    normalize: true
+    policy_kwargs:
+        net_arch: [64, 64]
+    env_wrapper:
+        - wrappers.silence_warnings

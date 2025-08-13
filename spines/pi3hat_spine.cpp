@@ -15,12 +15,13 @@
 #include <string>
 #include <vector>
 
-#include "upkie/cpp/actuation/Pi3HatInterface.h"
+#include "spines/common/controllers.h"
+#include "spines/common/observers.h"
+#include "spines/common/sensors.h"
 #include "upkie/cpp/controllers/ControllerPipeline.h"
-#include "upkie/cpp/observers/BaseOrientation.h"
-#include "upkie/cpp/observers/FloorContact.h"
+#include "upkie/cpp/exceptions/UpkieError.h"
+#include "upkie/cpp/interfaces/Pi3HatInterface.h"
 #include "upkie/cpp/observers/ObserverPipeline.h"
-#include "upkie/cpp/observers/WheelOdometry.h"
 #include "upkie/cpp/sensors/CpuTemperature.h"
 #include "upkie/cpp/sensors/Joystick.h"
 #include "upkie/cpp/sensors/SensorPipeline.h"
@@ -29,16 +30,14 @@
 #include "upkie/cpp/utils/realtime.h"
 #include "upkie/cpp/version.h"
 
-namespace spines::pi3hat {
-
 using Pi3Hat = ::mjbots::pi3hat::Pi3Hat;
 using palimpsest::Dictionary;
-using upkie::cpp::actuation::Pi3HatInterface;
+using spines::common::make_controllers;
+using spines::common::make_observers;
+using spines::common::make_sensors;
 using upkie::cpp::controllers::ControllerPipeline;
-using upkie::cpp::observers::BaseOrientation;
-using upkie::cpp::observers::FloorContact;
+using upkie::cpp::interfaces::Pi3HatInterface;
 using upkie::cpp::observers::ObserverPipeline;
-using upkie::cpp::observers::WheelOdometry;
 using upkie::cpp::sensors::CpuTemperature;
 using upkie::cpp::sensors::Joystick;
 using upkie::cpp::sensors::SensorPipeline;
@@ -68,6 +67,9 @@ class CommandLineArguments {
       } else if (arg == "--log-dir") {
         log_dir = args.at(++i);
         spdlog::info("Command line: log_dir = {}", log_dir);
+      } else if (arg == "--pipeline") {
+        pipeline = args.at(++i);
+        spdlog::info("Command line: pipeline = {}", pipeline);
       } else if (arg == "--shm-name") {
         shm_name = args.at(++i);
         spdlog::info("Command line: shm_name = {}", shm_name);
@@ -104,6 +106,8 @@ class CommandLineArguments {
               << "    CPUID for the CAN thread (default: 2).\n";
     std::cout << "--log-dir <path>\n"
               << "    Path to a directory for output logs.\n";
+    std::cout << "--pipeline <name>\n"
+              << "    Pipeline name (e.g., 'wheel_balancer').\n";
     std::cout << "--shm-name <name>\n"
               << "    Name for IPC shared memory file.\n";
     std::cout << "--spine-cpu <cpuid>\n"
@@ -130,6 +134,9 @@ class CommandLineArguments {
 
   //! Log directory
   std::string log_dir = "";
+
+  //! Pipeline name
+  std::string pipeline = "servo";
 
   //! Name for the shared memory file.
   std::string shm_name = "/upkie";
@@ -161,51 +168,13 @@ int run_spine(const CommandLineArguments& args) {
     return -4;
   }
 
-  SensorPipeline sensors;
-
-  // Sensor: CPU temperature
-  auto cpu_temperature = std::make_shared<CpuTemperature>();
-  sensors.connect_sensor(cpu_temperature);
-
-  // Sensor: Joystick
-  auto joystick = std::make_shared<Joystick>();
-  if (!joystick->present()) {
-    char response;
-    std::cout << "\n /!\\ Joystick not found /!\\\n\n"
-              << "Ctrl-C will be the only way to stop the spine. "
-              << "Proceed? [yN] ";
-    std::cin >> response;
-    if (response != 'y') {
-      std::cout << "Joystick required to run the pi3hat spine.\n";
-      return -6;
-    }
-  }
-  sensors.connect_sensor(joystick);
-
-  ObserverPipeline observers;
-
-  // Observation: Base orientation
-  BaseOrientation::Parameters base_orientation_params;
-  auto base_orientation =
-      std::make_shared<BaseOrientation>(base_orientation_params);
-  observers.append_observer(base_orientation);
-
-  // Observation: Floor contact
-  FloorContact::Parameters floor_contact_params;
-  floor_contact_params.dt = 1.0 / args.spine_frequency;
-  auto floor_contact = std::make_shared<FloorContact>(floor_contact_params);
-  observers.append_observer(floor_contact);
-
-  // Observation: Wheel odometry
-  WheelOdometry::Parameters odometry_params;
-  odometry_params.dt = 1.0 / args.spine_frequency;
-  auto odometry = std::make_shared<WheelOdometry>(odometry_params);
-  observers.append_observer(odometry);
-
-  // Empty controller pipeline
-  ControllerPipeline controllers;
-
   try {
+    // Make pipelines
+    SensorPipeline sensors = make_sensors(/* joystick_required = */ true);
+    ObserverPipeline observers = make_observers(args.spine_frequency);
+    ControllerPipeline controllers =
+        make_controllers(args.pipeline, args.spine_frequency);
+
     // pi3hat configuration
     Pi3Hat::Configuration pi3hat_config;
     pi3hat_config.attitude_rate_hz = args.attitude_frequency;
@@ -216,7 +185,7 @@ int run_spine(const CommandLineArguments& args) {
     // pi3hat interface
     Pi3HatInterface interface(args.can_cpu, pi3hat_config);
 
-    // Spine
+    // Run the spine
     Spine::Parameters spine_params;
     spine_params.cpu = args.spine_cpu;
     spine_params.frequency = args.spine_frequency;
@@ -225,9 +194,12 @@ int run_spine(const CommandLineArguments& args) {
     spdlog::info("Spine data logged to {}", spine_params.log_path);
     Spine spine(spine_params, interface, sensors, observers, controllers);
     spine.run();
+  } catch (const upkie::cpp::exceptions::UpkieError& error) {
+    spdlog::error("Upkie error: {}", error.what());
+    return -2;
   } catch (const ::mjbots::pi3hat::Error& error) {
     std::string message = error.what();
-    spdlog::error(message);
+    spdlog::error("pi3hat error: {}", message);
     if (message.find("/dev/mem") != std::string::npos) {
       spdlog::info("did you run with sudo?");
     }
@@ -237,10 +209,8 @@ int run_spine(const CommandLineArguments& args) {
   return EXIT_SUCCESS;
 }
 
-}  // namespace spines::pi3hat
-
 int main(int argc, char** argv) {
-  spines::pi3hat::CommandLineArguments args({argv + 1, argv + argc});
+  CommandLineArguments args({argv + 1, argv + argc});
   if (args.error) {
     return EXIT_FAILURE;
   } else if (args.help) {
@@ -250,5 +220,5 @@ int main(int argc, char** argv) {
     std::cout << "Upkie pi3hat spine " << upkie::cpp::kVersion << "\n";
     return EXIT_SUCCESS;
   }
-  return spines::pi3hat::run_spine(args);
+  return run_spine(args);
 }

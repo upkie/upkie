@@ -12,7 +12,7 @@ import upkie.envs
 
 upkie.envs.register()
 
-GAIN = 10.0  # base pitch to wheel torque, in [N m] / [rad]
+GAIN = 10.0  # base pitch to wheel torque, in N⋅m/rad
 
 
 def run(env: upkie.envs.UpkieServos):
@@ -40,5 +40,5 @@ def run(env: upkie.envs.UpkieServos):
 
 
 if __name__ == "__main__":
-    with gym.make("UpkieServos-v5", frequency=200.0) as env:
+    with gym.make("Upkie-Spine-Servos", frequency=200.0) as env:
         run(env)

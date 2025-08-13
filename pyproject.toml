@@ -28,9 +28,10 @@ classifiers = [
 ]
 dependencies = [
     "gymnasium >= 1.0.0",
-    "loop-rate-limiters >= 1.0.0",
+    "loop-rate-limiters >= 1.2.0",
     "msgpack >= 1.0.2",
     "numpy >= 1.24.3",
+    "pyyaml >=5.3.1",
     "scipy >= 1.10.0",
     "upkie_description >= 2.1.0",
 ]
@@ -54,6 +55,7 @@ exclude = [
     "CONTRIBUTING.md",
     "CPPLINT.cfg",
     "WORKSPACE",
+    "agents/",
     "examples/",
     "logs/",
     "spines/",
@@ -65,6 +67,159 @@ include = [
     "upkie/envs/*.py",
     "upkie/utils/*.py",
 ]
+
+[tool.pixi.project]
+channels = ["conda-forge"]
+platforms = ["linux-64", "linux-aarch64", "osx-arm64"]
+
+[tool.pixi.pypi-dependencies]
+upkie = { path = ".", editable = true }
+
+[tool.pixi.dependencies]
+gymnasium = ">=1.0.0"
+loop-rate-limiters = ">=1.2.0"
+msgpack-python = ">=1.0.2"
+numpy = ">=1.24.3"
+pyyaml = ">=5.3.1"
+scipy = ">=1.10.0"
+upkie_description = ">=2.1.0"
+
+[tool.pixi.feature.coverage.dependencies]
+lcov = "*"
+
+[tool.pixi.feature.coverage.tasks]
+coverage-generate = { cmd = "tools/bazelisk coverage --combined_report=lcov --compilation_mode=fastbuild --instrument_test_targets //..." }
+coverage-report = { cmd = "genhtml bazel-out/_coverage/_coverage_report.dat -o bazel-out/_coverage", depends-on = ["coverage-generate"] }
+coverage-open = { cmd = "xdg-open bazel-out/_coverage/index.html", depends-on = ["coverage-report"] }
+
+[tool.pixi.feature.docs.dependencies]
+doxygen = "<=1.9.5"
+graphviz = "*"
+make = "*"
+"stable-baselines3" = ">=2.3.0"
+
+[tool.pixi.feature.docs.tasks]
+docs-make = "doxygen --version && cd docs && make"
+docs-open = { cmd = "xdg-open docs/html/index.html", depends-on = ["docs-make"] }
+
+[tool.pixi.feature.genesis]
+platforms = ["linux-64", "osx-arm64"]
+
+[tool.pixi.feature.genesis.dependencies]
+python = "3.10.*"
+qpmpc = ">=3.0.1,<4"
+
+[tool.pixi.feature.genesis.pypi-dependencies]
+genesis-world = ">=0.3.0"
+torch = ">=2.6.0"
+torchvision = ">=0.21.0"
+
+[tool.pixi.feature.try-genesis.tasks]
+try-genesis = "python examples/model_predictive_control.py --env Upkie-Genesis-Pendulum"
+
+[tool.pixi.feature.lint.dependencies]
+six = "*"
+ruff = ">=0.4.3"
+
+[tool.pixi.feature.lint.tasks]
+lint-bazel = { cmd = "tools/bazelisk test --config lint //upkie/..." }
+lint-ruff = { cmd = "ruff check upkie" }
+lint-ruff-format = { cmd = "ruff format --check upkie" }
+lint = { depends-on = ["lint-bazel", "lint-ruff", "lint-ruff-format"] }
+
+[tool.pixi.feature.mpc-balancer.dependencies]
+gin-config = ">=0.5.0"
+meshcat-shapes = ">=0.3.0"
+pink = ">=3.0.0,<4"
+pinocchio = ">=3.1.0,<4"
+proxsuite = ">=0.4.1"
+qpmpc = ">=3.0.1,<4"
+
+[tool.pixi.feature.mpc-balancer.tasks]
+upkie-mpc-balancer = "python -m agents.mpc_balancer"
+
+[tool.pixi.feature.pack.dependencies]
+gin-config = ">=0.5.0"
+meshcat-shapes = ">=0.3.0"
+pink = ">=3.0.0,<4"
+pinocchio = ">=3.1.0,<4"
+pixi-pack = ">=0.7.2"
+proxsuite = ">=0.4.1"
+qpmpc = ">=3.0.1,<4"
+stable-baselines3 = ">=2.3.0"
+
+[tool.pixi.feature.pack.tasks]
+pack = "pixi-pack --environment pack --platform linux-aarch64 --ignore-pypi-non-wheel"
+
+[tool.pixi.feature.py39]
+dependencies = { python = "3.9.*" }
+
+[tool.pixi.feature.py310]
+dependencies = { python = "3.10.*" }
+
+[tool.pixi.feature.py311]
+dependencies = { python = "3.11.*" }
+
+[tool.pixi.feature.py312]
+dependencies = { python = "3.12.*" }
+
+[tool.pixi.feature.pybullet.dependencies]
+gin-config = ">=0.5.0"
+meshcat-shapes = ">=0.3.0"
+pink = ">=3.0.0,<4"
+pinocchio = ">=3.1.0,<4"
+proxsuite = ">=0.4.1"
+pybullet = ">=3"
+qpmpc = ">=3.0.1,<4"
+
+[tool.pixi.feature.try-pybullet.tasks]
+try-pybullet = "python examples/model_predictive_control.py --env Upkie-PyBullet-Pendulum"
+
+[tool.pixi.feature.rlb3.pypi-dependencies]
+rl-zoo3 = ">=2.6.0"
+stable-baselines3 = ">=2.3.0"
+tensorboard = "*"
+
+[tool.pixi.feature.rlb3-genesis.tasks]
+rlb3-train-genesis = "python agents/rlb3_trainer/train.py --env Upkie-Genesis-Pendulum"
+rlb3-enjoy-genesis = "python agents/rlb3_trainer/enjoy.py --env Upkie-Genesis-Pendulum"
+
+[tool.pixi.feature.rlb3-pybullet.tasks]
+rlb3-train-pybullet = "python agents/rlb3_trainer/train.py --env Upkie-PyBullet-Pendulum"
+rlb3-enjoy-pybullet = "python agents/rlb3_trainer/enjoy.py --env Upkie-PyBullet-Pendulum"
+
+[tool.pixi.feature.test.dependencies]
+pybullet = ">=3"
+pytest = "*"
+"stable-baselines3" = ">2.3.0"
+
+[tool.pixi.feature.test.tasks]
+test = "pytest tests/"
+
+[tool.pixi.feature.trajectory-player.dependencies]
+gin-config = ">=0.5.0"
+meshcat-shapes = ">=0.3.0"
+pandas = "*"
+pink = ">=3.0.0,<4"
+proxsuite = ">=0.4.1"
+qpmpc = ">=3.0.1,<4"
+
+[tool.pixi.environments]
+coverage = { features = ["coverage"], solve-group = "default" }
+default = { features = [], solve-group = "default" }
+docs = { features = ["docs"], solve-group = "default" }
+genesis = { features = ["genesis", "try-genesis"], solve-group = "genesis" }
+lint = { features = ["lint"], solve-group = "default" }
+mpc-balancer = { features = ["mpc-balancer"], solve-group = "mpc-balancer" }
+pack = { features = ["pack"], solve-group = "default" }
+pybullet = { features = ["pybullet", "try-pybullet"], solve-group = "pybullet" }
+rlb3-genesis = { features = ["rlb3", "genesis", "rlb3-genesis"], solve-group = "genesis" }
+rlb3-pybullet = { features = ["rlb3", "pybullet", "rlb3-pybullet"], solve-group = "pybullet" }
+test-py310 = { features = ["py310", "test"], solve-group = "py310" }
+test-py311 = { features = ["py311", "test"], solve-group = "py311" }
+test-py312 = { features = ["py312", "test"], solve-group = "py312" }
+test-py39 = { features = ["py39", "test"], solve-group = "py39" }
+trajectory-player = { features = ["trajectory-player"], solve-group = "trajectory-player" }
 
 [tool.ruff]
 line-length = 79
@@ -78,6 +233,8 @@ ignore = [
     "D401",  # good for methods but not for class docstrings
     "D405",  # British-style section names are also "proper"!
 ]
+per-file-ignores = { "*/tests/*.py" = ["D"] }
+pydocstyle = { convention = "numpy" }
 select = [
     # pyflakes
     "F",
@@ -89,43 +246,3 @@ select = [
     # pydocstyle
     "D"
 ]
-
-[tool.ruff.lint.per-file-ignores]
-"*/tests/*.py" = ["D"]
-
-[tool.ruff.lint.pydocstyle]
-convention = "numpy"
-
-[tool.pixi.project]
-channels = ["conda-forge"]
-platforms = ["linux-64", "linux-aarch64", "osx-arm64"]
-
-[tool.pixi.dependencies]
-gymnasium = ">=1.0.0"
-loop-rate-limiters = ">=1.0.0"
-msgpack-python = ">=1.0.2"
-numpy = ">=1.24.3"
-scipy = ">=1.10.0"
-upkie_description = ">=2.1.0"
-
-[tool.pixi.feature.dev]
-dependencies = { "stable-baselines3" = ">2.3.0" }
-
-[tool.pixi.feature.docs]
-dependencies = { doxygen = "<=1.9.5", graphviz = "*", make = "*", "stable-baselines3" = "*" }
-tasks = { make-docs = "doxygen --version && cd docs && make" }
-
-[tool.pixi.feature.pack]
-dependencies = { pixi-pack = "*" }
-tasks = { pack-to-aarch64 = "pixi-pack pack -e default --platform linux-aarch64 --ignore-pypi-non-wheel" }
-
-[tool.pixi.feature.test]
-dependencies = { "stable-baselines3" = ">2.3.0" }
-tasks = { test = "tools/bazel test //upkie/..." }
-
-[tool.pixi.environments]
-default = { features = [], solve-group = "default" }
-dev = { features = ["dev"], solve-group = "default" }
-docs = { features = ["docs"], solve-group = "default" }
-pack = { features = ["pack"], solve-group = "default" }
-test = { features = ["test"], solve-group = "default" }

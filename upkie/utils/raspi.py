@@ -4,29 +4,43 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Inria
 
-"""!
-Functions to work on the onboard Raspberry Pi.
-"""
+## \namespace upkie.utils.raspi
+## \brief Functions to work on the onboard Raspberry Pi.
 
 import os
-import sys
+from pathlib import Path
 
-from upkie.exceptions import UpkieRuntimeError
+from ..logging import logger
 
-from .spdlog import logging
+## CPU ID for agent processes on Raspberry Pi.
+__AGENT_CPUID = 3
 
-__AGENT_CPUID: int = 3
-__MODEL_PATH: str = "/sys/firmware/devicetree/base/model"
-__ON_RASPI: bool = False
+## Path to device tree model file for Raspberry Pi detection.
+__MODEL_PATH = Path("/sys/firmware/devicetree/base/model")
 
-if os.path.exists(__MODEL_PATH):
-    with open(__MODEL_PATH, "r", encoding="utf-8") as fh:
-        line = fh.readline()
-        __ON_RASPI = line.startswith("Raspberry")
+## Boolean flag indicating if running on Raspberry Pi hardware.
+__ON_RASPI = False
+
+
+def _detect_raspi() -> bool:
+    r"""!
+    Detect if running on Raspberry Pi by reading device tree model.
+
+    \return True if running on Raspberry Pi, False otherwise.
+    """
+    if __MODEL_PATH.exists():
+        with __MODEL_PATH.open("r") as fh:
+            line = fh.readline()
+            return line.startswith("Raspberry")
+    return False
+
+
+# Initialize the module-level flag
+__ON_RASPI = _detect_raspi()
 
 
 def on_raspi() -> bool:
-    """!
+    r"""!
     Check whether we are running on a Raspberry Pi.
     """
     return __ON_RASPI
@@ -34,17 +48,37 @@ def on_raspi() -> bool:
 
 def configure_agent_process() -> None:
     r"""!
-    Configure process to run as an agent on the Raspberry Pi.
+    Configure process to run on a dedicated CPU ID for better performance.
 
-    \note This function assumes we are running an underlying script. It won't
-    work from an interpreter.
+    The Linux kernel on Upkies is configured with CPU isolation so that we can
+    isolate the spine, CAN and Python processes on different CPU cores of the
+    Raspberry Pi. Typically the spine process runs on CPU ID 1, its CAN thread
+    on CPU ID 2, and the Python interpreter runs on CPU ID 3. (All other system
+    processes will run on CPU ID 0 by default.)
     """
-    if hasattr(sys, "ps1"):
-        raise UpkieRuntimeError(
-            "Cannot configure agent process from an interpreter"
+    current_affinity = os.sched_getaffinity(0)
+    if __AGENT_CPUID in current_affinity and len(current_affinity) == 1:
+        logger.info(
+            "The agent process is already running on CPU %d",
+            __AGENT_CPUID,
         )
-    if os.geteuid() != 0:
-        logging.info("Re-running as root to set the CPU affinity")
-        args = ["sudo", "-E", sys.executable] + sys.argv + [os.environ]
-        os.execlpe("sudo", *args)
-    os.sched_setaffinity(0, {__AGENT_CPUID})
+        return
+
+    try:
+        os.sched_setaffinity(0, {__AGENT_CPUID})
+        logger.info(
+            "Configured the agent process to run on CPU %d",
+            __AGENT_CPUID,
+        )
+    except PermissionError:
+        logger.warning(
+            "Error setting CPU affinity of the agent process to CPU %d. "
+            "Consider running with 'taskset -c %d' for better control "
+            "performance.",
+            __AGENT_CPUID,
+            __AGENT_CPUID,
+        )
+        logger.info(
+            "The agent process will be running on CPUs: %s",
+            str(sorted(current_affinity)),
+        )

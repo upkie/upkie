@@ -4,113 +4,129 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Inria
 
-"""Wheel balancing using model predictive control of an LTV system.
+"""Wheel balancing using model predictive control of an LTV system."""
 
-This implementation is not efficient but more concise than the MPC balancer.
-Check out the full agent to go further: https://github.com/upkie/mpc_balancer
-"""
+import argparse
+from typing import Tuple
 
 import gymnasium as gym
 import numpy as np
 
 import upkie.envs
-from upkie.exceptions import MissingOptionalDependency
-from upkie.utils.clamp import clamp_and_warn
-
-try:
-    from qpmpc import solve_mpc
-    from qpmpc.systems import WheeledInvertedPendulum
-except ModuleNotFoundError as exn:
-    raise MissingOptionalDependency(
-        "This example uses qpmpc: `[conda|pip] install qpmpc`"
-    ) from exn
+from upkie.controllers import MPCBalancer
 
 upkie.envs.register()
 
-
-def get_target_trajectory(
-    pendulum: WheeledInvertedPendulum,
-    state: np.ndarray,
-    target_vel: float = 0.0,
-) -> np.ndarray:
-    r"""!
-    Define the reference state trajectory over the receding horizon.
-
-    \param pendulum Instance from which we read receding-horizon properties.
-    \param state Initial state of the wheeled inverted pendulum system.
-    \param target_vel Target ground velocity in m/s.
-    \return Reference state trajectory over the horizon.
-    """
-    nx = WheeledInvertedPendulum.STATE_DIM
-    target_states = np.zeros((pendulum.nb_timesteps + 1) * nx)
-    for k in range(pendulum.nb_timesteps + 1):
-        target_states[k * nx] = (
-            state[0] + (k * pendulum.sampling_period) * target_vel
-        )
-        target_states[k * nx + 2] = target_vel
-    return target_states
+NB_STEPS = 5_000
+TARGET_GROUND_VELOCITY = 0.3  # m/s
 
 
-def run(env: gym.Env, nb_env_steps: int = 10_000) -> None:
-    r"""!
-    Balancer Upkie by closed-loop MPC on its gym environment.
-
-    \param env Gymnasium environment to Upkie.
-
-    \note This example rebuilds the QP problem at every step and does not
-    implement hot-starting, both of which impact performance. See the MPC
-    balancer agent for a more complete example.
-    """
-    pendulum = WheeledInvertedPendulum(
-        length=0.3,
-        max_ground_accel=10.0,
-        nb_timesteps=50,
-        sampling_period=0.02,
-    )
-    mpc_problem = pendulum.build_mpc_problem(
-        terminal_cost_weight=1.0,
-        stage_state_cost_weight=1e-2,
-        stage_input_cost_weight=1e-3,
+def select_gym_environment() -> str:
+    print("Select your Gymnasium environment:")
+    print("1. Upkie-Genesis-Pendulum \tself-contained Genesis simulation")
+    print("2. Upkie-PyBullet-Pendulum \tself-contained PyBullet simulation")
+    print(
+        "3. Upkie-Spine-Pendulum      \t"
+        "requires a running spine, e.g. from ./start_simulation.sh"
     )
 
-    env.reset()  # connects to the spine
-    commanded_velocity = 0.0
-    action = np.zeros(env.action_space.shape)
-    for step in range(nb_env_steps):
-        action[0] = commanded_velocity
-        observation, _, terminated, truncated, info = env.step(action)
-        if terminated or truncated:
-            observation, info = env.reset()
-            commanded_velocity = 0.0
+    env_name = ""
+    while not env_name:
+        try:
+            choice = input("Enter your choice: ").strip()
+            if choice == "1":
+                env_name = "Upkie-Genesis-Pendulum"
+            elif choice == "2":
+                env_name = "Upkie-PyBullet-Pendulum"
+            elif choice == "3":
+                env_name = "Upkie-Spine-Pendulum"
+            else:
+                print("Invalid choice. Please select 1, 2 or 3.")
+        except KeyboardInterrupt:
+            exit(0)
+    return env_name
 
-        theta, ground_pos, theta_dot, ground_vel = observation
-        initial_state = np.array([ground_pos, theta, ground_vel, theta_dot])
-        target_states = get_target_trajectory(pendulum, initial_state)
-        mpc_problem.update_initial_state(initial_state)
-        mpc_problem.update_goal_state(
-            target_states[-WheeledInvertedPendulum.STATE_DIM :]
-        )
-        mpc_problem.update_target_states(
-            target_states[: -WheeledInvertedPendulum.STATE_DIM]
-        )
 
-        # NB: we solve the MPC problem "cold" here, i.e. without hot-starting.
-        # This will likely take too much time to fit in a 200 Hz control loop
-        # on most current computers. See https://github.com/upkie/mpc_balancer
-        # for a more performant implementation that runs in real-time on a
-        # Raspberry Pi 4 Model B.
-        plan = solve_mpc(mpc_problem, solver="proxqp")
-        dt = env.unwrapped.dt
-        if not plan.is_empty:
-            commanded_accel = plan.first_input[0]
-            commanded_velocity = clamp_and_warn(
-                commanded_velocity + commanded_accel * dt / 2.0,
-                lower=-1.0,
-                upper=+1.0,
-                label="commanded_velocity",
-            )
+def parse_command_line_arguments() -> Tuple[str, dict]:
+    """Prompt user to choose between simulation environments."""
+    parser = argparse.ArgumentParser(
+        description="Model predictive control example", add_help=False
+    )
+    parser.add_argument(
+        "-e",
+        "--env",
+        choices=[
+            "Upkie-Genesis-Pendulum",
+            "Upkie-PyBullet-Pendulum",
+            "Upkie-Spine-Pendulum",
+        ],
+        help="Environment to train on",
+    )
+    args = parser.parse_args()
+    env_name = args.env if args.env is not None else select_gym_environment()
+    env_kwargs = {
+        "frequency": 200.0,
+        "frequency_checks": False,  # simulation steps run within env steps
+        "gui": True,
+    }
+    if env_name == "Upkie-PyBullet-Pendulum":
+        env_kwargs["nb_substeps"] = 5
+    return env_name, env_kwargs
 
 
 if __name__ == "__main__":
-    with gym.make("UpkieGroundVelocity-v4", frequency=200.0) as env:
-        run(env)
+    mpc_balancer = MPCBalancer()
+    env_name, env_kwargs = parse_command_line_arguments()
+    print(f"\nStarting MPC balancing with {env_name}...")
+
+    try:
+        with gym.make(env_name, **env_kwargs) as env:
+            _, info = env.reset()  # connects to the spine
+            action = np.zeros(env.action_space.shape)
+
+            print("\n--\n")
+            print(f"Running MPC balancing for {NB_STEPS} steps...")
+            print(f"Target ground velocity: {TARGET_GROUND_VELOCITY} m/s")
+            print("Press Ctrl+C to stop early.\n")
+
+            for step in range(NB_STEPS):
+                action[0] = mpc_balancer.compute_ground_velocity(
+                    target_ground_velocity=TARGET_GROUND_VELOCITY,  # m/s
+                    spine_observation=info["spine_observation"],
+                    dt=env.unwrapped.dt,
+                )
+                _, _, terminated, truncated, info = env.step(action)
+
+                # Print progress every 1000 steps
+                if (step + 1) % (NB_STEPS // 10) == 0:
+                    ground_pos = info["spine_observation"]["wheel_odometry"][
+                        "position"
+                    ]
+                    base_pitch = info["spine_observation"]["base_orientation"][
+                        "pitch"
+                    ]
+                    print(
+                        f"Step {step + 1:5d}: "
+                        f"Ground position = {ground_pos:6.3f} m, "
+                        f"Base pitch = {base_pitch:6.3f} rad"
+                    )
+
+                if terminated or truncated:
+                    print("Episode ended, resetting...")
+                    _, info = env.reset()
+
+            print("Example completed.")
+
+    except KeyboardInterrupt:
+        print("\nStopped by user.")
+
+    except Exception as e:
+        if "spine" in str(e).lower():
+            print(f"\nConnection error: {e}")
+            print(
+                "Make sure a spine running, for instance "
+                "a simulation started with: ./start_simulation.sh"
+            )
+        else:
+            print(f"\nError: {e}")
+        exit(1)

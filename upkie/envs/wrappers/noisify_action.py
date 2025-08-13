@@ -4,6 +4,9 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Inria
 
+## \namespace upkie.envs.wrappers.noisify_action
+## \brief Add noise to the action of an environment.
+
 """Add noise to the action of an environment."""
 
 import gymnasium as gym

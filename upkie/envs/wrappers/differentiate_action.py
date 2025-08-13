@@ -4,6 +4,9 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Inria
 
+## \namespace upkie.envs.wrappers.differentiate_action
+## \brief Act on the derivative of the action.
+
 from typing import Tuple
 
 import gymnasium as gym

@@ -7,6 +7,89 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [9.0.0] - 2025-08-14
+
+### Added
+
+- **Major:** Add Gymnasium environments with the Genesis simulator
+- **Major:** Add Gymnasium environments with the PyBullet simulator
+- **Major:** Add `rlb3_trainer` agent based on [RL Baselines3 Zoo](https://github.com/DLR-RM/rl-baselines3-zoo)
+- **Major:** Add trajectory-player agent
+- agent: Add `start_mpc_balancer.sh` script to the repository
+- agent: Import MPC balancer from previous Pink balancer
+- config: Load user configuration from `~/.config/upkie`
+- control: Create `upkie.controllers` submodule
+- control: Import MPC balancer class from the Pink balancer
+- cpp: Add documentation to the moteus actuation interface
+- cpp: Controller pipeline run by the spine after observers
+- deps: Add dependency on PyYAML
+- envs: Abstract base class for environments named `UpkieEnv`
+- envs: Add Genesis backend
+- envs: Add PyBullet backend
+- envs: Add internal `upkie.envs.backends` submodule
+- envs: New `Upkie-Mock-Pendulum` environment
+- envs: New `Upkie-Mock-Servos` environment
+- envs: New `Upkie-PyBullet-Pendulum` environment
+- envs: New `Upkie-PyBullet-Servos` environment
+- examples: Genesis lying genuflection example
+- examples: Trying a Genesis simulation environment
+- examples: Trying a PyBullet simulation environment
+- exceptions: Raise `UpkieTimeoutError` upon spine timeout
+- logging: Add `disable_warnings` helper function
+- model: List joint names in `Model` class
+- spines: Log buffer size of the logger itself
+- utils: Joystick utility class
+- utils: Wrap quaternion conversion function from SciPy
+
+### Changed
+
+- **Breaking:** Move `upkie.spine` submodule to `upkie.envs.backends.spine`
+- **Breaking:** Rename `UpkieGroundVelocity` Gymnasium environment to `Upkie-Spine-Pendulum`
+- **Breaking:** Rename `UpkieGroundVelocity` wrapper to `UpkiePendulum`
+- **Breaking:** Rename `UpkieServos` Gymnasium environment to `Upkie-Spine-Servos`
+- **Breaking:** Rename `interfaces` C++ namespace from `actuation`
+- **Breaking:** Rename `upkie.logging` submodule from `upkie.utils.spdlog`
+- CICD: Move coverage and lint rules from the Makefile to Pixi tasks
+- CICD: Separate jobs for C++ and Python library testing
+- CICD: Switch to Pixi in CI workflow
+- CICD: Switch to pytest for Python unit tests
+- Clean up Python cache directories upon `make clean`
+- Restrict Bazel to C++ tasks and use Pixi for Python tasks in development workflow
+- cpp: Fix Bazel imports of C++ packages going up the dependency tree
+- cpp: Limit rate of SynchronousClock skip warnings and report frequency drop
+- cpp: Update mpacklog.cpp to version 3.2.0
+- deps: Bump loop-rate-limiters to 1.2.0
+- envs: Allow gain scales larger than one in servo environments
+- envs: Allow parallel simulations, clearing up the CPU bottleneck
+- envs: Class `UpkieServos` is now a subclass of `UpkieEnv`
+- envs: Drop Gymnasium environment versioning
+- examples: Allow users to select the Gymnasium environment in MPC example
+- examples: Rename PyBullet lying genuflection example
+- logging: Use an "upkie" logger rather than the global logger
+- model: Load the URDF description from `upkie_description` by default
+- nit: Remove brackets around SI units in documentation and comments
+- spines: Factor common observers and sensors between spines
+- spines: Throttle clock warning frequency based on time and performance drop
+- tools: Update script to dump moteus servo configurations
+- utils: Generalize `abs_bounded_derivative_filter` to vector inputs
+- utils: Generalize `bounded_derivative_filter` to vector inputs
+- utils: Use `pathlib` rather than `os.path` in Raspberry Pi detection
+
+### Fixed
+
+- exceptions: Fix error message reporting of UpkieError base class
+- exceptions: Make sure we stop the spine even upon interruption
+- spines: Add exception handling to all three spines
+- spines: Handle empty user replies when no joystick is found
+- utils: Fix incorrect check on inability to set affinity from an interpreter
+- utils: Remove unnecessary requirement to configure the agent process as root
+
+### Removed
+
+- **Breaking:** Remove output bound from `abs_bounded_derivative_filter`
+- **Breaking:** Remove output bound from `bounded_derivative_filter`
+- cpp: Remove palimpsest Bazel package that is already upstream from mpacklog
+
 ## [8.1.1] - 2025-07-21
 
 ### Changed
@@ -33,6 +116,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - envs: Remove UpkieServoPositions and UpkieServoTorques environments
+- envs: Remove UpkieServoPositions and UpkieServoTorques environments
+- envs: Remove `log` function from spine environment
+- envs: Remove observation-based reward wrapper
 
 ## [8.0.0] - 2025-05-08
 
@@ -796,7 +882,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Starting this changelog.
 
-[unreleased]: https://github.com/upkie/upkie/compare/v8.1.1...HEAD
+[unreleased]: https://github.com/upkie/upkie/compare/v9.0.0...HEAD
+[9.0.0]: https://github.com/upkie/upkie/compare/v8.1.1...v9.0.0
 [8.1.1]: https://github.com/upkie/upkie/compare/v8.1.0...v8.1.1
 [8.1.0]: https://github.com/upkie/upkie/compare/v8.0.0...v8.1.0
 [8.0.0]: https://github.com/upkie/upkie/compare/v7.0.0...v8.0.0

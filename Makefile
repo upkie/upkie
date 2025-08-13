@@ -22,7 +22,6 @@ help:
 	@echo "\nRaspberry Pi targets:\n"
 	@grep -P '^[a-zA-Z0-9_-]+:.*?### .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?### "}; {printf "    \033[36m%-24s\033[0m %s\n", $$1, $$2}'
 	@echo ""  # manicure
-.DEFAULT_GOAL := help
 
 # HOST TARGETS
 # ============
@@ -47,56 +46,64 @@ check_upkie_name:
 .PHONY: clean
 clean: clean_broken_links  ## clean all local build and intermediate files
 	$(BAZEL) clean --expunge
+	find $(CURDIR) -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
+	rm -rf $(CURDIR)/cache $(CURDIR)/dist
 
 .PHONY: clean_broken_links
 clean_broken_links:
-	find -L $(CURDIR) -type l ! -exec test -e {} \; -delete
+	find -L $(CURDIR) -type l ! -exec test -e {} \; -delete 2>/dev/null || true
+
+.PHONY: pack_pixi_env
+pack_pixi_env:  ## pack pixi environment to environment.tar
+	pixi run pack
 
 .PHONY: run_bullet_spine
-run_bullet_spine:  ## run the Bullet simulation spine
+run_bullet_spine:  ## build and run the Bullet spine
 	$(BAZEL) run //spines:bullet_spine -- --show
 
-# This rule is handy if the target Upkie is not connected to the Internet
 .PHONY: set_date
-set_date: check_upkie_name
+set_date: check_upkie_name  ## set Upkie's date if it is not connected to the Internet
 	ssh ${UPKIE_NAME} sudo date -s "$(CURDATE)"
+
+.PHONY: test_cpp
+test_cpp:  ## run C++ unit tests
+	$(BAZEL) test //upkie/...
 
 # Running `raspunzel -s` can create __pycache__ directories owned by root
 # that rsync is not allowed to remove. We therefore give permissions first.
 .PHONY: upload
-upload: check_upkie_name build set_date  ## upload built targets to the Raspberry Pi
+upload: check_upkie_name build  ## upload built targets to the Raspberry Pi
 	ssh ${UPKIE_NAME} mkdir -p $(PROJECT_NAME)
 	ssh ${UPKIE_NAME} sudo find $(PROJECT_NAME) -type d -name __pycache__ -user root -exec chmod go+wx {} "\;"
-	rsync -Lrtu --delete-after --delete-excluded \
+	rsync -Lrtu --delete-after \
 		--exclude .mypy_cache/ \
 		--exclude .pixi \
+		--exclude .pytest_cache \
+		--exclude .ruff_cache \
 		--exclude __pycache__ \
 		--exclude bazel-$(CURDIR_NAME) \
 		--exclude bazel-$(PROJECT_NAME)/ \
 		--exclude bazel-out/ \
 		--exclude bazel-testlogs/ \
 		--exclude cache/ \
+		--exclude docs/html \
+		--exclude logs/\*.mpack \
+		--exclude logs/ppo \
+		--exclude logs/tensorboard \
 		--exclude tools/bazel \
-		--exclude tools/logs/\*.mpack \
-		--exclude tools/raspios \
 		--progress $(CURDIR)/ ${UPKIE_NAME}:$(PROJECT_NAME)/
-
-pack_env:  ## pack pixi environment to environment.tar
-	pixi run pack-to-aarch64
 
 # REMOTE TARGETS
 # ==============
 
-check_mamba_setup:
-	@ if [ -z "${MAMBA_ROOT_PREFIX}" ]; then \
-        echo "ERROR: Either MAMBA_EXE or MAMBA_ROOT_PREFIX is not set."; \
-        echo "Is Micromamba installed?"; \
-        echo "See https://mamba.readthedocs.io/en/latest/installation/micromamba-installation.html"; \
-        exit 1; \
+run_mpc_balancer:  ### run agent
+	@if [ -f $(CURDIR)/activate.sh ]; then \
+		echo "Running MPC balancer from packed environment..."; \
+		. $(CURDIR)/activate.sh && python -m agents.mpc_balancer; \
+	else \
+		echo "Running MPC balancer directly..."; \
+		python -m agents.mpc_balancer; \
 	fi
-
-unpack_env: check_mamba_setup  ### unpack pixi environment from environment.tar
-	pixi-pack unpack environment.tar -e upkie -o ${MAMBA_ROOT_PREFIX}/envs
 
 run_mock_spine:  ### run the mock spine on the Raspberry Pi
 	$(RASPUNZEL) run -s //spines:mock_spine
@@ -105,24 +112,9 @@ run_mock_spine:  ### run the mock spine on the Raspberry Pi
 run_pi3hat_spine:  ### run the pi3hat spine on the Raspberry Pi
 	$(RASPUNZEL) run -s //spines:pi3hat_spine
 
-# DEV HELPERS
-# ===========
-
-.PHONY: coverage
-coverage:  # check unit test coverage and open the resulting HTML report
-	$(BAZEL) coverage --combined_report=lcov --compilation_mode=fastbuild --instrument_test_targets //...
-	@if [ -z "$(shell which genhtml)" ]; then\
-		echo "ERROR: genhtml not found, is lcov installed?"; \
-	else \
-		genhtml $(COVERAGE_DIR)/_coverage_report.dat -o $(COVERAGE_DIR); \
-		xdg-open $(COVERAGE_DIR)/index.html; \
-	fi
-
-.PHONY: lint
-lint:
-	$(BAZEL) test --config lint //...
-	ruff check $(CURDIR)/upkie
-
-.PHONY: test
-test:
-	$(BAZEL) test //...
+unpack_pixi_env:  ### unpack Python environment
+	@pixi-unpack environment.tar -e upkie -o ${MAMBA_ROOT_PREFIX}/envs || { \
+		echo "Error: pixi-pack not found"; \
+		echo "See https://github.com/Quantco/pixi-pack?tab=readme-ov-file#-installation"; \
+		exit 1; \
+	}

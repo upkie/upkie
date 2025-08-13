@@ -28,9 +28,30 @@ cc_library(
 )
 
 cc_library(
+    name = "wheel_balancer",
+    hdrs = ["WheelBalancer.h"],
+    srcs = ["WheelBalancer.cpp"],
+    deps = [
+        ":controller",
+        "//upkie/cpp/utils:low_pass_filter",
+    ],
+)
+
+cc_library(
+    name = "wheel_stopper",
+    hdrs = ["WheelStopper.h"],
+    srcs = ["WheelStopper.cpp"],
+    deps = [
+        ":controller",
+    ],
+)
+
+cc_library(
     name = "controllers",
     deps = [
         ":controller_pipeline",
+        ":wheel_balancer",
+        ":wheel_stopper",
     ],
 )
 

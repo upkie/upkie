@@ -32,20 +32,27 @@ class ModelError(UpkieException):
     """
 
 
+class PerformanceIssue(UpkieException):
+    """!
+    Raised when a performance issue is detected.
+    """
+
+
+class SpineError(UpkieException):
+    """!
+    Raised when the spine sets an error flag.
+
+    The error flag is read from the request field of the shared memory map.
+    """
+
+
 class UpkieRuntimeError(UpkieException, RuntimeError):
     """!
     Runtime error, for instance an invalid call to a library function.
     """
 
 
-class PerformanceIssue(UpkieException):
+class UpkieTimeoutError(UpkieException, TimeoutError):
     """!
-    Exception raised when a performance issue is detected.
-    """
-
-
-class SpineError(UpkieException):
-    """!
-    Exception raised when the spine sets an error flag in the request field of
-    the shared memory map.
+    Raised when something times out, typically the spine not responding.
     """

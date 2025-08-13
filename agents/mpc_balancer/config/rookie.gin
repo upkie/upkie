@@ -1,0 +1,5 @@
+# -*- python -*-
+#
+# SPDX-License-Identifier: Apache-2.0
+
+WheelController.wheel_radius = 0.055  # m

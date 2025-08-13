@@ -15,10 +15,10 @@ cc_binary(
         "@upkie_description",
     ],
     deps = [
-        "//upkie/cpp/actuation:bullet_interface",
-        "//upkie/cpp/observers",
-        "//upkie/cpp/observers:history_observer",
-        "//upkie/cpp/sensors",
+        "//spines/common",
+        "//upkie/cpp/interfaces:bullet_interface",
+        "//upkie/cpp/controllers:wheel_balancer",
+        "//upkie/cpp/controllers:wheel_stopper",
         "//upkie/cpp/spine",
         "//upkie/cpp/utils:clear_shared_memory",
         "//upkie/cpp/utils:get_log_path",
@@ -32,12 +32,13 @@ cc_binary(
         "mock_spine.cpp",
     ],
     deps = [
-        "//upkie/cpp/actuation:mock_interface",
+        "//upkie/cpp/interfaces:mock_interface",
         "//upkie/cpp/observers",
         "//upkie/cpp/sensors",
         "//upkie/cpp/spine",
         "//upkie/cpp/utils:get_log_path",
         "//upkie/cpp:version",
+        "//spines/common",
     ] + select({
         "//:pi64_config": [
             "@org_llvm_libcxx//:libcxx",
@@ -53,13 +54,16 @@ cc_binary(
         "pi3hat_spine.cpp",
     ],
     deps = [
+        "//spines/common",
+        "//upkie/cpp/controllers:wheel_balancer",
+        "//upkie/cpp/controllers:wheel_stopper",
         "//upkie/cpp/observers",
         "//upkie/cpp/sensors",
         "//upkie/cpp/spine",
         "//upkie/cpp/utils:get_log_path",
         "//upkie/cpp:version",
     ] + select({
-        "//:pi64_config": ["//upkie/cpp/actuation:pi3hat_interface"],
+        "//:pi64_config": ["//upkie/cpp/interfaces:pi3hat_interface"],
         "//conditions:default": [],
     }),
     target_compatible_with = select({
