@@ -84,40 +84,6 @@ pyyaml = ">=5.3.1"
 scipy = ">=1.10.0"
 upkie_description = ">=2.1.0"
 
-[tool.pixi.feature.agent-mpc-balancer.dependencies]
-gin-config = ">=0.5.0"
-meshcat-shapes = ">=0.3.0"
-pink = ">=3.0.0,<4"
-pinocchio = ">=3.1.0,<4"
-proxsuite = ">=0.4.1"
-qpmpc = ">=3.0.1,<4"
-
-[tool.pixi.feature.agent-mpc-balancer.tasks]
-upkie-mpc-balancer = "python -m agents.mpc_balancer"
-
-[tool.pixi.feature.agent-trajectory-player.dependencies]
-gin-config = ">=0.5.0"
-meshcat-shapes = ">=0.3.0"
-pandas = "*"
-pink = ">=3.0.0,<4"
-proxsuite = ">=0.4.1"
-qpmpc = ">=3.0.1,<4"
-
-[tool.pixi.feature.agent-trajectory-player.tasks]
-upkie-jolly-jumper = "python agents/trajectory_player/run.py agents/trajectory_player/trajectories/upkie_jump_v3.csv"
-
-[tool.pixi.feature.agent-rlb3-trainer.dependencies]
-pybullet = ">=3"
-stable-baselines3 = ">=2.3.0"
-tensorboard = "*"
-
-[tool.pixi.feature.agent-rlb3-trainer.pypi-dependencies]
-rl-zoo3 = ">=2.6.0"
-
-[tool.pixi.feature.agent-rlb3-trainer.tasks]
-upkie-train-policy = "python agents/rlb3_trainer/train.py"
-upkie-enjoy-policy = "python agents/rlb3_trainer/enjoy.py"
-
 [tool.pixi.feature.coverage.dependencies]
 lcov = "*"
 
@@ -130,7 +96,7 @@ coverage-open = { cmd = "xdg-open bazel-out/_coverage/index.html", depends-on = 
 doxygen = "<=1.9.5"
 graphviz = "*"
 make = "*"
-"stable-baselines3" = "*"
+"stable-baselines3" = ">=2.3.0"
 
 [tool.pixi.feature.docs.tasks]
 docs-make = "doxygen --version && cd docs && make"
@@ -148,8 +114,8 @@ genesis-world = ">=0.3.0"
 torch = ">=2.6.0"
 torchvision = ">=0.21.0"
 
-[tool.pixi.feature.genesis.tasks]
-simulator-genesis = "python examples/model_predictive_control.py --env Upkie-Genesis-Pendulum"
+[tool.pixi.feature.try-genesis.tasks]
+try-genesis = "python examples/model_predictive_control.py --env Upkie-Genesis-Pendulum"
 
 [tool.pixi.feature.lint.dependencies]
 six = "*"
@@ -160,6 +126,17 @@ lint-bazel = { cmd = "tools/bazelisk test --config lint //upkie/..." }
 lint-ruff = { cmd = "ruff check upkie" }
 lint-ruff-format = { cmd = "ruff format --check upkie" }
 lint = { depends-on = ["lint-bazel", "lint-ruff", "lint-ruff-format"] }
+
+[tool.pixi.feature.mpc-balancer.dependencies]
+gin-config = ">=0.5.0"
+meshcat-shapes = ">=0.3.0"
+pink = ">=3.0.0,<4"
+pinocchio = ">=3.1.0,<4"
+proxsuite = ">=0.4.1"
+qpmpc = ">=3.0.1,<4"
+
+[tool.pixi.feature.mpc-balancer.tasks]
+upkie-mpc-balancer = "python -m agents.mpc_balancer"
 
 [tool.pixi.feature.pack.dependencies]
 gin-config = ">=0.5.0"
@@ -195,8 +172,21 @@ proxsuite = ">=0.4.1"
 pybullet = ">=3"
 qpmpc = ">=3.0.1,<4"
 
-[tool.pixi.feature.pybullet.tasks]
-simulator-pybullet = "python examples/model_predictive_control.py --env Upkie-PyBullet-Pendulum"
+[tool.pixi.feature.try-pybullet.tasks]
+try-pybullet = "python examples/model_predictive_control.py --env Upkie-PyBullet-Pendulum"
+
+[tool.pixi.feature.rlb3.pypi-dependencies]
+rl-zoo3 = ">=2.6.0"
+stable-baselines3 = ">=2.3.0"
+tensorboard = "*"
+
+[tool.pixi.feature.rlb3-genesis.tasks]
+upkie-train-genesis = "python agents/rlb3_trainer/train.py --env Upkie-Genesis-Pendulum"
+upkie-enjoy-genesis = "python agents/rlb3_trainer/enjoy.py --env Upkie-Genesis-Pendulum"
+
+[tool.pixi.feature.rlb3-pybullet.tasks]
+upkie-train-pybullet = "python agents/rlb3_trainer/train.py --env Upkie-PyBullet-Pendulum"
+upkie-enjoy-pybullet = "python agents/rlb3_trainer/enjoy.py --env Upkie-PyBullet-Pendulum"
 
 [tool.pixi.feature.test.dependencies]
 pybullet = ">=3"
@@ -206,21 +196,30 @@ pytest = "*"
 [tool.pixi.feature.test.tasks]
 test = "pytest tests/"
 
+[tool.pixi.feature.trajectory-player.dependencies]
+gin-config = ">=0.5.0"
+meshcat-shapes = ">=0.3.0"
+pandas = "*"
+pink = ">=3.0.0,<4"
+proxsuite = ">=0.4.1"
+qpmpc = ">=3.0.1,<4"
+
 [tool.pixi.environments]
-agent-mpc-balancer = { features = ["agent-mpc-balancer"], solve-group = "agent-mpc-balancer" }
-agent-rlb3-trainer = { features = ["agent-rlb3-trainer"], solve-group = "agent-rlb3-trainer" }
-agent-trajectory-player = { features = ["agent-trajectory-player"], solve-group = "agent-trajectory-player" }
 coverage = { features = ["coverage"], solve-group = "default" }
 default = { features = [], solve-group = "default" }
 docs = { features = ["docs"], solve-group = "default" }
-genesis = { features = ["genesis"], solve-group = "genesis" }
+genesis = { features = ["genesis", "try-genesis"], solve-group = "genesis" }
 lint = { features = ["lint"], solve-group = "default" }
+mpc-balancer = { features = ["mpc-balancer"], solve-group = "mpc-balancer" }
 pack = { features = ["pack"], solve-group = "default" }
-pybullet = { features = ["pybullet"], solve-group = "pybullet" }
+pybullet = { features = ["pybullet", "try-pybullet"], solve-group = "pybullet" }
+rlb3-genesis = { features = ["rlb3", "genesis", "rlb3-genesis"], solve-group = "genesis" }
+rlb3-pybullet = { features = ["rlb3", "pybullet", "rlb3-pybullet"], solve-group = "pybullet" }
 test-py310 = { features = ["py310", "test"], solve-group = "py310" }
 test-py311 = { features = ["py311", "test"], solve-group = "py311" }
 test-py312 = { features = ["py312", "test"], solve-group = "py312" }
 test-py39 = { features = ["py39", "test"], solve-group = "py39" }
+trajectory-player = { features = ["trajectory-player"], solve-group = "trajectory-player" }
 
 [tool.ruff]
 line-length = 79
