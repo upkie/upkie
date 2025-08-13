@@ -77,25 +77,30 @@ void Spine::reset(const Dictionary& config) {
 
 void Spine::log_working_dict(
     std::optional<std::reference_wrapper<utils::SynchronousClock>> clock) {
-  // Log spine entries to the working dictionary
   Dictionary& spine = working_dict_("spine");
+
+  // Clock properties
   if (clock) {
     spine("clock")("measured_period") = clock->get().measured_period();
     spine("clock")("skip_count") = clock->get().skip_count();
     spine("clock")("slack") = clock->get().slack();
   }
-  spine("logger_last_size") = static_cast<uint32_t>(logger_.last_size());
+
+  // MessagePack logger properties
+  spine("logger")("last_size") = static_cast<uint32_t>(logger_.last_size());
+
+  // Spine properties
   spine("rx_count") = static_cast<uint32_t>(rx_count_);
   spine("state_cycle_beginning") =
       static_cast<uint32_t>(state_cycle_beginning_);
   spine("state_cycle_end") = static_cast<uint32_t>(state_cycle_end_);
 
-  // Log full working dictionary
+  // Proceed to log the full working dictionary
   if (!logger_.put(working_dict_)) {
     spdlog::warn("Could not log spine dictionary, logger is full");
   }
 
-  // Log configuration dictionary at most once (at reset)
+  // If there is a configuration dictionary, we log it at most once (at reset)
   if (working_dict_.has("config")) {
     working_dict_.remove("config");
   }
