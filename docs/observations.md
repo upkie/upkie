@@ -13,7 +13,7 @@ The base orientation observer estimates the orientation of the floating base wit
 
 | Observation key | Description |
 |-----------------|-------------|
-| `base_orientation.angular_velocity` | Body angular velocity vector of the base frame in [rad] / [s] |
+| `base_orientation.angular_velocity` | Body angular velocity vector of the base frame in rad/s |
 | `base_orientation.pitch` | Pitch angle of the base frame relative to the world frame, in radians |
 
 <img src="https://upkie.github.io/upkie/observers.png" align="right">
@@ -30,7 +30,7 @@ The floor contact observer detects contact between the wheels and the floor. The
 | `contact`          | Boolean contact state |
 | `left_wheel`       | Wheel contact observation for the left wheel |
 | `right_wheel`      | Wheel contact observation for the right wheel |
-| `upper_leg_torque` | Mean squared upper-leg torques in [N m] |
+| `upper_leg_torque` | Mean squared upper-leg torques in N⋅m |
 
 ### Wheel contact
 
@@ -41,8 +41,8 @@ Internally, the floor contact observer relies on two wheel contact observers, on
 
 | Observation key    | Description |
 |--------------------|-------------|
-| `abs_acceleration` | Low-pass filtered absolute wheel acceleration in [rad] / [s]² |
-| `abs_torque`       | Low-pass filtered absolute wheel torque in [N m] |
+| `abs_acceleration` | Low-pass filtered absolute wheel acceleration in rad/s² |
+| `abs_torque`       | Low-pass filtered absolute wheel torque in N⋅m |
 | `contact`          | Current contact state (boolean) |
 | `inertia`          | Apparent inertia I = |torque| / |acceleration| at the wheel |
 
@@ -80,11 +80,11 @@ observer_pipeline.append_observer(linear_acceleration_history);
 
 | Observation key | Description |
 |-----------------|-------------|
-| `angular_velocity` | [Body angular velocity](\ref upkie::cpp::interfaces::ImuData::angular_velocity_imu_in_imu) of the IMU frame in [rad] / [s] |
-| `linear_acceleration` | [Linear acceleration](\ref upkie::cpp::interfaces::ImuData::linear_acceleration_imu_in_imu) of the IMU, with gravity filtered out, in [m] / [s]² |
+| `angular_velocity` | [Body angular velocity](\ref upkie::cpp::interfaces::ImuData::angular_velocity_imu_in_imu) of the IMU frame in rad/s |
+| `linear_acceleration` | [Linear acceleration](\ref upkie::cpp::interfaces::ImuData::linear_acceleration_imu_in_imu) of the IMU, with gravity filtered out, in m/s² |
 | `orientation` | [Orientation of the IMU frame](\ref upkie::cpp::interfaces::ImuData::orientation_imu_in_ars) in the [ARS](\ref ars) frame as a unit quaternion (w, x, y, z) |
-| `raw_angular_velocity` | [Raw angular velocity](\ref upkie::cpp::interfaces::ImuData::raw_angular_velocity) measured by the gyroscope of the IMU, in [rad] / [s] |
-| `raw_linear_acceleration` | [Raw linear acceleration](\ref upkie::cpp::interfaces::ImuData::raw_linear_acceleration) measured by the accelerometer of the IMU, in [m] / [s]² |
+| `raw_angular_velocity` | [Raw angular velocity](\ref upkie::cpp::interfaces::ImuData::raw_angular_velocity) measured by the gyroscope of the IMU, in rad/s |
+| `raw_linear_acceleration` | [Raw linear acceleration](\ref upkie::cpp::interfaces::ImuData::raw_linear_acceleration) measured by the accelerometer of the IMU, in m/s² |
 
 The inertial measurement unit (IMU) mounted on the [pi3hat](https://mjbots.com/products/mjbots-pi3hat-r4-5) combines an accelerometer and a gyroscope. These raw measurements are converted onboard by an unscented Kalman filter (based on a standard quasi-static assumption) that outputs observed quantities with respect to an attitude reference system (ARS) frame.
 
@@ -98,9 +98,9 @@ There are three main frames to keep in mind when considering the IMU: the frame 
 | Observation key         | Description |
 |-------------------------|-------------|
 | `<servo_name>`          | Observations for a given servo, *e.g. `left_hip` |
-| `<servo_name>.position` | Angle between the stator and the rotor in [rad] |
-| `<servo_name>.torque`   | Joint torque in [N m] |
-| `<servo_name>.velocity` | Angular velocity of the rotor w.r.t. stator in rotor, in [rad] / [s] |
+| `<servo_name>.position` | Angle between the stator and the rotor in radians |
+| `<servo_name>.torque`   | Joint torque in N⋅m |
+| `<servo_name>.velocity` | Angular velocity of the rotor w.r.t. stator in rotor, in rad/s |
 
 Actuators on the robot are [qdd100 beta 3](https://mjbots.com/products/qdd100-beta-3) (hips and knees) and [mj5208 brushless motors](https://mjbots.com/products/mj5208) (wheels). All of them have [moteus](https://mjbots.com/products/moteus-r4-11) controller boards that provide the above measurements. They are estimated as follows:
 
@@ -123,10 +123,10 @@ Positions and velocities of the base frame:
 
 | Observation key         | Description |
 |-------------------------|-------------|
-| `base.position`         | Position of the base frame in the world frame, in [m] |
+| `base.position`         | Position of the base frame in the world frame, in meters |
 | `base.orientation`      | Unit quaternion (q, x, y, z) of the orientation of the base frame in the world frame |
-| `base.linear_velocity`  | Linear velocity from base to world in world, in [m] / [s] |
-| `base.angular_velocity` | Angular velocity from base to world in world, in [rad] / [s] |
+| `base.linear_velocity`  | Linear velocity from base to world in world, in m/s |
+| `base.angular_velocity` | Angular velocity from base to world in world, in rad/s |
 
 ### IMU non-observables
 
@@ -136,7 +136,7 @@ Non-observable quantities related to the IMU:
 
 | Observation key   | Description |
 |-------------------|-------------|
-| `linear_velocity` | Linear velocity of the IMU frame in the world frame, in [m] / [s] |
+| `linear_velocity` | Linear velocity of the IMU frame in the world frame, in m/s |
 
 ### Rigid bodies
 
@@ -147,7 +147,7 @@ Coordinates of some rigid bodies in the world frame:
 | Observation key   | Description |
 |-------------------|-------------|
 | `YYY`             | Positions and velocities of the extra body YYY |
-| `YYY.position`    | Position of YYY in the world frame, in [m] |
+| `YYY.position`    | Position of YYY in the world frame, in meters |
 | `YYY.orientation` | Unit quaternion (q, x, y, z) of the orientation of YYY in the world frame |
 
 ## Wheel odometry
@@ -159,5 +159,5 @@ This observer measures the relative motion of the robot with respect to the floo
 
 | Observation key | Description                  |
 |-----------------|------------------------------|
-| `position`      | Ground position in [m]       |
-| `velocity`      | Ground velocity in [m] / [s] |
+| `position`      | Ground position in meters    |
+| `velocity`      | Ground velocity in m/s       |

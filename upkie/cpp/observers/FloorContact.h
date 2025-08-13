@@ -79,7 +79,7 @@ class FloorContact : public Observer {
     //! Wheel contact observer configuration
     WheelContact::Parameters wheel_contact_params;
 
-    //! Threshold for upper leg torques, in [N m]
+    //! Threshold for upper leg torques, in N⋅m
     double upper_leg_torque_threshold = 10.0;
   };
 
@@ -128,7 +128,7 @@ class FloorContact : public Observer {
   //! Wheel contact observers
   std::unordered_map<std::string, WheelContact> wheel_contacts_;
 
-  //! Norm of the upper-leg joint torque vector, in [N m]
+  //! Norm of the upper-leg joint torque vector, in N⋅m.
   double upper_leg_torque_;
 
   //! True if and only if the observer detects a contact.

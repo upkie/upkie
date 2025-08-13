@@ -23,19 +23,19 @@ struct QueryResult {
   //! Control mode
   Mode mode = Mode::kStopped;
 
-  //! Angular position in [rev]
+  //! Angular position in revolutions
   double position = std::numeric_limits<double>::quiet_NaN();
 
-  //! Angular velocity in [rev] / [s]
+  //! Angular velocity in rev/s
   double velocity = std::numeric_limits<double>::quiet_NaN();
 
-  //! Torque in [N m]
+  //! Torque in N⋅m
   double torque = std::numeric_limits<double>::quiet_NaN();
 
-  //! Q-phase current in [A]
+  //! Q-phase current in A
   double q_current = std::numeric_limits<double>::quiet_NaN();
 
-  //! D-phase current in [A]
+  //! D-phase current in A
   double d_current = std::numeric_limits<double>::quiet_NaN();
 
   /*! Boolean flag used to figure out the output zero of a servo.

@@ -218,7 +218,7 @@ if __name__ == "__main__":
                 spine_observation=info["spine_observation"],
                 dt=env.unwrapped.dt,
             )
-            WHEEL_RADIUS = 0.06  # meters
+            WHEEL_RADIUS = 0.06  # m
             wheel_velocity = ground_velocity / WHEEL_RADIUS
             action["left_wheel"]["velocity"] += wheel_velocity
             action["right_wheel"]["velocity"] -= wheel_velocity

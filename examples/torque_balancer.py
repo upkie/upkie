@@ -12,7 +12,7 @@ import upkie.envs
 
 upkie.envs.register()
 
-GAIN = 10.0  # base pitch to wheel torque, in [N m] / [rad]
+GAIN = 10.0  # base pitch to wheel torque, in N⋅m/rad
 
 
 def run(env: upkie.envs.UpkieServos):

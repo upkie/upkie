@@ -180,7 +180,7 @@ class CommandLineArguments {
  */
 BulletInterface make_actuation_interface(const char* argv0,
                                          const CommandLineArguments& args) {
-  const double base_altitude = args.space ? 0.0 : 0.6;  // [m]
+  const double base_altitude = args.space ? 0.0 : 0.6;  // m
   BulletInterface::Parameters params(Dictionary{});
   params.argv0 = argv0;
   params.dt = 1.0 / args.spine_frequency;

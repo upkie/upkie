@@ -48,13 +48,13 @@ class WheelBalancer : public Controller {
     //! Half the distance between the two wheels, in meters.
     double contact_radius = 0.1524;
 
-    //! Spine timestep in [s].
+    //! Spine timestep in seconds.
     double dt;
 
-    //! Fall pitch angle in [rad].
+    //! Fall pitch angle in radians.
     double fall_pitch = 1.0;
 
-    //! Maximum ground velocity, in [m] / [s].
+    //! Maximum ground velocity, in m/s.
     double max_ground_velocity = 2.0;
 
     /*! Pitch error (normalized) damping gain.
@@ -85,10 +85,10 @@ class WheelBalancer : public Controller {
      */
     double position_stiffness = 1.6;
 
-    //! Magnitude of yaw velocity in [rad] / [s] above which legs get stiffer.
+    //! Magnitude of yaw velocity in rad/s above which legs get stiffer.
     double stiff_yaw_velocity = 0.1;
 
-    //! Wheel radius in [m].
+    //! Wheel radius in meters.
     double wheel_radius = 0.06;
   };
 
@@ -124,16 +124,16 @@ class WheelBalancer : public Controller {
   //! Controller parameters.
   Parameters params_;
 
-  //! Ground velocity offset used for balancing, in [m] / [s].
+  //! Ground velocity offset used for balancing, in m/s.
   double ground_velocity_;
 
-  //! Ground velocity offset due to the integral error, in [m] / [s].
+  //! Ground velocity offset due to the integral error, in m/s.
   double integral_velocity_;
 
-  //! Target ground position in [m].
+  //! Target ground position in meters.
   double target_ground_position_;
 
-  //! Target yaw velocity in [rad] / [s].
+  //! Target yaw velocity in rad/s.
   double target_yaw_velocity_;
 };
 

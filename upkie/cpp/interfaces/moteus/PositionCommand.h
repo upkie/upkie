@@ -22,13 +22,13 @@ namespace moteus {
  * interface.
  */
 struct PositionCommand {
-  //! Target position in [rev].
+  //! Target position in revolutions.
   double position = 0.0;
 
-  //! Target velocity in [rev] / [s].
+  //! Target velocity in rev/s.
   double velocity = 0.0;
 
-  //! Feedforward torque in [N m].
+  //! Feedforward torque in N⋅m.
   double feedforward_torque = 0.0;
 
   //! Proportional gain scaling factor.
@@ -37,13 +37,13 @@ struct PositionCommand {
   //! Derivative gain scaling factor.
   double kd_scale = 1.0;
 
-  //! Maximum torque limit in [N m].
+  //! Maximum torque limit in N⋅m.
   double maximum_torque = 0.0;
 
-  //! Stop position in [rev].
+  //! Stop position in revolutions.
   double stop_position = std::numeric_limits<double>::quiet_NaN();
 
-  //! Watchdog timeout in [s].
+  //! Watchdog timeout in seconds.
   double watchdog_timeout = 0.0;
 };
 

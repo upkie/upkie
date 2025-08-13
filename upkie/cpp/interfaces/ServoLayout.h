@@ -18,7 +18,7 @@ class ServoLayout {
    * \param[in] servo_id Servo ID (`id.id` for moteus)
    * \param[in] bus_id CAN bus the servo is connected to.
    * \param[in] joint_name Name of the joint the servo actuates.
-   * \param[in] maximum_torque Maximum torque the servo can exert, in [N m].
+   * \param[in] maximum_torque Maximum torque the servo can exert, in N⋅m.
    */
   void add_servo(const int servo_id, const int bus_id,
                  const std::string& joint_name, const double maximum_torque) {

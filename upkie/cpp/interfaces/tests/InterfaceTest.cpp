@@ -102,24 +102,24 @@ TEST_F(InterfaceTest, ThrowIfMissingServoAction) {
 
 TEST_F(InterfaceTest, ForwardPositionCommands) {
   Dictionary action;
-  action("servo")("left_hip")("position") = M_PI;        // [rad]
-  action("servo")("left_knee")("position") = 2 * M_PI;   // [rad]
-  action("servo")("left_wheel")("position") = 0.0;       // [rad]
-  action("servo")("right_hip")("position") = M_PI;       // [rad]
-  action("servo")("right_knee")("position") = 2 * M_PI;  // [rad]
-  action("servo")("right_wheel")("position") = 0.0;      // [rad]
+  action("servo")("left_hip")("position") = M_PI;        // rad
+  action("servo")("left_knee")("position") = 2 * M_PI;   // rad
+  action("servo")("left_wheel")("position") = 0.0;       // rad
+  action("servo")("right_hip")("position") = M_PI;       // rad
+  action("servo")("right_knee")("position") = 2 * M_PI;  // rad
+  action("servo")("right_wheel")("position") = 0.0;      // rad
 
   interface_->write_position_commands(action);
   for (const auto& command : interface_->commands()) {
     ASSERT_EQ(command.mode, moteus::Mode::kPosition);
   }
   const auto& commands = interface_->commands();
-  ASSERT_DOUBLE_EQ(commands[0].position.position, 0.5);  // [rev]
-  ASSERT_DOUBLE_EQ(commands[1].position.position, 1.0);  // [rev]
-  ASSERT_DOUBLE_EQ(commands[2].position.position, 0.0);  // [rev]
-  ASSERT_DOUBLE_EQ(commands[3].position.position, 0.5);  // [rev]
-  ASSERT_DOUBLE_EQ(commands[4].position.position, 1.0);  // [rev]
-  ASSERT_DOUBLE_EQ(commands[5].position.position, 0.0);  // [rev]
+  ASSERT_DOUBLE_EQ(commands[0].position.position, 0.5);  // rev
+  ASSERT_DOUBLE_EQ(commands[1].position.position, 1.0);  // rev
+  ASSERT_DOUBLE_EQ(commands[2].position.position, 0.0);  // rev
+  ASSERT_DOUBLE_EQ(commands[3].position.position, 0.5);  // rev
+  ASSERT_DOUBLE_EQ(commands[4].position.position, 1.0);  // rev
+  ASSERT_DOUBLE_EQ(commands[5].position.position, 0.0);  // rev
 }
 
 TEST_F(InterfaceTest, SkipIfNoActionAtAll) {
@@ -149,8 +149,8 @@ TEST_F(InterfaceTest, ThrowIfNoPosition) {
 TEST_F(InterfaceTest, ForwardVelocityCommands) {
   Dictionary action;
   for (const auto& servo_name : joint_names()) {
-    action("servo")(servo_name)("position") = 2 * M_PI;  // [rad]
-    action("servo")(servo_name)("velocity") = M_PI;      // [rad] / [s]
+    action("servo")(servo_name)("position") = 2 * M_PI;  // rad
+    action("servo")(servo_name)("velocity") = M_PI;      // rad/s
   }
   interface_->write_position_commands(action);
   for (const auto& command : interface_->commands()) {
@@ -162,10 +162,10 @@ TEST_F(InterfaceTest, ForwardVelocityCommands) {
 
 TEST_F(InterfaceTest, MaximumTorques) {
   Dictionary action;
-  constexpr double kFeasibleTorque = 0.5;        // [N m]
-  constexpr double kUnfeasisbleTorque = 1000.0;  // [N m]
+  constexpr double kFeasibleTorque = 0.5;        // N⋅m
+  constexpr double kUnfeasisbleTorque = 1000.0;  // N⋅m
   for (auto servo_name : joint_names()) {
-    action("servo")(servo_name)("position") = 0.0;  // [rad]
+    action("servo")(servo_name)("position") = 0.0;  // rad
     action("servo")(servo_name)("maximum_torque") = kFeasibleTorque;
   }
   interface_->write_position_commands(action);

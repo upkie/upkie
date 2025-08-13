@@ -266,7 +266,7 @@ void BulletInterface::observe(Dictionary& observation) const {
 
   // Observe base pose
   Eigen::Matrix4d T = get_transform_base_to_world();
-  sim("base")("position") = Eigen::Vector3d(T(0, 3), T(1, 3), T(2, 3));  // [m]
+  sim("base")("position") = Eigen::Vector3d(T(0, 3), T(1, 3), T(2, 3));  // m
   sim("base")("orientation") =
       Eigen::Quaterniond(T.block<3, 3>(0, 0));  // [w, x, y, z]
 
@@ -278,8 +278,8 @@ void BulletInterface::observe(Dictionary& observation) const {
   Eigen::Vector3d v = eigen_from_bullet(linear_velocity_base_to_world_in_world);
   Eigen::Vector3d omega =
       eigen_from_bullet(angular_velocity_base_to_world_in_world);
-  sim("base")("linear_velocity") = v;       // [m] / [s]
-  sim("base")("angular_velocity") = omega;  // [rad] / [s]
+  sim("base")("linear_velocity") = v;       // m/s
+  sim("base")("angular_velocity") = omega;  // rad/s
 
   // Observe the environment URDF states
   Dictionary& bodies = sim("bodies");
@@ -288,7 +288,7 @@ void BulletInterface::observe(Dictionary& observation) const {
     const auto& body_id = key_child.second;
     Eigen::Matrix4d T = get_transform_body_to_world(body_id);
     bodies(body_name)("position") =
-        Eigen::Vector3d(T(0, 3), T(1, 3), T(2, 3));  // [m]
+        Eigen::Vector3d(T(0, 3), T(1, 3), T(2, 3));  // m
     bodies(body_name)("orientation") =
         Eigen::Quaterniond(T.block<3, 3>(0, 0));  // [w, x, y, z]
   }
@@ -451,15 +451,15 @@ void BulletInterface::send_commands() {
         command.mode != moteus::Mode::kStopped) {
       // disable velocity controllers to enable torque control
       motor_args.m_controlMode = CONTROL_MODE_VELOCITY;
-      motor_args.m_maxTorqueValue = 0.;  // [N m]
+      motor_args.m_maxTorqueValue = 0.;  // N⋅m
       bullet_.setJointMotorControl(robot_, joint_index, motor_args);
     }
     servo_reply_[joint_name].result.mode = command.mode;
 
     if (command.mode == moteus::Mode::kStopped) {
       motor_args.m_controlMode = CONTROL_MODE_VELOCITY;
-      motor_args.m_maxTorqueValue = 100.;  // [N m]
-      motor_args.m_targetVelocity = 0.;    // [rad] / [s]
+      motor_args.m_maxTorqueValue = 100.;  // N⋅m
+      motor_args.m_targetVelocity = 0.;    // rad/s
       bullet_.setJointMotorControl(robot_, joint_index, motor_args);
       continue;
     }

@@ -15,9 +15,9 @@ void WheelStopper::read(const Dictionary& observation,
 void WheelStopper::write(Dictionary& action) {
   for (const auto& wheel : {"left_wheel", "right_wheel"}) {
     auto& servo_action = action("servo")(wheel);
-    servo_action("feedforward_torque") = 0.0;  // [N.m]
+    servo_action("feedforward_torque") = 0.0;  // N.m
     servo_action("position") = std::numeric_limits<double>::quiet_NaN();
-    servo_action("velocity") = 0.0;  // [rad/s]
+    servo_action("velocity") = 0.0;  // rad/s
   }
 }
 

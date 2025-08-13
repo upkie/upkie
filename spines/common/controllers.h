@@ -33,7 +33,7 @@ inline ControllerPipeline make_controllers(const std::string& pipeline,
 
     WheelBalancer::Parameters balancer_params;
     balancer_params.dt = 1.0 / spine_frequency;
-    balancer_params.wheel_radius = 0.06;  // [m]
+    balancer_params.wheel_radius = 0.06;  // m
     auto balancer = std::make_shared<WheelBalancer>(balancer_params);
     controllers.append(balancer);
   } else if (pipeline != "servo") {

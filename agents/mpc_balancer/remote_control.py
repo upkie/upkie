@@ -15,21 +15,21 @@ class RemoteControl:
     """
 
     ## \var max_linear_accel
-    ## Maximum acceleration for the ground position target, in [m] / [s]². Does
+    ## Maximum acceleration for the ground position target, in m/s². Does
     ## not affect the commanded ground velocity.
     max_linear_accel: float
 
     ## \var max_linear_velocity
-    ## Maximum velocity for the ground position target, in [m] / [s].
+    ## Maximum velocity for the ground position target, in m/s.
     ## Indirectly affects the commanded ground velocity.
     max_linear_velocity: float
 
     ## \var max_yaw_accel
-    ## Maximum yaw angular acceleration in [rad] / [s]².
+    ## Maximum yaw angular acceleration in rad/s².
     max_yaw_accel: float
 
     ## \var max_yaw_velocity
-    ## Maximum yaw angular velocity in [rad] / [s].
+    ## Maximum yaw angular velocity in rad/s.
     max_yaw_velocity: float
 
     def __init__(
@@ -43,13 +43,11 @@ class RemoteControl:
         Initialize remote-control parameters.
 
         \param max_linear_accel Maximum acceleration for the ground position
-            target, in [m] / [s]². Does not affect the commanded ground
-            velocity.
+            target, in m/s². Does not affect the commanded ground velocity.
         \param max_linear_velocity Maximum velocity for the ground position
-            target, in [m] / [s]. Indirectly affects the commanded ground
-            velocity.
-        \param max_yaw_accel Maximum yaw angular acceleration in [rad] / [s]².
-        \param max_yaw_velocity Maximum yaw angular velocity in [rad] / [s].
+            target, in m/s. Indirectly affects the commanded ground velocity.
+        \param max_yaw_accel Maximum yaw angular acceleration in rad/s².
+        \param max_yaw_velocity Maximum yaw angular velocity in rad/s.
         """
         self.max_linear_accel = max_linear_accel
         self.max_linear_velocity = max_linear_velocity

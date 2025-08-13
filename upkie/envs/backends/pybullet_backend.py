@@ -361,9 +361,9 @@ class PyBulletBackend(Backend):
             joint_state = pybullet.getJointState(
                 self._robot_id, joint_idx, physicsClientId=self._bullet
             )
-            position = joint_state[0]  # in [rad]
-            velocity = joint_state[1]  # in [rad] / [s]
-            torque = joint_state[3]  # in [N m]
+            position = joint_state[0]  # in rad
+            velocity = joint_state[1]  # in rad/s
+            torque = joint_state[3]  # in N⋅m
             servo_obs[joint_name] = {
                 "position": position,
                 "velocity": velocity,
@@ -406,15 +406,15 @@ class PyBulletBackend(Backend):
         Reproduce the moteus position controller in PyBullet.
 
         \param joint_name Name of the joint.
-        \param feedforward_torque Feedforward torque command in [N m].
-        \param target_position Target angular position in [rad].
-        \param target_velocity Target angular velocity in [rad] / [s].
+        \param feedforward_torque Feedforward torque command in N⋅m.
+        \param target_position Target angular position in rad.
+        \param target_velocity Target angular velocity in rad/s.
         \param kp_scale Multiplicative factor applied to the proportional gain
             in torque control.
         \param kd_scale Multiplicative factor applied to the derivative gain
             in torque control.
-        \param maximum_torque Maximum torque in [N m] from the command.
-        \return Computed joint torque in [N m].
+        \param maximum_torque Maximum torque in N·m from the command.
+        \return Computed joint torque in N·m.
 
         This function should have the same semantics as \ref
         upkie::cpp::interfaces::BulletInterface::compute_joint_torque.

@@ -18,7 +18,7 @@ struct ImuData {
    */
   Eigen::Quaterniond orientation_imu_in_ars = Eigen::Quaterniond::Identity();
 
-  /*! Body angular velocity of the IMU frame in [rad] / [s].
+  /*! Body angular velocity of the IMU frame in rad/s.
    *
    * The full name of the body angular vector would be "angular velocity IMU to
    * world in IMU", but as for all body angular velocities, "angular velocity
@@ -28,7 +28,7 @@ struct ImuData {
    */
   Eigen::Vector3d angular_velocity_imu_in_imu = Eigen::Vector3d::Zero();
 
-  /*! Linear acceleration of the IMU, with gravity filtered out, in [m] / [s]².
+  /*! Linear acceleration of the IMU, with gravity filtered out, in m/s².
    *
    * This quantity corresponds to SPI register 34 from the pi3hat
    * https://github.com/mjbots/pi3hat/blob/master/docs/reference.md#imu-register-mapping
@@ -37,7 +37,7 @@ struct ImuData {
    */
   Eigen::Vector3d linear_acceleration_imu_in_imu = Eigen::Vector3d::Zero();
 
-  /*! Raw angular velocity read by the IMU, in [rad] / [s].
+  /*! Raw angular velocity read by the IMU, in rad/s.
    *
    * This raw angular velocity measurement may differ from the filtered one
    * (although as of writing this the UKF angular-velocity bias is always
@@ -45,7 +45,7 @@ struct ImuData {
    */
   Eigen::Vector3d raw_angular_velocity = Eigen::Vector3d::Zero();
 
-  /*! Proper linear acceleration read by the IMU, in [m] / [s]².
+  /*! Proper linear acceleration read by the IMU, in m/s².
    *
    * The acceleration read by an accelerometer is:
    * \f[
@@ -63,7 +63,7 @@ struct ImuData {
    */
   Eigen::Vector3d raw_linear_acceleration = Eigen::Vector3d::Zero();
 
-  /*! Spatial linear velocity in [m] / [s].
+  /*! Spatial linear velocity in m/s.
    *
    * This field is not an IMU measurement. It is used for instance in the
    * Bullet spine to compute IMU accelerations by finite differences.

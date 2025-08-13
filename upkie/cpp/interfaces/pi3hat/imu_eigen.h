@@ -18,9 +18,9 @@ constexpr double kMjbotsGravity = 9.81;
 
 /*! Get raw angular velocity measurement from the gyroscope.
  *
- * \param[in] rate_dps Angular velocity in [deg] / [s] from the pi3hat.
- * \param[in] bias_dps Gyroscope bias in [deg] / [s] from the pi3hat.
- * \return Raw angular velocity of the IMU in [rad] / [s].
+ * \param[in] rate_dps Angular velocity in deg/s from the pi3hat.
+ * \param[in] bias_dps Gyroscope bias in deg/s from the pi3hat.
+ * \return Raw angular velocity of the IMU in rad/s.
  *
  * \note We reverse filter outputs for now as (1) it avoids an extra call to
  * ReadSpi, and more generally customizing the Pi3Hat::Impl from mjbots, and
@@ -36,8 +36,8 @@ inline Eigen::Vector3d get_raw_angular_velocity(
 /*! Recompute raw linear acceleration from UKF observations.
  *
  * \param[in] orientation_imu_in_ars Rotation from the IMU to the ARS.
- * \param[in] accel_mps2 UKF output linear acceleration, in [m] / [s]².
- * \return Raw linear acceleration in [m] / [s]².
+ * \param[in] accel_mps2 UKF output linear acceleration, in m/s².
+ * \return Raw linear acceleration in m/s².
  *
  * \note We reverse filter outputs for now as (1) it avoids an extra call to
  * ReadSpi, and more generally customizing the Pi3Hat::Impl from mjbots, and

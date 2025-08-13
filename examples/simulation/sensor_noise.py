@@ -14,8 +14,8 @@ import upkie.envs
 # The following values are completely arbitrary :)
 JOINT_NOISE = {
     # Try increasing torque control noise: it affects balancing
-    "torque_control_noise": 0.5,  # white noise in [N m]
-    "torque_measurement_noise": 0.1,  # white noise in [N m]
+    "torque_control_noise": 0.5,  # white noise in N⋅m
+    "torque_measurement_noise": 0.1,  # white noise in N⋅m
 }
 
 if __name__ == "__main__":

@@ -94,10 +94,10 @@ class WheelOdometry : public Observer {
       }
     }
 
-    //! Spine timestep in [s]
+    //! Spine timestep in seconds
     double dt;
 
-    //! Signed radius in [m] for each wheel
+    //! Signed radius in meters for each wheel
     std::map<std::string, double> signed_radius;
   };
 
@@ -134,7 +134,7 @@ class WheelOdometry : public Observer {
    * \param[in] floor_contact Wheel contact states.
    * \param[in] servo Wheel servo readings.
    *
-   * \return Average linear velocity in [m] / [s].
+   * \return Average linear velocity in m/s.
    */
   double compute_average_velocity(const Dictionary& floor_contact,
                                   const Dictionary& servo);
@@ -143,13 +143,13 @@ class WheelOdometry : public Observer {
   //! Observer parameters.
   Parameters params_;
 
-  /*! Sagittal ground position in [m].
+  /*! Sagittal ground position in meters.
    *
    * Its origin is defined the first time the robot hits the ground.
    */
   double position_;
 
-  //! Sagittal ground velocity in [m] / [s].
+  //! Sagittal ground velocity in m/s.
   double velocity_;
 };
 

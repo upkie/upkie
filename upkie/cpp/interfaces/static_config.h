@@ -59,8 +59,8 @@ inline moteus::QueryCommand query_resolution() noexcept {
 inline const ServoLayout servo_layout() noexcept {
   constexpr int kLeftBusID = 1;              // JC1 on the pi3hat
   constexpr int kRightBusID = 3;             // JC3 on the pi3hat
-  constexpr double kMaxQdd100Torque = 16.0;  // [N m]
-  constexpr double kMaxMj5208Torque = 1.7;   // [N m]
+  constexpr double kMaxQdd100Torque = 16.0;  // N⋅m
+  constexpr double kMaxMj5208Torque = 1.7;   // N⋅m
   ServoLayout layout;
   layout.add_servo(1, kLeftBusID, "left_hip", kMaxQdd100Torque);
   layout.add_servo(2, kLeftBusID, "left_knee", kMaxQdd100Torque);

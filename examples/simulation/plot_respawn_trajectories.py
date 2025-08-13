@@ -38,5 +38,5 @@ if __name__ == "__main__":
         plt.grid(True)
         plt.plot(trange, np.array(trajectories).T)
         plt.ylim(-0.03, 0.03)
-        plt.legend(("pitch [rad]",))
+        plt.legend(("pitch (rad)",))
         plt.show(block=True)

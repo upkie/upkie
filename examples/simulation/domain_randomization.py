@@ -22,7 +22,7 @@ upkie.envs.register()
 
 def add_domain_randomization(
     env: gym.Env,
-    action_noise: float = 0.05,  # [m] / [s]
+    action_noise: float = 0.05,  # m/s
     observation_noise: float = 0.01,  # mixed units (*^_^*)
 ) -> gym.Wrapper:
     obs_ones = np.ones(env.observation_space.shape)

@@ -42,7 +42,7 @@ inline Eigen::Quaterniond get_orientation_imu_in_ars(
 /*! Get the body angular velocity of the IMU frame.
  *
  * \param[in] attitude Attitude object from the pi3hat library.
- * \return Body angular velocity of the IMU frame in [rad] / [s].
+ * \return Body angular velocity of the IMU frame in rad/s.
  *
  * \note This is the angular velocity \f$ {}_I \omega_{WI} \f$ from the IMU
  * frame \f$ I \f$ to the world frame \f$ W \f$, expressed in the IMU frame.
@@ -57,7 +57,7 @@ inline Eigen::Vector3d get_angular_velocity(const Attitude& attitude) noexcept {
 /*! Get the body linear acceleration of the IMU.
  *
  * \param[in] attitude Attitude object from the pi3hat library.
- * \return Body linear acceleration of the IMU in [m] / [s]².
+ * \return Body linear acceleration of the IMU in m/s².
  *
  * \note This is the linear acceleration \f$ {}_I a_{WI} \f$ of the IMU frame
  * \f$ I \f$ with respect to the world frame, expressed in the IMU frame.

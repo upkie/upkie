@@ -9,9 +9,9 @@
 
 namespace upkie::cpp::controllers {
 
-constexpr double kAirReturnPeriod = 1.0;       // [s]
-constexpr double kMaxIntegralVelocity = 10.0;  // [m] / [s]
-constexpr double kMaxTargetDistance = 1.0;     // [m]
+constexpr double kAirReturnPeriod = 1.0;       // s
+constexpr double kMaxIntegralVelocity = 10.0;  // m/s
+constexpr double kMaxTargetDistance = 1.0;     // m
 constexpr double kGainScale = 2.0;
 constexpr double kTurningGainScale = 2.0;
 
@@ -51,7 +51,7 @@ void WheelBalancer::read(const Dictionary& observation,
 
   const double ground_position = observation("wheel_odometry")("position");
   const bool floor_contact = observation("floor_contact")("contact");
-  double target_pitch = 0.0;  // [rad]
+  double target_pitch = 0.0;  // rad
   Eigen::Vector2d error = {
       target_ground_position_ - ground_position,
       target_pitch - pitch,

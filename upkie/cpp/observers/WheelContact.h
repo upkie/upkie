@@ -69,25 +69,25 @@ class WheelContact {
     }
 
     /*! Hysteresis value of the apparent inertia that triggers liftoff
-     * detection, in [m]² * [kg].
+     * detection, in m²·kg.
      */
     double liftoff_inertia;
 
-    //! Low-pass filtering time constant, in [s]
+    //! Low-pass filtering time constant, in seconds.
     double cutoff_period;
 
-    /*! Skip touchdown detection below this acceleration, in [rad] / [s]².
+    /*! Skip touchdown detection below this acceleration, in rad/s².
      *
      * This avoids false positives when the air wheel acceleration happens to
      * be low.
      */
     double min_touchdown_acceleration;
 
-    //! Skip touchdown detection below this torque, in [N m].
+    //! Skip touchdown detection below this torque, in N⋅m.
     double min_touchdown_torque;
 
     /*! Hysteresis value of the apparent inertia that triggers touchdown
-     * detection, in [m]² * [kg].
+     * detection, in m²·kg.
      */
     double touchdown_inertia;
   };
@@ -107,10 +107,10 @@ class WheelContact {
   void observe(const double torque, const double velocity,
                const double dt) noexcept;
 
-  //! Low-pass filtered absolute wheel acceleration, in [rad] / [s]²
+  //! Low-pass filtered absolute wheel acceleration, in rad/s²
   double abs_acceleration() const noexcept { return abs_acceleration_; }
 
-  //! Low-pass filtered absolute wheel torque, in [N m]
+  //! Low-pass filtered absolute wheel torque, in N⋅m
   double abs_torque() const noexcept { return abs_torque_; }
 
   //! Current contact state
@@ -126,10 +126,10 @@ class WheelContact {
   //! Observer parameters.
   const Parameters params_;
 
-  //! Low-pass filtered absolute wheel acceleration, in [rad] / [s]²
+  //! Low-pass filtered absolute wheel acceleration, in rad/s²
   double abs_acceleration_;
 
-  //! Low-pass filtered absolute wheel torque, in [N m]
+  //! Low-pass filtered absolute wheel torque, in N⋅m
   double abs_torque_;
 
   //! Observer contact state
@@ -138,7 +138,7 @@ class WheelContact {
   //! Apparent inertia I = |torque| / |acceleration| at the wheel
   double inertia_;
 
-  //! Low-pass filtered wheel velocity, in [rad] / [s]
+  //! Low-pass filtered wheel velocity, in rad/s
   double velocity_;
 };
 

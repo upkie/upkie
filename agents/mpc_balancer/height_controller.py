@@ -85,7 +85,7 @@ class HeightController:
     """
 
     ## \var height_difference
-    ## Current height difference between the two wheel contact points, in [m].
+    ## Current height difference between wheel contact points, in meters.
     height_difference: float = 0.0
 
     ## \var knees_forward
@@ -94,23 +94,23 @@ class HeightController:
 
     ## \var max_crouch_height
     ## Maximum distance along the vertical axis that the robot goes down while
-    ## crouching, in [m].
+    ## crouching, in meters.
     max_crouch_height: float
 
     ## \var max_crouch_velocity
-    ## Maximum vertical velocity in [m] / [s].
+    ## Maximum vertical velocity in m/s.
     max_crouch_velocity: float
 
     ## \var max_height_difference
-    ## Maximum height difference between the two wheel contact points, in [m].
+    ## Maximum height difference between wheel contact points, in meters.
     max_height_difference: float
 
     ## \var max_init_joint_velocity
-    ## Maximum joint velocity during the initial phase, in [rad] / [s].
+    ## Maximum joint velocity during the initial phase, in rad/s.
     max_init_joint_velocity: float
 
     ## \var max_lean_velocity
-    ## Maximum leaning (to the side) velocity, in [m] / [s].
+    ## Maximum leaning (to the side) velocity, in m/s.
     max_lean_velocity: float
 
     ## \var robot
@@ -118,7 +118,7 @@ class HeightController:
     robot: pin.RobotWrapper
 
     ## \var target_height
-    ## Current target base height, in [m].
+    ## Current target base height, in meters.
     target_height: float = 0.0
 
     ## \var target_position_wheel_in_rest
@@ -149,14 +149,14 @@ class HeightController:
         \param knees_forward Set to True to bend knees forward rather than
             backward.
         \param max_crouch_height Maximum distance along the vertical axis that
-            the robot goes down while crouching, in [m].
-        \param max_crouch_velocity Maximum vertical velocity in [m] / [s].
+            the robot goes down while crouching, in meters.
+        \param max_crouch_velocity Maximum vertical velocity in m/s.
         \param max_init_joint_velocity Maximum joint velocity during the
-            initial phase, in [rad] / [s].
+            initial phase, in rad/s.
         \param max_height_difference Maximum height difference between the two
-            wheel contact points, in [m].
+            wheel contact points, in meters.
         \param max_lean_velocity Maximum leaning (to the side) velocity,
-            in [m] / [s].
+            in m/s.
         \param visualize If true, open a MeshCat visualizer on the side.
         """
         robot = upkie_description.load_in_pinocchio(root_joint=None)
@@ -196,18 +196,18 @@ class HeightController:
         tasks = {
             "left_contact": FrameTask(
                 "left_contact",
-                position_cost=[0.1, 0.0, 0.1],  # [cost] / [m]
-                orientation_cost=0.0,  # [cost] / [rad]
+                position_cost=[0.1, 0.0, 0.1],  # cost/m
+                orientation_cost=0.0,  # cost/rad
                 lm_damping=10.0,
             ),
             "right_contact": FrameTask(
                 "right_contact",
-                position_cost=[0.1, 0.0, 0.1],  # [cost] / [m]
-                orientation_cost=0.0,  # [cost] / [rad]
+                position_cost=[0.1, 0.0, 0.1],  # cost/m
+                orientation_cost=0.0,  # cost/rad
                 lm_damping=10.0,
             ),
             "posture": PostureTask(
-                cost=1e-3,  # [cost] / [rad]
+                cost=1e-3,  # cost/rad
             ),
         }
 

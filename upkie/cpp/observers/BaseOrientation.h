@@ -230,7 +230,7 @@ class BaseOrientation : public Observer {
   //! Pitch angle of the base frame in the world frame
   double pitch_base_in_world_;
 
-  //! Body angular velocity of the base frame in [rad] / [s]
+  //! Body angular velocity of the base frame in rad/s
   Eigen::Vector3d angular_velocity_base_in_base_;
 };
 

@@ -19,7 +19,7 @@ AMPLITUDE = 1.0  # in radians
 
 JOINT_PROPS = {
     # The following value is completely arbitrary :)
-    "friction": 0.1,  # kinetic joint friction in [N m], this value
+    "friction": 0.1,  # kinetic joint friction in N⋅m, this value
 }
 
 if __name__ == "__main__":

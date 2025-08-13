@@ -3,5 +3,5 @@
 # SPDX-License-Identifier: Apache-2.0
 
 WheelController.left_wheeled = True
-WheelController.leg_length = 0.58     # [m]
-WheelController.wheel_radius = 0.055  # [m]
+WheelController.leg_length = 0.58     # m
+WheelController.wheel_radius = 0.055  # m

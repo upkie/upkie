@@ -13,16 +13,16 @@ using palimpsest::Dictionary;
 
 //! Properties for robot joints in the Bullet simulation.
 struct JointProperties {
-  //! Kinetic friction, in [N m].
+  //! Kinetic friction, in N⋅m.
   double friction = 0.0;
 
-  //! Maximum torque, in [N m].
+  //! Maximum torque, in N⋅m.
   double maximum_torque = 0.0;
 
-  //! Standard deviation of white noise added to applied torques, in [N m].
+  //! Standard deviation of white noise added to applied torques, in N⋅m.
   double torque_control_noise = 0.0;
 
-  //! Standard deviation of white noise added to measured torques, in [N m].
+  //! Standard deviation of white noise added to measured torques, in N⋅m.
   double torque_measurement_noise = 0.0;
 
   //! Default constructor for properties initialized to default values.

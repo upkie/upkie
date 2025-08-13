@@ -46,7 +46,7 @@ class SpineBackend(Backend):
         if spine_config is not None:
             nested_update(merged_spine_config, spine_config)
 
-        # Class attributes
+        # Instance attributes
         self.__bullet_action = {}
         self._spine = SpineInterface(shm_name, retries=10)
         self._spine_config = merged_spine_config

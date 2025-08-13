@@ -28,7 +28,7 @@ def get_target_states(
 
     \param pendulum Wheeled inverted pendulum model.
     \param state Initial state of the pendulum at the beginning of the horizon.
-    \param target_ground_velocity Target ground velocity in [m] / [s].
+    \param target_ground_velocity Target ground velocity in m/s.
     \return Goal state at the end of the horizon.
     """
     nx = pendulum.STATE_DIM
@@ -46,11 +46,11 @@ class MPCBalancer:
     """
 
     ## \var commanded_velocity
-    ## Current commanded ground velocity in [m] / [s].
+    ## Current commanded ground velocity in m/s.
     commanded_velocity: float
 
     ## \var fall_pitch
-    ## Pitch angle threshold for fall detection in [rad].
+    ## Pitch angle threshold for fall detection in radians.
     fall_pitch: float
 
     ## \var fallen
@@ -58,7 +58,7 @@ class MPCBalancer:
     fallen: bool
 
     ## \var max_ground_velocity
-    ## Maximum ground velocity constraint in [m] / [s].
+    ## Maximum ground velocity constraint in m/s.
     max_ground_velocity: float
 
     ## \var mpc_problem
@@ -98,11 +98,11 @@ class MPCBalancer:
         Initialize balancer.
 
         \param fall_pitch Fall pitch threshold, in radians.
-        \param leg_length Leg length in [m].
+        \param leg_length Leg length in meters.
         \param max_ground_accel Maximum commanded ground acceleration no matter
-            what, in [m] / [s]².
+            what, in m/s².
         \param max_ground_velocity Maximum commanded ground velocity no matter
-            what, in [m] / [s].
+            what, in m/s.
         \param nb_timesteps Number of MPC steps.
         \param sampling_period Duration of an MPC step in seconds.
         \param stage_input_cost_weight Weight for the stage input cost.
@@ -144,10 +144,10 @@ class MPCBalancer:
         r"""!
         Compute a new ground velocity.
 
-        \param target_ground_velocity Target ground velocity in [m] / [s].
+        \param target_ground_velocity Target ground velocity in m/s.
         \param spine_observation Latest observation dictionary from a spine.
-        \param dt Time in [s] until next cycle.
-        \return New ground velocity, in [m] / [s].
+        \param dt Duration in seconds until the next cycle.
+        \return New ground velocity, in m/s.
         """
         floor_contact = spine_observation["floor_contact"]["contact"]
         base_orientation = spine_observation["base_orientation"]

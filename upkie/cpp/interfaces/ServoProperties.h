@@ -15,7 +15,7 @@ struct ServoProperties {
   //! Name of the joint the servo acts on.
   std::string joint_name;
 
-  //! Maximum joint torque that the servo can exert, in [N m].
+  //! Maximum joint torque that the servo can exert, in N⋅m.
   double maximum_torque;
 };
 

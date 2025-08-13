@@ -370,15 +370,15 @@ class GenesisBackend(Backend):
         Reproduce the moteus position controller in Genesis.
 
         \param joint_name Name of the joint.
-        \param feedforward_torque Feedforward torque command in [N m].
-        \param target_position Target angular position in [rad].
-        \param target_velocity Target angular velocity in [rad] / [s].
+        \param feedforward_torque Feedforward torque command in N⋅m.
+        \param target_position Target angular position in rad.
+        \param target_velocity Target angular velocity in rad/s.
         \param kp_scale Multiplicative factor applied to the proportional gain
             in torque control.
         \param kd_scale Multiplicative factor applied to the derivative gain
             in torque control.
-        \param maximum_torque Maximum torque in [N m] from the command.
-        \return Computed joint torque in [N m].
+        \param maximum_torque Maximum torque in N⋅m from the command.
+        \return Computed joint torque in N⋅m.
         """
         assert not np.isnan(target_velocity)
 

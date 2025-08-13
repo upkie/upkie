@@ -34,11 +34,11 @@ class WheelController:
     mpc_balancer: MPCBalancer
 
     ## \var target_ground_velocity
-    ## Target ground sagittal velocity in [m] / [s].
+    ## Target ground sagittal velocity in m/s.
     target_ground_velocity: float
 
     ## \var target_yaw_velocity
-    ## Target yaw velocity in [rad] / [s].
+    ## Target yaw velocity in rad/s.
     target_yaw_velocity: float
 
     ## \var turning_deadband
@@ -47,8 +47,8 @@ class WheelController:
     turning_deadband: float
 
     ## \var turning_decision_time
-    ## Minimum duration in [s] for the turning probability to switch from zero
-    ## to one and conversely.
+    ## Minimum duration in seconds for the turning probability to switch from
+    ## zero to one and conversely.
     turning_decision_time: float
 
     ## \var turning_probability
@@ -56,7 +56,7 @@ class WheelController:
     turning_probability: float
 
     ## \var wheel_radius
-    ## Wheel radius in [m].
+    ## Wheel radius in meters.
     wheel_radius: float
 
     def __init__(
@@ -77,12 +77,12 @@ class WheelController:
         \param left_wheeled Set to True (default) if the robot is left wheeled,
             that is, a positive turn of the left wheel results in forward
             motion. Set to False for a right-wheeled variant.
-        \param leg_length Leg length in [m].
+        \param leg_length Leg length in meters.
         \param turning_deadband Joystick axis value between 0.0 and 1.0 below
             which legs stiffen but the turning motion doesn't start.
-        \param turning_decision_time Minimum duration in [s] for the turning
-            probability to switch from zero to one and converesly.
-        \param wheel_radius Wheel radius in [m].
+        \param turning_decision_time Minimum duration in seconds for the
+            turning probability to switch from zero to one and conversely.
+        \param wheel_radius Wheel radius in meters.
         \param max_ground_accel Maximum commanded ground acceleration.
         \param max_ground_velocity Maximum commanded ground velocity.
         """
@@ -120,8 +120,8 @@ class WheelController:
         Compute a new ground velocity.
 
         \param observation Latest observation.
-        \param dt Time in [s] until next cycle.
-        \return New ground velocity, in [m] / [s].
+        \param dt Duration in seconds until the next cycle.
+        \return New ground velocity, in m/s.
         """
         self.update_target_ground_velocity(observation, dt)
         self.update_target_yaw_velocity(observation, dt)
@@ -163,7 +163,7 @@ class WheelController:
         Update target ground velocity from joystick input.
 
         \param observation Latest observation.
-        \param dt Time in [s] until next cycle.
+        \param dt Duration in seconds until the next cycle.
 
         \note The target ground velocity is commanded by both the left axis and
             right trigger of the joystick. When the right trigger is unpressed,
@@ -193,7 +193,7 @@ class WheelController:
         Update target yaw velocity from joystick input.
 
         \param observation Latest observation.
-        \param dt Time in [s] until next cycle.
+        \param dt Duration in seconds until the next cycle.
         """
         try:
             joystick_value = observation["joystick"]["right_axis"][0]

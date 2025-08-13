@@ -168,10 +168,10 @@ TEST_F(BulletInterfaceTest, ComputeJointTorquesWhileMoving) {
   for (auto& command : interface_->data().commands) {
     command.mode = moteus::Mode::kPosition;
     command.position.position = no_position;
-    command.position.velocity = 1.0;  // [rev] / [s]
+    command.position.velocity = 1.0;  // rev/s
     command.position.kp_scale = 1.0;
     command.position.kd_scale = 1.0;
-    command.position.maximum_torque = 1.0;  // [N m]
+    command.position.maximum_torque = 1.0;  // N⋅m
   }
 
   // Cycle a couple of times so that both wheels spin up
@@ -202,11 +202,11 @@ TEST_F(BulletInterfaceTest, ComputeJointFeedforwardTorque) {
   for (auto& command : interface_->data().commands) {
     command.mode = moteus::Mode::kPosition;
     command.position.position = std::numeric_limits<double>::quiet_NaN();
-    command.position.velocity = 0.0;  // [rev] / [s]
+    command.position.velocity = 0.0;  // rev/s
     command.position.kp_scale = 0.0;
     command.position.kd_scale = 0.0;
-    command.position.feedforward_torque = 0.42;  // [N m]
-    command.position.maximum_torque = 1.0;       // [N m]
+    command.position.feedforward_torque = 0.42;  // N⋅m
+    command.position.maximum_torque = 1.0;       // N⋅m
   }
 
   // Cycle a couple of times so that both wheels spin up
