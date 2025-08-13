@@ -98,6 +98,10 @@ class UpkiePendulum(gym.Wrapper):
     ## Observation space.
     observation_space: gym.spaces.Box
 
+    ## \var wheel_radius
+    ## Robot wheel radius in meters.
+    wheel_radius: float
+
     def __init__(
         self,
         env: UpkieEnv,
