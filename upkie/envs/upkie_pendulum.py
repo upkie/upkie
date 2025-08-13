@@ -14,6 +14,7 @@ from typing import Dict, Optional, Tuple
 import gymnasium as gym
 import numpy as np
 
+from upkie.config import ROBOT_CONFIG
 from upkie.envs.upkie_env import UpkieEnv
 from upkie.exceptions import UpkieException
 from upkie.logging import logger
@@ -97,17 +98,12 @@ class UpkiePendulum(gym.Wrapper):
     ## Observation space.
     observation_space: gym.spaces.Box
 
-    ## \var wheel_radius
-    ## Wheel radius in [m].
-    wheel_radius: float
-
     def __init__(
         self,
         env: UpkieEnv,
         fall_pitch: float = 1.0,
         left_wheeled: bool = True,
         max_ground_velocity: float = 1.0,
-        wheel_radius: float = 0.06,
     ):
         r"""!
         Initialize environment.
@@ -120,7 +116,6 @@ class UpkiePendulum(gym.Wrapper):
         \param max_ground_velocity Maximum commanded ground velocity in m/s.
             The default value of 1 m/s is conservative, don't hesitate to
             increase it once you feel confident in your agent.
-        \param wheel_radius Wheel radius in [m].
         """
         super().__init__(env)
         if env.frequency is None:
@@ -161,7 +156,7 @@ class UpkiePendulum(gym.Wrapper):
         self.env = env
         self.fall_pitch = fall_pitch
         self.left_wheeled = left_wheeled
-        self.wheel_radius = wheel_radius
+        self.wheel_radius = ROBOT_CONFIG["wheel_radius"]
 
     def __get_env_observation(self, spine_observation: dict) -> np.ndarray:
         r"""!
