@@ -18,6 +18,7 @@
 #include "upkie/cpp/controllers/ControllerPipeline.h"
 #include "upkie/cpp/controllers/WheelBalancer.h"
 #include "upkie/cpp/controllers/WheelStopper.h"
+#include "upkie/cpp/exceptions/UpkieError.h"
 #include "upkie/cpp/interfaces/BulletInterface.h"
 #include "upkie/cpp/observers/ObserverPipeline.h"
 #include "upkie/cpp/sensors/SensorPipeline.h"
@@ -218,18 +219,27 @@ int run_spine(const char* argv0, const CommandLineArguments& args) {
   params.shm_name = args.shm_name;
   spdlog::info("Spine data logged to {}", params.log_path);
 
-  BulletInterface interface = make_actuation_interface(argv0, args);
-  SensorPipeline sensors = make_sensors(/* joystick_required = */ false);
-  ObserverPipeline observers = make_observers(args.spine_frequency);
-  ControllerPipeline controllers =
-      make_controllers(args.pipeline, args.spine_frequency);
+  try {
+    // Make pipelines
+    SensorPipeline sensors = make_sensors(/* joystick_required = */ false);
+    ObserverPipeline observers = make_observers(args.spine_frequency);
+    ControllerPipeline controllers =
+        make_controllers(args.pipeline, args.spine_frequency);
 
-  Spine spine(params, interface, sensors, observers, controllers);
-  if (args.nb_substeps == 0u) {
-    spine.run();
-  } else /* args.nb_substeps > 0 */ {
-    spdlog::set_level(spdlog::level::warn);
-    spine.simulate(args.nb_substeps);
+    // Bullet interface
+    BulletInterface interface = make_actuation_interface(argv0, args);
+
+    // Run the spine
+    Spine spine(params, interface, sensors, observers, controllers);
+    if (args.nb_substeps == 0u) {
+      spine.run();
+    } else /* args.nb_substeps > 0 */ {
+      spdlog::set_level(spdlog::level::warn);
+      spine.simulate(args.nb_substeps);
+    }
+  } catch (const upkie::cpp::exceptions::UpkieError& error) {
+    spdlog::error("Upkie error: {}", error.what());
+    return -2;
   }
 
   return EXIT_SUCCESS;

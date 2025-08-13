@@ -19,6 +19,7 @@
 #include "spines/common/observers.h"
 #include "spines/common/sensors.h"
 #include "upkie/cpp/controllers/ControllerPipeline.h"
+#include "upkie/cpp/exceptions/UpkieError.h"
 #include "upkie/cpp/interfaces/Pi3HatInterface.h"
 #include "upkie/cpp/observers/ObserverPipeline.h"
 #include "upkie/cpp/sensors/CpuTemperature.h"
@@ -167,12 +168,13 @@ int run_spine(const CommandLineArguments& args) {
     return -4;
   }
 
-  SensorPipeline sensors = make_sensors(/* joystick_required = */ true);
-  ObserverPipeline observers = make_observers(args.spine_frequency);
-  ControllerPipeline controllers =
-      make_controllers(args.pipeline, args.spine_frequency);
-
   try {
+    // Make pipelines
+    SensorPipeline sensors = make_sensors(/* joystick_required = */ true);
+    ObserverPipeline observers = make_observers(args.spine_frequency);
+    ControllerPipeline controllers =
+        make_controllers(args.pipeline, args.spine_frequency);
+
     // pi3hat configuration
     Pi3Hat::Configuration pi3hat_config;
     pi3hat_config.attitude_rate_hz = args.attitude_frequency;
@@ -183,7 +185,7 @@ int run_spine(const CommandLineArguments& args) {
     // pi3hat interface
     Pi3HatInterface interface(args.can_cpu, pi3hat_config);
 
-    // Spine
+    // Run the spine
     Spine::Parameters spine_params;
     spine_params.cpu = args.spine_cpu;
     spine_params.frequency = args.spine_frequency;
@@ -192,9 +194,12 @@ int run_spine(const CommandLineArguments& args) {
     spdlog::info("Spine data logged to {}", spine_params.log_path);
     Spine spine(spine_params, interface, sensors, observers, controllers);
     spine.run();
+  } catch (const upkie::cpp::exceptions::UpkieError& error) {
+    spdlog::error("Upkie error: {}", error.what());
+    return -2;
   } catch (const ::mjbots::pi3hat::Error& error) {
     std::string message = error.what();
-    spdlog::error(message);
+    spdlog::error("pi3hat error: {}", message);
     if (message.find("/dev/mem") != std::string::npos) {
       spdlog::info("did you run with sudo?");
     }

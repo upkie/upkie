@@ -16,7 +16,7 @@ class UpkieError : public std::runtime_error {
    * \param[in] message Error message.
    */
   explicit UpkieError(const std::string& message)
-      : std::runtime_error(message) {}
+      : std::runtime_error(message), message_(message) {}
 
   /*! Copy an existing error, adding to the error message.
    *

@@ -15,6 +15,7 @@
 #include "spines/common/observers.h"
 #include "spines/common/sensors.h"
 #include "upkie/cpp/controllers/ControllerPipeline.h"
+#include "upkie/cpp/exceptions/UpkieError.h"
 #include "upkie/cpp/interfaces/MockInterface.h"
 #include "upkie/cpp/observers/ObserverPipeline.h"
 #include "upkie/cpp/sensors/SensorPipeline.h"
@@ -121,24 +122,30 @@ int run_spine(const CommandLineArguments& args) {
     return -4;
   }
 
-  SensorPipeline sensors = make_sensors(/* joystick_required = */ false);
-  ObserverPipeline observers = make_observers(args.spine_frequency);
-  ControllerPipeline controllers =
-      make_controllers(args.pipeline, args.spine_frequency);
+  try {
+    // Make pipelines
+    SensorPipeline sensors = make_sensors(/* joystick_required = */ false);
+    ObserverPipeline observers = make_observers(args.spine_frequency);
+    ControllerPipeline controllers =
+        make_controllers(args.pipeline, args.spine_frequency);
 
-  // Mock actuators
-  const double dt = 1.0 / args.spine_frequency;
-  MockInterface actuation(dt);
+    // Mock interfacde
+    const double dt = 1.0 / args.spine_frequency;
+    MockInterface actuation(dt);
 
-  // Spine
-  Spine::Parameters spine_params;
-  spine_params.cpu = args.spine_cpu;
-  spine_params.frequency = args.spine_frequency;
-  spine_params.log_path =
-      upkie::cpp::utils::get_log_path(args.log_dir, "mock_spine");
-  spdlog::info("Spine data logged to {}", spine_params.log_path);
-  Spine spine(spine_params, actuation, sensors, observers, controllers);
-  spine.run();
+    // Run the spine
+    Spine::Parameters spine_params;
+    spine_params.cpu = args.spine_cpu;
+    spine_params.frequency = args.spine_frequency;
+    spine_params.log_path =
+        upkie::cpp::utils::get_log_path(args.log_dir, "mock_spine");
+    spdlog::info("Spine data logged to {}", spine_params.log_path);
+    Spine spine(spine_params, actuation, sensors, observers, controllers);
+    spine.run();
+  } catch (const upkie::cpp::exceptions::UpkieError& error) {
+    spdlog::error("Upkie error: {}", error.what());
+    return -2;
+  }
 
   return EXIT_SUCCESS;
 }
