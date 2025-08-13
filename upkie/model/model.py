@@ -10,6 +10,8 @@ from xml.etree import ElementTree
 import numpy as np
 import upkie_description
 
+from upkie.config import ROBOT_CONFIG
+
 from .joint import Joint
 from .joint_limit import JointLimit
 
@@ -107,11 +109,19 @@ class Model:
         wheel_joints = tuple(
             joint for joint in joints if joint.name in self.WHEEL_JOINT_NAMES
         )
-        self.JOINT_NAMES = Model.JOINT_NAMES  # for Doxygen
-        self.UPPER_LEG_JOINT_NAMES = Model.UPPER_LEG_JOINT_NAMES  # for Doxygen
-        self.WHEEL_JOINT_NAMES = Model.WHEEL_JOINT_NAMES  # for Doxygen
+
+        # Read-only rotation matrices
+        rotation_ars_to_world = np.diag([1.0, -1.0, -1.0])
+        rotation_ars_to_world.setflags(write=False)
+
+        # Redefine class attributes as instance attributes for Doxygen
+        self.JOINT_NAMES = Model.JOINT_NAMES
+        self.UPPER_LEG_JOINT_NAMES = Model.UPPER_LEG_JOINT_NAMES
+        self.WHEEL_JOINT_NAMES = Model.WHEEL_JOINT_NAMES
+
+        # Instance attributes
         self.joints = joints
-        self.rotation_ars_to_world = np.diag([1.0, -1.0, -1.0])
-        self.rotation_base_to_imu = np.diag([-1.0, 1.0, -1.0])
+        self.rotation_ars_to_world = rotation_ars_to_world
+        self.rotation_base_to_imu = ROBOT_CONFIG["rotation_base_to_imu"]
         self.upper_leg_joints = upper_leg_joints
         self.wheel_joints = wheel_joints

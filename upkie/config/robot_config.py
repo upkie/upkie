@@ -9,6 +9,8 @@
 
 from typing import Any, Dict
 
+import numpy as np
+
 from upkie.utils.nested_update import nested_update
 
 from .user_config import USER_CONFIG
@@ -36,6 +38,7 @@ def _merge_user_robot_config(
 _DEFAULT_ROBOT_CONFIG = {
     "leg_length": 0.58,  # m
     "mass": 5.34,  # kg
+    "rotation_base_to_imu": np.diag([-1.0, 1.0, -1.0]),
     "wheel_radius": 0.06,  # m
 }
 
