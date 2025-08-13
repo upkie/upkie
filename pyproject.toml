@@ -181,12 +181,12 @@ stable-baselines3 = ">=2.3.0"
 tensorboard = "*"
 
 [tool.pixi.feature.rlb3-genesis.tasks]
-upkie-train-genesis = "python agents/rlb3_trainer/train.py --env Upkie-Genesis-Pendulum"
-upkie-enjoy-genesis = "python agents/rlb3_trainer/enjoy.py --env Upkie-Genesis-Pendulum"
+rlb3-train-genesis = "python agents/rlb3_trainer/train.py --env Upkie-Genesis-Pendulum"
+rlb3-enjoy-genesis = "python agents/rlb3_trainer/enjoy.py --env Upkie-Genesis-Pendulum"
 
 [tool.pixi.feature.rlb3-pybullet.tasks]
-upkie-train-pybullet = "python agents/rlb3_trainer/train.py --env Upkie-PyBullet-Pendulum"
-upkie-enjoy-pybullet = "python agents/rlb3_trainer/enjoy.py --env Upkie-PyBullet-Pendulum"
+rlb3-train-pybullet = "python agents/rlb3_trainer/train.py --env Upkie-PyBullet-Pendulum"
+rlb3-enjoy-pybullet = "python agents/rlb3_trainer/enjoy.py --env Upkie-PyBullet-Pendulum"
 
 [tool.pixi.feature.test.dependencies]
 pybullet = ">=3"

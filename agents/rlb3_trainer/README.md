@@ -4,9 +4,8 @@ Neural-network policy training environment based on [RL Baselines3 Zoo](https://
 
 To train a new policy:
 
-```console
-pixi run upkie-train-policy
-```
+- Genesis: `pixi run train-genesis`
+- PyBullet: `pixi run train-pybullet`
 
 To test the latest trained policy:
 

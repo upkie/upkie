@@ -135,7 +135,7 @@ def main():
     if model_path is None or not model_path.exists():
         print(f"Error: Could not find trained model for {env_name}")
         print(f"Searched in: {args.logs_dir}/{args.algo}/")
-        print("Train a model first using: pixi run upkie-train-policy")
+        print("Train a model first using: pixi run rlb3-train-pybullet")
         return
 
     print(f"Loading model from: {model_path}")

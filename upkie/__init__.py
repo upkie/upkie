@@ -8,7 +8,7 @@
 
 from . import config, envs, model, utils
 
-__version__ = "9.0.0-pre"
+__version__ = "9.0.0"
 
 __all__ = [
     "config",

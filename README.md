@@ -90,12 +90,15 @@ pixi run --environment genesis ./examples/genesis_balancing.py
 
 Upkies come with a set of default behaviors that you can executed as Pixi tasks. To get started, make sure you have [installed `pixi`](https://pixi.sh/latest/#installation).
 
-| Task name | Agent | Behavior |
-|-----------|-------|----------|
-| `upkie-enjoy-policy` |  RLB3 trainer | Evaluate the latest policy trained by reinforcement learning |
-| `upkie-jolly-jumper` |  Trajectory player | Play a pre-recorded trajectory (WIP) |
-| `upkie-mpc-balancer` |  MPC balancer | Run the MPC balancer |
-| `upkie-train-policy` |  RLB3 trainer | Train a new balancing policy by reinforcement learning |
+| Name                   | Task                                                     |
+|------------------------|----------------------------------------------------------|
+| `rlb3-enjoy-genesis`   | Evaluate the last policy trained in Genesis              |
+| `rlb3-enjoy-pybullet`  | Evaluate the last policy trained in PyBullet             |
+| `rlb3-train-genesis`   | Train a new policy by reinforcement learning in Genesis  |
+| `rlb3-train-pybullet`  | Train a new policy by reinforcement learning in PyBullet |
+| `try-genesis`          | Run a balancing example in Genesis                       |
+| `try-pybullet`         | Run a balancing example in PyBullet                      |
+| `upkie-mpc-balancer`   | Run the MPC balancer                                     |
 
 You can execute a task by `pixi run <task-name>`, for instance:
 
@@ -119,7 +122,7 @@ If you built an Upkie or use parts of this project in your works, please cite th
   author = {Caron, St\'{e}phane and Perrin-Gilbert, Nicolas and Ledoux, Viviane and G\"{o}kbakan, \"{U}mit Bora and Raverdy, Pierre-Guillaume and Raffin, Antonin and Tordjman--Levavasseur, Valentin},
   url = {https://github.com/upkie/upkie},
   license = {Apache-2.0},
-  version = {8.1.1},
+  version = {9.0.0},
   year = {2025}
 }
 ```

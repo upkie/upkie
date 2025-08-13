@@ -9,6 +9,6 @@ pixi run upkie-mpc-balancer
 Or manually in a shell:
 
 ```console
-pixi shell -e agent-mpc-balancer  # or your own conda environment
+pixi shell -e upkie-mpc-balancer  # or your own conda environment
 python -m agents.mpc_balancer
 ```

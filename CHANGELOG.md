@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [9.0.0] - 2025-08-14
+
 ### Added
 
 - **Major:** Add Gymnasium environments with the Genesis simulator
@@ -880,7 +882,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Starting this changelog.
 
-[unreleased]: https://github.com/upkie/upkie/compare/v8.1.1...HEAD
+[unreleased]: https://github.com/upkie/upkie/compare/v9.0.0...HEAD
+[9.0.0]: https://github.com/upkie/upkie/compare/v8.1.1...v9.0.0
 [8.1.1]: https://github.com/upkie/upkie/compare/v8.1.0...v8.1.1
 [8.1.0]: https://github.com/upkie/upkie/compare/v8.0.0...v8.1.0
 [8.0.0]: https://github.com/upkie/upkie/compare/v7.0.0...v8.0.0
