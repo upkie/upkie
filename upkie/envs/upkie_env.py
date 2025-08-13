@@ -86,7 +86,7 @@ class UpkieEnv(gym.Env, ABC):
                 position_base_in_world=np.array([0.0, 0.0, 0.6])
             )
 
-        # Class attributes
+        # Instance attributes
         self.__backend = backend
         self.__frequency = frequency
         self.__frequency_checks = frequency_checks

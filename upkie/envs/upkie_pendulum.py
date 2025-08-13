@@ -156,7 +156,7 @@ class UpkiePendulum(gym.Wrapper):
             dtype=action_limit.dtype,
         )
 
-        # Class attributes
+        # Instance attributes
         self.__leg_servo_action = env.get_neutral_action()
         self.env = env
         self.fall_pitch = fall_pitch
