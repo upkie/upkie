@@ -55,7 +55,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Restrict Bazel to C++ tasks and use Pixi for Python tasks in development workflow
 - cpp: Fix Bazel imports of C++ packages going up the dependency tree
 - cpp: Limit rate of SynchronousClock skip warnings and report frequency drop
-- cpp: Update mpacklog.cpp to version 3.1.2
+- cpp: Update mpacklog.cpp to version 3.2.0
+- deps: Bump loop-rate-limiters to 1.2.0
 - envs: Allow gain scales larger than one in servo environments
 - envs: Allow parallel simulations, clearing up the CPU bottleneck
 - envs: Class `UpkieServos` is now a subclass of `UpkieEnv`
