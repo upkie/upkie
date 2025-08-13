@@ -59,10 +59,6 @@ def configure_agent_process() -> None:
     on CPU ID 2, and the Python interpreter runs on CPU ID 3. (All other system
     processes will run on CPU ID 0 by default.)
     """
-    if hasattr(sys, "ps1"):
-        raise UpkieRuntimeError(
-            "Cannot configure agent process from an interpreter"
-        )
     if os.geteuid() != 0:
         logger.info("Re-running as root to set the CPU affinity")
         args = ["sudo", "-E", sys.executable] + sys.argv + [os.environ]

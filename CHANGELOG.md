@@ -67,6 +67,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - utils: Generalize `bounded_derivative_filter` to vector inputs
 - utils: Use `pathlib` rather than `os.path` in Raspberry Pi detection
 
+### Fixed
+
+- utils: Fix incorrect check on inability to set affinity from an interpreter
+
 ### Removed
 
 - **Breaking:** Remove output bound from `abs_bounded_derivative_filter`
