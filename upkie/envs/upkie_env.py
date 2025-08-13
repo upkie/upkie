@@ -97,6 +97,15 @@ class UpkieEnv(gym.Env, ABC):
         self.model = Model()
         self.observation_space = None  # subclasses should set this
 
+    def close(self) -> None:
+        r"""!
+        Close the environment and clean up resources.
+
+        This function is part of the Gymnasium API and ensures proper cleanup
+        of backend resources when the environment is closed.
+        """
+        self.__backend.close()
+
     @property
     def dt(self) -> Optional[float]:
         """!
