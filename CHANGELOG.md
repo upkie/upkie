@@ -35,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - exceptions: Raise `UpkieTimeoutError` upon spine timeout
 - logging: Add `disable_warnings` helper function
 - model: List joint names in `Model` class
+- spines: Log buffer size of the logger itself
 - utils: Joystick utility class
 - utils: Wrap quaternion conversion function from SciPy
 

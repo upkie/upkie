@@ -87,6 +87,7 @@ void Spine::log_working_dict(
   }
 
   // MessagePack logger properties
+  spine("logger")("buffer_size") = static_cast<uint32_t>(logger_.buffer_size());
   spine("logger")("last_size") = static_cast<uint32_t>(logger_.last_size());
 
   // Spine properties
