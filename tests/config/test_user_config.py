@@ -33,8 +33,8 @@ class TestUserConfig(unittest.TestCase):
             result = _load_yaml_config(config_path)
             self.assertIsNone(result)
 
-    @patch("builtins.print")  # mock print to avoid output during tests
-    def test_load_yaml_config_invalid_yaml(self, mock_print):
+    @patch("upkie.config.user_config.logger.warning")  # avoid test output
+    def test_load_yaml_config_invalid_yaml(self, mock_warning):
         """Test loading a configuration file with invalid YAML content."""
         with tempfile.NamedTemporaryFile(
             mode="w", suffix=".yml", delete=False
@@ -46,12 +46,10 @@ class TestUserConfig(unittest.TestCase):
             result = _load_yaml_config(config_path)
             self.assertIsNone(result)
 
-            # Check that a warning was printed
-            mock_print.assert_called_once()
-            call_args = mock_print.call_args[0][0]
-            self.assertTrue(
-                call_args.startswith("Warning: Failed to load config from")
-            )
+            # Check that a warning was logged
+            mock_warning.assert_called_once()
+            call_args = mock_warning.call_args[0][0]
+            self.assertTrue(call_args.startswith("Failed to load config from"))
 
     def test_load_yaml_config_success(self):
         """Test successfully loading a configuration file."""

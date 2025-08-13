@@ -11,6 +11,8 @@ from typing import Any, Dict, Optional
 
 import yaml
 
+from ..logging import logger
+
 
 def _get_user_config_path() -> Path:
     r"""!
@@ -37,7 +39,7 @@ def _load_yaml_config(config_path: Path) -> Optional[Dict[str, Any]]:
         with config_path.open("r") as file:
             return yaml.safe_load(file)
     except Exception as e:
-        print(f"Warning: Failed to load config from {config_path}: {e}")
+        logger.warning(f"Failed to load config from {config_path}: {e}")
         return None
 
 
