@@ -8,10 +8,7 @@
 ## \brief Functions to work on the onboard Raspberry Pi.
 
 import os
-import sys
 from pathlib import Path
-
-from upkie.exceptions import UpkieRuntimeError
 
 from ..logging import logger
 
@@ -59,8 +56,29 @@ def configure_agent_process() -> None:
     on CPU ID 2, and the Python interpreter runs on CPU ID 3. (All other system
     processes will run on CPU ID 0 by default.)
     """
-    if os.geteuid() != 0:
-        logger.info("Re-running as root to set the CPU affinity")
-        args = ["sudo", "-E", sys.executable] + sys.argv + [os.environ]
-        os.execlpe("sudo", *args)
-    os.sched_setaffinity(0, {__AGENT_CPUID})
+    current_affinity = os.sched_getaffinity(0)
+    if __AGENT_CPUID in current_affinity and len(current_affinity) == 1:
+        logger.info(
+            "The agent process is already running on CPU %d",
+            __AGENT_CPUID,
+        )
+        return
+
+    try:
+        os.sched_setaffinity(0, {__AGENT_CPUID})
+        logger.info(
+            "Configured the agent process to run on CPU %d",
+            __AGENT_CPUID,
+        )
+    except PermissionError:
+        logger.warning(
+            "Error setting CPU affinity of the agent process to CPU %d. "
+            "Consider running with 'taskset -c %d' for better control "
+            "performance.",
+            __AGENT_CPUID,
+            __AGENT_CPUID,
+        )
+        logger.info(
+            "The agent process will be running on CPUs: %s",
+            str(sorted(current_affinity)),
+        )
