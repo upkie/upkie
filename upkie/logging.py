@@ -72,5 +72,6 @@ def disable_warnings() -> None:
 
 
 __all__ = [
+    "disable_warnings",
     "logger",
 ]
