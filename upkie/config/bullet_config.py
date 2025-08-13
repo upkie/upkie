@@ -4,6 +4,9 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2025 Inria
 
+## \namespace upkie.config.bullet_config
+## \brief Bullet configuration dictionary.
+
 ## Bullet simulation configuration dictionary.
 BULLET_CONFIG = {
     "follower_camera": False,

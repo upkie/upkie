@@ -8,9 +8,13 @@
 ## \brief Static robot configuration.
 
 from .bullet_config import BULLET_CONFIG
-from .spine_config import SPINE_CONFIG
+from .spine_config import SPINE_CONFIG, merge_user_spine_config
+from .user_config import USER_CONFIG, get_user_config
 
 __all__ = [
     "BULLET_CONFIG",
     "SPINE_CONFIG",
+    "USER_CONFIG",
+    "get_user_config",
+    "merge_user_spine_config",
 ]
