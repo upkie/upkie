@@ -31,7 +31,7 @@ def abs_bounded_derivative_filter(
 
     \param prev_output Previous filter output, or initial value.
     \param new_input New filter input.
-    \param dt Sampling period in [s].
+    \param dt Sampling period in seconds.
     \param max_derivative Maximum absolute value of the output derivative.
     \return New filter output.
     """
@@ -54,7 +54,7 @@ def bounded_derivative_filter(
 
     \param prev_output Previous filter output, or initial value.
     \param new_input New filter input.
-    \param dt Sampling period in [s].
+    \param dt Sampling period in seconds.
     \param derivative_bounds Min and max value for the output derivative.
     \return New filter output.
     """
@@ -74,9 +74,9 @@ def low_pass_filter(
     Low-pass filter.
 
     \param prev_output Previous filter output, or initial value.
-    \param cutoff_period Time constant of the filter in [s].
+    \param cutoff_period Time constant of the filter in seconds.
     \param new_input New filter input.
-    \param dt Sampling period in [s].
+    \param dt Sampling period in seconds.
     \return New filter output.
     """
     alpha = dt / cutoff_period

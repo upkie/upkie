@@ -44,8 +44,8 @@ class UpkiePendulum(gym.Wrapper):
     a =\begin{bmatrix} \dot{p}^* \end{bmatrix}
     \f]
 
-    where we denote by \f$\dot{p}^*\f$ the commanded ground velocity in [m] /
-    [s], which is internally converted into wheel velocity commands. Note that,
+    where we denote by \f$\dot{p}^*\f$ the commanded ground velocity in m/s,
+    which is internally converted into wheel velocity commands. Note that,
     while this action is not normalized, [-1, 1] m/s is a reasonable range for
     ground velocities.
 
@@ -232,7 +232,7 @@ class UpkiePendulum(gym.Wrapper):
         r"""!
         Get servo actions for wheel joints.
 
-        \param[in] left_wheel_velocity Left-wheel velocity, in [rad] / [s].
+        \param[in] left_wheel_velocity Left-wheel velocity, in rad/s.
         \return Servo action dictionary.
         """
         right_wheel_velocity = -left_wheel_velocity
