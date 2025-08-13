@@ -6,8 +6,6 @@
 ## \namespace upkie.envs.backends.genesis_backend
 ## \brief Backend using the Genesis physics simulator.
 
-from typing import Optional
-
 import numpy as np
 import upkie_description
 
@@ -17,10 +15,8 @@ except ModuleNotFoundError:
     ## Genesis physics simulation library, or None if it is not installed.
     genesis = None
 
-from upkie.config import BULLET_CONFIG
 from upkie.exceptions import MissingOptionalDependency, UpkieRuntimeError
 from upkie.model import Model
-from upkie.utils.nested_update import nested_update
 from upkie.utils.robot_state import RobotState
 from upkie.utils.rotations import (
     quaternion_from_rotation_matrix,
@@ -40,7 +36,6 @@ class GenesisBackend(Backend):
         self,
         dt: float,
         backend: str = "gpu",
-        genesis_config: Optional[dict] = None,
         gui: bool = True,
         show_fps: bool = False,
         substeps: int = 1,
@@ -50,20 +45,12 @@ class GenesisBackend(Backend):
 
         \param dt Simulation time step in seconds.
         \param backend Genesis backend to use ("cpu" or "gpu").
-        \param genesis_config Additional Genesis configuration overriding the
-            default configuration. The combined configuration dictionary is
-            used for Genesis simulation setup.
         \param gui If True, run Genesis with GUI. If False, run headless.
         \param show_fps If True, Genesis will print out an FPS counter.
         \param substeps Number of simulation substeps per environment step.
             Higher values increase simulation accuracy at the cost of
             computational performance.
         """
-        # Save combined simulator configuration
-        self.__genesis_config = BULLET_CONFIG.copy()  # reusing this for now
-        if genesis_config is not None:
-            nested_update(self.__genesis_config, genesis_config)
-
         # Initialize Genesis
         if genesis is None:
             raise MissingOptionalDependency(
@@ -110,14 +97,27 @@ class GenesisBackend(Backend):
 
         # Initialize model and joint indices
         self.__model = Model()
-        self._joint_indices = {}
+        self._dofs_idx = []
+        self._dof_idx_from_name = {}
         for joint in self.__model.joints:
             joint_entity = self._robot.get_joint(joint.name)
-            self._joint_indices[joint.name] = int(*joint_entity.dofs_idx_local)
+            dof_idx = int(*joint_entity.dofs_idx_local)
+            self._dofs_idx.append(dof_idx)
+            self._dof_idx_from_name[joint.name] = dof_idx
 
-        # Other attributes
+        # Instance attributes
         self.__dt = dt
         self.__previous_imu_linear_velocity = np.zeros(3)
+
+    def _set_dof_gains(self) -> None:
+        """!
+        Set up PD gains for Genesis built-in position and velocity controllers.
+        """
+        kp = np.array([10.0, 10.0, 10.0, 10.0, 10.0, 10.0])
+        kd = np.array([10.0, 10.0, 10.0, 10.0, 10.0, 10.0])
+        assert len(kp) == len(kp) == len(self._dofs_idx)
+        self._robot.set_dofs_kp(kp, dofs_idx_local=self._dofs_idx)
+        self._robot.set_dofs_kv(kd, dofs_idx_local=self._dofs_idx)
 
     def __del__(self):
         """!
@@ -142,6 +142,7 @@ class GenesisBackend(Backend):
         # Build the scene if it was not already built
         if not self._scene.is_built:
             self._scene.build()
+            self._set_dof_gains()
 
         self._reset_robot_state(init_state)
         self._scene.step()
@@ -163,16 +164,14 @@ class GenesisBackend(Backend):
         # Missing: Reset base velocity in the world frame
         # NB: the Genesis API does not do base velocity reset as of 0.2.1
 
-        # Reset joint states
-        dofs_position = []
-        dofs_velocity = []
-        dofs_idx = []
-        for joint in self.__model.joints:
-            dofs_idx.append(self._joint_indices[joint.name])
-            dofs_position.append(init_state.joint_configuration[joint.idx_q])
-            dofs_velocity.append(init_state.joint_velocity[joint.idx_v])
-        self._robot.set_dofs_position(dofs_position, dofs_idx_local=dofs_idx)
-        self._robot.set_dofs_velocity(dofs_velocity, dofs_idx_local=dofs_idx)
+        self._robot.set_dofs_position(
+            init_state.joint_configuration,
+            dofs_idx_local=self._dofs_idx,
+        )
+        self._robot.set_dofs_velocity(
+            init_state.joint_velocity,
+            dofs_idx_local=self._dofs_idx,
+        )
 
     def step(self, action: dict) -> dict:
         r"""!
@@ -181,26 +180,37 @@ class GenesisBackend(Backend):
         \param action Action dictionary in spine format.
         \return Spine observation dictionary after the step.
         """
-        # Apply motor torques
-        joint_torques = []
-        dofs_idx_local = []
         servo_actions = action.get("servo", {})
+        position_dofs_idx = []
+        position_targets = []
+        velocity_dofs_idx = []
+        velocity_targs = []
+
         for joint_name, servo_action in servo_actions.items():
-            joint_torque = self.compute_joint_torque(
-                joint_name,
-                feedforward_torque=servo_action.get("feedforward_torque", 0.0),
-                target_position=servo_action["position"],
-                target_velocity=servo_action["velocity"],
-                kp_scale=servo_action.get("kp_scale", 1.0),
-                kd_scale=servo_action.get("kd_scale", 1.0),
-                maximum_torque=servo_action["maximum_torque"],
+            dof_idx = self._dof_idx_from_name[joint_name]
+            target_position = servo_action["position"]
+            target_velocity = servo_action["velocity"]
+
+            if np.isnan(target_position):  # velocity control
+                velocity_dofs_idx.append(dof_idx)
+                velocity_targs.append(target_velocity)
+            else:  # position control
+                position_dofs_idx.append(dof_idx)
+                position_targets.append(target_position)
+
+        # Apply position control to joints with valid position targets
+        if position_dofs_idx:
+            self._robot.control_dofs_position(
+                position_targets,
+                dofs_idx_local=position_dofs_idx,
             )
-            dofs_idx_local.append(self._joint_indices[joint_name])
-            joint_torques.append(joint_torque)
-        self._robot.control_dofs_force(
-            joint_torques,
-            dofs_idx_local=dofs_idx_local,
-        )
+
+        # Apply velocity control to joints with NaN position targets
+        if velocity_dofs_idx:
+            self._robot.control_dofs_velocity(
+                velocity_targs,
+                dofs_idx_local=velocity_dofs_idx,
+            )
 
         # Step the simulation
         self._scene.step()
@@ -310,20 +320,20 @@ class GenesisBackend(Backend):
 
     def __get_servo_observations(self) -> dict:
         servo_obs = {}
-        for joint_name, joint_idx in self._joint_indices.items():
+        for joint_name, dof_idx in self._dof_idx_from_name.items():
             # Get joint state from Genesis
             position = (
-                self._robot.get_dofs_position(dofs_idx_local=[joint_idx])
+                self._robot.get_dofs_position(dofs_idx_local=[dof_idx])
                 .cpu()
                 .numpy()[0]
             )
             velocity = (
-                self._robot.get_dofs_velocity(dofs_idx_local=[joint_idx])
+                self._robot.get_dofs_velocity(dofs_idx_local=[dof_idx])
                 .cpu()
                 .numpy()[0]
             )
             torque = (
-                self._robot.get_dofs_force(dofs_idx_local=[joint_idx])
+                self._robot.get_dofs_force(dofs_idx_local=[dof_idx])
                 .cpu()
                 .numpy()[0]
             )
@@ -355,56 +365,3 @@ class GenesisBackend(Backend):
             "position": ground_position,
             "velocity": ground_velocity,
         }
-
-    def compute_joint_torque(
-        self,
-        joint_name: str,
-        feedforward_torque: float,
-        target_position: float,
-        target_velocity: float,
-        kp_scale: float,
-        kd_scale: float,
-        maximum_torque: float,
-    ) -> float:
-        r"""!
-        Reproduce the moteus position controller in Genesis.
-
-        \param joint_name Name of the joint.
-        \param feedforward_torque Feedforward torque command in N⋅m.
-        \param target_position Target angular position in rad.
-        \param target_velocity Target angular velocity in rad/s.
-        \param kp_scale Multiplicative factor applied to the proportional gain
-            in torque control.
-        \param kd_scale Multiplicative factor applied to the derivative gain
-            in torque control.
-        \param maximum_torque Maximum torque in N⋅m from the command.
-        \return Computed joint torque in N⋅m.
-        """
-        assert not np.isnan(target_velocity)
-
-        # Read measurements from Genesis
-        joint_idx = self._joint_indices[joint_name]
-        measured_position = (
-            self._robot.get_dofs_position(dofs_idx_local=[joint_idx])
-            .cpu()
-            .numpy()[0]
-        )
-        measured_velocity = (
-            self._robot.get_dofs_velocity(dofs_idx_local=[joint_idx])
-            .cpu()
-            .numpy()[0]
-        )
-
-        # Use kp and kd gains from the configuration
-        torque_control_kp = self.__genesis_config["torque_control"]["kp"]
-        torque_control_kd = self.__genesis_config["torque_control"]["kd"]
-        kp = kp_scale * torque_control_kp
-        kd = kd_scale * torque_control_kd
-
-        # Compute joint torque with position-velocity feedback
-        torque = feedforward_torque
-        torque += kd * (target_velocity - measured_velocity)
-        if not np.isnan(target_position):
-            torque += kp * (target_position - measured_position)
-        torque = np.clip(torque, -maximum_torque, maximum_torque)
-        return torque
