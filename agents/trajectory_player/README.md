@@ -1,14 +1,6 @@
 # Trajectory player
 
-To try this agent out:
-
-```console
-pixi run upkie-jolly-jumper
-```
-
-## Going further
-
-Setting up all dependencies:
+Starting a virtual environment with all required dependencies:
 
 ```console
 pixi shell -e agent-trajectory-player

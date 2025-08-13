@@ -71,16 +71,6 @@ Other Gymnasium environments provide various levels of absraction to control the
 
 ## Going further
 
-### Agents
-
-Upkie comes with [agents](https://github.com/upkie/upkie/tree/main/agents) that implement behaviors 
-
-- **MPC balancer:** balancing and locomotion by model predictive control.
-- **RLB3 trainer:** train and evaluate balancing policies by reinforcement learning.
-- **Trajectory player:** play pre-computed trajectories while balancing with the wheels.
-
-You can make your own agents by forking this repository or using the [new\_agent](https://github.com/upkie/new_agent) template to get started.
-
 ### Examples
 
 There are smaller standalone examples in the [examples](https://github.com/upkie/upkie/tree/main/examples) directory. For instance:
@@ -107,13 +97,13 @@ Upkies come with a set of default behaviors that you can executed as Pixi tasks.
 | `upkie-mpc-balancer` |  MPC balancer | Run the MPC balancer |
 | `upkie-train-policy` |  RLB3 trainer | Train a new balancing policy by reinforcement learning |
 
-Call Pixi to execute a task:
+You can execute a task by `pixi run <task-name>`, for instance:
 
 ```console
-pixi run upkie-<task-name>
+pixi run upkie-mpc-balancer
 ```
 
-Tasks are available both on your machine and on your Upkie's Raspberry Pi (Pixi comes pre-installed on the SD card image).
+Tasks are available both on your machine and on your Upkie's Raspberry Pi (Pixi comes pre-installed on the SD card image). They are implemented by [agents](https://github.com/upkie/upkie/tree/main/agents). You can make your own agents by forking this repository or using the [new\_agent](https://github.com/upkie/new_agent) template to get started.
 
 ### Contributing
 
