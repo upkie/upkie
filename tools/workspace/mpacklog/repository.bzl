@@ -3,8 +3,8 @@
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 def mpacklog_repository(
-        version = "3.1.2",
-        sha256 = "68de1ec5292f53b821da9b01235bd8385250ee3a21435d531f3e372abd7606ce"):
+        version = "3.2.0",
+        sha256 = "d9931db7fff526f6eae1421e0b12eef7e153b43722191d85e79fe85c9438b3ec"):
     """
     Clone repository from GitHub and make its targets available for binding.
 
