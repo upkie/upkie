@@ -33,7 +33,6 @@ def merge_user_spine_config(
     return merged_config
 
 
-## Default spine configuration dictionary.
 _DEFAULT_SPINE_CONFIG = {
     "bullet": BULLET_CONFIG,
     "floor_contact": {

@@ -12,7 +12,6 @@ from upkie.config.user_config import (
     USER_CONFIG,
     _get_user_config_path,
     _load_yaml_config,
-    get_user_config,
 )
 
 
@@ -78,10 +77,6 @@ class TestUserConfig(unittest.TestCase):
     def test_user_config_is_dict(self):
         """Test that USER_CONFIG is loaded as a dictionary."""
         self.assertIsInstance(USER_CONFIG, dict)
-
-    def test_get_user_config(self):
-        """Test that get_user_config function returns USER_CONFIG."""
-        self.assertIs(get_user_config(), USER_CONFIG)
 
 
 if __name__ == "__main__":

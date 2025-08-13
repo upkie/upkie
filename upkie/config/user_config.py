@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 ## \namespace upkie.config.user_config
-## \brief Functions to load user configuration from ~/.config/upkie/
+## \brief Load local configuration to a `USER_CONFIG` dictionary.
 
 from pathlib import Path
 from typing import Any, Dict, Optional
@@ -41,18 +41,7 @@ def _load_yaml_config(config_path: Path) -> Optional[Dict[str, Any]]:
         return None
 
 
-def get_user_config() -> Dict[str, Any]:
-    r"""!
-    Get the full user configuration dictionary.
-
-    This contains the complete YAML configuration loaded from the user's
-    configuration file at ~/.config/upkie/config.yml. If the file doesn't exist
-    or can't be loaded, this will be an empty dict.
-
-    \return Full user configuration dictionary.
-    """
-    return USER_CONFIG
-
-
-# Module-level variable containing the full user configuration
-USER_CONFIG: Dict[str, Any] = _load_yaml_config(_get_user_config_path()) or {}
+## This dictionary contains the complete YAML configuration loaded from the
+## user's configuration file at `~/.config/upkie/config.yml`. If the file
+## doesn't exist or can't be loaded, this will be an empty dict.
+USER_CONFIG = _load_yaml_config(_get_user_config_path()) or {}
