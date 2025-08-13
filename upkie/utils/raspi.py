@@ -51,10 +51,13 @@ def on_raspi() -> bool:
 
 def configure_agent_process() -> None:
     r"""!
-    Configure process to run as an agent on the Raspberry Pi.
+    Configure process to run on a dedicated CPU ID for better performance.
 
-    \note This function assumes we are running an underlying script. It won't
-    work from an interpreter.
+    The Linux kernel on Upkies is configured with CPU isolation so that we can
+    isolate the spine, CAN and Python processes on different CPU cores of the
+    Raspberry Pi. Typically the spine process runs on CPU ID 1, its CAN thread
+    on CPU ID 2, and the Python interpreter runs on CPU ID 3. (All other system
+    processes will run on CPU ID 0 by default.)
     """
     if hasattr(sys, "ps1"):
         raise UpkieRuntimeError(
