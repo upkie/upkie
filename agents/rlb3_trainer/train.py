@@ -13,6 +13,7 @@ from rl_zoo3.train import train as rl_zoo3_train
 
 import upkie.envs
 import upkie.logging
+from agents.rlb3_trainer.select_env import ENVIRONMENTS, select_env
 
 CLI_SETTINGS = {
     "--algo": ["ppo"],
@@ -28,47 +29,27 @@ CLI_SETTINGS = {
 }
 
 
-def parse_command_line_arguments() -> Tuple[argparse.Namespace, List[str]]:
-    r"""!
-    Parse custom arguments and get user input for missing values.
-
-    This function handles the environment selection for Upkie RL training.
-    If the --env argument is not provided on the command line, it will
-    prompt the user interactively to select between available environments.
-
-    \return Tuple containing:
-        - Parsed arguments namespace with the selected environment
-        - List of remaining command-line arguments to pass to rl_zoo3
+def parse_env_arguments() -> Tuple[argparse.Namespace, List[str]]:
     """
-    parser = argparse.ArgumentParser(
-        description="Upkie RL Training", add_help=False
-    )
+    Parse environment selection arguments.
+
+    Returns:
+        Tuple containing:
+        - Parsed arguments namespace with the selected environment
+        - List of remaining command-line arguments
+    """
+    parser = argparse.ArgumentParser(description="Upkie environment selection")
     parser.add_argument(
         "-e",
         "--env",
-        choices=["Upkie-PyBullet-Pendulum", "Upkie-Genesis-Pendulum"],
-        help="Environment to train on",
+        choices=ENVIRONMENTS,
+        help="Environment to use",
     )
 
-    # Parse only known args to avoid conflicts with rl_zoo3
+    # Parse only known args to avoid conflicts with other parsers
     args, remaining_args = parser.parse_known_args()
-
-    # Prompt for environment if not specified
     if args.env is None:
-        print("Available environments:")
-        print("1. Upkie-PyBullet-Pendulum")
-        print("2. Upkie-Genesis-Pendulum")
-
-        while True:
-            choice = input("Select environment (1 or 2): ").strip()
-            if choice == "1":
-                args.env = "Upkie-PyBullet-Pendulum"
-                break
-            elif choice == "2":
-                args.env = "Upkie-Genesis-Pendulum"
-                break
-            else:
-                print("Invalid choice. Please enter 1 or 2.")
+        args.env = select_env()
 
     return args, remaining_args
 
@@ -78,7 +59,7 @@ if __name__ == "__main__":
     upkie.logging.disable_warnings()
 
     # Read custom command-line arguments
-    custom_args, remaining_args = parse_command_line_arguments()
+    custom_args, remaining_args = parse_env_arguments()
 
     # Prepare command-line arguments for rl_zoo3
     sys.argv = [sys.argv[0]] + remaining_args

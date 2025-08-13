@@ -13,6 +13,7 @@ from stable_baselines3 import PPO
 
 import upkie.envs
 import upkie.logging
+from agents.rlb3_trainer.select_env import ENVIRONMENTS, select_env
 
 
 def find_latest_model(
@@ -68,7 +69,7 @@ def parse_command_line_arguments() -> argparse.Namespace:
     parser.add_argument(
         "--env",
         help="Environment ID",
-        default="Upkie-PyBullet-Pendulum",
+        default="",
         type=str,
     )
     parser.add_argument(
@@ -92,24 +93,49 @@ def parse_command_line_arguments() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def get_environment_name(env_arg: Optional[str] = None) -> str:
+    """
+    Get environment name, prompting user if not provided.
+
+    Args:
+        env_arg: Environment argument from command line
+
+    Returns:
+        Selected environment name
+    """
+    if env_arg is None:
+        return select_env()
+    elif env_arg in ENVIRONMENTS:
+        return env_arg
+    else:
+        print(f"Error: Unknown environment '{env_arg}'")
+        print("Available environments:")
+        for env in ENVIRONMENTS:
+            print(f"  - {env}")
+        return select_env()
+
+
 def main():
     """Main function to run trained policy."""
     args = parse_command_line_arguments()
     upkie.envs.register()
     upkie.logging.disable_warnings()
 
+    # Get environment name with interactive selection if not provided
+    env_name = get_environment_name(args.env if args.env else None)
+
     # Find model path
     if args.model_path:
         model_path = Path(args.model_path)
     else:
         model_path = find_latest_model(
-            Path(args.logs_dir), args.env, args.algo
+            Path(args.logs_dir), env_name, args.algo
         )
 
     if model_path is None or not model_path.exists():
-        print(f"Error: Could not find trained model for {args.env}")
+        print(f"Error: Could not find trained model for {env_name}")
         print(f"Searched in: {args.logs_dir}/{args.algo}/")
-        print("Train a model first using: pixi run rl-baselines3-train")
+        print("Train a model first using: pixi run upkie-train-policy")
         return
 
     print(f"Loading model from: {model_path}")
@@ -122,7 +148,7 @@ def main():
         return
 
     # Create environment and run episodes
-    with gym.make(args.env, gui=True, frequency=200) as env:
+    with gym.make(env_name, gui=True, frequency=200) as env:
         print(f"Running {args.episodes} episodes")
         for episode in range(args.episodes):
             obs, info = env.reset()
