@@ -15,6 +15,7 @@ import gymnasium as gym
 
 import upkie.config
 import upkie.envs
+from upkie.config import SPINE_CONFIG
 from upkie.logging import logger
 from upkie.utils.clamp import clamp
 from upkie.utils.raspi import configure_agent_process, on_raspi
@@ -48,7 +49,6 @@ def parse_command_line_arguments() -> argparse.Namespace:
 
 @gin.configurable
 def run(
-    spine_config: dict,
     gain_scale: float,
     turning_gain_scale: float,
     visualize: bool,
@@ -57,7 +57,6 @@ def run(
     r"""!
     Run agent using a spine environment.
 
-    \param spine_config Spine configuration dictionary.
     \param gain_scale PD gain scale for hip and knee joints.
     \param turning_gain_scale Additional gain scaling applied when turning.
     \param visualize If true, open a MeshCat visualizer on the side.
@@ -71,11 +70,7 @@ def run(
 
     dt = 1.0 / frequency
 
-    with gym.make(
-        "Upkie-Spine-Servos",
-        frequency=frequency,
-        spine_config=spine_config,
-    ) as env:
+    with gym.make("Upkie-Spine-Servos", frequency=frequency) as env:
         _, info = env.reset()
         spine_observation = info["spine_observation"]
 
@@ -132,26 +127,10 @@ if __name__ == "__main__":
     if on_raspi():
         configure_agent_process()
 
-    spine_config = upkie.config.SPINE_CONFIG.copy()
-    # spine_config["base_orientation"] = {
-    #     "rotation_base_to_imu": np.array(
-    #         [-1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0],
-    #         dtype=float,
-    #     )
-    # }
-    spine_config["bullet"]["reset"]["joint_configuration"] = [
-        0.1,
-        0.2,
-        0.0,
-        0.1,
-        0.2,
-        0.0,
-    ]
-
-    # Create temporary controllers to access configuration
+    # Configuration hack for wheel odometry
     temp_wheel_controller = WheelController()
     wheel_radius = temp_wheel_controller.wheel_radius
-    wheel_odometry = spine_config["wheel_odometry"]
+    wheel_odometry = SPINE_CONFIG["wheel_odometry"]
     left_sign: float = 1.0 if temp_wheel_controller.left_wheeled else -1.0
     right_sign = -left_sign
     wheel_odometry["signed_radius"]["left_wheel"] = left_sign * wheel_radius
@@ -164,9 +143,8 @@ if __name__ == "__main__":
     logger.info(f"Max. remote-control velocity: {max_rc_vel} m/s")
     logger.info(f"Max. commanded velocity: {max_ground_vel} m/s")
     logger.info(f"Wheel radius: {wheel_radius} m")
-    logger.info(f"Additional spine config:\n\n{spine_config}\n\n")
 
     try:
-        run(spine_config, visualize=args.visualize)
+        run(visualize=args.visualize)
     except KeyboardInterrupt:
         logger.info("Terminating in response to keyboard interrupt")
