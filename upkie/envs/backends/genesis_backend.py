@@ -15,7 +15,7 @@ except ModuleNotFoundError:
     ## Genesis physics simulation library, or None if it is not installed.
     genesis = None
 
-from upkie.exceptions import MissingOptionalDependency, UpkieRuntimeError
+from upkie.exceptions import MissingOptionalDependency
 from upkie.model import Model
 from upkie.utils.robot_state import RobotState
 from upkie.utils.rotations import (
@@ -35,7 +35,7 @@ class GenesisBackend(Backend):
     def __init__(
         self,
         dt: float,
-        backend: str = "gpu",
+        genesis_init: dict = {},
         gui: bool = True,
         show_fps: bool = False,
         substeps: int = 1,
@@ -44,7 +44,8 @@ class GenesisBackend(Backend):
         Initialize Genesis backend.
 
         \param dt Simulation time step in seconds.
-        \param backend Genesis backend to use ("cpu" or "gpu").
+        \param genesis_init Dictionary of keyword arguments forwarded to the
+            init of the Genesis simulator.
         \param gui If True, run Genesis with GUI. If False, run headless.
         \param show_fps If True, Genesis will print out an FPS counter.
         \param substeps Number of simulation substeps per environment step.
@@ -57,12 +58,7 @@ class GenesisBackend(Backend):
                 "Genesis not found, "
                 "you can install it e.g. by `pip install genesis-world`"
             )
-        if backend == "gpu":
-            genesis.init(backend=genesis.gpu)
-        elif backend == "cpu":
-            genesis.init(backend=genesis.cpu)
-        else:
-            raise UpkieRuntimeError(f"Unknown Genesis backend: {backend}")
+        genesis.init(**genesis_init)
 
         # Create scene
         self._scene = genesis.Scene(

@@ -13,7 +13,20 @@ import upkie.envs
 upkie.envs.register()
 
 if __name__ == "__main__":
-    with gym.make("Upkie-Genesis-Pendulum", frequency=200, gui=True) as env:
+    with gym.make(
+        "Upkie-Genesis-Pendulum",
+        frequency=200,
+        frequency_checks=False,
+        genesis_init={
+            "debug": False,
+            "logging_level": None,
+            "performance_mode": False,
+            "precision": "32",
+            "seed": 42,
+        },
+        gui=True,
+        show_fps=True,
+    ) as env:
         observation, info = env.reset()
         while True:
             pitch = observation[0]
