@@ -37,7 +37,6 @@ class GenesisBackend(Backend):
         dt: float,
         genesis_init: dict = {},
         gui: bool = True,
-        show_fps: bool = False,
         substeps: int = 1,
     ) -> None:
         r"""!
@@ -47,7 +46,6 @@ class GenesisBackend(Backend):
         \param genesis_init Dictionary of keyword arguments forwarded to the
             init of the Genesis simulator.
         \param gui If True, run Genesis with GUI. If False, run headless.
-        \param show_fps If True, Genesis will print out an FPS counter.
         \param substeps Number of simulation substeps per environment step.
             Higher values increase simulation accuracy at the cost of
             computational performance.
@@ -67,7 +65,7 @@ class GenesisBackend(Backend):
                     camera_pos=[2.0, 0.0, 1.2],
                     camera_lookat=[0.0, 0.0, 0.6],
                     camera_up=[0.0, 0.0, 1.0],
-                    max_FPS=60,
+                    max_FPS=None,  # redundant with the rate limiter
                 )
                 if gui
                 else None
@@ -78,7 +76,7 @@ class GenesisBackend(Backend):
                 gravity=[0.0, 0.0, -9.81],
             ),
             profiling_options=genesis.options.ProfilingOptions(
-                show_FPS=show_fps,
+                show_FPS=False,  # those are viewer FPS
             ),
             show_viewer=gui,
         )

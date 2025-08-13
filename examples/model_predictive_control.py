@@ -67,6 +67,7 @@ def parse_command_line_arguments() -> Tuple[str, dict]:
     env_kwargs = {
         "frequency": 200.0,
         "frequency_checks": False,  # simulation steps run within env steps
+        "gui": True,
     }
     if env_name == "Upkie-PyBullet-Pendulum":
         env_kwargs["nb_substeps"] = 5

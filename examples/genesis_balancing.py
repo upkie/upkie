@@ -25,7 +25,6 @@ if __name__ == "__main__":
             "seed": 42,
         },
         gui=True,
-        show_fps=True,
     ) as env:
         observation, info = env.reset()
         while True:
