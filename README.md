@@ -87,9 +87,14 @@ There are smaller standalone examples in the [examples](https://github.com/upkie
 
 - Domain randomization: shows how to add domain-randomization wrappers to an Upkie environment.
 - Lying genuflection: genuflect while lying on a horizontal floor.
-- Neutral configuration: reset smoothly to the neutral (straight legs) configuration.
+- Model predictive control: a self-contained MPC balancer
 - PD balancer: balance by proportional-derivative feedback to wheel velocities.
-- Torque balancer: balance by proportional control from base pitch to wheel torques.
+
+Some examples have optional dependencies, like those for the Genesis and PyBullet simulators. You can activate a virtual environment and install them as optional dependencies, or use Pixi:
+
+```console
+pixi run --environment genesis ./examples/genesis_balancing.py
+```
 
 ### Tasks
 
