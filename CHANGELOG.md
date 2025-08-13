@@ -71,6 +71,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - exceptions: Fix error message reporting of UpkieError base class
 - spines: Add exception handling to all three spines
+- spines: Handle empty user replies when no joystick is found
 - utils: Fix incorrect check on inability to set affinity from an interpreter
 - utils: Remove unnecessary requirement to configure the agent process as root
 

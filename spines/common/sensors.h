@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <algorithm>
+#include <cctype>
 #include <memory>
 
 #include "upkie/cpp/exceptions/UpkieError.h"
@@ -42,12 +44,13 @@ SensorPipeline make_sensors(bool joystick_required) {
     spdlog::info("Joystick found");
     sensors.connect_sensor(joystick);
   } else if (joystick_required) {
-    char response;
+    std::string response;
     std::cout << "\n /!\\ Joystick not found /!\\\n\n"
               << "Ctrl-C will be the only way to stop the spine. "
               << "Proceed? [yN] ";
-    std::cin >> response;
-    if (response != 'y' && response != 'Y') {
+    std::getline(std::cin, response);
+    std::transform(response.begin(), response.end(), response.begin(), ::tolower);
+    if (response != "y" && response != "yes") {
       throw UpkieError("Joystick required to start the spine.");
     }
   }
