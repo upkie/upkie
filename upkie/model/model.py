@@ -74,6 +74,7 @@ class Model:
         """
         if urdf_path is None:
             urdf_path = upkie_description.URDF_PATH
+
         tree = ElementTree.parse(urdf_path)
         joint_tags = [
             child for child in tree.getroot() if child.tag == "joint"
@@ -84,6 +85,7 @@ class Model:
             for child in joint
             if child.tag == "limit"
         ]
+
         joints = []
         for idx, (joint, limit) in enumerate(limits):
             joint_name = joint.attrib["name"]
@@ -110,10 +112,6 @@ class Model:
             joint for joint in joints if joint.name in self.WHEEL_JOINT_NAMES
         )
 
-        # Read-only rotation matrices
-        rotation_ars_to_world = np.diag([1.0, -1.0, -1.0])
-        rotation_ars_to_world.setflags(write=False)
-
         # Redefine class attributes as instance attributes for Doxygen
         self.JOINT_NAMES = Model.JOINT_NAMES
         self.UPPER_LEG_JOINT_NAMES = Model.UPPER_LEG_JOINT_NAMES
@@ -121,7 +119,7 @@ class Model:
 
         # Instance attributes
         self.joints = joints
-        self.rotation_ars_to_world = rotation_ars_to_world
+        self.rotation_ars_to_world = np.diag([1.0, -1.0, -1.0])
         self.rotation_base_to_imu = ROBOT_CONFIG["rotation_base_to_imu"]
         self.upper_leg_joints = upper_leg_joints
         self.wheel_joints = wheel_joints
