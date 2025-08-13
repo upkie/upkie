@@ -44,11 +44,15 @@ void SynchronousClock::wait_for_next_tick() {
   const auto call_time = std::chrono::steady_clock::now();
   const double duration_tick_to_call_us =
       std::chrono::duration_cast<microseconds>(call_time - next_tick_).count();
+
+  // Check if we skipped any clock cycle
   skip_count_ = std::ceil(duration_tick_to_call_us / period_us_.count());
   if (skip_count_ > 0) {
     next_tick_ += skip_count_ * period_us_;
   }
   std::this_thread::sleep_until(next_tick_);
+
+  // Consider issuing a warning if some clock cycles were skipped
   if (skip_count_ > 0) {
     accumulated_skip_count_ += skip_count_;
     const auto skip_warning_time = std::chrono::steady_clock::now();
@@ -57,15 +61,21 @@ void SynchronousClock::wait_for_next_tick() {
             skip_warning_time - last_skip_warning_time_)
             .count() /
         1000.0;
+
+    // Don't warn the user too frequently
     if (time_since_last_warning >= kSkipWarningInterval_) {
       const double expected_steps = time_since_last_warning * frequency_;
       const double skip_ratio = accumulated_skip_count_ / expected_steps;
       const double estimated_frequency = (1.0 - skip_ratio) * frequency_;
-      spdlog::warn(
-          "Skipped {} clock cycles over {:.1f} seconds (frequency is at most "
-          "{:.0f} Hz < desired {:.0f} Hz)",
-          accumulated_skip_count_, time_since_last_warning, estimated_frequency,
-          frequency_);
+
+      // Only warn if performance dropped by more than 10%
+      if (estimated_frequency < 0.9 * frequency_) {
+        spdlog::warn(
+            "Skipped {} clock cycles over {:.1f} seconds (frequency is at most "
+            "{:.0f} Hz < desired {:.0f} Hz)",
+            accumulated_skip_count_, time_since_last_warning,
+            estimated_frequency, frequency_);
+      }
       last_skip_warning_time_ = skip_warning_time;
       accumulated_skip_count_ = 0;
     }
@@ -77,6 +87,7 @@ void SynchronousClock::wait_for_next_tick() {
         std::chrono::duration_cast<microseconds>(sleep_duration).count();
     slack_ = duration_call_to_wakeup_us / 1e6;
   }
+
   next_tick_ += period_us_;
   measure_period(call_time);
 }

@@ -65,6 +65,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - model: Load the URDF description from `upkie_description` by default
 - nit: Remove brackets around SI units in documentation and comments
 - spines: Factor common observers and sensors between spines
+- spines: Throttle clock warning frequency based on time and performance drop
 - tools: Update script to dump moteus servo configurations
 - utils: Generalize `abs_bounded_derivative_filter` to vector inputs
 - utils: Generalize `bounded_derivative_filter` to vector inputs
