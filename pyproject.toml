@@ -144,7 +144,7 @@ python = "3.10.*"
 qpmpc = ">=3.0.1,<4"
 
 [tool.pixi.feature.genesis.pypi-dependencies]
-genesis-world = ">=0.2.1"
+genesis-world = ">=0.3.0"
 torch = ">=2.6.0"
 torchvision = ">=0.21.0"
 
