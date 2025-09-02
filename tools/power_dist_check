@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 #
+# SPDX-License-Identifier: Apache-2.0
 # Copyright 2021 Josh Pieper, jjp@pobox.com.
 # Copyright 2023 Inria
-# SPDX-License-Identifier: Apache-2.0
 
 """Use the raw CAN API to query the power dist board.
 
