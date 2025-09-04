@@ -13,6 +13,7 @@
 
 #include <chrono>
 #include <iostream>
+#include <memory>
 #include <string>
 
 #include "upkie/cpp/sensors/Sensor.h"

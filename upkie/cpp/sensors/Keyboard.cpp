@@ -31,9 +31,9 @@ bool Keyboard::read_event() {
     if (bytes_read < bytes_available) {
       // Skip the remaining bytes
       do {
-        unsigned char garbage[bytes_available - bytes_read];
-        bytes_read =
-            ::read(STDIN_FILENO, &garbage, bytes_available - bytes_read);
+        ssize_t remaining = bytes_available - bytes_read;
+        std::unique_ptr<unsigned char[]> garbage(new unsigned char[remaining]);
+        bytes_read = ::read(STDIN_FILENO, garbage.get(), remaining);
         ioctl(STDIN_FILENO, FIONREAD, &bytes_available);
       } while (bytes_available);
     }
