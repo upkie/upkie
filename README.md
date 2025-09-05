@@ -12,9 +12,9 @@
 
 This repository contains all the materials needed to build and control an Upkie. Questions are welcome in the [discussions forum](https://github.com/upkie/upkie/discussions) or in the [chat room](https://matrix.to/#/#upkie:matrix.org).
 
-## Building your own Upkie
+## Building your own
 
-Step by step instructions to build a new Upkie from scratch are available in the [Wiki](https://github.com/upkie/upkie/wiki).
+Upkies come with [step by step build instructions](https://github.com/upkie/upkie/wiki).
 
 ## Getting started
 

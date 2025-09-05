@@ -75,11 +75,14 @@ def parse_command_line_arguments() -> Tuple[str, dict]:
 
 
 if __name__ == "__main__":
-    mpc_balancer = MPCBalancer()
-    env_name, env_kwargs = parse_command_line_arguments()
-    print(f"\nStarting MPC balancing with {env_name}...")
+    # Leg length is a key parameter of the model predictive controller. Start
+    # from the leg length of the wheeled biped, but don't hesitate to tune this
+    # value afterwards for better performance on your real robot.
+    mpc_balancer = MPCBalancer(leg_length=0.58)
 
     try:
+        env_name, env_kwargs = parse_command_line_arguments()
+        print(f"\nStarting MPC balancing with {env_name}...")
         with gym.make(env_name, **env_kwargs) as env:
             _, info = env.reset()  # connects to the spine
             action = np.zeros(env.action_space.shape)
