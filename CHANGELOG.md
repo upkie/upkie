@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - examples: Add PEP-723 inline dependencies to example scripts
 
+### Changed
+
+- Move joint friction from C++ Bullet interface to PyBullet environment
+
 ### Fixed
 
 - CICD: Release workflow for the pi3hat spine
