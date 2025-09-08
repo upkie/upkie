@@ -25,7 +25,7 @@ JOINT_PROPS = {
 if __name__ == "__main__":
     upkie.envs.register()
     with gym.make(
-        "Upkie-Spine-Servos",
+        "Upkie-PyBullet-Servos",
         frequency=200.0,
         init_state=RobotState(
             orientation_base_in_world=ScipyRotation.from_quat(
@@ -33,16 +33,14 @@ if __name__ == "__main__":
             ),
             position_base_in_world=np.array([0.0, 0.0, 0.1]),
         ),
-        spine_config={
-            "bullet": {
-                "joint_properties": {
-                    "left_hip": JOINT_PROPS,
-                    "left_knee": JOINT_PROPS,
-                    "left_wheel": JOINT_PROPS,
-                    "right_hip": JOINT_PROPS,
-                    "right_knee": JOINT_PROPS,
-                    "right_wheel": JOINT_PROPS,
-                }
+        bullet_config={
+            "joint_properties": {
+                "left_hip": JOINT_PROPS,
+                "left_knee": JOINT_PROPS,
+                "left_wheel": JOINT_PROPS,
+                "right_hip": JOINT_PROPS,
+                "right_knee": JOINT_PROPS,
+                "right_wheel": JOINT_PROPS,
             }
         },
     ) as env:

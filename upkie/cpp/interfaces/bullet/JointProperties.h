@@ -13,9 +13,6 @@ using palimpsest::Dictionary;
 
 //! Properties for robot joints in the Bullet simulation.
 struct JointProperties {
-  //! Kinetic friction, in N⋅m.
-  double friction = 0.0;
-
   //! Maximum torque, in N⋅m.
   double maximum_torque = 0.0;
 
@@ -33,7 +30,6 @@ struct JointProperties {
    * \param[in] config Configuration dictionary.
    */
   explicit JointProperties(const Dictionary& config) {
-    friction = config.get<double>("friction", friction);
     torque_control_noise =
         config.get<double>("torque_control_noise", torque_control_noise);
     torque_measurement_noise = config.get<double>("torque_measurement_noise",
@@ -45,14 +41,12 @@ struct JointProperties {
    * \param[in] other Properties to update from.
    */
   void update_configurable(const JointProperties& other) noexcept {
-    friction = other.friction;
     torque_control_noise = other.torque_control_noise;
     torque_measurement_noise = other.torque_measurement_noise;
   }
 
   //! Reset configurable properties.
   void reset_configurable() noexcept {
-    friction = 0.0;
     torque_control_noise = 0.0;
     torque_measurement_noise = 0.0;
   }

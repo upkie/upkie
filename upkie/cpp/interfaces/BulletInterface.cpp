@@ -516,10 +516,6 @@ double BulletInterface::compute_joint_torque(
   if (!std::isnan(target_position)) {
     torque += kp * (target_position - measured_position);
   }
-  constexpr double kMaxStictionVelocity = 1e-3;  // rad/s
-  if (std::abs(measured_velocity) > kMaxStictionVelocity) {
-    torque += joint_props.friction * ((measured_velocity > 0.0) ? -1.0 : +1.0);
-  }
   if (joint_props.torque_control_noise > 1e-10) {
     std::normal_distribution<double> white_noise(
         0.0, joint_props.torque_control_noise);

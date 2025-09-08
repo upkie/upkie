@@ -182,7 +182,7 @@ class BulletInterface : public Interface {
     //! Body angular velocity of the base upon reset
     Eigen::Vector3d angular_velocity_base_in_base = Eigen::Vector3d::Zero();
 
-    //! Joint friction parameters
+    //! Joint properties (torque limits, noise parameters, etc.)
     std::map<std::string, bullet::JointProperties> joint_properties;
 
     //! Uncertainty on IMU measurements

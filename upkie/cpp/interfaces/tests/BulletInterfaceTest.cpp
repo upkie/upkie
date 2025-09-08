@@ -17,9 +17,6 @@ namespace upkie::cpp::interfaces {
 
 using bazel::tools::cpp::runfiles::Runfiles;
 
-constexpr double kNoFriction = 1e-5;
-constexpr double kLeftWheelFriction = 0.1;
-
 class BulletInterfaceTest : public ::testing::Test {
  protected:
   //! Set up a new test fixture
@@ -32,9 +29,6 @@ class BulletInterfaceTest : public ::testing::Test {
     params.dt = dt_;
     params.floor = false;   // wheels roll freely during testing
     params.gravity = true;  // default, just a reminder
-    bullet::JointProperties left_wheel_props;
-    left_wheel_props.friction = kLeftWheelFriction;
-    params.joint_properties.try_emplace("left_wheel", left_wheel_props);
     params.robot_urdf_path =
         runfiles->Rlocation("upkie_description/urdf/upkie.urdf");
     interface_ = std::make_unique<BulletInterface>(params);
@@ -76,13 +70,6 @@ TEST_F(BulletInterfaceTest, JointProperties) {
   ASSERT_NO_THROW(joint_props.at("right_hip"));
   ASSERT_NO_THROW(joint_props.at("right_knee"));
   ASSERT_NO_THROW(joint_props.at("right_wheel"));
-
-  ASSERT_LT(joint_props.at("left_hip").friction, kNoFriction);
-  ASSERT_LT(joint_props.at("left_knee").friction, kNoFriction);
-  ASSERT_GE(joint_props.at("left_wheel").friction, kLeftWheelFriction);
-  ASSERT_LT(joint_props.at("right_hip").friction, kNoFriction);
-  ASSERT_LT(joint_props.at("right_knee").friction, kNoFriction);
-  ASSERT_LT(joint_props.at("right_wheel").friction, kNoFriction);
 
   ASSERT_GT(joint_props.at("left_hip").maximum_torque, 5.0);
   ASSERT_GT(joint_props.at("left_knee").maximum_torque, 5.0);
@@ -179,7 +166,7 @@ TEST_F(BulletInterfaceTest, ComputeJointTorquesWhileMoving) {
   interface_->cycle([](const moteus::Output& output) {});
   interface_->cycle([](const moteus::Output& output) {});
 
-  // Right wheel has no kinetic friction
+  // Both wheels should behave the same (no joint friction)
   const auto& right_wheel = interface_->servo_reply().at("right_wheel").result;
   const double right_target_velocity = right_wheel.velocity * (2.0 * M_PI);
   const double right_torque = interface_->compute_joint_torque(
@@ -188,14 +175,13 @@ TEST_F(BulletInterfaceTest, ComputeJointTorquesWhileMoving) {
   ASSERT_GT(right_wheel.velocity, 0.1);
   ASSERT_NEAR(right_torque, 0.0, 1e-3);
 
-  // Left wheel has kinetic friction
   const auto& left_wheel = interface_->servo_reply().at("left_wheel").result;
   const double left_target_velocity = left_wheel.velocity * (2.0 * M_PI);
   const double left_torque = interface_->compute_joint_torque(
       "left_wheel", no_feedforward_torque, no_position, left_target_velocity,
       1.0, 1.0, 1.0);
-  ASSERT_GT(left_wheel.velocity, 0.1);                  // positive velocity
-  ASSERT_NEAR(left_torque, -kLeftWheelFriction, 1e-3);  // negative torque
+  ASSERT_GT(left_wheel.velocity, 0.1);  // positive velocity
+  ASSERT_NEAR(left_torque, 0.0, 1e-3);  // no friction torque
 }
 
 TEST_F(BulletInterfaceTest, ComputeJointFeedforwardTorque) {
