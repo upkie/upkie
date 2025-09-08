@@ -7,12 +7,14 @@
 """Balancing an Upkie by PD feedback to wheel velocities."""
 
 import gymnasium as gym
-
 import upkie.envs
+from upkie.utils.raspi import configure_agent_process, on_raspi
 
 upkie.envs.register()
 
 if __name__ == "__main__":
+    if on_raspi():
+        configure_agent_process()
     with gym.make("Upkie-Spine-Pendulum", frequency=200.0) as env:
         observation, _ = env.reset()  # connects to the spine
         action = 0.0 * env.action_space.sample()

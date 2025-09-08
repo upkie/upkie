@@ -3,8 +3,12 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2025 Inria
+#
+# /// script
+# dependencies = ["pybullet>=3"]
+# ///
 
-"""Try PyBullet environment with basic balancing."""
+"""Try basic balancing in a PyBullet simulation."""
 
 import gymnasium as gym
 import numpy as np

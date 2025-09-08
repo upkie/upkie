@@ -5,7 +5,7 @@
 # Copyright 2023 Inria
 #
 # /// script
-# dependencies = ["upkie", "pybullet>=3", "qpmpc", "proxsuite"]
+# dependencies = ["proxsuite", "pybullet>=3", "qpmpc"]
 # ///
 
 """Wheel balancing using model predictive control in PyBullet simulation."""

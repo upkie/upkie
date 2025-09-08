@@ -12,8 +12,8 @@ logs/**/*.0
 logs/**/*.csv
 logs/**/*.mpack
 logs/**/*.pkl
-logs/**/*.yml
 logs/**/*.txt
+logs/**/*.yml
 logs/**/*.zip
 sandbox/
 tools/bazel

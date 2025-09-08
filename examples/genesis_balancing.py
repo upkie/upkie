@@ -2,6 +2,10 @@
 # -*- coding: utf-8 -*-
 #
 # SPDX-License-Identifier: Apache-2.0
+#
+# /// script
+# dependencies = ["genesis-world"]
+# ///
 
 """Try Genesis environment with basic balancing."""
 

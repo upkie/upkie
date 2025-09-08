@@ -3,6 +3,10 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Inria
+#
+# /// script
+# dependencies = ["pybullet>=3"]
+# ///
 
 """Balancing using proportional control from base pitch to wheel torques."""
 
@@ -40,5 +44,5 @@ def run(env: upkie.envs.UpkieServos):
 
 
 if __name__ == "__main__":
-    with gym.make("Upkie-Spine-Servos", frequency=200.0) as env:
+    with gym.make("Upkie-PyBullet-Servos", frequency=200.0) as env:
         run(env)

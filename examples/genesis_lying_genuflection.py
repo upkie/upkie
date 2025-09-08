@@ -2,7 +2,10 @@
 # -*- coding: utf-8 -*-
 #
 # SPDX-License-Identifier: Apache-2.0
-# Copyright 2023 Inria
+#
+# /// script
+# dependencies = ["genesis-world"]
+# ///
 
 """Genuflect while lying on a horizontal floor."""
 

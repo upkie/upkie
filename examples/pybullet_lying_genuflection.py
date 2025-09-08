@@ -3,8 +3,12 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Inria
+#
+# /// script
+# dependencies = ["pybullet>=3"]
+# ///
 
-"""Genuflect while lying on a horizontal floor."""
+"""Genuflect while lying on a horizontal floor in a PyBullet simulation."""
 
 import gymnasium as gym
 import numpy as np
