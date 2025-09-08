@@ -3,6 +3,10 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Inria
+#
+# /// script
+# dependencies = ["pybullet>=3"]
+# ///
 
 """Genuflect while lying on the floor despite joint friction."""
 
