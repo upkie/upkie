@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add `uv` dependencies to example scripts
+
 ### Fixed
 
 - Fix keyboard build error on ARM64 macOS
