@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- examples: Reorganize examples into backend-specific sub-directories
 - Move joint friction from C++ Bullet interface to PyBullet environment
 
 ### Fixed
