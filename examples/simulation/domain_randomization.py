@@ -3,6 +3,10 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2025 Inria
+#
+# /// script
+# dependencies = ["pybullet>=3"]
+# ///
 
 """Apply some domain-randomization wrappers to an Upkie environment."""
 

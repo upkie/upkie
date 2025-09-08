@@ -3,6 +3,10 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2024 Inria
+#
+# /// script
+# dependencies = ["pybullet>=3"]
+# ///
 
 """Initialize servo environment with a custom initial state."""
 
