@@ -644,6 +644,262 @@ class PyBulletBackendTestCase(unittest.TestCase):
 
         backend.close()
 
+    @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
+    @patch("upkie.envs.backends.pybullet_backend.pybullet")
+    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
+    def test_torque_control_noise(
+        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
+    ):
+        """Test torque control noise is applied during torque computation."""
+        mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
+        mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
+        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
+
+        bullet_config = {
+            "torque_control": {"kp": 20.0, "kd": 1.0},
+            "joint_properties": {
+                "left_hip": {
+                    "torque_control_noise": 0.1,  # Significant noise
+                },
+                "right_hip": {
+                    "torque_control_noise": 0.0,  # No noise
+                },
+            },
+        }
+
+        backend = PyBulletBackend(
+            dt=0.01, bullet_config=bullet_config, gui=False
+        )
+
+        # Set up joint state for torque computation
+        self.pybullet_mock.getJointState.return_value = (0.1, 0.05, 0.0, 0.0)
+
+        # Test parameters for torque computation
+        target_position = 0.2
+        target_velocity = 0.1
+        feedforward_torque = 0.5
+        maximum_torque = 10.0
+
+        # Compute multiple torques and check noise characteristics
+        left_hip_torques = []
+        right_hip_torques = []
+        for _ in range(100):
+            left_hip_torque = backend.compute_joint_torque(
+                "left_hip",
+                feedforward_torque,
+                target_position,
+                target_velocity,
+                1.0,  # kp_scale
+                1.0,  # kd_scale
+                maximum_torque,
+            )
+            right_hip_torque = backend.compute_joint_torque(
+                "right_hip",
+                feedforward_torque,
+                target_position,
+                target_velocity,
+                1.0,  # kp_scale
+                1.0,  # kd_scale
+                maximum_torque,
+            )
+            left_hip_torques.append(left_hip_torque)
+            right_hip_torques.append(right_hip_torque)
+
+        # Expected base torque: feedforward + kd*(target_vel - measured_vel) +
+        # kp*(target_pos - measured_pos)
+        expected_base_torque = (
+            feedforward_torque
+            + 1.0 * (target_velocity - 0.05)
+            + 20.0 * (target_position - 0.1)
+        )
+
+        # Joint without noise should have constant torque
+        self.assertTrue(
+            all(
+                abs(torque - expected_base_torque) < 1e-10
+                for torque in right_hip_torques
+            ),
+            "Right hip torque should be constant (no control noise)",
+        )
+
+        # Joint with control noise should have varying torque values
+        left_hip_std = np.std(left_hip_torques)
+        left_hip_mean = np.mean(left_hip_torques)
+
+        # Check that noise has reasonable statistics
+        # Mean should be close to expected torque (unbiased noise)
+        self.assertAlmostEqual(left_hip_mean, expected_base_torque, delta=0.05)
+
+        # Standard deviation should be close to configured noise level
+        self.assertGreater(
+            left_hip_std,
+            0.05,
+            "Left hip torque should vary due to control noise",
+        )
+        self.assertLess(
+            left_hip_std, 0.15, "Control noise magnitude should be reasonable"
+        )
+
+        # Check that different samples have different values
+        unique_torques = set(round(t, 6) for t in left_hip_torques[:10])
+        self.assertGreater(
+            len(unique_torques),
+            5,
+            "Should get different torque values due to control noise",
+        )
+
+        backend.close()
+
+    @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
+    @patch("upkie.envs.backends.pybullet_backend.pybullet")
+    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
+    def test_torque_control_noise_threshold(
+        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
+    ):
+        """Test that small torque control noise values are ignored."""
+        mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
+        mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
+        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
+
+        bullet_config = {
+            "torque_control": {"kp": 20.0, "kd": 1.0},
+            "joint_properties": {
+                "left_hip": {
+                    "torque_control_noise": 1e-11,  # Below threshold
+                },
+            },
+        }
+
+        backend = PyBulletBackend(
+            dt=0.01, bullet_config=bullet_config, gui=False
+        )
+
+        # Set up joint state for torque computation
+        self.pybullet_mock.getJointState.return_value = (0.0, 0.0, 0.0, 0.0)
+
+        # Test parameters
+        target_position = 0.05
+        feedforward_torque = 1.0
+        maximum_torque = 10.0
+
+        # Compute multiple torques
+        torques = []
+        for _ in range(50):
+            torque = backend.compute_joint_torque(
+                "left_hip",
+                feedforward_torque,
+                target_position,
+                0.0,  # target_velocity
+                1.0,  # kp_scale
+                1.0,  # kd_scale
+                maximum_torque,
+            )
+            torques.append(torque)
+
+        # Expected torque: feedforward + kp * (target_pos - measured_pos)
+        # = 1.0 + 20.0 * (0.05 - 0.0) = 1.0 + 1.0 = 2.0
+        expected_torque = feedforward_torque + 20.0 * (target_position - 0.0)
+
+        # All torque values should be exactly the same (no noise applied)
+        self.assertTrue(
+            all(abs(torque - expected_torque) < 1e-10 for torque in torques),
+            "Torque should be constant when control noise is below threshold",
+        )
+
+        backend.close()
+
+    @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
+    @patch("upkie.envs.backends.pybullet_backend.pybullet")
+    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
+    def test_control_vs_measurement_noise_independence(
+        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
+    ):
+        """Test that control noise and measurement noise are independent."""
+        mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
+        mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
+        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
+
+        # Mock required methods for get_spine_observation
+        mock_pybullet.getBasePositionAndOrientation.return_value = (
+            [0.0, 0.0, 0.6],
+            [0.0, 0.0, 0.0, 1.0],
+        )
+        mock_pybullet.getBaseVelocity.return_value = (
+            [0.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0],
+        )
+        mock_pybullet.getLinkState.return_value = [
+            None,
+            None,
+            None,
+            None,
+            None,
+            [0.0, 0.0, 0.0, 1.0],  # link orientation
+            [0.0, 0.0, 0.0],  # linear velocity
+            [0.0, 0.0, 0.0],  # angular velocity
+        ]
+
+        bullet_config = {
+            "torque_control": {"kp": 20.0, "kd": 1.0},
+            "joint_properties": {
+                "left_hip": {
+                    "torque_control_noise": 0.1,  # Control noise
+                    "torque_measurement_noise": 0.05,  # Measurement noise
+                },
+            },
+        }
+
+        backend = PyBulletBackend(
+            dt=0.01, bullet_config=bullet_config, gui=False
+        )
+
+        # Set up joint state
+        self.pybullet_mock.getJointState.return_value = (0.0, 0.0, 0.0, 0.0)
+
+        # Apply action and get observations multiple times
+        servo_action = {
+            "position": 0.1,
+            "velocity": 0.0,
+            "kp_scale": 1.0,
+            "kd_scale": 1.0,
+            "maximum_torque": 10.0,
+        }
+        action = {"servo": {"left_hip": servo_action}}
+
+        stored_torques = []  # These should have control noise
+        observed_torques = []  # These should have control + measurement noise
+
+        for _ in range(100):
+            # Step to compute and store torque (with control noise)
+            backend.step(action)
+            stored_torque = backend._PyBulletBackend__joint_torques["left_hip"]
+
+            # Get observation (adds measurement noise on top)
+            obs = backend.get_spine_observation()
+            observed_torque = obs["servo"]["left_hip"]["torque"]
+
+            stored_torques.append(stored_torque)
+            observed_torques.append(observed_torque)
+
+        # Both should vary, but observed torques should have more variance
+        stored_std = np.std(stored_torques)
+        observed_std = np.std(observed_torques)
+
+        # Control noise should cause variation in stored torques
+        self.assertGreater(
+            stored_std, 0.05, "Stored torques should vary due to control noise"
+        )
+
+        # Observed torques should differ from measurement noise
+        self.assertGreater(
+            observed_std,
+            stored_std,
+            "Observed torques should have more variance "
+            "due to measurement noise",
+        )
+
+        backend.close()
+
 
 if __name__ == "__main__":
     unittest.main()
