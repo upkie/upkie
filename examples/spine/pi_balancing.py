@@ -3,6 +3,10 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Inria
+#
+# /// script
+# dependencies = ["upkie"]
+# ///
 
 """Pitch-position PI balancing controller."""
 

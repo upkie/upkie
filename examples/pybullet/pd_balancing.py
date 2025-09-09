@@ -5,7 +5,7 @@
 # Copyright 2025 Inria
 #
 # /// script
-# dependencies = ["pybullet>=3"]
+# dependencies = ["upkie", "pybullet>=3"]
 # ///
 
 """Try basic balancing in a PyBullet simulation."""

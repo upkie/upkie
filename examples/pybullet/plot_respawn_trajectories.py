@@ -5,7 +5,7 @@
 # Copyright 2024 Inria
 #
 # /// script
-# dependencies = ["pybullet>=3"]
+# dependencies = ["upkie", "pybullet>=3"]
 # ///
 
 """This example illustrates https://github.com/orgs/upkie/discussions/471"""
