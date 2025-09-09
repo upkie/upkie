@@ -87,10 +87,7 @@ BulletInterface::BulletInterface(const Parameters& params)
     get_link_index(link_name);  // memoize link index
     if (joint_index_map_.find(joint_name) != joint_index_map_.end()) {
       joint_index_map_[joint_name] = joint_index;
-
-      bullet::JointProperties props;
-      props.maximum_torque = joint_info.m_jointMaxForce;
-      joint_properties_.try_emplace(joint_name, props);
+      model_maximum_torque_.try_emplace(joint_name, joint_info.m_jointMaxForce);
     }
   }
 
@@ -478,13 +475,13 @@ double BulletInterface::compute_joint_torque(
   assert(!std::isnan(target_velocity));
 
   // Read in measurements and torque-control gains
-  const bullet::JointProperties& joint_props = joint_properties_[joint_name];
+  const double model_max_torque = model_maximum_torque_[joint_name];
   const auto& measurements = servo_reply_[joint_name].result;
   const double measured_position = measurements.position * (2.0 * M_PI);
   const double measured_velocity = measurements.velocity * (2.0 * M_PI);
   const double kp = kp_scale * params_.torque_control_kp;
   const double kd = kd_scale * params_.torque_control_kd;
-  const double tau_max = std::min(maximum_torque, joint_props.maximum_torque);
+  const double tau_max = std::min(maximum_torque, model_max_torque);
 
   // Compute joint torque
   double torque = feedforward_torque;

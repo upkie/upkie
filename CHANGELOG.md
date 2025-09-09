@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- cpp: Refactor joint properties in internal Bullet interface
 - examples: Reorganize examples into backend-specific sub-directories
 
 ### Removed
