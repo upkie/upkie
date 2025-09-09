@@ -477,5 +477,12 @@ class PyBulletBackend(Backend):
             friction_torque = -friction * velocity_sign
             torque += friction_torque
 
+        # Add torque-control Gaussian white noise if applicable
+        joint_props = self._joint_properties[joint_name]
+        torque_control_noise = joint_props["torque_control_noise"]
+        if torque_control_noise > 1e-10:
+            noise = self.__rng.normal(0.0, torque_control_noise)
+            torque += noise
+
         torque = np.clip(torque, -maximum_torque, maximum_torque)
         return torque
