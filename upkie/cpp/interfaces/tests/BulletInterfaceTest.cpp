@@ -77,8 +77,6 @@ TEST_F(BulletInterfaceTest, JointProperties) {
   ASSERT_GT(joint_props.at("right_hip").maximum_torque, 5.0);
   ASSERT_GT(joint_props.at("right_knee").maximum_torque, 5.0);
   ASSERT_GT(joint_props.at("right_wheel").maximum_torque, 0.5);
-
-
 }
 
 TEST_F(BulletInterfaceTest, CycleDoesntThrow) {

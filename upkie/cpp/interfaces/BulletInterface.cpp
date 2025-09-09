@@ -169,7 +169,6 @@ void BulletInterface::reset(const Dictionary& config) {
                    params_.angular_velocity_base_in_base);
   reset_contact_data();
   reset_joint_angles(params_.joint_configuration);
-  reset_joint_properties();
   if (std::abs(params_.inertia_randomization) < 1e-10) {
     randomize_masses();
   }
@@ -233,23 +232,6 @@ void BulletInterface::reset_joint_angles(
         "Invalid joint configuration: vector has dimension " +
         std::to_string(nq) + " whereas the robot has " +
         std::to_string(nb_revolute_joints) + " revolute joints");
-  }
-}
-
-void BulletInterface::reset_joint_properties() {
-  b3JointInfo joint_info;
-  const int nb_joints = bullet_.getNumJoints(robot_);
-  for (int joint_index = 0; joint_index < nb_joints; ++joint_index) {
-    bullet_.getJointInfo(robot_, joint_index, &joint_info);
-    std::string joint_name = joint_info.m_jointName;
-    if (joint_index_map_.find(joint_name) != joint_index_map_.end()) {
-      const auto params_it = params_.joint_properties.find(joint_name);
-      if (params_it != params_.joint_properties.end()) {
-        joint_properties_[joint_name].update_configurable(params_it->second);
-      } else /* no configuration for joint properties */ {
-        joint_properties_[joint_name].reset_configurable();
-      }
-    }
   }
 }
 
