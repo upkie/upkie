@@ -485,13 +485,7 @@ void BulletInterface::send_commands() {
 
     // m_jointMotorTorque processed in read_joint_sensors() will be set to zero
     // since we just torque controlled the joint, hence we measure it here:
-    const bullet::JointProperties& joint_props = joint_properties_[joint_name];
     servo_reply_[joint_name].result.torque = joint_torque;
-    if (joint_props.torque_measurement_noise > 1e-10) {
-      std::normal_distribution<double> white_noise(
-          0.0, joint_props.torque_control_noise);
-      servo_reply_[joint_name].result.torque += white_noise(rng_);
-    }
   }
 }
 
