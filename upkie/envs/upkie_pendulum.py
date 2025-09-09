@@ -108,6 +108,7 @@ class UpkiePendulum(gym.Wrapper):
         fall_pitch: float = 1.0,
         left_wheeled: bool = True,
         max_ground_velocity: float = 1.0,
+        wheel_radius: Optional[float] = None,  # TODO(scaron): not the way!
     ):
         r"""!
         Initialize environment.
@@ -120,6 +121,11 @@ class UpkiePendulum(gym.Wrapper):
         \param max_ground_velocity Maximum commanded ground velocity in m/s.
             The default value of 1 m/s is conservative, don't hesitate to
             increase it once you feel confident in your agent.
+        \param wheel_radius Wheel radius used by the environment to distribute
+            ground velocities between the left and right wheels. By default the
+            wheel radius is defined in the robot configuration (read from
+            ~/.config/upkie/config.yml). Passing a value via this argument will
+            override... oh wait, actually that is not a good idea...
         """
         super().__init__(env)
         if env.frequency is None:
