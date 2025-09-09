@@ -24,15 +24,6 @@ struct JointProperties {
    * \param[in] config Configuration dictionary.
    */
   explicit JointProperties(const Dictionary& config) {}
-
-  /*! Update configurable properties from another instance.
-   *
-   * \param[in] other Properties to update from.
-   */
-  void update_configurable(const JointProperties& other) noexcept {}
-
-  //! Reset configurable properties.
-  void reset_configurable() noexcept {}
 };
 
 }  // namespace upkie::cpp::interfaces::bullet
