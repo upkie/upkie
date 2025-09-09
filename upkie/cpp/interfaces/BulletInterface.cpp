@@ -510,11 +510,6 @@ double BulletInterface::compute_joint_torque(
   if (!std::isnan(target_position)) {
     torque += kp * (target_position - measured_position);
   }
-  if (joint_props.torque_control_noise > 1e-10) {
-    std::normal_distribution<double> white_noise(
-        0.0, joint_props.torque_control_noise);
-    torque += white_noise(rng_);
-  }
   torque = std::max(std::min(torque, tau_max), -tau_max);
   return torque;
 }
