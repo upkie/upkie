@@ -61,22 +61,22 @@ TEST_F(BulletInterfaceTest, CycleCallsCallback) {
   ASSERT_TRUE(callback_called);
 }
 
-TEST_F(BulletInterfaceTest, JointProperties) {
-  const auto& joint_props = interface_->joint_properties();
+TEST_F(BulletInterfaceTest, ModelMaximumTorque) {
+  const auto& max_torques = interface_->model_maximum_torque();
 
-  ASSERT_NO_THROW(joint_props.at("left_hip"));
-  ASSERT_NO_THROW(joint_props.at("left_knee"));
-  ASSERT_NO_THROW(joint_props.at("left_wheel"));
-  ASSERT_NO_THROW(joint_props.at("right_hip"));
-  ASSERT_NO_THROW(joint_props.at("right_knee"));
-  ASSERT_NO_THROW(joint_props.at("right_wheel"));
+  ASSERT_NO_THROW(max_torques.at("left_hip"));
+  ASSERT_NO_THROW(max_torques.at("left_knee"));
+  ASSERT_NO_THROW(max_torques.at("left_wheel"));
+  ASSERT_NO_THROW(max_torques.at("right_hip"));
+  ASSERT_NO_THROW(max_torques.at("right_knee"));
+  ASSERT_NO_THROW(max_torques.at("right_wheel"));
 
-  ASSERT_GT(joint_props.at("left_hip").maximum_torque, 5.0);
-  ASSERT_GT(joint_props.at("left_knee").maximum_torque, 5.0);
-  ASSERT_GT(joint_props.at("left_wheel").maximum_torque, 0.5);
-  ASSERT_GT(joint_props.at("right_hip").maximum_torque, 5.0);
-  ASSERT_GT(joint_props.at("right_knee").maximum_torque, 5.0);
-  ASSERT_GT(joint_props.at("right_wheel").maximum_torque, 0.5);
+  ASSERT_GT(max_torques.at("left_hip"), 5.0);
+  ASSERT_GT(max_torques.at("left_knee"), 5.0);
+  ASSERT_GT(max_torques.at("left_wheel"), 0.5);
+  ASSERT_GT(max_torques.at("right_hip"), 5.0);
+  ASSERT_GT(max_torques.at("right_knee"), 5.0);
+  ASSERT_GT(max_torques.at("right_wheel"), 0.5);
 }
 
 TEST_F(BulletInterfaceTest, CycleDoesntThrow) {
