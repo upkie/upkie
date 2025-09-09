@@ -17,4 +17,5 @@ logs/**/*.yml
 logs/**/*.zip
 sandbox/
 tools/bazel
+uv.lock
 wiki/
