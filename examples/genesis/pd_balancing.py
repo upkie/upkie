@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 # /// script
-# dependencies = ["genesis-world"]
+# dependencies = ["upkie", "genesis-world"]
 # ///
 
 """Try Genesis environment with basic balancing."""
