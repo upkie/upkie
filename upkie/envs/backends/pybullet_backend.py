@@ -379,6 +379,7 @@ class PyBulletBackend(Backend):
         left_wheel_vel = servo_obs["left_wheel"]["velocity"]
         right_wheel_vel = servo_obs["right_wheel"]["velocity"]
 
+        # TODO(scaron): read from robot configuration
         wheel_radius = 0.06  # approximate wheel radius in meters
         ground_position = (
             0.5 * (left_wheel_pos - right_wheel_pos) * wheel_radius
