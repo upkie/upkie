@@ -11,7 +11,6 @@ cc_library(
     hdrs = [
         "ContactData.h",
         "ExternalForce.h",
-        "JointProperties.h",
         "gravity.h",
         "RobotSimulator.h",
         "read_imu_data.h",

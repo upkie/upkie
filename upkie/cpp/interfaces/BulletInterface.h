@@ -17,7 +17,6 @@
 #include "upkie/cpp/interfaces/Interface.h"
 #include "upkie/cpp/interfaces/bullet/ContactData.h"
 #include "upkie/cpp/interfaces/bullet/ExternalForce.h"
-#include "upkie/cpp/interfaces/bullet/JointProperties.h"
 #include "upkie/cpp/interfaces/bullet/RobotSimulator.h"
 #include "upkie/cpp/interfaces/moteus/Output.h"
 #include "upkie/cpp/interfaces/moteus/ServoReply.h"
@@ -57,11 +56,12 @@ class BulletInterface : public Interface {
         imu_uncertainty.configure(bullet("imu_uncertainty"));
       }
 
-      joint_properties.clear();
+      model_maximum_torque.clear();
       if (bullet.has("joint_properties")) {
         for (const auto& joint : bullet("joint_properties").keys()) {
           const auto& props = bullet("joint_properties")(joint);
-          joint_properties.try_emplace(joint, bullet::JointProperties(props));
+          model_maximum_torque.try_emplace(
+              joint, props.get<double>("maximum_torque", 0.0));
         }
       }
 
@@ -182,8 +182,8 @@ class BulletInterface : public Interface {
     //! Body angular velocity of the base upon reset
     Eigen::Vector3d angular_velocity_base_in_base = Eigen::Vector3d::Zero();
 
-    //! Joint properties (torque limits, noise parameters, etc.)
-    std::map<std::string, bullet::JointProperties> joint_properties;
+    //! Maximum torque limits per joint read from model
+    std::map<std::string, double> model_maximum_torque;
 
     //! Uncertainty on IMU measurements
     ImuUncertainty imu_uncertainty;
@@ -297,9 +297,9 @@ class BulletInterface : public Interface {
       const Eigen::Vector3d& linear_velocity_base_to_world_in_world,
       const Eigen::Vector3d& angular_velocity_base_in_base);
 
-  //! Joint properties (getter used for testing)
-  const std::map<std::string, bullet::JointProperties>& joint_properties() {
-    return joint_properties_;
+  //! Model maximum torque map (getter used for testing)
+  const std::map<std::string, double>& model_maximum_torque() {
+    return model_maximum_torque_;
   }
 
   //! Internal map of servo replies (getter used for testing)
@@ -317,7 +317,7 @@ class BulletInterface : public Interface {
    *     in torque control.
    * \param[in] kd_scale Multiplicative factor applied to the derivative gain
    *     in torque control.
-   * \param[in] maximum_torque Maximum torque in N⋅m from the command.
+   * \param[in] maximum_torque Maximum torque in N⋅m specified by the command.
    */
   double compute_joint_torque(const std::string& joint_name,
                               const double feedforward_torque,
@@ -410,7 +410,7 @@ class BulletInterface : public Interface {
   int plane_id_;
 
   //! Maximum joint torques read from the URDF model
-  std::map<std::string, bullet::JointProperties> joint_properties_;
+  std::map<std::string, double> model_maximum_torque_;
 
   //! Link index of the IMU in Bullet
   int imu_link_index_;
