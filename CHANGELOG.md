@@ -15,14 +15,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- cpp: Refactor joint properties in internal Bullet interface
 - examples: Reorganize examples into backend-specific sub-directories
 
 ### Removed
 
-- Remove joint friction from C++ Bullet interface
-- Remove torque control noise from C++ Bullet interface
-- Remove torque measurement noise from C++ Bullet interface
+- cpp: Remove joint friction from Bullet interface
+- cpp: Remove joint properties from Bullet interface
+- cpp: Remove torque control noise from Bullet interface
+- cpp: Remove torque measurement noise from Bullet interface
 
 ## [9.0.1] - 2025-09-10
 
