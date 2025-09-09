@@ -15,10 +15,12 @@ import numpy as np
 
 import upkie.envs
 
-# The following values are completely arbitrary :)
+# The following values are completely arbitrary. Try setting them to high
+# values to see the different impacts of control and measurement noise.
 JOINT_NOISE = {
-    # Try increasing torque control noise: it affects balancing
+    # Control noise affects the torques actually applied to joints
     "torque_control_noise": 0.5,  # white noise in N⋅m
+    # Measurement noise affects torque readings
     "torque_measurement_noise": 0.1,  # white noise in N⋅m
 }
 
