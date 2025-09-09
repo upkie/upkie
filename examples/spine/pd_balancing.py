@@ -3,10 +3,15 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Inria
+#
+# /// script
+# dependencies = ["upkie"]
+# ///
 
 """Balancing an Upkie by PD feedback to wheel velocities."""
 
 import gymnasium as gym
+
 import upkie.envs
 from upkie.utils.raspi import configure_agent_process, on_raspi
 

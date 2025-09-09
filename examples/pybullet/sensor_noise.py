@@ -3,6 +3,10 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Inria
+#
+# /// script
+# dependencies = ["upkie", "pybullet>=3"]
+# ///
 
 """Balance in place despite sensor noise."""
 
