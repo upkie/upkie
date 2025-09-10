@@ -9,11 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Add `uv` dependencies to example scripts
+- examples: Add `uv` dependencies to example scripts
 
 ### Fixed
 
-- Fix keyboard build error on ARM64 macOS
+- envs: Use wheel radius from robot configuration in PyBullet odometry
+- sensors: Fix keyboard build error on ARM64 macOS
 
 ## [9.0.0] - 2025-08-14
 
