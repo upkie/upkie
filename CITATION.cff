@@ -1,8 +1,8 @@
 cff-version: 1.2.0
 message: "If you find this code helpful, please cite it as below."
 title: "Upkie open source wheeled biped robot"
-version: 9.0.0
-date-released: 2025-08-14
+version: 9.0.1
+date-released: 2025-09-10
 url: "https://github.com/upkie/upkie"
 license: "Apache-2.0"
 authors:

@@ -7,9 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [9.0.1] - 2025-09-10
+
 ### Added
 
-- examples: Add `uv` dependencies to example scripts
+- examples: Add PEP-723 inline dependencies to example scripts
 
 ### Fixed
 
@@ -891,7 +893,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Starting this changelog.
 
-[unreleased]: https://github.com/upkie/upkie/compare/v9.0.0...HEAD
+[unreleased]: https://github.com/upkie/upkie/compare/v9.0.1...HEAD
+[9.0.1]: https://github.com/upkie/upkie/compare/v9.0.0...v9.0.1
 [9.0.0]: https://github.com/upkie/upkie/compare/v8.1.1...v9.0.0
 [8.1.1]: https://github.com/upkie/upkie/compare/v8.1.0...v8.1.1
 [8.1.0]: https://github.com/upkie/upkie/compare/v8.0.0...v8.1.0
