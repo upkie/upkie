@@ -5,7 +5,7 @@
 # Copyright 2023 Inria
 #
 # /// script
-# dependencies = ["pybullet>=3"]
+# dependencies = ["upkie", "pybullet>=3"]
 # ///
 
 """Balancing using proportional control from base pitch to wheel torques."""

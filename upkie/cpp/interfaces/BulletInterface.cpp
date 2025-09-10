@@ -87,10 +87,7 @@ BulletInterface::BulletInterface(const Parameters& params)
     get_link_index(link_name);  // memoize link index
     if (joint_index_map_.find(joint_name) != joint_index_map_.end()) {
       joint_index_map_[joint_name] = joint_index;
-
-      bullet::JointProperties props;
-      props.maximum_torque = joint_info.m_jointMaxForce;
-      joint_properties_.try_emplace(joint_name, props);
+      model_maximum_torque_.try_emplace(joint_name, joint_info.m_jointMaxForce);
     }
   }
 
@@ -169,7 +166,6 @@ void BulletInterface::reset(const Dictionary& config) {
                    params_.angular_velocity_base_in_base);
   reset_contact_data();
   reset_joint_angles(params_.joint_configuration);
-  reset_joint_properties();
   if (std::abs(params_.inertia_randomization) < 1e-10) {
     randomize_masses();
   }
@@ -233,23 +229,6 @@ void BulletInterface::reset_joint_angles(
         "Invalid joint configuration: vector has dimension " +
         std::to_string(nq) + " whereas the robot has " +
         std::to_string(nb_revolute_joints) + " revolute joints");
-  }
-}
-
-void BulletInterface::reset_joint_properties() {
-  b3JointInfo joint_info;
-  const int nb_joints = bullet_.getNumJoints(robot_);
-  for (int joint_index = 0; joint_index < nb_joints; ++joint_index) {
-    bullet_.getJointInfo(robot_, joint_index, &joint_info);
-    std::string joint_name = joint_info.m_jointName;
-    if (joint_index_map_.find(joint_name) != joint_index_map_.end()) {
-      const auto params_it = params_.joint_properties.find(joint_name);
-      if (params_it != params_.joint_properties.end()) {
-        joint_properties_[joint_name].update_configurable(params_it->second);
-      } else /* no configuration for joint properties */ {
-        joint_properties_[joint_name].reset_configurable();
-      }
-    }
   }
 }
 
@@ -485,13 +464,7 @@ void BulletInterface::send_commands() {
 
     // m_jointMotorTorque processed in read_joint_sensors() will be set to zero
     // since we just torque controlled the joint, hence we measure it here:
-    const bullet::JointProperties& joint_props = joint_properties_[joint_name];
     servo_reply_[joint_name].result.torque = joint_torque;
-    if (joint_props.torque_measurement_noise > 1e-10) {
-      std::normal_distribution<double> white_noise(
-          0.0, joint_props.torque_control_noise);
-      servo_reply_[joint_name].result.torque += white_noise(rng_);
-    }
   }
 }
 
@@ -502,28 +475,19 @@ double BulletInterface::compute_joint_torque(
   assert(!std::isnan(target_velocity));
 
   // Read in measurements and torque-control gains
-  const bullet::JointProperties& joint_props = joint_properties_[joint_name];
+  const double model_max_torque = model_maximum_torque_[joint_name];
   const auto& measurements = servo_reply_[joint_name].result;
   const double measured_position = measurements.position * (2.0 * M_PI);
   const double measured_velocity = measurements.velocity * (2.0 * M_PI);
   const double kp = kp_scale * params_.torque_control_kp;
   const double kd = kd_scale * params_.torque_control_kd;
-  const double tau_max = std::min(maximum_torque, joint_props.maximum_torque);
+  const double tau_max = std::min(maximum_torque, model_max_torque);
 
   // Compute joint torque
   double torque = feedforward_torque;
   torque += kd * (target_velocity - measured_velocity);
   if (!std::isnan(target_position)) {
     torque += kp * (target_position - measured_position);
-  }
-  constexpr double kMaxStictionVelocity = 1e-3;  // rad/s
-  if (std::abs(measured_velocity) > kMaxStictionVelocity) {
-    torque += joint_props.friction * ((measured_velocity > 0.0) ? -1.0 : +1.0);
-  }
-  if (joint_props.torque_control_noise > 1e-10) {
-    std::normal_distribution<double> white_noise(
-        0.0, joint_props.torque_control_noise);
-    torque += white_noise(rng_);
   }
   torque = std::max(std::min(torque, tau_max), -tau_max);
   return torque;

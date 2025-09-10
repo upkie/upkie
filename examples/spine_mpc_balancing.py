@@ -3,6 +3,10 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2023 Inria
+#
+# /// script
+# dependencies = ["upkie"]
+# ///
 
 """Wheel balancing using model predictive control with a running spine."""
 

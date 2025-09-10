@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- envs: Add joint friction modeling to PyBullet backend
+- envs: Add torque control noise to PyBullet backend
+- envs: Add torque measurement noise to PyBullet backend
+
+### Changed
+
+- examples: Reorganize examples into backend-specific sub-directories
+
+### Removed
+
+- cpp: Remove joint friction from Bullet interface
+- cpp: Remove joint properties from Bullet interface
+- cpp: Remove torque control noise from Bullet interface
+- cpp: Remove torque measurement noise from Bullet interface
+
 ## [9.0.1] - 2025-09-10
 
 ### Added

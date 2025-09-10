@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 # /// script
-# dependencies = ["genesis-world"]
+# dependencies = ["upkie", "genesis-world"]
 # ///
 
 """Genuflect while lying on a horizontal floor."""

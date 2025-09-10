@@ -98,12 +98,26 @@ class PyBulletBackend(Backend):
         # Initialize model and build joint index mapping
         self.__model = Model()
         self._joint_indices = {}
+        self._joint_properties = {}
         self._imu_link_index = -1
         for bullet_idx in range(pybullet.getNumJoints(self._robot_id)):
             joint_info = pybullet.getJointInfo(self._robot_id, bullet_idx)
             joint_name = joint_info[1].decode("utf-8")
             if joint_name in Model.JOINT_NAMES:
                 self._joint_indices[joint_name] = bullet_idx
+                # Initialize joint properties with defaults
+                joint_props = self.__bullet_config.get(
+                    "joint_properties", {}
+                ).get(joint_name, {})
+                self._joint_properties[joint_name] = {
+                    "friction": joint_props.get("friction", 0.0),
+                    "torque_control_noise": joint_props.get(
+                        "torque_control_noise", 0.0
+                    ),
+                    "torque_measurement_noise": joint_props.get(
+                        "torque_measurement_noise", 0.0
+                    ),
+                }
                 # Disable velocity controllers to enable torque control
                 pybullet.setJointMotorControl2(
                     self._robot_id,
@@ -121,6 +135,14 @@ class PyBulletBackend(Backend):
 
         # Initialize previous IMU velocity for acceleration computation
         self.__previous_imu_linear_velocity = np.zeros(3)
+
+        # Initialize random number generator for noise simulation
+        self.__rng = np.random.default_rng()
+
+        # Initialize storage for commanded joint torques
+        self.__joint_torques = {
+            joint_name: 0.0 for joint_name in self._joint_indices.keys()
+        }
 
         if gui:  # Enable GUI if it is requested
             pybullet.configureDebugVisualizer(pybullet.COV_ENABLE_RENDERING, 1)
@@ -220,6 +242,8 @@ class PyBulletBackend(Backend):
                         kd_scale=servo_action.get("kd_scale", 1.0),
                         maximum_torque=servo_action["maximum_torque"],
                     )
+                    # Store the commanded torque for observation later
+                    self.__joint_torques[joint_name] = joint_torque
                     pybullet.setJointMotorControl2(
                         self._robot_id,
                         joint_idx,
@@ -363,7 +387,17 @@ class PyBulletBackend(Backend):
             )
             position = joint_state[0]  # in rad
             velocity = joint_state[1]  # in rad/s
-            torque = joint_state[3]  # in N⋅m
+
+            # Commanded torques are applied by the simulator exactly, so the
+            # measured torque is the commanded one stored in __joint_torques
+            torque = self.__joint_torques[joint_name]
+
+            # Add Gaussian white noise to torque measurements if configured
+            joint_props = self._joint_properties[joint_name]
+            torque_measurement_noise = joint_props["torque_measurement_noise"]
+            if torque_measurement_noise > 1e-10:
+                noise = self.__rng.normal(0.0, torque_measurement_noise)
+                torque += noise
             servo_obs[joint_name] = {
                 "position": position,
                 "velocity": velocity,
@@ -434,5 +468,21 @@ class PyBulletBackend(Backend):
         torque += kd * (target_velocity - measured_velocity)
         if not np.isnan(target_position):
             torque += kp * (target_position - measured_position)
+
+        # Add kinetic friction if applicable
+        MAX_STICTION_VELOCITY = 1e-3  # rad/s
+        if abs(measured_velocity) > MAX_STICTION_VELOCITY:
+            friction = self._joint_properties[joint_name]["friction"]
+            velocity_sign = 1.0 if measured_velocity > 0.0 else -1.0
+            friction_torque = -friction * velocity_sign
+            torque += friction_torque
+
+        # Add torque-control Gaussian white noise if applicable
+        joint_props = self._joint_properties[joint_name]
+        torque_control_noise = joint_props["torque_control_noise"]
+        if torque_control_noise > 1e-10:
+            noise = self.__rng.normal(0.0, torque_control_noise)
+            torque += noise
+
         torque = np.clip(torque, -maximum_torque, maximum_torque)
         return torque

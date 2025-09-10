@@ -5,10 +5,10 @@
 # Copyright 2023 Inria
 #
 # /// script
-# dependencies = ["pybullet>=3"]
+# dependencies = ["upkie", "pybullet>=3"]
 # ///
 
-"""Genuflect while lying on a horizontal floor in a PyBullet simulation."""
+"""Genuflect while lying on the floor despite joint friction."""
 
 import gymnasium as gym
 import numpy as np
@@ -21,6 +21,11 @@ NB_GENUFLECTIONS = 10
 GENUFLECTION_STEPS = 200
 AMPLITUDE = 1.0  # in radians
 
+JOINT_PROPS = {
+    # The following value is completely arbitrary :)
+    "friction": 0.1,  # kinetic joint friction in N⋅m, this value
+}
+
 if __name__ == "__main__":
     upkie.envs.register()
     with gym.make(
@@ -32,6 +37,16 @@ if __name__ == "__main__":
             ),
             position_base_in_world=np.array([0.0, 0.0, 0.1]),
         ),
+        bullet_config={
+            "joint_properties": {
+                "left_hip": JOINT_PROPS,
+                "left_knee": JOINT_PROPS,
+                "left_wheel": JOINT_PROPS,
+                "right_hip": JOINT_PROPS,
+                "right_knee": JOINT_PROPS,
+                "right_wheel": JOINT_PROPS,
+            }
+        },
     ) as env:
         action = env.unwrapped.get_neutral_action()
         env.reset()  # connects to the spine
