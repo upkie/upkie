@@ -11,10 +11,11 @@ from multiprocessing.shared_memory import SharedMemory
 
 import numpy as np
 
+from upkie.config import ROBOT_CONFIG
 from upkie.envs.backends import SpineBackend
 from upkie.envs.testing import MockSpine
-from upkie.envs.upkie_servos import UpkieServos
 from upkie.envs.upkie_pendulum import UpkiePendulum
+from upkie.envs.upkie_servos import UpkieServos
 
 
 class PendulumTestCase(unittest.TestCase):
@@ -89,7 +90,8 @@ class PendulumTestCase(unittest.TestCase):
         model = self.env.get_wrapper_attr("model")
         for wheel in model.wheel_joints:
             wheel_velocity = servo_action[wheel.name]["velocity"]  # rad/s
-            ground_velocity = np.abs(wheel_velocity * self.env.wheel_radius)
+            wheel_radius = ROBOT_CONFIG["wheel_radius"]
+            ground_velocity = np.abs(wheel_velocity * wheel_radius)
             self.assertLess(ground_velocity, max_ground_velocity + 1e-10)
 
 
