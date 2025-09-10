@@ -20,7 +20,7 @@ except ModuleNotFoundError:
     ## PyBullet data package, or None if PyBullet is not installed.
     pybullet_data = None
 
-from upkie.config import BULLET_CONFIG
+from upkie.config import BULLET_CONFIG, ROBOT_CONFIG
 from upkie.exceptions import MissingOptionalDependency, UpkieRuntimeError
 from upkie.model import Model
 from upkie.utils.nested_update import nested_update
@@ -374,19 +374,14 @@ class PyBulletBackend(Backend):
         return servo_obs
 
     def __get_wheel_odometry_observation(self, servo_obs: dict) -> dict:
-        left_wheel_pos = servo_obs["left_wheel"]["position"]
-        right_wheel_pos = servo_obs["right_wheel"]["position"]
-        left_wheel_vel = servo_obs["left_wheel"]["velocity"]
-        right_wheel_vel = servo_obs["right_wheel"]["velocity"]
+        left_angle = servo_obs["left_wheel"]["position"]
+        right_angle = servo_obs["right_wheel"]["position"]
+        left_omega = servo_obs["left_wheel"]["velocity"]
+        right_omega = servo_obs["right_wheel"]["velocity"]
+        wheel_radius = ROBOT_CONFIG["wheel_radius"]
 
-        # TODO(scaron): read from robot configuration
-        wheel_radius = 0.06  # approximate wheel radius in meters
-        ground_position = (
-            0.5 * (left_wheel_pos - right_wheel_pos) * wheel_radius
-        )
-        ground_velocity = (
-            0.5 * (left_wheel_vel - right_wheel_vel) * wheel_radius
-        )
+        ground_position = 0.5 * (left_angle - right_angle) * wheel_radius
+        ground_velocity = 0.5 * (left_omega - right_omega) * wheel_radius
 
         return {
             "position": ground_position,
