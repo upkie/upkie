@@ -8,7 +8,7 @@
 ## \brief Base class with features shared by all Upkie environments.
 
 from abc import ABC, abstractmethod
-from typing import Optional, Tuple
+from typing import Any, Dict, Optional, Tuple
 
 import gymnasium as gym
 import numpy as np
@@ -33,6 +33,7 @@ class UpkieEnv(gym.Env, ABC):
 
     __backend: Backend
     __frequency: Optional[float]
+    __log: Dict[str, Any]
     __rate: Optional[RateLimiter]
     __regulate_frequency: bool
 
@@ -90,6 +91,7 @@ class UpkieEnv(gym.Env, ABC):
         self.__backend = backend
         self.__frequency = frequency
         self.__frequency_checks = frequency_checks
+        self.__log = {}
         self.__rate = None
         self.__regulate_frequency = regulate_frequency
         self.action_space = None  # subclasses should set this
@@ -145,6 +147,15 @@ class UpkieEnv(gym.Env, ABC):
         \param[in] env_action Gym environment action.
         \return Spine action dictionary.
         """
+
+    def log(self, name: str, entry: Any) -> None:
+        r"""!
+        Log a new entry to the "log" key of the action dictionary.
+
+        \param name Name of the entry.
+        \param entry Dictionary to log along with the actual action.
+        """
+        self.__log[name] = entry.copy() if isinstance(entry, dict) else entry
 
     def reset(
         self,
@@ -209,6 +220,7 @@ class UpkieEnv(gym.Env, ABC):
 
         # Convert environment action to spine action and apply it
         spine_action = self.get_spine_action(action)
+        spine_action["UpkieEnv"] = self.__log
         spine_observation = self.__backend.step(spine_action)
 
         # Get observation
