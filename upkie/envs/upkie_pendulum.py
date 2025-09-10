@@ -98,17 +98,12 @@ class UpkiePendulum(gym.Wrapper):
     ## Observation space.
     observation_space: gym.spaces.Box
 
-    ## \var wheel_radius
-    ## Robot wheel radius in meters.
-    wheel_radius: float
-
     def __init__(
         self,
         env: UpkieEnv,
         fall_pitch: float = 1.0,
         left_wheeled: bool = True,
         max_ground_velocity: float = 1.0,
-        wheel_radius: Optional[float] = None,  # TODO(scaron): not the way!
     ):
         r"""!
         Initialize environment.
@@ -121,11 +116,6 @@ class UpkiePendulum(gym.Wrapper):
         \param max_ground_velocity Maximum commanded ground velocity in m/s.
             The default value of 1 m/s is conservative, don't hesitate to
             increase it once you feel confident in your agent.
-        \param wheel_radius Wheel radius used by the environment to distribute
-            ground velocities between the left and right wheels. By default the
-            wheel radius is defined in the robot configuration (read from
-            ~/.config/upkie/config.yml). Passing a value via this argument will
-            override... oh wait, actually that is not a good idea...
         """
         super().__init__(env)
         if env.frequency is None:
@@ -166,7 +156,6 @@ class UpkiePendulum(gym.Wrapper):
         self.env = env
         self.fall_pitch = fall_pitch
         self.left_wheeled = left_wheeled
-        self.wheel_radius = ROBOT_CONFIG["wheel_radius"]
 
     def __get_env_observation(self, spine_observation: dict) -> np.ndarray:
         r"""!
@@ -268,7 +257,7 @@ class UpkiePendulum(gym.Wrapper):
             self.action_space.high[0],
             label="ground_velocity",
         )
-        wheel_velocity = ground_velocity / self.wheel_radius
+        wheel_velocity = ground_velocity / ROBOT_CONFIG["wheel_radius"]
         left_wheel_sign = 1.0 if self.left_wheeled else -1.0
         left_wheel_velocity = left_wheel_sign * wheel_velocity
         leg_servo_action = self.__get_leg_servo_action()
