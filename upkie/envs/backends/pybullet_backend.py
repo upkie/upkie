@@ -144,6 +144,16 @@ class PyBulletBackend(Backend):
             joint_name: 0.0 for joint_name in self._joint_indices.keys()
         }
 
+        # Initialize storage for nominal masses and inertias for randomization
+        self.__nominal_masses = {}
+        self.__nominal_inertias = {}
+        self.__save_nominal_inertias()
+
+        # Apply inertia randomization if configured
+        inertia_variation = self.__bullet_config.get("inertia_variation", 0.0)
+        if abs(inertia_variation) > 1e-10:
+            self.randomize_inertias(inertia_variation)
+
         if gui:  # Enable GUI if it is requested
             pybullet.configureDebugVisualizer(pybullet.COV_ENABLE_RENDERING, 1)
             pybullet.configureDebugVisualizer(pybullet.COV_ENABLE_SHADOWS, 0)
@@ -486,3 +496,51 @@ class PyBulletBackend(Backend):
 
         torque = np.clip(torque, -maximum_torque, maximum_torque)
         return torque
+
+    def __save_nominal_inertias(self) -> None:
+        r"""!
+        Save nominal masses and inertias for all robot links.
+
+        This method stores the original dynamic properties of each link
+        so they can be used later for randomization.
+        """
+        num_joints = pybullet.getNumJoints(self._robot_id)
+        for link_id in range(num_joints):
+            dynamics_info = pybullet.getDynamicsInfo(self._robot_id, link_id)
+            mass = dynamics_info[0]
+            local_inertia_diagonal = dynamics_info[2]  # tuple of 3 values
+
+            self.__nominal_masses[link_id] = mass
+            self.__nominal_inertias[link_id] = list(local_inertia_diagonal)
+
+    def randomize_inertias(self, inertia_variation: float) -> None:
+        r"""!
+        Randomize the inertias of all robot links.
+
+        \\param inertia_variation Magnitude of uniform noise to sample from.
+            The actual variation is sampled uniformly from
+            [-inertia_variation, +inertia_variation].
+
+        This method applies random variations to both masses and inertias of
+        all robot links. The same random factor (1 + epsilon) is applied to
+        both mass and inertia components of each link, assuming uniform mass
+        distribution.
+        """
+        for link_id in self.__nominal_masses:
+            # Sample random variation uniformly from range
+            epsilon = self.__rng.uniform(-inertia_variation, inertia_variation)
+
+            # Calculate new mass and inertia values
+            new_mass = self.__nominal_masses[link_id] * (1 + epsilon)
+            new_inertia = [
+                inertia_component * (1 + epsilon)
+                for inertia_component in self.__nominal_inertias[link_id]
+            ]
+
+            # Apply the changes to the PyBullet simulation
+            pybullet.changeDynamics(
+                self._robot_id,
+                link_id,
+                mass=new_mass,
+                localInertiaDiagonal=new_inertia
+            )
