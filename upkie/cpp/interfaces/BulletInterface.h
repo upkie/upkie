@@ -135,9 +135,6 @@ class BulletInterface : public Interface {
     //! Translate the camera to follow the robot
     bool follower_camera = false;
 
-    //! Mass randomization epsilon
-    double inertia_randomization = 0.0;
-
     //! If true, set gravity to -9.81 m/s².
     bool gravity = true;
 
@@ -338,20 +335,6 @@ class BulletInterface : public Interface {
    */
   Eigen::Vector3d get_position_link_in_world(const std::string& link_name);
 
-  //! Get nominal masses of the robot links
-  void save_nominal_masses();
-
-  //! Randomize masses of the robot links
-  void randomize_masses();
-
-  //! Mass randomization epsilon
-  double inertia_randomization_;
-
-  //! Nominal masses of the robot links
-  std::map<int, double> nominal_masses;
-
-  //! Nominal inertia diagonal of the robot links
-  std::map<int, double[3]> nominal_inertia;
 
  private:
   //! Apply external forces.
