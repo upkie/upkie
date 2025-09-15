@@ -25,10 +25,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+- cpp: Remove inertia randomization from Bullet interface
 - cpp: Remove joint friction from Bullet interface
 - cpp: Remove joint properties from Bullet interface
 - cpp: Remove torque control noise from Bullet interface
 - cpp: Remove torque measurement noise from Bullet interface
+- spines: Remove inertia randomization from Bullet spine
 
 ## [9.0.1] - 2025-09-10
 
