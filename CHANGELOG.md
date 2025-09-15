@@ -17,6 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - examples: Reorganize examples into backend-specific sub-directories
 
+### Fixed
+
+- utils: Compatibility with old SciPy API with Python 3.9
+
 ### Removed
 
 - cpp: Remove joint friction from Bullet interface
