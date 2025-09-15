@@ -27,6 +27,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+- **Breaking:** envs: Remove `get_bullet_action` function
+- **Breaking:** envs: Remove `set_bullet_action` function
 - cpp: Remove inertia randomization from Bullet interface
 - cpp: Remove joint friction from Bullet interface
 - cpp: Remove joint properties from Bullet interface
