@@ -13,8 +13,8 @@ import numpy as np
 
 from upkie.envs.backends import SpineBackend
 from upkie.envs.testing import ConstantObservationEnv, MockSpine
-from upkie.envs.upkie_servos import UpkieServos
 from upkie.envs.upkie_pendulum import UpkiePendulum
+from upkie.envs.upkie_servos import UpkieServos
 from upkie.envs.wrappers.random_push import RandomPush
 
 
@@ -38,18 +38,29 @@ class RandomPushTestCase(unittest.TestCase):
     def test_wrapper(self):
         env = ConstantObservationEnv(1.0)
         env.get_spine_action = lambda action: {}
+
+        # Mock backend with set_external_forces method
+        class MockBackend:
+            def __init__(self):
+                self.external_forces = {}
+
+            def set_external_forces(self, forces):
+                self.external_forces = forces
+
+        env.backend = MockBackend()
+
         wrapped_env = RandomPush(
             env, push_prob=1, push_generator=lambda: np.array([42, 42, 42])
         )
         action = np.array([1.0])
         wrapped_env.step(action)
-        bullet_action = wrapped_env.unwrapped.get_bullet_action()
-        self.assertTrue("external_forces" in bullet_action)
-        self.assertTrue("torso" in bullet_action["external_forces"])
-        self.assertTrue("force" in bullet_action["external_forces"]["torso"])
+
+        # Check that external forces were applied to the backend
+        self.assertTrue("torso" in env.backend.external_forces)
+        self.assertTrue("force" in env.backend.external_forces["torso"])
         self.assertTrue(
             np.allclose(
-                bullet_action["external_forces"]["torso"]["force"],
+                env.backend.external_forces["torso"]["force"],
                 np.array([42, 42, 42]),
             )
         )
@@ -58,6 +69,12 @@ class RandomPushTestCase(unittest.TestCase):
         try:
             from stable_baselines3.common.env_checker import check_env
 
+            # Add mock backend with set_external_forces method
+            class MockBackend:
+                def set_external_forces(self, forces):
+                    pass
+
+            self.env.backend = MockBackend()
             wrapped_env = RandomPush(self.env)
             check_env(wrapped_env)
         except ImportError:
