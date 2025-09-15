@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - envs: Add joint friction modeling to PyBullet backend
 - envs: Add torque control noise to PyBullet backend
 - envs: Add torque measurement noise to PyBullet backend
+- examples: Add PyBullet inertia randomization example
 
 ### Changed
 
