@@ -226,7 +226,6 @@ void Spine::cycle_actuation() {
       actuation_.write_stop_commands();
     } else if (state_machine_.state() == State::kStep) {
       const Dictionary& action = working_dict_("action");
-      actuation_.process_action(action);
       actuation_.write_position_commands(action);
     }
   } catch (const std::exception& e) {

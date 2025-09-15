@@ -264,8 +264,6 @@ void BulletInterface::observe(Dictionary& observation) const {
   }
 }
 
-void BulletInterface::process_action(const Dictionary& action) {}
-
 void BulletInterface::cycle(
     std::function<void(const moteus::Output&)> callback) {
   assert(data_.commands.size() == data_.replies.size());

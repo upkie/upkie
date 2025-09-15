@@ -211,12 +211,6 @@ class BulletInterface : public Interface {
    */
   void observe(Dictionary& observation) const override;
 
-  /*! Process a new action dictionary.
-   *
-   * \param[in] action Action to read commands from.
-   */
-  void process_action(const Dictionary& action) override;
-
   /*! Spin a new communication cycle.
    *
    * \param callback Function to call when the cycle is over.

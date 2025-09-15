@@ -45,8 +45,6 @@ void Pi3HatInterface::observe(Dictionary& observation) const {
   Interface::observe_imu(observation);
 }
 
-void Pi3HatInterface::process_action(const Dictionary& action) {}
-
 void Pi3HatInterface::cycle(
     std::function<void(const moteus::Output&)> callback) {
   std::lock_guard<std::mutex> lock(mutex_);
