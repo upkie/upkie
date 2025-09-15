@@ -31,7 +31,6 @@ class UpkieEnv(gym.Env, ABC):
     - Loop frequency regulation (optional).
     """
 
-    __backend: Backend
     __frequency: Optional[float]
     __rate: Optional[RateLimiter]
     __regulate_frequency: bool
@@ -39,6 +38,10 @@ class UpkieEnv(gym.Env, ABC):
     ## \var action_space
     ## Action space of the environment.
     action_space: gym.Space
+
+    ## \var backend
+    ## Spine or simulation backend.
+    backend: Backend
 
     ## \var init_state
     ## Initial state for the floating base of the robot, which may be
@@ -87,12 +90,12 @@ class UpkieEnv(gym.Env, ABC):
             )
 
         # Instance attributes
-        self.__backend = backend
         self.__frequency = frequency
         self.__frequency_checks = frequency_checks
         self.__rate = None
         self.__regulate_frequency = regulate_frequency
         self.action_space = None  # subclasses should set this
+        self.backend = backend
         self.init_state = init_state
         self.model = Model()
         self.observation_space = None  # subclasses should set this
@@ -104,7 +107,7 @@ class UpkieEnv(gym.Env, ABC):
         This function is part of the Gymnasium API and ensures proper cleanup
         of backend resources when the environment is closed.
         """
-        self.__backend.close()
+        self.backend.close()
 
     @property
     def dt(self) -> Optional[float]:
@@ -175,7 +178,7 @@ class UpkieEnv(gym.Env, ABC):
 
         # Sample initial state and reset backend
         sampled_init_state = self.init_state.sample_state(self.np_random)
-        spine_observation = self.__backend.reset(sampled_init_state)
+        spine_observation = self.backend.reset(sampled_init_state)
         observation = self.get_env_observation(spine_observation)
         info = {"spine_observation": spine_observation}
         return observation, info
@@ -209,7 +212,7 @@ class UpkieEnv(gym.Env, ABC):
 
         # Convert environment action to spine action and apply it
         spine_action = self.get_spine_action(action)
-        spine_observation = self.__backend.step(spine_action)
+        spine_observation = self.backend.step(spine_action)
 
         # Get observation
         observation = self.get_env_observation(spine_observation)
