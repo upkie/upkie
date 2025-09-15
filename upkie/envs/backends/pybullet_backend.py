@@ -166,6 +166,7 @@ class PyBulletBackend(Backend):
 
         # Internal attributes
         self.__dt = dt
+        self.__external_forces = {}
         self.__nb_substeps = nb_substeps
 
     def __del__(self):
@@ -260,6 +261,9 @@ class PyBulletBackend(Backend):
                         pybullet.TORQUE_CONTROL,
                         force=joint_torque,
                     )
+
+            # Apply external forces, if any
+            self.__apply_external_forces()
 
             # Step the simulation
             pybullet.stepSimulation()
@@ -542,5 +546,94 @@ class PyBulletBackend(Backend):
                 self._robot_id,
                 link_id,
                 mass=new_mass,
-                localInertiaDiagonal=new_inertia
+                localInertiaDiagonal=new_inertia,
+            )
+
+    def set_external_forces(self, external_forces: dict) -> None:
+        r"""!
+        Set external forces applied to robot links.
+
+        \param external_forces Dictionary specifying external forces to apply.
+            Format: {link_name: {"force": [fx, fy, fz], "local": bool}}
+            where "local" specifies whether the force is in local frame (True)
+            or world frame (False, default).
+
+        This method processes and stores external force specifications.
+        The actual forces are applied during the simulation step.
+        """
+        for link_name, force_spec in external_forces.items():
+            # Validate force specification
+            if "force" not in force_spec:
+                continue
+
+            force = np.array(force_spec["force"])
+            if force.shape != (3,):
+                raise ValueError(
+                    f"Force must be 3D vector, got shape {force.shape}"
+                )
+
+            # Determine if force is in local frame
+            local_frame = force_spec.get("local", False)
+
+            # Get link index - handle special case for base
+            if link_name == "base":
+                link_index = -1  # PyBullet uses -1 for base
+            else:
+                # Find link index by searching through joints
+                link_index = None
+                for joint_idx in range(pybullet.getNumJoints(self._robot_id)):
+                    joint_info = pybullet.getJointInfo(
+                        self._robot_id, joint_idx
+                    )
+                    joint_link_name = joint_info[12].decode("utf-8")
+                    if joint_link_name == link_name:
+                        link_index = joint_idx
+                        break
+
+                if link_index is None:
+                    print(
+                        f"Warning: Link '{link_name}' not found in robot "
+                        "description"
+                    )
+                    continue
+
+            # Store the external force
+            self.__external_forces[link_index] = {
+                "force": force,
+                "local": local_frame,
+            }
+
+    def __apply_external_forces(self) -> None:
+        r"""!
+        Apply stored external forces to the robot in PyBullet.
+
+        This is called internally during simulation steps to apply
+        all forces that were previously set via @ref set_external_forces.
+        """
+        for link_index, force_spec in self.__external_forces.items():
+            force = force_spec["force"]
+            local_frame = force_spec["local"]
+
+            if local_frame:
+                # Force in local frame: apply at link origin
+                position = [0.0, 0.0, 0.0]
+                flags = pybullet.LINK_FRAME
+            else:
+                # Force in world frame: get link position in world
+                if link_index == -1:
+                    # Base link
+                    position, _ = pybullet.getBasePositionAndOrientation(
+                        self._robot_id
+                    )
+                else:
+                    # Other links
+                    link_state = pybullet.getLinkState(
+                        self._robot_id, link_index
+                    )
+                    position = link_state[0]  # world position
+                flags = pybullet.WORLD_FRAME
+
+            # Apply the external force
+            pybullet.applyExternalForce(
+                self._robot_id, link_index, force, position, flags
             )
