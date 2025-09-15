@@ -900,6 +900,301 @@ class PyBulletBackendTestCase(unittest.TestCase):
 
         backend.close()
 
+    @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
+    @patch("upkie.envs.backends.pybullet_backend.pybullet")
+    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
+    def test_inertia_randomization_initialization(
+        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
+    ):
+        """Test that inertia randomization is applied during initialization."""
+        mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
+        mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
+        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
+
+        # Mock getDynamicsInfo to return consistent test data for all joints
+        # Use the same joint count as the existing mock setup (7 joints)
+        expected_joint_count = 7  # From the base setUp method
+        test_dynamics = []
+        for i in range(expected_joint_count):
+            mass = 1.0 + i * 0.5  # Different masses for each link
+            inertia_val = 0.1 + i * 0.05  # Different inertias for each link
+            test_dynamics.append(
+                (mass, [0, 0, 0], [inertia_val, inertia_val, inertia_val])
+            )
+
+        def mock_getDynamicsInfo(robot_id, link_id):
+            if link_id < len(test_dynamics):
+                return test_dynamics[link_id]
+            return (0.0, [0, 0, 0], [0.0, 0.0, 0.0])
+
+        mock_pybullet.getDynamicsInfo.side_effect = mock_getDynamicsInfo
+        # Don't override getNumJoints - use the existing mock setup
+
+        bullet_config = {
+            "torque_control": {"kp": 20.0, "kd": 1.0},
+            "inertia_variation": 0.2,  # 20% variation
+        }
+
+        # Create backend (should trigger inertia randomization)
+        backend = PyBulletBackend(
+            dt=0.01, bullet_config=bullet_config, gui=False
+        )
+
+        # Check that changeDynamics was called for each link
+        self.assertEqual(
+            mock_pybullet.changeDynamics.call_count,
+            expected_joint_count,
+            "changeDynamics should be called once per link",
+        )
+
+        # Verify that changes were applied with reasonable variations
+        for i, call_args in enumerate(
+            mock_pybullet.changeDynamics.call_args_list
+        ):
+            args, kwargs = call_args
+            robot_id, link_id = args[:2]
+
+            self.assertEqual(robot_id, backend._robot_id)
+            self.assertEqual(link_id, i)
+            self.assertIn("mass", kwargs)
+            self.assertIn("localInertiaDiagonal", kwargs)
+
+            # Check that mass and inertia have been modified
+            original_mass = test_dynamics[i][0]
+            original_inertia = test_dynamics[i][2]
+            new_mass = kwargs["mass"]
+            new_inertia = kwargs["localInertiaDiagonal"]
+
+            # Mass should be within reasonable bounds: original * (1 ± 0.2)
+            self.assertGreater(new_mass, original_mass * 0.8)
+            self.assertLess(new_mass, original_mass * 1.2)
+
+            # Inertia components should also be modified proportionally
+            for j in range(3):
+                self.assertGreater(new_inertia[j], original_inertia[j] * 0.8)
+                self.assertLess(new_inertia[j], original_inertia[j] * 1.2)
+
+        backend.close()
+
+    @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
+    @patch("upkie.envs.backends.pybullet_backend.pybullet")
+    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
+    def test_inertia_randomization_no_variation(
+        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
+    ):
+        """Test that no randomization happens when inertia_variation is 0."""
+        mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
+        mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
+        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
+
+        # Mock getDynamicsInfo
+        mock_pybullet.getDynamicsInfo.return_value = (
+            1.0,
+            [0, 0, 0],
+            [0.1, 0.1, 0.1],
+        )
+        # Use existing mock joint count
+
+        bullet_config = {
+            "torque_control": {"kp": 20.0, "kd": 1.0},
+            "inertia_variation": 0.0,  # No variation
+        }
+
+        # Create backend
+        backend = PyBulletBackend(
+            dt=0.01, bullet_config=bullet_config, gui=False
+        )
+
+        # changeDynamics should not have been called
+        self.assertEqual(
+            mock_pybullet.changeDynamics.call_count,
+            0,
+            "changeDynamics should not be called when inertia_variation is 0",
+        )
+
+        backend.close()
+
+    @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
+    @patch("upkie.envs.backends.pybullet_backend.pybullet")
+    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
+    def test_inertia_randomization_small_threshold(
+        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
+    ):
+        """Test that tiny inertia_variation values are ignored."""
+        mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
+        mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
+        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
+
+        mock_pybullet.getDynamicsInfo.return_value = (
+            1.0,
+            [0, 0, 0],
+            [0.1, 0.1, 0.1],
+        )
+        # Use existing mock joint count
+
+        bullet_config = {
+            "torque_control": {"kp": 20.0, "kd": 1.0},
+            "inertia_variation": 1e-11,  # Below threshold (1e-10)
+        }
+
+        backend = PyBulletBackend(
+            dt=0.01, bullet_config=bullet_config, gui=False
+        )
+
+        # changeDynamics should not have been called
+        self.assertEqual(
+            mock_pybullet.changeDynamics.call_count,
+            0,
+            "changeDynamics shouldn't be called when inertia_variation is low",
+        )
+
+        backend.close()
+
+    @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
+    @patch("upkie.envs.backends.pybullet_backend.pybullet")
+    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
+    def test_randomize_inertias_method(
+        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
+    ):
+        """Test the randomize_inertias method can be called independently."""
+        mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
+        mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
+        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
+
+        # Mock dynamics info for all 7 links to match the base setUp
+        test_dynamics = [
+            (3.0, [0, 0, 0], [0.3, 0.25, 0.35]),  # link 0
+            (1.2, [0, 0, 0], [0.12, 0.15, 0.18]),  # link 1
+            (2.5, [0, 0, 0], [0.25, 0.20, 0.30]),  # link 2
+            (1.8, [0, 0, 0], [0.18, 0.22, 0.16]),  # link 3
+            (2.1, [0, 0, 0], [0.21, 0.19, 0.23]),  # link 4
+            (1.6, [0, 0, 0], [0.16, 0.17, 0.15]),  # link 5
+            (1.4, [0, 0, 0], [0.14, 0.13, 0.12]),  # link 6
+        ]
+
+        def mock_getDynamicsInfo(robot_id, link_id):
+            if link_id < len(test_dynamics):
+                return test_dynamics[link_id]
+            return (0.0, [0, 0, 0], [0.0, 0.0, 0.0])
+
+        mock_pybullet.getDynamicsInfo.side_effect = mock_getDynamicsInfo
+        # Use existing mock joint count
+
+        # Create backend without automatic randomization
+        bullet_config = {
+            "torque_control": {"kp": 20.0, "kd": 1.0},
+            "inertia_variation": 0.0,  # No automatic randomization
+        }
+
+        backend = PyBulletBackend(
+            dt=0.01, bullet_config=bullet_config, gui=False
+        )
+
+        # Clear any calls from initialization
+        mock_pybullet.changeDynamics.reset_mock()
+
+        # Call randomize_inertias manually
+        variation = 0.15  # 15% variation
+        backend.randomize_inertias(variation)
+
+        # Should have called changeDynamics for each link
+        expected_calls = 7  # Based on the base setUp mock joint count
+        self.assertEqual(
+            mock_pybullet.changeDynamics.call_count,
+            expected_calls,
+            "randomize_inertias should modify dynamics of all links",
+        )
+
+        # Verify the parameters passed to changeDynamics
+        for i, call_args in enumerate(
+            mock_pybullet.changeDynamics.call_args_list
+        ):
+            args, kwargs = call_args
+            robot_id, link_id = args[:2]
+
+            self.assertEqual(robot_id, backend._robot_id)
+            self.assertEqual(link_id, i)
+            self.assertIn("mass", kwargs)
+            self.assertIn("localInertiaDiagonal", kwargs)
+
+            original_mass = test_dynamics[i][0]
+            original_inertia = test_dynamics[i][2]
+
+            # Verify variations are within expected bounds
+            new_mass = kwargs["mass"]
+            new_inertia = kwargs["localInertiaDiagonal"]
+
+            self.assertGreater(new_mass, original_mass * (1 - variation))
+            self.assertLess(new_mass, original_mass * (1 + variation))
+
+            for j in range(3):
+                self.assertGreater(
+                    new_inertia[j], original_inertia[j] * (1 - variation)
+                )
+                self.assertLess(
+                    new_inertia[j], original_inertia[j] * (1 + variation)
+                )
+
+        backend.close()
+
+    @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
+    @patch("upkie.envs.backends.pybullet_backend.pybullet")
+    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
+    def test_randomize_inertias_repeatability(
+        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
+    ):
+        """Test that repeated calls produce different results."""
+        mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
+        mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
+        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
+
+        mock_pybullet.getDynamicsInfo.return_value = (
+            1.0,
+            [0, 0, 0],
+            [0.1, 0.1, 0.1],
+        )
+        # Use existing mock joint count
+
+        bullet_config = {
+            "torque_control": {"kp": 20.0, "kd": 1.0},
+            "inertia_variation": 0.0,  # No automatic randomization
+        }
+
+        backend = PyBulletBackend(
+            dt=0.01, bullet_config=bullet_config, gui=False
+        )
+
+        # Clear initialization calls
+        mock_pybullet.changeDynamics.reset_mock()
+
+        # Call randomize_inertias multiple times and collect results
+        masses = []
+        inertias = []
+        variation = 0.2
+
+        for _ in range(10):
+            backend.randomize_inertias(variation)
+            # Get the most recent call
+            call_args = mock_pybullet.changeDynamics.call_args_list[-1]
+            _, kwargs = call_args
+            masses.append(kwargs["mass"])
+            inertias.append(kwargs["localInertiaDiagonal"])
+
+        # Should have different values (very unlikely to be all the same)
+        unique_masses = set(round(m, 8) for m in masses)
+        self.assertGreater(
+            len(unique_masses),
+            5,
+            "Should get different mass values from repeated randomization",
+        )
+
+        # Check that all values are within reasonable bounds
+        for mass in masses:
+            self.assertGreater(mass, 0.8)  # 1.0 * (1 - 0.2)
+            self.assertLess(mass, 1.2)  # 1.0 * (1 + 0.2)
+
+        backend.close()
+
 
 if __name__ == "__main__":
     unittest.main()
