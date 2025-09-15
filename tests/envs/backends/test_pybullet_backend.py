@@ -64,6 +64,8 @@ class PyBulletBackendTestCase(unittest.TestCase):
         self.pybullet_mock.COV_ENABLE_SHADOWS = 2
         self.pybullet_mock.VELOCITY_CONTROL = 1
         self.pybullet_mock.TORQUE_CONTROL = 2
+        self.pybullet_mock.WORLD_FRAME = 1
+        self.pybullet_mock.LINK_FRAME = 2
 
         # Mock joint state (position, velocity, force, torque)
         self.pybullet_mock.getJointState.return_value = (0.1, 0.5, 0.0, 0.0)
@@ -1192,6 +1194,418 @@ class PyBulletBackendTestCase(unittest.TestCase):
         for mass in masses:
             self.assertGreater(mass, 0.8)  # 1.0 * (1 - 0.2)
             self.assertLess(mass, 1.2)  # 1.0 * (1 + 0.2)
+
+        backend.close()
+
+    @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
+    @patch("upkie.envs.backends.pybullet_backend.pybullet")
+    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
+    def test_apply_external_forces_world_frame(
+        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
+    ):
+        """Test applying external forces in world frame."""
+        mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
+        mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
+        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
+
+        # Mock required methods for get_spine_observation
+        mock_pybullet.getBasePositionAndOrientation.return_value = (
+            [0.5, 0.6, 0.7],  # base position
+            [0.0, 0.0, 0.0, 1.0],  # base orientation
+        )
+        mock_pybullet.getBaseVelocity.return_value = (
+            [0.0, 0.0, 0.0],  # linear velocity
+            [0.0, 0.0, 0.0],  # angular velocity
+        )
+        mock_pybullet.getLinkState.return_value = [
+            [1.0, 2.0, 3.0],  # world position
+            [0.0, 0.0, 0.0, 1.0],  # world orientation
+            [0.0, 0.0, 0.0],  # local inertial frame position
+            [0.0, 0.0, 0.0, 1.0],  # local inertial frame orientation
+            [0.0, 0.0, 0.0],  # world frame position of CoM
+            [0.0, 0.0, 0.0, 1.0],  # world frame orientation
+            [0.0, 0.0, 0.0],  # linear velocity
+            [0.0, 0.0, 0.0],  # angular velocity
+        ]
+
+        backend = PyBulletBackend(dt=0.01, gui=False)
+
+        # Define external forces
+        external_forces = {
+            "torso": {  # This should map to a joint link
+                "force": [10.0, 20.0, 30.0],
+                "local": False,  # world frame
+            },
+            "base": {  # Special case for base
+                "force": [5.0, 15.0, 25.0],
+                "local": False,
+            },
+        }
+
+        # Apply external forces
+        backend.set_external_forces(external_forces)
+
+        # Step the simulation to trigger force application
+        backend.step({})
+
+        # Check that applyExternalForce was called correctly
+        self.assertGreater(
+            mock_pybullet.applyExternalForce.call_count,
+            0,
+            "applyExternalForce should have been called",
+        )
+
+        # Find calls for the base link
+        base_calls = [
+            call
+            for call in mock_pybullet.applyExternalForce.call_args_list
+            if call[0][1] == -1  # base link index
+        ]
+
+        # Verify base call if it exists
+        if base_calls:
+            base_call = base_calls[0]
+            args, kwargs = base_call
+            robot_id, link_index, force, position, flags = args
+
+            self.assertEqual(robot_id, backend._robot_id)
+            self.assertEqual(link_index, -1)
+            self.assertEqual(list(force), [5.0, 15.0, 25.0])
+            self.assertEqual(list(position), [0.5, 0.6, 0.7])  # base position
+            self.assertEqual(flags, mock_pybullet.WORLD_FRAME)
+
+        backend.close()
+
+    @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
+    @patch("upkie.envs.backends.pybullet_backend.pybullet")
+    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
+    def test_apply_external_forces_local_frame(
+        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
+    ):
+        """Test applying external forces in local frame."""
+        mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
+        mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
+        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
+
+        # Mock required methods for get_spine_observation
+        mock_pybullet.getBasePositionAndOrientation.return_value = (
+            [0.0, 0.0, 0.6],
+            [0.0, 0.0, 0.0, 1.0],
+        )
+        mock_pybullet.getBaseVelocity.return_value = (
+            [0.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0],
+        )
+        mock_pybullet.getLinkState.return_value = [
+            None,
+            None,
+            None,
+            None,
+            None,
+            [0.0, 0.0, 0.0, 1.0],  # link orientation
+            [0.0, 0.0, 0.0],  # linear velocity
+            [0.0, 0.0, 0.0],  # angular velocity
+        ]
+
+        backend = PyBulletBackend(dt=0.01, gui=False)
+
+        # Define external forces in local frame
+        external_forces = {
+            "base": {"force": [1.0, 2.0, 3.0], "local": True}  # local frame
+        }
+
+        # Apply external forces
+        backend.set_external_forces(external_forces)
+
+        # Step the simulation
+        backend.step({})
+
+        # Check that applyExternalForce was called with local frame parameters
+        base_calls = [
+            call
+            for call in mock_pybullet.applyExternalForce.call_args_list
+            if call[0][1] == -1  # base link index
+        ]
+
+        self.assertGreater(
+            len(base_calls),
+            0,
+            "applyExternalForce should have been called for base",
+        )
+
+        base_call = base_calls[0]
+        args, kwargs = base_call
+        robot_id, link_index, force, position, flags = args
+
+        self.assertEqual(robot_id, backend._robot_id)
+        self.assertEqual(link_index, -1)
+        self.assertEqual(list(force), [1.0, 2.0, 3.0])
+        self.assertEqual(list(position), [0.0, 0.0, 0.0])  # local origin
+        self.assertEqual(flags, mock_pybullet.LINK_FRAME)
+
+        backend.close()
+
+    @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
+    @patch("upkie.envs.backends.pybullet_backend.pybullet")
+    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
+    def test_apply_external_forces_invalid_force_shape(
+        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
+    ):
+        """Test that invalid force shapes raise ValueError."""
+        mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
+        mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
+        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
+
+        backend = PyBulletBackend(dt=0.01, gui=False)
+
+        # Test 2D force vector (should fail)
+        with self.assertRaises(ValueError) as context:
+            backend.set_external_forces(
+                {"base": {"force": [1.0, 2.0]}}  # Only 2 components
+            )
+
+        self.assertIn("Force must be 3D vector", str(context.exception))
+
+        # Test 4D force vector (should fail)
+        with self.assertRaises(ValueError) as context:
+            backend.set_external_forces(
+                {"base": {"force": [1.0, 2.0, 3.0, 4.0]}}  # 4 components
+            )
+
+        self.assertIn("Force must be 3D vector", str(context.exception))
+
+        backend.close()
+
+    @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
+    @patch("upkie.envs.backends.pybullet_backend.pybullet")
+    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
+    def test_apply_external_forces_unknown_link(
+        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
+    ):
+        """Test behavior when applying forces to unknown links."""
+        mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
+        mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
+        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
+
+        # Mock required methods for get_spine_observation
+        mock_pybullet.getBasePositionAndOrientation.return_value = (
+            [0.0, 0.0, 0.6],
+            [0.0, 0.0, 0.0, 1.0],
+        )
+        mock_pybullet.getBaseVelocity.return_value = (
+            [0.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0],
+        )
+        mock_pybullet.getLinkState.return_value = [
+            None,
+            None,
+            None,
+            None,
+            None,
+            [0.0, 0.0, 0.0, 1.0],  # link orientation
+            [0.0, 0.0, 0.0],  # linear velocity
+            [0.0, 0.0, 0.0],  # angular velocity
+        ]
+
+        backend = PyBulletBackend(dt=0.01, gui=False)
+
+        # Mock print to capture warning messages
+        with patch("builtins.print") as mock_print:
+            backend.set_external_forces(
+                {"unknown_link": {"force": [1.0, 2.0, 3.0]}}
+            )
+
+            # Should have printed a warning
+            mock_print.assert_called_with(
+                "Warning: Link 'unknown_link' not found in robot description"
+            )
+
+        # Step simulation - should not cause any errors
+        backend.step({})
+
+        backend.close()
+
+    @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
+    @patch("upkie.envs.backends.pybullet_backend.pybullet")
+    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
+    def test_apply_external_forces_missing_force_key(
+        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
+    ):
+        """Test behavior when force specification is missing 'force' key."""
+        mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
+        mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
+        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
+
+        # Mock required methods for get_spine_observation
+        mock_pybullet.getBasePositionAndOrientation.return_value = (
+            [0.0, 0.0, 0.6],
+            [0.0, 0.0, 0.0, 1.0],
+        )
+        mock_pybullet.getBaseVelocity.return_value = (
+            [0.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0],
+        )
+        mock_pybullet.getLinkState.return_value = [
+            None,
+            None,
+            None,
+            None,
+            None,
+            [0.0, 0.0, 0.0, 1.0],  # link orientation
+            [0.0, 0.0, 0.0],  # linear velocity
+            [0.0, 0.0, 0.0],  # angular velocity
+        ]
+
+        backend = PyBulletBackend(dt=0.01, gui=False)
+
+        # Apply forces without 'force' key - should be silently ignored
+        backend.set_external_forces(
+            {"base": {"local": True}}  # Missing 'force' key
+        )
+
+        # Step simulation
+        backend.step({})
+
+        # Should not have called applyExternalForce
+        self.assertEqual(
+            mock_pybullet.applyExternalForce.call_count,
+            0,
+            "applyExternalForce should not be called for invalid force specs",
+        )
+
+        backend.close()
+
+    @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
+    @patch("upkie.envs.backends.pybullet_backend.pybullet")
+    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
+    def test_apply_external_forces_multiple_steps(
+        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
+    ):
+        """Test that external forces persist across multiple steps."""
+        mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
+        mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
+        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
+
+        # Mock required methods for get_spine_observation
+        mock_pybullet.getBasePositionAndOrientation.return_value = (
+            [0.0, 0.0, 0.6],
+            [0.0, 0.0, 0.0, 1.0],
+        )
+        mock_pybullet.getBaseVelocity.return_value = (
+            [0.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0],
+        )
+        mock_pybullet.getLinkState.return_value = [
+            None,
+            None,
+            None,
+            None,
+            None,
+            [0.0, 0.0, 0.0, 1.0],  # link orientation
+            [0.0, 0.0, 0.0],  # linear velocity
+            [0.0, 0.0, 0.0],  # angular velocity
+        ]
+
+        backend = PyBulletBackend(dt=0.01, gui=False)
+
+        # Apply external forces
+        backend.set_external_forces(
+            {"base": {"force": [0.0, 0.0, 10.0], "local": False}}
+        )
+
+        # Step simulation multiple times
+        for _ in range(3):
+            backend.step({})
+
+        # Should have called applyExternalForce in each step (once per substep)
+        base_calls = [
+            call
+            for call in mock_pybullet.applyExternalForce.call_args_list
+            if call[0][1] == -1  # base link
+        ]
+
+        # With default dt=0.01, nb_substeps = int(1000.0 * 0.01) = 10 substeps
+        # per step, we have 3 steps * 10 substeps = 30 calls total
+        expected_calls = 3 * 10  # 3 steps * 10 substeps per step
+        self.assertEqual(
+            len(base_calls),
+            expected_calls,
+            f"applyExternalForce should be called {expected_calls} times here",
+        )
+
+        # All calls should have the same force parameters
+        for call in base_calls:
+            args, kwargs = call
+            robot_id, link_index, force, position, flags = args
+            self.assertEqual(list(force), [0.0, 0.0, 10.0])
+
+        backend.close()
+
+    @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
+    @patch("upkie.envs.backends.pybullet_backend.pybullet")
+    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
+    def test_apply_external_forces_update_forces(
+        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
+    ):
+        """Test that external forces can be updated between steps."""
+        mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
+        mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
+        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
+
+        # Mock required methods for get_spine_observation
+        mock_pybullet.getBasePositionAndOrientation.return_value = (
+            [0.0, 0.0, 0.6],
+            [0.0, 0.0, 0.0, 1.0],
+        )
+        mock_pybullet.getBaseVelocity.return_value = (
+            [0.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0],
+        )
+        mock_pybullet.getLinkState.return_value = [
+            None,
+            None,
+            None,
+            None,
+            None,
+            [0.0, 0.0, 0.0, 1.0],  # link orientation
+            [0.0, 0.0, 0.0],  # linear velocity
+            [0.0, 0.0, 0.0],  # angular velocity
+        ]
+
+        backend = PyBulletBackend(dt=0.01, gui=False)
+
+        # Apply initial forces
+        backend.set_external_forces(
+            {"base": {"force": [1.0, 0.0, 0.0], "local": False}}
+        )
+        backend.step({})
+
+        # Update forces
+        backend.set_external_forces(
+            {"base": {"force": [0.0, 2.0, 0.0], "local": False}}
+        )
+        backend.step({})
+
+        # Check that forces were applied correctly in both steps
+        base_calls = [
+            call
+            for call in mock_pybullet.applyExternalForce.call_args_list
+            if call[0][1] == -1  # base link
+        ]
+
+        # With 2 steps * 10 substeps per step = 20 calls total
+        expected_calls = 2 * 10
+        self.assertEqual(len(base_calls), expected_calls)
+
+        # First 10 calls should have force [1.0, 0.0, 0.0] (first step)
+        for i in range(10):
+            first_force = list(base_calls[i][0][2])
+            self.assertEqual(first_force, [1.0, 0.0, 0.0])
+
+        # Next 10 calls should have force [0.0, 2.0, 0.0] (second step)
+        for i in range(10, 20):
+            second_force = list(base_calls[i][0][2])
+            self.assertEqual(second_force, [0.0, 2.0, 0.0])
 
         backend.close()
 
