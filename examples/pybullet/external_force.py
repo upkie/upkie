@@ -19,7 +19,7 @@ from upkie.envs.upkie_pendulum import UpkiePendulum
 upkie.envs.register()
 
 
-def get_vertical_force(
+def get_lifting_force(
     step: int,
     start: int = 200,
     lift_steps: int = 200,
@@ -43,27 +43,33 @@ def get_vertical_force(
 
 def run(env: UpkiePendulum):
     torso_force_in_world = np.zeros(3)
-    bullet_action = {
-        "external_forces": {
+    gain = np.array([10.0, 1.0, 0.0, 0.1])
+    simulator = env.unwrapped.backend
+
+    observation, _ = env.reset()
+    for step in range(1_000_000):
+        action = gain.dot(observation).reshape((1,))
+        action = np.clip(action, -0.9, 0.9)
+
+        # Lift the robot periodically
+        torso_force_in_world[2] = get_lifting_force(step % 1000)
+        if torso_force_in_world[2] > 1.0:
+            action *= 0.0
+
+        # Apply the external force directly in the PyBullet backend
+        external_forces = {
             "torso": {
                 "force": torso_force_in_world,
                 "local": False,
             }
         }
-    }
-    observation, _ = env.reset()
-    gain = np.array([10.0, 1.0, 0.0, 0.1])
-    for step in range(1_000_000):
-        action = gain.dot(observation).reshape((1,))
-        torso_force_in_world[2] = get_vertical_force(step % 1000)
-        if torso_force_in_world[2] > 1.0:
-            action *= 0.0
-        env.unwrapped.set_bullet_action(bullet_action)  # call before env.step
+        simulator.set_external_forces(external_forces)
+
         observation, _, terminated, truncated, _ = env.step(action)
         if terminated or truncated:
             observation, _ = env.reset()
 
 
 if __name__ == "__main__":
-    with gym.make("Upkie-Spine-Pendulum", frequency=200.0) as env:
+    with gym.make("Upkie-PyBullet-Pendulum", frequency=200.0, gui=True) as env:
         run(env)
