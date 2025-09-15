@@ -59,7 +59,6 @@ BulletInterface::BulletInterface(const Parameters& params)
     throw std::runtime_error("Robot does not have a link named \"imu\"");
   }
 
-
   // Read servo layout
   for (const auto& id_joint : servo_name_map()) {
     const auto& servo_id = id_joint.first;
@@ -265,43 +264,7 @@ void BulletInterface::observe(Dictionary& observation) const {
   }
 }
 
-void BulletInterface::process_action(const Dictionary& action) {
-  if (!action.has("bullet")) {
-    return;
-  }
-  const Dictionary& bullet_action = action("bullet");
-  if (bullet_action.has("external_forces")) {
-    process_forces(bullet_action("external_forces"));
-  }
-}
-
-void BulletInterface::process_forces(const Dictionary& external_forces) {
-  for (const auto& link_name : external_forces.keys()) {
-    // Check that link name is valid and get link index
-    int link_index = get_link_index(link_name);
-    if (link_index < 0) {
-      if (link_name == "base") {
-        link_index = -1;
-      } else {
-        spdlog::warn(
-            "Link \"{}\" not found in the robot description, cannot apply an "
-            "external force to it",
-            link_name);
-        continue;
-      }
-    }
-
-    // Read external force from the dictionary
-    const auto& params = external_forces(link_name);
-    const bool local_frame = params.get<bool>("local_frame", false);
-    Eigen::Vector3d force_eigen = params("force");
-
-    // Save external force, to be applied before stepSimulation()
-    bullet::ExternalForce& ext_force = external_forces_[link_index];
-    ext_force.flags = (local_frame) ? EF_LINK_FRAME : EF_WORLD_FRAME;
-    ext_force.force = bullet_from_eigen(force_eigen);
-  }
-}
+void BulletInterface::process_action(const Dictionary& action) {}
 
 void BulletInterface::cycle(
     std::function<void(const moteus::Output&)> callback) {
@@ -315,7 +278,6 @@ void BulletInterface::cycle(
   read_imu();
   read_contacts();
   send_commands();
-  apply_external_forces();
   bullet_.stepSimulation();
 
   if (params_.follower_camera) {
@@ -374,7 +336,6 @@ void BulletInterface::read_joint_sensors() {
     result.torque = sensor_state.m_jointMotorTorque;
   }
 }
-
 
 void BulletInterface::send_commands() {
   b3RobotSimulatorJointMotorArgs motor_args(CONTROL_MODE_VELOCITY);
@@ -544,23 +505,6 @@ double BulletInterface::compute_robot_mass() {
 
 Eigen::Vector3d BulletInterface::compute_position_com_in_world() {
   return bullet::compute_position_com_in_world(bullet_, robot_);
-}
-
-void BulletInterface::apply_external_forces() {
-  for (auto& link_force : external_forces_) {
-    const int link_index = link_force.first;
-    const int flags = link_force.second.flags;
-    btVector3& force = link_force.second.force;
-    Eigen::Vector3d position_eigen;
-    if (flags == EF_LINK_FRAME) {
-      position_eigen.setZero();
-    } else /* (flags == EF_WORLD_FRAME) */ {
-      position_eigen =
-          bullet::get_position_link_in_world(bullet_, robot_, link_index);
-    }
-    btVector3 position = bullet_from_eigen(position_eigen);
-    bullet_.applyExternalForce(robot_, link_index, force, position, flags);
-  }
 }
 
 }  // namespace upkie::cpp::interfaces

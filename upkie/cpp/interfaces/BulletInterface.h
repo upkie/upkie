@@ -16,7 +16,6 @@
 #include "upkie/cpp/interfaces/ImuUncertainty.h"
 #include "upkie/cpp/interfaces/Interface.h"
 #include "upkie/cpp/interfaces/bullet/ContactData.h"
-#include "upkie/cpp/interfaces/bullet/ExternalForce.h"
 #include "upkie/cpp/interfaces/bullet/RobotSimulator.h"
 #include "upkie/cpp/interfaces/moteus/Output.h"
 #include "upkie/cpp/interfaces/moteus/ServoReply.h"
@@ -218,14 +217,6 @@ class BulletInterface : public Interface {
    */
   void process_action(const Dictionary& action) override;
 
-  /*! Process a dictionary of additional external forces.
-   *
-   * \param[in] external_forces Dictionary to read forces from.
-   *
-   * Note that Bullet clears external forces after each simulation step.
-   */
-  void process_forces(const Dictionary& external_forces);
-
   /*! Spin a new communication cycle.
    *
    * \param callback Function to call when the cycle is over.
@@ -335,11 +326,7 @@ class BulletInterface : public Interface {
    */
   Eigen::Vector3d get_position_link_in_world(const std::string& link_name);
 
-
  private:
-  //! Apply external forces.
-  void apply_external_forces();
-
   /*! Get index of a given robot link in Bullet
    *
    * \param[in] link_name Name of the searched link.
@@ -406,14 +393,6 @@ class BulletInterface : public Interface {
 
   //! Random number generator used to sample from probability distributions
   std::mt19937 rng_;
-
-  /*! Map from link index to external force applied to it
-   *
-   * \note It is only possible to apply one external wrench (force, torque) on
-   * a given body at a given time. If you have multiple wrenches, sum them up
-   * to a net wrench.
-   */
-  std::map<int, bullet::ExternalForce> external_forces_;
 };
 
 }  // namespace upkie::cpp::interfaces

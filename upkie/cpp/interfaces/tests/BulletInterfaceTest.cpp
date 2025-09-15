@@ -209,7 +209,6 @@ TEST_F(BulletInterfaceTest, JointRepliesHaveVoltage) {
   }
 }
 
-
 TEST_F(BulletInterfaceTest, ObserveImuOrientation) {
   Eigen::Quaterniond orientation_base_in_world = {0., 1., 0., 0.};
 
@@ -345,45 +344,6 @@ TEST_F(BulletInterfaceTest, FreeFallBasePosition) {
 
 TEST_F(BulletInterfaceTest, ComputeRobotMass) {
   ASSERT_NEAR(interface_->compute_robot_mass(), 5.3382, 1e-4);
-}
-
-TEST_F(BulletInterfaceTest, ApplyExternalForces) {
-  const double T = 0.05;  // trajectory duration in seconds
-
-  Dictionary action, config;
-  auto& torso_force = action("bullet")("external_forces")("torso");
-  auto& external_force =
-      torso_force.insert<Eigen::Vector3d>("force", Eigen::Vector3d{0., 0., 0.});
-  torso_force.insert<bool>("local_frame", false);  // world frame
-
-  const double mass = interface_->compute_robot_mass();
-  Eigen::Vector3d init_com_position;
-  for (int n_g = 0; n_g < 4; ++n_g) {
-    external_force.z() = n_g * bullet::kGravity * mass;
-    interface_->reset(config);
-    init_com_position = interface_->compute_position_com_in_world();
-    for (double t = 0.0; t < T; t += dt_) {
-      interface_->process_action(action);  // forces are cleared at each cycle
-      interface_->cycle([](const moteus::Output& output) {});
-    }
-
-    // Since there is no ground in this text fixture, the only forces exerted on
-    // the robot during this test are gravity and the external force
-    const Eigen::Vector3d gravity = {0., 0., -bullet::kGravity};
-    const Eigen::Vector3d com_accel = gravity + external_force / mass;
-    const Eigen::Vector3d Delta_com =
-        interface_->compute_position_com_in_world() - init_com_position;
-
-    ASSERT_NEAR(Delta_com.x(), 0.5 * com_accel.x() * T * T, 5e-3);
-    ASSERT_NEAR(Delta_com.y(), 0.5 * com_accel.y() * T * T, 5e-3);
-    if (n_g != 1) {  // relative error check for the vertical coordinate
-      double should_be = 0.5 * com_accel.z() * T * T;
-      double relvar = std::abs((Delta_com.z() - should_be) / should_be);
-      ASSERT_NEAR(relvar, 0.0, 5e-2);
-    } else /* n_g == 1 */ {
-      ASSERT_NEAR(Delta_com.z(), 0.5 * com_accel.z() * T * T, 5e-3);
-    }
-  }
 }
 
 TEST_F(BulletInterfaceTest, ResetJointConfiguration) {
