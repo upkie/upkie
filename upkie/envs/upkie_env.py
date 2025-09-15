@@ -231,29 +231,3 @@ class UpkieEnv(gym.Env, ABC):
         upkie.utils.robot_state_randomization.RobotStateRandomization.update.
         """
         self.init_state.randomization.update(**kwargs)
-
-    def get_bullet_action(self) -> dict:
-        r"""!
-        Get the bullet action that will be applied at next step (only applies
-        to the spine backend).
-
-        \note Deprecation notice: this function is deprecated and will evolve
-        into a more general one.
-
-        \return Upcoming simulator action.
-        """
-        if hasattr(self.__backend, "get_bullet_action"):
-            return self.__backend.get_bullet_action()
-        return {}
-
-    def set_bullet_action(self, bullet_action: dict) -> None:
-        r"""!
-        Set bullet action for the next step (only for SpineBackend).
-
-        \note Deprecation notice: this function is deprecated and will evolve
-        into a more general one.
-
-        \param bullet_action Action dictionary processed by the Bullet spine.
-        """
-        if hasattr(self.__backend, "set_bullet_action"):
-            self.__backend.set_bullet_action(bullet_action)
