@@ -46,12 +46,10 @@ class RandomPush(gym.Wrapper):
             return a 3D NumPy array.
         """
         super().__init__(env)
-        if not (
-            hasattr(env.unwrapped, "set_bullet_action")
-            or env.has_wrapper_attr("set_bullet_action")
-        ):
+        if not hasattr(env.backend, "set_external_forces"):
             raise UpkieException(
-                "Wrapped environment must have a `set_bullet_action` method"
+                "Wrapped environment backend must have a "
+                "`set_external_forces` method"
             )
         self.env = env
         self.push_prob = push_prob
@@ -61,11 +59,9 @@ class RandomPush(gym.Wrapper):
         """Adds a random push to the action."""
         if np.random.binomial(1, self.push_prob):
             force = self.push_generator()
-            self.env.unwrapped.set_bullet_action(
-                {"external_forces": {"torso": {"force": force}}}
-            )
+            external_forces = {"torso": {"force": force, "local": False}}
         else:  # Reset the forces to zero
-            self.env.unwrapped.set_bullet_action(
-                {"external_forces": {"torso": {"force": np.zeros(3)}}}
-            )
+            external_forces = {"torso": {"force": np.zeros(3), "local": False}}
+
+        self.env.backend.set_external_forces(external_forces)
         return self.env.step(action)
