@@ -59,11 +59,6 @@ BulletInterface::BulletInterface(const Parameters& params)
     throw std::runtime_error("Robot does not have a link named \"imu\"");
   }
 
-  // If params has an attribute inertia_randomization, store masses
-  if (params.inertia_randomization) {
-    inertia_randomization_ = params.inertia_randomization;
-    save_nominal_masses();
-  }
 
   // Read servo layout
   for (const auto& id_joint : servo_name_map()) {
@@ -166,9 +161,6 @@ void BulletInterface::reset(const Dictionary& config) {
                    params_.angular_velocity_base_in_base);
   reset_contact_data();
   reset_joint_angles(params_.joint_configuration);
-  if (std::abs(params_.inertia_randomization) < 1e-10) {
-    randomize_masses();
-  }
 }
 
 void BulletInterface::reset_base_state(
@@ -383,39 +375,6 @@ void BulletInterface::read_joint_sensors() {
   }
 }
 
-void BulletInterface::save_nominal_masses() {
-  const int nb_links = bullet_.getNumJoints(robot_);
-  b3DynamicsInfo info;
-  for (int link_id = 0; link_id < nb_links; ++link_id) {
-    bullet_.getDynamicsInfo(robot_, link_id, &info);
-    nominal_masses[link_id] = info.m_mass;
-    nominal_inertia[link_id][0] = info.m_localInertialDiagonal[0];
-    nominal_inertia[link_id][1] = info.m_localInertialDiagonal[1];
-    nominal_inertia[link_id][2] = info.m_localInertialDiagonal[2];
-  }
-}
-
-void BulletInterface::randomize_masses() {
-  std::default_random_engine generator;
-  for (const auto& link_id : nominal_masses) {
-    std::uniform_real_distribution<double> distribution(-inertia_randomization_,
-                                                        inertia_randomization_);
-    double epsilon = distribution(generator);
-    bullet::RobotSimulatorChangeDynamicsArgs change_dyn_args;
-    change_dyn_args.m_mass = nominal_masses[link_id.first] * (1 + epsilon);
-    // We assume a uniform distribution of the mass density
-    // The new mass is (1+\epsilon)previous_mass
-    // As the distribution of mass is uniform, the inertia is linear
-    // in mass, so we can multiply the original inertia by (1+\epsilon)
-    change_dyn_args.m_localInertiaDiagonal[0] =
-        nominal_inertia[link_id.first][0] * (1 + epsilon);
-    change_dyn_args.m_localInertiaDiagonal[1] =
-        nominal_inertia[link_id.first][1] * (1 + epsilon);
-    change_dyn_args.m_localInertiaDiagonal[2] =
-        nominal_inertia[link_id.first][2] * (1 + epsilon);
-    bullet_.changeDynamics(robot_, link_id.first, change_dyn_args);
-  }
-}
 
 void BulletInterface::send_commands() {
   b3RobotSimulatorJointMotorArgs motor_args(CONTROL_MODE_VELOCITY);
