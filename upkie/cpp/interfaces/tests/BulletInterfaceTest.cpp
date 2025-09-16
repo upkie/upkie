@@ -244,23 +244,6 @@ TEST_F(BulletInterfaceTest, ObserveImuOrientation) {
                   .isApprox(orientation_imu_in_ars));
 }
 
-TEST_F(BulletInterfaceTest, MonitorContacts) {
-  Dictionary config;
-  config("bullet")("monitor")("contacts")("wheels")("include")(
-      "left_wheel_tire") = true;
-  config("bullet")("monitor")("contacts")("wheels")("include")(
-      "right_wheel_tire") = true;
-  interface_->reset(config);
-
-  Dictionary observation;
-  interface_->cycle([](const moteus::Output& output) {});
-  interface_->observe(observation);
-  ASSERT_TRUE(observation.has("sim"));
-  ASSERT_TRUE(observation("sim").has("contact"));
-  ASSERT_TRUE(observation("sim")("contact").has("wheels"));
-  ASSERT_EQ(observation("sim")("contact").get<int>("wheels"), 0);
-}
-
 TEST_F(BulletInterfaceTest, MonitorIMU) {
   Dictionary config;
   interface_->reset(config);

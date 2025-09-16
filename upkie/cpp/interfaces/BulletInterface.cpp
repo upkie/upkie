@@ -119,46 +119,13 @@ BulletInterface::BulletInterface(const Parameters& params)
 
 BulletInterface::~BulletInterface() { bullet_.disconnect(); }
 
-void BulletInterface::register_contacts() {
-  // Save contacts to monitor
-  for (const auto& contact_group : params_.monitor_contacts) {
-    for (const auto& include_or_exclude :
-         params_.monitor_contacts.at(contact_group.first)) {
-      if (include_or_exclude.first == "include") {
-        for (const auto& body :
-             params_.monitor_contacts.at(contact_group.first).at("include")) {
-          monitor_contacts_[contact_group.first].push_back(body);
-        }
-      } else if (include_or_exclude.first == "exclude") {
-        for (const auto& body : link_index_) {
-          // find if the body has to be excluded
-          if (std::find(params_.monitor_contacts.at(contact_group.first)
-                            .at("exclude")
-                            .begin(),
-                        params_.monitor_contacts.at(contact_group.first)
-                            .at("exclude")
-                            .end(),
-                        body.first) ==
-              params_.monitor_contacts.at(contact_group.first)
-                  .at("exclude")
-                  .end()) {
-            monitor_contacts_[contact_group.first].push_back(body.first);
-          }
-        }
-      }
-    }
-  }
-}
-
 void BulletInterface::reset(const Dictionary& config) {
   params_.configure(config);
-  register_contacts();
   bullet_.setTimeStep(params_.dt);
   reset_base_state(params_.position_base_in_world,
                    params_.orientation_base_in_world,
                    params_.linear_velocity_base_to_world_in_world,
                    params_.angular_velocity_base_in_base);
-  reset_contact_data();
   reset_joint_angles(params_.joint_configuration);
 }
 
@@ -189,12 +156,6 @@ void BulletInterface::reset_base_state(
       link_state.m_worldLinearVelocity[1];
   imu_data_.linear_velocity_imu_in_world[2] =
       link_state.m_worldLinearVelocity[2];
-}
-
-void BulletInterface::reset_contact_data() {
-  for (const auto& contact_group : monitor_contacts_) {
-    contact_data_[contact_group.first] = bullet::ContactData();
-  }
 }
 
 void BulletInterface::reset_joint_angles(
@@ -228,11 +189,6 @@ void BulletInterface::observe(Dictionary& observation) const {
 
   Dictionary& sim = observation("sim");
   sim("imu")("linear_velocity") = imu_data_.linear_velocity_imu_in_world;
-
-  for (const auto& contact_group : monitor_contacts_) {
-    sim("contact")(contact_group.first) =
-        contact_data_.at(contact_group.first).num_contact_points;
-  }
 
   // Observe base pose
   Eigen::Matrix4d T = get_transform_base_to_world();
@@ -274,7 +230,6 @@ void BulletInterface::cycle(
 
   read_joint_sensors();
   read_imu();
-  read_contacts();
   send_commands();
   bullet_.stepSimulation();
 
@@ -300,22 +255,6 @@ void BulletInterface::read_imu() {
                                 imu_data_.angular_velocity_imu_in_imu, rng_);
   params_.imu_uncertainty.apply(imu_data_.raw_linear_acceleration,
                                 imu_data_.raw_angular_velocity, rng_);
-}
-
-void BulletInterface::read_contacts() {
-  b3ContactInformation contact_info;
-  b3RobotSimulatorGetContactPointsArgs contact_args;
-  int n_contacts;
-  for (const auto& contact_group : monitor_contacts_) {
-    n_contacts = 0;
-    for (const auto& link_name : monitor_contacts_.at(contact_group.first)) {
-      contact_args.m_bodyUniqueIdA = robot_;
-      contact_args.m_linkIndexA = get_link_index(link_name);
-      bullet_.getContactPoints(contact_args, &contact_info);
-      n_contacts += contact_info.m_numContactPoints;
-    }
-    contact_data_.at(contact_group.first).num_contact_points = n_contacts;
-  }
 }
 
 void BulletInterface::read_joint_sensors() {
