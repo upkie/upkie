@@ -11,7 +11,6 @@ cc_library(
     hdrs = [
         "ContactData.h",
         "gravity.h",
-        "RobotSimulator.h",
         "read_imu_data.h",
         "utils.h",
     ],
@@ -20,21 +19,6 @@ cc_library(
         "@bullet",
         "@eigen",
         "@palimpsest",
-    ],
-)
-
-cc_library(
-    name = "robot_simulator",
-    hdrs = [
-        "RobotSimulatorChangeDynamicsArgs.h",
-        "RobotSimulator.h",
-    ],
-    srcs = [
-        "RobotSimulator.cpp",
-    ],
-    deps = [
-        "@bullet",
-        "@eigen"
     ],
 )
 
