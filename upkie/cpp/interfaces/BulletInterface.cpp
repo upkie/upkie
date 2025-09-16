@@ -9,7 +9,7 @@
 #include <string>
 
 #include "tools/cpp/runfiles/runfiles.h"
-#include "upkie/cpp/interfaces/bullet/gravity.h"
+#include "upkie/cpp/interfaces/bullet/constants.h"
 #include "upkie/cpp/interfaces/bullet/read_imu_data.h"
 #include "upkie/cpp/interfaces/bullet/utils.h"
 
@@ -48,7 +48,7 @@ BulletInterface::BulletInterface(const Parameters& params)
   bullet_.configureDebugVisualizer(COV_ENABLE_RENDERING, 0);
   bullet_.configureDebugVisualizer(COV_ENABLE_SHADOWS, 0);
   if (params.gravity) {
-    bullet_.setGravity(btVector3(0, 0, -bullet::kGravity));
+    bullet_.setGravity(btVector3(0, 0, -bullet::constants::kGravity));
   }
   bullet_.setRealTimeSimulation(false);  // making sure
 

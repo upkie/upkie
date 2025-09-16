@@ -10,7 +10,7 @@ cc_library(
     name = "bullet",
     hdrs = [
         "ContactData.h",
-        "gravity.h",
+        "constants.h",
         "read_imu_data.h",
         "utils.h",
     ],

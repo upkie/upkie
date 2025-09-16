@@ -11,7 +11,7 @@
 #include "gtest/gtest.h"
 #include "tools/cpp/runfiles/runfiles.h"
 #include "upkie/cpp/interfaces/BulletInterface.h"
-#include "upkie/cpp/interfaces/bullet/gravity.h"
+#include "upkie/cpp/interfaces/bullet/constants.h"
 
 namespace upkie::cpp::interfaces {
 
@@ -275,7 +275,8 @@ TEST_F(BulletInterfaceTest, MonitorIMU) {
   ASSERT_TRUE(observation("sim")("imu").has("linear_velocity"));
   Eigen::Vector3d linear_velocity_imu_in_imu =
       observation("sim")("imu")("linear_velocity");
-  ASSERT_DOUBLE_EQ(linear_velocity_imu_in_imu.z(), -bullet::kGravity * dt_);
+  ASSERT_DOUBLE_EQ(linear_velocity_imu_in_imu.z(),
+                   -bullet::constants::kGravity * dt_);
 }
 
 TEST_F(BulletInterfaceTest, MonitorBaseState) {
@@ -299,8 +300,8 @@ TEST_F(BulletInterfaceTest, MonitorBaseState) {
      it first updates velocities then integrates those to get positions
      (semi-implicit Euler method).
   */
-  ASSERT_NEAR(base_position.z(), 3 * -bullet::kGravity * std::pow(dt_, 2.0),
-              1e-6);
+  ASSERT_NEAR(base_position.z(),
+              3 * -bullet::constants::kGravity * std::pow(dt_, 2.0), 1e-6);
 
   ASSERT_TRUE(observation("sim")("base").has("orientation"));
   Eigen::Quaterniond base_orientation =
@@ -333,13 +334,14 @@ TEST_F(BulletInterfaceTest, FreeFallBasePosition) {
   base_position = interface_->get_transform_base_to_world().block<3, 1>(0, 3);
   ASSERT_NEAR(base_position.x(), 0.0, 1e-4);
   ASSERT_NEAR(base_position.y(), 0.0, 1e-4);
-  ASSERT_NEAR(base_position.z(), -0.5 * bullet::kGravity * T * T, 1e-3);
+  ASSERT_NEAR(base_position.z(), -0.5 * bullet::constants::kGravity * T * T,
+              1e-3);
 
   Eigen::Vector3d base_velocity =
       interface_->get_linear_velocity_base_to_world_in_world();
   ASSERT_NEAR(base_velocity.x(), 0.0 * T, 1e-4);
   ASSERT_NEAR(base_velocity.y(), 0.0 * T, 1e-4);
-  ASSERT_NEAR(base_velocity.z(), -bullet::kGravity * T, 1e-3);
+  ASSERT_NEAR(base_velocity.z(), -bullet::constants::kGravity * T, 1e-3);
 }
 
 TEST_F(BulletInterfaceTest, ComputeRobotMass) {
