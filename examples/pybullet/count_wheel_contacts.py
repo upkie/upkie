@@ -23,8 +23,6 @@ def print_contact_details(backend):
     """Print detailed information about all contact points."""
     contact_points = backend.get_contact_points()
 
-    print(f"\nTotal contact points: {len(contact_points)}")
-
     for i, contact in enumerate(contact_points):
         print(f"\nContact {i + 1}:")
         print(f"  Robot link index: {contact['link_index_a']}")
@@ -40,19 +38,15 @@ def run(env):
     observation, _ = env.reset()
     backend = env.unwrapped.backend
     ground_plane_id = backend._plane_id
-
-    step_count = 0
     contact_history = []
 
-    print("Starting wheel contact monitoring...")
+    print("\nCounting wheel contacts...")
     print("Ground plane ID:", ground_plane_id)
-
-    # Demonstrate the new link-specific contact monitoring
     print("Using link-specific contact monitoring for wheel tires:")
     print("- Left wheel tire: 'left_wheel_tire'")
-    print("- Right wheel tire: 'right_wheel_tire'")
+    print("- Right wheel tire: 'right_wheel_tire'\n")
 
-    while step_count < 1000:
+    for step in range(1000):
         # Balancing control
         pitch = observation[0]
         ground_position = observation[1]
@@ -73,13 +67,15 @@ def run(env):
         contact_history.append((nb_left_contacts, nb_right_contacts))
 
         # Print contact information every 100 steps
-        if step_count % 100 == 0:
-            print(f"\n--- Step {step_count} ---")
-            print(f"Left wheel contacts: {nb_left_contacts}")
-            print(f"Right wheel contacts: {nb_right_contacts}")
+        if step % 100 == 0:
+            print(
+                f"Step {step:3}: "
+                f"left wheel contacts: {nb_left_contacts} contacts, "
+                f"right wheel contacts: {nb_right_contacts} contacts"
+            )
 
             # Print detailed contact information occasionally
-            if step_count % 500 == 0:
+            if step == 500:
                 print_contact_details(backend)
 
                 # Show what the contact links actually are
@@ -103,35 +99,8 @@ def run(env):
                             else:
                                 print(f"  Link {link_idx}: base")
 
-        step_count += 1
-
         if terminated or truncated:
             observation, _ = env.reset()
-
-    # Print summary statistics
-    print("\n" + "=" * 50)
-    print("CONTACT STATISTICS SUMMARY")
-    print("=" * 50)
-
-    left_contacts_all = [c[0] for c in contact_history]
-    right_contacts_all = [c[1] for c in contact_history]
-    total_contacts_all = [c[0] + c[1] for c in contact_history]
-
-    print(
-        f"Left wheel contacts - Mean: {np.mean(left_contacts_all):.2f}, "
-        f"Max: {np.max(left_contacts_all)}, "
-        f"Min: {np.min(left_contacts_all)}"
-    )
-    print(
-        f"Right wheel contacts - Mean: {np.mean(right_contacts_all):.2f}, "
-        f"Max: {np.max(right_contacts_all)}, "
-        f"Min: {np.min(right_contacts_all)}"
-    )
-    print(
-        f"Total wheel contacts - Mean: {np.mean(total_contacts_all):.2f}, "
-        f"Max: {np.max(total_contacts_all)}, "
-        f"Min: {np.min(total_contacts_all)}"
-    )
 
 
 if __name__ == "__main__":
