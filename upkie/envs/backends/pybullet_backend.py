@@ -6,7 +6,7 @@
 ## \namespace upkie.envs.backends.pybullet_backend
 ## \brief Backend using PyBullet physics simulation.
 
-from typing import Optional
+from typing import Dict, Optional
 
 import numpy as np
 import upkie_description
@@ -23,6 +23,7 @@ except ModuleNotFoundError:
 from upkie.config import BULLET_CONFIG, ROBOT_CONFIG
 from upkie.exceptions import MissingOptionalDependency, UpkieRuntimeError
 from upkie.model import Model
+from upkie.utils.external_force import ExternalForce
 from upkie.utils.nested_update import nested_update
 from upkie.utils.robot_state import RobotState
 from upkie.utils.rotations import (
@@ -548,37 +549,29 @@ class PyBulletBackend(Backend):
                 localInertiaDiagonal=new_inertia,
             )
 
-    def set_external_forces(self, external_forces: dict) -> None:
+    def set_external_forces(
+        self, external_forces: Dict[str, ExternalForce]
+    ) -> None:
         r"""!
         Set external forces applied to robot links.
 
         \param external_forces Dictionary specifying external forces to apply.
-            Format: {link_name: {"force": [fx, fy, fz], "local": bool}}
-            where "local" specifies whether the force is in local frame (True)
-            or world frame (False, default).
+            Values must be ExternalForce instances.
 
         This method processes and stores external force specifications.
         The actual forces are applied during the simulation step.
         """
-        for link_name, force_spec in external_forces.items():
-            # Validate force specification
-            if "force" not in force_spec:
-                continue
-            force = np.array(force_spec["force"])
-            if force.shape != (3,):
-                raise ValueError(
-                    f"Force must be 3D vector, got shape {force.shape}"
-                )
-
+        for link_name, external_force in external_forces.items():
             link_index = self.__link_index.get(link_name)
             if link_index is None:
                 raise UpkieRuntimeError(
                     f"Robot does not have a link named '{link_name}'"
                 )
 
+            # Store force specifications for application during simulation
             self.__external_forces[link_index] = {
-                "force": force,
-                "local": force_spec.get("local", False),
+                "force": external_force.force,
+                "local": external_force.local,
             }
 
     def __apply_external_forces(self) -> None:

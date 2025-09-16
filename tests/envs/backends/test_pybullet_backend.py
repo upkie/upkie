@@ -13,6 +13,7 @@ import numpy as np
 
 from upkie.envs.backends.pybullet_backend import PyBulletBackend
 from upkie.exceptions import UpkieRuntimeError
+from upkie.utils.external_force import ExternalForce
 
 
 class PyBulletBackendTestCase(unittest.TestCase):
@@ -1233,14 +1234,12 @@ class PyBulletBackendTestCase(unittest.TestCase):
 
         # Define external forces
         external_forces = {
-            "left_hip_link": {  # Valid link from mock setup
-                "force": [10.0, 20.0, 30.0],
-                "local": False,  # world frame
-            },
-            "imu": {  # Valid link from mock setup
-                "force": [5.0, 15.0, 25.0],
-                "local": False,
-            },
+            "left_hip_link": ExternalForce(  # Valid link from mock setup
+                [10.0, 20.0, 30.0], local=False  # world frame
+            ),
+            "imu": ExternalForce(  # Valid link from mock setup
+                [5.0, 15.0, 25.0], local=False
+            ),
         }
 
         # Apply external forces
@@ -1311,7 +1310,7 @@ class PyBulletBackendTestCase(unittest.TestCase):
 
         # Define external forces in local frame
         external_forces = {
-            "base": {"force": [1.0, 2.0, 3.0], "local": True}  # local frame
+            "base": ExternalForce([1.0, 2.0, 3.0], local=True)  # local frame
         }
 
         # Apply external forces
@@ -1358,21 +1357,17 @@ class PyBulletBackendTestCase(unittest.TestCase):
 
         backend = PyBulletBackend(dt=0.01, gui=False)
 
-        # Test 2D force vector (should fail)
+        # Test 2D force vector (should fail during ExternalForce creation)
         with self.assertRaises(ValueError) as context:
-            backend.set_external_forces(
-                {"base": {"force": [1.0, 2.0]}}  # Only 2 components
-            )
+            ExternalForce([1.0, 2.0])  # Only 2 components
 
-        self.assertIn("Force must be 3D vector", str(context.exception))
+        self.assertIn("Force must be a 3D vector", str(context.exception))
 
-        # Test 4D force vector (should fail)
+        # Test 4D force vector (should fail during ExternalForce creation)
         with self.assertRaises(ValueError) as context:
-            backend.set_external_forces(
-                {"base": {"force": [1.0, 2.0, 3.0, 4.0]}}  # 4 components
-            )
+            ExternalForce([1.0, 2.0, 3.0, 4.0])  # 4 components
 
-        self.assertIn("Force must be 3D vector", str(context.exception))
+        self.assertIn("Force must be a 3D vector", str(context.exception))
 
         backend.close()
 
@@ -1412,59 +1407,12 @@ class PyBulletBackendTestCase(unittest.TestCase):
         # Should raise UpkieRuntimeError for unknown link
         with self.assertRaises(UpkieRuntimeError) as context:
             backend.set_external_forces(
-                {"unknown_link": {"force": [1.0, 2.0, 3.0]}}
+                {"unknown_link": ExternalForce([1.0, 2.0, 3.0])}
             )
 
-        self.assertIn("Robot does not have a link named 'unknown_link'", str(context.exception))
-
-        backend.close()
-
-    @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
-    @patch("upkie.envs.backends.pybullet_backend.pybullet")
-    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
-    def test_apply_external_forces_missing_force_key(
-        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
-    ):
-        """Test behavior when force specification is missing 'force' key."""
-        mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
-        mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
-        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
-
-        # Mock required methods for get_spine_observation
-        mock_pybullet.getBasePositionAndOrientation.return_value = (
-            [0.0, 0.0, 0.6],
-            [0.0, 0.0, 0.0, 1.0],
-        )
-        mock_pybullet.getBaseVelocity.return_value = (
-            [0.0, 0.0, 0.0],
-            [0.0, 0.0, 0.0],
-        )
-        mock_pybullet.getLinkState.return_value = [
-            None,
-            None,
-            None,
-            None,
-            None,
-            [0.0, 0.0, 0.0, 1.0],  # link orientation
-            [0.0, 0.0, 0.0],  # linear velocity
-            [0.0, 0.0, 0.0],  # angular velocity
-        ]
-
-        backend = PyBulletBackend(dt=0.01, gui=False)
-
-        # Apply forces without 'force' key - should be silently ignored
-        backend.set_external_forces(
-            {"base": {"local": True}}  # Missing 'force' key
-        )
-
-        # Step simulation
-        backend.step({})
-
-        # Should not have called applyExternalForce
-        self.assertEqual(
-            mock_pybullet.applyExternalForce.call_count,
-            0,
-            "applyExternalForce should not be called for invalid force specs",
+        self.assertIn(
+            "Robot does not have a link named 'unknown_link'",
+            str(context.exception),
         )
 
         backend.close()
@@ -1504,7 +1452,7 @@ class PyBulletBackendTestCase(unittest.TestCase):
 
         # Apply external forces
         backend.set_external_forces(
-            {"base": {"force": [0.0, 0.0, 10.0], "local": False}}
+            {"base": ExternalForce([0.0, 0.0, 10.0], local=False)}
         )
 
         # Step simulation multiple times
@@ -1570,13 +1518,13 @@ class PyBulletBackendTestCase(unittest.TestCase):
 
         # Apply initial forces
         backend.set_external_forces(
-            {"base": {"force": [1.0, 0.0, 0.0], "local": False}}
+            {"base": ExternalForce([1.0, 0.0, 0.0], local=False)}
         )
         backend.step({})
 
         # Update forces
         backend.set_external_forces(
-            {"base": {"force": [0.0, 2.0, 0.0], "local": False}}
+            {"base": ExternalForce([0.0, 2.0, 0.0], local=False)}
         )
         backend.step({})
 

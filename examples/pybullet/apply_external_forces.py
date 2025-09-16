@@ -15,6 +15,7 @@ import numpy as np
 
 import upkie.envs
 from upkie.envs.upkie_pendulum import UpkiePendulum
+from upkie.utils.external_force import ExternalForce
 
 upkie.envs.register()
 
@@ -83,12 +84,12 @@ def run(env: UpkiePendulum, nb_steps: int = 5000):
         if torso_force_in_world[2] > 1.0:
             action *= 0.0
 
-        # Set the external forces in the simulator
+        # Set external forces using the new ExternalForce class
         external_forces = {
-            "torso": {
-                "force": torso_force_in_world,
-                "local": False,
-            }
+            "torso": ExternalForce(
+                force=torso_force_in_world,
+                local=False,
+            )
         }
         simulator.set_external_forces(external_forces)
 
