@@ -22,6 +22,7 @@ except ModuleNotFoundError:
 
 from upkie.config import BULLET_CONFIG, ROBOT_CONFIG
 from upkie.exceptions import MissingOptionalDependency, UpkieRuntimeError
+from upkie.logging import logger
 from upkie.model import Model
 from upkie.utils.nested_update import nested_update
 from upkie.utils.robot_state import RobotState
@@ -96,10 +97,10 @@ class PyBulletBackend(Backend):
         )
 
         # Initialize model and build joint index mapping
+        self.__link_index = {"base": -1}
         self.__model = Model()
         self._joint_indices = {}
         self._joint_properties = {}
-        self._imu_link_index = -1
         for bullet_idx in range(pybullet.getNumJoints(self._robot_id)):
             joint_info = pybullet.getJointInfo(self._robot_id, bullet_idx)
             joint_name = joint_info[1].decode("utf-8")
@@ -127,10 +128,9 @@ class PyBulletBackend(Backend):
                 )
 
             link_name = joint_info[12].decode("utf-8")
-            if link_name == "imu":
-                self._imu_link_index = bullet_idx
+            self.__link_index[link_name] = bullet_idx
 
-        if self._imu_link_index < 0:
+        if "imu" not in self.__link_index:
             raise UpkieRuntimeError("Robot does not have a link named 'imu'")
 
         # Initialize previous IMU velocity for acceleration computation
@@ -325,7 +325,7 @@ class PyBulletBackend(Backend):
     def __get_imu_observation(self) -> dict:
         link_state = pybullet.getLinkState(
             self._robot_id,
-            self._imu_link_index,
+            self.__link_index["imu"],
             computeLinkVelocity=True,
             computeForwardKinematics=True,
         )
@@ -565,42 +565,22 @@ class PyBulletBackend(Backend):
             # Validate force specification
             if "force" not in force_spec:
                 continue
-
             force = np.array(force_spec["force"])
             if force.shape != (3,):
                 raise ValueError(
                     f"Force must be 3D vector, got shape {force.shape}"
                 )
 
-            # Determine if force is in local frame
-            local_frame = force_spec.get("local", False)
+            link_index = self.__link_index.get(link_name)
+            if link_index is None:
+                logger.warning(
+                    "Robot does not have a link named '%s'", link_name
+                )
+                continue
 
-            # Get link index - handle special case for base
-            if link_name == "base":
-                link_index = -1  # PyBullet uses -1 for base
-            else:
-                # Find link index by searching through joints
-                link_index = None
-                for joint_idx in range(pybullet.getNumJoints(self._robot_id)):
-                    joint_info = pybullet.getJointInfo(
-                        self._robot_id, joint_idx
-                    )
-                    joint_link_name = joint_info[12].decode("utf-8")
-                    if joint_link_name == link_name:
-                        link_index = joint_idx
-                        break
-
-                if link_index is None:
-                    print(
-                        f"Warning: Link '{link_name}' not found in robot "
-                        "description"
-                    )
-                    continue
-
-            # Store the external force
             self.__external_forces[link_index] = {
                 "force": force,
-                "local": local_frame,
+                "local": force_spec.get("local", False),
             }
 
     def __apply_external_forces(self) -> None:
@@ -638,27 +618,6 @@ class PyBulletBackend(Backend):
                 self._robot_id, link_index, force, position, flags
             )
 
-    def get_link_index(self, link_name: str) -> Optional[int]:
-        r"""!
-        Get the link index for a given link name.
-
-        \param link_name Name of the link to find.
-        \return Link index if found, None otherwise.
-        """
-        # PyBullet uses -1 for the base link
-        if link_name == "base":
-            return -1
-
-        # Search through joints to find matching link
-        num_joints = pybullet.getNumJoints(self._robot_id)
-        for joint_idx in range(num_joints):
-            joint_info = pybullet.getJointInfo(self._robot_id, joint_idx)
-            joint_link_name = joint_info[12].decode("utf-8")
-            if joint_link_name == link_name:
-                return joint_idx
-
-        return None  # Link not found
-
     def get_contact_points(self, link_name: Optional[str] = None) -> list:
         r"""!
         Get contact points from PyBullet simulation.
@@ -674,7 +633,7 @@ class PyBulletBackend(Backend):
             - link_index_b: Link index on body B (-1 for base)
             - position_on_a: Contact position on robot in world coordinates
             - position_on_b: Contact position on body B in world coordinates
-            - contact_normal_on_b: Contact normal on body B in world coordinates
+            - contact_normal_on_b: Contact normal on B in world coordinates
             - contact_distance: Contact distance (negative for penetration)
             - normal_force: Normal force magnitude
             - lateral_friction_1: Lateral friction force 1
@@ -684,7 +643,7 @@ class PyBulletBackend(Backend):
         """
         link_index = -1
         if link_name is not None:
-            link_index = self.get_link_index(link_name)
+            link_index = self.__link_index.get(link_name)
             if link_index is None:
                 return []
 
