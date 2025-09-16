@@ -78,7 +78,7 @@ TEST_F(BulletReadImuDataTest, RawIMULinearAcceleration) {
   change_dynamics_args.m_linearDamping = 0.0;
   change_dynamics_args.m_angularDamping = 0.0;
   bullet_->changeDynamics(robot_, -1, change_dynamics_args);
-  bullet_->setGravity(btVector3(0, 0, -kGravity));
+  bullet_->setGravity(btVector3(0, 0, -bullet::constants::kGravity));
   bullet_->setTimeStep(dt);
 
   // Rotate the base so that the IMU frame has its x-axis downward
@@ -99,7 +99,8 @@ TEST_F(BulletReadImuDataTest, RawIMULinearAcceleration) {
   ASSERT_NEAR(imu_data.raw_linear_acceleration.z(), 0.0, 1e-10);
 
   // Filtered acceleration substracts gravity
-  ASSERT_NEAR(imu_data.linear_acceleration_imu_in_imu.x(), kGravity, 1e-10);
+  ASSERT_NEAR(imu_data.linear_acceleration_imu_in_imu.x(),
+              bullet::constants::kGravity, 1e-10);
   ASSERT_NEAR(imu_data.linear_acceleration_imu_in_imu.y(), 0.0, 1e-10);
   ASSERT_NEAR(imu_data.linear_acceleration_imu_in_imu.z(), 0.0, 1e-10);
 }
