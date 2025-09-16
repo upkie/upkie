@@ -639,7 +639,7 @@ class PyBulletBackend(Backend):
             - lateral_friction_2: Lateral friction force 2
             - lateral_friction_dir_2: Lateral friction direction 2
         """
-        link_index = -1
+        link_index = -2  # -2 for all links in PyBullet
         if link_name is not None:
             link_index = self.__link_index.get(link_name)
             if link_index is None:
@@ -647,9 +647,9 @@ class PyBulletBackend(Backend):
 
         contact_points = pybullet.getContactPoints(
             bodyA=self._robot_id,
-            bodyB=-1,
+            bodyB=-1,  # -1 for all bodies
             linkIndexA=link_index,
-            linkIndexB=-1,
+            linkIndexB=-2,  # -2 for all links
         )
 
         result = []
