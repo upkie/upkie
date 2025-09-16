@@ -22,7 +22,6 @@ except ModuleNotFoundError:
 
 from upkie.config import BULLET_CONFIG, ROBOT_CONFIG
 from upkie.exceptions import MissingOptionalDependency, UpkieRuntimeError
-from upkie.logging import logger
 from upkie.model import Model
 from upkie.utils.nested_update import nested_update
 from upkie.utils.robot_state import RobotState
@@ -573,10 +572,9 @@ class PyBulletBackend(Backend):
 
             link_index = self.__link_index.get(link_name)
             if link_index is None:
-                logger.warning(
-                    "Robot does not have a link named '%s'", link_name
+                raise UpkieRuntimeError(
+                    f"Robot does not have a link named '{link_name}'"
                 )
-                continue
 
             self.__external_forces[link_index] = {
                 "force": force,
