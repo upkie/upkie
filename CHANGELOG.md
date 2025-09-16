@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - envs: Add torque measurement noise to PyBullet backend
 - envs: Get contact points via the PyBullet backend
 - examples: Add PyBullet inertia randomization example
+- examples: Annotate PyBullet external force example
 
 ### Changed
 

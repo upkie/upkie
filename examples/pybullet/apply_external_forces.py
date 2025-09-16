@@ -41,22 +41,49 @@ def get_lifting_force(
     return lift * mass * 9.81  # in [N]
 
 
-def run(env: UpkiePendulum):
+def run(env: UpkiePendulum, nb_steps: int = 5000):
     torso_force_in_world = np.zeros(3)
     gain = np.array([10.0, 1.0, 0.0, 0.1])
     simulator = env.unwrapped.backend
 
+    print("Upkie balancing simulation with periodic lifting")
+    print("Watch the GUI to see the external force effects!")
+    print(f"Running for {nb_steps} steps...")
+
     observation, _ = env.reset()
-    for step in range(1_000_000):
+    for step in range(nb_steps):
         action = gain.dot(observation).reshape((1,))
         action = np.clip(action, -0.9, 0.9)
 
         # Lift the robot periodically
-        torso_force_in_world[2] = get_lifting_force(step % 1000)
+        cycle_step = step % 1000
+        torso_force_in_world[2] = get_lifting_force(cycle_step)
+
+        # Comment for user
+        if cycle_step == 0:
+            print(f"⚖️  Step {step:4d}: No external force")
+        elif cycle_step == 200:
+            print(
+                f"⬆️  Step {step:4d}: Applying upward force at "
+                f"{torso_force_in_world[2]:.1f} N"
+            )
+        elif cycle_step == 300:
+            print(
+                f"⬇️  Step {step:4d}: Reducing upward force "
+                f"to {torso_force_in_world[2]:.1f} N"
+            )
+        elif cycle_step == 400:
+            print(
+                f"🔒 Step {step:4d}: Holding robot in the air "
+                f"with an upward force of {torso_force_in_world[2]:.1f} N"
+            )
+        elif cycle_step == 800:
+            print(f"📉 Step {step:4d}: Lowering robot back to ground")
+
         if torso_force_in_world[2] > 1.0:
             action *= 0.0
 
-        # Apply the external force directly in the PyBullet backend
+        # Set the external forces in the simulator
         external_forces = {
             "torso": {
                 "force": torso_force_in_world,
@@ -65,8 +92,10 @@ def run(env: UpkiePendulum):
         }
         simulator.set_external_forces(external_forces)
 
+        # External forces will be applied during env.step
         observation, _, terminated, truncated, _ = env.step(action)
         if terminated or truncated:
+            print("🔄 Environment reset, robot fell or triggered termination")
             observation, _ = env.reset()
 
 
