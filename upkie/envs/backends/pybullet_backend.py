@@ -637,3 +637,82 @@ class PyBulletBackend(Backend):
             pybullet.applyExternalForce(
                 self._robot_id, link_index, force, position, flags
             )
+
+    def get_link_index(self, link_name: str) -> Optional[int]:
+        r"""!
+        Get the link index for a given link name.
+
+        \param link_name Name of the link to find.
+        \return Link index if found, None otherwise.
+        """
+        # PyBullet uses -1 for the base link
+        if link_name == "base":
+            return -1
+
+        # Search through joints to find matching link
+        num_joints = pybullet.getNumJoints(self._robot_id)
+        for joint_idx in range(num_joints):
+            joint_info = pybullet.getJointInfo(self._robot_id, joint_idx)
+            joint_link_name = joint_info[12].decode("utf-8")
+            if joint_link_name == link_name:
+                return joint_idx
+
+        return None  # Link not found
+
+    def get_contact_points(self, link_name: Optional[str] = None) -> list:
+        r"""!
+        Get contact points from PyBullet simulation.
+
+        \param link_name Optional link name to filter contacts. If provided,
+            only returns contact points involving this specific link.
+            If None, returns all contact points for the robot.
+        \return List of contact point dictionaries with keys:
+            - contact_flag: Contact flag
+            - body_unique_id_a: Body A unique ID (robot)
+            - body_unique_id_b: Body B unique ID
+            - link_index_a: Link index on robot (-1 for base)
+            - link_index_b: Link index on body B (-1 for base)
+            - position_on_a: Contact position on robot in world coordinates
+            - position_on_b: Contact position on body B in world coordinates
+            - contact_normal_on_b: Contact normal on body B in world coordinates
+            - contact_distance: Contact distance (negative for penetration)
+            - normal_force: Normal force magnitude
+            - lateral_friction_1: Lateral friction force 1
+            - lateral_friction_dir_1: Lateral friction direction 1
+            - lateral_friction_2: Lateral friction force 2
+            - lateral_friction_dir_2: Lateral friction direction 2
+        """
+        link_index = -1
+        if link_name is not None:
+            link_index = self.get_link_index(link_name)
+            if link_index is None:
+                return []
+
+        contact_points = pybullet.getContactPoints(
+            bodyA=self._robot_id,
+            bodyB=-1,
+            linkIndexA=link_index,
+            linkIndexB=-1,
+        )
+
+        result = []
+        for contact in contact_points:
+            contact_dict = {
+                "contact_flag": contact[0],
+                "body_unique_id_a": contact[1],
+                "body_unique_id_b": contact[2],
+                "link_index_a": contact[3],
+                "link_index_b": contact[4],
+                "position_on_a": list(contact[5]),
+                "position_on_b": list(contact[6]),
+                "contact_normal_on_b": list(contact[7]),
+                "contact_distance": contact[8],
+                "normal_force": contact[9],
+                "lateral_friction_1": contact[10],
+                "lateral_friction_dir_1": list(contact[11]),
+                "lateral_friction_2": contact[12],
+                "lateral_friction_dir_2": list(contact[13]),
+            }
+            result.append(contact_dict)
+
+        return result
