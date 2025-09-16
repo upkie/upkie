@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- CICD: Release workflow for the pi3hat spine
 - envs: Use wheel radius from robot configuration in PyBullet odometry
 - sensors: Fix keyboard build error on ARM64 macOS
 
