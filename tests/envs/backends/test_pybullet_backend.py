@@ -12,6 +12,7 @@ from unittest.mock import MagicMock, patch
 import numpy as np
 
 from upkie.envs.backends.pybullet_backend import PyBulletBackend
+from upkie.exceptions import UpkieRuntimeError
 
 
 class PyBulletBackendTestCase(unittest.TestCase):
@@ -1232,11 +1233,11 @@ class PyBulletBackendTestCase(unittest.TestCase):
 
         # Define external forces
         external_forces = {
-            "torso": {  # This should map to a joint link
+            "left_hip_link": {  # Valid link from mock setup
                 "force": [10.0, 20.0, 30.0],
                 "local": False,  # world frame
             },
-            "base": {  # Special case for base
+            "imu": {  # Valid link from mock setup
                 "force": [5.0, 15.0, 25.0],
                 "local": False,
             },
@@ -1255,23 +1256,22 @@ class PyBulletBackendTestCase(unittest.TestCase):
             "applyExternalForce should have been called",
         )
 
-        # Find calls for the base link
-        base_calls = [
+        # Find calls for the imu link (index 6)
+        imu_calls = [
             call
             for call in mock_pybullet.applyExternalForce.call_args_list
-            if call[0][1] == -1  # base link index
+            if call[0][1] == 6  # imu link index
         ]
 
-        # Verify base call if it exists
-        if base_calls:
-            base_call = base_calls[0]
-            args, kwargs = base_call
+        # Verify imu call if it exists
+        if imu_calls:
+            imu_call = imu_calls[0]
+            args, kwargs = imu_call
             robot_id, link_index, force, position, flags = args
 
             self.assertEqual(robot_id, backend._robot_id)
-            self.assertEqual(link_index, -1)
+            self.assertEqual(link_index, 6)
             self.assertEqual(list(force), [5.0, 15.0, 25.0])
-            self.assertEqual(list(position), [0.5, 0.6, 0.7])  # base position
             self.assertEqual(flags, mock_pybullet.WORLD_FRAME)
 
         backend.close()
@@ -1409,19 +1409,13 @@ class PyBulletBackendTestCase(unittest.TestCase):
 
         backend = PyBulletBackend(dt=0.01, gui=False)
 
-        # Mock print to capture warning messages
-        with patch("builtins.print") as mock_print:
+        # Should raise UpkieRuntimeError for unknown link
+        with self.assertRaises(UpkieRuntimeError) as context:
             backend.set_external_forces(
                 {"unknown_link": {"force": [1.0, 2.0, 3.0]}}
             )
 
-            # Should have printed a warning
-            mock_print.assert_called_with(
-                "Warning: Link 'unknown_link' not found in robot description"
-            )
-
-        # Step simulation - should not cause any errors
-        backend.step({})
+        self.assertIn("Robot does not have a link named 'unknown_link'", str(context.exception))
 
         backend.close()
 
