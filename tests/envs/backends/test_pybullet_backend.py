@@ -1603,6 +1603,504 @@ class PyBulletBackendTestCase(unittest.TestCase):
 
         backend.close()
 
+    @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
+    @patch("upkie.envs.backends.pybullet_backend.pybullet")
+    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
+    def test_get_contact_points_basic(
+        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
+    ):
+        """Test basic functionality of get_contact_points method."""
+        mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
+        mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
+        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
+
+        # Mock contact points data
+        mock_contact_data = [
+            (
+                0,  # contact_flag
+                1,  # body_unique_id_a (robot)
+                0,  # body_unique_id_b (ground plane)
+                5,  # link_index_a (right wheel)
+                -1,  # link_index_b (base of plane)
+                [0.1, 0.2, 0.3],  # position_on_a
+                [0.1, 0.2, 0.0],  # position_on_b
+                [0.0, 0.0, 1.0],  # contact_normal_on_b
+                -0.001,  # contact_distance (negative = penetration)
+                100.0,  # normal_force
+                0.0,  # lateral_friction_1
+                [1.0, 0.0, 0.0],  # lateral_friction_dir_1
+                0.0,  # lateral_friction_2
+                [0.0, 1.0, 0.0],  # lateral_friction_dir_2
+            ),
+            (
+                0,  # contact_flag
+                1,  # body_unique_id_a (robot)
+                0,  # body_unique_id_b (ground plane)
+                2,  # link_index_a (left wheel)
+                -1,  # link_index_b (base of plane)
+                [-0.1, 0.2, 0.3],  # position_on_a
+                [-0.1, 0.2, 0.0],  # position_on_b
+                [0.0, 0.0, 1.0],  # contact_normal_on_b
+                -0.002,  # contact_distance
+                95.0,  # normal_force
+                0.0,  # lateral_friction_1
+                [1.0, 0.0, 0.0],  # lateral_friction_dir_1
+                0.0,  # lateral_friction_2
+                [0.0, 1.0, 0.0],  # lateral_friction_dir_2
+            ),
+        ]
+
+        mock_pybullet.getContactPoints.return_value = mock_contact_data
+
+        backend = PyBulletBackend(dt=0.01, gui=False)
+
+        # Test getting contact points with default parameters (robot vs all)
+        contact_points = backend.get_contact_points()
+
+        # Should have called getContactPoints with robot body ID
+        mock_pybullet.getContactPoints.assert_called_with(
+            bodyA=backend._robot_id, bodyB=-1, linkIndexA=-2, linkIndexB=-2
+        )
+
+        # Should return 2 contact points
+        self.assertEqual(len(contact_points), 2)
+
+        # Check first contact point structure
+        contact1 = contact_points[0]
+        self.assertEqual(contact1["contact_flag"], 0)
+        self.assertEqual(contact1["body_unique_id_a"], 1)
+        self.assertEqual(contact1["body_unique_id_b"], 0)
+        self.assertEqual(contact1["link_index_a"], 5)
+        self.assertEqual(contact1["link_index_b"], -1)
+        self.assertEqual(contact1["position_on_a"], [0.1, 0.2, 0.3])
+        self.assertEqual(contact1["position_on_b"], [0.1, 0.2, 0.0])
+        self.assertEqual(contact1["contact_normal_on_b"], [0.0, 0.0, 1.0])
+        self.assertEqual(contact1["contact_distance"], -0.001)
+        self.assertEqual(contact1["normal_force"], 100.0)
+        self.assertEqual(contact1["lateral_friction_1"], 0.0)
+        self.assertEqual(contact1["lateral_friction_dir_1"], [1.0, 0.0, 0.0])
+        self.assertEqual(contact1["lateral_friction_2"], 0.0)
+        self.assertEqual(contact1["lateral_friction_dir_2"], [0.0, 1.0, 0.0])
+
+        # Check second contact point
+        contact2 = contact_points[1]
+        self.assertEqual(contact2["link_index_a"], 2)
+        self.assertEqual(contact2["normal_force"], 95.0)
+        self.assertEqual(contact2["contact_distance"], -0.002)
+
+        backend.close()
+
+    @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
+    @patch("upkie.envs.backends.pybullet_backend.pybullet")
+    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
+    def test_get_contact_points_no_contacts(
+        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
+    ):
+        """Test get_contact_points when no contacts exist."""
+        mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
+        mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
+        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
+
+        # Mock empty contact points
+        mock_pybullet.getContactPoints.return_value = []
+
+        backend = PyBulletBackend(dt=0.01, gui=False)
+
+        # Test with no contacts
+        contact_points = backend.get_contact_points()
+
+        self.assertEqual(len(contact_points), 0)
+        self.assertIsInstance(contact_points, list)
+
+        backend.close()
+
+    @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
+    @patch("upkie.envs.backends.pybullet_backend.pybullet")
+    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
+    def test_get_contact_points_robot_only(
+        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
+    ):
+        """Test get_contact_points always uses robot ID for body_a."""
+        mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
+        mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
+        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
+
+        mock_pybullet.getContactPoints.return_value = []
+
+        backend = PyBulletBackend(dt=0.01, gui=False)
+        robot_id = backend._robot_id
+
+        # Test that function gets all contacts for the robot
+        backend.get_contact_points()
+        mock_pybullet.getContactPoints.assert_called_with(
+            bodyA=robot_id, bodyB=-1, linkIndexA=-2, linkIndexB=-2
+        )
+
+        backend.close()
+
+    @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
+    @patch("upkie.envs.backends.pybullet_backend.pybullet")
+    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
+    def test_get_contact_points_with_link_name(
+        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
+    ):
+        """Test get_contact_points with link_name filtering."""
+        mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
+        mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
+        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
+
+        # Mock contact data with different links
+        mock_contact_data = [
+            (
+                0,
+                1,
+                0,
+                5,
+                -1,
+                [0.1, 0.2, 0.3],
+                [0.1, 0.2, 0.0],
+                [0.0, 0.0, 1.0],
+                -0.001,
+                100.0,
+                0.0,
+                [1.0, 0.0, 0.0],
+                0.0,
+                [0.0, 1.0, 0.0],
+            ),
+            (
+                0,
+                1,
+                0,
+                2,
+                -1,
+                [-0.1, 0.2, 0.3],
+                [-0.1, 0.2, 0.0],
+                [0.0, 0.0, 1.0],
+                -0.002,
+                95.0,
+                0.0,
+                [1.0, 0.0, 0.0],
+                0.0,
+                [0.0, 1.0, 0.0],
+            ),
+            (
+                0,
+                1,
+                0,
+                7,
+                -1,
+                [0.0, 0.0, 0.1],
+                [0.0, 0.0, 0.0],
+                [0.0, 0.0, 1.0],
+                -0.001,
+                50.0,
+                0.0,
+                [1.0, 0.0, 0.0],
+                0.0,
+                [0.0, 1.0, 0.0],
+            ),
+        ]
+
+        mock_pybullet.getContactPoints.return_value = mock_contact_data
+
+        # Mock joint info for get_link_index
+        mock_joint_info_list = [
+            (
+                0,
+                b"joint1",
+                1,
+                -1,
+                0,
+                0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                b"link1",
+            ),
+            (
+                1,
+                b"joint2",
+                1,
+                -1,
+                0,
+                0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                b"left_wheel_tire",
+            ),
+            (
+                2,
+                b"joint3",
+                1,
+                -1,
+                0,
+                0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                b"link3",
+            ),
+            (
+                3,
+                b"imu_joint",
+                1,
+                -1,
+                0,
+                0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                b"imu",
+            ),
+        ]
+
+        def mock_get_joint_info(robot_id, joint_index):
+            if joint_index < len(mock_joint_info_list):
+                return mock_joint_info_list[joint_index]
+            raise IndexError("Joint index out of range")
+
+        mock_pybullet.getJointInfo.side_effect = mock_get_joint_info
+        mock_pybullet.getNumJoints.return_value = len(mock_joint_info_list)
+
+        backend = PyBulletBackend(dt=0.01, gui=False)
+
+        # Set up different return values for different calls
+        def mock_get_contact_points_side_effect(*args, **kwargs):
+            # Check if linkIndexA is specified
+            if "linkIndexA" in kwargs:
+                link_index = kwargs["linkIndexA"]
+                if link_index == 1:  # left_wheel_tire
+                    # Empty list as no contact for this link in test data
+                    return []
+                elif link_index == 2:  # link3
+                    # Return only contacts for this link
+                    return [
+                        (
+                            0,
+                            1,
+                            0,
+                            2,
+                            -1,
+                            [-0.1, 0.2, 0.3],
+                            [-0.1, 0.2, 0.0],
+                            [0.0, 0.0, 1.0],
+                            -0.002,
+                            95.0,
+                            0.0,
+                            [1.0, 0.0, 0.0],
+                            0.0,
+                            [0.0, 1.0, 0.0],
+                        )
+                    ]
+            # Default return all contacts
+            return mock_contact_data
+
+        mock_pybullet.getContactPoints.side_effect = (
+            mock_get_contact_points_side_effect
+        )
+
+        # Test filtering by specific link name that has no contacts
+        contact_points = backend.get_contact_points(
+            link_name="left_wheel_tire"
+        )
+        self.assertEqual(len(contact_points), 0)
+
+        # Verify the correct API call was made
+        mock_pybullet.getContactPoints.assert_called_with(
+            bodyA=backend._robot_id, bodyB=-1, linkIndexA=1, linkIndexB=-2
+        )
+
+        # Test with a link that has contacts (link index 2)
+        contact_points = backend.get_contact_points(link_name="link3")
+        self.assertEqual(len(contact_points), 1)
+        self.assertEqual(contact_points[0]["link_index_a"], 2)
+
+        # Verify the correct API call was made
+        mock_pybullet.getContactPoints.assert_called_with(
+            bodyA=backend._robot_id, bodyB=-1, linkIndexA=2, linkIndexB=-2
+        )
+
+        backend.close()
+
+    @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
+    @patch("upkie.envs.backends.pybullet_backend.pybullet")
+    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
+    def test_get_contact_points_invalid_link_name(
+        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
+    ):
+        """Test get_contact_points with invalid link name."""
+        mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
+        mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
+        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
+
+        # Mock joint info with IMU link
+        mock_joint_info_list = [
+            (
+                0,
+                b"imu_joint",
+                1,
+                -1,
+                0,
+                0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                b"imu",
+            ),
+        ]
+
+        def mock_get_joint_info(robot_id, joint_index):
+            if joint_index < len(mock_joint_info_list):
+                return mock_joint_info_list[joint_index]
+            raise IndexError("Joint index out of range")
+
+        mock_pybullet.getJointInfo.side_effect = mock_get_joint_info
+        mock_pybullet.getNumJoints.return_value = len(mock_joint_info_list)
+        mock_pybullet.getContactPoints.return_value = []
+
+        backend = PyBulletBackend(dt=0.01, gui=False)
+
+        # Test with invalid link name
+        contact_points = backend.get_contact_points(
+            link_name="nonexistent_link"
+        )
+        self.assertEqual(len(contact_points), 0)
+
+        backend.close()
+
+    @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
+    @patch("upkie.envs.backends.pybullet_backend.pybullet")
+    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
+    def test_get_contact_points_base_link(
+        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
+    ):
+        """Test get_contact_points with base link."""
+        mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
+        mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
+        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
+
+        # Mock joint info with IMU link
+        mock_joint_info_list = [
+            (
+                0,
+                b"imu_joint",
+                1,
+                -1,
+                0,
+                0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                b"imu",
+            ),
+        ]
+
+        def mock_get_joint_info(robot_id, joint_index):
+            if joint_index < len(mock_joint_info_list):
+                return mock_joint_info_list[joint_index]
+            raise IndexError("Joint index out of range")
+
+        mock_pybullet.getJointInfo.side_effect = mock_get_joint_info
+        mock_pybullet.getNumJoints.return_value = len(mock_joint_info_list)
+
+        # Mock contact points side effect for different API calls
+        def mock_get_contact_points_side_effect(*args, **kwargs):
+            # Check if linkIndexA is -1 (base link)
+            if "linkIndexA" in kwargs and kwargs["linkIndexA"] == -1:
+                # Return only base link contact
+                return [
+                    (
+                        0,
+                        1,
+                        0,
+                        -1,
+                        -1,
+                        [0.0, 0.0, 0.1],
+                        [0.0, 0.0, 0.0],
+                        [0.0, 0.0, 1.0],
+                        -0.001,
+                        50.0,
+                        0.0,
+                        [1.0, 0.0, 0.0],
+                        0.0,
+                        [0.0, 1.0, 0.0],
+                    )
+                ]
+            # Default return all contacts
+            return [
+                (
+                    0,
+                    1,
+                    0,
+                    -1,
+                    -1,
+                    [0.0, 0.0, 0.1],
+                    [0.0, 0.0, 0.0],
+                    [0.0, 0.0, 1.0],
+                    -0.001,
+                    50.0,
+                    0.0,
+                    [1.0, 0.0, 0.0],
+                    0.0,
+                    [0.0, 1.0, 0.0],
+                ),
+                (
+                    0,
+                    1,
+                    0,
+                    2,
+                    -1,
+                    [-0.1, 0.2, 0.3],
+                    [-0.1, 0.2, 0.0],
+                    [0.0, 0.0, 1.0],
+                    -0.002,
+                    95.0,
+                    0.0,
+                    [1.0, 0.0, 0.0],
+                    0.0,
+                    [0.0, 1.0, 0.0],
+                ),
+            ]
+
+        mock_pybullet.getContactPoints.side_effect = (
+            mock_get_contact_points_side_effect
+        )
+
+        backend = PyBulletBackend(dt=0.01, gui=False)
+
+        # Test filtering by base link
+        contact_points = backend.get_contact_points(link_name="base")
+
+        # Should only return contacts for base link (index -1)
+        self.assertEqual(len(contact_points), 1)
+        self.assertEqual(contact_points[0]["link_index_a"], -1)
+
+        # Verify the correct API call was made
+        mock_pybullet.getContactPoints.assert_called_with(
+            bodyA=backend._robot_id, bodyB=-1, linkIndexA=-1, linkIndexB=-2
+        )
+
+        backend.close()
+
 
 if __name__ == "__main__":
     unittest.main()
