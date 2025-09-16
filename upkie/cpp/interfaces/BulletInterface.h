@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include <RobotSimulator/b3RobotSimulatorClientAPI.h>
 #include <palimpsest/Dictionary.h>
 #include <spdlog/spdlog.h>
 
@@ -15,8 +16,6 @@
 
 #include "upkie/cpp/interfaces/ImuUncertainty.h"
 #include "upkie/cpp/interfaces/Interface.h"
-#include "upkie/cpp/interfaces/bullet/ContactData.h"
-#include <RobotSimulator/b3RobotSimulatorClientAPI.h>
 #include "upkie/cpp/interfaces/moteus/Output.h"
 #include "upkie/cpp/interfaces/moteus/ServoReply.h"
 
@@ -64,28 +63,6 @@ class BulletInterface : public Interface {
         }
       }
 
-      monitor_contacts.clear();
-      if (bullet.has("monitor")) {
-        const auto& monitor = bullet("monitor");
-        if (monitor.has("contacts")) {
-          for (const auto& contact_group : monitor("contacts").keys()) {
-            spdlog::debug("Monitoring contacts for collision \"{}\"",
-                          contact_group);
-            if (monitor("contacts")(contact_group).has("include")) {
-              for (const auto& body :
-                   monitor("contacts")(contact_group)("include").keys()) {
-                monitor_contacts[contact_group]["include"].push_back(body);
-              }
-            }
-            if (monitor("contacts")(contact_group).has("exclude")) {
-              for (const auto& body :
-                   monitor("contacts")(contact_group)("exclude").keys()) {
-                monitor_contacts[contact_group]["exclude"].push_back(body);
-              }
-            }
-          }
-        }
-      }
       if (bullet.has("reset")) {
         const auto& reset = bullet("reset");
         position_base_in_world = reset.get<Eigen::Vector3d>(
@@ -123,10 +100,6 @@ class BulletInterface : public Interface {
      * https://github.com/bazelbuild/bazel/issues/7994
      */
     std::string argv0 = "";
-
-    //! Contacts to monitor and report along with observations
-    std::map<std::string, std::map<std::string, std::vector<std::string>>>
-        monitor_contacts;
 
     //! Simulation timestep in [s]
     double dt = std::numeric_limits<double>::quiet_NaN();
@@ -251,9 +224,6 @@ class BulletInterface : public Interface {
    */
   Eigen::VectorXd get_joint_angles() noexcept;
 
-  //! Reset contact data.
-  void reset_contact_data();
-
   /*! Reset joint angles.
    *
    * \param[in] joint_configuration Joint configuration vector.
@@ -333,9 +303,6 @@ class BulletInterface : public Interface {
    */
   int get_link_index(const std::string& link_name);
 
-  //! Read contact sensors from the simulator
-  void read_contacts();
-  void register_contacts();
   //! Read IMU data from the simulator
   void read_imu();
 
@@ -367,9 +334,6 @@ class BulletInterface : public Interface {
   //! Map from URDF link names to Bullet link indices
   std::map<std::string, int> env_body_ids;
 
-  //! Register the contacts to monitor
-  std::map<std::string, std::vector<std::string>> monitor_contacts_;
-
   //! Identifier of the ground plane in the simulation
   int plane_id_;
 
@@ -381,9 +345,6 @@ class BulletInterface : public Interface {
 
   //! Map from link name to link index in Bullet
   std::map<std::string, int> link_index_;
-
-  //! Map from link name to link contact data
-  std::map<std::string, bullet::ContactData> contact_data_;
 
   //! Random number generator used to sample from probability distributions
   std::mt19937 rng_;

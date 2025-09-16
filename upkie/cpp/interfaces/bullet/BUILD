@@ -9,7 +9,6 @@ package(default_visibility = ["//visibility:public"])
 cc_library(
     name = "bullet",
     hdrs = [
-        "ContactData.h",
         "constants.h",
         "read_imu_data.h",
         "utils.h",
