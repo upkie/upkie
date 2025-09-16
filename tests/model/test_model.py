@@ -15,7 +15,7 @@ import upkie_description
 from upkie.model import Model
 
 
-class TestModel(unittest.TestCase):
+class ModelTestCase(unittest.TestCase):
     def setUp(self):
         self.model = Model(upkie_description.URDF_PATH)
 

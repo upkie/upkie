@@ -19,7 +19,7 @@ from upkie.envs.backends.spine import Request, SpineInterface, serialize
 wait_pre_monkeypatch = SpineInterface._wait_for_spine
 
 
-class TestSpineInterface(unittest.TestCase):
+class SpineInterfaceTestCase(unittest.TestCase):
     last_action: dict
     last_config: dict
     shm_name: str

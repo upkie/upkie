@@ -14,7 +14,7 @@ from upkie.utils.robot_state import RobotState
 from upkie.utils.robot_state_randomization import RobotStateRandomization
 
 
-class TestRobotState(unittest.TestCase):
+class RobotStateTestCase(unittest.TestCase):
     def test_robot_state(self):
         init_state = RobotState(
             randomization=RobotStateRandomization(roll=0.0, pitch=0.0)
