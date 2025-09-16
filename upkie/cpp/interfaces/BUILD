@@ -93,7 +93,6 @@ cc_library(
     ],
     deps = [
         "//upkie/cpp/interfaces/bullet",
-        "//upkie/cpp/interfaces/bullet:robot_simulator",
         "//upkie/cpp/interfaces:interface",
         "//upkie/cpp/utils:synchronous_clock",
         "@bazel_tools//tools/cpp/runfiles",
