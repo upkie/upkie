@@ -33,6 +33,9 @@ def merge_user_spine_config(
     return merged_config
 
 
+## Default spine configuration dictionary with baseline settings.
+## This dictionary contains the default configuration values for various
+## spine components including bullet physics, contact detection, and odometry.
 _DEFAULT_SPINE_CONFIG = {
     "bullet": BULLET_CONFIG,
     "floor_contact": {
