@@ -6,13 +6,11 @@
 ## \namespace upkie.utils.external_force
 ## \brief External force data structure.
 
-from dataclasses import dataclass
 from typing import List, Union
 
 import numpy as np
 
 
-@dataclass
 class ExternalForce:
     """!
     External force applied to a robot link.
@@ -20,29 +18,39 @@ class ExternalForce:
 
     ## \var force
     ## Force vector [fx, fy, fz] in Newtons.
-    ## Can be provided as a list or numpy array of 3 float values.
-    force: Union[List[float], np.ndarray]
+    force: np.ndarray
 
     ## \var local
     ## Whether the force is in local frame (True) or world frame (False).
     ## Default is False (world frame).
-    local: bool = False
+    local: bool
 
-    def __post_init__(self) -> None:
+    def __init__(
+        self,
+        force: Union[List[float], np.ndarray],
+        local: bool = False,
+    ):
         r"""!
-        Validate the force vector after initialization.
+        Initialize external force.
 
-        Ensures that the force is a 3D vector and converts it to numpy array
-        of floats for consistent handling.
+        \param force Force vector [fx, fy, fz] in Newtons.
+        \param local Whether the force is in the local (True) or world (False)
+            frame.
         """
-        # Convert to numpy array of floats
-        force_array = np.array(self.force, dtype=np.float64)
-
-        # Validate shape
-        if force_array.shape != (3,):
+        force = np.array(force, dtype=np.float64)
+        if force.shape != (3,):
             raise ValueError(
-                f"Force must be a 3D vector, got shape {force_array.shape}"
+                f"Force must be a 3D vector, got shape {force.shape}"
             )
 
-        # Store as numpy array of floats
-        self.force = force_array
+        # Instance attributes
+        self.force = force
+        self.local = local
+
+    def __repr__(self) -> str:
+        """!
+        String representation of the external force.
+
+        \return String representation showing force vector and frame.
+        """
+        return f"ExternalForce(force={self.force.tolist()}, local={self.local})"
