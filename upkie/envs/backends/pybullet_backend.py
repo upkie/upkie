@@ -612,28 +612,17 @@ class PyBulletBackend(Backend):
                 self._robot_id, link_index, force, position, flags
             )
 
-    def get_contact_points(self, link_name: Optional[str] = None) -> list:
+    def get_contact_points(
+        self, link_name: Optional[str] = None
+    ) -> List[PointContact]:
         r"""!
         Get contact points from PyBullet simulation.
 
         \param link_name Optional link name to filter contacts. If provided,
             only returns contact points involving this specific link.
             If None, returns all contact points for the robot.
-        \return List of contact point dictionaries with keys:
-            - contact_flag: Contact flag
-            - body_unique_id_a: Body A unique ID (robot)
-            - body_unique_id_b: Body B unique ID
-            - link_index_a: Link index on robot (-1 for base)
-            - link_index_b: Link index on body B (-1 for base)
-            - position_on_a: Contact position on robot in world coordinates
-            - position_on_b: Contact position on body B in world coordinates
-            - contact_normal_on_b: Contact normal on B in world coordinates
-            - contact_distance: Contact distance (negative for penetration)
-            - normal_force: Normal force magnitude
-            - lateral_friction_1: Lateral friction force 1
-            - lateral_friction_dir_1: Lateral friction direction 1
-            - lateral_friction_2: Lateral friction force 2
-            - lateral_friction_dir_2: Lateral friction direction 2
+        \return List of PointContact instances representing contact points
+            from the robot's perspective.
         """
         link_index = -2  # -2 for all links in PyBullet
         if link_name is not None:
@@ -650,22 +639,32 @@ class PyBulletBackend(Backend):
 
         result = []
         for contact in contact_points:
-            contact_dict = {
-                "contact_flag": contact[0],
-                "body_unique_id_a": contact[1],
-                "body_unique_id_b": contact[2],
-                "link_index_a": contact[3],
-                "link_index_b": contact[4],
-                "position_on_a": list(contact[5]),
-                "position_on_b": list(contact[6]),
-                "contact_normal_on_b": list(contact[7]),
-                "contact_distance": contact[8],
-                "normal_force": contact[9],
-                "lateral_friction_1": contact[10],
-                "lateral_friction_dir_1": list(contact[11]),
-                "lateral_friction_2": contact[12],
-                "lateral_friction_dir_2": list(contact[13]),
-            }
-            result.append(contact_dict)
+            link_idx = contact[3]  # link index in body A
+            contact_link_name = self.__link_name.get(
+                link_idx, f"unknown_link_{link_idx}"
+            )
+
+            # Read contact properties returned by PyBullet
+            position_contact_in_world = np.array(contact[5])  # A is robot link
+            contact_normal = np.array(contact[7])  # from B to A
+            normal_force_magnitude = contact[9]
+            lateral_friction_1 = contact[10]
+            lateral_friction_dir_1 = np.array(contact[11])
+            lateral_friction_2 = contact[12]
+            lateral_friction_dir_2 = np.array(contact[13])
+
+            # Net contact force exerted by body B on body A
+            normal_force = normal_force_magnitude * contact_normal
+            friction_force_1 = lateral_friction_1 * lateral_friction_dir_1
+            friction_force_2 = lateral_friction_2 * lateral_friction_dir_2
+            contact_force = normal_force + friction_force_1 + friction_force_2
+
+            # Append PointContact to the list
+            contact_point = PointContact(
+                link_name=contact_link_name,
+                position_contact_in_world=position_contact_in_world,
+                force_in_world=contact_force,
+            )
+            result.append(contact_point)
 
         return result
