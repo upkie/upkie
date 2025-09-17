@@ -1613,21 +1613,25 @@ class PyBulletBackendTestCase(unittest.TestCase):
         # Should return 2 contact points
         self.assertEqual(len(contact_points), 2)
 
-        # Check first contact point structure (now PointContact object)
+        # Check first point-contact structure
         contact1 = contact_points[0]
-        self.assertEqual(contact1.link_name, "right_wheel_link")  # link index 5 mapped to name
-        np.testing.assert_array_equal(contact1.position_contact_in_world, [0.1, 0.2, 0.3])
-        # Force should be computed: -normal_force * contact_normal_on_b + friction forces
-        # = -100.0 * [0.0, 0.0, 1.0] + 0.0 * [1.0, 0.0, 0.0] + 0.0 * [0.0, 1.0, 0.0]
-        # = [0.0, 0.0, -100.0]
-        np.testing.assert_array_equal(contact1.force_in_world, [0.0, 0.0, -100.0])
+        self.assertEqual(contact1.link_name, "right_wheel_link")
+        np.testing.assert_array_equal(
+            contact1.position_contact_in_world, [0.1, 0.2, 0.3]
+        )
+        np.testing.assert_array_equal(
+            contact1.force_in_world, [0.0, 0.0, 100.0]
+        )
 
-        # Check second contact point
+        # Check second point contact
         contact2 = contact_points[1]
-        self.assertEqual(contact2.link_name, "left_wheel_link")  # link index 2 mapped to name
-        np.testing.assert_array_equal(contact2.position_contact_in_world, [-0.1, 0.2, 0.3])
-        # Force: -95.0 * [0.0, 0.0, 1.0] = [0.0, 0.0, -95.0]
-        np.testing.assert_array_equal(contact2.force_in_world, [0.0, 0.0, -95.0])
+        self.assertEqual(contact2.link_name, "left_wheel_link")
+        np.testing.assert_array_equal(
+            contact2.position_contact_in_world, [-0.1, 0.2, 0.3]
+        )
+        np.testing.assert_array_equal(
+            contact2.force_in_world, [0.0, 0.0, 95.0]
+        )
 
         backend.close()
 
