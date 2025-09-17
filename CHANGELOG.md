@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - examples: Add PyBullet inertia randomization example
 - examples: Annotate PyBullet external force example
 - utils: Add `ExternalForce` class
+- utils: Add `PointContact` class
 
 ### Changed
 
