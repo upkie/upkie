@@ -123,11 +123,18 @@ class ExternalForceTestCase(unittest.TestCase):
     def test_external_force_string_representation(self):
         """Test that ExternalForce can be converted to string."""
         force = ExternalForce([1.0, 2.0, 3.0], local=True)
-        str_repr = str(force)
+        repr_str = repr(force)
 
-        # Should contain the key information
-        self.assertIn("ExternalForce", str_repr)
-        # Note: exact format depends on dataclass __str__ implementation
+        # Should contain the class name and all attributes
+        self.assertIn("ExternalForce", repr_str)
+        self.assertIn("force=[1.0, 2.0, 3.0]", repr_str)
+        self.assertIn("local=True", repr_str)
+
+        # Test with world frame (default)
+        force_world = ExternalForce([4.0, 5.0, 6.0])
+        repr_world = repr(force_world)
+        self.assertIn("force=[4.0, 5.0, 6.0]", repr_world)
+        self.assertIn("local=False", repr_world)
 
     def test_external_force_equality(self):
         """Test ExternalForce equality comparison."""
