@@ -99,6 +99,7 @@ class PyBulletBackend(Backend):
 
         # Initialize model and build joint index mapping
         self.__link_index = {"base": -1}
+        self.__link_name = {-1: "base"}
         self.__model = Model()
         self._joint_indices = {}
         self._joint_properties = {}
@@ -130,6 +131,7 @@ class PyBulletBackend(Backend):
 
             link_name = joint_info[12].decode("utf-8")
             self.__link_index[link_name] = bullet_idx
+            self.__link_name[bullet_idx] = link_name
 
         if "imu" not in self.__link_index:
             raise UpkieRuntimeError("Robot does not have a link named 'imu'")
