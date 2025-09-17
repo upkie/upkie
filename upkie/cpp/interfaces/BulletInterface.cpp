@@ -117,7 +117,10 @@ BulletInterface::BulletInterface(const Parameters& params)
   reset(Dictionary{});
 }
 
-BulletInterface::~BulletInterface() { bullet_.disconnect(); }
+BulletInterface::~BulletInterface() {
+  // Nothing else than disconnecting the simulator
+  bullet_.disconnect();
+}
 
 void BulletInterface::reset(const Dictionary& config) {
   params_.configure(config);
