@@ -6,7 +6,7 @@
 ## \namespace upkie.envs.backends.pybullet_backend
 ## \brief Backend using PyBullet physics simulation.
 
-from typing import Dict, Optional
+from typing import Dict, List, Optional
 
 import numpy as np
 import upkie_description
@@ -25,6 +25,7 @@ from upkie.exceptions import MissingOptionalDependency, UpkieRuntimeError
 from upkie.model import Model
 from upkie.utils.external_force import ExternalForce
 from upkie.utils.nested_update import nested_update
+from upkie.utils.point_contact import PointContact
 from upkie.utils.robot_state import RobotState
 from upkie.utils.rotations import (
     quaternion_from_rotation_matrix,
