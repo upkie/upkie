@@ -661,9 +661,9 @@ class PyBulletBackend(Backend):
 
             # Append PointContact to the list
             contact_point = PointContact(
+                force_in_world=contact_force,
                 link_name=contact_link_name,
                 position_contact_in_world=position_contact_in_world,
-                force_in_world=contact_force,
             )
             result.append(contact_point)
 

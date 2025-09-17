@@ -31,8 +31,8 @@ class PointContactTestCase(unittest.TestCase):
             point_contact.force_in_world, [10.0, 20.0, 30.0]
         )
 
-    def test_data_class_representation(self):
-        """Test PointContact string representation."""
+    def test_point_contact_repr(self):
+        """Test PointContact __repr__ method."""
         point_contact = PointContact(
             link_name="imu",
             position_contact_in_world=np.array([0.0, 0.0, 0.1]),
@@ -42,7 +42,8 @@ class PointContactTestCase(unittest.TestCase):
         repr_str = repr(point_contact)
         self.assertIn("PointContact", repr_str)
         self.assertIn("link_name='imu'", repr_str)
-        self.assertIn("array", repr_str)
+        self.assertIn("position_contact_in_world=[0.0, 0.0, 0.1]", repr_str)
+        self.assertIn("force_in_world=[0.0, 0.0, -50.0]", repr_str)
 
 
 if __name__ == "__main__":
