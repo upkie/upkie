@@ -56,7 +56,9 @@ class RandomPush(gym.Wrapper):
         self.push_generator = push_generator
 
     def step(self, action):
-        """Adds a random push to the action."""
+        r"""!
+        Adds a random push to the action.
+        """
         if np.random.binomial(1, self.push_prob):
             force = self.push_generator()
             external_forces = {"torso": {"force": force, "local": False}}
