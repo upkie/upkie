@@ -24,11 +24,12 @@ from upkie.envs.wrappers import (
 upkie.envs.register()
 
 
-def add_domain_randomization(
+def wrap_environment(
     env: gym.Env,
     action_noise: float = 0.05,  # m/s
     observation_noise: float = 0.01,  # mixed units (*^_^*)
 ) -> gym.Wrapper:
+    """Add random pushes, noise and lag to the robot environment."""
     obs_ones = np.ones(env.observation_space.shape)
     act_ones = np.ones(env.action_space.shape)
     env = RandomPush(
@@ -43,8 +44,8 @@ def add_domain_randomization(
 
 
 if __name__ == "__main__":
-    with gym.make("Upkie-Spine-Pendulum", frequency=200.0) as spine_env:
-        env = add_domain_randomization(spine_env)
+    with gym.make("Upkie-PyBullet-Pendulum", frequency=200.0) as pybullet_env:
+        env = wrap_environment(pybullet_env)
         observation, _ = env.reset()
         gain = np.array([10.0, 1.0, 0.0, 0.1])
         for step in range(1_000_000):
