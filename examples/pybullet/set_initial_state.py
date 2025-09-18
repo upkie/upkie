@@ -8,19 +8,18 @@
 # dependencies = ["upkie", "pybullet>=3"]
 # ///
 
-"""Initialize servo environment with a custom initial state."""
+"""Initialize robot in PyBullet with a custom initial state."""
 
 import gymnasium as gym
 import numpy as np
-from scipy.spatial.transform import Rotation as ScipyRotation
-
 import upkie.envs
+from scipy.spatial.transform import Rotation as ScipyRotation
 from upkie.utils.robot_state import RobotState
 
 if __name__ == "__main__":
     upkie.envs.register()
     with gym.make(
-        "Upkie-Spine-Servos",
+        "Upkie-PyBullet-Servos",
         frequency=200.0,
         init_state=RobotState(
             orientation_base_in_world=ScipyRotation.from_quat(
