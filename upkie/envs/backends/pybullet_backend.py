@@ -88,10 +88,10 @@ class PyBulletBackend(Backend):
         pybullet.setTimeStep(dt / nb_substeps)
 
         # Load ground plane
-        self._plane_id = pybullet.loadURDF("plane.urdf")
+        pybullet.loadURDF("plane.urdf")
 
         # Load Upkie
-        self._robot_id = pybullet.loadURDF(
+        self.__robot_id = pybullet.loadURDF(
             upkie_description.URDF_PATH,
             basePosition=[0, 0, 0.6],
             baseOrientation=[0, 0, 0, 1],
@@ -103,8 +103,8 @@ class PyBulletBackend(Backend):
         self.__model = Model()
         self._joint_indices = {}
         self._joint_properties = {}
-        for bullet_idx in range(pybullet.getNumJoints(self._robot_id)):
-            joint_info = pybullet.getJointInfo(self._robot_id, bullet_idx)
+        for bullet_idx in range(pybullet.getNumJoints(self.__robot_id)):
+            joint_info = pybullet.getJointInfo(self.__robot_id, bullet_idx)
             joint_name = joint_info[1].decode("utf-8")
             if joint_name in Model.JOINT_NAMES:
                 self._joint_indices[joint_name] = bullet_idx
@@ -123,7 +123,7 @@ class PyBulletBackend(Backend):
                 }
                 # Disable velocity controllers to enable torque control
                 pybullet.setJointMotorControl2(
-                    self._robot_id,
+                    self.__robot_id,
                     bullet_idx,
                     pybullet.VELOCITY_CONTROL,
                     force=0,
@@ -178,6 +178,13 @@ class PyBulletBackend(Backend):
         """
         self.close()
 
+    @property
+    def robot_id(self) -> int:
+        """!
+        Identifier of the robot body in the PyBullet simulation.
+        """
+        return self.__robot_id
+
     def close(self) -> None:
         """!
         Disconnect PyBullet properly.
@@ -209,7 +216,7 @@ class PyBulletBackend(Backend):
         qx, qy, qz, qw = orientation_quat
         orientation_quat_bullet = [qx, qy, qz, qw]
         pybullet.resetBasePositionAndOrientation(
-            self._robot_id,
+            self.__robot_id,
             position,
             orientation_quat_bullet,
         )
@@ -218,7 +225,7 @@ class PyBulletBackend(Backend):
         linear_velocity = init_state.linear_velocity_base_to_world_in_world
         angular_velocity = init_state.angular_velocity_base_in_base
         pybullet.resetBaseVelocity(
-            self._robot_id,
+            self.__robot_id,
             linear_velocity,
             angular_velocity,
         )
@@ -227,7 +234,7 @@ class PyBulletBackend(Backend):
         for joint in self.__model.joints:
             bullet_joint_idx = self._joint_indices[joint.name]
             pybullet.resetJointState(
-                self._robot_id,
+                self.__robot_id,
                 bullet_joint_idx,
                 init_state.joint_configuration[joint.idx_q],
             )
@@ -259,7 +266,7 @@ class PyBulletBackend(Backend):
                     # Store the commanded torque for observation later
                     self.__joint_torques[joint_name] = joint_torque
                     pybullet.setJointMotorControl2(
-                        self._robot_id,
+                        self.__robot_id,
                         joint_idx,
                         pybullet.TORQUE_CONTROL,
                         force=joint_torque,
@@ -295,12 +302,12 @@ class PyBulletBackend(Backend):
 
     def __get_base_orientation_observation(self) -> dict:
         position_base_in_world, bullet_quat_base_in_world = (
-            pybullet.getBasePositionAndOrientation(self._robot_id)
+            pybullet.getBasePositionAndOrientation(self.__robot_id)
         )
         (
             linear_velocity_base_to_world_in_world,
             angular_velocity_base_to_world_in_world,
-        ) = pybullet.getBaseVelocity(self._robot_id)
+        ) = pybullet.getBaseVelocity(self.__robot_id)
 
         # Convert quaternion from Bullet format
         quat_base_to_world = [
@@ -331,7 +338,7 @@ class PyBulletBackend(Backend):
 
     def __get_imu_observation(self) -> dict:
         link_state = pybullet.getLinkState(
-            self._robot_id,
+            self.__robot_id,
             self.__link_index["imu"],
             computeLinkVelocity=True,
             computeForwardKinematics=True,
@@ -393,7 +400,7 @@ class PyBulletBackend(Backend):
 
     def __get_floor_contact_observation(self) -> dict:
         position_base_in_world, _ = pybullet.getBasePositionAndOrientation(
-            self._robot_id
+            self.__robot_id
         )
         contact = position_base_in_world[2] < 0.8
         return {
@@ -404,7 +411,7 @@ class PyBulletBackend(Backend):
         servo_obs = {}
         for joint_name, joint_idx in self._joint_indices.items():
             joint_state = pybullet.getJointState(
-                self._robot_id, joint_idx, physicsClientId=self._bullet
+                self.__robot_id, joint_idx, physicsClientId=self._bullet
             )
             position = joint_state[0]  # in rad
             velocity = joint_state[1]  # in rad/s
@@ -474,7 +481,7 @@ class PyBulletBackend(Backend):
 
         # Read in measurements from the simulator
         joint_idx = self._joint_indices[joint_name]
-        joint_state = pybullet.getJointState(self._robot_id, joint_idx)
+        joint_state = pybullet.getJointState(self.__robot_id, joint_idx)
         measured_position = joint_state[0]  # already in radians in PyBullet
         measured_velocity = joint_state[1]  # already in rad/s in PyBullet
 
@@ -515,9 +522,9 @@ class PyBulletBackend(Backend):
         This method stores the original dynamic properties of each link
         so they can be used later for randomization.
         """
-        num_joints = pybullet.getNumJoints(self._robot_id)
+        num_joints = pybullet.getNumJoints(self.__robot_id)
         for link_id in range(num_joints):
-            dynamics_info = pybullet.getDynamicsInfo(self._robot_id, link_id)
+            dynamics_info = pybullet.getDynamicsInfo(self.__robot_id, link_id)
             mass = dynamics_info[0]
             local_inertia_diagonal = dynamics_info[2]  # tuple of 3 values
 
@@ -550,7 +557,7 @@ class PyBulletBackend(Backend):
 
             # Apply the changes to the PyBullet simulation
             pybullet.changeDynamics(
-                self._robot_id,
+                self.__robot_id,
                 link_id,
                 mass=new_mass,
                 localInertiaDiagonal=new_inertia,
@@ -598,19 +605,19 @@ class PyBulletBackend(Backend):
                 if link_index == -1:
                     # Base link
                     position, _ = pybullet.getBasePositionAndOrientation(
-                        self._robot_id
+                        self.__robot_id
                     )
                 else:
                     # Other links
                     link_state = pybullet.getLinkState(
-                        self._robot_id, link_index
+                        self.__robot_id, link_index
                     )
                     position = link_state[0]  # world position
                 flags = pybullet.WORLD_FRAME
 
             # Apply the external force
             pybullet.applyExternalForce(
-                self._robot_id, link_index, force, position, flags
+                self.__robot_id, link_index, force, position, flags
             )
 
     def get_contact_points(
@@ -632,7 +639,7 @@ class PyBulletBackend(Backend):
                 return []
 
         contact_points = pybullet.getContactPoints(
-            bodyA=self._robot_id,
+            bodyA=self.__robot_id,
             bodyB=-1,  # -1 for all bodies
             linkIndexA=link_index,
             linkIndexB=-2,  # -2 for all links
