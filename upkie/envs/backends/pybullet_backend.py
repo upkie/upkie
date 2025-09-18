@@ -560,13 +560,10 @@ class PyBulletBackend(Backend):
         self, external_forces: Dict[str, ExternalForce]
     ) -> None:
         r"""!
-        Set external forces applied to robot links.
+        Set external forces to apply to robot links at next step.
 
         \param external_forces Dictionary specifying external forces to apply.
             Values must be ExternalForce instances.
-
-        This method processes and stores external force specifications.
-        The actual forces are applied during the simulation step.
         """
         for link_name, external_force in external_forces.items():
             link_index = self.__link_index.get(link_name)
