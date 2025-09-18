@@ -130,7 +130,11 @@ class SpineBackend(Backend):
         return spine_observation
 
     def get_spine_observation(self) -> dict:
-        """Get current observation from spine (used after reset)."""
+        r"""
+        Get current observation from spine (used after reset).
+
+        \return Spine observation dictionary.
+        """
         return self._spine.get_observation()
 
     def get_bullet_action(self) -> dict:

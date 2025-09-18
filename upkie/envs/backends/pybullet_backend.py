@@ -274,7 +274,11 @@ class PyBulletBackend(Backend):
         return self.get_spine_observation()
 
     def get_spine_observation(self) -> dict:
-        """Get observation in spine format from PyBullet simulation."""
+        r"""!
+        Get observation in spine format from PyBullet simulation.
+
+        \return Spine observation dictionary.
+        """
         base_orientation = self.__get_base_orientation_observation()
         imu = self.__get_imu_observation()
         floor_contact = self.__get_floor_contact_observation()
