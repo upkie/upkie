@@ -15,7 +15,7 @@ from upkie.config.robot_config import (
 )
 
 
-class TestRobotConfig(unittest.TestCase):
+class RobotConfigTestCase(unittest.TestCase):
     """!
     Test robot configuration functionality.
     """

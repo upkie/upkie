@@ -84,12 +84,6 @@ class Interface {
    */
   void reset_action(Dictionary& action);
 
-  /*! Process a new action dictionary.
-   *
-   * \param[in] action Action to read commands from.
-   */
-  virtual void process_action(const Dictionary& action) = 0;
-
   /*! Write position commands from an action dictionary.
    *
    * \param[in] action Action to read commands from.

@@ -12,7 +12,7 @@ from upkie.config.spine_config import (
 )
 
 
-class TestSpineConfig(unittest.TestCase):
+class SpineConfigTestCase(unittest.TestCase):
     """!
     Test spine configuration functionality.
     """

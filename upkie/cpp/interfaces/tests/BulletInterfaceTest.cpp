@@ -11,14 +11,11 @@
 #include "gtest/gtest.h"
 #include "tools/cpp/runfiles/runfiles.h"
 #include "upkie/cpp/interfaces/BulletInterface.h"
-#include "upkie/cpp/interfaces/bullet/gravity.h"
+#include "upkie/cpp/interfaces/bullet/constants.h"
 
 namespace upkie::cpp::interfaces {
 
 using bazel::tools::cpp::runfiles::Runfiles;
-
-constexpr double kNoFriction = 1e-5;
-constexpr double kLeftWheelFriction = 0.1;
 
 class BulletInterfaceTest : public ::testing::Test {
  protected:
@@ -32,9 +29,6 @@ class BulletInterfaceTest : public ::testing::Test {
     params.dt = dt_;
     params.floor = false;   // wheels roll freely during testing
     params.gravity = true;  // default, just a reminder
-    bullet::JointProperties left_wheel_props;
-    left_wheel_props.friction = kLeftWheelFriction;
-    params.joint_properties.try_emplace("left_wheel", left_wheel_props);
     params.robot_urdf_path =
         runfiles->Rlocation("upkie_description/urdf/upkie.urdf");
     interface_ = std::make_unique<BulletInterface>(params);
@@ -67,43 +61,22 @@ TEST_F(BulletInterfaceTest, CycleCallsCallback) {
   ASSERT_TRUE(callback_called);
 }
 
-TEST_F(BulletInterfaceTest, JointProperties) {
-  const auto& joint_props = interface_->joint_properties();
+TEST_F(BulletInterfaceTest, ModelMaximumTorque) {
+  const auto& max_torques = interface_->model_maximum_torque();
 
-  ASSERT_NO_THROW(joint_props.at("left_hip"));
-  ASSERT_NO_THROW(joint_props.at("left_knee"));
-  ASSERT_NO_THROW(joint_props.at("left_wheel"));
-  ASSERT_NO_THROW(joint_props.at("right_hip"));
-  ASSERT_NO_THROW(joint_props.at("right_knee"));
-  ASSERT_NO_THROW(joint_props.at("right_wheel"));
+  ASSERT_NO_THROW(max_torques.at("left_hip"));
+  ASSERT_NO_THROW(max_torques.at("left_knee"));
+  ASSERT_NO_THROW(max_torques.at("left_wheel"));
+  ASSERT_NO_THROW(max_torques.at("right_hip"));
+  ASSERT_NO_THROW(max_torques.at("right_knee"));
+  ASSERT_NO_THROW(max_torques.at("right_wheel"));
 
-  ASSERT_LT(joint_props.at("left_hip").friction, kNoFriction);
-  ASSERT_LT(joint_props.at("left_knee").friction, kNoFriction);
-  ASSERT_GE(joint_props.at("left_wheel").friction, kLeftWheelFriction);
-  ASSERT_LT(joint_props.at("right_hip").friction, kNoFriction);
-  ASSERT_LT(joint_props.at("right_knee").friction, kNoFriction);
-  ASSERT_LT(joint_props.at("right_wheel").friction, kNoFriction);
-
-  ASSERT_GT(joint_props.at("left_hip").maximum_torque, 5.0);
-  ASSERT_GT(joint_props.at("left_knee").maximum_torque, 5.0);
-  ASSERT_GT(joint_props.at("left_wheel").maximum_torque, 0.5);
-  ASSERT_GT(joint_props.at("right_hip").maximum_torque, 5.0);
-  ASSERT_GT(joint_props.at("right_knee").maximum_torque, 5.0);
-  ASSERT_GT(joint_props.at("right_wheel").maximum_torque, 0.5);
-
-  ASSERT_LT(joint_props.at("left_hip").torque_control_noise, 1e-5);
-  ASSERT_LT(joint_props.at("left_knee").torque_control_noise, 1e-5);
-  ASSERT_LT(joint_props.at("left_wheel").torque_control_noise, 1e-5);
-  ASSERT_LT(joint_props.at("right_hip").torque_control_noise, 1e-5);
-  ASSERT_LT(joint_props.at("right_knee").torque_control_noise, 1e-5);
-  ASSERT_LT(joint_props.at("right_wheel").torque_control_noise, 1e-5);
-
-  ASSERT_LT(joint_props.at("left_hip").torque_measurement_noise, 1e-5);
-  ASSERT_LT(joint_props.at("left_knee").torque_measurement_noise, 1e-5);
-  ASSERT_LT(joint_props.at("left_wheel").torque_measurement_noise, 1e-5);
-  ASSERT_LT(joint_props.at("right_hip").torque_measurement_noise, 1e-5);
-  ASSERT_LT(joint_props.at("right_knee").torque_measurement_noise, 1e-5);
-  ASSERT_LT(joint_props.at("right_wheel").torque_measurement_noise, 1e-5);
+  ASSERT_GT(max_torques.at("left_hip"), 5.0);
+  ASSERT_GT(max_torques.at("left_knee"), 5.0);
+  ASSERT_GT(max_torques.at("left_wheel"), 0.5);
+  ASSERT_GT(max_torques.at("right_hip"), 5.0);
+  ASSERT_GT(max_torques.at("right_knee"), 5.0);
+  ASSERT_GT(max_torques.at("right_wheel"), 0.5);
 }
 
 TEST_F(BulletInterfaceTest, CycleDoesntThrow) {
@@ -179,7 +152,7 @@ TEST_F(BulletInterfaceTest, ComputeJointTorquesWhileMoving) {
   interface_->cycle([](const moteus::Output& output) {});
   interface_->cycle([](const moteus::Output& output) {});
 
-  // Right wheel has no kinetic friction
+  // Both wheels should behave the same (no joint friction)
   const auto& right_wheel = interface_->servo_reply().at("right_wheel").result;
   const double right_target_velocity = right_wheel.velocity * (2.0 * M_PI);
   const double right_torque = interface_->compute_joint_torque(
@@ -188,14 +161,13 @@ TEST_F(BulletInterfaceTest, ComputeJointTorquesWhileMoving) {
   ASSERT_GT(right_wheel.velocity, 0.1);
   ASSERT_NEAR(right_torque, 0.0, 1e-3);
 
-  // Left wheel has kinetic friction
   const auto& left_wheel = interface_->servo_reply().at("left_wheel").result;
   const double left_target_velocity = left_wheel.velocity * (2.0 * M_PI);
   const double left_torque = interface_->compute_joint_torque(
       "left_wheel", no_feedforward_torque, no_position, left_target_velocity,
       1.0, 1.0, 1.0);
-  ASSERT_GT(left_wheel.velocity, 0.1);                  // positive velocity
-  ASSERT_NEAR(left_torque, -kLeftWheelFriction, 1e-3);  // negative torque
+  ASSERT_GT(left_wheel.velocity, 0.1);  // positive velocity
+  ASSERT_NEAR(left_torque, 0.0, 1e-3);  // no friction torque
 }
 
 TEST_F(BulletInterfaceTest, ComputeJointFeedforwardTorque) {
@@ -237,22 +209,6 @@ TEST_F(BulletInterfaceTest, JointRepliesHaveVoltage) {
   }
 }
 
-TEST_F(BulletInterfaceTest, MassRandomizationIsDifferent) {
-  interface_->save_nominal_masses();
-  const std::map<int, double> nominal_masses = interface_->nominal_masses;
-  interface_->inertia_randomization_ = 0.1;
-  interface_->randomize_masses();
-  interface_->save_nominal_masses();
-  const std::map<int, double> randomized_masses = interface_->nominal_masses;
-  for (const auto& [id, nominal_mass] : nominal_masses) {
-    double randomized_mass = randomized_masses.at(id);
-    ASSERT_NE(nominal_mass, randomized_mass);
-    ASSERT_LT(randomized_mass, 1.1 * nominal_mass);
-    ASSERT_GT(randomized_mass, 0.9 * nominal_mass);
-  }
-  interface_->inertia_randomization_ = 0.0;
-}
-
 TEST_F(BulletInterfaceTest, ObserveImuOrientation) {
   Eigen::Quaterniond orientation_base_in_world = {0., 1., 0., 0.};
 
@@ -288,23 +244,6 @@ TEST_F(BulletInterfaceTest, ObserveImuOrientation) {
                   .isApprox(orientation_imu_in_ars));
 }
 
-TEST_F(BulletInterfaceTest, MonitorContacts) {
-  Dictionary config;
-  config("bullet")("monitor")("contacts")("wheels")("include")(
-      "left_wheel_tire") = true;
-  config("bullet")("monitor")("contacts")("wheels")("include")(
-      "right_wheel_tire") = true;
-  interface_->reset(config);
-
-  Dictionary observation;
-  interface_->cycle([](const moteus::Output& output) {});
-  interface_->observe(observation);
-  ASSERT_TRUE(observation.has("sim"));
-  ASSERT_TRUE(observation("sim").has("contact"));
-  ASSERT_TRUE(observation("sim")("contact").has("wheels"));
-  ASSERT_EQ(observation("sim")("contact").get<int>("wheels"), 0);
-}
-
 TEST_F(BulletInterfaceTest, MonitorIMU) {
   Dictionary config;
   interface_->reset(config);
@@ -319,7 +258,8 @@ TEST_F(BulletInterfaceTest, MonitorIMU) {
   ASSERT_TRUE(observation("sim")("imu").has("linear_velocity"));
   Eigen::Vector3d linear_velocity_imu_in_imu =
       observation("sim")("imu")("linear_velocity");
-  ASSERT_DOUBLE_EQ(linear_velocity_imu_in_imu.z(), -bullet::kGravity * dt_);
+  ASSERT_DOUBLE_EQ(linear_velocity_imu_in_imu.z(),
+                   -bullet::constants::kGravity * dt_);
 }
 
 TEST_F(BulletInterfaceTest, MonitorBaseState) {
@@ -343,8 +283,8 @@ TEST_F(BulletInterfaceTest, MonitorBaseState) {
      it first updates velocities then integrates those to get positions
      (semi-implicit Euler method).
   */
-  ASSERT_NEAR(base_position.z(), 3 * -bullet::kGravity * std::pow(dt_, 2.0),
-              1e-6);
+  ASSERT_NEAR(base_position.z(),
+              3 * -bullet::constants::kGravity * std::pow(dt_, 2.0), 1e-6);
 
   ASSERT_TRUE(observation("sim")("base").has("orientation"));
   Eigen::Quaterniond base_orientation =
@@ -377,56 +317,18 @@ TEST_F(BulletInterfaceTest, FreeFallBasePosition) {
   base_position = interface_->get_transform_base_to_world().block<3, 1>(0, 3);
   ASSERT_NEAR(base_position.x(), 0.0, 1e-4);
   ASSERT_NEAR(base_position.y(), 0.0, 1e-4);
-  ASSERT_NEAR(base_position.z(), -0.5 * bullet::kGravity * T * T, 1e-3);
+  ASSERT_NEAR(base_position.z(), -0.5 * bullet::constants::kGravity * T * T,
+              1e-3);
 
   Eigen::Vector3d base_velocity =
       interface_->get_linear_velocity_base_to_world_in_world();
   ASSERT_NEAR(base_velocity.x(), 0.0 * T, 1e-4);
   ASSERT_NEAR(base_velocity.y(), 0.0 * T, 1e-4);
-  ASSERT_NEAR(base_velocity.z(), -bullet::kGravity * T, 1e-3);
+  ASSERT_NEAR(base_velocity.z(), -bullet::constants::kGravity * T, 1e-3);
 }
 
 TEST_F(BulletInterfaceTest, ComputeRobotMass) {
   ASSERT_NEAR(interface_->compute_robot_mass(), 5.3382, 1e-4);
-}
-
-TEST_F(BulletInterfaceTest, ApplyExternalForces) {
-  const double T = 0.05;  // trajectory duration in seconds
-
-  Dictionary action, config;
-  auto& torso_force = action("bullet")("external_forces")("torso");
-  auto& external_force =
-      torso_force.insert<Eigen::Vector3d>("force", Eigen::Vector3d{0., 0., 0.});
-  torso_force.insert<bool>("local_frame", false);  // world frame
-
-  const double mass = interface_->compute_robot_mass();
-  Eigen::Vector3d init_com_position;
-  for (int n_g = 0; n_g < 4; ++n_g) {
-    external_force.z() = n_g * bullet::kGravity * mass;
-    interface_->reset(config);
-    init_com_position = interface_->compute_position_com_in_world();
-    for (double t = 0.0; t < T; t += dt_) {
-      interface_->process_action(action);  // forces are cleared at each cycle
-      interface_->cycle([](const moteus::Output& output) {});
-    }
-
-    // Since there is no ground in this text fixture, the only forces exerted on
-    // the robot during this test are gravity and the external force
-    const Eigen::Vector3d gravity = {0., 0., -bullet::kGravity};
-    const Eigen::Vector3d com_accel = gravity + external_force / mass;
-    const Eigen::Vector3d Delta_com =
-        interface_->compute_position_com_in_world() - init_com_position;
-
-    ASSERT_NEAR(Delta_com.x(), 0.5 * com_accel.x() * T * T, 5e-3);
-    ASSERT_NEAR(Delta_com.y(), 0.5 * com_accel.y() * T * T, 5e-3);
-    if (n_g != 1) {  // relative error check for the vertical coordinate
-      double should_be = 0.5 * com_accel.z() * T * T;
-      double relvar = std::abs((Delta_com.z() - should_be) / should_be);
-      ASSERT_NEAR(relvar, 0.0, 5e-2);
-    } else /* n_g == 1 */ {
-      ASSERT_NEAR(Delta_com.z(), 0.5 * com_accel.z() * T * T, 5e-3);
-    }
-  }
 }
 
 TEST_F(BulletInterfaceTest, ResetJointConfiguration) {

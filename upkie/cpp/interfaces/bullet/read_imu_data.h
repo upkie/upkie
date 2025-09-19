@@ -11,7 +11,7 @@
 
 #include "RobotSimulator/b3RobotSimulatorClientAPI.h"
 #include "upkie/cpp/interfaces/ImuData.h"
-#include "upkie/cpp/interfaces/bullet/gravity.h"
+#include "upkie/cpp/interfaces/bullet/constants.h"
 
 namespace upkie::cpp::interfaces::bullet {
 

@@ -9,7 +9,7 @@
 #include <string>
 
 #include "tools/cpp/runfiles/runfiles.h"
-#include "upkie/cpp/interfaces/bullet/gravity.h"
+#include "upkie/cpp/interfaces/bullet/constants.h"
 #include "upkie/cpp/interfaces/bullet/read_imu_data.h"
 #include "upkie/cpp/interfaces/bullet/utils.h"
 
@@ -48,7 +48,7 @@ BulletInterface::BulletInterface(const Parameters& params)
   bullet_.configureDebugVisualizer(COV_ENABLE_RENDERING, 0);
   bullet_.configureDebugVisualizer(COV_ENABLE_SHADOWS, 0);
   if (params.gravity) {
-    bullet_.setGravity(btVector3(0, 0, -bullet::kGravity));
+    bullet_.setGravity(btVector3(0, 0, -bullet::constants::kGravity));
   }
   bullet_.setRealTimeSimulation(false);  // making sure
 
@@ -57,12 +57,6 @@ BulletInterface::BulletInterface(const Parameters& params)
   imu_link_index_ = get_link_index("imu");
   if (imu_link_index_ < 0) {
     throw std::runtime_error("Robot does not have a link named \"imu\"");
-  }
-
-  // If params has an attribute inertia_randomization, store masses
-  if (params.inertia_randomization) {
-    inertia_randomization_ = params.inertia_randomization;
-    save_nominal_masses();
   }
 
   // Read servo layout
@@ -87,10 +81,7 @@ BulletInterface::BulletInterface(const Parameters& params)
     get_link_index(link_name);  // memoize link index
     if (joint_index_map_.find(joint_name) != joint_index_map_.end()) {
       joint_index_map_[joint_name] = joint_index;
-
-      bullet::JointProperties props;
-      props.maximum_torque = joint_info.m_jointMaxForce;
-      joint_properties_.try_emplace(joint_name, props);
+      model_maximum_torque_.try_emplace(joint_name, joint_info.m_jointMaxForce);
     }
   }
 
@@ -126,53 +117,19 @@ BulletInterface::BulletInterface(const Parameters& params)
   reset(Dictionary{});
 }
 
-BulletInterface::~BulletInterface() { bullet_.disconnect(); }
-
-void BulletInterface::register_contacts() {
-  // Save contacts to monitor
-  for (const auto& contact_group : params_.monitor_contacts) {
-    for (const auto& include_or_exclude :
-         params_.monitor_contacts.at(contact_group.first)) {
-      if (include_or_exclude.first == "include") {
-        for (const auto& body :
-             params_.monitor_contacts.at(contact_group.first).at("include")) {
-          monitor_contacts_[contact_group.first].push_back(body);
-        }
-      } else if (include_or_exclude.first == "exclude") {
-        for (const auto& body : link_index_) {
-          // find if the body has to be excluded
-          if (std::find(params_.monitor_contacts.at(contact_group.first)
-                            .at("exclude")
-                            .begin(),
-                        params_.monitor_contacts.at(contact_group.first)
-                            .at("exclude")
-                            .end(),
-                        body.first) ==
-              params_.monitor_contacts.at(contact_group.first)
-                  .at("exclude")
-                  .end()) {
-            monitor_contacts_[contact_group.first].push_back(body.first);
-          }
-        }
-      }
-    }
-  }
+BulletInterface::~BulletInterface() {
+  // Nothing else than disconnecting the simulator
+  bullet_.disconnect();
 }
 
 void BulletInterface::reset(const Dictionary& config) {
   params_.configure(config);
-  register_contacts();
   bullet_.setTimeStep(params_.dt);
   reset_base_state(params_.position_base_in_world,
                    params_.orientation_base_in_world,
                    params_.linear_velocity_base_to_world_in_world,
                    params_.angular_velocity_base_in_base);
-  reset_contact_data();
   reset_joint_angles(params_.joint_configuration);
-  reset_joint_properties();
-  if (std::abs(params_.inertia_randomization) < 1e-10) {
-    randomize_masses();
-  }
 }
 
 void BulletInterface::reset_base_state(
@@ -204,12 +161,6 @@ void BulletInterface::reset_base_state(
       link_state.m_worldLinearVelocity[2];
 }
 
-void BulletInterface::reset_contact_data() {
-  for (const auto& contact_group : monitor_contacts_) {
-    contact_data_[contact_group.first] = bullet::ContactData();
-  }
-}
-
 void BulletInterface::reset_joint_angles(
     const Eigen::VectorXd& joint_configuration) {
   b3JointInfo joint_info;
@@ -236,33 +187,11 @@ void BulletInterface::reset_joint_angles(
   }
 }
 
-void BulletInterface::reset_joint_properties() {
-  b3JointInfo joint_info;
-  const int nb_joints = bullet_.getNumJoints(robot_);
-  for (int joint_index = 0; joint_index < nb_joints; ++joint_index) {
-    bullet_.getJointInfo(robot_, joint_index, &joint_info);
-    std::string joint_name = joint_info.m_jointName;
-    if (joint_index_map_.find(joint_name) != joint_index_map_.end()) {
-      const auto params_it = params_.joint_properties.find(joint_name);
-      if (params_it != params_.joint_properties.end()) {
-        joint_properties_[joint_name].update_configurable(params_it->second);
-      } else /* no configuration for joint properties */ {
-        joint_properties_[joint_name].reset_configurable();
-      }
-    }
-  }
-}
-
 void BulletInterface::observe(Dictionary& observation) const {
   Interface::observe_imu(observation);
 
   Dictionary& sim = observation("sim");
   sim("imu")("linear_velocity") = imu_data_.linear_velocity_imu_in_world;
-
-  for (const auto& contact_group : monitor_contacts_) {
-    sim("contact")(contact_group.first) =
-        contact_data_.at(contact_group.first).num_contact_points;
-  }
 
   // Observe base pose
   Eigen::Matrix4d T = get_transform_base_to_world();
@@ -294,44 +223,6 @@ void BulletInterface::observe(Dictionary& observation) const {
   }
 }
 
-void BulletInterface::process_action(const Dictionary& action) {
-  if (!action.has("bullet")) {
-    return;
-  }
-  const Dictionary& bullet_action = action("bullet");
-  if (bullet_action.has("external_forces")) {
-    process_forces(bullet_action("external_forces"));
-  }
-}
-
-void BulletInterface::process_forces(const Dictionary& external_forces) {
-  for (const auto& link_name : external_forces.keys()) {
-    // Check that link name is valid and get link index
-    int link_index = get_link_index(link_name);
-    if (link_index < 0) {
-      if (link_name == "base") {
-        link_index = -1;
-      } else {
-        spdlog::warn(
-            "Link \"{}\" not found in the robot description, cannot apply an "
-            "external force to it",
-            link_name);
-        continue;
-      }
-    }
-
-    // Read external force from the dictionary
-    const auto& params = external_forces(link_name);
-    const bool local_frame = params.get<bool>("local_frame", false);
-    Eigen::Vector3d force_eigen = params("force");
-
-    // Save external force, to be applied before stepSimulation()
-    bullet::ExternalForce& ext_force = external_forces_[link_index];
-    ext_force.flags = (local_frame) ? EF_LINK_FRAME : EF_WORLD_FRAME;
-    ext_force.force = bullet_from_eigen(force_eigen);
-  }
-}
-
 void BulletInterface::cycle(
     std::function<void(const moteus::Output&)> callback) {
   assert(data_.commands.size() == data_.replies.size());
@@ -342,9 +233,7 @@ void BulletInterface::cycle(
 
   read_joint_sensors();
   read_imu();
-  read_contacts();
   send_commands();
-  apply_external_forces();
   bullet_.stepSimulation();
 
   if (params_.follower_camera) {
@@ -371,22 +260,6 @@ void BulletInterface::read_imu() {
                                 imu_data_.raw_angular_velocity, rng_);
 }
 
-void BulletInterface::read_contacts() {
-  b3ContactInformation contact_info;
-  b3RobotSimulatorGetContactPointsArgs contact_args;
-  int n_contacts;
-  for (const auto& contact_group : monitor_contacts_) {
-    n_contacts = 0;
-    for (const auto& link_name : monitor_contacts_.at(contact_group.first)) {
-      contact_args.m_bodyUniqueIdA = robot_;
-      contact_args.m_linkIndexA = get_link_index(link_name);
-      bullet_.getContactPoints(contact_args, &contact_info);
-      n_contacts += contact_info.m_numContactPoints;
-    }
-    contact_data_.at(contact_group.first).num_contact_points = n_contacts;
-  }
-}
-
 void BulletInterface::read_joint_sensors() {
   b3JointSensorState sensor_state;
   for (const auto& name_index : joint_index_map_) {
@@ -401,40 +274,6 @@ void BulletInterface::read_joint_sensors() {
     // controlled (command mode == moteus::Mode::kStopped), and is zero when
     // the joint is torque controlled (command mode == moteus::Mode::kPosition)
     result.torque = sensor_state.m_jointMotorTorque;
-  }
-}
-
-void BulletInterface::save_nominal_masses() {
-  const int nb_links = bullet_.getNumJoints(robot_);
-  b3DynamicsInfo info;
-  for (int link_id = 0; link_id < nb_links; ++link_id) {
-    bullet_.getDynamicsInfo(robot_, link_id, &info);
-    nominal_masses[link_id] = info.m_mass;
-    nominal_inertia[link_id][0] = info.m_localInertialDiagonal[0];
-    nominal_inertia[link_id][1] = info.m_localInertialDiagonal[1];
-    nominal_inertia[link_id][2] = info.m_localInertialDiagonal[2];
-  }
-}
-
-void BulletInterface::randomize_masses() {
-  std::default_random_engine generator;
-  for (const auto& link_id : nominal_masses) {
-    std::uniform_real_distribution<double> distribution(-inertia_randomization_,
-                                                        inertia_randomization_);
-    double epsilon = distribution(generator);
-    bullet::RobotSimulatorChangeDynamicsArgs change_dyn_args;
-    change_dyn_args.m_mass = nominal_masses[link_id.first] * (1 + epsilon);
-    // We assume a uniform distribution of the mass density
-    // The new mass is (1+\epsilon)previous_mass
-    // As the distribution of mass is uniform, the inertia is linear
-    // in mass, so we can multiply the original inertia by (1+\epsilon)
-    change_dyn_args.m_localInertiaDiagonal[0] =
-        nominal_inertia[link_id.first][0] * (1 + epsilon);
-    change_dyn_args.m_localInertiaDiagonal[1] =
-        nominal_inertia[link_id.first][1] * (1 + epsilon);
-    change_dyn_args.m_localInertiaDiagonal[2] =
-        nominal_inertia[link_id.first][2] * (1 + epsilon);
-    bullet_.changeDynamics(robot_, link_id.first, change_dyn_args);
   }
 }
 
@@ -485,13 +324,7 @@ void BulletInterface::send_commands() {
 
     // m_jointMotorTorque processed in read_joint_sensors() will be set to zero
     // since we just torque controlled the joint, hence we measure it here:
-    const bullet::JointProperties& joint_props = joint_properties_[joint_name];
     servo_reply_[joint_name].result.torque = joint_torque;
-    if (joint_props.torque_measurement_noise > 1e-10) {
-      std::normal_distribution<double> white_noise(
-          0.0, joint_props.torque_control_noise);
-      servo_reply_[joint_name].result.torque += white_noise(rng_);
-    }
   }
 }
 
@@ -502,28 +335,19 @@ double BulletInterface::compute_joint_torque(
   assert(!std::isnan(target_velocity));
 
   // Read in measurements and torque-control gains
-  const bullet::JointProperties& joint_props = joint_properties_[joint_name];
+  const double model_max_torque = model_maximum_torque_[joint_name];
   const auto& measurements = servo_reply_[joint_name].result;
   const double measured_position = measurements.position * (2.0 * M_PI);
   const double measured_velocity = measurements.velocity * (2.0 * M_PI);
   const double kp = kp_scale * params_.torque_control_kp;
   const double kd = kd_scale * params_.torque_control_kd;
-  const double tau_max = std::min(maximum_torque, joint_props.maximum_torque);
+  const double tau_max = std::min(maximum_torque, model_max_torque);
 
   // Compute joint torque
   double torque = feedforward_torque;
   torque += kd * (target_velocity - measured_velocity);
   if (!std::isnan(target_position)) {
     torque += kp * (target_position - measured_position);
-  }
-  constexpr double kMaxStictionVelocity = 1e-3;  // rad/s
-  if (std::abs(measured_velocity) > kMaxStictionVelocity) {
-    torque += joint_props.friction * ((measured_velocity > 0.0) ? -1.0 : +1.0);
-  }
-  if (joint_props.torque_control_noise > 1e-10) {
-    std::normal_distribution<double> white_noise(
-        0.0, joint_props.torque_control_noise);
-    torque += white_noise(rng_);
   }
   torque = std::max(std::min(torque, tau_max), -tau_max);
   return torque;
@@ -621,23 +445,6 @@ double BulletInterface::compute_robot_mass() {
 
 Eigen::Vector3d BulletInterface::compute_position_com_in_world() {
   return bullet::compute_position_com_in_world(bullet_, robot_);
-}
-
-void BulletInterface::apply_external_forces() {
-  for (auto& link_force : external_forces_) {
-    const int link_index = link_force.first;
-    const int flags = link_force.second.flags;
-    btVector3& force = link_force.second.force;
-    Eigen::Vector3d position_eigen;
-    if (flags == EF_LINK_FRAME) {
-      position_eigen.setZero();
-    } else /* (flags == EF_WORLD_FRAME) */ {
-      position_eigen =
-          bullet::get_position_link_in_world(bullet_, robot_, link_index);
-    }
-    btVector3 position = bullet_from_eigen(position_eigen);
-    bullet_.applyExternalForce(robot_, link_index, force, position, flags);
-  }
 }
 
 }  // namespace upkie::cpp::interfaces

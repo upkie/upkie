@@ -3,6 +3,10 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2024 Inria
+#
+# /// script
+# dependencies = ["upkie"]
+# ///
 
 """This example simply makes Upkie go to its neutral configuration."""
 
@@ -43,7 +47,7 @@ def reset_to_neutral(env: upkie.envs.UpkieServos):
 
 
 if __name__ == "__main__":
-    with gym.make("Upkie-PyBullet-Servos", frequency=200.0) as env:
+    with gym.make("Upkie-Spine-Servos", frequency=200.0) as env:
         last_action = reset_to_neutral(env)
         while True:  # hold configuration until the agent is interrupted
             env.step(last_action)

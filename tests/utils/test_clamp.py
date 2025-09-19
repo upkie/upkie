@@ -13,7 +13,7 @@ import numpy as np
 from upkie.utils.clamp import clamp, clamp_abs, clamp_and_warn
 
 
-class TestClamp(unittest.TestCase):
+class ClampTestCase(unittest.TestCase):
     def test_clamp(self):
         self.assertAlmostEqual(clamp(-2.1, -2.0, 2.0), -2.0)
         self.assertAlmostEqual(clamp(3.1, -2.0, 2.0), 2.0)

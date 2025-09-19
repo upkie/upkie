@@ -9,11 +9,7 @@ package(default_visibility = ["//visibility:public"])
 cc_library(
     name = "bullet",
     hdrs = [
-        "ContactData.h",
-        "ExternalForce.h",
-        "JointProperties.h",
-        "gravity.h",
-        "RobotSimulator.h",
+        "constants.h",
         "read_imu_data.h",
         "utils.h",
     ],
@@ -22,21 +18,6 @@ cc_library(
         "@bullet",
         "@eigen",
         "@palimpsest",
-    ],
-)
-
-cc_library(
-    name = "robot_simulator",
-    hdrs = [
-        "RobotSimulatorChangeDynamicsArgs.h",
-        "RobotSimulator.h",
-    ],
-    srcs = [
-        "RobotSimulator.cpp",
-    ],
-    deps = [
-        "@bullet",
-        "@eigen"
     ],
 )
 

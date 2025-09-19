@@ -15,7 +15,7 @@ from upkie.config.user_config import (
 )
 
 
-class TestUserConfig(unittest.TestCase):
+class UserConfigTestCase(unittest.TestCase):
     """!
     Test user configuration loading functionality.
     """

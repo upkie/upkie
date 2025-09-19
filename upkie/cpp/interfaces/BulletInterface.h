@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include <RobotSimulator/b3RobotSimulatorClientAPI.h>
 #include <palimpsest/Dictionary.h>
 #include <spdlog/spdlog.h>
 
@@ -15,10 +16,6 @@
 
 #include "upkie/cpp/interfaces/ImuUncertainty.h"
 #include "upkie/cpp/interfaces/Interface.h"
-#include "upkie/cpp/interfaces/bullet/ContactData.h"
-#include "upkie/cpp/interfaces/bullet/ExternalForce.h"
-#include "upkie/cpp/interfaces/bullet/JointProperties.h"
-#include "upkie/cpp/interfaces/bullet/RobotSimulator.h"
 #include "upkie/cpp/interfaces/moteus/Output.h"
 #include "upkie/cpp/interfaces/moteus/ServoReply.h"
 
@@ -57,36 +54,15 @@ class BulletInterface : public Interface {
         imu_uncertainty.configure(bullet("imu_uncertainty"));
       }
 
-      joint_properties.clear();
+      model_maximum_torque.clear();
       if (bullet.has("joint_properties")) {
         for (const auto& joint : bullet("joint_properties").keys()) {
           const auto& props = bullet("joint_properties")(joint);
-          joint_properties.try_emplace(joint, bullet::JointProperties(props));
+          model_maximum_torque.try_emplace(
+              joint, props.get<double>("maximum_torque", 0.0));
         }
       }
 
-      monitor_contacts.clear();
-      if (bullet.has("monitor")) {
-        const auto& monitor = bullet("monitor");
-        if (monitor.has("contacts")) {
-          for (const auto& contact_group : monitor("contacts").keys()) {
-            spdlog::debug("Monitoring contacts for collision \"{}\"",
-                          contact_group);
-            if (monitor("contacts")(contact_group).has("include")) {
-              for (const auto& body :
-                   monitor("contacts")(contact_group)("include").keys()) {
-                monitor_contacts[contact_group]["include"].push_back(body);
-              }
-            }
-            if (monitor("contacts")(contact_group).has("exclude")) {
-              for (const auto& body :
-                   monitor("contacts")(contact_group)("exclude").keys()) {
-                monitor_contacts[contact_group]["exclude"].push_back(body);
-              }
-            }
-          }
-        }
-      }
       if (bullet.has("reset")) {
         const auto& reset = bullet("reset");
         position_base_in_world = reset.get<Eigen::Vector3d>(
@@ -125,18 +101,11 @@ class BulletInterface : public Interface {
      */
     std::string argv0 = "";
 
-    //! Contacts to monitor and report along with observations
-    std::map<std::string, std::map<std::string, std::vector<std::string>>>
-        monitor_contacts;
-
     //! Simulation timestep in [s]
     double dt = std::numeric_limits<double>::quiet_NaN();
 
     //! Translate the camera to follow the robot
     bool follower_camera = false;
-
-    //! Mass randomization epsilon
-    double inertia_randomization = 0.0;
 
     //! If true, set gravity to -9.81 m/s².
     bool gravity = true;
@@ -182,8 +151,8 @@ class BulletInterface : public Interface {
     //! Body angular velocity of the base upon reset
     Eigen::Vector3d angular_velocity_base_in_base = Eigen::Vector3d::Zero();
 
-    //! Joint friction parameters
-    std::map<std::string, bullet::JointProperties> joint_properties;
+    //! Maximum torque limits per joint read from model
+    std::map<std::string, double> model_maximum_torque;
 
     //! Uncertainty on IMU measurements
     ImuUncertainty imu_uncertainty;
@@ -214,20 +183,6 @@ class BulletInterface : public Interface {
    * \param[out] observation Dictionary to write to.
    */
   void observe(Dictionary& observation) const override;
-
-  /*! Process a new action dictionary.
-   *
-   * \param[in] action Action to read commands from.
-   */
-  void process_action(const Dictionary& action) override;
-
-  /*! Process a dictionary of additional external forces.
-   *
-   * \param[in] external_forces Dictionary to read forces from.
-   *
-   * Note that Bullet clears external forces after each simulation step.
-   */
-  void process_forces(const Dictionary& external_forces);
 
   /*! Spin a new communication cycle.
    *
@@ -269,9 +224,6 @@ class BulletInterface : public Interface {
    */
   Eigen::VectorXd get_joint_angles() noexcept;
 
-  //! Reset contact data.
-  void reset_contact_data();
-
   /*! Reset joint angles.
    *
    * \param[in] joint_configuration Joint configuration vector.
@@ -297,9 +249,9 @@ class BulletInterface : public Interface {
       const Eigen::Vector3d& linear_velocity_base_to_world_in_world,
       const Eigen::Vector3d& angular_velocity_base_in_base);
 
-  //! Joint properties (getter used for testing)
-  const std::map<std::string, bullet::JointProperties>& joint_properties() {
-    return joint_properties_;
+  //! Model maximum torque map (getter used for testing)
+  const std::map<std::string, double>& model_maximum_torque() {
+    return model_maximum_torque_;
   }
 
   //! Internal map of servo replies (getter used for testing)
@@ -317,7 +269,7 @@ class BulletInterface : public Interface {
    *     in torque control.
    * \param[in] kd_scale Multiplicative factor applied to the derivative gain
    *     in torque control.
-   * \param[in] maximum_torque Maximum torque in N⋅m from the command.
+   * \param[in] maximum_torque Maximum torque in N⋅m specified by the command.
    */
   double compute_joint_torque(const std::string& joint_name,
                               const double feedforward_torque,
@@ -338,25 +290,7 @@ class BulletInterface : public Interface {
    */
   Eigen::Vector3d get_position_link_in_world(const std::string& link_name);
 
-  //! Get nominal masses of the robot links
-  void save_nominal_masses();
-
-  //! Randomize masses of the robot links
-  void randomize_masses();
-
-  //! Mass randomization epsilon
-  double inertia_randomization_;
-
-  //! Nominal masses of the robot links
-  std::map<int, double> nominal_masses;
-
-  //! Nominal inertia diagonal of the robot links
-  std::map<int, double[3]> nominal_inertia;
-
  private:
-  //! Apply external forces.
-  void apply_external_forces();
-
   /*! Get index of a given robot link in Bullet
    *
    * \param[in] link_name Name of the searched link.
@@ -369,9 +303,6 @@ class BulletInterface : public Interface {
    */
   int get_link_index(const std::string& link_name);
 
-  //! Read contact sensors from the simulator
-  void read_contacts();
-  void register_contacts();
   //! Read IMU data from the simulator
   void read_imu();
 
@@ -395,7 +326,7 @@ class BulletInterface : public Interface {
   std::map<std::string, moteus::ServoReply> servo_reply_;
 
   //! Bullet client
-  bullet::RobotSimulatorClientAPI bullet_;
+  b3RobotSimulatorClientAPI bullet_;
 
   //! Identifier of the robot model in the simulation
   int robot_;
@@ -403,14 +334,11 @@ class BulletInterface : public Interface {
   //! Map from URDF link names to Bullet link indices
   std::map<std::string, int> env_body_ids;
 
-  //! Register the contacts to monitor
-  std::map<std::string, std::vector<std::string>> monitor_contacts_;
-
   //! Identifier of the ground plane in the simulation
   int plane_id_;
 
   //! Maximum joint torques read from the URDF model
-  std::map<std::string, bullet::JointProperties> joint_properties_;
+  std::map<std::string, double> model_maximum_torque_;
 
   //! Link index of the IMU in Bullet
   int imu_link_index_;
@@ -418,19 +346,8 @@ class BulletInterface : public Interface {
   //! Map from link name to link index in Bullet
   std::map<std::string, int> link_index_;
 
-  //! Map from link name to link contact data
-  std::map<std::string, bullet::ContactData> contact_data_;
-
   //! Random number generator used to sample from probability distributions
   std::mt19937 rng_;
-
-  /*! Map from link index to external force applied to it
-   *
-   * \note It is only possible to apply one external wrench (force, torque) on
-   * a given body at a given time. If you have multiple wrenches, sum them up
-   * to a net wrench.
-   */
-  std::map<int, bullet::ExternalForce> external_forces_;
 };
 
 }  // namespace upkie::cpp::interfaces

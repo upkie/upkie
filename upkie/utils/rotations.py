@@ -65,4 +65,11 @@ def quaternion_from_rotation_matrix(rotation_matrix: np.ndarray) -> np.ndarray:
     if rotation_matrix.shape != (3, 3):
         raise ValueError(f"Expected 3x3 matrix, got {rotation_matrix.shape}")
     rotation = ScipyRotation.from_matrix(rotation_matrix)
-    return rotation.as_quat(scalar_first=True)
+    try:
+        return rotation.as_quat(scalar_first=True)
+    except TypeError:
+        # Fallback for older scipy: as_quat() returns [x, y, z, w]
+        quat_xyzw = rotation.as_quat()
+        return np.array(
+            [quat_xyzw[3], quat_xyzw[0], quat_xyzw[1], quat_xyzw[2]]
+        )

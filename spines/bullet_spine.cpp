@@ -59,10 +59,6 @@ class CommandLineArguments {
         extra_urdf_paths.push_back(args.at(++i));
         spdlog::info("Command line: extra-urdf-path = {}",
                      extra_urdf_paths.back());
-      } else if (arg == "--inertia-randomization") {
-        inertia_randomization = std::stod(args.at(++i));
-        spdlog::info("Command line: inertia_randomization = {} [kg]",
-                     inertia_randomization);
       } else if (arg == "--log-dir") {
         log_dir = args.at(++i);
         spdlog::info("Command line: log_dir = {}", log_dir);
@@ -142,8 +138,6 @@ class CommandLineArguments {
   //! Help flag
   bool help = false;
 
-  //! Mass randomization ratio in [%]
-  double inertia_randomization = 0.0;
 
   //! Log directory
   std::string log_dir = "";
@@ -187,7 +181,6 @@ BulletInterface make_actuation_interface(const char* argv0,
   params.floor = !args.space;
   params.gravity = !args.space;
   params.gui = args.show;
-  params.inertia_randomization = args.inertia_randomization;
   params.position_base_in_world = Eigen::Vector3d(0., 0., base_altitude);
   if (args.robot_variant.empty()) {
     params.robot_urdf_path = "external/upkie_description/urdf/upkie.urdf";

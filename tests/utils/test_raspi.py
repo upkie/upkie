@@ -11,7 +11,7 @@ import unittest
 from upkie.utils.raspi import on_raspi
 
 
-class TestRaspi(unittest.TestCase):
+class RaspiTestCase(unittest.TestCase):
     def test_on_raspi(self):
         self.assertFalse(on_raspi())
 

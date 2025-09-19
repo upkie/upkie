@@ -29,8 +29,6 @@ void MockInterface::observe(Dictionary& observation) const {
   Interface::observe_imu(observation);
 }
 
-void MockInterface::process_action(const Dictionary& action) {}
-
 void MockInterface::cycle(std::function<void(const moteus::Output&)> callback) {
   const moteus::Data& data = this->data_;
   assert(data.replies.size() == data.commands.size());

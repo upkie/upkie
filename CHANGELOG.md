@@ -7,6 +7,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- envs: Add external force application to PyBullet backend
+- envs: Add inertia randomization to PyBullet backend
+- envs: Add joint friction modeling to PyBullet backend
+- envs: Add torque control noise to PyBullet backend
+- envs: Add torque measurement noise to PyBullet backend
+- envs: Get contact points via the PyBullet backend
+- examples: Add PyBullet inertia randomization example
+- examples: Annotate PyBullet external force example
+- utils: Add `ExternalForce` class
+- utils: Add `PointContact` class
+
+### Changed
+
+- envs: Expose backend in all `UpkieEnv` environments
+- envs: Move external forces from C++ BulletInterface to Python PyBulletBackend
+- examples: Reorganize examples into backend-specific sub-directories
+- examples: Update PyBullet external-force to new backend
+
+### Fixed
+
+- utils: Compatibility with old SciPy API with Python 3.9
+
+### Removed
+
+- **Breaking:** envs: Remove `get_bullet_action` function
+- **Breaking:** envs: Remove `set_bullet_action` function
+- cpp: Remove contact monitoring from Bullet interface
+- cpp: Remove external force processing from Bullet interface
+- cpp: Remove inertia randomization from Bullet interface
+- cpp: Remove joint friction from Bullet interface
+- cpp: Remove joint properties from Bullet interface
+- cpp: Remove torque control noise from Bullet interface
+- cpp: Remove torque measurement noise from Bullet interface
+- spines: Remove inertia randomization from Bullet spine
+
 ## [9.0.1] - 2025-09-10
 
 ### Added

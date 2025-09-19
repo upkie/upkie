@@ -11,6 +11,7 @@ import gymnasium as gym
 import numpy as np
 
 from upkie.exceptions import UpkieException
+from upkie.utils.external_force import ExternalForce
 
 
 class RandomPush(gym.Wrapper):
@@ -46,26 +47,30 @@ class RandomPush(gym.Wrapper):
             return a 3D NumPy array.
         """
         super().__init__(env)
-        if not (
-            hasattr(env.unwrapped, "set_bullet_action")
-            or env.has_wrapper_attr("set_bullet_action")
-        ):
+        backend = env.unwrapped.backend
+        if not hasattr(backend, "set_external_forces"):
             raise UpkieException(
-                "Wrapped environment must have a `set_bullet_action` method"
+                "Wrapped environment backend must have a "
+                "`set_external_forces` method"
             )
+
+        # Instance attributes
+        self.__backend = backend
         self.env = env
-        self.push_prob = push_prob
         self.push_generator = push_generator
+        self.push_prob = push_prob
 
     def step(self, action):
-        """Adds a random push to the action."""
+        r"""!
+        Adds a random push to the action.
+        """
         if np.random.binomial(1, self.push_prob):
             force = self.push_generator()
-            self.env.unwrapped.set_bullet_action(
-                {"external_forces": {"torso": {"force": force}}}
-            )
+            external_forces = {"torso": ExternalForce(force, local=False)}
         else:  # Reset the forces to zero
-            self.env.unwrapped.set_bullet_action(
-                {"external_forces": {"torso": {"force": np.zeros(3)}}}
-            )
+            external_forces = {
+                "torso": ExternalForce(np.zeros(3), local=False)
+            }
+
+        self.__backend.set_external_forces(external_forces)
         return self.env.step(action)

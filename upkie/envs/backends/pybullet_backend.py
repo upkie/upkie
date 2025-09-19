@@ -6,7 +6,7 @@
 ## \namespace upkie.envs.backends.pybullet_backend
 ## \brief Backend using PyBullet physics simulation.
 
-from typing import Optional
+from typing import Dict, List, Optional
 
 import numpy as np
 import upkie_description
@@ -23,7 +23,9 @@ except ModuleNotFoundError:
 from upkie.config import BULLET_CONFIG, ROBOT_CONFIG
 from upkie.exceptions import MissingOptionalDependency, UpkieRuntimeError
 from upkie.model import Model
+from upkie.utils.external_force import ExternalForce
 from upkie.utils.nested_update import nested_update
+from upkie.utils.point_contact import PointContact
 from upkie.utils.robot_state import RobotState
 from upkie.utils.rotations import (
     quaternion_from_rotation_matrix,
@@ -86,41 +88,74 @@ class PyBulletBackend(Backend):
         pybullet.setTimeStep(dt / nb_substeps)
 
         # Load ground plane
-        self._plane_id = pybullet.loadURDF("plane.urdf")
+        pybullet.loadURDF("plane.urdf")
 
         # Load Upkie
-        self._robot_id = pybullet.loadURDF(
+        self.__robot_id = pybullet.loadURDF(
             upkie_description.URDF_PATH,
             basePosition=[0, 0, 0.6],
             baseOrientation=[0, 0, 0, 1],
         )
 
         # Initialize model and build joint index mapping
+        self.__link_index = {"base": -1}
+        self.__link_name = {-1: "base"}
         self.__model = Model()
         self._joint_indices = {}
-        self._imu_link_index = -1
-        for bullet_idx in range(pybullet.getNumJoints(self._robot_id)):
-            joint_info = pybullet.getJointInfo(self._robot_id, bullet_idx)
+        self._joint_properties = {}
+        for bullet_idx in range(pybullet.getNumJoints(self.__robot_id)):
+            joint_info = pybullet.getJointInfo(self.__robot_id, bullet_idx)
             joint_name = joint_info[1].decode("utf-8")
             if joint_name in Model.JOINT_NAMES:
                 self._joint_indices[joint_name] = bullet_idx
+                # Initialize joint properties with defaults
+                joint_props = self.__bullet_config.get(
+                    "joint_properties", {}
+                ).get(joint_name, {})
+                self._joint_properties[joint_name] = {
+                    "friction": joint_props.get("friction", 0.0),
+                    "torque_control_noise": joint_props.get(
+                        "torque_control_noise", 0.0
+                    ),
+                    "torque_measurement_noise": joint_props.get(
+                        "torque_measurement_noise", 0.0
+                    ),
+                }
                 # Disable velocity controllers to enable torque control
                 pybullet.setJointMotorControl2(
-                    self._robot_id,
+                    self.__robot_id,
                     bullet_idx,
                     pybullet.VELOCITY_CONTROL,
                     force=0,
                 )
 
             link_name = joint_info[12].decode("utf-8")
-            if link_name == "imu":
-                self._imu_link_index = bullet_idx
+            self.__link_index[link_name] = bullet_idx
+            self.__link_name[bullet_idx] = link_name
 
-        if self._imu_link_index < 0:
+        if "imu" not in self.__link_index:
             raise UpkieRuntimeError("Robot does not have a link named 'imu'")
 
         # Initialize previous IMU velocity for acceleration computation
         self.__previous_imu_linear_velocity = np.zeros(3)
+
+        # Initialize random number generator for noise simulation
+        self.__rng = np.random.default_rng()
+
+        # Initialize storage for commanded joint torques
+        self.__joint_torques = {
+            joint_name: 0.0 for joint_name in self._joint_indices.keys()
+        }
+
+        # Initialize storage for nominal masses and inertias for randomization
+        self.__nominal_masses = {}
+        self.__nominal_inertias = {}
+        self.__save_nominal_inertias()
+
+        # Apply inertia randomization if configured
+        inertia_variation = self.__bullet_config.get("inertia_variation", 0.0)
+        if abs(inertia_variation) > 1e-10:
+            self.randomize_inertias(inertia_variation)
 
         if gui:  # Enable GUI if it is requested
             pybullet.configureDebugVisualizer(pybullet.COV_ENABLE_RENDERING, 1)
@@ -134,6 +169,7 @@ class PyBulletBackend(Backend):
 
         # Internal attributes
         self.__dt = dt
+        self.__external_forces = {}
         self.__nb_substeps = nb_substeps
 
     def __del__(self):
@@ -141,6 +177,13 @@ class PyBulletBackend(Backend):
         Disconnect PyBullet when deleting the backend instance.
         """
         self.close()
+
+    @property
+    def robot_id(self) -> int:
+        """!
+        Identifier of the robot body in the PyBullet simulation.
+        """
+        return self.__robot_id
 
     def close(self) -> None:
         """!
@@ -173,7 +216,7 @@ class PyBulletBackend(Backend):
         qx, qy, qz, qw = orientation_quat
         orientation_quat_bullet = [qx, qy, qz, qw]
         pybullet.resetBasePositionAndOrientation(
-            self._robot_id,
+            self.__robot_id,
             position,
             orientation_quat_bullet,
         )
@@ -182,7 +225,7 @@ class PyBulletBackend(Backend):
         linear_velocity = init_state.linear_velocity_base_to_world_in_world
         angular_velocity = init_state.angular_velocity_base_in_base
         pybullet.resetBaseVelocity(
-            self._robot_id,
+            self.__robot_id,
             linear_velocity,
             angular_velocity,
         )
@@ -191,7 +234,7 @@ class PyBulletBackend(Backend):
         for joint in self.__model.joints:
             bullet_joint_idx = self._joint_indices[joint.name]
             pybullet.resetJointState(
-                self._robot_id,
+                self.__robot_id,
                 bullet_joint_idx,
                 init_state.joint_configuration[joint.idx_q],
             )
@@ -220,12 +263,17 @@ class PyBulletBackend(Backend):
                         kd_scale=servo_action.get("kd_scale", 1.0),
                         maximum_torque=servo_action["maximum_torque"],
                     )
+                    # Store the commanded torque for observation later
+                    self.__joint_torques[joint_name] = joint_torque
                     pybullet.setJointMotorControl2(
-                        self._robot_id,
+                        self.__robot_id,
                         joint_idx,
                         pybullet.TORQUE_CONTROL,
                         force=joint_torque,
                     )
+
+            # Apply external forces, if any
+            self.__apply_external_forces()
 
             # Step the simulation
             pybullet.stepSimulation()
@@ -233,7 +281,11 @@ class PyBulletBackend(Backend):
         return self.get_spine_observation()
 
     def get_spine_observation(self) -> dict:
-        """Get observation in spine format from PyBullet simulation."""
+        r"""!
+        Get observation in spine format from PyBullet simulation.
+
+        \return Spine observation dictionary.
+        """
         base_orientation = self.__get_base_orientation_observation()
         imu = self.__get_imu_observation()
         floor_contact = self.__get_floor_contact_observation()
@@ -250,12 +302,12 @@ class PyBulletBackend(Backend):
 
     def __get_base_orientation_observation(self) -> dict:
         position_base_in_world, bullet_quat_base_in_world = (
-            pybullet.getBasePositionAndOrientation(self._robot_id)
+            pybullet.getBasePositionAndOrientation(self.__robot_id)
         )
         (
             linear_velocity_base_to_world_in_world,
             angular_velocity_base_to_world_in_world,
-        ) = pybullet.getBaseVelocity(self._robot_id)
+        ) = pybullet.getBaseVelocity(self.__robot_id)
 
         # Convert quaternion from Bullet format
         quat_base_to_world = [
@@ -286,8 +338,8 @@ class PyBulletBackend(Backend):
 
     def __get_imu_observation(self) -> dict:
         link_state = pybullet.getLinkState(
-            self._robot_id,
-            self._imu_link_index,
+            self.__robot_id,
+            self.__link_index["imu"],
             computeLinkVelocity=True,
             computeForwardKinematics=True,
         )
@@ -348,7 +400,7 @@ class PyBulletBackend(Backend):
 
     def __get_floor_contact_observation(self) -> dict:
         position_base_in_world, _ = pybullet.getBasePositionAndOrientation(
-            self._robot_id
+            self.__robot_id
         )
         contact = position_base_in_world[2] < 0.8
         return {
@@ -359,11 +411,21 @@ class PyBulletBackend(Backend):
         servo_obs = {}
         for joint_name, joint_idx in self._joint_indices.items():
             joint_state = pybullet.getJointState(
-                self._robot_id, joint_idx, physicsClientId=self._bullet
+                self.__robot_id, joint_idx, physicsClientId=self._bullet
             )
             position = joint_state[0]  # in rad
             velocity = joint_state[1]  # in rad/s
-            torque = joint_state[3]  # in N⋅m
+
+            # Commanded torques are applied by the simulator exactly, so the
+            # measured torque is the commanded one stored in __joint_torques
+            torque = self.__joint_torques[joint_name]
+
+            # Add Gaussian white noise to torque measurements if configured
+            joint_props = self._joint_properties[joint_name]
+            torque_measurement_noise = joint_props["torque_measurement_noise"]
+            if torque_measurement_noise > 1e-10:
+                noise = self.__rng.normal(0.0, torque_measurement_noise)
+                torque += noise
             servo_obs[joint_name] = {
                 "position": position,
                 "velocity": velocity,
@@ -419,7 +481,7 @@ class PyBulletBackend(Backend):
 
         # Read in measurements from the simulator
         joint_idx = self._joint_indices[joint_name]
-        joint_state = pybullet.getJointState(self._robot_id, joint_idx)
+        joint_state = pybullet.getJointState(self.__robot_id, joint_idx)
         measured_position = joint_state[0]  # already in radians in PyBullet
         measured_velocity = joint_state[1]  # already in rad/s in PyBullet
 
@@ -434,5 +496,183 @@ class PyBulletBackend(Backend):
         torque += kd * (target_velocity - measured_velocity)
         if not np.isnan(target_position):
             torque += kp * (target_position - measured_position)
+
+        # Add kinetic friction if applicable
+        MAX_STICTION_VELOCITY = 1e-3  # rad/s
+        if abs(measured_velocity) > MAX_STICTION_VELOCITY:
+            friction = self._joint_properties[joint_name]["friction"]
+            velocity_sign = 1.0 if measured_velocity > 0.0 else -1.0
+            friction_torque = -friction * velocity_sign
+            torque += friction_torque
+
+        # Add torque-control Gaussian white noise if applicable
+        joint_props = self._joint_properties[joint_name]
+        torque_control_noise = joint_props["torque_control_noise"]
+        if torque_control_noise > 1e-10:
+            noise = self.__rng.normal(0.0, torque_control_noise)
+            torque += noise
+
         torque = np.clip(torque, -maximum_torque, maximum_torque)
         return torque
+
+    def __save_nominal_inertias(self) -> None:
+        r"""!
+        Save nominal masses and inertias for all robot links.
+
+        This method stores the original dynamic properties of each link
+        so they can be used later for randomization.
+        """
+        num_joints = pybullet.getNumJoints(self.__robot_id)
+        for link_id in range(num_joints):
+            dynamics_info = pybullet.getDynamicsInfo(self.__robot_id, link_id)
+            mass = dynamics_info[0]
+            local_inertia_diagonal = dynamics_info[2]  # tuple of 3 values
+
+            self.__nominal_masses[link_id] = mass
+            self.__nominal_inertias[link_id] = list(local_inertia_diagonal)
+
+    def randomize_inertias(self, inertia_variation: float) -> None:
+        r"""!
+        Randomize the inertias of all robot links.
+
+        \\param inertia_variation Magnitude of uniform noise to sample from.
+            The actual variation is sampled uniformly from
+            [-inertia_variation, +inertia_variation].
+
+        This method applies random variations to both masses and inertias of
+        all robot links. The same random factor (1 + epsilon) is applied to
+        both mass and inertia components of each link, assuming uniform mass
+        distribution.
+        """
+        for link_id in self.__nominal_masses:
+            # Sample random variation uniformly from range
+            epsilon = self.__rng.uniform(-inertia_variation, inertia_variation)
+
+            # Calculate new mass and inertia values
+            new_mass = self.__nominal_masses[link_id] * (1 + epsilon)
+            new_inertia = [
+                inertia_component * (1 + epsilon)
+                for inertia_component in self.__nominal_inertias[link_id]
+            ]
+
+            # Apply the changes to the PyBullet simulation
+            pybullet.changeDynamics(
+                self.__robot_id,
+                link_id,
+                mass=new_mass,
+                localInertiaDiagonal=new_inertia,
+            )
+
+    def set_external_forces(
+        self, external_forces: Dict[str, ExternalForce]
+    ) -> None:
+        r"""!
+        Set external forces to apply to robot links at next step.
+
+        \param external_forces Dictionary specifying external forces to apply.
+            Values must be ExternalForce instances.
+        """
+        for link_name, external_force in external_forces.items():
+            link_index = self.__link_index.get(link_name)
+            if link_index is None:
+                raise UpkieRuntimeError(
+                    f"Robot does not have a link named '{link_name}'"
+                )
+
+            # Store force specifications for application during simulation
+            self.__external_forces[link_index] = {
+                "force": external_force.force,
+                "local": external_force.local,
+            }
+
+    def __apply_external_forces(self) -> None:
+        r"""!
+        Apply stored external forces to the robot in PyBullet.
+
+        This is called internally during simulation steps to apply
+        all forces that were previously set via @ref set_external_forces.
+        """
+        for link_index, force_spec in self.__external_forces.items():
+            force = force_spec["force"]
+            local_frame = force_spec["local"]
+
+            if local_frame:
+                # Force in local frame: apply at link origin
+                position = [0.0, 0.0, 0.0]
+                flags = pybullet.LINK_FRAME
+            else:
+                # Force in world frame: get link position in world
+                if link_index == -1:
+                    # Base link
+                    position, _ = pybullet.getBasePositionAndOrientation(
+                        self.__robot_id
+                    )
+                else:
+                    # Other links
+                    link_state = pybullet.getLinkState(
+                        self.__robot_id, link_index
+                    )
+                    position = link_state[0]  # world position
+                flags = pybullet.WORLD_FRAME
+
+            # Apply the external force
+            pybullet.applyExternalForce(
+                self.__robot_id, link_index, force, position, flags
+            )
+
+    def get_contact_points(
+        self, link_name: Optional[str] = None
+    ) -> List[PointContact]:
+        r"""!
+        Get contact points from PyBullet simulation.
+
+        \param link_name Optional link name to filter contacts. If provided,
+            only returns contact points involving this specific link.
+            If None, returns all contact points for the robot.
+        \return List of PointContact instances representing contact points
+            from the robot's perspective.
+        """
+        link_index = -2  # -2 for all links in PyBullet
+        if link_name is not None:
+            link_index = self.__link_index.get(link_name)
+            if link_index is None:
+                return []
+
+        contact_points = pybullet.getContactPoints(
+            bodyA=self.__robot_id,
+            bodyB=-1,  # -1 for all bodies
+            linkIndexA=link_index,
+            linkIndexB=-2,  # -2 for all links
+        )
+
+        result = []
+        for contact in contact_points:
+            link_idx = contact[3]  # link index in body A
+            contact_link_name = self.__link_name.get(
+                link_idx, f"unknown_link_{link_idx}"
+            )
+
+            # Read contact properties returned by PyBullet
+            position_contact_in_world = np.array(contact[5])  # A is robot link
+            contact_normal = np.array(contact[7])  # from B to A
+            normal_force_magnitude = contact[9]
+            lateral_friction_1 = contact[10]
+            lateral_friction_dir_1 = np.array(contact[11])
+            lateral_friction_2 = contact[12]
+            lateral_friction_dir_2 = np.array(contact[13])
+
+            # Net contact force exerted by body B on body A
+            normal_force = normal_force_magnitude * contact_normal
+            friction_force_1 = lateral_friction_1 * lateral_friction_dir_1
+            friction_force_2 = lateral_friction_2 * lateral_friction_dir_2
+            contact_force = normal_force + friction_force_1 + friction_force_2
+
+            # Append PointContact to the list
+            contact_point = PointContact(
+                force_in_world=contact_force,
+                link_name=contact_link_name,
+                position_contact_in_world=position_contact_in_world,
+            )
+            result.append(contact_point)
+
+        return result
