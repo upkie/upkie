@@ -57,10 +57,10 @@ class RandomPushTestCase(unittest.TestCase):
 
         # Check that external forces were applied to the backend
         self.assertTrue("torso" in env.backend.external_forces)
-        self.assertTrue("force" in env.backend.external_forces["torso"])
+        self.assertTrue(hasattr(env.backend.external_forces["torso"], "force"))
         self.assertTrue(
             np.allclose(
-                env.backend.external_forces["torso"]["force"],
+                env.backend.external_forces["torso"].force,
                 np.array([42, 42, 42]),
             )
         )
