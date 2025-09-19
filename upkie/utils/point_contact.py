@@ -44,14 +44,15 @@ class PointContact:
         self.position_contact_in_world = position_contact_in_world
 
     def __repr__(self) -> str:
-        """!
+        r"""!
         String representation of the point contact.
 
         \return String representation showing all contact information.
         """
+        position_repr = self.position_contact_in_world.tolist()
         return (
             f"PointContact("
             f"link_name='{self.link_name}', "
-            f"position_contact_in_world={self.position_contact_in_world.tolist()}, "
+            f"position_contact_in_world={position_repr}, "
             f"force_in_world={self.force_in_world.tolist()})"
         )
