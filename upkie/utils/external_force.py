@@ -48,9 +48,11 @@ class ExternalForce:
         self.local = local
 
     def __repr__(self) -> str:
-        """!
+        r"""!
         String representation of the external force.
 
         \return String representation showing force vector and frame.
         """
-        return f"ExternalForce(force={self.force.tolist()}, local={self.local})"
+        return (
+            f"ExternalForce(force={self.force.tolist()}, local={self.local})"
+        )
