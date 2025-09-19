@@ -958,7 +958,7 @@ class PyBulletBackendTestCase(unittest.TestCase):
             args, kwargs = call_args
             robot_id, link_id = args[:2]
 
-            self.assertEqual(robot_id, backend._robot_id)
+            self.assertEqual(robot_id, backend.robot_id)
             self.assertEqual(link_id, i)
             self.assertIn("mass", kwargs)
             self.assertIn("localInertiaDiagonal", kwargs)
@@ -1116,7 +1116,7 @@ class PyBulletBackendTestCase(unittest.TestCase):
             args, kwargs = call_args
             robot_id, link_id = args[:2]
 
-            self.assertEqual(robot_id, backend._robot_id)
+            self.assertEqual(robot_id, backend.robot_id)
             self.assertEqual(link_id, i)
             self.assertIn("mass", kwargs)
             self.assertIn("localInertiaDiagonal", kwargs)
@@ -1268,7 +1268,7 @@ class PyBulletBackendTestCase(unittest.TestCase):
             args, kwargs = imu_call
             robot_id, link_index, force, position, flags = args
 
-            self.assertEqual(robot_id, backend._robot_id)
+            self.assertEqual(robot_id, backend.robot_id)
             self.assertEqual(link_index, 6)
             self.assertEqual(list(force), [5.0, 15.0, 25.0])
             self.assertEqual(flags, mock_pybullet.WORLD_FRAME)
@@ -1336,7 +1336,7 @@ class PyBulletBackendTestCase(unittest.TestCase):
         args, kwargs = base_call
         robot_id, link_index, force, position, flags = args
 
-        self.assertEqual(robot_id, backend._robot_id)
+        self.assertEqual(robot_id, backend.robot_id)
         self.assertEqual(link_index, -1)
         self.assertEqual(list(force), [1.0, 2.0, 3.0])
         self.assertEqual(list(position), [0.0, 0.0, 0.0])  # local origin
@@ -1607,7 +1607,7 @@ class PyBulletBackendTestCase(unittest.TestCase):
 
         # Should have called getContactPoints with robot body ID
         mock_pybullet.getContactPoints.assert_called_with(
-            bodyA=backend._robot_id, bodyB=-1, linkIndexA=-2, linkIndexB=-2
+            bodyA=backend.robot_id, bodyB=-1, linkIndexA=-2, linkIndexB=-2
         )
 
         # Should return 2 contact points
@@ -1673,7 +1673,7 @@ class PyBulletBackendTestCase(unittest.TestCase):
         mock_pybullet.getContactPoints.return_value = []
 
         backend = PyBulletBackend(dt=0.01, gui=False)
-        robot_id = backend._robot_id
+        robot_id = backend.robot_id
 
         # Test that function gets all contacts for the robot
         backend.get_contact_points()
@@ -1865,7 +1865,7 @@ class PyBulletBackendTestCase(unittest.TestCase):
 
         # Verify the correct API call was made
         mock_pybullet.getContactPoints.assert_called_with(
-            bodyA=backend._robot_id, bodyB=-1, linkIndexA=1, linkIndexB=-2
+            bodyA=backend.robot_id, bodyB=-1, linkIndexA=1, linkIndexB=-2
         )
 
         # Test with a link that has contacts (link index 2)
@@ -1875,7 +1875,7 @@ class PyBulletBackendTestCase(unittest.TestCase):
 
         # Verify the correct API call was made
         mock_pybullet.getContactPoints.assert_called_with(
-            bodyA=backend._robot_id, bodyB=-1, linkIndexA=2, linkIndexB=-2
+            bodyA=backend.robot_id, bodyB=-1, linkIndexA=2, linkIndexB=-2
         )
 
         backend.close()
@@ -2041,7 +2041,7 @@ class PyBulletBackendTestCase(unittest.TestCase):
 
         # Verify the correct API call was made
         mock_pybullet.getContactPoints.assert_called_with(
-            bodyA=backend._robot_id, bodyB=-1, linkIndexA=-1, linkIndexB=-2
+            bodyA=backend.robot_id, bodyB=-1, linkIndexA=-1, linkIndexB=-2
         )
 
         backend.close()
@@ -2116,7 +2116,7 @@ class PyBulletBackendTestCase(unittest.TestCase):
             args, kwargs = base_call
             robot_id, link_index, force, position, flags = args
 
-            self.assertEqual(robot_id, backend._robot_id)
+            self.assertEqual(robot_id, backend.robot_id)
             self.assertEqual(link_index, -1)
             self.assertEqual(list(force), [5.0, 10.0, 15.0])
             self.assertEqual(list(position), [0.0, 0.0, 0.0])  # local origin
@@ -2128,7 +2128,7 @@ class PyBulletBackendTestCase(unittest.TestCase):
             args, kwargs = imu_call
             robot_id, link_index, force, position, flags = args
 
-            self.assertEqual(robot_id, backend._robot_id)
+            self.assertEqual(robot_id, backend.robot_id)
             self.assertEqual(link_index, 6)
             self.assertEqual(list(force), [1.0, 2.0, 3.0])
             self.assertEqual(flags, mock_pybullet.WORLD_FRAME)
