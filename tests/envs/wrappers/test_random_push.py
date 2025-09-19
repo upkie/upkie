@@ -7,12 +7,11 @@
 """Test RandomPush wrapper."""
 
 import unittest
-from multiprocessing.shared_memory import SharedMemory
 
 import numpy as np
 
-from upkie.envs.backends import SpineBackend
-from upkie.envs.testing import ConstantObservationEnv, MockSpine
+from upkie.envs.backends import PyBulletBackend
+from upkie.envs.testing import ConstantObservationEnv
 from upkie.envs.upkie_pendulum import UpkiePendulum
 from upkie.envs.upkie_servos import UpkieServos
 from upkie.envs.wrappers.random_push import RandomPush
@@ -20,19 +19,16 @@ from upkie.envs.wrappers.random_push import RandomPush
 
 class RandomPushTestCase(unittest.TestCase):
     def setUp(self):
-        shared_memory = SharedMemory(name=None, size=42, create=True)
-        backend = SpineBackend(shm_name=shared_memory._name)
+        backend = PyBulletBackend(dt=0.01, gui=False)
         servos_env = UpkieServos(
             backend=backend,
             frequency=100.0,
         )
-        backend._spine = MockSpine()
         ground_velocity_env = UpkiePendulum(
             servos_env,
             fall_pitch=1.0,
             max_ground_velocity=1.0,
         )
-        shared_memory.close()
         self.env = ground_velocity_env
 
     def test_wrapper(self):
