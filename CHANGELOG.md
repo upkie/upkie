@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - envs: Expose backend in all `UpkieEnv` environments
 - envs: Move external forces from C++ BulletInterface to Python PyBulletBackend
+- envs: Standardize Gymnasium dtypes to float32 across environments
 - examples: Reorganize examples into backend-specific sub-directories
 - examples: Update PyBullet external-force to new backend
 
