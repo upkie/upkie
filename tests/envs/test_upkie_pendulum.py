@@ -10,7 +10,6 @@ import unittest
 from multiprocessing.shared_memory import SharedMemory
 
 import numpy as np
-
 from upkie.config import ROBOT_CONFIG
 from upkie.envs.backends import SpineBackend
 from upkie.envs.testing import MockSpine
@@ -93,6 +92,20 @@ class PendulumTestCase(unittest.TestCase):
             wheel_radius = ROBOT_CONFIG["wheel_radius"]
             ground_velocity = np.abs(wheel_velocity * wheel_radius)
             self.assertLess(ground_velocity, max_ground_velocity + 1e-10)
+
+    def test_dtype_consistency(self):
+        """Test that action and observation spaces use float32 dtype."""
+        self.assertEqual(self.env.action_space.dtype, np.float32)
+        self.assertEqual(self.env.observation_space.dtype, np.float32)
+
+        # Check that observations from reset are float32
+        observation, _ = self.env.reset()
+        self.assertEqual(observation.dtype, np.float32)
+
+        # Check that observations from step are float32
+        action = np.zeros(self.env.action_space.shape, dtype=np.float32)
+        observation, _, _, _, _ = self.env.step(action)
+        self.assertEqual(observation.dtype, np.float32)
 
 
 if __name__ == "__main__":
