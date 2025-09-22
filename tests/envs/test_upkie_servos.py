@@ -10,7 +10,6 @@ import unittest
 
 import gymnasium as gym
 import numpy as np
-
 from upkie.envs.backends import MockBackend
 from upkie.envs.upkie_servos import UpkieServos
 from upkie.model import Model
@@ -270,6 +269,60 @@ class UpkieServosTestCase(unittest.TestCase):
         # Check that all joints are present in spine action
         expected_joints = set(Model.JOINT_NAMES)
         self.assertEqual(set(spine_action["servo"].keys()), expected_joints)
+
+    def test_dtype_consistency(self):
+        """Test that action and observation spaces use float32 dtype."""
+        # Check action space dtypes for all joints
+        for joint_name in Model.JOINT_NAMES:
+            joint_action_space = self.env.action_space[joint_name]
+            for key in [
+                "position",
+                "velocity",
+                "feedforward_torque",
+                "kp_scale",
+                "kd_scale",
+                "maximum_torque",
+            ]:
+                self.assertEqual(joint_action_space[key].dtype, np.float32)
+
+        # Check observation space dtypes for all joints
+        for joint_name in Model.JOINT_NAMES:
+            joint_obs_space = self.env.observation_space[joint_name]
+            for key in [
+                "position",
+                "velocity",
+                "torque",
+                "temperature",
+                "voltage",
+            ]:
+                self.assertEqual(joint_obs_space[key].dtype, np.float32)
+
+        # Check that observations returned are float32
+        observation, _ = self.env.reset()
+        for joint_name in Model.JOINT_NAMES:
+            joint_obs = observation[joint_name]
+            for key in [
+                "position",
+                "velocity",
+                "torque",
+                "temperature",
+                "voltage",
+            ]:
+                self.assertEqual(joint_obs[key].dtype, np.float32)
+
+        # Check observations from step are float32
+        action = self.env.get_neutral_action()
+        observation, _, _, _, _ = self.env.step(action)
+        for joint_name in Model.JOINT_NAMES:
+            joint_obs = observation[joint_name]
+            for key in [
+                "position",
+                "velocity",
+                "torque",
+                "temperature",
+                "voltage",
+            ]:
+                self.assertEqual(joint_obs[key].dtype, np.float32)
 
 
 if __name__ == "__main__":
