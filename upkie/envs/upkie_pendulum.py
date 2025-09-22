@@ -131,7 +131,7 @@ class UpkiePendulum(gym.Wrapper):
                 MAX_BASE_ANGULAR_VELOCITY,
                 max_ground_velocity,
             ],
-            dtype=float,
+            dtype=np.float32,
         )
         action_limit = np.array([max_ground_velocity], dtype=np.float32)
 
@@ -170,7 +170,7 @@ class UpkiePendulum(gym.Wrapper):
         ground_position = spine_observation["wheel_odometry"]["position"]
         ground_velocity = spine_observation["wheel_odometry"]["velocity"]
 
-        obs = np.empty(4, dtype=float)
+        obs = np.empty(4, dtype=np.float32)
         obs[0] = pitch_base_in_world
         obs[1] = ground_position
         obs[2] = angular_velocity_base_in_base[1]
