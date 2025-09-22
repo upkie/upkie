@@ -183,37 +183,37 @@ class UpkieServos(UpkieEnv):
                         low=joint.limit.lower,
                         high=joint.limit.upper,
                         shape=(1,),
-                        dtype=float,
+                        dtype=np.float32,
                     ),
                     "velocity": gym.spaces.Box(
                         low=-joint.limit.velocity,
                         high=+joint.limit.velocity,
                         shape=(1,),
-                        dtype=float,
+                        dtype=np.float32,
                     ),
                     "feedforward_torque": gym.spaces.Box(
                         low=-joint.limit.effort,
                         high=+joint.limit.effort,
                         shape=(1,),
-                        dtype=float,
+                        dtype=np.float32,
                     ),
                     "kp_scale": gym.spaces.Box(
                         low=0.0,
                         high=max_gain_scale,
                         shape=(1,),
-                        dtype=float,
+                        dtype=np.float32,
                     ),
                     "kd_scale": gym.spaces.Box(
                         low=0.0,
                         high=max_gain_scale,
                         shape=(1,),
-                        dtype=float,
+                        dtype=np.float32,
                     ),
                     "maximum_torque": gym.spaces.Box(
                         low=0.0,
                         high=joint.limit.effort,
                         shape=(1,),
-                        dtype=float,
+                        dtype=np.float32,
                     ),
                 }
             )
@@ -223,31 +223,31 @@ class UpkieServos(UpkieEnv):
                         low=joint.limit.lower,
                         high=joint.limit.upper,
                         shape=(1,),
-                        dtype=float,
+                        dtype=np.float32,
                     ),
                     "velocity": gym.spaces.Box(
                         low=-joint.limit.velocity,
                         high=+joint.limit.velocity,
                         shape=(1,),
-                        dtype=float,
+                        dtype=np.float32,
                     ),
                     "torque": gym.spaces.Box(
                         low=-joint.limit.effort,
                         high=+joint.limit.effort,
                         shape=(1,),
-                        dtype=float,
+                        dtype=np.float32,
                     ),
                     "temperature": gym.spaces.Box(
                         low=0.0,
                         high=100.0,
                         shape=(1,),
-                        dtype=float,
+                        dtype=np.float32,
                     ),
                     "voltage": gym.spaces.Box(
                         low=10.0,  # moteus min 10 V
                         high=44.0,  # moteus max 44 V
                         shape=(1,),
-                        dtype=float,
+                        dtype=np.float32,
                     ),
                 }
             )
@@ -297,7 +297,7 @@ class UpkieServos(UpkieEnv):
             joint.name: {
                 key: np.array(
                     [spine_observation["servo"][joint.name][key]],
-                    dtype=float,
+                    dtype=np.float32,
                 )
                 for key in self.observation_space[joint.name]
             }
