@@ -11,6 +11,7 @@ from upkie.envs.backends import (
 )
 from upkie.envs.upkie_base_velocity import UpkieBaseVelocity
 from upkie.envs.upkie_gyropod import UpkieGyropod
+from upkie.envs.upkie_navigation import UpkieNavigation
 from upkie.envs.upkie_pendulum import UpkiePendulum
 from upkie.exceptions import MissingOptionalDependency
 from upkie.model import Model
@@ -486,3 +487,34 @@ def make_cookie_spine_pendulum(**kwargs):
     Add pendulum wrapper around a Cookie servos env with Spine backend.
     """
     return wrap_spine_pendulum(**kwargs)
+
+
+def wrap_navigation(make_env_func, **kwargs):
+    r"""!
+    Make a navigation environment around a pendulum environment.
+
+    This function is meant to be called by `gymnasium.make()` rather than to be
+    called directly.
+
+    \param make_env_func Function that creates the base servo environment.
+    \param kwargs Keyword arguments forwarded to both the
+        \ref upkie.envs.upkie_navigation.UpkieNavigation wrapper and the
+        internal Upkie environment.
+    \return UpkieNavigation environment.
+    """
+    navigation_keys = {
+        "max_linear_velocity",
+        "max_angular_velocity",
+    }
+    navigation_kwargs = {
+        key: value for key, value in kwargs.items() if key in navigation_keys
+    }
+    pendulum_kwargs = {
+        key: value
+        for key, value in kwargs.items()
+        if key not in navigation_keys
+    }
+
+    # Create pendulum environment first
+    pendulum_env = wrap_pendulum(make_env_func, **pendulum_kwargs)
+    return UpkieNavigation(pendulum_env, **navigation_kwargs)
