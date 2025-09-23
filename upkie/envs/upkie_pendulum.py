@@ -104,6 +104,10 @@ class UpkiePendulum(gym.Wrapper):
             dtype=np.float32,
         )
 
+        # Instance attributes
+        self.env = gyropod_env.unwrapped
+        self.fall_pitch = fall_pitch
+
     def reset(
         self,
         *,
