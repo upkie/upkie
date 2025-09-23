@@ -191,6 +191,7 @@ rlb3-enjoy-pybullet = "python agents/rlb3_trainer/enjoy.py --env Upkie-PyBullet-
 [tool.pixi.feature.test.dependencies]
 pybullet = ">=3"
 pytest = "*"
+qpmpc = ">=3.0.1,<4"
 "stable-baselines3" = ">2.3.0"
 
 [tool.pixi.feature.test.tasks]
