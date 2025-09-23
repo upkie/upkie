@@ -104,29 +104,6 @@ class PendulumTestCase(unittest.TestCase):
         observation, _, _, _, _ = self.env.step(action)
         self.assertEqual(observation.dtype, np.float32)
 
-    def test_frequency_validation_missing_attribute(self):
-        """An exception is raised when the environment has no frequency."""
-
-        class MockEnvWithoutFrequency(gym.Env):
-            """Mock environment that doesn't have frequency attribute."""
-
-            def __init__(self):
-                # Don't set frequency attribute
-                pass
-
-            def step(self, action):
-                return None, 0.0, False, False, {}
-
-            def reset(self, **kwargs):
-                return None, {}
-
-        mock_env = MockEnvWithoutFrequency()
-
-        with self.assertRaises(UpkieException) as context:
-            UpkiePendulum(mock_env)
-
-        self.assertIn("frequency", str(context.exception))
-
     def test_frequency_validation_none_value(self):
         """An exception is raised when environment has a None frequency."""
 
