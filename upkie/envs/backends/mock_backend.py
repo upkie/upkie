@@ -69,6 +69,7 @@ class MockBackend(Backend):
         joystick = Joystick(js_path) if js_path.exists() else None
 
         self.__dt = 0.01  # Default timestep in seconds
+        self.__last_action = {}  # Store last action for testing
         self.__spine_observation = spine_observation
         self.__wheel_radius = 0.06  # Default wheel radius in meters
         self.joystick = joystick
@@ -86,6 +87,7 @@ class MockBackend(Backend):
         \param init_state Initial state of the robot (ignored in mock).
         \return Initial spine observation dictionary.
         """
+        self.__spine_observation["number"] += 1
         return self.get_spine_observation()
 
     def step(self, action: dict) -> dict:
@@ -95,8 +97,10 @@ class MockBackend(Backend):
         \param action Action dictionary in spine format.
         \return Spine observation dictionary after the step.
         """
+        self.__last_action = action.copy()  # Store action for testing
         self.__update_servo(action)
         self.__update_wheel_odometry()
+        self.__spine_observation["number"] += 1
 
         if self.joystick is not None:
             self.joystick.write(self.__spine_observation)
@@ -133,6 +137,12 @@ class MockBackend(Backend):
         new_position = current_position + ground_velocity * self.__dt
         wheel_odometry["position"] = new_position
         wheel_odometry["velocity"] = ground_velocity
+
+    def get_last_action(self) -> dict:
+        r"""!
+        Get the last action sent to the mock backend.
+        """
+        return self.__last_action
 
     def get_spine_observation(self) -> dict:
         r"""!
