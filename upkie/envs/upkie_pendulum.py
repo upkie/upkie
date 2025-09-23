@@ -118,7 +118,7 @@ class UpkiePendulum(gym.Wrapper):
             increase it once you feel confident in your agent.
         """
         super().__init__(env)
-        if env.frequency is None:
+        if env.unwrapped.frequency is None:
             raise UpkieException("This environment needs a loop frequency")
 
         MAX_BASE_PITCH: float = np.pi
@@ -153,7 +153,7 @@ class UpkiePendulum(gym.Wrapper):
 
         # Instance attributes
         self.__leg_servo_action = env.get_neutral_action()
-        self.env = env
+        self.env = env.unwrapped
         self.fall_pitch = fall_pitch
         self.left_wheeled = left_wheeled
 
