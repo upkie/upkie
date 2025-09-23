@@ -6,13 +6,11 @@
 """Test UpkiePendulum wrapper."""
 
 import unittest
-from multiprocessing.shared_memory import SharedMemory
 
 import gymnasium as gym
 import numpy as np
 
-from upkie.envs.backends import SpineBackend
-from upkie.envs.testing import MockSpine
+from upkie.envs.backends import MockBackend
 from upkie.envs.upkie_pendulum import UpkiePendulum
 from upkie.envs.upkie_servos import UpkieServos
 from upkie.exceptions import UpkieException
@@ -20,19 +18,16 @@ from upkie.exceptions import UpkieException
 
 class PendulumTestCase(unittest.TestCase):
     def setUp(self):
-        shared_memory = SharedMemory(name=None, size=42, create=True)
-        self.backend = SpineBackend(shm_name=shared_memory._name)
+        self.backend = MockBackend()
         servos_env = UpkieServos(
             backend=self.backend,
             frequency=100.0,
         )
-        self.backend._spine = MockSpine()
         pendulum = UpkiePendulum(
             servos_env,
             fall_pitch=1.0,
             max_ground_velocity=1.0,
         )
-        shared_memory.close()
         self.servos_env = servos_env
         self.env = pendulum
 
@@ -50,7 +45,7 @@ class PendulumTestCase(unittest.TestCase):
         observation, reward, terminated, truncated, _ = self.env.step(action)
         self.assertNotEqual(reward, 0.0)  # non-zero base velocity
 
-        spine_observation = self.backend._spine.observation
+        spine_observation = self.backend.get_spine_observation()
         base_orientation = spine_observation["base_orientation"]
         base_orientation["pitch"] = 0.0
         base_orientation["angular_velocity"] = [0.0, 0.0, 0.0]
@@ -70,7 +65,7 @@ class PendulumTestCase(unittest.TestCase):
         _, _ = self.env.reset()
         action = np.zeros(self.env.action_space.shape)
         _, _, _, _, _ = self.env.step(action)
-        spine_action = self.backend._spine.action
+        spine_action = self.backend.get_last_action()
         servo_action = spine_action["servo"]
         model = self.env.get_wrapper_attr("model")
         for joint in model.upper_leg_joints:
@@ -84,7 +79,7 @@ class PendulumTestCase(unittest.TestCase):
         _, _ = self.env.reset()
         action = np.full(self.env.action_space.shape, 1111.1)
         _, _, _, _, _ = self.env.step(action)
-        spine_action = self.backend._spine.action
+        spine_action = self.backend.get_last_action()
         servo_action = spine_action["servo"]
         max_ground_velocity = self.env.action_space.high[0]
         model = self.env.get_wrapper_attr("model")
