@@ -65,5 +65,73 @@ class NavigationTestCase(unittest.TestCase):
             self.env.observation_space.high, expected_high
         )
 
+    def test_reset(self):
+        """Test reset functionality."""
+        observation, info = self.env.reset()
+
+        # Check observation shape and type
+        self.assertIsInstance(observation, np.ndarray)
+        self.assertEqual(observation.shape, (3,))
+        self.assertEqual(observation.dtype, float)
+
+        # Check SE(2) pose initialization
+        np.testing.assert_array_equal(observation, np.array([0.0, 0.0, 0.0]))
+
+        # Check info contains spine observation
+        self.assertIn("spine_observation", info)
+        spine_observation = info["spine_observation"]
+        self.assertIn("wheel_odometry", spine_observation)
+
+    def test_step_with_zero_action(self):
+        """Test step with zero navigation action."""
+        observation, _ = self.env.reset()
+
+        # Zero action: no linear or angular velocity
+        action = np.array([0.0, 0.0], dtype=np.float32)
+
+        next_observation, reward, terminated, truncated, info = self.env.step(
+            action
+        )
+
+        # Check return types
+        self.assertIsInstance(next_observation, np.ndarray)
+        self.assertEqual(next_observation.shape, (3,))
+        self.assertEqual(next_observation.dtype, float)
+        self.assertIsInstance(reward, (int, float))
+        self.assertIsInstance(terminated, bool)
+        self.assertIsInstance(truncated, bool)
+        self.assertIsInstance(info, dict)
+
+    def test_step_with_linear_action(self):
+        """Test step with linear velocity action."""
+        observation, _ = self.env.reset()
+        initial_pose = observation.copy()
+
+        # Forward motion: positive linear velocity, zero angular
+        action = np.array([0.1, 0.0], dtype=np.float32)
+        next_observation, _, _, _, _ = self.env.step(action)
+
+        # Check that pose has been updated (should move forward in x)
+        self.assertNotEqual(next_observation[0], initial_pose[0])  # x changed
+        self.assertEqual(next_observation[1], initial_pose[1])  # y unchanged
+        self.assertEqual(
+            next_observation[2], initial_pose[2]
+        )  # theta unchanged
+
+    def test_step_with_angular_action(self):
+        """Test step with angular velocity action."""
+        observation, _ = self.env.reset()
+        initial_pose = observation.copy()
+
+        # Pure rotation: zero linear velocity, positive angular
+        action = np.array([0.0, 0.5], dtype=np.float32)
+        next_observation, _, _, _, _ = self.env.step(action)
+
+        # Check that yaw angle has changed and translation hasn't moved much
+        self.assertAlmostEqual(next_observation[0], initial_pose[0], places=4)
+        self.assertAlmostEqual(next_observation[1], initial_pose[1], places=4)
+        self.assertNotEqual(next_observation[2], initial_pose[2])
+
+
 if __name__ == "__main__":
     unittest.main()
