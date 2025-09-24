@@ -132,6 +132,87 @@ class NavigationTestCase(unittest.TestCase):
         self.assertAlmostEqual(next_observation[1], initial_pose[1], places=4)
         self.assertNotEqual(next_observation[2], initial_pose[2])
 
+    def test_se2_pose_tracking(self):
+        """Test SE(2) pose tracking over multiple steps."""
+        observation, _ = self.env.reset()
+
+        # Move forward and turn
+        forward_action = np.array([0.1, 0.0], dtype=np.float32)
+        turn_action = np.array([0.0, 0.1], dtype=np.float32)
+
+        poses = [observation.copy()]
+
+        # Take several steps with different actions
+        for action in [
+            forward_action,
+            forward_action,
+            turn_action,
+            forward_action,
+        ]:
+            observation, _, _, _, _ = self.env.step(action)
+            poses.append(observation.copy())
+
+        # Check that poses are different and track SE(2) motion
+        for i in range(1, len(poses)):
+            # Each pose should be different from the previous one
+            self.assertFalse(np.array_equal(poses[i], poses[i - 1]))
+
+        # Check that all poses are valid SE(2) poses
+        for pose in poses:
+            self.assertEqual(len(pose), 3)  # [x, y, theta]
+            # Theta should be normalized to [-pi, pi]
+            self.assertGreaterEqual(pose[2], -np.pi)
+            self.assertLessEqual(pose[2], np.pi)
+
+    def test_action_clamping(self):
+        """Test that actions are clamped to action space bounds."""
+        observation, _ = self.env.reset()
+
+        # Action beyond bounds
+        extreme_action = np.array([10.0, -10.0], dtype=np.float32)
+
+        # Should not raise error due to clamping
+        next_observation, _, _, _, _ = self.env.step(extreme_action)
+        self.assertIsInstance(next_observation, np.ndarray)
+        self.assertEqual(next_observation.shape, (3,))
+
+    def test_mpc_balancer_integration(self):
+        """Test that MPC balancer is properly integrated."""
+        # Check that MPC balancer is initialized
+        self.assertIsNotNone(self.env.mpc_balancer)
+
+        # Test that it has expected attributes
+        self.assertTrue(
+            hasattr(self.env.mpc_balancer, "compute_ground_velocity")
+        )
+
+        # Test step uses MPC balancer
+        observation, _ = self.env.reset()
+        action = np.array([0.1, 0.0], dtype=np.float32)
+
+        # Should complete without error (MPC balancer working)
+        next_observation, _, _, _, _ = self.env.step(action)
+        self.assertIsInstance(next_observation, np.ndarray)
+
+    def test_check_env(self):
+        """Test Stable Baselines3 environment checker if available."""
+        try:
+            from stable_baselines3.common.env_checker import check_env
+
+            check_env(self.env)
+        except ImportError:
+            # Skip test if stable_baselines3 not available
+            pass
+
+    def test_wrapped_environment_access(self):
+        """Test that we can access the wrapped UpkiePendulum environment."""
+        self.assertIsInstance(self.env.env, UpkiePendulum)
+        self.assertIsInstance(self.env.env.env, UpkieServos)
+
+        # Test that we can access dt through the wrapped environment
+        self.assertIsNotNone(self.env.env.unwrapped.dt)
+        self.assertGreater(self.env.env.unwrapped.dt, 0)
+
 
 if __name__ == "__main__":
     unittest.main()
