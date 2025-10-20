@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [10.0.0] - 2025-10-20
+
 ### Added
 
 - envs: Add external force application to PyBullet backend
@@ -35,16 +37,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+- **Breaking:** cpp: Remove contact monitoring from Bullet interface
+- **Breaking:** cpp: Remove external force processing from Bullet interface
+- **Breaking:** cpp: Remove inertia randomization from Bullet interface
+- **Breaking:** cpp: Remove joint friction from Bullet interface
+- **Breaking:** cpp: Remove joint properties from Bullet interface
+- **Breaking:** cpp: Remove torque control noise from Bullet interface
+- **Breaking:** cpp: Remove torque measurement noise from Bullet interface
 - **Breaking:** envs: Remove `get_bullet_action` function
 - **Breaking:** envs: Remove `set_bullet_action` function
-- cpp: Remove contact monitoring from Bullet interface
-- cpp: Remove external force processing from Bullet interface
-- cpp: Remove inertia randomization from Bullet interface
-- cpp: Remove joint friction from Bullet interface
-- cpp: Remove joint properties from Bullet interface
-- cpp: Remove torque control noise from Bullet interface
-- cpp: Remove torque measurement noise from Bullet interface
-- spines: Remove inertia randomization from Bullet spine
+- **Breaking:** spines: Remove inertia randomization from Bullet spine
 
 ## [9.0.1] - 2025-09-10
 
@@ -933,7 +935,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Starting this changelog.
 
-[unreleased]: https://github.com/upkie/upkie/compare/v9.0.1...HEAD
+[unreleased]: https://github.com/upkie/upkie/compare/v10.0.0...HEAD
+[10.0.0]: https://github.com/upkie/upkie/compare/v9.0.1...v10.0.0
 [9.0.1]: https://github.com/upkie/upkie/compare/v9.0.0...v9.0.1
 [9.0.0]: https://github.com/upkie/upkie/compare/v8.1.1...v9.0.0
 [8.1.1]: https://github.com/upkie/upkie/compare/v8.1.0...v8.1.1
