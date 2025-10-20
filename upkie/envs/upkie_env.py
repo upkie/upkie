@@ -153,7 +153,7 @@ class UpkieEnv(gym.Env, ABC):
 
     def log(self, name: str, entry: Any) -> None:
         r"""!
-        Log a new entry to the "log" key of the action dictionary.
+        Log a new entry to the "env" key of the action dictionary.
 
         \param name Name of the entry.
         \param entry Dictionary to log along with the actual action.
@@ -223,7 +223,7 @@ class UpkieEnv(gym.Env, ABC):
 
         # Convert environment action to spine action and apply it
         spine_action = self.get_spine_action(action)
-        spine_action["UpkieEnv"] = self.__log
+        spine_action["env"] = self.__log
         spine_observation = self.backend.step(spine_action)
 
         # Get observation
