@@ -96,9 +96,9 @@ Upkies come with a set of default behaviors that you can executed as Pixi tasks.
 | `rlb3-enjoy-pybullet`  | Evaluate the last policy trained in PyBullet             |
 | `rlb3-train-genesis`   | Train a new policy by reinforcement learning in Genesis  |
 | `rlb3-train-pybullet`  | Train a new policy by reinforcement learning in PyBullet |
-| `try-genesis`          | Run a balancing example in Genesis                       |
-| `try-pybullet`         | Run a balancing example in PyBullet                      |
-| `upkie-mpc-balancer`   | Run the MPC balancer                                     |
+| `try-genesis`          | Run the MPC balancer in Genesis                          |
+| `try-pybullet`         | Run the MPC balancer in PyBullet                         |
+| `try-spine`            | Run the MPC balancer with a running spine / real robot   |
 
 You can execute a task by `pixi run <task-name>`, for instance:
 
