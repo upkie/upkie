@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- envs: Add back `UpkieEnv.log` function to log data in Python
 - utils: Compatibility with old SciPy API with Python 3.9
 
 ### Removed
