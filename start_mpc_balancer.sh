@@ -83,7 +83,7 @@ sleep 2
 
 # Start agent in the background
 echo "🚀 Starting agent 'mpc_balancer'..."
-$PIXI_CMD run upkie-mpc-balancer &
+$PIXI_CMD run try-spine &
 AGENT_PID=$!
 
 # Wait for either process to exit

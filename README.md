@@ -103,7 +103,7 @@ Upkies come with a set of default behaviors that you can executed as Pixi tasks.
 You can execute a task by `pixi run <task-name>`, for instance:
 
 ```console
-pixi run upkie-mpc-balancer
+pixi run try-pybullet
 ```
 
 Tasks are available both on your machine and on your Upkie's Raspberry Pi (Pixi comes pre-installed on the SD card image). They are implemented by [agents](https://github.com/upkie/upkie/tree/main/agents). You can make your own agents by forking this repository or using the [new\_agent](https://github.com/upkie/new_agent) template to get started.
