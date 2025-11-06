@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - docs: Add Sensors page
+- docs: Document CpuTemperature sensor
+- docs: Document Joystick sensor
 - docs: Document Keyboard sensor
 
 ## [10.0.0] - 2025-10-20
