@@ -69,7 +69,7 @@ enum class Key {
  * \note Long key presses will yield an output boolean that goes to true, then
  * false, then stays at true until the key is released. This behavior is tied
  * to the key repetition delay of the keyboard:
- * https://github.com/upkie/upkie/cpp/issues/49
+ * https://github.com/stephane-caron/vulp/issues/49
  */
 class Keyboard : public Sensor {
  public:
