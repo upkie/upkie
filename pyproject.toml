@@ -115,7 +115,7 @@ torch = ">=2.6.0"
 torchvision = ">=0.21.0"
 
 [tool.pixi.feature.try-genesis.tasks]
-try-genesis = "python examples/genesis_mpc_balancing.py --env Upkie-Genesis-Pendulum"
+try-genesis = "python examples/genesis/mpc_balancing.py --env Upkie-Genesis-Pendulum"
 
 [tool.pixi.feature.lint.dependencies]
 six = "*"
@@ -173,7 +173,7 @@ pybullet = ">=3"
 qpmpc = ">=3.0.1,<4"
 
 [tool.pixi.feature.try-pybullet.tasks]
-try-pybullet = "python examples/pybullet_mpc_balancing.py --env Upkie-PyBullet-Pendulum"
+try-pybullet = "python examples/mpc_balancing.py"
 
 [tool.pixi.feature.rlb3.pypi-dependencies]
 rl-zoo3 = ">=2.6.0"
