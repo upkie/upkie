@@ -22,7 +22,7 @@ There is a virtual link named `imu` whose frame matches the frame of your robot'
 
 #### 3. Sagittal vector
 
-The sagittal vector of your robot, *i.e.* the vector that points from back to front of its trunk, is the x-axis of its base-link frame.
+The [sagittal](https://en.wikipedia.org/wiki/Sagittal_plane) vector of your robot, defined as the vector pointing from the back to the front of its trunk, corresponds to the x-axis of its base-link frame.
 
 See also [#527](https://github.com/upkie/upkie/issues/527).
 
