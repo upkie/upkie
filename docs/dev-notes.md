@@ -2,9 +2,9 @@
 
 [TOC]
 
-## Controlling your own wheeled-biped {#dev-custom-wheeled-biped}
+## Custom hardware {#custom-hardware}
 
-Upkie's motion control software can applied to your own wheeled-biped as long as you use the same mjbots actuators and electronics. When making a custom robot, the step by step instructions from the Wiki should work, replacing of course Step 2 on 3D printing with your own parts. The Raspberry Pi setup and electronics testing will be the same. This section details the requirements to be able to run the motion control software. See also [#517](https://github.com/orgs/upkie/discussions/517).
+Upkie's motion control software can apply to other wheeled-biped robots with different hardware, as long as they use the same mjbots actuators and electronics. When making a custom robot, the step by step instructions from the Wiki should work, replacing of course Step 2 on 3D printing with your own parts. The Raspberry Pi setup and electronics testing will be the unchanged. This section details the requirements to be able to pass the [motion control software step](https://github.com/upkie/upkie/wiki/5%29-Motion-control-software). See also [#517](https://github.com/orgs/upkie/discussions/517).
 
 ### URDF requirements
 
@@ -25,18 +25,6 @@ There is a virtual link named `imu` whose frame matches the frame of your robot'
 The sagittal vector of your robot, *i.e.* the vector that points from back to front of its trunk, is the x-axis of its base-link frame.
 
 See also [#527](https://github.com/upkie/upkie/issues/527).
-
-## Attitude reference system {#ars}
-
-The attitude reference system (ARS) frame is an inertial frame of reference used by the IMU filter onboard the pi3hat. It has its x-axis pointing forward, y-axis pointing to the right and z-axis pointing down ([details](https://github.com/mjbots/pi3hat/blob/ab632c82bd501b9fcb6f8200df0551989292b7a1/docs/reference.md#orientation)). This is not the convention we use in the world frame, and the rotation matrix from the ARS frame to the world frame is:
-
-\f$
-R_{WA} = \begin{bmatrix}
-    1 & 0 & 0 \\
-    0 & -1 & 0 \\
-    0 & 0 & -1 \\
-\end{bmatrix}
-\f$
 
 ## Development workflow {#dev-workflow}
 
