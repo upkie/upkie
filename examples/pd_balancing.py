@@ -24,8 +24,15 @@ if __name__ == "__main__":
             pitch = observation[0]
             ground_position = observation[1]
             ground_velocity = observation[3]
-            v = 10.0 * pitch + 1.0 * ground_position + 0.1 * ground_velocity
-            action = np.array([v])
+            action = np.clip(
+                a=[
+                    10.0 * pitch
+                    + 1.0 * ground_position
+                    + 0.1 * ground_velocity
+                ],
+                a_min=-0.99,
+                a_max=0.99,
+            )
             observation, reward, terminated, truncated, info = env.step(action)
             if terminated or truncated:
                 observation, info = env.reset()
