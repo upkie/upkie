@@ -11,6 +11,10 @@
 Functions to work with nested dictionaries.
 """
 
+import numpy as np
+
+from ..exceptions import UpkieRuntimeError
+
 
 def nested_update(target_dict: dict, new_dict: dict) -> None:
     r"""!
@@ -42,5 +46,20 @@ def nested_update(target_dict: dict, new_dict: dict) -> None:
             and isinstance(value, dict)
         ):
             nested_update(target_dict[key], value)
+        elif (
+            key in target_dict
+            and key in new_dict
+            and not isinstance(new_dict[key], type(target_dict[key]))
+        ):
+            old_type = type(target_dict[key])
+            new_type = type(new_dict[key])
+            if issubclass(old_type, np.ndarray):
+                new_value = np.array(new_dict[key])
+                target_dict[key] = new_value
+            else:  # unclear how to convert
+                raise UpkieRuntimeError(
+                    f"key '{key}' is already present in dictionary with type "
+                    f"'{old_type}', but updated value has type '{new_type}'"
+                )
         else:
             target_dict[key] = new_dict[key]
