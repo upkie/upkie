@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2025 Inria
 
-"""Tests for PyBullet backend friction functionality."""
+"""Tests for PyBullet backend functionality with a mock pybullet module."""
 
 import unittest
 from unittest.mock import MagicMock, patch
@@ -16,7 +16,7 @@ from upkie.exceptions import UpkieRuntimeError
 from upkie.utils.external_force import ExternalForce
 
 
-class PyBulletBackendTestCase(unittest.TestCase):
+class PyBulletBackendMockTestCase(unittest.TestCase):
     def setUp(self):
         # Mock PyBullet to avoid requiring actual PyBullet installation
         self.pybullet_mock = MagicMock()
