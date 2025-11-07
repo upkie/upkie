@@ -279,8 +279,8 @@ class UpkiePendulum(gym.Wrapper):
         if abs(pitch) > self.fall_pitch:
             logger.warning(
                 "Fall detected (pitch=%.2f rad, fall_pitch=%.2f rad)",
-                abs(pitch),
-                self.fall_pitch,
+                pitch,
+                (+1. if pitch > 0 else -1.) * self.fall_pitch,
             )
             return True
         return False
