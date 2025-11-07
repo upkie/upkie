@@ -6,10 +6,10 @@
 ## \namespace upkie.envs.backends.pybullet_backend
 ## \brief Backend using PyBullet physics simulation.
 
+import math
 from typing import Dict, List, Optional
 
 import numpy as np
-import upkie_description
 
 try:
     import pybullet
@@ -92,7 +92,7 @@ class PyBulletBackend(Backend):
 
         # Load Upkie
         self.__robot_id = pybullet.loadURDF(
-            upkie_description.URDF_PATH,
+            "test_description/urdf/Bipedal.urdf",
             basePosition=[0, 0, 0.6],
             baseOrientation=[0, 0, 0, 1],
         )
@@ -319,7 +319,8 @@ class PyBulletBackend(Backend):
 
         # Calculate pitch angle directly from quaternion
         qw, qx, qy, qz = quat_base_to_world
-        pitch = np.arcsin(2 * (qw * qy - qz * qx))
+        # pitch = np.arcsin(2 * (qw * qy - qz * qx))
+        pitch = math.atan2(2 * (qw * qx + qy * qz), 1 - 2 * (qx**2 + qy**2))
 
         # Transform angular velocity from world frame to base frame
         rotation_base_to_world = rotation_matrix_from_quaternion(
