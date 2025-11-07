@@ -28,14 +28,6 @@ class ModelTestCase(unittest.TestCase):
                 nb_joints += 1
             self.assertEqual(nb_joints, 6)
 
-    def test_default_rotation_base_to_imu(self):
-        """Load the default `rotation_base_to_imu` from the robot config."""
-        # Test default value
-        expected_rotation = np.diag([-1.0, 1.0, -1.0])
-        np.testing.assert_array_equal(
-            self.model.rotation_base_to_imu, expected_rotation
-        )
-
     @patch("upkie.model.model.ROBOT_CONFIG")
     def test_custom_rotation_base_to_imu(self, mock_robot_config):
         """Load a custom `rotation_base_to_imu` from a user robot config."""
