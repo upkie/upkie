@@ -46,7 +46,9 @@ Right-click on the image to the right and open it in a new tab/window to see the
 
 ## Model conventions {#model-conventions}
 
-There are the conventions used in the URDF description of the robot model. In what follows, we assume you are familiar with the informal URDF standard from the ROS wiki, in particular the [urdf/XML/joint](https://wiki.ros.org/urdf/XML/joint) and [urdf/XML/link](https://wiki.ros.org/urdf/XML/link) pages.
+There are some conventions used in the URDF description of the robot model. You should read this section if you are planning on customizing the default [upkie\_description](https://github.com/upkie/upkie_description/). If you are creating your own wheeled-biped description and plan on running Upkie's software on it, head over to [this section](\ref dev-custom-wheeled-biped}.
+
+In what follows, we assume you are familiar with the informal URDF standard from the ROS wiki, in particular the [urdf/XML/joint](https://wiki.ros.org/urdf/XML/joint) and [urdf/XML/link](https://wiki.ros.org/urdf/XML/link) pages.
 
 ### Link and joint names
 
