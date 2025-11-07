@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - docs: Document CpuTemperature sensor
 - docs: Document Joystick sensor
 - docs: Document Keyboard sensor
+- docs: Document URDF robot description requirements
 
 ### Changed
 
