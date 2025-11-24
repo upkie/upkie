@@ -57,7 +57,7 @@ clean_broken_links:
 .PHONY: pack_pixi_env
 pack_pixi_env:  ## pack pixi environment to environment.tar
 	pixi run pack
-
+ 
 .PHONY: run_bullet_spine
 run_bullet_spine:  ## build and run the Bullet spine
 	$(BAZEL) run //spines:bullet_spine -- --show
@@ -77,8 +77,10 @@ upload: check_upkie_name build  ## upload built targets to the Raspberry Pi
 	ssh ${UPKIE_NAME} mkdir -p $(PROJECT_NAME)
 	ssh ${UPKIE_NAME} sudo find $(PROJECT_NAME) -type d -name __pycache__ -user root -exec chmod go+wx {} "\;"
 	rsync -Lrtu --delete-after \
-		--exclude .mypy_cache/ \
+		--exclude .mypy_cache \
+		--exclude .git* \
 		--exclude .pixi \
+		--exclude .venv \
 		--exclude .pytest_cache \
 		--exclude .ruff_cache \
 		--exclude __pycache__ \
@@ -92,19 +94,28 @@ upload: check_upkie_name build  ## upload built targets to the Raspberry Pi
 		--exclude logs/ppo \
 		--exclude logs/tensorboard \
 		--exclude tools/bazel \
+		--exclude tools/raspios \
 		--progress $(CURDIR)/ ${UPKIE_NAME}:$(PROJECT_NAME)/
 
 # REMOTE TARGETS
 # ==============
-
 run_mpc_balancer:  ### run agent
-	@if [ -f $(CURDIR)/activate.sh ]; then \
-		echo "Running MPC balancer from packed environment..."; \
-		. $(CURDIR)/activate.sh && python -m agents.mpc_balancer; \
+	@if [ -f /home/pi/micromamba/envs/activate.sh ]; then \
+		echo "Loading env from static path..."; \
+		. /home/pi/micromamba/envs/activate.sh && python -m agents.mpc_balancer; \
 	else \
 		echo "Running MPC balancer directly..."; \
 		python -m agents.mpc_balancer; \
 	fi
+
+# run_mpc_balancer:  ### run agent
+# 	@if [ -f $(CURDIR)/activate.sh ]; then \
+# 		echo "Running MPC balancer from packed environment..."; \
+# 		. $(CURDIR)/activate.sh && python -m agents.mpc_balancer; \
+# 	else \
+# 		echo "Running MPC balancer directly..."; \
+# 		python -m agents.mpc_balancer; \
+# 	fi
 
 run_mock_spine:  ### run the mock spine on the Raspberry Pi
 	$(RASPUNZEL) run -s //spines:mock_spine

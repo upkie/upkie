@@ -159,8 +159,9 @@ class BaseOrientation : public Observer {
      */
     void configure(const Dictionary& config) {
       // Default IMU and ARS orientations
-      rotation_base_to_imu.setZero();
-      rotation_base_to_imu.diagonal() << -1.0, 1.0, -1.0;
+      rotation_base_to_imu << 0.0, -1.0, 0.0,
+                              0.0, 0.0, -1.0,
+                              1.0, 0.0, 0.0;
       rotation_ars_to_world.setZero();
       rotation_ars_to_world.diagonal() << 1.0, -1.0, -1.0;
 
