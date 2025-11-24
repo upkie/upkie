@@ -53,6 +53,7 @@ clean: clean_broken_links  ## clean all local build and intermediate files
 clean_broken_links:
 	find -L $(CURDIR) -type l ! -exec test -e {} \; -delete 2>/dev/null || true
 
+# Packing pixi environments: https://github.com/orgs/upkie/discussions/467
 .PHONY: pack_pixi_env
 pack_pixi_env:  ## pack pixi environment to environment.tar
 	pixi run pack
@@ -122,6 +123,7 @@ run_mock_spine:  ### run the mock spine on the Raspberry Pi
 run_pi3hat_spine:  ### run the pi3hat spine on the Raspberry Pi
 	$(RASPUNZEL) run -s //spines:pi3hat_spine
 
+# Packing pixi environments: https://github.com/orgs/upkie/discussions/467
 unpack_pixi_env:  ### unpack Python environment
 	@pixi-unpack environment.tar -e upkie -o ${MAMBA_ROOT_PREFIX}/envs || { \
 		echo "Error: pixi-pack not found"; \
