@@ -91,6 +91,7 @@ upload: check_upkie_name build  ## upload built targets to the Raspberry Pi
 		--exclude logs/ppo \
 		--exclude logs/tensorboard \
 		--exclude tools/bazel \
+		--exclude tools/raspios \
 		--progress $(CURDIR)/ ${UPKIE_NAME}:$(PROJECT_NAME)/
 
 # REMOTE TARGETS
