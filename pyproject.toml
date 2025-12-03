@@ -175,19 +175,6 @@ qpmpc = ">=3.0.1,<4"
 [tool.pixi.feature.try-pybullet.tasks]
 try-pybullet = "python examples/mpc_balancing.py"
 
-[tool.pixi.feature.rlb3.pypi-dependencies]
-rl-zoo3 = ">=2.6.0"
-stable-baselines3 = ">=2.3.0"
-tensorboard = "*"
-
-[tool.pixi.feature.rlb3-genesis.tasks]
-rlb3-train-genesis = "python agents/rlb3_trainer/train.py --env Upkie-Genesis-Pendulum"
-rlb3-enjoy-genesis = "python agents/rlb3_trainer/enjoy.py --env Upkie-Genesis-Pendulum"
-
-[tool.pixi.feature.rlb3-pybullet.tasks]
-rlb3-train-pybullet = "python agents/rlb3_trainer/train.py --env Upkie-PyBullet-Pendulum"
-rlb3-enjoy-pybullet = "python agents/rlb3_trainer/enjoy.py --env Upkie-PyBullet-Pendulum"
-
 [tool.pixi.feature.test.dependencies]
 pybullet = ">=3"
 pytest = "*"
@@ -213,8 +200,6 @@ lint = { features = ["lint"], solve-group = "default" }
 mpc-balancer = { features = ["mpc-balancer"], solve-group = "mpc-balancer" }
 pack = { features = ["pack"], solve-group = "default" }
 pybullet = { features = ["pybullet", "try-pybullet"], solve-group = "pybullet" }
-rlb3-genesis = { features = ["rlb3", "genesis", "rlb3-genesis"], solve-group = "genesis" }
-rlb3-pybullet = { features = ["rlb3", "pybullet", "rlb3-pybullet"], solve-group = "pybullet" }
 test-py310 = { features = ["py310", "test"], solve-group = "py310" }
 test-py311 = { features = ["py311", "test"], solve-group = "py311" }
 test-py312 = { features = ["py312", "test"], solve-group = "py312" }

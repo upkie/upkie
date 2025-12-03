@@ -92,10 +92,6 @@ Upkies come with a set of default behaviors that you can executed as Pixi tasks.
 
 | Name                   | Task                                                     |
 |------------------------|----------------------------------------------------------|
-| `rlb3-enjoy-genesis`   | Evaluate the last policy trained in Genesis              |
-| `rlb3-enjoy-pybullet`  | Evaluate the last policy trained in PyBullet             |
-| `rlb3-train-genesis`   | Train a new policy by reinforcement learning in Genesis  |
-| `rlb3-train-pybullet`  | Train a new policy by reinforcement learning in PyBullet |
 | `try-genesis`          | Run the MPC balancer in Genesis                          |
 | `try-pybullet`         | Run the MPC balancer in PyBullet                         |
 | `try-spine`            | Run the MPC balancer with a running spine / real robot   |
@@ -119,7 +115,7 @@ If you built an Upkie or use parts of this project in your works, please cite th
 ```bibtex
 @software{upkie,
   title = {{Upkie open source wheeled biped robot}},
-  author = {Caron, St\'{e}phane and Perrin-Gilbert, Nicolas and Ledoux, Viviane and G\"{o}kbakan, \"{U}mit Bora and Raverdy, Pierre-Guillaume and Raffin, Antonin and Tordjman--Levavasseur, Valentin},
+  author = {Caron, St\'{e}phane and Perrin-Gilbert, Nicolas and Ledoux, Viviane and G\"{o}kbakan, \"{U}mit Bora and Raverdy, Pierre-Guillaume and Raffin, Antonin and Tordjman{-}{-}Levavasseur, Valentin},
   url = {https://github.com/upkie/upkie},
   license = {Apache-2.0},
   version = {10.0.0},
