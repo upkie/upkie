@@ -19,6 +19,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Report pitch rather than absolute pitch in fall detection warning
 
+### Removed
+
+- Move `rlb3_trainer` to its [own repository](https://github.com/stephane-caron/rlb3_upkie)
+
 ## [10.0.0] - 2025-10-20
 
 ### Added
