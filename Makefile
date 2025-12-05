@@ -98,7 +98,7 @@ upload: check_upkie_name build  ## upload built targets to the Raspberry Pi
 # REMOTE TARGETS
 # ==============
 run_mpc_balancer:  ### run agent
-	@if [ -f /home/pi/micromamba/envs/activate.sh ]; then \
+	@if [ -f ${MAMBA_ROOT_PREFIX}/envs/activate.sh ]; then \
 		echo "Loading env from static path..."; \
 		. /home/pi/micromamba/envs/activate.sh && python -m agents.mpc_balancer; \
 	else \
