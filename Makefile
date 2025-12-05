@@ -101,22 +101,13 @@ upload: check_upkie_name build  ## upload built targets to the Raspberry Pi
 # ==============
 
 run_mpc_balancer:  ### run agent
-	@if [ -f ${MAMBA_ROOT_PREFIX}/envs/activate.sh ]; then \
-		echo "Loading env from static path..."; \
+	@if [ -f ${MAMBA_ROOT_PREFIX}/envs/upkie/activate.sh ]; then \
+		echo "Loading MPC balancer in unpacked conda environment..."; \
 		. ${MAMBA_ROOT_PREFIX}/envs/activate.sh && python -m agents.mpc_balancer; \
 	else \
-		echo "Running MPC balancer directly..."; \
+		echo "Running MPC balancer in current Python environment..."; \
 		python -m agents.mpc_balancer; \
 	fi
-
-# run_mpc_balancer:  ### run agent
-# 	@if [ -f $(CURDIR)/activate.sh ]; then \
-# 		echo "Running MPC balancer from packed environment..."; \
-# 		. $(CURDIR)/activate.sh && python -m agents.mpc_balancer; \
-# 	else \
-# 		echo "Running MPC balancer directly..."; \
-# 		python -m agents.mpc_balancer; \
-# 	fi
 
 run_mock_spine:  ### run the mock spine on the Raspberry Pi
 	$(RASPUNZEL) run -s //spines:mock_spine
@@ -127,7 +118,7 @@ run_pi3hat_spine:  ### run the pi3hat spine on the Raspberry Pi
 
 # Packing pixi environments: https://github.com/orgs/upkie/discussions/467
 unpack_pixi_env:  ### unpack Python environment
-	@pixi-unpack environment.tar -e upkie -o ${MAMBA_ROOT_PREFIX}/envs || { \
+	@pixi-unpack environment.tar -e upkie -o ${MAMBA_ROOT_PREFIX}/envs/upkie || { \
 		echo "Error: pixi-pack not found"; \
 		echo "See https://github.com/Quantco/pixi-pack?tab=readme-ov-file#-installation"; \
 		exit 1; \
