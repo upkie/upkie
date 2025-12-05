@@ -56,7 +56,6 @@ clean_broken_links:
 .PHONY: pack_pixi_env
 pack_pixi_env:  ## pack pixi environment to environment.tar
 	pixi run pack
- 
 .PHONY: run_bullet_spine
 run_bullet_spine:  ## build and run the Bullet spine
 	$(BAZEL) run //spines:bullet_spine -- --show
