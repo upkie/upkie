@@ -15387,21 +15387,6 @@ packages:
   - pkg:pypi/prompt-toolkit?source=hash-mapping
   size: 271841
   timestamp: 1744724188108
-- pypi: https://files.pythonhosted.org/packages/6a/c9/b9689a2a250264a84e66c46d8862ba788ee7a641cdca39bccf64f59284b7/protobuf-6.31.1-cp39-abi3-macosx_10_9_universal2.whl
-  name: protobuf
-  version: 6.31.1
-  sha256: 6f1227473dc43d44ed644425268eb7c2e488ae245d51c6866d19fe158e207402
-  requires_python: '>=3.9'
-- pypi: https://files.pythonhosted.org/packages/76/a1/7a5a94032c83375e4fe7e7f56e3976ea6ac90c5e85fac8576409e25c39c3/protobuf-6.31.1-cp39-abi3-manylinux2014_aarch64.whl
-  name: protobuf
-  version: 6.31.1
-  sha256: a40fc12b84c154884d7d4c4ebd675d5b3b5283e155f324049ae396b95ddebc39
-  requires_python: '>=3.9'
-- pypi: https://files.pythonhosted.org/packages/fa/b1/b59d405d64d31999244643d88c45c8241c58f17cc887e73bcb90602327f8/protobuf-6.31.1-cp39-abi3-manylinux2014_x86_64.whl
-  name: protobuf
-  version: 6.31.1
-  sha256: 4ee898bf66f7a8b0bd21bce523814e6fbd8c6add948045ce958b73af7e8878c6
-  requires_python: '>=3.9'
 - conda: https://conda.anaconda.org/conda-forge/linux-64/proxsuite-0.7.2-py310h03d9f68_2.conda
   sha256: 9d254cc5a1190359d564329be1ebeff5f415281e1fe3357b0530cd06af41a34f
   md5: ddfa1f504e62d32b09db93b5a5b148ab
@@ -19524,7 +19509,7 @@ packages:
 - pypi: ./
   name: upkie
   version: 10.0.0
-  sha256: 8c1662b65c398360741d1fac3d4491b159003998e9aeaf6c1110475d57c30b31
+  sha256: 8217165bd9c4d46940bcc2e8dbc78818d1e5772b866707ccb28c117b53e11482
   requires_dist:
   - gymnasium>=1.0.0
   - loop-rate-limiters>=1.2.0
