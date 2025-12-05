@@ -25,7 +25,7 @@ class WheelController:
 
     ## \var left_wheeled
     ## Set to True if the robot is left wheeled, that is, a positive turn of
-    ## the ## left wheel results in forward motion. Set to False for a
+    ## the left wheel results in forward motion. Set to False for a
     ## right-wheeled variant.
     left_wheeled: bool
 
