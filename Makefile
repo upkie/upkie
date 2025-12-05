@@ -57,6 +57,7 @@ clean_broken_links:
 .PHONY: pack_pixi_env
 pack_pixi_env:  ## pack pixi environment to environment.tar
 	pixi run pack
+
 .PHONY: run_bullet_spine
 run_bullet_spine:  ## build and run the Bullet spine
 	$(BAZEL) run //spines:bullet_spine -- --show
@@ -98,6 +99,7 @@ upload: check_upkie_name build  ## upload built targets to the Raspberry Pi
 
 # REMOTE TARGETS
 # ==============
+
 run_mpc_balancer:  ### run agent
 	@if [ -f ${MAMBA_ROOT_PREFIX}/envs/activate.sh ]; then \
 		echo "Loading env from static path..."; \
