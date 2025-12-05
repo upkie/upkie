@@ -77,12 +77,12 @@ upload: check_upkie_name build  ## upload built targets to the Raspberry Pi
 	ssh ${UPKIE_NAME} mkdir -p $(PROJECT_NAME)
 	ssh ${UPKIE_NAME} sudo find $(PROJECT_NAME) -type d -name __pycache__ -user root -exec chmod go+wx {} "\;"
 	rsync -Lrtu --delete-after \
-		--exclude .mypy_cache \
 		--exclude .git* \
+		--exclude .mypy_cache \
 		--exclude .pixi \
-		--exclude .venv \
 		--exclude .pytest_cache \
 		--exclude .ruff_cache \
+		--exclude .venv \
 		--exclude __pycache__ \
 		--exclude bazel-$(CURDIR_NAME) \
 		--exclude bazel-$(PROJECT_NAME)/ \
