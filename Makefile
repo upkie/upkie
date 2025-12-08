@@ -103,7 +103,7 @@ upload: check_upkie_name build  ## upload built targets to the Raspberry Pi
 run_mpc_balancer:  ### run agent
 	@if [ -f ${MAMBA_ROOT_PREFIX}/envs/upkie/activate.sh ]; then \
 		echo "Loading MPC balancer in unpacked conda environment..."; \
-		. ${MAMBA_ROOT_PREFIX}/envs/activate.sh && python -m agents.mpc_balancer; \
+		. ${MAMBA_ROOT_PREFIX}/envs/upkie/activate.sh && python -m agents.mpc_balancer; \
 	else \
 		echo "Running MPC balancer in current Python environment..."; \
 		python -m agents.mpc_balancer; \
