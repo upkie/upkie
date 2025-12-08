@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+- CICD: Remove jobs that relied on `macos-13` runner images
 - Move `rlb3_trainer` to its [own repository](https://github.com/stephane-caron/rlb3_upkie)
 - Move `trajectory_player` to its own repository
 
