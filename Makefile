@@ -11,6 +11,7 @@ BAZEL = $(CURDIR)/tools/bazelisk
 COVERAGE_DIR = $(CURDIR)/bazel-out/_coverage
 CURDATE = $(shell date -Iseconds)
 CURDIR_NAME = $(shell basename $(CURDIR))
+PYTHON = python3
 RASPUNZEL = $(CURDIR)/tools/raspunzel
 
 # Help snippet adapted from:
@@ -102,11 +103,11 @@ upload: check_upkie_name build  ## upload built targets to the Raspberry Pi
 
 run_mpc_balancer:  ### run agent
 	@if [ -f ${MAMBA_ROOT_PREFIX}/envs/upkie/activate.sh ]; then \
-		echo "Loading MPC balancer in unpacked conda environment..."; \
-		. ${MAMBA_ROOT_PREFIX}/envs/upkie/activate.sh && python -m agents.mpc_balancer; \
+		echo "Running the MPC balancer in the unpacked Python environment..."; \
+		. ${MAMBA_ROOT_PREFIX}/envs/upkie/activate.sh && $(PYTHON) -m mpc_balancer; \
 	else \
-		echo "Running MPC balancer in current Python environment..."; \
-		python -m agents.mpc_balancer; \
+		echo "Running the MPC balancer in the current Python environment..."; \
+		$(PYTHON) -m mpc_balancer; \
 	fi
 
 run_mock_spine:  ### run the mock spine on the Raspberry Pi

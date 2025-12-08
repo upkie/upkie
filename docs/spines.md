@@ -44,5 +44,5 @@ user@upkie:~$ pi3hat_spine
 You can then run any agent in a separate shell on the robot, for example the PID balancer from the examples directory:
 
 ```console
-user@upkie:upkie$ python -m agents.mpc_balancer
+user@upkie:upkie$ python -m mpc_balancer
 ```

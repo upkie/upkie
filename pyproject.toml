@@ -55,9 +55,9 @@ exclude = [
     "CONTRIBUTING.md",
     "CPPLINT.cfg",
     "WORKSPACE",
-    "agents/",
     "examples/",
     "logs/",
+    "mpc_balancer/",
     "spines/",
     "tools/",
     "upkie/cpp",
@@ -136,7 +136,7 @@ proxsuite = ">=0.4.1"
 qpmpc = ">=3.0.1,<4"
 
 [tool.pixi.feature.mpc-balancer.tasks]
-try-spine = "python -m agents.mpc_balancer"
+try-spine = "python -m mpc_balancer"
 
 [tool.pixi.feature.pack.dependencies]
 gin-config = ">=0.5.0"
@@ -183,14 +183,6 @@ pytest = "*"
 [tool.pixi.feature.test.tasks]
 test = "pytest tests/"
 
-[tool.pixi.feature.trajectory-player.dependencies]
-gin-config = ">=0.5.0"
-meshcat-shapes = ">=0.3.0"
-pandas = "*"
-pink = ">=3.0.0,<4"
-proxsuite = ">=0.4.1"
-qpmpc = ">=3.0.1,<4"
-
 [tool.pixi.environments]
 coverage = { features = ["coverage"], solve-group = "default" }
 default = { features = [], solve-group = "default" }
@@ -204,7 +196,6 @@ test-py310 = { features = ["py310", "test"], solve-group = "py310" }
 test-py311 = { features = ["py311", "test"], solve-group = "py311" }
 test-py312 = { features = ["py312", "test"], solve-group = "py312" }
 test-py39 = { features = ["py39", "test"], solve-group = "py39" }
-trajectory-player = { features = ["trajectory-player"], solve-group = "trajectory-player" }
 
 [tool.ruff]
 line-length = 79

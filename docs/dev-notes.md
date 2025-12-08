@@ -63,7 +63,7 @@ user@upkie:upkie$ make run_pi3hat_spine
 Once the spine is running, you can run any agent in a separate shell on the robot, for example the PID balancer from the examples directory:
 
 ```console
-user@upkie:upkie$ python -m agents.mpc_balancer
+user@upkie:upkie$ python -m mpc_balancer
 ```
 
 ### Python development {#python-dev-workflow}

@@ -10,5 +10,5 @@ Or manually in a shell:
 
 ```console
 pixi shell -e mpc-balancer  # or your own conda environment
-python -m agents.mpc_balancer
+python -m mpc_balancer
 ```
