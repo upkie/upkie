@@ -81,29 +81,6 @@ jobs:
               run: |
                   tools/bazelisk build --compilation_mode=fastbuild --config=darwin_arm64 //...
 
-    build_darwin_x86:
-        name: "Build on macOS (x86)"
-        runs-on: macos-13
-
-        steps:
-            - name: "Checkout sources"
-              uses: actions/checkout@v4
-
-            - name: "Set up Python"
-              uses: actions/setup-python@v4
-              with:
-                  python-version: "3.11"
-
-            - name: 'Set up latest Oracle JDK 21'
-              uses: oracle-actions/setup-java@v1
-              with:
-                  website: oracle.com
-                  release: 21
-
-            - name: "Build all targets"
-              run: |
-                  tools/bazelisk build --compilation_mode=fastbuild --config=darwin_x86 //...
-
     build_raspi:
         name: "Cross-compile to the Raspberry Pi"
         runs-on: ubuntu-22.04
@@ -219,7 +196,6 @@ jobs:
         needs:
             - artifacts
             - build_darwin_arm64
-            - build_darwin_x86
             - build_linux
             - build_raspi
             - coverage
