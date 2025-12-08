@@ -10,6 +10,7 @@ from upkie.envs.backends import (
     PyBulletBackend,
     SpineBackend,
 )
+from upkie.envs.upkie_navigation import UpkieNavigation
 from upkie.envs.upkie_pendulum import UpkiePendulum
 
 from .upkie_servos import UpkieServos
@@ -158,3 +159,62 @@ def wrap_spine_pendulum(**kwargs):
     Add pendulum wrapper around an UpkieServos with Spine backend.
     """
     return wrap_pendulum(make_spine_servos_env, **kwargs)
+
+
+def wrap_navigation(make_env_func, **kwargs):
+    r"""!
+    Make a navigation environment around a pendulum environment.
+
+    This function is meant to be called by `gymnasium.make()` rather than to be
+    called directly.
+
+    \param make_env_func Function that creates the base servo environment.
+    \param kwargs Keyword arguments forwarded to both the
+        \ref upkie.envs.upkie_navigation.UpkieNavigation wrapper and the
+        internal Upkie environment.
+    \return UpkieNavigation environment.
+    """
+    navigation_keys = {
+        "max_linear_velocity",
+        "max_angular_velocity",
+    }
+    navigation_kwargs = {
+        key: value for key, value in kwargs.items() if key in navigation_keys
+    }
+    pendulum_kwargs = {
+        key: value
+        for key, value in kwargs.items()
+        if key not in navigation_keys
+    }
+
+    # Create pendulum environment first
+    pendulum_env = wrap_pendulum(make_env_func, **pendulum_kwargs)
+    return UpkieNavigation(pendulum_env, **navigation_kwargs)
+
+
+def wrap_genesis_navigation(**kwargs):
+    r"""!
+    Add navigation wrapper around an UpkieServos with Genesis backend.
+    """
+    return wrap_navigation(make_genesis_servos_env, **kwargs)
+
+
+def wrap_mock_navigation(**kwargs):
+    r"""!
+    Add navigation wrapper around an UpkieServos with Mock backend.
+    """
+    return wrap_navigation(make_mock_servos_env, **kwargs)
+
+
+def wrap_pybullet_navigation(**kwargs):
+    r"""!
+    Add navigation wrapper around an UpkieServos with PyBullet backend.
+    """
+    return wrap_navigation(make_pybullet_servos_env, **kwargs)
+
+
+def wrap_spine_navigation(**kwargs):
+    r"""!
+    Add navigation wrapper around an UpkieServos with Spine backend.
+    """
+    return wrap_navigation(make_spine_servos_env, **kwargs)

@@ -12,6 +12,7 @@
 import gymnasium as gym
 
 from .upkie_env import UpkieEnv
+from .upkie_navigation import UpkieNavigation
 from .upkie_pendulum import UpkiePendulum
 from .upkie_servos import UpkieServos
 
@@ -54,10 +55,27 @@ def register() -> None:
         id="Upkie-Genesis-Servos",
         entry_point="upkie.envs.entry_points:make_genesis_servos_env",
     )
+    gym.envs.registration.register(
+        id="Upkie-Mock-Navigation",
+        entry_point=("upkie.envs.entry_points:wrap_mock_navigation"),
+    )
+    gym.envs.registration.register(
+        id="Upkie-Spine-Navigation",
+        entry_point=("upkie.envs.entry_points:wrap_spine_navigation"),
+    )
+    gym.envs.registration.register(
+        id="Upkie-PyBullet-Navigation",
+        entry_point=("upkie.envs.entry_points:wrap_pybullet_navigation"),
+    )
+    gym.envs.registration.register(
+        id="Upkie-Genesis-Navigation",
+        entry_point=("upkie.envs.entry_points:wrap_genesis_navigation"),
+    )
 
 
 __all__ = [
     "UpkieEnv",
+    "UpkieNavigation",
     "UpkiePendulum",
     "UpkieServos",
     "register",
