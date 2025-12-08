@@ -9,7 +9,7 @@ assignees: ''
 
 ## Current problem
 
-> Is your feature request related to a problem? Please describe, *e.g.* "I'm always frustrated when..."
+> Is your feature request related to a problem? Please describe, *e.g.* "It is always frustrating when..."
 
 ...
 
