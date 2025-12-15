@@ -88,9 +88,8 @@ upkie_description = ">=2.1.0"
 lcov = "*"
 
 [tool.pixi.feature.coverage.tasks]
-coverage-generate = { cmd = "tools/bazelisk coverage --combined_report=lcov --compilation_mode=fastbuild --instrument_test_targets //..." }
-coverage-report = { cmd = "genhtml bazel-out/_coverage/_coverage_report.dat -o bazel-out/_coverage", depends-on = ["coverage-generate"] }
-coverage-open = { cmd = "xdg-open bazel-out/_coverage/index.html", depends-on = ["coverage-report"] }
+coverage = { cmd = "tools/bazelisk coverage --combined_report=lcov --compilation_mode=fastbuild --instrument_test_targets //... && genhtml bazel-out/_coverage/_coverage_report.dat -o bazel-out/_coverage" }
+open-coverage = { cmd = "xdg-open bazel-out/_coverage/index.html", depends-on = ["coverage"] }
 
 [tool.pixi.feature.docs.dependencies]
 doxygen = "<=1.9.5"
@@ -99,8 +98,8 @@ make = "*"
 "stable-baselines3" = ">=2.3.0"
 
 [tool.pixi.feature.docs.tasks]
-docs-make = "doxygen --version && cd docs && make"
-docs-open = { cmd = "xdg-open docs/html/index.html", depends-on = ["docs-make"] }
+docs = "doxygen --version && cd docs && make"
+open-docs = { cmd = "xdg-open docs/html/index.html", depends-on = ["docs"] }
 
 [tool.pixi.feature.genesis]
 platforms = ["linux-64", "osx-arm64"]
@@ -114,18 +113,17 @@ genesis-world = ">=0.3.0"
 torch = ">=2.6.0"
 torchvision = ">=0.21.0"
 
-[tool.pixi.feature.try-genesis.tasks]
-try-genesis = "python examples/genesis/mpc_balancing.py --env Upkie-Genesis-Pendulum"
+[tool.pixi.feature.genesis.tasks]
+mpc-balancer-genesis = "python examples/genesis/mpc_balancing.py --env Upkie-Genesis-Pendulum"
 
 [tool.pixi.feature.lint.dependencies]
 six = "*"
 ruff = ">=0.4.3"
 
 [tool.pixi.feature.lint.tasks]
-lint-bazel = { cmd = "tools/bazelisk test --config lint //upkie/..." }
-lint-ruff = { cmd = "ruff check upkie" }
-lint-ruff-format = { cmd = "ruff format --check upkie" }
-lint = { depends-on = ["lint-bazel", "lint-ruff", "lint-ruff-format"] }
+lint-cpp = { cmd = "tools/bazelisk test --config lint //upkie/..." }
+lint-python = { cmd = "ruff check upkie && ruff format --check upkie" }
+lint = { depends-on = ["lint-cpp", "lint-python"] }
 
 [tool.pixi.feature.mpc-balancer.dependencies]
 gin-config = ">=0.5.0"
@@ -136,7 +134,7 @@ proxsuite = ">=0.4.1"
 qpmpc = ">=3.0.1,<4"
 
 [tool.pixi.feature.mpc-balancer.tasks]
-try-spine = "python -m mpc_balancer"
+mpc-balancer = "python -m mpc_balancer"
 
 [tool.pixi.feature.pack.dependencies]
 gin-config = ">=0.5.0"
@@ -172,8 +170,8 @@ proxsuite = ">=0.4.1"
 pybullet = ">=3"
 qpmpc = ">=3.0.1,<4"
 
-[tool.pixi.feature.try-pybullet.tasks]
-try-pybullet = "python examples/mpc_balancing.py"
+[tool.pixi.feature.pybullet.tasks]
+mpc-balancer-pybullet = "python examples/mpc_balancing.py"
 
 [tool.pixi.feature.test.dependencies]
 pybullet = ">=3"
@@ -187,11 +185,11 @@ test = "pytest tests/"
 coverage = { features = ["coverage"], solve-group = "default" }
 default = { features = [], solve-group = "default" }
 docs = { features = ["docs"], solve-group = "default" }
-genesis = { features = ["genesis", "try-genesis"], solve-group = "genesis" }
+genesis = { features = ["genesis"], solve-group = "genesis" }
 lint = { features = ["lint"], solve-group = "default" }
 mpc-balancer = { features = ["mpc-balancer"], solve-group = "mpc-balancer" }
 pack = { features = ["pack"], solve-group = "default" }
-pybullet = { features = ["pybullet", "try-pybullet"], solve-group = "pybullet" }
+pybullet = { features = ["pybullet"], solve-group = "pybullet" }
 test-py310 = { features = ["py310", "test"], solve-group = "py310" }
 test-py311 = { features = ["py311", "test"], solve-group = "py311" }
 test-py312 = { features = ["py312", "test"], solve-group = "py312" }
