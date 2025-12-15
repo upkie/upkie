@@ -116,7 +116,7 @@ jobs:
 
             - name: "Run coverage tests"
               run: |
-                  pixi run coverage-report
+                  pixi run coverage
 
             - name: "Submit report to Coveralls"
               uses: coverallsapp/github-action@v2
