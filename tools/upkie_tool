@@ -120,6 +120,32 @@ class UpkieTool:
         )
         print("done")
 
+    async def check_servos(self) -> list:
+        """Query controllers one by one, returning their current stats.
+
+        Returns:
+            List of servo responses.
+        """
+        results = []
+        for controller in self.controllers:
+            print(
+                f"Checking connection to servo {controller.id}... ",
+                end="",
+                flush=True,
+            )
+
+            try:
+                servo_results = await asyncio.wait_for(
+                    self.transport.cycle([controller.make_stop(query=True)]),
+                    timeout=3.0,  # seconds
+                )
+                results.extend(servo_results)
+                print("✅ OK")
+            except asyncio.TimeoutError:
+                print("❌ Timeout!")
+        print("")
+        return results
+
     async def print_stats(self) -> None:
         """Query controllers for their current stats."""
 
@@ -127,12 +153,7 @@ class UpkieTool:
             result_id: int = result.id
             return result_id
 
-        results = await self.transport.cycle(
-            [
-                controller.make_stop(query=True)
-                for controller in self.controllers
-            ]
-        )
+        results = await self.check_servos()
         sorted_results = sorted(results, key=get_result_id)
         print(
             f"{'id':2} "
@@ -163,6 +184,7 @@ class UpkieTool:
                 f"{velocity_rps:18} "
                 f"{torque_N_m:14}"
             )
+        print("")
 
 
 def get_upkie_asset(name: str) -> dict:
