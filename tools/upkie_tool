@@ -22,7 +22,14 @@ import requests
 
 INSTALL_PREFIX = Path("/usr/local/bin/")
 PI3HAT_CFG = "1=1,2,3;3=4,5,6"
-
+SERVO_NAME = {
+    1: "left_hip",
+    2: "left_knee",
+    3: "left_wheel",
+    4: "right_hip",
+    5: "right_knee",
+    6: "right_wheel",
+}
 
 def parse_command_line_arguments() -> argparse.Namespace:
     """
