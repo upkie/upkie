@@ -56,5 +56,6 @@ unset __mamba_setup
 # <<< mamba initialize <<<
 
 alias conda="micromamba"
+alias ll="ls -lh"
 alias pst="ps -ao pcpu,cpuid,priority,pid,comm,command -T --sort=priority"
 EOF
