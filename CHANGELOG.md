@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- CICD: Update names of the main pixi tasks
 - Report pitch rather than absolute pitch in fall detection warning
 - tools: Check actuators sequentially when running `upkie_tool stats`
 
