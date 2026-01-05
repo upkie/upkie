@@ -130,3 +130,8 @@ Don't forget to add yourself to the BibTeX above and to `CITATION.cff` if you co
 - [Awesome Open Source Robots](https://github.com/stephane-caron/awesome-open-source-robots): Upkies are one among many open-source open-hardware robot initiative: check out the others!
 - [mjbots](https://mjbots.com/): The company that manufactures the brushless servos used in Upkies, that are [open source](https://github.com/mjbots/moteus) in firmware, hardware and software.
 - [Open Dynamic Robot Initiative](https://open-dynamic-robot-initiative.github.io/): An open torque-controlled modular robot architecture for legged locomotion research.
+
+Reinforcement learning playgrounds:
+
+- [RLB3 upkie](https://github.com/upkie/rlb3_upkie): new CPU playground to train policies for Upkie-Pendulum environments via RL Baselines3 Zoo
+- [PPO balancer](https://github.com/upkie/ppo_balancer): legacy CPU playground to train policies for Upkie-Pendulum environments using Stable-Baselines3
