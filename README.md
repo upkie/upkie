@@ -134,4 +134,4 @@ Don't forget to add yourself to the BibTeX above and to `CITATION.cff` if you co
 Reinforcement learning playgrounds:
 
 - [RLB3 upkie](https://github.com/upkie/rlb3_upkie): new CPU playground to train policies for Upkie-Pendulum environments via RL Baselines3 Zoo
-- [PPO balancer](https://github.com/upkie/ppo_balancer): legacy CPU playground to train policies for Upkie-Pendulum environments using Stable-Baselines3
+- [PPO balancer](https://github.com/upkie/ppo_balancer): legacy CPU playground to train policies for Upkie-Pendulum environments using Stable-Baselines3 ([video](https://www.youtube.com/shorts/bvWgYso1dzI))
