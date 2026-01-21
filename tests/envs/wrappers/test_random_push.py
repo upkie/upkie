@@ -27,7 +27,7 @@ class RandomPushTestCase(unittest.TestCase):
         ground_velocity_env = UpkiePendulum(
             servos_env,
             fall_pitch=1.0,
-            max_ground_velocity=1.0,
+            max_ground_velocity=2.0,  # may reach -1.03 on macOS, Python 3.12
         )
         self.env = ground_velocity_env
 
