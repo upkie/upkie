@@ -21,6 +21,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Report pitch rather than absolute pitch in fall detection warning
 - tools: Check actuators sequentially when running `upkie_tool stats`
 
+### Fixed
+
+- Fix failing unit test on macOS with Python 3.12
+
 ### Removed
 
 - CICD: Remove jobs that relied on `macos-13` runner images
