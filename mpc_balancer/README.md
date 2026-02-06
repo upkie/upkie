@@ -3,7 +3,7 @@
 Balancing and locomotion agent based on model predictive control. It can be run directly as a task:
 
 ```console
-pixi run try-spine
+pixi run mpc-balancer
 ```
 
 Or manually in a shell:

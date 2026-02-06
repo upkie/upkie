@@ -90,16 +90,16 @@ pixi run --environment genesis ./examples/genesis_balancing.py
 
 Upkies come with a set of default behaviors that you can executed as Pixi tasks. To get started, make sure you have [installed `pixi`](https://pixi.sh/latest/#installation).
 
-| Name                   | Task                                                     |
-|------------------------|----------------------------------------------------------|
-| `try-genesis`          | Run the MPC balancer in Genesis                          |
-| `try-pybullet`         | Run the MPC balancer in PyBullet                         |
-| `try-spine`            | Run the MPC balancer with a running spine / real robot   |
+| Name                    | Task                                                     |
+|-------------------------|----------------------------------------------------------|
+| `mpc-balancer`          | Run the MPC balancer with a running spine / real robot   |
+| `mpc-balancer-genesis`  | Run the MPC balancer in Genesis                          |
+| `mpc-balancer-pybullet` | Run the MPC balancer in PyBullet                         |
 
 You can execute a task by `pixi run <task-name>`, for instance:
 
 ```console
-pixi run try-pybullet
+pixi run mpc-balancer-pybullet
 ```
 
 Tasks are available both on your machine and on your Upkie's Raspberry Pi (Pixi comes pre-installed on the SD card image). They are implemented by [agents](https://github.com/upkie/upkie/tree/main/agents). You can make your own agents by forking this repository or using the [new\_agent](https://github.com/upkie/new_agent) template to get started.
