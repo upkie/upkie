@@ -1,0 +1,6 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$classupkie_1_1cpp_1_1interfaces_1_1Interface.html" title="Base class for actuation interfaces." alt="" coords="5,57,85,85"/>
+<area shape="rect" id="node2" href="$classupkie_1_1cpp_1_1interfaces_1_1BulletInterface.html" title="Actuation interface for the Bullet simulator." alt="" coords="135,5,252,33"/>
+<area shape="rect" id="node3" href="$classupkie_1_1cpp_1_1interfaces_1_1MockInterface.html" title="Interface whose internal state perfectly tracks commands." alt="" coords="137,57,251,85"/>
+<area shape="rect" id="node4" href="$classupkie_1_1cpp_1_1interfaces_1_1Pi3HatInterface.html" title="Interface to moteus controllers." alt="" coords="133,109,255,137"/>
+</map>

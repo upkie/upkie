@@ -1,0 +1,7 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$classupkie_1_1cpp_1_1observers_1_1Observer.html" title="Base class for observers." alt="" coords="5,84,86,112"/>
+<area shape="rect" id="node2" href="$classupkie_1_1cpp_1_1observers_1_1BaseOrientation.html" title="Observe the orientation of the base frame relative to the world frame." alt="" coords="153,5,280,33"/>
+<area shape="rect" id="node3" href="$classupkie_1_1cpp_1_1observers_1_1FloorContact.html" title="Observe contact between the wheels and the floor." alt="" coords="164,57,268,85"/>
+<area shape="rect" id="node4" href="$classupkie_1_1cpp_1_1observers_1_1HistoryObserver.html" title="Report high&#45;frequency history vectors to lower&#45;frequency agents." alt="" coords="134,109,299,137"/>
+<area shape="rect" id="node5" href="$classupkie_1_1cpp_1_1observers_1_1WheelOdometry.html" title="Observe the relative motion of the floating base with respect to the floor." alt="" coords="153,161,280,189"/>
+</map>
