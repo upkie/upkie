@@ -75,8 +75,10 @@ TEST_F(BaseOrientationTest, BasePitchFromIMU) {
   Eigen::Matrix3d rotation_base_to_imu;
   rotation_base_to_imu << 0.0, -1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0;
 
-  double pitch_base_in_world = compute_base_pitch_from_imu(
+  Eigen::Matrix3d rotation_base_to_world = compute_base_orientation_from_imu(
       quat_imu_in_ars, rotation_base_to_imu, rotation_ars_to_world_);
+  double pitch_base_in_world =
+      compute_pitch_frame_in_parent(rotation_base_to_world);
   ASSERT_NEAR(pitch_base_in_world, -0.016, 1e-3);
 }
 
