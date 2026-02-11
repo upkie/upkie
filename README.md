@@ -115,7 +115,7 @@ If you built an Upkie or use parts of this project in your works, please cite th
 ```bibtex
 @software{upkie,
   title = {{Upkie open source wheeled biped robot}},
-  author = {Caron, St\'{e}phane and Perrin-Gilbert, Nicolas and Ledoux, Viviane and G\"{o}kbakan, \"{U}mit Bora and Raverdy, Pierre-Guillaume and Raffin, Antonin and Tordjman{-}{-}Levavasseur, Valentin and Arlaud, Etienne},
+  author = {Caron, St\'{e}phane and Perrin-Gilbert, Nicolas and Ledoux, Viviane and G\"{o}kbakan, \"{U}mit Bora and Raverdy, Pierre-Guillaume and Raffin, Antonin and Tordjman{-}{-}Levavasseur, Valentin and Arlaud, Etienne and Duclusaud, Marc},
   url = {https://github.com/upkie/upkie},
   license = {Apache-2.0},
   version = {10.0.0},
