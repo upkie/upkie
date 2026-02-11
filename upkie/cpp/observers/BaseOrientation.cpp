@@ -19,9 +19,10 @@ void BaseOrientation::read(const Dictionary& observation) {
   // Pitch
   auto quat_imu_in_ars =
       observation("imu").get<Eigen::Quaterniond>("orientation");
-  pitch_base_in_world_ =
-      compute_base_pitch_from_imu(quat_imu_in_ars, params_.rotation_base_to_imu,
-                                  params_.rotation_ars_to_world);
+  rotation_base_to_world_ = compute_base_orientation_from_imu(
+      quat_imu_in_ars, params_.rotation_base_to_imu,
+      params_.rotation_ars_to_world);
+  pitch_base_in_world_ = compute_pitch_frame_in_parent(rotation_base_to_world);
 
   // Angular velocity
   auto angular_velocity_imu_in_imu =
@@ -34,6 +35,7 @@ void BaseOrientation::write(Dictionary& observation) {
   auto& output = observation(prefix());
   output("pitch") = pitch_base_in_world_;
   output("angular_velocity") = angular_velocity_base_in_base_;
+  output("rotation_base_to_world") = rotation_base_to_world_;
 }
 
 }  // namespace upkie::cpp::observers
