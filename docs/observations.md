@@ -11,10 +11,11 @@ Spines compute observation dictionaries from sensor measurements by applying *ob
 
 The base orientation observer estimates the orientation of the floating base with respect to the world frame.
 
-| Observation key | Description |
-|-----------------|-------------|
-| `base_orientation.angular_velocity` | Body angular velocity vector of the base frame in rad/s |
-| `base_orientation.pitch` | Pitch angle of the base frame relative to the world frame, in radians |
+| Observation key          | Description |
+|--------------------------|-------------|
+| `angular_velocity`       | Body angular velocity vector of the base frame in rad/s |
+| `pitch`                  | Pitch angle of the base frame relative to the world frame, in radians |
+| `rotation_base_to_world` | Rotation matrix from the base frame to the world frame |
 
 <img src="https://upkie.github.io/upkie/observers.png" align="right">
 
@@ -121,12 +122,12 @@ Simulation spines may report the following additional observations.
 
 Positions and velocities of the base frame:
 
-| Observation key         | Description |
-|-------------------------|-------------|
-| `base.position`         | Position of the base frame in the world frame, in meters |
-| `base.orientation`      | Unit quaternion (q, x, y, z) of the orientation of the base frame in the world frame |
-| `base.linear_velocity`  | Linear velocity from base to world in world, in m/s |
-| `base.angular_velocity` | Angular velocity from base to world in world, in rad/s |
+| Observation key    | Description |
+|--------------------|-------------|
+| `position`         | Position of the base frame in the world frame, in meters |
+| `orientation`      | Unit quaternion (q, x, y, z) of the orientation of the base frame in the world frame |
+| `linear_velocity`  | Linear velocity from base to world in world, in m/s |
+| `angular_velocity` | Angular velocity from base to world in world, in rad/s |
 
 ### IMU non-observables
 
