@@ -232,6 +232,9 @@ class BaseOrientation : public Observer {
 
   //! Body angular velocity of the base frame in rad/s
   Eigen::Vector3d angular_velocity_base_in_base_;
+
+  //! Rotation matrix from the base frame to the world frame
+  Eigen::Matrix3d rotation_base_to_world_;
 };
 
 }  // namespace upkie::cpp::observers
