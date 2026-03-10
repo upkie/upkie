@@ -22,7 +22,7 @@ void BaseOrientation::read(const Dictionary& observation) {
   rotation_base_to_world_ = compute_base_orientation_from_imu(
       quat_imu_in_ars, params_.rotation_base_to_imu,
       params_.rotation_ars_to_world);
-  pitch_base_in_world_ = compute_pitch_frame_in_parent(rotation_base_to_world);
+  pitch_base_in_world_ = compute_pitch_frame_in_parent(rotation_base_to_world_);
 
   // Angular velocity
   auto angular_velocity_imu_in_imu =
