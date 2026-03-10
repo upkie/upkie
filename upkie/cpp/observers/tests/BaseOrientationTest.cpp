@@ -20,11 +20,16 @@ class BaseOrientationTest : public ::testing::Test {
     rotation_ars_to_world_.setZero();
     rotation_ars_to_world_.diagonal() << 1.0, -1.0, -1.0;
 
-    BaseOrientation::Parameters params;
-    base_orientation_ = std::make_unique<BaseOrientation>(params);
+    Dictionary empty_config;
+    params_ = std::make_unique<BaseOrientation::Parameters>();
+    params_->configure(empty_config);
+    base_orientation_ = std::make_unique<BaseOrientation>(*params_);
   }
 
  protected:
+  //! Observer parameters
+  std::unique_ptr<BaseOrientation::Parameters> params_;
+
   //! Observer
   std::unique_ptr<BaseOrientation> base_orientation_;
 
@@ -97,17 +102,25 @@ TEST_F(BaseOrientationTest, NeutralValues) {
                                              Eigen::Vector3d::Zero());
   base_orientation_->read(observation);
   base_orientation_->write(observation);
+  const auto& output = observation("base_orientation");
 
-  // The angle is -pi/2 because the identity is the rotation from IMU to ARS,
-  // not from base to world (check out parameters for details)
-  ASSERT_DOUBLE_EQ(observation("base_orientation").get<double>("pitch"),
-                   -0.5 * M_PI);
+  // With identity quaternion and default params, rotation_base_to_world =
+  // diag(1,-1,-1) * I * diag(-1,1,-1) = diag(-1,-1,1), which has zero pitch.
+  ASSERT_DOUBLE_EQ(output.get<double>("pitch"), 0.0);
 
   auto angular_velocity_base_in_base =
-      observation("base_orientation").get<Eigen::Vector3d>("angular_velocity");
+      output.get<Eigen::Vector3d>("angular_velocity");
   ASSERT_DOUBLE_EQ(angular_velocity_base_in_base.x(), 0.0);
   ASSERT_DOUBLE_EQ(angular_velocity_base_in_base.y(), 0.0);
   ASSERT_DOUBLE_EQ(angular_velocity_base_in_base.z(), 0.0);
+
+  auto rotation_imu_to_ars = Eigen::Matrix3d::Identity();
+  Eigen::Matrix3d expected_rotation =
+      (params_->rotation_ars_to_world * rotation_imu_to_ars *
+       params_->rotation_base_to_imu);
+  auto rotation_base_to_world =
+      output.get<Eigen::Matrix3d>("rotation_base_to_world");
+  ASSERT_TRUE(rotation_base_to_world.isApprox(expected_rotation));
 }
 
 }  // namespace upkie::cpp::observers
