@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - docs: Document Joystick sensor
 - docs: Document Keyboard sensor
 - docs: Document URDF robot description requirements
+- observers: Expose rotation matrix from the base frame to the world frame
 
 ### Changed
 
