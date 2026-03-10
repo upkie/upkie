@@ -8,7 +8,7 @@
 [![Conda version](https://img.shields.io/conda/vn/conda-forge/upkie.svg)](https://anaconda.org/conda-forge/upkie)
 [![PyPI version](https://img.shields.io/pypi/v/upkie)](https://pypi.org/project/upkie/)
 
-**Upkies** are open-source wheeled biped robots. They have wheels for balancing and legs to negotiate uneven terrains. Upkies are designed to be buildable with off-the-shelf tools and components, like mjbots actuators. You can develop in Python or C++, on Linux or macOS, then deploy your behaviors to the robot's Raspberry Pi. Here are some instances of [Upkies in action](https://www.youtube.com/@upkie).
+**Upkies** are open-source wheeled biped robots featuring wheels for balance and legs to negotiate uneven terrains. They are designed to be buildable with off-the-shelf tools and components, such as mjbots actuators. You can develop in Python or C++, on Linux or macOS, then deploy your behaviors directly to the robot's Raspberry Pi. There are videos showing the robots in action on the [Upkies' YouTube channel](https://www.youtube.com/@upkie).
 
 This repository contains all the materials needed to build and control an Upkie. Questions are welcome in the [discussions forum](https://github.com/upkie/upkie/discussions) or in the [chat room](https://matrix.to/#/#upkie:matrix.org).
 
@@ -127,11 +127,16 @@ Don't forget to add yourself to the BibTeX above and to `CITATION.cff` if you co
 
 ## See also
 
+### Reinforcement learning playgrounds for Upkies
+
+<img src="https://github.com/user-attachments/assets/f6293fbc-5c59-4e56-bc7f-0ee930503f11" align="right" height="300px">
+
+- [MjLab Upkie](https://github.com/MarcDcls/mjlab_upkie): GPU-accelerated playground based on MjLab and MuJoCo Warp (requires an Nvidia GPU). Can train whole-body policies such as the one depicted to the right.
+- [RLB3 upkie](https://github.com/upkie/rlb3_upkie): new CPU playground to train policies for Upkie-Pendulum environments via RL Baselines3 Zoo
+- [PPO balancer](https://github.com/upkie/ppo_balancer): legacy CPU playground to train policies for Upkie-Pendulum environments using Stable-Baselines3 ([video](https://www.youtube.com/shorts/bvWgYso1dzI))
+
+### Open-source robotics
+
 - [Awesome Open Source Robots](https://github.com/stephane-caron/awesome-open-source-robots): Upkies are one among many open-source open-hardware robot initiative: check out the others!
 - [mjbots](https://mjbots.com/): The company that manufactures the brushless servos used in Upkies, that are [open source](https://github.com/mjbots/moteus) in firmware, hardware and software.
 - [Open Dynamic Robot Initiative](https://open-dynamic-robot-initiative.github.io/): An open torque-controlled modular robot architecture for legged locomotion research.
-
-Reinforcement learning playgrounds:
-
-- [RLB3 upkie](https://github.com/upkie/rlb3_upkie): new CPU playground to train policies for Upkie-Pendulum environments via RL Baselines3 Zoo
-- [PPO balancer](https://github.com/upkie/ppo_balancer): legacy CPU playground to train policies for Upkie-Pendulum environments using Stable-Baselines3 ([video](https://www.youtube.com/shorts/bvWgYso1dzI))
