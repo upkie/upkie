@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [10.1.0] - 2026-03-11
+
 ### Added
 
 - docs: Add Sensors page
@@ -960,7 +962,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Starting this changelog.
 
-[unreleased]: https://github.com/upkie/upkie/compare/v10.0.0...HEAD
+[unreleased]: https://github.com/upkie/upkie/compare/v10.1.0...HEAD
+[10.1.0]: https://github.com/upkie/upkie/compare/v10.0.0...v10.1.0
 [10.0.0]: https://github.com/upkie/upkie/compare/v9.0.1...v10.0.0
 [9.0.1]: https://github.com/upkie/upkie/compare/v9.0.0...v9.0.1
 [9.0.0]: https://github.com/upkie/upkie/compare/v8.1.1...v9.0.0
