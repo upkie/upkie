@@ -1,6 +1,6 @@
 # -*- python -*-
 #
-# Copyright 2022 Stéphane Caron
+# SPDX-License-Identifier: Apache-2.0
 
 load("//tools/workspace:github_archive.bzl", "github_archive")
 

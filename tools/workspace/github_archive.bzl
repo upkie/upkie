@@ -1,13 +1,6 @@
 # -*- python -*-
 #
 # SPDX-License-Identifier: Apache-2.0
-# Copyright 2022 Stéphane Caron
-#
-# This file incorporates work covered by the following copyright and
-# permission notice:
-#
-#     Copyright 2018 Josh Pieper, jjp@pobox.com.
-#     SPDX-License-Identifier: Apache-2.0
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 

@@ -1,6 +1,6 @@
-# Makefile for Sphinx documentation
+# SPDX-License-Identifier: Apache-2.0
 #
-# Copyright 2022 Stéphane Caron
+# Makefile for Sphinx documentation
 
 # You can also set these variables from the command line.
 DOXYGEN = doxygen

@@ -1,8 +1,8 @@
 #!/bin/bash
 #
-# Dump servo configurations on an Upkie robot.
+# SPDX-License-Identifier: Apache-2.0
 #
-# Copyright 2024 Inria
+# Dump servo configurations on an Upkie robot.
 
 set -euo pipefail
 

@@ -1,8 +1,6 @@
 # Makefile for upkie targets
 #
 # SPDX-License-Identifier: Apache-2.0
-# Copyright 2022 Stéphane Caron
-# Copyright 2023-2024 Inria
 
 # Project name needs to match the one in WORKSPACE
 PROJECT_NAME = upkie

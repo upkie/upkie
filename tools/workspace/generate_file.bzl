@@ -1,13 +1,6 @@
 # -*- python -*-
 #
 # SPDX-License-Identifier: Apache-2.0
-# Copyright 2022 Stéphane Caron
-#
-# This file incorporates work covered by the following copyright and permission
-# notice:
-#
-#     Copyright 2012-2016 Robot Locomotion Group @ CSAIL
-#     SPDX-License-Identifier: BSD-3-Clause
 
 def _generate_file_impl(ctx):
     out = ctx.actions.declare_file(ctx.label.name)
