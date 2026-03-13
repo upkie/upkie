@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - CICD: Add unit tests for the Python `Joystick` class
+- CICD: Test joystick usage in the PyBullet backend.
+- envs: Connect to joystick if available in the PyBullet backend.
 
 ### Changed
 
