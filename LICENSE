@@ -200,7 +200,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 
-   This software includes build configuration scripts derived from Drake
+   This software includes build and linting scripts derived from Drake
    <https://drake.mit.edu/>, which is available under the BSD 3-Clause license.
    See <https://github.com/RobotLocomotion/drake/blob/master/LICENSE.TXT>.
 
