@@ -1,7 +1,6 @@
 #!/bin/bash
 #
 # SPDX-License-Identifier: Apache-2.0
-# Copyright 2022 Stéphane Caron
 
 set -e
 

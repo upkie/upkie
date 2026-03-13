@@ -2,16 +2,6 @@
 # -*- coding: utf-8 -*-
 #
 # SPDX-License-Identifier: Apache-2.0
-# Copyright 2022 Stéphane Caron
-# Copyright 2023 Inria
-#
-# This file incorporates work covered by the following copyright and
-# permission notice:
-#
-#     setup-system.py from github.com:mjbots/quad
-#     Copyright 2018-2020 Josh Pieper
-#     SPDX-License-Identifier: Apache-2.0
-
 
 """Configure CPU isolation on Raspberry Pi OS (Debian "bullseye")."""
 
