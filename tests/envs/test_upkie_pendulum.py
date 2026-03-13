@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 #
 # SPDX-License-Identifier: Apache-2.0
-# Copyright 2023 Inria
 
 """Test UpkiePendulum wrapper."""
 
@@ -10,6 +9,7 @@ import unittest
 from multiprocessing.shared_memory import SharedMemory
 
 import numpy as np
+
 from upkie.config import ROBOT_CONFIG
 from upkie.envs.backends import SpineBackend
 from upkie.envs.testing import MockSpine
