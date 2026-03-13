@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 #
 # SPDX-License-Identifier: Apache-2.0
-# Copyright 2025 Inria
 
 """Tests for PyBullet backend functionality with a mock pybullet module."""
 
@@ -10,6 +9,7 @@ import unittest
 
 import numpy as np
 from scipy.spatial.transform import Rotation as ScipyRotation
+
 from upkie.envs.backends.pybullet_backend import PyBulletBackend
 from upkie.utils.robot_state import RobotState
 

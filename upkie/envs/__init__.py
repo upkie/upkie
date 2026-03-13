@@ -2,8 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # SPDX-License-Identifier: Apache-2.0
-# Copyright 2022 Stéphane Caron
-
+#
 ## \namespace upkie.envs
 ## \brief Gymnasium environments.
 ##

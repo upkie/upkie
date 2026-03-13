@@ -2,8 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # SPDX-License-Identifier: Apache-2.0
-# Copyright 2025 Inria
-
+#
 ## \namespace upkie.config.robot_config
 ## \brief Configuration dictionary for robot parameters.
 

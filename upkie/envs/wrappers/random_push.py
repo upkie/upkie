@@ -2,8 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # SPDX-License-Identifier: Apache-2.0
-# Copyright 2024 Inria
-
+#
 ## \namespace upkie.envs.wrappers.random_push
 ## \brief Apply a random push at each step with a given probability.
 

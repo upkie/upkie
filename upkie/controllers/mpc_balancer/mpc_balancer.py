@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 #
 # SPDX-License-Identifier: Apache-2.0
-# Copyright 2023 Inria
 
 """Wheel balancing using model predictive control with the ProxQP solver."""
 

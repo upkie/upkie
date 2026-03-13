@@ -2,8 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # SPDX-License-Identifier: Apache-2.0
-# Copyright 2023 Inria
-
+#
 ## \namespace upkie.utils.raspi
 ## \brief Functions to work on the onboard Raspberry Pi.
 
