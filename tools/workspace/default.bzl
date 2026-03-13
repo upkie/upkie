@@ -1,7 +1,6 @@
 # -*- python -*-
 #
 # SPDX-License-Identifier: Apache-2.0
-# Copyright 2022 Stéphane Caron
 
 load("//tools/workspace/bullet:repository.bzl", "bullet_repository")
 load("//tools/workspace/mpacklog:repository.bzl", "mpacklog_repository")
