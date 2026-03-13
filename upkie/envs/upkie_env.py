@@ -230,6 +230,13 @@ class UpkieEnv(gym.Env, ABC):
         reward = 1.0  # reward can be decided by a wrapper
         terminated = False
         truncated = False  # will be handled by e.g. a TimeLimit wrapper
+
+        # Cross button (A on Xbox / cross on PS4) signals a manual stop
+        joystick_obs = spine_observation.get("joystick", {})
+        if joystick_obs.get("cross_button", 0):
+            terminated = True
+            truncated = True
+
         info = {"spine_observation": spine_observation}
 
         return observation, reward, terminated, truncated, info
