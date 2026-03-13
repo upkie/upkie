@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright 2023 Inria
+# SPDX-License-Identifier: Apache-2.0
 #
 # To configure a secondary Wi-Fi access, e.g. using a USB dongle:
 #

@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 #
 # SPDX-License-Identifier: Apache-2.0
-# Copyright 2024 Inria
 #
 ## \namespace upkie.model
 ## \brief Robot model parsed from its URDF description.

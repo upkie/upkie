@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright 2022 Stéphane Caron
+# SPDX-License-Identifier: Apache-2.0
 
 PI3HAT_CFG="1=1,2,3;3=4,5,6"
 
