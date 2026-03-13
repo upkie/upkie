@@ -1,13 +1,4 @@
 // SPDX-License-Identifier: Apache-2.0
-// Copyright 2022 Stéphane Caron
-/*
- * This file incorporates work covered by the following copyright and
- * permission notice:
- *
- *     moteus_control_example.cc from github.com:mjbots/pi3hat
- *     SPDX-License-Identifier: Apache-2.0
- *     Copyright 2020 Josh Pieper, jjp@pobox.com.
- */
 
 #include "upkie/cpp/utils/SynchronousClock.h"
 
