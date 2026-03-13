@@ -2,8 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # SPDX-License-Identifier: Apache-2.0
-# Copyright 2023 Inria
-
+#
 ## \namespace upkie.utils.nested_update
 ## \brief Functions to work with nested dictionaries.
 

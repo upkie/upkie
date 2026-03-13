@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 #
 # SPDX-License-Identifier: Apache-2.0
-# Copyright 2025 Inria
 
 """Tests for PyBullet backend functionality with a mock pybullet module."""
 

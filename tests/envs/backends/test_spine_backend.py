@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 #
 # SPDX-License-Identifier: Apache-2.0
-# Copyright 2023 Inria
 
 """Tests for UpkieServos environment with SpineBackend."""
 
@@ -77,7 +76,9 @@ class SpineBackendTestCase(unittest.TestCase):
         action[not_wheel]["position"] = np.nan
         self.env.step(action)
         self.assertTrue(
-            np.isnan(self.backend._spine.action["servo"][not_wheel]["position"])
+            np.isnan(
+                self.backend._spine.action["servo"][not_wheel]["position"]
+            )
         )
 
         action[not_wheel]["position"] = 0.5
@@ -99,7 +100,9 @@ class SpineBackendTestCase(unittest.TestCase):
         action[not_wheel]["feedforward_torque"] = 1e20
         self.env.step(action)
         self.assertAlmostEqual(
-            self.backend._spine.action["servo"][not_wheel]["feedforward_torque"],
+            self.backend._spine.action["servo"][not_wheel][
+                "feedforward_torque"
+            ],
             self.env.action_space[not_wheel]["feedforward_torque"].high[0],
             places=5,
         )

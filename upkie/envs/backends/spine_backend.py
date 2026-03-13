@@ -2,8 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # SPDX-License-Identifier: Apache-2.0
-# Copyright 2023 Inria
-
+#
 ## \namespace upkie.envs.backends.spine_backend
 ## \brief Backend connected to a simulation or real spine.
 
