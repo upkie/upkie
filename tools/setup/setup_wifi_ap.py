@@ -2,13 +2,6 @@
 # -*- coding: utf-8 -*-
 #
 # SPDX-License-Identifier: Apache-2.0
-#
-# This file incorporates work covered by the following copyright and
-# permission notice:
-#
-#     setup-system.py from github.com:mjbots/quad
-#     Copyright 2018-2020 Josh Pieper
-#     SPDX-License-Identifier: Apache-2.0
 
 
 """Set up a Raspberry Pi 4b to operate a Wi-Fi access point.
