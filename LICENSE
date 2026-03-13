@@ -205,4 +205,9 @@
    See <https://github.com/RobotLocomotion/drake/blob/master/LICENSE.TXT>.
 
    This software includes a setup script and build configuration derived from
-   mjbots/quad by Josh Pieper <https://github.com/mjbots/quad>.
+   mjbots/quad by Josh Pieper <https://github.com/mjbots/quad>, which is
+   available under the Apache License, version 2.0.
+
+   This software includes headers derived from mjbots/moteus by Josh Pieper
+   <https://github.com/mjbots/moteus>, which is available under the Apache
+   License, Version 2.0.
