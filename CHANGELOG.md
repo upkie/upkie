@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- CICD: Add unit tests for the Python `Joystick` class
+
 ### Changed
 
 - Transfer copyright notices to `NOTICE` file
