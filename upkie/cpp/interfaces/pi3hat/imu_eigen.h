@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: Apache-2.0
-// Copyright 2024 Inria
 //
 // Tests in this file only depend on Eigen, so that we can execute them on x86.
 

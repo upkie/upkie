@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: Apache-2.0
-// Copyright 2022 Stéphane Caron
 
 #include "gtest/gtest.h"
 #include "spdlog/sinks/ostream_sink.h"

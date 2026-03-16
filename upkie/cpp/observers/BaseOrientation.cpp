@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: Apache-2.0
-// Copyright 2024 Inria
 
 #include "upkie/cpp/observers/BaseOrientation.h"
 

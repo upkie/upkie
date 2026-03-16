@@ -1,6 +1,4 @@
 // SPDX-License-Identifier: Apache-2.0
-// Copyright 2022 Stéphane Caron
-// Copyright 2023 Inria
 
 #pragma once
 
@@ -49,7 +47,8 @@ SensorPipeline make_sensors(bool joystick_required) {
               << "Ctrl-C will be the only way to stop the spine. "
               << "Proceed? [yN] ";
     std::getline(std::cin, response);
-    std::transform(response.begin(), response.end(), response.begin(), ::tolower);
+    std::transform(response.begin(), response.end(), response.begin(),
+                   ::tolower);
     if (response != "y" && response != "yes") {
       throw UpkieError("Joystick required to start the spine.");
     }

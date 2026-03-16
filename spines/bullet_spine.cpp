@@ -1,6 +1,4 @@
 // SPDX-License-Identifier: Apache-2.0
-// Copyright 2022 Stéphane Caron
-// Copyright 2023 Inria
 
 #include <algorithm>
 #include <cstdlib>
@@ -137,7 +135,6 @@ class CommandLineArguments {
 
   //! Help flag
   bool help = false;
-
 
   //! Log directory
   std::string log_dir = "";
