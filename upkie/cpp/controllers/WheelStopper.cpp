@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: Apache-2.0
-// Copyright 2025 Inria
 
 #include "upkie/cpp/controllers/WheelStopper.h"
 
