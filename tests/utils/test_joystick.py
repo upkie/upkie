@@ -102,6 +102,44 @@ class JoystickTestCase(unittest.TestCase):
         self.joystick.write(observation)  # must not raise
         self.assertIn("joystick", observation)
 
+    def test_dpad_up_state_appears_in_observation(self):
+        """write() reflects dpad_up button state in the observation."""
+        self.joystick.button_states["dpad_up"] = 1
+        observation = {}
+        self.joystick.write(observation)
+        self.assertEqual(observation["joystick"].get("dpad_up"), 1)
+
+    def test_dpad_down_state_appears_in_observation(self):
+        """write() reflects dpad_down button state in the observation."""
+        self.joystick.button_states["dpad_down"] = 1
+        observation = {}
+        self.joystick.write(observation)
+        self.assertEqual(observation["joystick"].get("dpad_down"), 1)
+
+    def test_dpad_up_event_appears_in_observation(self):
+        """write() reflects a dpad_up button event in the observation.
+
+        Button index 0 is mapped to 'dpad_up'. type=0x01 is JS_EVENT_BUTTON.
+        """
+        self.joystick.button_map = ["dpad_up"]
+        dpad_up_pressed = struct.pack("IhBB", 0, 1, 0x01, 0)
+        self.joystick.jsdev.read.return_value = dpad_up_pressed
+        observation = {}
+        self.joystick.write(observation)
+        self.assertEqual(observation["joystick"].get("dpad_up"), 1)
+
+    def test_dpad_down_event_appears_in_observation(self):
+        """write() reflects a dpad_down button event in the observation.
+
+        Button index 0 is mapped to 'dpad_down'. type=0x01 is JS_EVENT_BUTTON.
+        """
+        self.joystick.button_map = ["dpad_down"]
+        dpad_down_pressed = struct.pack("IhBB", 0, 1, 0x01, 0)
+        self.joystick.jsdev.read.return_value = dpad_down_pressed
+        observation = {}
+        self.joystick.write(observation)
+        self.assertEqual(observation["joystick"].get("dpad_down"), 1)
+
 
 if __name__ == "__main__":
     unittest.main()
