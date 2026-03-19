@@ -44,6 +44,8 @@ class JoystickTestCase(unittest.TestCase):
         expected_keys = {
             "cross_button",
             "dpad_down",
+            "dpad_left",
+            "dpad_right",
             "dpad_up",
             "left_axis",
             "left_button",
@@ -141,6 +143,44 @@ class JoystickTestCase(unittest.TestCase):
         observation = {}
         self.joystick.write(observation)
         self.assertEqual(observation["joystick"].get("dpad_down"), 1)
+
+    def test_dpad_left_state_appears_in_observation(self):
+        """write() reflects dpad_left button state in the observation."""
+        self.joystick.button_states["dpad_left"] = 1
+        observation = {}
+        self.joystick.write(observation)
+        self.assertEqual(observation["joystick"].get("dpad_left"), 1)
+
+    def test_dpad_right_state_appears_in_observation(self):
+        """write() reflects dpad_right button state in the observation."""
+        self.joystick.button_states["dpad_right"] = 1
+        observation = {}
+        self.joystick.write(observation)
+        self.assertEqual(observation["joystick"].get("dpad_right"), 1)
+
+    def test_dpad_left_event_appears_in_observation(self):
+        """write() reflects a dpad_left button event in the observation.
+
+        Button index 0 is mapped to 'dpad_left'. type=0x01 is JS_EVENT_BUTTON.
+        """
+        self.joystick.button_map = ["dpad_left"]
+        dpad_left_pressed = struct.pack("IhBB", 0, 1, 0x01, 0)
+        self.joystick.jsdev.read.return_value = dpad_left_pressed
+        observation = {}
+        self.joystick.write(observation)
+        self.assertEqual(observation["joystick"].get("dpad_left"), 1)
+
+    def test_dpad_right_event_appears_in_observation(self):
+        """write() reflects a dpad_right button event in the observation.
+
+        Button index 0 is mapped to 'dpad_right'. type=0x01 is JS_EVENT_BUTTON.
+        """
+        self.joystick.button_map = ["dpad_right"]
+        dpad_right_pressed = struct.pack("IhBB", 0, 1, 0x01, 0)
+        self.joystick.jsdev.read.return_value = dpad_right_pressed
+        observation = {}
+        self.joystick.write(observation)
+        self.assertEqual(observation["joystick"].get("dpad_right"), 1)
 
 
 if __name__ == "__main__":
