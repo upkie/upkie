@@ -7,9 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- CICD: Add unit tests for the Python `Joystick` class
+- CICD: Test joystick usage in the PyBullet backend.
+- envs: Connect to joystick if available in the PyBullet backend.
+
 ### Changed
 
 - Transfer copyright notices to `NOTICE` file
+- envs: Set `terminated` and `truncated` when joystick A/cross button is pressed
+
+### Fixed
+
+- utils: Handle directional pad (D-pad) inputs in `Joystick` class
 
 ## [10.1.0] - 2026-03-11
 

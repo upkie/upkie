@@ -6,6 +6,7 @@
 ## \namespace upkie.envs.backends.pybullet_backend
 ## \brief Backend using PyBullet physics simulation.
 
+from pathlib import Path
 from typing import Dict, List, Optional
 
 import numpy as np
@@ -24,6 +25,7 @@ from upkie.config import BULLET_CONFIG, ROBOT_CONFIG
 from upkie.exceptions import MissingOptionalDependency, UpkieRuntimeError
 from upkie.model import Model
 from upkie.utils.external_force import ExternalForce
+from upkie.utils.joystick import Joystick
 from upkie.utils.nested_update import nested_update
 from upkie.utils.point_contact import PointContact
 from upkie.utils.robot_state import RobotState
@@ -40,11 +42,17 @@ class PyBulletBackend(Backend):
     Backend using PyBullet physics simulation.
     """
 
+    ## \var joystick
+    ## Joystick interface for writing observations, or None if no joystick
+    ## device was found.
+    joystick: Optional[Joystick]
+
     def __init__(
         self,
         dt: float,
         bullet_config: Optional[dict] = None,
         gui: bool = True,
+        js_path: str = "/dev/input/js0",
         nb_substeps: Optional[int] = None,
     ) -> None:
         r"""!
@@ -55,6 +63,7 @@ class PyBulletBackend(Backend):
             default `upkie.config.BULLET_CONFIG`. The combined configuration
             dictionary is used for PyBullet simulation setup.
         \param gui If True, run PyBullet with GUI. If False, run headless.
+        \param js_path Path to joystick device. Defaults to "/dev/input/js0".
         \param nb_substeps Number of substeps for the PyBullet simulation.
         """
         # Combine dictionaries for simulator configuration
@@ -167,6 +176,10 @@ class PyBulletBackend(Backend):
                 cameraTargetPosition=[0, 0, 0.3],
             )
 
+        # Joystick
+        js_path = Path(js_path)
+        self.joystick = Joystick(js_path) if js_path.exists() else None
+
         # Internal attributes
         self.__dt = dt
         self.__external_forces = {}
@@ -278,7 +291,10 @@ class PyBulletBackend(Backend):
             # Step the simulation
             pybullet.stepSimulation()
 
-        return self.get_spine_observation()
+        observation = self.get_spine_observation()
+        if self.joystick is not None:
+            self.joystick.write(observation)
+        return observation
 
     def get_spine_observation(self) -> dict:
         r"""!

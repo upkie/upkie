@@ -17,6 +17,24 @@ class UpkieEnvsTestCase(unittest.TestCase):
         with gym.make("Upkie-Mock-Servos") as env:
             self.assertIsNotNone(env)
 
+    def test_cross_button_terminates(self):
+        """Joystick A/cross button press sets both terminated and truncated."""
+        with gym.make("Upkie-Mock-Servos") as env:
+            upkie_env = env.unwrapped
+            original_step = upkie_env.backend.step
+
+            def step_with_cross_button(action):
+                obs = original_step(action)
+                obs["joystick"] = {"cross_button": 1}
+                return obs
+
+            upkie_env.backend.step = step_with_cross_button
+            env.reset()
+            action = upkie_env.get_neutral_action()
+            _, _, terminated, truncated, _ = env.step(action)
+            self.assertTrue(terminated)
+            self.assertTrue(truncated)
+
     def test_log(self):
         """Test that logged entries are sent to backend in spine action."""
         with gym.make("Upkie-Mock-Servos") as env:
