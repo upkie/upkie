@@ -171,6 +171,8 @@ class Joystick:
             "y": 0,
             "tl": 0,
             "tr": 0,
+            "dpad_up": 0,
+            "dpad_down": 0,
         }
         for btn in buf[:num_buttons]:
             btn_name = Joystick.BUTTON_NAMES.get(btn, "unknown(0x%03x)" % btn)
@@ -218,4 +220,6 @@ class Joystick:
             "right_button": self.button_states["tr"],
             "square_button": self.button_states["x"],
             "triangle_button": self.button_states["y"],
+            "dpad_up": self.button_states["dpad_up"],
+            "dpad_down": self.button_states["dpad_down"],
         }

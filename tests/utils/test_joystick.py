@@ -43,6 +43,8 @@ class JoystickTestCase(unittest.TestCase):
         self.assertIn("joystick", observation)
         expected_keys = {
             "cross_button",
+            "dpad_down",
+            "dpad_up",
             "left_axis",
             "left_button",
             "left_trigger",
