@@ -6,7 +6,6 @@
 """Test Model class."""
 
 import unittest
-from unittest.mock import patch
 
 import numpy as np
 import upkie_description
