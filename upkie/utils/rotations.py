@@ -16,6 +16,34 @@ import numpy as np
 from scipy.spatial.transform import Rotation as ScipyRotation
 
 
+def rotation_matrix_from_rpy(
+    rpy: Tuple[float, float, float],
+) -> np.ndarray:
+    r"""!
+    Convert URDF roll-pitch-yaw angles to a rotation matrix.
+
+    URDF uses fixed-axis XYZ convention, so the resulting rotation matrix is:
+
+    \f[
+        R = R_z(\mathrm{yaw}) R_y(\mathrm{pitch}) R_x(\mathrm{roll})
+    \f]
+
+    \param rpy Tuple of (roll, pitch, yaw) angles in radians.
+    \return Rotation matrix.
+    """
+    roll, pitch, yaw = rpy
+    cr, sr = np.cos(roll), np.sin(roll)
+    cp, sp = np.cos(pitch), np.sin(pitch)
+    cy, sy = np.cos(yaw), np.sin(yaw)
+    return np.array(
+        [
+            [cy * cp, cy * sp * sr - sy * cr, cy * sp * cr + sy * sr],
+            [sy * cp, sy * sp * sr + cy * cr, sy * sp * cr - cy * sr],
+            [-sp, cp * sr, cp * cr],
+        ]
+    )
+
+
 def rotation_matrix_from_quaternion(
     quat: Tuple[float, float, float, float],
 ) -> np.ndarray:

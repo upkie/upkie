@@ -9,7 +9,7 @@ from xml.etree import ElementTree
 import numpy as np
 import upkie_description
 
-from upkie.config import ROBOT_CONFIG
+from upkie.utils.rotations import rotation_matrix_from_rpy
 
 from .joint import Joint
 from .joint_limit import JointLimit
@@ -117,9 +117,28 @@ class Model:
         self.UPPER_LEG_JOINT_NAMES = Model.UPPER_LEG_JOINT_NAMES
         self.WHEEL_JOINT_NAMES = Model.WHEEL_JOINT_NAMES
 
+        # Parse IMU placement from URDF
+        imu_joints = [
+            joint
+            for joint in joint_tags
+            if any(
+                child.tag == "child" and child.attrib.get("link") == "imu"
+                for child in joint
+            )
+        ]
+        if imu_joints:
+            imu_joint = imu_joints[0]
+            origin = imu_joint.find("origin")
+            rpy = tuple(
+                float(v) for v in origin.attrib.get("rpy", "0 0 0").split()
+            )
+            rotation_base_to_imu = rotation_matrix_from_rpy(rpy)
+        else:
+            rotation_base_to_imu = np.eye(3)
+
         # Instance attributes
         self.joints = joints
         self.rotation_ars_to_world = np.diag([1.0, -1.0, -1.0])
-        self.rotation_base_to_imu = ROBOT_CONFIG["rotation_base_to_imu"]
+        self.rotation_base_to_imu = rotation_base_to_imu
         self.upper_leg_joints = upper_leg_joints
         self.wheel_joints = wheel_joints
