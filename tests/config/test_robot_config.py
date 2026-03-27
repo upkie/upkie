@@ -5,8 +5,6 @@
 
 import unittest
 
-import numpy as np
-
 from upkie.config.robot_config import (
     _DEFAULT_ROBOT_CONFIG,
     ROBOT_CONFIG,
@@ -24,17 +22,12 @@ class RobotConfigTestCase(unittest.TestCase):
         self.assertIn("leg_length", _DEFAULT_ROBOT_CONFIG)
         self.assertIn("wheel_radius", _DEFAULT_ROBOT_CONFIG)
         self.assertIn("mass", _DEFAULT_ROBOT_CONFIG)
-        self.assertIn("rotation_base_to_imu", _DEFAULT_ROBOT_CONFIG)
 
     def test_default_robot_config_values(self):
         """Test default robot configuration values."""
         self.assertEqual(_DEFAULT_ROBOT_CONFIG["leg_length"], 0.58)
         self.assertEqual(_DEFAULT_ROBOT_CONFIG["wheel_radius"], 0.06)
         self.assertEqual(_DEFAULT_ROBOT_CONFIG["mass"], 5.34)
-        np.testing.assert_array_equal(
-            _DEFAULT_ROBOT_CONFIG["rotation_base_to_imu"],
-            np.diag([-1.0, 1.0, -1.0]),
-        )
 
     def test_robot_config_has_expected_structure(self):
         """Test that ROBOT_CONFIG incorporates user configuration properly."""
@@ -42,13 +35,11 @@ class RobotConfigTestCase(unittest.TestCase):
         self.assertIn("leg_length", ROBOT_CONFIG)
         self.assertIn("wheel_radius", ROBOT_CONFIG)
         self.assertIn("mass", ROBOT_CONFIG)
-        self.assertIn("rotation_base_to_imu", ROBOT_CONFIG)
 
         # Verify the config values are present (defaults or user overrides)
         self.assertIsInstance(ROBOT_CONFIG["leg_length"], (int, float))
         self.assertIsInstance(ROBOT_CONFIG["wheel_radius"], (int, float))
         self.assertIsInstance(ROBOT_CONFIG["mass"], (int, float))
-        self.assertIsInstance(ROBOT_CONFIG["rotation_base_to_imu"], np.ndarray)
 
         # Test that the structure is preserved from defaults
         self.assertEqual(

@@ -24,6 +24,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - utils: Handle directional pad (D-pad) inputs in `Joystick` class
 
+### Removed
+
+- config: Remove IMU-to-base rotation from configuration
+
 ## [10.1.0] - 2026-03-11
 
 ### Added
