@@ -73,6 +73,7 @@ class Model:
         """
         if urdf_path is None:
             urdf_path = upkie_description.URDF_PATH
+        self.urdf_path = urdf_path
 
         tree = ElementTree.parse(urdf_path)
         joint_tags = [
