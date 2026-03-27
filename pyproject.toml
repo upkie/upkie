@@ -36,6 +36,9 @@ dependencies = [
 ]
 keywords = ["wheeled", "biped", "robot", "balance", "motion", "control", "robotics"]
 
+[project.optional-dependencies]
+cookie = ["cookie_description >= 1.0"]
+
 [project.urls]
 Homepage = "https://hackaday.io/project/185729-upkie-wheeled-biped-robots"
 Documentation = "https://upkie.github.io/upkie/"
@@ -82,6 +85,12 @@ numpy = ">=1.24.3"
 pyyaml = ">=5.3.1"
 scipy = ">=1.10.0"
 upkie_description = ">=2.1.0"
+
+[tool.pixi.feature.cookie.pypi-dependencies]
+cookie_description = ">=1.0"
+
+[tool.pixi.feature.cookie.tasks]
+balancing-cookie = "python examples/balancing_cookie.py"
 
 [tool.pixi.feature.coverage.dependencies]
 lcov = "*"
@@ -185,6 +194,7 @@ genesis = { features = ["genesis"], solve-group = "genesis" }
 lint = { features = ["lint"], solve-group = "default" }
 mpc-balancer = { features = ["mpc-balancer"], solve-group = "mpc-balancer" }
 pack = { features = ["pack"], solve-group = "default" }
+cookie-pybullet = { features = ["cookie", "pybullet"], solve-group = "pybullet" }
 pybullet = { features = ["pybullet"], solve-group = "pybullet" }
 test-py310 = { features = ["py310", "test"], solve-group = "py310" }
 test-py311 = { features = ["py311", "test"], solve-group = "py311" }
