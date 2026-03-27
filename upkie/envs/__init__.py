@@ -53,6 +53,10 @@ def register() -> None:
         id="Upkie-Genesis-Servos",
         entry_point="upkie.envs.entry_points:make_genesis_servos_env",
     )
+    gym.envs.registration.register(
+        id="Cookie-PyBullet-Pendulum",
+        entry_point="upkie.envs.entry_points:wrap_cookie_pybullet_pendulum",
+    )
 
 
 __all__ = [

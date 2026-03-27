@@ -10,7 +10,6 @@ from pathlib import Path
 from typing import Dict, List, Optional
 
 import numpy as np
-import upkie_description
 
 from upkie.config import BULLET_CONFIG, ROBOT_CONFIG
 from upkie.exceptions import MissingOptionalDependency, UpkieRuntimeError
@@ -50,6 +49,7 @@ class PyBulletBackend(Backend):
         bullet_config: Optional[dict] = None,
         gui: bool = True,
         js_path: str = "/dev/input/js0",
+        model: Optional[Model] = None,
         nb_substeps: Optional[int] = None,
     ) -> None:
         r"""!
@@ -61,6 +61,8 @@ class PyBulletBackend(Backend):
             dictionary is used for PyBullet simulation setup.
         \param gui If True, run PyBullet with GUI. If False, run headless.
         \param js_path Path to joystick device. Defaults to "/dev/input/js0".
+        \param model Robot model. If None, defaults to the standard Upkie model
+            from `upkie_description`.
         \param nb_substeps Number of substeps for the PyBullet simulation.
         """
         # Combine dictionaries for simulator configuration
@@ -101,17 +103,19 @@ class PyBulletBackend(Backend):
         # Load ground plane
         pybullet.loadURDF("plane.urdf")
 
-        # Load Upkie
+        # Initialize robot model
+        self.__model = model if model is not None else Model()
+
+        # Load robot in PyBullet
         self.__robot_id = pybullet.loadURDF(
-            upkie_description.URDF_PATH,
+            self.__model.urdf_path,
             basePosition=[0, 0, 0.6],
             baseOrientation=[0, 0, 0, 1],
         )
 
-        # Initialize model and build joint index mapping
+        # Initialize link index mapping
         self.__link_index = {"base": -1}
         self.__link_name = {-1: "base"}
-        self.__model = Model()
         self._joint_indices = {}
         self._joint_properties = {}
         for bullet_idx in range(pybullet.getNumJoints(self.__robot_id)):

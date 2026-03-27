@@ -13,6 +13,7 @@ import numpy as np
 
 from upkie.envs.backends import Backend
 from upkie.exceptions import UpkieRuntimeError
+from upkie.model import Model
 from upkie.utils.clamp import clamp_and_warn
 from upkie.utils.robot_state import RobotState
 
@@ -122,6 +123,7 @@ class UpkieServos(UpkieEnv):
         init_state: Optional[RobotState] = None,
         regulate_frequency: bool = True,
         max_gain_scale: float = 5.0,
+        model: Optional[Model] = None,
     ) -> None:
         r"""!
         Initialize servos environment.
@@ -139,6 +141,8 @@ class UpkieServos(UpkieEnv):
             regulate the control loop frequency to the value prescribed in
             `frequency`.
         \param max_gain_scale Maximum value for kp or kd gain scales.
+        \param model Robot model. If None, defaults to the standard Upkie model
+            from `upkie_description`.
         """
         if not (0.0 < max_gain_scale < 10.0):
             raise UpkieRuntimeError("Invalid value {max_gain_scale =}")
@@ -149,6 +153,7 @@ class UpkieServos(UpkieEnv):
             frequency=frequency,
             frequency_checks=frequency_checks,
             init_state=init_state,
+            model=model,
             regulate_frequency=regulate_frequency,
         )
 

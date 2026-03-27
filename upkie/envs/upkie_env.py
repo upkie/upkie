@@ -63,6 +63,7 @@ class UpkieEnv(gym.Env, ABC):
         frequency_checks: bool,
         init_state: Optional[RobotState],
         regulate_frequency: bool,
+        model: Optional[Model] = None,
     ) -> None:
         r"""!
         Initialize environment.
@@ -76,6 +77,8 @@ class UpkieEnv(gym.Env, ABC):
             parameter is `True`, a warning will be issued every time the
             control loop runs slower than the desired `frequency`.
         \param init_state Initial state of the robot, only used in simulation.
+        \param model Robot model. If None, defaults to the standard Upkie model
+            from `upkie_description`.
         \param regulate_frequency If set (default), the environment will
             regulate the control loop frequency to the value prescribed in
             `frequency`.
@@ -98,7 +101,7 @@ class UpkieEnv(gym.Env, ABC):
         self.action_space = None  # subclasses should set this
         self.backend = backend
         self.init_state = init_state
-        self.model = Model()
+        self.model = model if model is not None else Model()
         self.observation_space = None  # subclasses should set this
 
     def close(self) -> None:

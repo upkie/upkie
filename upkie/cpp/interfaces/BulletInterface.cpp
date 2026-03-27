@@ -51,7 +51,7 @@ BulletInterface::BulletInterface(const Parameters& params)
   }
   bullet_.setRealTimeSimulation(false);  // making sure
 
-  // Load robot model
+  // Load robot in Bullet
   robot_ = bullet_.loadURDF(params.robot_urdf_path);
   imu_link_index_ = get_link_index("imu");
   if (imu_link_index_ < 0) {
