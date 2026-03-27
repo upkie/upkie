@@ -68,7 +68,10 @@ class MockBackend(Backend):
         js_path = Path(js_path)
         joystick = Joystick(js_path) if js_path.exists() else None
 
+        self.__dt = 0.01  # Default timestep in seconds
+        self.__last_action = {}  # Store last action for testing
         self.__spine_observation = spine_observation
+        self.__wheel_radius = 0.06  # Default wheel radius in meters
         self.joystick = joystick
 
     def close(self) -> None:
@@ -84,6 +87,7 @@ class MockBackend(Backend):
         \param init_state Initial state of the robot (ignored in mock).
         \return Initial spine observation dictionary.
         """
+        self.__spine_observation["number"] += 1
         return self.get_spine_observation()
 
     def step(self, action: dict) -> dict:
@@ -93,7 +97,20 @@ class MockBackend(Backend):
         \param action Action dictionary in spine format.
         \return Spine observation dictionary after the step.
         """
-        # Update internal spine observation from action
+        self.__last_action = action.copy()  # Store action for testing
+        self.__update_servo(action)
+        self.__update_wheel_odometry()
+        self.__spine_observation["number"] += 1
+
+        if self.joystick is not None:
+            self.joystick.write(self.__spine_observation)
+
+        return self.get_spine_observation()
+
+    def __update_servo(self, action: dict) -> None:
+        r"""!
+        Update servo observations from current action.
+        """
         servo_actions = action.get("servo", {})
         for joint_name, servo_action in servo_actions.items():
             if joint_name not in self.__spine_observation["servo"]:
@@ -103,10 +120,29 @@ class MockBackend(Backend):
                 if key in servo_action and not np.isnan(servo_action[key]):
                     obs[key] = servo_action[key]
 
-        if self.joystick is not None:
-            self.joystick.write(self.__spine_observation)
+    def __update_wheel_odometry(self) -> None:
+        r"""!
+        Update wheel odometry based on current wheel velocities.
+        """
+        # Compute ground velocity from wheel velocities (differential drive)
+        rho = self.__wheel_radius
+        servo = self.__spine_observation["servo"]
+        left_wheel_vel = servo["left_wheel"]["velocity"]  # rad/s
+        right_wheel_vel = servo["right_wheel"]["velocity"]  # rad/s
+        ground_velocity = rho * (left_wheel_vel - right_wheel_vel) / 2.0  # m/s
 
-        return self.get_spine_observation()
+        # Update wheel odometry by integrating ground velocity
+        wheel_odometry = self.__spine_observation["wheel_odometry"]
+        current_position = wheel_odometry["position"]
+        new_position = current_position + ground_velocity * self.__dt
+        wheel_odometry["position"] = new_position
+        wheel_odometry["velocity"] = ground_velocity
+
+    def get_last_action(self) -> dict:
+        r"""!
+        Get the last action sent to the mock backend.
+        """
+        return self.__last_action
 
     def get_spine_observation(self) -> dict:
         r"""!
