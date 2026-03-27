@@ -26,14 +26,12 @@ class ModelTestCase(unittest.TestCase):
                 nb_joints += 1
             self.assertEqual(nb_joints, 6)
 
-    @patch("upkie.model.model.ROBOT_CONFIG")
-    def test_custom_rotation_base_to_imu(self, mock_robot_config):
-        """Load a custom `rotation_base_to_imu` from a user robot config."""
-        custom_rotation = np.diag([1.0, -1.0, 1.0])
-        mock_robot_config.__getitem__.return_value = custom_rotation
-        model = Model()
-        np.testing.assert_array_equal(
-            model.rotation_base_to_imu, custom_rotation
+    def test_rotation_base_to_imu_from_urdf(self):
+        """Check that rotation_base_to_imu is parsed from the URDF."""
+        np.testing.assert_allclose(
+            self.model.rotation_base_to_imu,
+            np.diag([-1.0, 1.0, -1.0]),
+            atol=1e-10,
         )
 
 
