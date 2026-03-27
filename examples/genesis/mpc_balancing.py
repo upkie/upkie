@@ -67,7 +67,6 @@ if __name__ == "__main__":
                     )
 
                 if terminated or truncated:
-                    print("Episode ended, resetting...")
                     _, info = env.reset()
 
             print("Example completed.")

@@ -275,7 +275,7 @@ class UpkiePendulum(gym.Wrapper):
         pitch = spine_observation["base_orientation"]["pitch"]
         if abs(pitch) > self.fall_pitch:
             logger.warning(
-                "Fall detected (pitch=%.2f rad, fall_pitch=%.2f rad)",
+                "Fall detected (pitch = %.2f rad ≥ %.2f rad)",
                 pitch,
                 (+1.0 if pitch > 0 else -1.0) * self.fall_pitch,
             )
