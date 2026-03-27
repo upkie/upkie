@@ -34,8 +34,8 @@ if __name__ == "__main__":
             "nb_substeps": 5,
         }
 
-        print("\nStarting balancing an Upkie by MPC in PyBullet...")
-        with gym.make("Upkie-PyBullet-Pendulum", **env_kwargs) as env:
+        print("\nStarting balancing a Cookie by MPC in PyBullet...")
+        with gym.make("Cookie-PyBullet-Pendulum", **env_kwargs) as env:
             _, info = env.reset()  # connects to the spine
             action = np.zeros(env.action_space.shape)
 
