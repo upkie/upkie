@@ -10,6 +10,8 @@ from upkie.envs.backends import (
     SpineBackend,
 )
 from upkie.envs.upkie_pendulum import UpkiePendulum
+from upkie.exceptions import MissingOptionalDependency
+from upkie.model import Model
 
 from .upkie_servos import UpkieServos
 
@@ -157,3 +159,42 @@ def wrap_spine_pendulum(**kwargs):
     Add pendulum wrapper around an UpkieServos with Spine backend.
     """
     return wrap_pendulum(make_spine_servos_env, **kwargs)
+
+
+def make_cookie_pybullet_servos_env(**kwargs):
+    r"""!
+    Create a Cookie servos environment with PyBullet backend.
+
+    This function is meant to be called by `gymnasium.make()` rather than to be
+    called directly.
+
+    \param kwargs Keyword arguments forwarded to the environment and backend.
+    \return UpkieServos with PyBulletBackend and Cookie URDF.
+    """
+    try:
+        import cookie_description
+    except ImportError as e:
+        raise MissingOptionalDependency(
+            "cookie_description not found, "
+            "install it via `pip install cookie_description`"
+        ) from e
+    cookie_model = Model(urdf_path=cookie_description.URDF_PATH)
+    backend_keys = {"gui", "bullet_config", "nb_substeps"}
+    backend_kwargs = {
+        key: value for key, value in kwargs.items() if key in backend_keys
+    }
+    env_kwargs = {
+        key: value for key, value in kwargs.items() if key not in backend_keys
+    }
+    frequency = env_kwargs.get("frequency", 200.0)
+    dt = 1.0 / frequency if frequency is not None else 0.005
+    backend = PyBulletBackend(dt=dt, model=cookie_model, **backend_kwargs)
+    return UpkieServos(backend=backend, model=cookie_model, **env_kwargs)
+
+
+def wrap_cookie_pybullet_pendulum(**kwargs):
+    r"""!
+    Add pendulum wrapper around an UpkieServos with PyBullet backend and Cookie
+    URDF.
+    """
+    return wrap_pendulum(make_cookie_pybullet_servos_env, **kwargs)
