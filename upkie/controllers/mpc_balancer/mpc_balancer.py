@@ -11,7 +11,7 @@ from qpmpc.systems import WheeledInvertedPendulum
 from qpsolvers import solve_problem
 
 from upkie.logging import logger
-from upkie.utils.clamp import clamp_and_warn
+from upkie.utils.clamp import clamp_abs
 from upkie.utils.filters import low_pass_filter
 
 from .proxqp_workspace import ProxQPWorkspace
@@ -200,10 +200,8 @@ class MPCBalancer:
         else:  # all good, plan was found
             self.pendulum.state = cur_state
             commanded_accel = plan.first_input[0]
-            self.commanded_velocity = clamp_and_warn(
+            self.commanded_velocity = clamp_abs(
                 self.commanded_velocity + commanded_accel * dt / 2.0,
-                lower=-self.max_ground_velocity,
-                upper=+self.max_ground_velocity,
-                label="MPCBalancer.commanded_velocity",
+                self.max_ground_velocity,
             )
         return self.commanded_velocity
