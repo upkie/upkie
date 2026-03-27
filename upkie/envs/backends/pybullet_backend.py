@@ -12,15 +12,6 @@ from typing import Dict, List, Optional
 import numpy as np
 import upkie_description
 
-try:
-    import pybullet
-    import pybullet_data
-except ModuleNotFoundError:
-    ## PyBullet physics simulation library, or None if it is not installed.
-    pybullet = None
-    ## PyBullet data package, or None if PyBullet is not installed.
-    pybullet_data = None
-
 from upkie.config import BULLET_CONFIG, ROBOT_CONFIG
 from upkie.exceptions import MissingOptionalDependency, UpkieRuntimeError
 from upkie.model import Model
@@ -35,6 +26,12 @@ from upkie.utils.rotations import (
 )
 
 from .backend import Backend
+
+## PyBullet physics simulation library, or None if not yet imported.
+pybullet = None
+
+## PyBullet data package, or None if not yet imported.
+pybullet_data = None
 
 
 class PyBulletBackend(Backend):
@@ -77,11 +74,16 @@ class PyBulletBackend(Backend):
         )
 
         # Initialize PyBullet
-        if pybullet is None or pybullet_data is None:
-            raise MissingOptionalDependency(
-                "PyBullet not found, "
-                "you can install it by e.g. `pip install pybullet`"
-            )
+        global pybullet, pybullet_data
+        if pybullet is None:
+            try:
+                import pybullet
+                import pybullet_data
+            except ModuleNotFoundError:
+                raise MissingOptionalDependency(
+                    "PyBullet not found, "
+                    "you can install it by e.g. `pip install pybullet`"
+                )
         pybullet_mode = pybullet.GUI if gui else pybullet.DIRECT
         self._bullet = pybullet.connect(pybullet_mode)
 
