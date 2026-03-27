@@ -101,7 +101,7 @@ class UpkiePendulum(gym.Wrapper):
         env: UpkieEnv,
         fall_pitch: float = 1.0,
         left_wheeled: bool = True,
-        max_ground_velocity: float = 1.0,
+        max_ground_velocity: float = 3.0,
     ):
         r"""!
         Initialize environment.
@@ -112,8 +112,7 @@ class UpkiePendulum(gym.Wrapper):
             that is, a positive turn of the left wheel results in forward
             motion. Set to False for a right-wheeled variant.
         \param max_ground_velocity Maximum commanded ground velocity in m/s.
-            The default value of 1 m/s is conservative, don't hesitate to
-            increase it once you feel confident in your agent.
+            The default value of 3 m/s is the one used in the MPC balancer.
         """
         super().__init__(env)
         if env.frequency is None:

@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Transfer copyright notices to `NOTICE` file
+- envs: Default maximum ground velocity of pendulum environments is now 3 m/s
 - envs: Set `terminated` and `truncated` when joystick A/cross button is pressed
 
 ### Fixed
