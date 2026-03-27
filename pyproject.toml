@@ -176,6 +176,7 @@ pybullet = ">=3"
 qpmpc = ">=3.0.1,<4"
 
 [tool.pixi.feature.pybullet.tasks]
+balancing = "python examples/balancing.py"
 mpc-balancer-pybullet = "python examples/mpc_balancing.py"
 
 [tool.pixi.feature.test.dependencies]
