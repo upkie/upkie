@@ -29,6 +29,7 @@ if __name__ == "__main__":
 
     try:
         env_kwargs = {
+            "left_wheeled": False,
             "frequency": 200.0,
             "frequency_checks": False,  # simulation steps run within env steps
             "gui": True,
