@@ -101,7 +101,7 @@ class PyBulletBackend(Backend):
         pybullet.setTimeStep(dt / nb_substeps)
 
         # Load ground plane
-        pybullet.loadURDF("plane.urdf")
+        self.__ground_id = pybullet.loadURDF("plane.urdf")
 
         # Initialize robot model
         self.__model = model if model is not None else Model()
@@ -421,10 +421,17 @@ class PyBulletBackend(Backend):
         }
 
     def __get_floor_contact_observation(self) -> dict:
-        position_base_in_world, _ = pybullet.getBasePositionAndOrientation(
-            self.__robot_id
+        left_contacts = pybullet.getContactPoints(
+            bodyA=self.__robot_id,
+            bodyB=self.__ground_id,
+            linkIndexA=self.__link_index["left_wheel_tire"],
         )
-        contact = position_base_in_world[2] < 0.8
+        right_contacts = pybullet.getContactPoints(
+            bodyA=self.__robot_id,
+            bodyB=self.__ground_id,
+            linkIndexA=self.__link_index["right_wheel_tire"],
+        )
+        contact = len(left_contacts) > 0 or len(right_contacts) > 0
         return {
             "contact": contact,
         }
