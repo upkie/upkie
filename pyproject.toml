@@ -86,11 +86,16 @@ pyyaml = ">=5.3.1"
 scipy = ">=1.10.0"
 upkie_description = ">=2.1.0"
 
+[tool.pixi.feature.cookie.dependencies]
+pybullet = ">=3"
+qpmpc = ">=3.0.1,<4"
+
 [tool.pixi.feature.cookie.pypi-dependencies]
-cookie_description = ">=1.0"
+# cookie_description = ">=1.0"
+cookie_description = { path = "../cookie_description", editable = true }
 
 [tool.pixi.feature.cookie.tasks]
-balancing-cookie = "python examples/balancing_cookie.py"
+go-forward-cookie = "python examples/go_forward_cookie.py"
 
 [tool.pixi.feature.coverage.dependencies]
 lcov = "*"
@@ -168,15 +173,13 @@ dependencies = { python = "3.12.*" }
 
 [tool.pixi.feature.pybullet.dependencies]
 gin-config = ">=0.5.0"
-meshcat-shapes = ">=0.3.0"
 pink = ">=3.0.0,<4"
-pinocchio = ">=3.1.0,<4"
 proxsuite = ">=0.4.1"
 pybullet = ">=3"
 qpmpc = ">=3.0.1,<4"
 
 [tool.pixi.feature.pybullet.tasks]
-balancing = "python examples/balancing.py"
+go-forward = "python examples/go_forward.py"
 mpc-balancer-pybullet = "python examples/mpc_balancing.py"
 
 [tool.pixi.feature.test.dependencies]
@@ -188,6 +191,7 @@ pytest = "*"
 test = "pytest tests/"
 
 [tool.pixi.environments]
+cookie = { features = ["cookie"], solve-group = "cookie" }
 coverage = { features = ["coverage"], solve-group = "default" }
 default = { features = [], solve-group = "default" }
 docs = { features = ["docs"], solve-group = "default" }
@@ -195,7 +199,6 @@ genesis = { features = ["genesis"], solve-group = "genesis" }
 lint = { features = ["lint"], solve-group = "default" }
 mpc-balancer = { features = ["mpc-balancer"], solve-group = "mpc-balancer" }
 pack = { features = ["pack"], solve-group = "default" }
-cookie-pybullet = { features = ["cookie", "pybullet"], solve-group = "pybullet" }
 pybullet = { features = ["pybullet"], solve-group = "pybullet" }
 test-py310 = { features = ["py310", "test"], solve-group = "py310" }
 test-py311 = { features = ["py311", "test"], solve-group = "py311" }
