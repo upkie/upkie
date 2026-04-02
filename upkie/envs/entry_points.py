@@ -119,7 +119,6 @@ def wrap_pendulum(make_env_func, **kwargs):
     """
     pendulum_keys = {
         "fall_pitch",
-        "left_wheeled",
         "max_ground_velocity",
     }
     pendulum_kwargs = {

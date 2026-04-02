@@ -469,10 +469,11 @@ class PyBulletBackend(Backend):
         right_angle = servo_obs["right_wheel"]["position"]
         left_omega = servo_obs["left_wheel"]["velocity"]
         right_omega = servo_obs["right_wheel"]["velocity"]
-        wheel_radius = -self.__model.wheel_radius  # TODO: wheel sign
 
-        ground_position = 0.5 * (left_angle - right_angle) * wheel_radius
-        ground_velocity = 0.5 * (left_omega - right_omega) * wheel_radius
+        sign = +1.0 if self.__model.left_wheeled else -1.0
+        signed_radius = sign * self.__model.wheel_radius
+        ground_position = 0.5 * (left_angle - right_angle) * signed_radius
+        ground_velocity = 0.5 * (left_omega - right_omega) * signed_radius
 
         return {
             "position": ground_position,
