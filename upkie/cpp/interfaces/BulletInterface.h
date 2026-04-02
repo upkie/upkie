@@ -52,15 +52,6 @@ class BulletInterface : public Interface {
         imu_uncertainty.configure(bullet("imu_uncertainty"));
       }
 
-      model_maximum_torque.clear();
-      if (bullet.has("joint_properties")) {
-        for (const auto& joint : bullet("joint_properties").keys()) {
-          const auto& props = bullet("joint_properties")(joint);
-          model_maximum_torque.try_emplace(
-              joint, props.get<double>("maximum_torque", 0.0));
-        }
-      }
-
       if (bullet.has("reset")) {
         const auto& reset = bullet("reset");
         position_base_in_world = reset.get<Eigen::Vector3d>(
@@ -224,9 +215,6 @@ class BulletInterface : public Interface {
    * \param[in] joint_configuration Joint configuration vector.
    */
   void reset_joint_angles(const Eigen::VectorXd& joint_configuration);
-
-  //! Reset joint properties to defaults.
-  void reset_joint_properties();
 
   /*! Reset the pose and velocity of the floating base in the world frame.
    *
