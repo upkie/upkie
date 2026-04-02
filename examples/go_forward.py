@@ -11,6 +11,7 @@
 
 import gymnasium as gym
 import numpy as np
+
 import upkie.envs
 from upkie.controllers import MPCBalancer
 
