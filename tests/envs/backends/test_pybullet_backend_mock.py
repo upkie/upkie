@@ -78,13 +78,14 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
     def test_joint_properties_initialization(
         self, mock_pybullet, mock_pybullet_data
     ):
-        """Test joint properties are initialized from bullet_config."""
+        """Test joint properties are initialized from constructor kwargs."""
         mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
         mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
 
-        bullet_config = {
-            "torque_control": {"kp": 20.0, "kd": 1.0},
-            "joint_properties": {
+        backend = PyBulletBackend(
+            dt=0.01,
+            gui=False,
+            joint_properties={
                 "left_hip": {
                     "friction": 0.1,
                     "torque_control_noise": 0.05,
@@ -94,10 +95,7 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
                     "friction": 0.15,
                 },
             },
-        }
-
-        backend = PyBulletBackend(
-            dt=0.01, bullet_config=bullet_config, gui=False
+            torque_control={"kp": 20.0, "kd": 1.0},
         )
 
         # Check that joint properties were initialized correctly
@@ -149,13 +147,11 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
         mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
         mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
 
-        bullet_config = {
-            "torque_control": {"kp": 20.0, "kd": 1.0},
-            "joint_properties": {"left_hip": {"friction": 0.0}},  # No friction
-        }
-
         backend = PyBulletBackend(
-            dt=0.01, bullet_config=bullet_config, gui=False
+            dt=0.01,
+            gui=False,
+            joint_properties={"left_hip": {"friction": 0.0}},
+            torque_control={"kp": 20.0, "kd": 1.0},
         )
 
         # Test with measured velocity above stiction threshold
@@ -196,13 +192,11 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
         mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
 
         friction_value = 0.1
-        bullet_config = {
-            "torque_control": {"kp": 20.0, "kd": 1.0},
-            "joint_properties": {"left_hip": {"friction": friction_value}},
-        }
-
         backend = PyBulletBackend(
-            dt=0.01, bullet_config=bullet_config, gui=False
+            dt=0.01,
+            gui=False,
+            joint_properties={"left_hip": {"friction": friction_value}},
+            torque_control={"kp": 20.0, "kd": 1.0},
         )
 
         # Test positive velocity (friction opposes motion)
@@ -269,13 +263,11 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
         mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
 
         friction_value = 0.1
-        bullet_config = {
-            "torque_control": {"kp": 20.0, "kd": 1.0},
-            "joint_properties": {"left_hip": {"friction": friction_value}},
-        }
-
         backend = PyBulletBackend(
-            dt=0.01, bullet_config=bullet_config, gui=False
+            dt=0.01,
+            gui=False,
+            joint_properties={"left_hip": {"friction": friction_value}},
+            torque_control={"kp": 20.0, "kd": 1.0},
         )
 
         # Test velocity below stiction threshold
@@ -351,9 +343,10 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
             [0.0, 0.0, 0.0],  # angular velocity
         ]
 
-        bullet_config = {
-            "torque_control": {"kp": 20.0, "kd": 1.0},
-            "joint_properties": {
+        backend = PyBulletBackend(
+            dt=0.01,
+            gui=False,
+            joint_properties={
                 "left_hip": {
                     "torque_measurement_noise": 0.1,  # Significant noise
                 },
@@ -361,10 +354,7 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
                     "torque_measurement_noise": 0.0,  # No noise
                 },
             },
-        }
-
-        backend = PyBulletBackend(
-            dt=0.01, bullet_config=bullet_config, gui=False
+            torque_control={"kp": 20.0, "kd": 1.0},
         )
 
         # Simulate a servo action to generate torques
@@ -466,17 +456,15 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
             [0.0, 0.0, 0.0],  # angular velocity
         ]
 
-        bullet_config = {
-            "torque_control": {"kp": 20.0, "kd": 1.0},
-            "joint_properties": {
+        backend = PyBulletBackend(
+            dt=0.01,
+            gui=False,
+            joint_properties={
                 "left_hip": {
                     "torque_measurement_noise": 1e-11,  # Below threshold
                 },
             },
-        }
-
-        backend = PyBulletBackend(
-            dt=0.01, bullet_config=bullet_config, gui=False
+            torque_control={"kp": 20.0, "kd": 1.0},
         )
 
         # Simulate a servo action to generate torques
@@ -545,16 +533,14 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
             [0.0, 0.0, 0.0],  # angular velocity
         ]
 
-        bullet_config = {
-            "torque_control": {"kp": 20.0, "kd": 1.0},
-            "joint_properties": {
+        backend = PyBulletBackend(
+            dt=0.01,
+            gui=False,
+            joint_properties={
                 "left_hip": {"torque_measurement_noise": 0.0},
                 "left_knee": {"torque_measurement_noise": 0.0},
             },
-        }
-
-        backend = PyBulletBackend(
-            dt=0.01, bullet_config=bullet_config, gui=False
+            torque_control={"kp": 20.0, "kd": 1.0},
         )
 
         # Initially, torques should be zero (no actions applied yet)
@@ -640,9 +626,10 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
         mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
         mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
 
-        bullet_config = {
-            "torque_control": {"kp": 20.0, "kd": 1.0},
-            "joint_properties": {
+        backend = PyBulletBackend(
+            dt=0.01,
+            gui=False,
+            joint_properties={
                 "left_hip": {
                     "torque_control_noise": 0.1,  # Significant noise
                 },
@@ -650,10 +637,7 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
                     "torque_control_noise": 0.0,  # No noise
                 },
             },
-        }
-
-        backend = PyBulletBackend(
-            dt=0.01, bullet_config=bullet_config, gui=False
+            torque_control={"kp": 20.0, "kd": 1.0},
         )
 
         # Set up joint state for torque computation
@@ -744,17 +728,15 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
         mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
         mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
 
-        bullet_config = {
-            "torque_control": {"kp": 20.0, "kd": 1.0},
-            "joint_properties": {
+        backend = PyBulletBackend(
+            dt=0.01,
+            gui=False,
+            joint_properties={
                 "left_hip": {
                     "torque_control_noise": 1e-11,  # Below threshold
                 },
             },
-        }
-
-        backend = PyBulletBackend(
-            dt=0.01, bullet_config=bullet_config, gui=False
+            torque_control={"kp": 20.0, "kd": 1.0},
         )
 
         # Set up joint state for torque computation
@@ -820,18 +802,16 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
             [0.0, 0.0, 0.0],  # angular velocity
         ]
 
-        bullet_config = {
-            "torque_control": {"kp": 20.0, "kd": 1.0},
-            "joint_properties": {
+        backend = PyBulletBackend(
+            dt=0.01,
+            gui=False,
+            joint_properties={
                 "left_hip": {
                     "torque_control_noise": 0.1,  # Control noise
                     "torque_measurement_noise": 0.05,  # Measurement noise
                 },
             },
-        }
-
-        backend = PyBulletBackend(
-            dt=0.01, bullet_config=bullet_config, gui=False
+            torque_control={"kp": 20.0, "kd": 1.0},
         )
 
         # Set up joint state
@@ -909,14 +889,12 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
         mock_pybullet.getDynamicsInfo.side_effect = mock_getDynamicsInfo
         # Don't override getNumJoints - use the existing mock setup
 
-        bullet_config = {
-            "torque_control": {"kp": 20.0, "kd": 1.0},
-            "inertia_variation": 0.2,  # 20% variation
-        }
-
         # Create backend (should trigger inertia randomization)
         backend = PyBulletBackend(
-            dt=0.01, bullet_config=bullet_config, gui=False
+            dt=0.01,
+            gui=False,
+            inertia_variation=0.2,
+            torque_control={"kp": 20.0, "kd": 1.0},
         )
 
         # Check that changeDynamics was called for each link
@@ -972,14 +950,11 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
         )
         # Use existing mock joint count
 
-        bullet_config = {
-            "torque_control": {"kp": 20.0, "kd": 1.0},
-            "inertia_variation": 0.0,  # No variation
-        }
-
         # Create backend
         backend = PyBulletBackend(
-            dt=0.01, bullet_config=bullet_config, gui=False
+            dt=0.01,
+            gui=False,
+            torque_control={"kp": 20.0, "kd": 1.0},
         )
 
         # changeDynamics should not have been called
@@ -1007,13 +982,11 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
         )
         # Use existing mock joint count
 
-        bullet_config = {
-            "torque_control": {"kp": 20.0, "kd": 1.0},
-            "inertia_variation": 1e-11,  # Below threshold (1e-10)
-        }
-
         backend = PyBulletBackend(
-            dt=0.01, bullet_config=bullet_config, gui=False
+            dt=0.01,
+            gui=False,
+            inertia_variation=1e-11,
+            torque_control={"kp": 20.0, "kd": 1.0},
         )
 
         # changeDynamics should not have been called
@@ -1056,13 +1029,10 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
         # Use existing mock joint count
 
         # Create backend without automatic randomization
-        bullet_config = {
-            "torque_control": {"kp": 20.0, "kd": 1.0},
-            "inertia_variation": 0.0,  # No automatic randomization
-        }
-
         backend = PyBulletBackend(
-            dt=0.01, bullet_config=bullet_config, gui=False
+            dt=0.01,
+            gui=False,
+            torque_control={"kp": 20.0, "kd": 1.0},
         )
 
         # Clear any calls from initialization
@@ -1128,13 +1098,10 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
         )
         # Use existing mock joint count
 
-        bullet_config = {
-            "torque_control": {"kp": 20.0, "kd": 1.0},
-            "inertia_variation": 0.0,  # No automatic randomization
-        }
-
         backend = PyBulletBackend(
-            dt=0.01, bullet_config=bullet_config, gui=False
+            dt=0.01,
+            gui=False,
+            torque_control={"kp": 20.0, "kd": 1.0},
         )
 
         # Clear initialization calls
