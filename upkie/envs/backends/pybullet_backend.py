@@ -47,10 +47,13 @@ class PyBulletBackend(Backend):
     ## device was found.
     joystick: Optional[Joystick]
 
-    ## \var torque_control
-    ## Torque control gains, as a dictionary with ``"kp"`` (proportional) and
-    ## ``"kd"`` (derivative) keys. Defaults are read from the robot model.
-    torque_control: dict
+    ## \var torque_control_kd
+    ## Derivative gain for torque control.
+    torque_control_kd: float
+
+    ## \var torque_control_kp
+    ## Proportional gain for torque control.
+    torque_control_kp: float
 
     def __init__(
         self,
@@ -61,7 +64,8 @@ class PyBulletBackend(Backend):
         js_path: str = "/dev/input/js0",
         model: Optional[Model] = None,
         nb_substeps: Optional[int] = None,
-        torque_control: Optional[dict] = None,
+        torque_control_kd: float = 1.0,
+        torque_control_kp: float = 20.0,
     ) -> None:
         r"""!
         Initialize PyBullet backend.
@@ -71,16 +75,14 @@ class PyBulletBackend(Backend):
         \param inertia_variation Relative variation for domain randomization
             of link masses and inertias. Zero means no randomization.
         \param joint_properties Per-joint simulation properties. Dictionary
-            mapping joint names to dictionaries with optional keys
-            ``"friction"``, ``"torque_control_noise"``, and
-            ``"torque_measurement_noise"`` (all default to 0.0).
+            mapping joint names to
+            \ref upkie.model.joint_properties.JointProperties instances.
         \param js_path Path to joystick device. Defaults to "/dev/input/js0".
         \param model Robot model. If None, defaults to the standard Upkie model
             from `upkie_description`.
         \param nb_substeps Number of substeps for the PyBullet simulation.
-        \param torque_control Torque control gains as a dictionary with
-            ``"kp"`` and ``"kd"`` keys. If None, defaults are read from the
-            robot model.
+        \param torque_control_kd Derivative gain for torque control.
+        \param torque_control_kp Proportional gain for torque control.
         """
 
         # Default number of substeps corresponds to the 1 kHz spine frequency
@@ -173,10 +175,8 @@ class PyBulletBackend(Backend):
 
         # Store configuration as instance attributes
         self.inertia_variation = inertia_variation
-        self.torque_control = torque_control if torque_control is not None else {
-            "kp": self.__model.pybullet_torque_control_kp,
-            "kd": self.__model.pybullet_torque_control_kd,
-        }
+        self.torque_control_kd = torque_control_kd
+        self.torque_control_kp = torque_control_kp
 
         # Apply inertia randomization if configured
         if abs(inertia_variation) > 1e-10:
@@ -525,10 +525,8 @@ class PyBulletBackend(Backend):
         measured_velocity = joint_state[1]  # already in rad/s in PyBullet
 
         # Use kp and kd gains from the torque control configuration
-        torque_control_kp = self.torque_control["kp"]
-        torque_control_kd = self.torque_control["kd"]
-        kp = kp_scale * torque_control_kp
-        kd = kd_scale * torque_control_kd
+        kp = kp_scale * self.torque_control_kp
+        kd = kd_scale * self.torque_control_kd
 
         # Compute joint torque with position-velocity feedback
         torque = feedforward_torque

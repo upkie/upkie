@@ -12,6 +12,7 @@ import numpy as np
 
 from upkie.envs.backends.pybullet_backend import PyBulletBackend
 from upkie.exceptions import UpkieRuntimeError
+from upkie.model import JointProperties
 from upkie.utils.external_force import ExternalForce
 
 
@@ -86,53 +87,50 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
             dt=0.01,
             gui=False,
             joint_properties={
-                "left_hip": {
-                    "friction": 0.1,
-                    "torque_control_noise": 0.05,
-                    "torque_measurement_noise": 0.02,
-                },
-                "right_knee": {
-                    "friction": 0.15,
-                },
+                "left_hip": JointProperties(
+                    friction=0.1,
+                    torque_control_noise=0.05,
+                    torque_measurement_noise=0.02,
+                ),
+                "right_knee": JointProperties(friction=0.15),
             },
-            torque_control={"kp": 20.0, "kd": 1.0},
+            torque_control_kp=20.0,
+            torque_control_kd=1.0,
         )
 
         # Check that joint properties were initialized correctly
         self.assertEqual(
-            backend._joint_properties["left_hip"]["friction"], 0.1
+            backend._joint_properties["left_hip"].friction, 0.1
         )
         self.assertEqual(
-            backend._joint_properties["left_hip"]["torque_control_noise"], 0.05
+            backend._joint_properties["left_hip"].torque_control_noise, 0.05
         )
         self.assertEqual(
-            backend._joint_properties["left_hip"]["torque_measurement_noise"],
+            backend._joint_properties["left_hip"].torque_measurement_noise,
             0.02,
         )
 
         self.assertEqual(
-            backend._joint_properties["right_knee"]["friction"], 0.15
+            backend._joint_properties["right_knee"].friction, 0.15
         )
         self.assertEqual(
-            backend._joint_properties["right_knee"]["torque_control_noise"],
+            backend._joint_properties["right_knee"].torque_control_noise,
             0.0,
         )  # default
         self.assertEqual(
-            backend._joint_properties["right_knee"][
-                "torque_measurement_noise"
-            ],
+            backend._joint_properties["right_knee"].torque_measurement_noise,
             0.0,
         )  # default
 
         # Joint without specific config should have default values
         self.assertEqual(
-            backend._joint_properties["left_knee"]["friction"], 0.0
+            backend._joint_properties["left_knee"].friction, 0.0
         )
         self.assertEqual(
-            backend._joint_properties["left_knee"]["torque_control_noise"], 0.0
+            backend._joint_properties["left_knee"].torque_control_noise, 0.0
         )
         self.assertEqual(
-            backend._joint_properties["left_knee"]["torque_measurement_noise"],
+            backend._joint_properties["left_knee"].torque_measurement_noise,
             0.0,
         )
 
@@ -150,8 +148,9 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
         backend = PyBulletBackend(
             dt=0.01,
             gui=False,
-            joint_properties={"left_hip": {"friction": 0.0}},
-            torque_control={"kp": 20.0, "kd": 1.0},
+            joint_properties={"left_hip": JointProperties(friction=0.0)},
+            torque_control_kp=20.0,
+            torque_control_kd=1.0,
         )
 
         # Test with measured velocity above stiction threshold
@@ -195,8 +194,11 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
         backend = PyBulletBackend(
             dt=0.01,
             gui=False,
-            joint_properties={"left_hip": {"friction": friction_value}},
-            torque_control={"kp": 20.0, "kd": 1.0},
+            joint_properties={
+                "left_hip": JointProperties(friction=friction_value),
+            },
+            torque_control_kp=20.0,
+            torque_control_kd=1.0,
         )
 
         # Test positive velocity (friction opposes motion)
@@ -266,8 +268,11 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
         backend = PyBulletBackend(
             dt=0.01,
             gui=False,
-            joint_properties={"left_hip": {"friction": friction_value}},
-            torque_control={"kp": 20.0, "kd": 1.0},
+            joint_properties={
+                "left_hip": JointProperties(friction=friction_value),
+            },
+            torque_control_kp=20.0,
+            torque_control_kd=1.0,
         )
 
         # Test velocity below stiction threshold
@@ -347,14 +352,15 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
             dt=0.01,
             gui=False,
             joint_properties={
-                "left_hip": {
-                    "torque_measurement_noise": 0.1,  # Significant noise
-                },
-                "right_hip": {
-                    "torque_measurement_noise": 0.0,  # No noise
-                },
+                "left_hip": JointProperties(
+                    torque_measurement_noise=0.1,
+                ),
+                "right_hip": JointProperties(
+                    torque_measurement_noise=0.0,
+                ),
             },
-            torque_control={"kp": 20.0, "kd": 1.0},
+            torque_control_kp=20.0,
+            torque_control_kd=1.0,
         )
 
         # Simulate a servo action to generate torques
@@ -460,11 +466,12 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
             dt=0.01,
             gui=False,
             joint_properties={
-                "left_hip": {
-                    "torque_measurement_noise": 1e-11,  # Below threshold
-                },
+                "left_hip": JointProperties(
+                    torque_measurement_noise=1e-11,
+                ),
             },
-            torque_control={"kp": 20.0, "kd": 1.0},
+            torque_control_kp=20.0,
+            torque_control_kd=1.0,
         )
 
         # Simulate a servo action to generate torques
@@ -537,10 +544,11 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
             dt=0.01,
             gui=False,
             joint_properties={
-                "left_hip": {"torque_measurement_noise": 0.0},
-                "left_knee": {"torque_measurement_noise": 0.0},
+                "left_hip": JointProperties(torque_measurement_noise=0.0),
+                "left_knee": JointProperties(torque_measurement_noise=0.0),
             },
-            torque_control={"kp": 20.0, "kd": 1.0},
+            torque_control_kp=20.0,
+            torque_control_kd=1.0,
         )
 
         # Initially, torques should be zero (no actions applied yet)
@@ -630,14 +638,15 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
             dt=0.01,
             gui=False,
             joint_properties={
-                "left_hip": {
-                    "torque_control_noise": 0.1,  # Significant noise
-                },
-                "right_hip": {
-                    "torque_control_noise": 0.0,  # No noise
-                },
+                "left_hip": JointProperties(
+                    torque_control_noise=0.1,
+                ),
+                "right_hip": JointProperties(
+                    torque_control_noise=0.0,
+                ),
             },
-            torque_control={"kp": 20.0, "kd": 1.0},
+            torque_control_kp=20.0,
+            torque_control_kd=1.0,
         )
 
         # Set up joint state for torque computation
@@ -732,11 +741,12 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
             dt=0.01,
             gui=False,
             joint_properties={
-                "left_hip": {
-                    "torque_control_noise": 1e-11,  # Below threshold
-                },
+                "left_hip": JointProperties(
+                    torque_control_noise=1e-11,
+                ),
             },
-            torque_control={"kp": 20.0, "kd": 1.0},
+            torque_control_kp=20.0,
+            torque_control_kd=1.0,
         )
 
         # Set up joint state for torque computation
@@ -806,12 +816,13 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
             dt=0.01,
             gui=False,
             joint_properties={
-                "left_hip": {
-                    "torque_control_noise": 0.1,  # Control noise
-                    "torque_measurement_noise": 0.05,  # Measurement noise
-                },
+                "left_hip": JointProperties(
+                    torque_control_noise=0.1,
+                    torque_measurement_noise=0.05,
+                ),
             },
-            torque_control={"kp": 20.0, "kd": 1.0},
+            torque_control_kp=20.0,
+            torque_control_kd=1.0,
         )
 
         # Set up joint state
@@ -894,7 +905,8 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
             dt=0.01,
             gui=False,
             inertia_variation=0.2,
-            torque_control={"kp": 20.0, "kd": 1.0},
+            torque_control_kp=20.0,
+            torque_control_kd=1.0,
         )
 
         # Check that changeDynamics was called for each link
@@ -954,7 +966,8 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
         backend = PyBulletBackend(
             dt=0.01,
             gui=False,
-            torque_control={"kp": 20.0, "kd": 1.0},
+            torque_control_kp=20.0,
+            torque_control_kd=1.0,
         )
 
         # changeDynamics should not have been called
@@ -986,7 +999,8 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
             dt=0.01,
             gui=False,
             inertia_variation=1e-11,
-            torque_control={"kp": 20.0, "kd": 1.0},
+            torque_control_kp=20.0,
+            torque_control_kd=1.0,
         )
 
         # changeDynamics should not have been called
@@ -1032,7 +1046,8 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
         backend = PyBulletBackend(
             dt=0.01,
             gui=False,
-            torque_control={"kp": 20.0, "kd": 1.0},
+            torque_control_kp=20.0,
+            torque_control_kd=1.0,
         )
 
         # Clear any calls from initialization
@@ -1101,7 +1116,8 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
         backend = PyBulletBackend(
             dt=0.01,
             gui=False,
-            torque_control={"kp": 20.0, "kd": 1.0},
+            torque_control_kp=20.0,
+            torque_control_kd=1.0,
         )
 
         # Clear initialization calls
