@@ -18814,7 +18814,7 @@ packages:
 - pypi: ./
   name: upkie
   version: 10.1.0
-  sha256: 8cf2156e37f1d482cea829d0ec4c55f5ce627e3cec93c836a8c5f06a21a0a9e4
+  sha256: c598c5f7f62ceb4ca379220fc466930e6cec258ffdb92f903627689da334eedf
   requires_dist:
   - gymnasium>=1.0.0
   - loop-rate-limiters>=1.2.0

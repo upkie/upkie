@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - config: Remove IMU-to-base rotation from configuration
 - config: Remove `wheel_radius` from `ROBOT_CONFIG`; it is now a property of `Model` parsed from the URDF collision geometry
+- cpp: Remove unused `follower_camera` parameter from the Bullet interface
 
 ## [10.1.0] - 2026-03-11
 

@@ -46,7 +46,6 @@ class BulletInterface : public Interface {
       spdlog::info("Applying \"bullet\" runtime configuration...");
 
       const auto& bullet = config("bullet");
-      follower_camera = bullet.get<bool>("follower_camera", follower_camera);
       gui = bullet.get<bool>("gui", gui);
 
       if (bullet.has("imu_uncertainty")) {
@@ -102,9 +101,6 @@ class BulletInterface : public Interface {
 
     //! Simulation timestep in [s]
     double dt = std::numeric_limits<double>::quiet_NaN();
-
-    //! Translate the camera to follow the robot
-    bool follower_camera = false;
 
     //! If true, set gravity to -9.81 m/s².
     bool gravity = true;
@@ -310,9 +306,6 @@ class BulletInterface : public Interface {
 
   //! Send commands to simulated joints
   void send_commands();
-
-  //! Convenience function to follow the base translation
-  void translate_camera_to_robot();
 
  private:
   //! Interface parameters
