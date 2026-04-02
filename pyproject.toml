@@ -91,8 +91,7 @@ pybullet = ">=3"
 qpmpc = ">=3.0.1,<4"
 
 [tool.pixi.feature.cookie.pypi-dependencies]
-# cookie_description = ">=1.0"
-cookie_description = { path = "../cookie_description", editable = true }
+cookie_description = ">=1.1"
 
 [tool.pixi.feature.cookie.tasks]
 go-forward-cookie = "python examples/go_forward_cookie.py"

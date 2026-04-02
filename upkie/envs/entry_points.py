@@ -16,7 +16,7 @@ from upkie.model import Model
 from .upkie_servos import UpkieServos
 
 
-def make_genesis_servos_env(**kwargs):
+def make_upkie_genesis_servos(**kwargs):
     r"""!
     Create an Upkie servos environment with Genesis backend.
 
@@ -42,7 +42,7 @@ def make_genesis_servos_env(**kwargs):
     return UpkieServos(backend=backend, **env_kwargs)
 
 
-def make_mock_servos_env(**kwargs):
+def make_mock_servos(**kwargs):
     r"""!
     Create an Upkie servos environment with Mock backend.
 
@@ -56,7 +56,7 @@ def make_mock_servos_env(**kwargs):
     return UpkieServos(backend=backend, **kwargs)
 
 
-def make_pybullet_servos_env(**kwargs):
+def make_upkie_pybullet_servos(**kwargs):
     r"""!
     Create an Upkie servos environment with PyBullet backend.
 
@@ -91,7 +91,7 @@ def make_pybullet_servos_env(**kwargs):
     return UpkieServos(backend=backend, **env_kwargs)
 
 
-def make_spine_servos_env(**kwargs):
+def make_spine_servos(**kwargs):
     r"""!
     Create an Upkie servos environment with Spine backend.
 
@@ -140,43 +140,74 @@ def wrap_pendulum(make_env_func, **kwargs):
     return UpkiePendulum(env, **pendulum_kwargs)
 
 
-def wrap_genesis_pendulum(**kwargs):
+def make_upkie_mock_servos(**kwargs):
+    r"""!
+    Create an Upkie servos environment with Mock backend.
+    """
+    return make_mock_servos(**kwargs)
+
+
+def make_upkie_spine_servos(**kwargs):
+    r"""!
+    Create an Upkie servos environment with Spine backend.
+    """
+    return make_spine_servos(**kwargs)
+
+
+def make_upkie_genesis_pendulum(**kwargs):
     r"""!
     Add pendulum wrapper around an UpkieServos with Genesis backend.
     """
-    return wrap_pendulum(make_genesis_servos_env, **kwargs)
+    return wrap_pendulum(make_upkie_genesis_servos, **kwargs)
 
 
 def wrap_mock_pendulum(**kwargs):
     r"""!
     Add pendulum wrapper around an UpkieServos with Mock backend.
     """
-    return wrap_pendulum(make_mock_servos_env, **kwargs)
+    return wrap_pendulum(make_mock_servos, **kwargs)
 
 
-def wrap_pybullet_pendulum(**kwargs):
+def make_cookie_mock_pendulum(**kwargs):
+    r"""!
+    Add pendulum wrapper around a Cookie servos env with Mock backend.
+    """
+    return wrap_mock_pendulum(**kwargs)
+
+
+def make_upkie_mock_pendulum(**kwargs):
+    r"""!
+    Add pendulum wrapper around an UpkieServos with Mock backend.
+    """
+    return wrap_mock_pendulum(**kwargs)
+
+
+def make_upkie_pybullet_pendulum(**kwargs):
     r"""!
     Add pendulum wrapper around an UpkieServos with PyBullet backend.
     """
-    return wrap_pendulum(make_pybullet_servos_env, **kwargs)
+    return wrap_pendulum(make_upkie_pybullet_servos, **kwargs)
+
+
+def make_upkie_spine_pendulum(**kwargs):
+    r"""!
+    Add pendulum wrapper around an UpkieServos with Spine backend.
+    """
+    return wrap_spine_pendulum(**kwargs)
 
 
 def wrap_spine_pendulum(**kwargs):
     r"""!
     Add pendulum wrapper around an UpkieServos with Spine backend.
     """
-    return wrap_pendulum(make_spine_servos_env, **kwargs)
+    return wrap_pendulum(make_spine_servos, **kwargs)
 
 
-def make_cookie_pybullet_servos_env(**kwargs):
+def _get_cookie_model():
     r"""!
-    Create a Cookie servos environment with PyBullet backend.
+    Load the Cookie robot model.
 
-    This function is meant to be called by `gymnasium.make()` rather than to be
-    called directly.
-
-    \param kwargs Keyword arguments forwarded to the environment and backend.
-    \return UpkieServos with PyBulletBackend and Cookie URDF.
+    \return Model instance for the Cookie robot.
     """
     try:
         import cookie_description
@@ -185,7 +216,38 @@ def make_cookie_pybullet_servos_env(**kwargs):
             "cookie_description not found, "
             "install it via `pip install cookie_description`"
         ) from e
-    cookie_model = Model(urdf_path=cookie_description.URDF_PATH)
+    return Model(urdf_path=cookie_description.URDF_PATH)
+
+
+def make_cookie_genesis_servos(**kwargs):
+    r"""!
+    Create a Cookie servos environment with Genesis backend.
+
+    \param kwargs Keyword arguments forwarded to the environment and backend.
+    \return UpkieServos with GenesisBackend and Cookie URDF.
+    """
+    cookie_model = _get_cookie_model()
+    backend_keys = {"genesis_init", "gui", "substeps"}
+    backend_kwargs = {
+        key: value for key, value in kwargs.items() if key in backend_keys
+    }
+    env_kwargs = {
+        key: value for key, value in kwargs.items() if key not in backend_keys
+    }
+    frequency = env_kwargs.get("frequency", 200.0)
+    dt = 1.0 / frequency if frequency is not None else 0.005
+    backend = GenesisBackend(dt=dt, model=cookie_model, **backend_kwargs)
+    return UpkieServos(backend=backend, model=cookie_model, **env_kwargs)
+
+
+def make_cookie_pybullet_servos(**kwargs):
+    r"""!
+    Create a Cookie servos environment with PyBullet backend.
+
+    \param kwargs Keyword arguments forwarded to the environment and backend.
+    \return UpkieServos with PyBulletBackend and Cookie URDF.
+    """
+    cookie_model = _get_cookie_model()
     backend_keys = {
         "gui",
         "inertia_variation",
@@ -208,9 +270,36 @@ def make_cookie_pybullet_servos_env(**kwargs):
     return UpkieServos(backend=backend, model=cookie_model, **env_kwargs)
 
 
-def wrap_cookie_pybullet_pendulum(**kwargs):
+def make_cookie_genesis_pendulum(**kwargs):
     r"""!
-    Add pendulum wrapper around an UpkieServos with PyBullet backend and Cookie
-    URDF.
+    Add pendulum wrapper around a Cookie servos env with Genesis backend.
     """
-    return wrap_pendulum(make_cookie_pybullet_servos_env, **kwargs)
+    return wrap_pendulum(make_cookie_genesis_servos, **kwargs)
+
+
+def make_cookie_mock_servos(**kwargs):
+    r"""!
+    Create a Cookie servos environment with Mock backend.
+    """
+    return make_mock_servos(**kwargs)
+
+
+def make_cookie_pybullet_pendulum(**kwargs):
+    r"""!
+    Add pendulum wrapper around a Cookie servos env with PyBullet backend.
+    """
+    return wrap_pendulum(make_cookie_pybullet_servos, **kwargs)
+
+
+def make_cookie_spine_servos(**kwargs):
+    r"""!
+    Create a Cookie servos environment with Spine backend.
+    """
+    return make_spine_servos(**kwargs)
+
+
+def make_cookie_spine_pendulum(**kwargs):
+    r"""!
+    Add pendulum wrapper around a Cookie servos env with Spine backend.
+    """
+    return wrap_spine_pendulum(**kwargs)
