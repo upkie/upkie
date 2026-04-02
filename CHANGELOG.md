@@ -39,8 +39,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - config: Remove IMU-to-base rotation from configuration
-- config: Remove `mass` parameter as it was unused
 - config: Remove `wheel_radius` as it is now a property of `Model` and parsed from the URDF collision geometry
+- config: Remove robot configuration dictionary as it has become unused
 - cpp: Remove unused `follower_camera` parameter from the Bullet interface
 
 ## [10.1.0] - 2026-03-11

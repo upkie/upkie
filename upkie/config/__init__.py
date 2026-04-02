@@ -6,12 +6,10 @@
 ## \namespace upkie.config
 ## \brief Static robot configuration.
 
-from .robot_config import ROBOT_CONFIG
 from .spine_config import SPINE_CONFIG
 from .user_config import USER_CONFIG
 
 __all__ = [
-    "ROBOT_CONFIG",
     "SPINE_CONFIG",
     "USER_CONFIG",
 ]
