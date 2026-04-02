@@ -10,7 +10,6 @@ from typing import Any, Dict
 
 from upkie.utils.nested_update import nested_update
 
-from .bullet_config import BULLET_CONFIG
 from .user_config import USER_CONFIG
 
 
@@ -36,7 +35,17 @@ def merge_user_spine_config(
 ## This dictionary contains the default configuration values for various
 ## spine components including bullet physics, contact detection, and odometry.
 _DEFAULT_SPINE_CONFIG = {
-    "bullet": BULLET_CONFIG,
+    "bullet": {
+        "gui": True,
+        "reset": {
+            "orientation_base_in_world": [1.0, 0.0, 0.0, 0.0],
+            "position_base_in_world": [0.0, 0.0, 0.6],
+        },
+        "torque_control": {
+            "kp": 20.0,
+            "kd": 1.0,
+        },
+    },
     "floor_contact": {
         "upper_leg_torque_threshold": 10.0,
     },
