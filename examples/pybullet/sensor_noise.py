@@ -13,15 +13,14 @@ import gymnasium as gym
 import numpy as np
 
 import upkie.envs
+from upkie.model import JointProperties
 
 # The following values are completely arbitrary. Try setting them to high
 # values to see the different impacts of control and measurement noise.
-JOINT_NOISE = {
-    # Control noise affects the torques actually applied to joints
-    "torque_control_noise": 0.5,  # white noise in N⋅m
-    # Measurement noise affects torque readings
-    "torque_measurement_noise": 0.1,  # white noise in N⋅m
-}
+JOINT_NOISE = JointProperties(
+    torque_control_noise=0.5,  # white noise in N⋅m
+    torque_measurement_noise=0.1,  # white noise in N⋅m
+)
 
 if __name__ == "__main__":
     upkie.envs.register()

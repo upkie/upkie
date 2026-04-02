@@ -14,16 +14,15 @@ import numpy as np
 from scipy.spatial.transform import Rotation as ScipyRotation
 
 import upkie.envs
+from upkie.model import JointProperties
 from upkie.utils.robot_state import RobotState
 
 NB_GENUFLECTIONS = 10
 GENUFLECTION_STEPS = 200
 AMPLITUDE = 1.0  # in radians
 
-JOINT_PROPS = {
-    # The following value is completely arbitrary :)
-    "friction": 0.1,  # kinetic joint friction in N⋅m, this value
-}
+# The following friction value is completely arbitrary :)
+JOINT_PROPS = JointProperties(friction=0.1)
 
 if __name__ == "__main__":
     upkie.envs.register()
