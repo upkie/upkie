@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - **Breaking:** envs: Pendulum environments read `left_wheeled` from the model rather than as a keyword argument
+- **Breaking:** envs: Replace `bullet_config` dict in PyBullet backend with explicit `inertia_variation`, `joint_properties` and `torque_control` kwargs
 - Transfer copyright notices to `NOTICE` file
 - envs: Default maximum ground velocity of pendulum environments is now 3 m/s
 - envs: Floor contact detection in PyBullet backend now queries wheel-tire contacts with the ground plane
