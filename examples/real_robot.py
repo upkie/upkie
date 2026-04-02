@@ -31,7 +31,6 @@ if __name__ == "__main__":
         env_kwargs = {
             "frequency": 200.0,
             "frequency_checks": False,  # simulation steps run within env steps
-            "gui": True,
         }
 
         print("\nStarting MPC balancing with Upkie-Spine-Pendulum...")
