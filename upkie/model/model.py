@@ -167,3 +167,34 @@ class Model:
             )
             return rotation_matrix_from_rpy(rpy)
         return np.eye(3)
+
+    @staticmethod
+    def _parse_wheel_radius(link_tags: list) -> float:
+        r"""!
+        Parse wheel radius from the collision geometry of the wheel tire link.
+
+        \param link_tags List of ``<link>`` XML elements from the URDF.
+        \return Wheel radius in meters.
+        \raise ModelError If the "left_wheel_tire" link is missing or lacks the
+            expected collision cylinder geometry.
+        """
+        for link in link_tags:
+            if link.attrib.get("name") != "left_wheel_tire":
+                continue
+            collision = link.find("collision")
+            if collision is None:
+                raise ModelError(
+                    "left_wheel_tire link has no collision element"
+                )
+            geometry = collision.find("geometry")
+            if geometry is None:
+                raise ModelError(
+                    "left_wheel_tire collision has no geometry element"
+                )
+            cylinder = geometry.find("cylinder")
+            if cylinder is None:
+                raise ModelError(
+                    "left_wheel_tire collision geometry has no cylinder element"
+                )
+            return float(cylinder.attrib["radius"])
+        raise ModelError("left_wheel_tire link not found in URDF")

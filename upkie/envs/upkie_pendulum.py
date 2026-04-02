@@ -12,7 +12,6 @@ from typing import Dict, Optional, Tuple
 import gymnasium as gym
 import numpy as np
 
-from upkie.config import ROBOT_CONFIG
 from upkie.envs.upkie_env import UpkieEnv
 from upkie.exceptions import UpkieException
 from upkie.logging import logger
@@ -254,7 +253,7 @@ class UpkiePendulum(gym.Wrapper):
             self.action_space.high[0],
             label="ground_velocity",
         )
-        wheel_velocity = ground_velocity / ROBOT_CONFIG["wheel_radius"]
+        wheel_velocity = ground_velocity / self.env.model.wheel_radius
         left_wheel_sign = 1.0 if self.left_wheeled else -1.0
         left_wheel_velocity = left_wheel_sign * wheel_velocity
         leg_servo_action = self.__get_leg_servo_action()
