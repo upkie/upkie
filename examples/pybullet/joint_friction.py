@@ -36,15 +36,13 @@ if __name__ == "__main__":
             ),
             position_base_in_world=np.array([0.0, 0.0, 0.1]),
         ),
-        bullet_config={
-            "joint_properties": {
-                "left_hip": JOINT_PROPS,
-                "left_knee": JOINT_PROPS,
-                "left_wheel": JOINT_PROPS,
-                "right_hip": JOINT_PROPS,
-                "right_knee": JOINT_PROPS,
-                "right_wheel": JOINT_PROPS,
-            }
+        joint_properties={
+            "left_hip": JOINT_PROPS,
+            "left_knee": JOINT_PROPS,
+            "left_wheel": JOINT_PROPS,
+            "right_hip": JOINT_PROPS,
+            "right_knee": JOINT_PROPS,
+            "right_wheel": JOINT_PROPS,
         },
     ) as env:
         action = env.unwrapped.get_neutral_action()

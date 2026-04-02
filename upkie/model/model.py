@@ -60,6 +60,14 @@ class Model:
     ## axis in the trigonometric direction.
     left_wheeled: bool
 
+    ## \var pybullet_torque_control_kd
+    ## Derivative gain for PyBullet torque control.
+    pybullet_torque_control_kd: float
+
+    ## \var pybullet_torque_control_kp
+    ## Proportional gain for PyBullet torque control.
+    pybullet_torque_control_kp: float
+
     ## \var rotation_ars_to_world
     ## Rotation matrix from the ARS frame to the world frame.
     rotation_ars_to_world: np.ndarray
@@ -139,8 +147,11 @@ class Model:
         self.WHEEL_JOINT_NAMES = Model.WHEEL_JOINT_NAMES
 
         # Instance attributes
+        is_cookie = "cookie" in str(urdf_path).lower()
         self.joints = joints
-        self.left_wheeled = "cookie" not in str(urdf_path).lower()
+        self.left_wheeled = not is_cookie
+        self.pybullet_torque_control_kd = 4.0 if is_cookie else 1.0
+        self.pybullet_torque_control_kp = 60.0 if is_cookie else 20.0
         self.rotation_ars_to_world = np.diag([1.0, -1.0, -1.0])
         self.rotation_base_to_imu = self._parse_rotation_base_to_imu(
             joint_tags

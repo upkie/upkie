@@ -28,15 +28,13 @@ if __name__ == "__main__":
     with gym.make(
         "Upkie-PyBullet-Pendulum",
         frequency=200.0,
-        bullet_config={
-            "joint_properties": {
-                "left_hip": JOINT_NOISE,
-                "left_knee": JOINT_NOISE,
-                "left_wheel": JOINT_NOISE,
-                "right_hip": JOINT_NOISE,
-                "right_knee": JOINT_NOISE,
-                "right_wheel": JOINT_NOISE,
-            }
+        joint_properties={
+            "left_hip": JOINT_NOISE,
+            "left_knee": JOINT_NOISE,
+            "left_wheel": JOINT_NOISE,
+            "right_hip": JOINT_NOISE,
+            "right_knee": JOINT_NOISE,
+            "right_wheel": JOINT_NOISE,
         },
     ) as env:
         observation, _ = env.reset()  # connects to the spine

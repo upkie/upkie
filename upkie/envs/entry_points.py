@@ -66,7 +66,13 @@ def make_pybullet_servos_env(**kwargs):
     \param kwargs Keyword arguments forwarded to the environment and backend.
     \return UpkieServos with PyBulletBackend.
     """
-    backend_keys = {"gui", "bullet_config", "nb_substeps"}
+    backend_keys = {
+        "gui",
+        "inertia_variation",
+        "joint_properties",
+        "nb_substeps",
+        "torque_control",
+    }
     backend_kwargs = {
         key: value for key, value in kwargs.items() if key in backend_keys
     }
@@ -177,7 +183,13 @@ def make_cookie_pybullet_servos_env(**kwargs):
             "install it via `pip install cookie_description`"
         ) from e
     cookie_model = Model(urdf_path=cookie_description.URDF_PATH)
-    backend_keys = {"gui", "bullet_config", "nb_substeps"}
+    backend_keys = {
+        "gui",
+        "inertia_variation",
+        "joint_properties",
+        "nb_substeps",
+        "torque_control",
+    }
     backend_kwargs = {
         key: value for key, value in kwargs.items() if key in backend_keys
     }

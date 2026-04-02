@@ -11,12 +11,10 @@ from typing import Dict, List, Optional
 
 import numpy as np
 
-from upkie.config import BULLET_CONFIG
 from upkie.exceptions import MissingOptionalDependency, UpkieRuntimeError
 from upkie.model import Model
 from upkie.utils.external_force import ExternalForce
 from upkie.utils.joystick import Joystick
-from upkie.utils.nested_update import nested_update
 from upkie.utils.point_contact import PointContact
 from upkie.utils.robot_state import RobotState
 from upkie.utils.rotations import (
@@ -38,37 +36,52 @@ class PyBulletBackend(Backend):
     Backend using PyBullet physics simulation.
     """
 
+    ## \var inertia_variation
+    ## Relative variation applied to link masses and inertias for domain
+    ## randomization. A value of 0.2 means each mass and inertia component is
+    ## scaled by a uniform random factor in [0.8, 1.2].
+    inertia_variation: float
+
     ## \var joystick
     ## Joystick interface for writing observations, or None if no joystick
     ## device was found.
     joystick: Optional[Joystick]
 
+    ## \var torque_control
+    ## Torque control gains, as a dictionary with ``"kp"`` (proportional) and
+    ## ``"kd"`` (derivative) keys. Defaults are read from the robot model.
+    torque_control: dict
+
     def __init__(
         self,
         dt: float,
-        bullet_config: Optional[dict] = None,
         gui: bool = True,
+        inertia_variation: float = 0.0,
+        joint_properties: Optional[Dict[str, dict]] = None,
         js_path: str = "/dev/input/js0",
         model: Optional[Model] = None,
         nb_substeps: Optional[int] = None,
+        torque_control: Optional[dict] = None,
     ) -> None:
         r"""!
         Initialize PyBullet backend.
 
         \param dt Simulation time step in seconds.
-        \param bullet_config Additional bullet configuration overriding the
-            default `upkie.config.BULLET_CONFIG`. The combined configuration
-            dictionary is used for PyBullet simulation setup.
         \param gui If True, run PyBullet with GUI. If False, run headless.
+        \param inertia_variation Relative variation for domain randomization
+            of link masses and inertias. Zero means no randomization.
+        \param joint_properties Per-joint simulation properties. Dictionary
+            mapping joint names to dictionaries with optional keys
+            ``"friction"``, ``"torque_control_noise"``, and
+            ``"torque_measurement_noise"`` (all default to 0.0).
         \param js_path Path to joystick device. Defaults to "/dev/input/js0".
         \param model Robot model. If None, defaults to the standard Upkie model
             from `upkie_description`.
         \param nb_substeps Number of substeps for the PyBullet simulation.
+        \param torque_control Torque control gains as a dictionary with
+            ``"kp"`` and ``"kd"`` keys. If None, defaults are read from the
+            robot model.
         """
-        # Combine dictionaries for simulator configuration
-        self.__bullet_config = BULLET_CONFIG.copy()
-        if bullet_config is not None:
-            nested_update(self.__bullet_config, bullet_config)
 
         # Default number of substeps corresponds to the 1 kHz spine frequency
         nb_substeps: int = (
@@ -124,9 +137,9 @@ class PyBulletBackend(Backend):
             if joint_name in Model.JOINT_NAMES:
                 self._joint_indices[joint_name] = bullet_idx
                 # Initialize joint properties with defaults
-                joint_props = self.__bullet_config.get(
-                    "joint_properties", {}
-                ).get(joint_name, {})
+                joint_props = (joint_properties or {}).get(
+                    joint_name, {}
+                )
                 self._joint_properties[joint_name] = {
                     "friction": joint_props.get("friction", 0.0),
                     "torque_control_noise": joint_props.get(
@@ -167,14 +180,19 @@ class PyBulletBackend(Backend):
         self.__nominal_inertias = {}
         self.__save_nominal_inertias()
 
+        # Store configuration as instance attributes
+        self.inertia_variation = inertia_variation
+        self.torque_control = torque_control if torque_control is not None else {
+            "kp": self.__model.pybullet_torque_control_kp,
+            "kd": self.__model.pybullet_torque_control_kd,
+        }
+
         # Apply inertia randomization if configured
-        inertia_variation = self.__bullet_config.get("inertia_variation", 0.0)
         if abs(inertia_variation) > 1e-10:
             self.randomize_inertias(inertia_variation)
 
         if gui:  # Enable GUI if it is requested
             pybullet.configureDebugVisualizer(pybullet.COV_ENABLE_RENDERING, 1)
-            pybullet.configureDebugVisualizer(pybullet.COV_ENABLE_SHADOWS, 0)
             pybullet.resetDebugVisualizerCamera(
                 cameraDistance=1.0,
                 cameraYaw=45,
@@ -515,9 +533,9 @@ class PyBulletBackend(Backend):
         measured_position = joint_state[0]  # already in radians in PyBullet
         measured_velocity = joint_state[1]  # already in rad/s in PyBullet
 
-        # Use kp and kd gains from the bullet configuration
-        torque_control_kp = self.__bullet_config["torque_control"]["kp"]
-        torque_control_kd = self.__bullet_config["torque_control"]["kd"]
+        # Use kp and kd gains from the torque control configuration
+        torque_control_kp = self.torque_control["kp"]
+        torque_control_kd = self.torque_control["kd"]
         kp = kp_scale * torque_control_kp
         kd = kd_scale * torque_control_kd
 

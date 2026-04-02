@@ -70,23 +70,18 @@ if __name__ == "__main__":
     print("Notice how the robot's behavior changes progressively.")
 
     for i, inertia_variation in enumerate(INERTIA_VARIATIONS):
-        # Configure bullet with inertia variation
-        bullet_config = {
-            "inertia_variation": inertia_variation,
-        }
-
         # Create environment with current configuration (GUI disabled for CI)
         with gym.make(
             "Upkie-PyBullet-Pendulum",
             frequency=CONTROL_FREQUENCY,
             gui=True,
+            inertia_variation=inertia_variation,
             init_state=RobotState(
                 position_base_in_world=np.array([0.0, 0.0, 0.6]),
                 orientation_base_in_world=ScipyRotation.from_euler(
                     "xyz", [0.0, 0.1, 0.0]
                 ),
             ),
-            bullet_config=bullet_config,
         ) as env:
             run_episode(
                 env,
