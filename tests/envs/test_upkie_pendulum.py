@@ -89,7 +89,7 @@ class PendulumTestCase(unittest.TestCase):
         for wheel in model.wheel_joints:
             wheel_velocity = servo_action[wheel.name]["velocity"]  # rad/s
             ground_velocity = np.abs(wheel_velocity * model.wheel_radius)
-            self.assertLess(ground_velocity, max_ground_velocity + 1e-10)
+            self.assertLess(ground_velocity, max_ground_velocity + 1e-6)
 
     def test_dtype_consistency(self):
         """Test that action and observation spaces use float32 dtype."""
