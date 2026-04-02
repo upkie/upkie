@@ -20,25 +20,21 @@ class RobotConfigTestCase(unittest.TestCase):
     def test_default_robot_config_structure(self):
         """Test that default robot config has expected structure."""
         self.assertIn("leg_length", _DEFAULT_ROBOT_CONFIG)
-        self.assertIn("wheel_radius", _DEFAULT_ROBOT_CONFIG)
         self.assertIn("mass", _DEFAULT_ROBOT_CONFIG)
 
     def test_default_robot_config_values(self):
         """Test default robot configuration values."""
         self.assertEqual(_DEFAULT_ROBOT_CONFIG["leg_length"], 0.58)
-        self.assertEqual(_DEFAULT_ROBOT_CONFIG["wheel_radius"], 0.06)
         self.assertEqual(_DEFAULT_ROBOT_CONFIG["mass"], 5.34)
 
     def test_robot_config_has_expected_structure(self):
         """Test that ROBOT_CONFIG incorporates user configuration properly."""
         # Verify it has the expected keys from default config
         self.assertIn("leg_length", ROBOT_CONFIG)
-        self.assertIn("wheel_radius", ROBOT_CONFIG)
         self.assertIn("mass", ROBOT_CONFIG)
 
         # Verify the config values are present (defaults or user overrides)
         self.assertIsInstance(ROBOT_CONFIG["leg_length"], (int, float))
-        self.assertIsInstance(ROBOT_CONFIG["wheel_radius"], (int, float))
         self.assertIsInstance(ROBOT_CONFIG["mass"], (int, float))
 
         # Test that the structure is preserved from defaults
