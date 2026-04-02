@@ -23,8 +23,13 @@ class WheelController:
 
     ## \var left_wheeled
     ## Set to True if the robot is left wheeled, that is, a positive turn of
-    ## the ## left wheel results in forward motion. Set to False for a
-    ## right-wheeled variant.
+    ## the left wheel results in forward motion. Upkie's v1 and v2 are
+    ## left-wheeled, but Cookies are right-wheeled.
+    ##
+    ## To figure out if your robot is left- or right-wheeled, look at the rotor
+    ## of its left wheel motor and assume its axis is pointing outward (i.e.
+    ## from stator to rotor). A positive turn rotates the rotor around this
+    ## axis in the trigonometric direction.
     left_wheeled: bool
 
     ## \var mpc_balancer
