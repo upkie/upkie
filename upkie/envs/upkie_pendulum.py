@@ -85,12 +85,6 @@ class UpkiePendulum(gym.Wrapper):
     ## Fall detection pitch angle, in radians.
     fall_pitch: float
 
-    ## \var left_wheeled
-    ## Set to True (default) if the robot is left wheeled, that is, a positive
-    ## turn of the left wheel results in forward motion. Set to False for a
-    ## right-wheeled variant.
-    left_wheeled: bool
-
     ## \var observation_space
     ## Observation space.
     observation_space: gym.spaces.Box
@@ -99,7 +93,6 @@ class UpkiePendulum(gym.Wrapper):
         self,
         env: UpkieEnv,
         fall_pitch: float = 1.0,
-        left_wheeled: bool = True,
         max_ground_velocity: float = 3.0,
     ):
         r"""!
@@ -107,9 +100,6 @@ class UpkiePendulum(gym.Wrapper):
 
         \param env Upkie environment to command servomotors.
         \param fall_pitch Fall detection pitch angle, in radians.
-        \param left_wheeled Set to True (default) if the robot is left wheeled,
-            that is, a positive turn of the left wheel results in forward
-            motion. Set to False for a right-wheeled variant.
         \param max_ground_velocity Maximum commanded ground velocity in m/s.
             The default value of 3 m/s is the one used in the MPC balancer.
         """
@@ -151,7 +141,6 @@ class UpkiePendulum(gym.Wrapper):
         self.__leg_servo_action = env.get_neutral_action()
         self.env = env
         self.fall_pitch = fall_pitch
-        self.left_wheeled = left_wheeled
 
     def __get_env_observation(self, spine_observation: dict) -> np.ndarray:
         r"""!
@@ -254,7 +243,7 @@ class UpkiePendulum(gym.Wrapper):
             label="ground_velocity",
         )
         wheel_velocity = ground_velocity / self.env.model.wheel_radius
-        left_wheel_sign = 1.0 if self.left_wheeled else -1.0
+        left_wheel_sign = 1.0 if self.env.model.left_wheeled else -1.0
         left_wheel_velocity = left_wheel_sign * wheel_velocity
         leg_servo_action = self.__get_leg_servo_action()
         wheel_servo_action = self.__get_wheel_servo_action(left_wheel_velocity)
