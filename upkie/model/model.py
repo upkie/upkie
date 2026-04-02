@@ -49,6 +49,17 @@ class Model:
     ## Joints of the robot model.
     joints: List[Joint]
 
+    ## \var left_wheeled
+    ## True if the robot is left-wheeled, that is, a positive turn of the left
+    ## wheel results in forward motion. Upkie's v1 and v2 are left-wheeled, but
+    ## Cookies are right-wheeled.
+    ##
+    ## To figure out if your robot is left- or right-wheeled, look at the rotor
+    ## of its left wheel motor and assume its axis is pointing outward (i.e.
+    ## from stator to rotor). A positive turn rotates the rotor around this
+    ## axis in the trigonometric direction.
+    left_wheeled: bool
+
     ## \var rotation_ars_to_world
     ## Rotation matrix from the ARS frame to the world frame.
     rotation_ars_to_world: np.ndarray
@@ -129,6 +140,7 @@ class Model:
 
         # Instance attributes
         self.joints = joints
+        self.left_wheeled = "cookie" not in str(urdf_path).lower()
         self.rotation_ars_to_world = np.diag([1.0, -1.0, -1.0])
         self.rotation_base_to_imu = self._parse_rotation_base_to_imu(
             joint_tags
@@ -184,17 +196,17 @@ class Model:
             collision = link.find("collision")
             if collision is None:
                 raise ModelError(
-                    "left_wheel_tire link has no collision element"
+                    "left_wheel_tire link has no collision"
                 )
             geometry = collision.find("geometry")
             if geometry is None:
                 raise ModelError(
-                    "left_wheel_tire collision has no geometry element"
+                    "left_wheel_tire collision has no geometry"
                 )
             cylinder = geometry.find("cylinder")
             if cylinder is None:
                 raise ModelError(
-                    "left_wheel_tire collision geometry has no cylinder element"
+                    "left_wheel_tire collision geometry has no cylinder"
                 )
             return float(cylinder.attrib["radius"])
         raise ModelError("left_wheel_tire link not found in URDF")
