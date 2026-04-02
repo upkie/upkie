@@ -76,7 +76,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/linux-64/xorg-libxext-1.3.7-hb03c661_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/yaml-0.2.5-h280c20c_3.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/zstd-1.5.7-hb78ec9c_6.conda
-      - pypi: ../cookie_description
+      - pypi: https://files.pythonhosted.org/packages/2b/7f/0e8b1f89370df5edeaefa3b3e74eb40586bf9b2c7cb46c494b715c3462f8/cookie_description-1.1.0-py3-none-any.whl
       - pypi: ./
       linux-aarch64:
       - conda: https://conda.anaconda.org/conda-forge/linux-aarch64/_openmp_mutex-4.5-20_gnu.conda
@@ -146,7 +146,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/linux-aarch64/xorg-libxext-1.3.7-he30d5cf_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-aarch64/yaml-0.2.5-h80f16a2_3.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-aarch64/zstd-1.5.7-h85ac4a6_6.conda
-      - pypi: ../cookie_description
+      - pypi: https://files.pythonhosted.org/packages/2b/7f/0e8b1f89370df5edeaefa3b3e74eb40586bf9b2c7cb46c494b715c3462f8/cookie_description-1.1.0-py3-none-any.whl
       - pypi: ./
       osx-arm64:
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/_openmp_mutex-4.5-7_kmp_llvm.conda
@@ -210,7 +210,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/xorg-libxdmcp-1.1.5-hc919400_1.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/xorg-libxext-1.3.7-h84a0fba_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/yaml-0.2.5-h925e9cb_3.conda
-      - pypi: ../cookie_description
+      - pypi: https://files.pythonhosted.org/packages/2b/7f/0e8b1f89370df5edeaefa3b3e74eb40586bf9b2c7cb46c494b715c3462f8/cookie_description-1.1.0-py3-none-any.whl
       - pypi: ./
   coverage:
     channels:
@@ -5240,12 +5240,11 @@ packages:
   - pkg:pypi/contourpy?source=hash-mapping
   size: 257410
   timestamp: 1754063952152
-- pypi: ../cookie_description
+- pypi: https://files.pythonhosted.org/packages/2b/7f/0e8b1f89370df5edeaefa3b3e74eb40586bf9b2c7cb46c494b715c3462f8/cookie_description-1.1.0-py3-none-any.whl
   name: cookie-description
   version: 1.1.0
-  sha256: eae2ffaf9d8a6dad8c88ca1c3c5e996923aab19704ad141415597abc30b2a96f
+  sha256: 238f5ea40b3bd01df159efcba0ead3ac061e38cc7cd4fd2ce91d1b8ed6346648
   requires_python: '>=3.10'
-  editable: true
 - conda: https://conda.anaconda.org/conda-forge/noarch/cpython-3.10.18-py310hd8ed1ab_0.conda
   noarch: generic
   sha256: 44329b37f854a90b4b9bcf500c25c13dce91180eca26a9272f6a254725d2db8c
@@ -18814,7 +18813,7 @@ packages:
 - pypi: ./
   name: upkie
   version: 10.1.0
-  sha256: c598c5f7f62ceb4ca379220fc466930e6cec258ffdb92f903627689da334eedf
+  sha256: 68def84f99b7607c66e9d63c228cf55c9c7ec1319ae7984bab9b74416b45c1b7
   requires_dist:
   - gymnasium>=1.0.0
   - loop-rate-limiters>=1.2.0
