@@ -5,6 +5,7 @@
 
 import argparse
 import socket
+from importlib import import_module
 from pathlib import Path
 from typing import Optional
 
@@ -15,6 +16,7 @@ import upkie.config
 import upkie.envs
 from upkie.config import SPINE_CONFIG
 from upkie.logging import logger
+from upkie.model import Model
 from upkie.utils.clamp import clamp
 from upkie.utils.raspi import configure_agent_process, on_raspi
 
@@ -37,6 +39,12 @@ def parse_command_line_arguments() -> argparse.Namespace:
         type=str,
     )
     parser.add_argument(
+        "--description",
+        help="Robot description to read (default: upkie_description)",
+        choices=["upkie_description", "cookie_description"],
+        default="upkie_description",
+    )
+    parser.add_argument(
         "--visualize",
         help="Publish robot visualization to MeshCat for debugging",
         default=False,
@@ -47,6 +55,7 @@ def parse_command_line_arguments() -> argparse.Namespace:
 
 @gin.configurable
 def run(
+    model: Model,
     gain_scale: float,
     turning_gain_scale: float,
     visualize: bool,
@@ -64,7 +73,7 @@ def run(
 
     gain_scale = clamp(gain_scale, 0.1, 2.0)
     height_controller = HeightController(visualize=visualize)
-    wheel_controller = WheelController()
+    wheel_controller = WheelController(model)
 
     dt = 1.0 / frequency
 
@@ -126,23 +135,28 @@ if __name__ == "__main__":
         configure_agent_process()
 
     # Configuration hack for wheel odometry
-    temp_wheel_controller = WheelController()
-    wheel_radius = temp_wheel_controller.wheel_radius
+    description = import_module(args.description)
+    model = Model(description.URDF_PATH)
     wheel_odometry = SPINE_CONFIG["wheel_odometry"]
-    left_sign: float = 1.0 if temp_wheel_controller.left_wheeled else -1.0
+    left_sign: float = 1.0 if model.left_wheeled else -1.0
     right_sign = -left_sign
-    wheel_odometry["signed_radius"]["left_wheel"] = left_sign * wheel_radius
-    wheel_odometry["signed_radius"]["right_wheel"] = right_sign * wheel_radius
+    wheel_odometry["signed_radius"]["left_wheel"] = (
+        left_sign * model.wheel_radius
+    )
+    wheel_odometry["signed_radius"]["right_wheel"] = (
+        right_sign * model.wheel_radius
+    )
 
+    temp_wheel_controller = WheelController(model)
     max_rc_vel = temp_wheel_controller.remote_control.max_linear_velocity
     max_ground_vel = temp_wheel_controller.mpc_balancer.max_ground_velocity
     temp_height_controller = HeightController(visualize=False)
     logger.info(f"Knees bend {temp_height_controller.knee_side}")
     logger.info(f"Max. remote-control velocity: {max_rc_vel} m/s")
     logger.info(f"Max. commanded velocity: {max_ground_vel} m/s")
-    logger.info(f"Wheel radius: {wheel_radius} m")
+    logger.info(f"Wheel radius: {model.wheel_radius} m")
 
     try:
-        run(visualize=args.visualize)
+        run(model, visualize=args.visualize)
     except KeyboardInterrupt:
         logger.info("Terminating in response to keyboard interrupt")
