@@ -7,9 +7,7 @@
 ## \brief Static robot configuration.
 
 from .spine_config import SPINE_CONFIG
-from .user_config import USER_CONFIG
 
 __all__ = [
     "SPINE_CONFIG",
-    "USER_CONFIG",
 ]
