@@ -12,7 +12,7 @@ from typing import Dict, List, Optional
 import numpy as np
 
 from upkie.exceptions import MissingOptionalDependency, UpkieRuntimeError
-from upkie.model import Model
+from upkie.model import JointProperties, Model
 from upkie.utils.external_force import ExternalForce
 from upkie.utils.joystick import Joystick
 from upkie.utils.point_contact import PointContact
@@ -57,7 +57,7 @@ class PyBulletBackend(Backend):
         dt: float,
         gui: bool = True,
         inertia_variation: float = 0.0,
-        joint_properties: Optional[Dict[str, dict]] = None,
+        joint_properties: Optional[Dict[str, JointProperties]] = None,
         js_path: str = "/dev/input/js0",
         model: Optional[Model] = None,
         nb_substeps: Optional[int] = None,
@@ -137,18 +137,9 @@ class PyBulletBackend(Backend):
             if joint_name in Model.JOINT_NAMES:
                 self._joint_indices[joint_name] = bullet_idx
                 # Initialize joint properties with defaults
-                joint_props = (joint_properties or {}).get(
-                    joint_name, {}
-                )
-                self._joint_properties[joint_name] = {
-                    "friction": joint_props.get("friction", 0.0),
-                    "torque_control_noise": joint_props.get(
-                        "torque_control_noise", 0.0
-                    ),
-                    "torque_measurement_noise": joint_props.get(
-                        "torque_measurement_noise", 0.0
-                    ),
-                }
+                self._joint_properties[joint_name] = (
+                    joint_properties or {}
+                ).get(joint_name, JointProperties())
                 # Disable velocity controllers to enable torque control
                 pybullet.setJointMotorControl2(
                     self.__robot_id,
@@ -469,7 +460,7 @@ class PyBulletBackend(Backend):
 
             # Add Gaussian white noise to torque measurements if configured
             joint_props = self._joint_properties[joint_name]
-            torque_measurement_noise = joint_props["torque_measurement_noise"]
+            torque_measurement_noise = joint_props.torque_measurement_noise
             if torque_measurement_noise > 1e-10:
                 noise = self.__rng.normal(0.0, torque_measurement_noise)
                 torque += noise
@@ -548,14 +539,14 @@ class PyBulletBackend(Backend):
         # Add kinetic friction if applicable
         MAX_STICTION_VELOCITY = 1e-3  # rad/s
         if abs(measured_velocity) > MAX_STICTION_VELOCITY:
-            friction = self._joint_properties[joint_name]["friction"]
+            friction = self._joint_properties[joint_name].friction
             velocity_sign = 1.0 if measured_velocity > 0.0 else -1.0
             friction_torque = -friction * velocity_sign
             torque += friction_torque
 
         # Add torque-control Gaussian white noise if applicable
         joint_props = self._joint_properties[joint_name]
-        torque_control_noise = joint_props["torque_control_noise"]
+        torque_control_noise = joint_props.torque_control_noise
         if torque_control_noise > 1e-10:
             noise = self.__rng.normal(0.0, torque_control_noise)
             torque += noise
