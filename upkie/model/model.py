@@ -69,6 +69,11 @@ class Model:
     ## Wheel joints.
     wheel_joints: Tuple[float]
 
+    ## \var wheel_radius
+    ## Wheel radius in meters, parsed from the URDF collision geometry of the
+    ## "left_wheel_tire" link.
+    wheel_radius: float
+
     def __init__(self, urdf_path: Optional[str] = None):
         r"""!
         Constructor for the robot model wrapper.
@@ -81,9 +86,9 @@ class Model:
         self.urdf_path = urdf_path
 
         tree = ElementTree.parse(urdf_path)
-        joint_tags = [
-            child for child in tree.getroot() if child.tag == "joint"
-        ]
+        root = tree.getroot()
+        joint_tags = [child for child in root if child.tag == "joint"]
+        link_tags = [child for child in root if child.tag == "link"]
         limits = [
             (joint, child)
             for joint in joint_tags
@@ -130,6 +135,7 @@ class Model:
         )
         self.upper_leg_joints = upper_leg_joints
         self.wheel_joints = wheel_joints
+        self.wheel_radius = self._parse_wheel_radius(link_tags)
 
     @staticmethod
     def _parse_rotation_base_to_imu(joint_tags: list) -> np.ndarray:
