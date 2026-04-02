@@ -20,31 +20,28 @@ class RobotConfigTestCase(unittest.TestCase):
     def test_default_robot_config_structure(self):
         """Test that default robot config has expected structure."""
         self.assertIn("leg_length", _DEFAULT_ROBOT_CONFIG)
-        self.assertIn("mass", _DEFAULT_ROBOT_CONFIG)
 
     def test_default_robot_config_values(self):
         """Test default robot configuration values."""
         self.assertEqual(_DEFAULT_ROBOT_CONFIG["leg_length"], 0.58)
-        self.assertEqual(_DEFAULT_ROBOT_CONFIG["mass"], 5.34)
 
     def test_robot_config_has_expected_structure(self):
         """Test that ROBOT_CONFIG incorporates user configuration properly."""
         # Verify it has the expected keys from default config
         self.assertIn("leg_length", ROBOT_CONFIG)
-        self.assertIn("mass", ROBOT_CONFIG)
 
         # Verify the config values are present (defaults or user overrides)
         self.assertIsInstance(ROBOT_CONFIG["leg_length"], (int, float))
-        self.assertIsInstance(ROBOT_CONFIG["mass"], (int, float))
 
         # Test that the structure is preserved from defaults
         self.assertEqual(
-            set(ROBOT_CONFIG.keys()), set(_DEFAULT_ROBOT_CONFIG.keys()),
+            set(ROBOT_CONFIG.keys()),
+            set(_DEFAULT_ROBOT_CONFIG.keys()),
         )
 
     def test_merge_user_robot_config_no_user_config(self):
         """Test merging when no user config is available."""
-        default_config = {"leg_length": 0.3, "mass": 2.5}
+        default_config = {"leg_length": 0.3}
         user_config = {}
         result = _merge_user_robot_config(default_config, user_config)
         self.assertEqual(result, default_config)
@@ -54,7 +51,6 @@ class RobotConfigTestCase(unittest.TestCase):
         default_config = {
             "foo": {"bar": 0.1},
             "leg_length": 0.3,
-            "mass": 2.5,
         }
         user_config = {
             "robot": {
@@ -66,7 +62,6 @@ class RobotConfigTestCase(unittest.TestCase):
         expected = {
             "foo": {"bar": 0.1},  # unchanged
             "leg_length": 0.35,  # overridden
-            "mass": 2.5,  # unchanged
             "new_param": 42,  # added
         }
         self.assertEqual(result, expected)
