@@ -180,7 +180,7 @@ qpmpc = ">=3.0.1,<4"
 
 [tool.pixi.feature.pybullet.tasks]
 go-forward = "python examples/go_forward.py"
-mpc-balancer-pybullet = "python examples/mpc_balancing.py"
+mpc-balancer-pybullet = "python examples/go_forward.py"
 
 [tool.pixi.feature.test.dependencies]
 pybullet = ">=3"
