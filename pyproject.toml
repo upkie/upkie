@@ -127,7 +127,7 @@ torch = ">=2.6.0"
 torchvision = ">=0.21.0"
 
 [tool.pixi.feature.genesis.tasks]
-mpc-balancer-genesis = "python examples/genesis/mpc_balancing.py --env Upkie-Genesis-Pendulum"
+simulator-genesis = "python examples/genesis/mpc_balancing.py"
 
 [tool.pixi.feature.lint.dependencies]
 six = "*"
@@ -179,8 +179,8 @@ pybullet = ">=3"
 qpmpc = ">=3.0.1,<4"
 
 [tool.pixi.feature.pybullet.tasks]
-go-forward = "python examples/go_forward.py"
-mpc-balancer-pybullet = "python examples/go_forward.py"
+go-forward-upkie = "python examples/go_forward_upkie.py"
+simulator-pybullet = "python examples/go_forward_upkie.py"
 
 [tool.pixi.feature.test.dependencies]
 pybullet = ">=3"
