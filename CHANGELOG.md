@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CICD: Test joystick usage in the PyBullet backend.
 - envs: Add `Cookie-PyBullet-Pendulum` environment
 - envs: Connect to joystick if available in the PyBullet backend.
+- model: Add `left_wheeled` property
 
 ### Changed
 
