@@ -121,7 +121,6 @@ def wrap_pendulum(make_env_func, **kwargs):
         "fall_pitch",
         "left_wheeled",
         "max_ground_velocity",
-        "wheel_radius",
     }
     pendulum_kwargs = {
         key: value for key, value in kwargs.items() if key in pendulum_keys

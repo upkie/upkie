@@ -11,7 +11,7 @@ from typing import Dict, List, Optional
 
 import numpy as np
 
-from upkie.config import BULLET_CONFIG, ROBOT_CONFIG
+from upkie.config import BULLET_CONFIG
 from upkie.exceptions import MissingOptionalDependency, UpkieRuntimeError
 from upkie.model import Model
 from upkie.utils.external_force import ExternalForce
@@ -469,7 +469,7 @@ class PyBulletBackend(Backend):
         right_angle = servo_obs["right_wheel"]["position"]
         left_omega = servo_obs["left_wheel"]["velocity"]
         right_omega = servo_obs["right_wheel"]["velocity"]
-        wheel_radius = ROBOT_CONFIG["wheel_radius"]
+        wheel_radius = -self.__model.wheel_radius  # TODO: wheel sign
 
         ground_position = 0.5 * (left_angle - right_angle) * wheel_radius
         ground_velocity = 0.5 * (left_omega - right_omega) * wheel_radius

@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - config: Remove IMU-to-base rotation from configuration
+- config: Remove `wheel_radius` from `ROBOT_CONFIG`; it is now a property of `Model` parsed from the URDF collision geometry
 
 ## [10.1.0] - 2026-03-11
 

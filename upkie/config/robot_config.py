@@ -35,7 +35,6 @@ def _merge_user_robot_config(
 _DEFAULT_ROBOT_CONFIG = {
     "leg_length": 0.58,  # m
     "mass": 5.34,  # kg
-    "wheel_radius": 0.06,  # m
 }
 
 ## Robot configuration dictionary with default values and user overrides.
