@@ -24,7 +24,9 @@ def register() -> None:
     for robot in ["upkie", "cookie"]:
         robot_cap = robot.capitalize()
         for backend in ["genesis", "mock", "pybullet", "spine"]:
-            backend_cap = "PyBullet" if backend == "pybullet" else backend.capitalize()
+            backend_cap = (
+                "PyBullet" if backend == "pybullet" else backend.capitalize()
+            )
             for action in ["servos", "pendulum"]:
                 action_cap = action.capitalize()
                 gym.envs.registration.register(

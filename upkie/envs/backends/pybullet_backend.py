@@ -84,7 +84,6 @@ class PyBulletBackend(Backend):
         \param torque_control_kd Derivative gain for torque control.
         \param torque_control_kp Proportional gain for torque control.
         """
-
         # Default number of substeps corresponds to the 1 kHz spine frequency
         nb_substeps: int = (
             nb_substeps if nb_substeps is not None else int(1000.0 * dt)
