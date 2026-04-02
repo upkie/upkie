@@ -9,6 +9,7 @@ import gin
 import numpy as np
 
 from upkie.controllers.mpc_balancer import MPCBalancer
+from upkie.model import Model
 from upkie.utils.clamp import clamp, clamp_abs
 from upkie.utils.filters import abs_bounded_derivative_filter
 
@@ -21,16 +22,9 @@ class WheelController:
     Base class for wheel balancers.
     """
 
-    ## \var left_wheeled
-    ## Set to True if the robot is left wheeled, that is, a positive turn of
-    ## the left wheel results in forward motion. Upkie's v1 and v2 are
-    ## left-wheeled, but Cookies are right-wheeled.
-    ##
-    ## To figure out if your robot is left- or right-wheeled, look at the rotor
-    ## of its left wheel motor and assume its axis is pointing outward (i.e.
-    ## from stator to rotor). A positive turn rotates the rotor around this
-    ## axis in the trigonometric direction.
-    left_wheeled: bool
+    ## \var model
+    ## Robot model.
+    model: Model
 
     ## \var mpc_balancer
     ## Internal controller for sagittal balance.
@@ -58,34 +52,25 @@ class WheelController:
     ## Probability the user wants to turn based on the joystick axis value.
     turning_probability: float
 
-    ## \var wheel_radius
-    ## Wheel radius in meters.
-    wheel_radius: float
-
     def __init__(
         self,
+        model: Model,
         fall_pitch: float,
-        left_wheeled: bool,
         leg_length: float,
         max_ground_accel: float,
         max_ground_velocity: float,
         turning_deadband: float,
         turning_decision_time: float,
-        wheel_radius: float,
     ):
         r"""!
         Initialize balancer.
 
         \param fall_pitch Fall pitch threshold, in radians.
-        \param left_wheeled Set to True (default) if the robot is left wheeled,
-            that is, a positive turn of the left wheel results in forward
-            motion. Set to False for a right-wheeled variant.
         \param leg_length Leg length in meters.
         \param turning_deadband Joystick axis value between 0.0 and 1.0 below
             which legs stiffen but the turning motion doesn't start.
         \param turning_decision_time Minimum duration in seconds for the
             turning probability to switch from zero to one and conversely.
-        \param wheel_radius Wheel radius in meters.
         \param max_ground_accel Maximum commanded ground acceleration.
         \param max_ground_velocity Maximum commanded ground velocity.
         """
@@ -96,15 +81,14 @@ class WheelController:
             max_ground_accel=max_ground_accel,
             max_ground_velocity=max_ground_velocity,
         )
-        self.left_wheeled = left_wheeled
         self.remote_control = RemoteControl()
+        self.model = model
         self.mpc_balancer = mpc_balancer
         self.target_ground_velocity = 0.0
         self.target_yaw_velocity = 0.0
         self.turning_deadband = turning_deadband
         self.turning_decision_time = turning_decision_time
         self.turning_probability = 0.0
-        self.wheel_radius = wheel_radius
 
     def log(self) -> dict:
         r"""!
@@ -134,8 +118,8 @@ class WheelController:
         )
 
         # Sagittal translation
-        wheel_velocity = ground_velocity / self.wheel_radius
-        left_sign: float = 1.0 if self.left_wheeled else -1.0
+        wheel_velocity = ground_velocity / self.model.wheel_radius
+        left_sign: float = 1.0 if self.model.left_wheeled else -1.0
         right_sign = -left_sign
         left_wheel_velocity = left_sign * wheel_velocity
         right_wheel_velocity = right_sign * wheel_velocity
@@ -143,7 +127,7 @@ class WheelController:
         # Yaw rotation
         delta = observation["height_controller"]["position_right_in_left"]
         contact_radius = 0.5 * np.linalg.norm(delta)
-        yaw_to_wheel = left_sign * contact_radius / self.wheel_radius
+        yaw_to_wheel = left_sign * contact_radius / self.model.wheel_radius
         left_wheel_velocity += yaw_to_wheel * self.target_yaw_velocity
         right_wheel_velocity += yaw_to_wheel * self.target_yaw_velocity
 

@@ -16,13 +16,11 @@ RemoteControl.max_yaw_accel = 10.0                   # rad/s²
 RemoteControl.max_yaw_velocity = 1.0                 # rad/s
 
 WheelController.fall_pitch = 1.0                     # rad
-WheelController.left_wheeled = True
 WheelController.leg_length = 0.58                    # m
 WheelController.max_ground_accel = 10.0              # m/s²
 WheelController.max_ground_velocity = 3.0            # m/s
 WheelController.turning_deadband = 0.3
 WheelController.turning_decision_time = 0.2          # s
-WheelController.wheel_radius = 0.06                  # m
 
 run.gain_scale = 2.0
 run.turning_gain_scale = 2.0

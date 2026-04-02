@@ -18,9 +18,13 @@ def _get_user_config_path() -> Path:
     r"""!
     Get path to the user configuration file.
 
-    \return Path to ~/.config/upkie/config.yml
+    \return Path to ~/.config/upkie/config.yaml or ~/.config/upkie/config.yml,
+        whichever exists (preferring .yaml).
     """
     config_dir = Path.home() / ".config" / "upkie"
+    yaml_path = config_dir / "config.yaml"
+    if yaml_path.exists():
+        return yaml_path
     return config_dir / "config.yml"
 
 
