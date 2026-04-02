@@ -22,10 +22,12 @@ class PyBulletBackendJoystickTestCase(unittest.TestCase):
             (0, b"left_hip", b"left_hip_link"),
             (1, b"left_knee", b"left_knee_link"),
             (2, b"left_wheel", b"left_wheel_link"),
-            (3, b"right_hip", b"right_hip_link"),
-            (4, b"right_knee", b"right_knee_link"),
-            (5, b"right_wheel", b"right_wheel_link"),
-            (6, b"imu_joint", b"imu"),
+            (3, b"left_wheel_tire_joint", b"left_wheel_tire"),
+            (4, b"right_hip", b"right_hip_link"),
+            (5, b"right_knee", b"right_knee_link"),
+            (6, b"right_wheel", b"right_wheel_link"),
+            (7, b"right_wheel_tire_joint", b"right_wheel_tire"),
+            (8, b"imu_joint", b"imu"),
         ]
 
         def mock_getJointInfo(robot_id, joint_idx):
@@ -85,14 +87,18 @@ class PyBulletBackendJoystickTestCase(unittest.TestCase):
 
     @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
     @patch("upkie.envs.backends.pybullet_backend.pybullet")
-    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
+    @patch("upkie.envs.backends.pybullet_backend.Model")
     def test_no_joystick_when_device_absent(
-        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
+        self, mock_model, mock_pybullet, mock_pybullet_data
     ):
         """Check that joystick is None when the device path does not exist."""
         mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
         mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
-        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
+        mock_model.return_value.urdf_path = "/mock/urdf/path"
+        mock_model.JOINT_NAMES = (
+            "left_hip", "left_knee", "left_wheel",
+            "right_hip", "right_knee", "right_wheel",
+        )
 
         backend = PyBulletBackend(
             dt=0.01,
@@ -106,10 +112,10 @@ class PyBulletBackendJoystickTestCase(unittest.TestCase):
     @patch("upkie.envs.backends.pybullet_backend.Path")
     @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
     @patch("upkie.envs.backends.pybullet_backend.pybullet")
-    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
+    @patch("upkie.envs.backends.pybullet_backend.Model")
     def test_b_button_raises_in_step(
         self,
-        mock_upkie_desc,
+        mock_model,
         mock_pybullet,
         mock_pybullet_data,
         mock_path_cls,
@@ -121,7 +127,11 @@ class PyBulletBackendJoystickTestCase(unittest.TestCase):
         button is pressed."""
         mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
         mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
-        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
+        mock_model.return_value.urdf_path = "/mock/urdf/path"
+        mock_model.JOINT_NAMES = (
+            "left_hip", "left_knee", "left_wheel",
+            "right_hip", "right_knee", "right_wheel",
+        )
 
         # Make Path(js_path).exists() return True so the Joystick is created
         mock_path_instance = MagicMock()

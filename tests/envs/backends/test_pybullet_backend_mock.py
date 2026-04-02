@@ -28,10 +28,12 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
             (0, b"left_hip", b"left_hip_link"),
             (1, b"left_knee", b"left_knee_link"),
             (2, b"left_wheel", b"left_wheel_link"),
-            (3, b"right_hip", b"right_hip_link"),
-            (4, b"right_knee", b"right_knee_link"),
-            (5, b"right_wheel", b"right_wheel_link"),
-            (6, b"imu_joint", b"imu"),
+            (3, b"left_wheel_tire_joint", b"left_wheel_tire"),
+            (4, b"right_hip", b"right_hip_link"),
+            (5, b"right_knee", b"right_knee_link"),
+            (6, b"right_wheel", b"right_wheel_link"),
+            (7, b"right_wheel_tire_joint", b"right_wheel_tire"),
+            (8, b"imu_joint", b"imu"),
         ]
 
         def mock_getJointInfo(robot_id, joint_idx):
@@ -73,14 +75,12 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
 
     @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
     @patch("upkie.envs.backends.pybullet_backend.pybullet")
-    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
     def test_joint_properties_initialization(
-        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
+        self, mock_pybullet, mock_pybullet_data
     ):
         """Test joint properties are initialized from bullet_config."""
         mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
         mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
-        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
 
         bullet_config = {
             "torque_control": {"kp": 20.0, "kd": 1.0},
@@ -142,14 +142,12 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
 
     @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
     @patch("upkie.envs.backends.pybullet_backend.pybullet")
-    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
     def test_friction_computation_no_friction(
-        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
+        self, mock_pybullet, mock_pybullet_data
     ):
         """Test joint torque computation without friction."""
         mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
         mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
-        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
 
         bullet_config = {
             "torque_control": {"kp": 20.0, "kd": 1.0},
@@ -190,14 +188,12 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
 
     @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
     @patch("upkie.envs.backends.pybullet_backend.pybullet")
-    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
     def test_friction_computation_with_friction(
-        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
+        self, mock_pybullet, mock_pybullet_data
     ):
         """Test joint torque computation with friction."""
         mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
         mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
-        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
 
         friction_value = 0.1
         bullet_config = {
@@ -265,14 +261,12 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
 
     @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
     @patch("upkie.envs.backends.pybullet_backend.pybullet")
-    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
     def test_friction_stiction_threshold(
-        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
+        self, mock_pybullet, mock_pybullet_data
     ):
         """No friction below stiction velocity threshold."""
         mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
         mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
-        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
 
         friction_value = 0.1
         bullet_config = {
@@ -332,14 +326,10 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
 
     @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
     @patch("upkie.envs.backends.pybullet_backend.pybullet")
-    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
-    def test_torque_measurement_noise(
-        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
-    ):
+    def test_torque_measurement_noise(self, mock_pybullet, mock_pybullet_data):
         """Test torque measurement noise is applied correctly."""
         mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
         mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
-        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
 
         # Mock base pose and velocity for get_spine_observation
         mock_pybullet.getBasePositionAndOrientation.return_value = (
@@ -449,14 +439,12 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
 
     @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
     @patch("upkie.envs.backends.pybullet_backend.pybullet")
-    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
     def test_torque_measurement_noise_threshold(
-        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
+        self, mock_pybullet, mock_pybullet_data
     ):
         """Test that small noise values are ignored (threshold behavior)."""
         mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
         mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
-        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
 
         # Mock required methods for get_spine_observation
         mock_pybullet.getBasePositionAndOrientation.return_value = (
@@ -530,14 +518,12 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
 
     @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
     @patch("upkie.envs.backends.pybullet_backend.pybullet")
-    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
     def test_torques_are_nonzero_with_actions(
-        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
+        self, mock_pybullet, mock_pybullet_data
     ):
         """Test that torques are non-zero when actions are applied."""
         mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
         mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
-        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
 
         # Mock required methods for get_spine_observation
         mock_pybullet.getBasePositionAndOrientation.return_value = (
@@ -649,14 +635,10 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
 
     @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
     @patch("upkie.envs.backends.pybullet_backend.pybullet")
-    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
-    def test_torque_control_noise(
-        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
-    ):
+    def test_torque_control_noise(self, mock_pybullet, mock_pybullet_data):
         """Test torque control noise is applied during torque computation."""
         mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
         mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
-        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
 
         bullet_config = {
             "torque_control": {"kp": 20.0, "kd": 1.0},
@@ -755,14 +737,12 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
 
     @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
     @patch("upkie.envs.backends.pybullet_backend.pybullet")
-    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
     def test_torque_control_noise_threshold(
-        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
+        self, mock_pybullet, mock_pybullet_data
     ):
         """Test that small torque control noise values are ignored."""
         mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
         mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
-        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
 
         bullet_config = {
             "torque_control": {"kp": 20.0, "kd": 1.0},
@@ -813,14 +793,12 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
 
     @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
     @patch("upkie.envs.backends.pybullet_backend.pybullet")
-    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
     def test_control_vs_measurement_noise_independence(
-        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
+        self, mock_pybullet, mock_pybullet_data
     ):
         """Test that control noise and measurement noise are independent."""
         mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
         mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
-        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
 
         # Mock required methods for get_spine_observation
         mock_pybullet.getBasePositionAndOrientation.return_value = (
@@ -905,18 +883,16 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
 
     @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
     @patch("upkie.envs.backends.pybullet_backend.pybullet")
-    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
     def test_inertia_randomization_initialization(
-        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
+        self, mock_pybullet, mock_pybullet_data
     ):
         """Test that inertia randomization is applied during initialization."""
         mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
         mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
-        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
 
         # Mock getDynamicsInfo to return consistent test data for all joints
         # Use the same joint count as the existing mock setup (7 joints)
-        expected_joint_count = 7  # From the base setUp method
+        expected_joint_count = 9  # From the base setUp method
         test_dynamics = []
         for i in range(expected_joint_count):
             mass = 1.0 + i * 0.5  # Different masses for each link
@@ -981,14 +957,12 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
 
     @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
     @patch("upkie.envs.backends.pybullet_backend.pybullet")
-    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
     def test_inertia_randomization_no_variation(
-        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
+        self, mock_pybullet, mock_pybullet_data
     ):
         """Test that no randomization happens when inertia_variation is 0."""
         mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
         mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
-        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
 
         # Mock getDynamicsInfo
         mock_pybullet.getDynamicsInfo.return_value = (
@@ -1019,14 +993,12 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
 
     @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
     @patch("upkie.envs.backends.pybullet_backend.pybullet")
-    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
     def test_inertia_randomization_small_threshold(
-        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
+        self, mock_pybullet, mock_pybullet_data
     ):
         """Test that tiny inertia_variation values are ignored."""
         mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
         mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
-        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
 
         mock_pybullet.getDynamicsInfo.return_value = (
             1.0,
@@ -1055,24 +1027,24 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
 
     @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
     @patch("upkie.envs.backends.pybullet_backend.pybullet")
-    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
     def test_randomize_inertias_method(
-        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
+        self, mock_pybullet, mock_pybullet_data
     ):
         """Test the randomize_inertias method can be called independently."""
         mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
         mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
-        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
 
-        # Mock dynamics info for all 7 links to match the base setUp
+        # Mock dynamics info for all 9 links to match the base setUp
         test_dynamics = [
             (3.0, [0, 0, 0], [0.3, 0.25, 0.35]),  # link 0
             (1.2, [0, 0, 0], [0.12, 0.15, 0.18]),  # link 1
             (2.5, [0, 0, 0], [0.25, 0.20, 0.30]),  # link 2
-            (1.8, [0, 0, 0], [0.18, 0.22, 0.16]),  # link 3
-            (2.1, [0, 0, 0], [0.21, 0.19, 0.23]),  # link 4
-            (1.6, [0, 0, 0], [0.16, 0.17, 0.15]),  # link 5
-            (1.4, [0, 0, 0], [0.14, 0.13, 0.12]),  # link 6
+            (0.5, [0, 0, 0], [0.05, 0.05, 0.05]),  # link 3
+            (1.8, [0, 0, 0], [0.18, 0.22, 0.16]),  # link 4
+            (2.1, [0, 0, 0], [0.21, 0.19, 0.23]),  # link 5
+            (1.6, [0, 0, 0], [0.16, 0.17, 0.15]),  # link 6
+            (0.5, [0, 0, 0], [0.05, 0.05, 0.05]),  # link 7
+            (1.4, [0, 0, 0], [0.14, 0.13, 0.12]),  # link 8
         ]
 
         def mock_getDynamicsInfo(robot_id, link_id):
@@ -1101,7 +1073,7 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
         backend.randomize_inertias(variation)
 
         # Should have called changeDynamics for each link
-        expected_calls = 7  # Based on the base setUp mock joint count
+        expected_calls = 9  # Based on the base setUp mock joint count
         self.assertEqual(
             mock_pybullet.changeDynamics.call_count,
             expected_calls,
@@ -1142,14 +1114,12 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
 
     @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
     @patch("upkie.envs.backends.pybullet_backend.pybullet")
-    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
     def test_randomize_inertias_repeatability(
-        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
+        self, mock_pybullet, mock_pybullet_data
     ):
         """Test that repeated calls produce different results."""
         mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
         mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
-        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
 
         mock_pybullet.getDynamicsInfo.return_value = (
             1.0,
@@ -1200,14 +1170,12 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
 
     @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
     @patch("upkie.envs.backends.pybullet_backend.pybullet")
-    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
     def test_apply_external_forces_world_frame(
-        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
+        self, mock_pybullet, mock_pybullet_data
     ):
         """Test applying external forces in world frame."""
         mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
         mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
-        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
 
         # Mock required methods for get_spine_observation
         mock_pybullet.getBasePositionAndOrientation.return_value = (
@@ -1276,14 +1244,12 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
 
     @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
     @patch("upkie.envs.backends.pybullet_backend.pybullet")
-    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
     def test_apply_external_forces_local_frame(
-        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
+        self, mock_pybullet, mock_pybullet_data
     ):
         """Test applying external forces in local frame."""
         mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
         mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
-        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
 
         # Mock required methods for get_spine_observation
         mock_pybullet.getBasePositionAndOrientation.return_value = (
@@ -1345,14 +1311,12 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
 
     @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
     @patch("upkie.envs.backends.pybullet_backend.pybullet")
-    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
     def test_apply_external_forces_invalid_force_shape(
-        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
+        self, mock_pybullet, mock_pybullet_data
     ):
         """Test that invalid force shapes raise ValueError."""
         mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
         mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
-        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
 
         backend = PyBulletBackend(dt=0.01, gui=False)
 
@@ -1372,14 +1336,12 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
 
     @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
     @patch("upkie.envs.backends.pybullet_backend.pybullet")
-    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
     def test_apply_external_forces_unknown_link(
-        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
+        self, mock_pybullet, mock_pybullet_data
     ):
         """Test behavior when applying forces to unknown links."""
         mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
         mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
-        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
 
         # Mock required methods for get_spine_observation
         mock_pybullet.getBasePositionAndOrientation.return_value = (
@@ -1418,14 +1380,12 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
 
     @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
     @patch("upkie.envs.backends.pybullet_backend.pybullet")
-    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
     def test_apply_external_forces_multiple_steps(
-        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
+        self, mock_pybullet, mock_pybullet_data
     ):
         """Test that external forces persist across multiple steps."""
         mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
         mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
-        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
 
         # Mock required methods for get_spine_observation
         mock_pybullet.getBasePositionAndOrientation.return_value = (
@@ -1484,14 +1444,12 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
 
     @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
     @patch("upkie.envs.backends.pybullet_backend.pybullet")
-    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
     def test_apply_external_forces_update_forces(
-        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
+        self, mock_pybullet, mock_pybullet_data
     ):
         """Test that external forces can be updated between steps."""
         mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
         mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
-        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
 
         # Mock required methods for get_spine_observation
         mock_pybullet.getBasePositionAndOrientation.return_value = (
@@ -1552,14 +1510,10 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
 
     @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
     @patch("upkie.envs.backends.pybullet_backend.pybullet")
-    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
-    def test_get_contact_points_basic(
-        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
-    ):
+    def test_get_contact_points_basic(self, mock_pybullet, mock_pybullet_data):
         """Test basic functionality of get_contact_points method."""
         mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
         mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
-        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
 
         # Mock contact points data
         mock_contact_data = [
@@ -1567,7 +1521,7 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
                 0,  # contact_flag
                 1,  # body_unique_id_a (robot)
                 0,  # body_unique_id_b (ground plane)
-                5,  # link_index_a (right wheel)
+                6,  # link_index_a (right wheel)
                 -1,  # link_index_b (base of plane)
                 [0.1, 0.2, 0.3],  # position_on_a
                 [0.1, 0.2, 0.0],  # position_on_b
@@ -1636,14 +1590,12 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
 
     @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
     @patch("upkie.envs.backends.pybullet_backend.pybullet")
-    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
     def test_get_contact_points_no_contacts(
-        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
+        self, mock_pybullet, mock_pybullet_data
     ):
         """Test get_contact_points when no contacts exist."""
         mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
         mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
-        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
 
         # Mock empty contact points
         mock_pybullet.getContactPoints.return_value = []
@@ -1660,14 +1612,12 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
 
     @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
     @patch("upkie.envs.backends.pybullet_backend.pybullet")
-    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
     def test_get_contact_points_robot_only(
-        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
+        self, mock_pybullet, mock_pybullet_data
     ):
         """Test get_contact_points always uses robot ID for body_a."""
         mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
         mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
-        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
 
         mock_pybullet.getContactPoints.return_value = []
 
@@ -1684,14 +1634,12 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
 
     @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
     @patch("upkie.envs.backends.pybullet_backend.pybullet")
-    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
     def test_get_contact_points_with_link_name(
-        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
+        self, mock_pybullet, mock_pybullet_data
     ):
         """Test get_contact_points with link_name filtering."""
         mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
         mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
-        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
 
         # Mock contact data with different links
         mock_contact_data = [
@@ -1881,14 +1829,12 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
 
     @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
     @patch("upkie.envs.backends.pybullet_backend.pybullet")
-    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
     def test_get_contact_points_invalid_link_name(
-        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
+        self, mock_pybullet, mock_pybullet_data
     ):
         """Test get_contact_points with invalid link name."""
         mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
         mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
-        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
 
         # Mock joint info with IMU link
         mock_joint_info_list = [
@@ -1930,14 +1876,12 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
 
     @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
     @patch("upkie.envs.backends.pybullet_backend.pybullet")
-    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
     def test_get_contact_points_base_link(
-        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
+        self, mock_pybullet, mock_pybullet_data
     ):
         """Test get_contact_points with base link."""
         mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
         mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
-        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
 
         # Mock joint info with IMU link
         mock_joint_info_list = [
@@ -2047,14 +1991,12 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
 
     @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
     @patch("upkie.envs.backends.pybullet_backend.pybullet")
-    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
     def test_apply_external_forces_with_external_force_class(
-        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
+        self, mock_pybullet, mock_pybullet_data
     ):
         """Test applying external forces using ExternalForce class."""
         mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
         mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
-        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
 
         # Mock required methods for get_spine_observation
         mock_pybullet.getBasePositionAndOrientation.return_value = (
@@ -2136,14 +2078,12 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
 
     @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
     @patch("upkie.envs.backends.pybullet_backend.pybullet")
-    @patch("upkie.envs.backends.pybullet_backend.upkie_description")
     def test_apply_external_forces_mixed_formats(
-        self, mock_upkie_desc, mock_pybullet, mock_pybullet_data
+        self, mock_pybullet, mock_pybullet_data
     ):
         """Test mixing ExternalForce instances and dictionary formats."""
         mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
         mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
-        mock_upkie_desc.URDF_PATH = "/mock/urdf/path"
 
         # Mock required methods for get_spine_observation
         mock_pybullet.getBasePositionAndOrientation.return_value = (
