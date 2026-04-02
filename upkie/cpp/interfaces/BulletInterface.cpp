@@ -235,10 +235,6 @@ void BulletInterface::cycle(
   send_commands();
   bullet_.stepSimulation();
 
-  if (params_.follower_camera) {
-    translate_camera_to_robot();
-  }
-
   moteus::Output output;
   for (size_t i = 0; i < data_.replies.size(); ++i) {
     const auto servo_id = data_.commands[i].id;
@@ -410,17 +406,6 @@ Eigen::VectorXd BulletInterface::get_joint_angles() noexcept {
     }
   }
   return joint_angles;
-}
-
-void BulletInterface::translate_camera_to_robot() {
-  b3OpenGLVisualizerCameraInfo camera_info;
-  btVector3 position_base_in_world;
-  btQuaternion orientation_base_in_world;
-  bullet_.getBasePositionAndOrientation(robot_, position_base_in_world,
-                                        orientation_base_in_world);
-  bullet_.getDebugVisualizerCamera(&camera_info);
-  bullet_.resetDebugVisualizerCamera(camera_info.m_dist, camera_info.m_pitch,
-                                     camera_info.m_yaw, position_base_in_world);
 }
 
 int BulletInterface::get_link_index(const std::string& link_name) {

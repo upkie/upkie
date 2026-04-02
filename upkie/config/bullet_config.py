@@ -8,7 +8,6 @@
 
 ## Bullet simulation configuration dictionary.
 BULLET_CONFIG = {
-    "follower_camera": False,
     "gui": True,
     "reset": {
         "orientation_base_in_world": [1.0, 0.0, 0.0, 0.0],
