@@ -18709,7 +18709,7 @@ packages:
 - pypi: ./
   name: upkie
   version: 10.1.0
-  sha256: 68def84f99b7607c66e9d63c228cf55c9c7ec1319ae7984bab9b74416b45c1b7
+  sha256: 2cb3d130ea70b68abf7e5a93f1d1c8bfbce0fcad235392b8fccf198af2f4ab24
   requires_dist:
   - gymnasium>=1.0.0
   - loop-rate-limiters>=1.2.0
@@ -18720,7 +18720,6 @@ packages:
   - upkie-description>=2.1.0
   - cookie-description>=1.0 ; extra == 'cookie'
   requires_python: '>=3.10'
-  editable: true
 - conda: https://conda.anaconda.org/conda-forge/noarch/upkie_description-2.2.0-pyhd8ed1ab_0.conda
   sha256: 84d79bc1acace472c1bb0cb7f7c71e9eea5fb19092156f61b6ba2173f831af17
   md5: 9a658b84bcb72d606b2d34a7b30ac79c

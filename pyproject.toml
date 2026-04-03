@@ -133,9 +133,11 @@ six = "*"
 ruff = ">=0.4.3"
 
 [tool.pixi.feature.lint.tasks]
-_lint-cpp = { cmd = "tools/bazelisk test --config lint //upkie/..." }
-_lint-python = { cmd = "ruff check upkie && ruff format --check upkie" }
-lint = { depends-on = ["_lint-cpp", "_lint-python"] }
+format-python = { cmd = "ruff format upkie" }
+lint-cpp = { cmd = "tools/bazelisk test --config lint //upkie/..." }
+lint-python = { cmd = "ruff check upkie && ruff format --check upkie" }
+lint-python-fix = { cmd = "ruff check --fix upkie" }
+lint = { depends-on = ["lint-cpp", "lint-python"] }
 
 [tool.pixi.feature.mpc-balancer.dependencies]
 gin-config = ">=0.5.0"

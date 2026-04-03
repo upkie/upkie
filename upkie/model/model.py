@@ -196,14 +196,10 @@ class Model:
                 continue
             collision = link.find("collision")
             if collision is None:
-                raise ModelError(
-                    "left_wheel_tire link has no collision"
-                )
+                raise ModelError("left_wheel_tire link has no collision")
             geometry = collision.find("geometry")
             if geometry is None:
-                raise ModelError(
-                    "left_wheel_tire collision has no geometry"
-                )
+                raise ModelError("left_wheel_tire collision has no geometry")
             cylinder = geometry.find("cylinder")
             if cylinder is None:
                 raise ModelError(
