@@ -59,7 +59,7 @@ class ConstantObservationEnv(gym.Env):
     Test environment that returns a constant observation.
 
     This environment always returns the same observation value regardless
-    of the action taken. It also stores PyBullet actions for testing purposes.
+    of the action taken.
     """
 
     ## \var action_space
@@ -83,7 +83,6 @@ class ConstantObservationEnv(gym.Env):
         self.action_space = spaces.Box(-1.0, 1.0, shape=(1,))
         self.observation_space = spaces.Box(0.0, 2.0, shape=(1,))
         self.constant = constant
-        self.__bullet_action = {}
 
     def step(self, action):
         r"""!
@@ -96,22 +95,6 @@ class ConstantObservationEnv(gym.Env):
         """
         observation = np.array([self.constant])
         return observation, 0.0, False, False, {}
-
-    def get_bullet_action(self) -> dict:
-        r"""!
-        Get the stored PyBullet action.
-
-        \return The stored PyBullet action dictionary.
-        """
-        return self.__bullet_action
-
-    def set_bullet_action(self, bullet_action: dict) -> None:
-        r"""!
-        Set the PyBullet action to be stored.
-
-        \param bullet_action The PyBullet action dictionary to store.
-        """
-        self.__bullet_action = bullet_action.copy()
 
 
 class MockSpine:
