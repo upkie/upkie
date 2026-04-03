@@ -31,7 +31,7 @@ jobs:
 
             - name: "Test submodule imports"
               run: |
-                  python -c "import upkie.config"
+                  python -c "import upkie.envs.backends"
                   python -c "import upkie.envs; upkie.envs.register()"
                   python -c "import upkie.model"
                   python -c "import upkie.utils"
@@ -53,7 +53,7 @@ jobs:
 
             - name: "Test submodule imports"
               run: |
-                  python -c "import upkie.config"
+                  python -c "import upkie.envs.backends"
                   python -c "import upkie.envs; upkie.envs.register()"
                   python -c "import upkie.model"
                   python -c "import upkie.utils"
@@ -75,7 +75,7 @@ jobs:
 
             - name: "Test submodule imports"
               run: |
-                  python -c "import upkie.config"
+                  python -c "import upkie.envs.backends"
                   python -c "import upkie.envs; upkie.envs.register()"
                   python -c "import upkie.model"
                   python -c "import upkie.utils"
