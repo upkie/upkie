@@ -111,7 +111,7 @@ jobs:
             - name: "Setup Pixi"
               uses: prefix-dev/setup-pixi@v0.8.14
               with:
-                  pixi-version: v0.60.0
+                  pixi-version: v0.66.0
                   cache: true
 
             - name: "Run coverage tests"
@@ -136,7 +136,7 @@ jobs:
             - name: "Setup Pixi"
               uses: prefix-dev/setup-pixi@v0.8.14
               with:
-                  pixi-version: v0.60.0
+                  pixi-version: v0.66.0
                   cache: true
 
             - name: "Check code formatting"
@@ -181,7 +181,7 @@ jobs:
             - name: "Setup Pixi"
               uses: prefix-dev/setup-pixi@v0.8.14
               with:
-                  pixi-version: v0.60.0
+                  pixi-version: v0.66.0
                   environments: test-${{ matrix.pyenv }}
                   cache: true
 
