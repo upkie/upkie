@@ -5,12 +5,11 @@
 
 """Python module to control Upkie wheeled biped robots."""
 
-from . import config, envs, model, utils
+from . import envs, model, utils
 
 __version__ = "10.1.0"
 
 __all__ = [
-    "config",
     "envs",
     "model",
     "utils",
