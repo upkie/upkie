@@ -54,20 +54,19 @@ exclude = [
     ".bazel*",
     ".clang-format",
     ".git*",
+    "CITATION.cff",
     "CONTRIBUTING.md",
     "CPPLINT.cfg",
+    "Makefile",
     "WORKSPACE",
+    "docs/",
     "examples/",
     "logs/",
     "mpc_balancer/",
+    "pixi.lock",
     "spines/",
     "tools/",
     "upkie/cpp",
-]
-include = [
-    "upkie/config/*.py",
-    "upkie/envs/*.py",
-    "upkie/utils/*.py",
 ]
 
 [tool.pixi.workspace]
