@@ -38,6 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+- config: Move spine configuration to the spine backend
 - config: Remove IMU-to-base rotation from configuration
 - config: Remove `wheel_radius` as it is now a property of `Model` and parsed from the URDF collision geometry
 - config: Remove robot configuration dictionary as it has become unused

@@ -12,9 +12,7 @@ from typing import Optional
 import gin
 import gymnasium as gym
 
-import upkie.config
 import upkie.envs
-from upkie.config import SPINE_CONFIG
 from upkie.logging import logger
 from upkie.model import Model
 from upkie.utils.clamp import clamp
@@ -134,18 +132,8 @@ if __name__ == "__main__":
     if on_raspi():
         configure_agent_process()
 
-    # Configuration hack for wheel odometry
     description = import_module(args.description)
     model = Model(description.URDF_PATH)
-    wheel_odometry = SPINE_CONFIG["wheel_odometry"]
-    left_sign: float = 1.0 if model.left_wheeled else -1.0
-    right_sign = -left_sign
-    wheel_odometry["signed_radius"]["left_wheel"] = (
-        left_sign * model.wheel_radius
-    )
-    wheel_odometry["signed_radius"]["right_wheel"] = (
-        right_sign * model.wheel_radius
-    )
 
     temp_wheel_controller = WheelController(model)
     max_rc_vel = temp_wheel_controller.remote_control.max_linear_velocity
