@@ -101,7 +101,7 @@ def make_spine_servos(**kwargs):
     \param kwargs Keyword arguments forwarded to the environment and backend.
     \return UpkieServos with SpineBackend.
     """
-    backend_keys = {"shm_name", "spine_config"}
+    backend_keys = {"model", "shm_name", "spine_config"}
     backend_kwargs = {
         key: value for key, value in kwargs.items() if key in backend_keys
     }
@@ -295,7 +295,8 @@ def make_cookie_spine_servos(**kwargs):
     r"""!
     Create a Cookie servos environment with Spine backend.
     """
-    return make_spine_servos(**kwargs)
+    cookie_model = _get_cookie_model()
+    return make_spine_servos(model=cookie_model, **kwargs)
 
 
 def make_cookie_spine_pendulum(**kwargs):
