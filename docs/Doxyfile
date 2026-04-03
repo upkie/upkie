@@ -839,7 +839,6 @@ INPUT                  = README.md \
                          docs/spines.md \
                          docs/dev-notes.md \
                          upkie \
-                         upkie/config \
                          upkie/controllers \
                          upkie/controllers/mpc_balancer \
                          upkie/cpp \
