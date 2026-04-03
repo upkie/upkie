@@ -34,6 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - cpp: Clean up unused `reset_joint_properties` function
 - cpp: Remove joint properties from Bullet interface
+- docs: Clean up obsolete Doxygen configuration parameters
 - utils: Handle directional pad (D-pad) inputs in `Joystick` class
 
 ### Removed
