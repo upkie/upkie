@@ -151,7 +151,6 @@ class SpineBackend(Backend):
         }
 
         # Instance attributes
-        self.__bullet_action = {}
         self._spine = SpineInterface(shm_name, retries=10)
         self._spine_config = merged_spine_config
 
@@ -222,14 +221,7 @@ class SpineBackend(Backend):
         \param action Action dictionary in spine format.
         \return Spine observation dictionary after the step.
         """
-        # Prepare spine action
         spine_action = action.copy()
-        if self.__bullet_action:
-            spine_action["bullet"] = {}
-            spine_action["bullet"].update(self.__bullet_action)
-            self.__bullet_action.clear()
-
-        # Send action to and get observation from the spine
         spine_observation = self._spine.set_action(spine_action)
         return spine_observation
 
@@ -240,22 +232,3 @@ class SpineBackend(Backend):
         \return Spine observation dictionary.
         """
         return self._spine.get_observation()
-
-    def get_bullet_action(self) -> dict:
-        r"""!
-        Get the Bullet action that will be applied at next step.
-
-        \return Upcoming simulator action.
-        """
-        return self.__bullet_action
-
-    def set_bullet_action(self, bullet_action: dict) -> None:
-        r"""!
-        Prepare for the next step an extra action for the Bullet spine.
-
-        This extra action can be for instance a set of external forces applied
-        to some robot bodies.
-
-        \param bullet_action Action dictionary processed by the Bullet spine.
-        """
-        self.__bullet_action = bullet_action.copy()
