@@ -112,7 +112,8 @@ class GyropodTestCase(unittest.TestCase):
 
     def test_leg_gain_scale(self):
         self.env.reset()
-        self.env.leg_gain_scale = 2.5
+        self.env.set_leg_gain_scale(2.5)
+        self.assertAlmostEqual(self.env.leg_gain_scale, 2.5)
         action = np.zeros(self.env.action_space.shape)
         self.env.step(action)
         spine_action = self.backend._spine.action
