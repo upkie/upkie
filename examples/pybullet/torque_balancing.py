@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 # /// script
-# dependencies = ["upkie", "pybullet>=3"]
+# dependencies = ["upkie", "pybullet"]
 # ///
 
 """Balancing using proportional control from base pitch to wheel torques."""

@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 # /// script
-# dependencies = ["upkie", "proxsuite", "pybullet>=3", "qpmpc"]
+# dependencies = ["upkie", "proxsuite", "pybullet", "qpmpc"]
 # ///
 
 """Follow a 1 m square using the UpkieBaseVelocity environment in PyBullet."""
