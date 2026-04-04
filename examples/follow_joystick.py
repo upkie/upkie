@@ -2,6 +2,10 @@
 # -*- coding: utf-8 -*-
 #
 # SPDX-License-Identifier: Apache-2.0
+#
+# /// script
+# dependencies = ["upkie", "proxsuite", "pybullet", "qpmpc"]
+# ///
 
 """Follow joystick commands in simulation for Upkie or Cookie."""
 
@@ -15,6 +19,7 @@ from upkie.controllers import JoystickGyropodController
 from upkie.utils.clamp import clamp
 
 upkie.envs.register()
+
 
 def main(
     robot: str = "Upkie",

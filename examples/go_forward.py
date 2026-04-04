@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 # /// script
-# dependencies = ["upkie", "proxsuite", "pybullet>=3", "qpmpc"]
+# dependencies = ["upkie", "proxsuite", "pybullet", "qpmpc"]
 # ///
 
 """Balancing with the wheels by model predictive control in PyBullet."""
@@ -41,12 +41,13 @@ def main(robot: str):
     mpc_balancer = MPCBalancer(leg_length=0.58)
 
     print(f"\nStarting balancing a {robot} by MPC in PyBullet...")
-    with gym.make(f"{robot}-PyBullet-Pendulum",
-        frequency= 200.0,
+    with gym.make(
+        f"{robot}-PyBullet-Pendulum",
+        frequency=200.0,
         frequency_checks=False,
-        gui= True,
-        nb_substeps= 5,
-                  ) as env:
+        gui=True,
+        nb_substeps=5,
+    ) as env:
         _, info = env.reset()  # connects to the spine
         action = np.zeros(env.action_space.shape)
 

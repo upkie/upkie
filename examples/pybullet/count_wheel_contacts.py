@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 # /// script
-# dependencies = ["upkie", "pybullet>=3"]
+# dependencies = ["upkie", "pybullet"]
 # ///
 
 """Count contacts between robot wheels and the environment."""

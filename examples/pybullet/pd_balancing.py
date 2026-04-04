@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 # /// script
-# dependencies = ["upkie", "pybullet>=3"]
+# dependencies = ["upkie", "pybullet"]
 # ///
 
 """Try basic balancing in a PyBullet simulation."""

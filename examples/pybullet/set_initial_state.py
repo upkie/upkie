@@ -4,15 +4,16 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 # /// script
-# dependencies = ["upkie", "pybullet>=3"]
+# dependencies = ["upkie", "pybullet"]
 # ///
 
 """Initialize robot in PyBullet with a custom initial state."""
 
 import gymnasium as gym
 import numpy as np
-import upkie.envs
 from scipy.spatial.transform import Rotation as ScipyRotation
+
+import upkie.envs
 from upkie.utils.robot_state import RobotState
 
 if __name__ == "__main__":
