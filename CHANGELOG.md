@@ -15,9 +15,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - controllers: Add `JoystickGyropodController` mapping joystick inputs to gyropod actions
 - controllers: Add `reset` function to `MPCBalancer`
 - controllers: Rename MPCBalancer stepping function to `step`
-- envs: Add `*-*-Gyropod` environments
-- envs: Add `Cookie-*-*` environments
+- envs: Add `UpkieBaseVelocity` environment
+- envs: Add `UpkieGyropod` environment
 - envs: Connect to joystick if available in the PyBullet backend.
+- envs: Register `*-*-BaseVelocity` environments
+- envs: Register `*-*-Gyropod` environments
+- envs: Register `Cookie-*-*` environments
 - model: Add `JointProperties` class for per-joint simulation properties
 - model: Add `left_wheeled` property
 - model: Add `wheel_base` property
