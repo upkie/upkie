@@ -115,7 +115,7 @@ class UpkieGyropod(gym.Wrapper):
         r"""!
         Initialize environment.
 
-        \param servos Upkie environment to command servomotors.
+        \param servos_env Upkie environment to command servomotors.
         \param fall_pitch Fall detection pitch angle, in radians.
         \param leg_gain_scale Gain scale applied to upper leg kp_scale and
             kd_scale servo parameters.

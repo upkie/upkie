@@ -83,7 +83,7 @@ class UpkieBaseVelocity(gym.Wrapper):
         r"""!
         Initialize environment.
 
-        \param servos Upkie environment to command servomotors.
+        \param servos_env Upkie environment to command servomotors.
         \param fall_pitch Fall detection pitch angle, in radians.
         \param max_ground_velocity Maximum commanded ground velocity in m/s.
         \param max_yaw_velocity Maximum commanded yaw velocity in rad/s.
