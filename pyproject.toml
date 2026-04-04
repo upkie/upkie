@@ -177,8 +177,10 @@ examples-upkie-going-forward = "python examples/going_forward.py"
 simulator-pybullet = "python examples/pybullet/mpc_balancing.py"
 
 [tool.pixi.feature.test.dependencies]
+proxsuite = ">=0.7.2,<0.8"
 pybullet = ">=3.25,<4"
 pytest = ">=9.0.2,<10"
+qpmpc = ">=3.1.0,<4"
 "stable-baselines3" = ">=2.7.1,<3"
 
 [tool.pixi.feature.test.tasks]
