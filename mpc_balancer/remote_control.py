@@ -3,10 +3,6 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-import gin
-
-
-@gin.configurable
 class RemoteControl:
     r"""!
     Remote control parameters.
@@ -32,10 +28,10 @@ class RemoteControl:
 
     def __init__(
         self,
-        max_linear_velocity: float,
-        max_linear_accel: float,
-        max_yaw_velocity: float,
-        max_yaw_accel: float,
+        max_linear_velocity: float = 1.5,
+        max_linear_accel: float = 1.2,
+        max_yaw_velocity: float = 1.0,
+        max_yaw_accel: float = 10.0,
     ) -> None:
         r"""!
         Initialize remote-control parameters.

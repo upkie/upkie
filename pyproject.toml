@@ -139,7 +139,6 @@ lint-python-fix = { cmd = "ruff check --fix upkie" }
 lint = { depends-on = ["lint-cpp", "lint-python"] }
 
 [tool.pixi.feature.mpc-balancer.dependencies]
-gin-config = ">=0.5.0"
 meshcat-shapes = ">=0.3.0"
 pink = ">=3.0.0,<4"
 proxsuite = ">=0.4.1"
