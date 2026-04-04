@@ -58,7 +58,7 @@ if __name__ == "__main__":
             action = np.zeros(env.action_space.shape)
 
             print("\n--\n")
-            print(f"Balancing for {NB_STEPS} steps...")
+            print(f"Going forward for {NB_STEPS} steps...")
             print(f"Target ground velocity: {TARGET_GROUND_VELOCITY} m/s")
             print("Press Ctrl+C to stop early.\n")
 
