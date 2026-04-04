@@ -5,6 +5,8 @@
 
 """Wheel balancing using model predictive control with the ProxQP solver."""
 
+import copy
+
 import numpy as np
 import proxsuite
 import qpsolvers
@@ -87,8 +89,22 @@ class ProxQPWorkspace:
             u=mpc_qp.h[::2],  # WheeledInvertedPendulum structure
         )
         solver.solve()
+        self.__mpc_qp = copy.deepcopy(mpc_qp)
         self.solver = solver
         self.update_preconditioner = update_preconditioner
+
+    def reset(self):
+        r"""!
+        Reset internal workspace to its initial state.
+        """
+        self.solver.init(
+            H=self.__mpc_qp.P,
+            g=self.__mpc_qp.q,
+            C=self.__mpc_qp.G[::2, :],  # WheeledInvertedPendulum structure
+            l=-self.__mpc_qp.h[1::2],  # WheeledInvertedPendulum structure
+            u=self.__mpc_qp.h[::2],  # WheeledInvertedPendulum structure
+        )
+        self.solver.solve()
 
     def solve_with_warm_start(self, mpc_qp: MPCQP) -> qpsolvers.Solution:
         r"""!
@@ -205,6 +221,15 @@ class MPCBalancer:
         self.pendulum = pendulum
         self.proxqp = proxqp
         self.warm_start = warm_start
+
+    def reset(self):
+        r"""!
+        Reset the internal state of the controller.
+        """
+        self.commanded_velocity = 0.0
+        self.fallen = False
+        self.mpc_problem.initial_state = np.zeros(4)
+        self.proxqp.reset()
 
     def step(
         self,
