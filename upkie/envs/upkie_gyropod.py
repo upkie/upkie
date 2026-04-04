@@ -169,12 +169,27 @@ class UpkieGyropod(gym.Wrapper):
         )
 
         # Instance attributes
+        self.__leg_gain_scale = leg_gain_scale
         self.__leg_servo_action = env.get_neutral_action()
         self.__yaw_angle = 0.0  # rad
         self.__yaw_velocity = 0.0  # rad/s
         self.env = env
         self.fall_pitch = fall_pitch
-        self.leg_gain_scale = leg_gain_scale
+
+    @property
+    def leg_gain_scale(self) -> float:
+        r"""!
+        Get the current kp/kd scale upplied to hip and knee joints.
+        """
+        return self.__leg_gain_scale
+
+    def set_leg_gain_scale(self, leg_gain_scale: float) -> None:
+        r"""!
+        Set a new kp/kd scale upplied to hip and knee joints.
+
+        \param leg_gain_scale New kp/kd scale.
+        """
+        self.__leg_gain_scale = leg_gain_scale
 
     def __get_env_observation(
         self, spine_observation: dict, yaw_angle: float, yaw_velocity: float
@@ -253,10 +268,10 @@ class UpkieGyropod(gym.Wrapper):
             self.__leg_servo_action[joint.name]["position"] = new_position
             self.__leg_servo_action[joint.name][
                 "kp_scale"
-            ] = self.leg_gain_scale
+            ] = self.__leg_gain_scale
             self.__leg_servo_action[joint.name][
                 "kd_scale"
-            ] = self.leg_gain_scale
+            ] = self.__leg_gain_scale
         return self.__leg_servo_action
 
     def __get_wheel_servo_action(

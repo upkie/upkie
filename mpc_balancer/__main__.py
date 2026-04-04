@@ -98,7 +98,7 @@ def update_target_yaw_velocity(
     \param remote_control Remote control parameters.
     \param spine_observation Spine observation dictionary.
     \param dt Duration in seconds until the next cycle.
-    \return Tuple of (updated target yaw velocity, updated turning probability).
+    \return Tuple of updated (target yaw velocity, turning probability).
     """
     try:
         joystick_value = spine_observation["joystick"]["right_axis"][0]
@@ -219,8 +219,10 @@ def run(
             )
 
             # Update leg gain scaling based on turning probability
-            leg_gain_scale = gain_scale + turning_gain_scale * turning_probability
-            env.unwrapped.leg_gain_scale = leg_gain_scale
+            set_leg_gain_scale = env.get_wrapper_attr("set_leg_gain_scale")
+            set_leg_gain_scale(
+                gain_scale + turning_gain_scale * turning_probability
+            )
 
             action = np.array([ground_velocity, target_yaw_velocity])
             _, _, terminated, truncated, info = env.step(action)
