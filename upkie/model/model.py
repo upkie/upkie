@@ -80,6 +80,10 @@ class Model:
     ## Wheel joints.
     wheel_joints: Tuple[float]
 
+    ## \var wheel_base
+    ## Distance between left and right wheel contact points, in meters.
+    wheel_base: float
+
     ## \var wheel_radius
     ## Wheel radius in meters, parsed from the URDF collision geometry of the
     ## "left_wheel_tire" link.
@@ -147,6 +151,7 @@ class Model:
             joint_tags
         )
         self.upper_leg_joints = upper_leg_joints
+        self.wheel_base = 0.3048  # meters, TODO: read from neutral config.
         self.wheel_joints = wheel_joints
         self.wheel_radius = self._parse_wheel_radius(link_tags)
 
