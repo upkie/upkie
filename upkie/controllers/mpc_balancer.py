@@ -10,6 +10,7 @@ import proxsuite
 import qpsolvers
 from qpmpc import MPCQP, MPCProblem, Plan
 from qpmpc.systems import WheeledInvertedPendulum
+
 from upkie.logging import logger
 from upkie.utils.clamp import clamp_abs
 from upkie.utils.filters import low_pass_filter
@@ -41,6 +42,14 @@ class ProxQPWorkspace:
     r"""!
     ProxQP solver instance with corresponding workspace data.
     """
+
+    ## \var solver
+    ## ProxQP solver instance.
+    solver: proxsuite.proxqp.dense.QP
+
+    ## \var update_preconditioner
+    ## Flag to update preconditioners at each solve.
+    update_preconditioner: bool
 
     def __init__(
         self,
@@ -78,8 +87,8 @@ class ProxQPWorkspace:
             u=mpc_qp.h[::2],  # WheeledInvertedPendulum structure
         )
         solver.solve()
-        self.__update_preconditioner = update_preconditioner
-        self.__solver = solver
+        self.solver = solver
+        self.update_preconditioner = update_preconditioner
 
     def solve_with_warm_start(self, mpc_qp: MPCQP) -> qpsolvers.Solution:
         r"""!
@@ -88,23 +97,23 @@ class ProxQPWorkspace:
         \param mpc_qp Model predictive control problem to solve.
         \return Solution found by the solver.
         """
-        self.__solver.update(
+        self.solver.update(
             g=mpc_qp.q,
-            update_preconditioner=self.__update_preconditioner,
+            update_preconditioner=self.update_preconditioner,
         )
-        self.__solver.solve()
-        result = self.__solver.results
+        self.solver.solve()
+        result = self.solver.results
         qpsol = qpsolvers.Solution(mpc_qp.problem)
         qpsol.found = (
             result.info.status == proxsuite.proxqp.QPSolverOutput.PROXQP_SOLVED
         )
-        qpsol.x = self.__solver.results.x
+        qpsol.x = self.solver.results.x
         return qpsol
 
 
 class MPCBalancer:
     r"""!
-    Model-predictive control sagittal balancer.
+    Model-predictive controller for sagittal balance control.
     """
 
     ## \var commanded_velocity
@@ -197,7 +206,7 @@ class MPCBalancer:
         self.proxqp = proxqp
         self.warm_start = warm_start
 
-    def compute_ground_velocity(
+    def step(
         self,
         target_ground_velocity: float,
         spine_observation: dict,
