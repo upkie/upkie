@@ -5,6 +5,8 @@
 
 """Joystick controller for gyropod."""
 
+from typing import Literal
+
 import numpy as np
 
 from upkie.utils.clamp import clamp, clamp_abs
@@ -44,6 +46,7 @@ class JoystickGyropodController:
 
     def __init__(
         self,
+        joystick_axis: Literal["left_axis", "right_axis"] = "left_axis",
         max_linear_accel: float = 1.2,
         max_linear_velocity: float = 1.5,
         max_yaw_accel: float = 10.0,
@@ -54,6 +57,9 @@ class JoystickGyropodController:
         r"""!
         Initialize joystick controller.
 
+        \param joystick_axis Joystick axis to read inputs from. Up-down stick
+            motions control the linear velocity, while left-right motions
+            control the angular velocity.
         \param max_linear_accel Maximum linear acceleration in m/s².
         \param max_linear_velocity Maximum linear velocity in m/s.
         \param max_yaw_accel Maximum yaw angular acceleration in rad/s².
@@ -64,6 +70,8 @@ class JoystickGyropodController:
             turning probability to switch from zero to one and conversely.
         """
         assert 0.0 <= turning_deadband <= 1.0
+        assert joystick_axis in ["left_axis", "right_axis"]
+        self.__axis_name = joystick_axis
         self.__linear_velocity = 0.0
         self.__turning_probability = 0.0
         self.__yaw_velocity = 0.0
@@ -100,7 +108,7 @@ class JoystickGyropodController:
         \param dt Duration in seconds until the next cycle.
         """
         try:
-            axis_value = observation["joystick"]["left_axis"][1]
+            axis_value = observation["joystick"][self.__axis_name][1]
             max_velocity = self.max_linear_velocity
             unfiltered_velocity = -max_velocity * axis_value
         except KeyError:
@@ -124,7 +132,7 @@ class JoystickGyropodController:
         \param dt Duration in seconds until the next cycle.
         """
         try:
-            joystick_value = observation["joystick"]["left_axis"][0]
+            joystick_value = observation["joystick"][self.__axis_name][0]
         except KeyError:
             joystick_value = 0.0
         joystick_abs = abs(joystick_value)
