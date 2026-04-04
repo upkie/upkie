@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Breaking:** envs: Pendulum environments read `left_wheeled` from the model rather than as a keyword argument
 - **Breaking:** envs: Replace `bullet_config` dict in PyBullet backend with explicit `inertia_variation`, `joint_properties`, `torque_control_kd` and `torque_control_kp` kwargs
+- Move `start_simulation.sh` to `spines/start_bullet_spine.sh`
 - Transfer copyright notices to `NOTICE` file
 - envs: Default maximum ground velocity of pendulum environments is now 3 m/s
 - envs: Floor contact detection in PyBullet backend now queries wheel-tire contacts with the ground plane
@@ -52,6 +53,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - **Breaking:** Remove `upkie.config` submodule entirely
+- Remove `start_mpc_balancer.sh` as there are simpler examples now
 - config: Move spine configuration to the spine backend
 - config: Remove IMU-to-base rotation from configuration
 - config: Remove `wheel_radius` as it is now a property of `Model` and parsed from the URDF collision geometry
