@@ -11,6 +11,7 @@
 import gymnasium as gym
 
 from .upkie_env import UpkieEnv
+from .upkie_gyropod import UpkieGyropod
 from .upkie_pendulum import UpkiePendulum
 from .upkie_servos import UpkieServos
 
@@ -27,7 +28,7 @@ def register() -> None:
             backend_cap = (
                 "PyBullet" if backend == "pybullet" else backend.capitalize()
             )
-            for action in ["servos", "pendulum"]:
+            for action in ["servos", "pendulum", "gyropod"]:
                 action_cap = action.capitalize()
                 gym.envs.registration.register(
                     id=f"{robot_cap}-{backend_cap}-{action_cap}",
@@ -40,6 +41,7 @@ def register() -> None:
 
 __all__ = [
     "UpkieEnv",
+    "UpkieGyropod",
     "UpkiePendulum",
     "UpkieServos",
     "register",
