@@ -3,18 +3,15 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-import argparse
-from importlib import import_module
-
 import gymnasium as gym
 import numpy as np
+import upkie_description
 
 import upkie.envs
 from upkie.controllers import JoystickGyropodController, MPCBalancer
 from upkie.logging import logger
 from upkie.model import Model
 from upkie.utils.clamp import clamp
-from upkie.utils.raspi import configure_agent_process, on_raspi
 
 
 class Controller:
@@ -193,38 +190,8 @@ class Controller:
                     self.mpc_balancer.reset()
 
 
-def parse_command_line_arguments() -> argparse.Namespace:
-    r"""!
-    Parse command line arguments.
-
-    \return Command-line arguments.
-    """
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument(
-        "-c",
-        "--config",
-        metavar="config",
-        help="Additional agent configuration to apply",
-        type=str,
-    )
-    parser.add_argument(
-        "--description",
-        help="Robot description to read (default: upkie_description)",
-        choices=["upkie_description", "cookie_description"],
-        default="upkie_description",
-    )
-    return parser.parse_args()
-
-
 if __name__ == "__main__":
-    args = parse_command_line_arguments()
-
-    # On Raspberry Pi, configure the process to run on a separate CPU core
-    if on_raspi():
-        configure_agent_process()
-
-    description = import_module(args.description)
-    model = Model(description.URDF_PATH)
+    model = Model(upkie_description.URDF_PATH)
 
     logger.info(f"Wheel radius: {model.wheel_radius} m")
 
