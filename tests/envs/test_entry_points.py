@@ -54,6 +54,26 @@ class EntryPointsTestCase(unittest.TestCase):
         with gym.make("Upkie-PyBullet-Pendulum", gui=False) as env:
             self.assertIsNotNone(env)
 
+    def test_mock_gyropod(self):
+        with gym.make("Upkie-Mock-Gyropod") as env:
+            self.assertIsNotNone(env)
+
+    def test_spine_gyropod(self):
+        shm = SharedMemory(name=None, size=42, create=True)
+        try:
+            env = gym.make("Upkie-Spine-Gyropod", shm_name=shm._name)
+            self.assertIsNotNone(env)
+            try:
+                del env
+            except UpkieTimeoutError:
+                pass
+        finally:
+            shm.close()
+
+    def test_pybullet_gyropod(self):
+        with gym.make("Upkie-PyBullet-Gyropod", gui=False) as env:
+            self.assertIsNotNone(env)
+
     def test_unregistered(self):
         with self.assertRaises(gym.error.NameNotFound):
             gym.make("Upkie-Servos-NotFound")
