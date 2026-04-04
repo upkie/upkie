@@ -122,18 +122,6 @@ class Controller:
         self.max_yaw_accel = max_yaw_accel
         self.max_yaw_velocity = max_yaw_velocity
 
-    def log(self) -> dict:
-        r"""!
-        Log internal state to a dictionary.
-
-        \return Log data as a dictionary.
-        """
-        return {
-            "commanded_velocity": self.mpc_balancer.commanded_velocity,
-            "target_ground_velocity": self.target_ground_velocity,
-            "target_yaw_velocity": self.target_yaw_velocity,
-        }
-
     def cycle(self, observation: dict, dt: float) -> dict:
         r"""!
         Compute a new ground velocity.
