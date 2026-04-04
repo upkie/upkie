@@ -33,6 +33,7 @@ def main(
         dt = env.unwrapped.dt
         _, info = env.reset()
         spine_observation = info["spine_observation"]
+        set_leg_gain_scale = env.get_wrapper_attr("set_leg_gain_scale")
 
         while True:
             linear_velocity, yaw_velocity = joystick_controller.step(
@@ -40,7 +41,6 @@ def main(
             )
 
             # Update leg gain scaling based on turning probability
-            set_leg_gain_scale = env.get_wrapper_attr("set_leg_gain_scale")
             turning_prob = joystick_controller.turning_probability
             set_leg_gain_scale(gain_scale + turning_gain_scale * turning_prob)
 
