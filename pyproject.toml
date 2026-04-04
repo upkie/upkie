@@ -112,6 +112,7 @@ cookie_description = ">=1.1.0, <2"
 
 [tool.pixi.feature.cookie.tasks]
 cookie-follow-joystick = "python examples/follow_joystick.py --robot cookie"
+cookie-follow-square = "python examples/follow_square.py --robot cookie"
 cookie-go-forward = "python examples/go_forward.py --robot cookie"
 
 # ---------------------
@@ -218,6 +219,7 @@ qpmpc = ">=3.1.0,<4"
 
 [tool.pixi.feature.pybullet.tasks]
 example-follow-joystick = "python examples/follow_joystick.py"
+example-follow-square = "python examples/follow_square.py"
 example-go-forward = "python examples/go_forward.py"
 simulator-pybullet = "python examples/pybullet/mpc_balancing.py"
 
