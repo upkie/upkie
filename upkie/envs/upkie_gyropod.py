@@ -266,12 +266,12 @@ class UpkieGyropod(gym.Wrapper):
                 dt=self.env.dt,
             )
             self.__leg_servo_action[joint.name]["position"] = new_position
-            self.__leg_servo_action[joint.name][
-                "kp_scale"
-            ] = self.__leg_gain_scale
-            self.__leg_servo_action[joint.name][
-                "kd_scale"
-            ] = self.__leg_gain_scale
+            self.__leg_servo_action[joint.name]["kp_scale"] = (
+                self.__leg_gain_scale
+            )
+            self.__leg_servo_action[joint.name]["kd_scale"] = (
+                self.__leg_gain_scale
+            )
         return self.__leg_servo_action
 
     def __get_wheel_servo_action(
