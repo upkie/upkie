@@ -48,36 +48,28 @@ class JoystickGyropodController:
     ## Probability the user wants to turn based on the joystick axis value.
     turning_probability: float
 
-    ## \var target_ground_velocity
-    ## Target ground sagittal velocity in m/s.
-    target_ground_velocity: float
-
-    ## \var target_yaw_velocity
-    ## Target yaw velocity in rad/s.
-    target_yaw_velocity: float
-
     def __init__(
         self,
+        max_linear_accel: float = 1.2,
+        max_linear_velocity: float = 1.5,
+        max_yaw_accel: float = 10.0,
+        max_yaw_velocity: float = 1.0,
         turning_deadband: float = 0.3,
         turning_decision_time: float = 0.2,
-        max_linear_velocity: float = 1.5,
-        max_linear_accel: float = 1.2,
-        max_yaw_velocity: float = 1.0,
-        max_yaw_accel: float = 10.0,
     ):
         r"""!
         Initialize joystick controller.
 
-        \param turning_deadband Joystick axis value between 0.0 and 1.0 below
-            which legs stiffen but the turning motion doesn't start.
-        \param turning_decision_time Minimum duration in seconds for the
-            turning probability to switch from zero to one and conversely.
         \param max_linear_accel Maximum acceleration for the ground position
             target, in m/s². Does not affect the commanded ground velocity.
         \param max_linear_velocity Maximum velocity for the ground position
             target, in m/s. Indirectly affects the commanded ground velocity.
         \param max_yaw_accel Maximum yaw angular acceleration in rad/s².
         \param max_yaw_velocity Maximum yaw angular velocity in rad/s.
+        \param turning_deadband Joystick axis value between 0.0 and 1.0 below
+            which legs stiffen but the turning motion doesn't start.
+        \param turning_decision_time Minimum duration in seconds for the
+            turning probability to switch from zero to one and conversely.
         """
         assert 0.0 <= turning_deadband <= 1.0
         self.turning_deadband = turning_deadband
@@ -87,8 +79,8 @@ class JoystickGyropodController:
         self.max_linear_velocity = max_linear_velocity
         self.max_yaw_accel = max_yaw_accel
         self.max_yaw_velocity = max_yaw_velocity
-        self.target_ground_velocity = 0.0
-        self.target_yaw_velocity = 0.0
+        self.__linear_velocity = 0.0
+        self.__yaw_velocity = 0.0
 
     def update_target_ground_velocity(
         self, observation: dict, dt: float
@@ -112,12 +104,12 @@ class JoystickGyropodController:
         except KeyError:
             unfiltered_velocity = 0.0
         unclipped_ground_velocity = abs_bounded_derivative_filter(
-            prev_output=self.target_ground_velocity,
+            prev_output=self.__linear_velocity,
             new_input=unfiltered_velocity,
             dt=dt,
             max_derivative=self.max_linear_accel,
         )
-        self.target_ground_velocity = clamp_abs(
+        self.__linear_velocity = clamp_abs(
             unclipped_ground_velocity,
             self.max_linear_velocity,
         )
@@ -151,23 +143,31 @@ class JoystickGyropodController:
         velocity_ratio = max(0.0, velocity_ratio)
         max_yaw_velocity = self.max_yaw_velocity
         velocity = max_yaw_velocity * joystick_sign * velocity_ratio
-        turn_hasnt_started = abs(self.target_yaw_velocity) < 0.01
+        turn_hasnt_started = abs(self.__yaw_velocity) < 0.01
         turn_not_sure_yet = self.turning_probability < 0.99
         if turn_hasnt_started and turn_not_sure_yet:
             velocity = 0.0
         unclipped_yaw_velocity = abs_bounded_derivative_filter(
-            prev_output=self.target_yaw_velocity,
+            prev_output=self.__yaw_velocity,
             new_input=velocity,
             dt=dt,
             max_derivative=self.max_yaw_accel,
         )
-        self.target_yaw_velocity = clamp_abs(
+        self.__yaw_velocity = clamp_abs(
             unclipped_yaw_velocity,
             self.max_yaw_velocity,
         )
-        if abs(self.target_yaw_velocity) > 0.01:  # still turning
+        if abs(self.__yaw_velocity) > 0.01:  # still turning
             self.turning_probability = 1.0
 
-    def step(self, observation: dict, dt: float) -> None:
+    def step(self, observation: dict, dt: float) -> tuple[float, float]:
+        r"""!
+        Get new target velocities based on joystick input.
+
+        \param observation Observation dictionary containing joystick inputs.
+        \param dt Duration in seconds until the next control cycle.
+        \return Tuple of (target_ground_velocity, target_yaw_velocity).
+        """
         self.update_target_ground_velocity(observation, dt)
         self.update_target_yaw_velocity(observation, dt)
+        return (self.__linear_velocity, self.__yaw_velocity)
