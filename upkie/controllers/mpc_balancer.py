@@ -6,8 +6,8 @@
 """Wheel balancing using model predictive control with the ProxQP solver."""
 
 import numpy as np
+import proxsuite
 import qpsolvers
-from proxsuite import proxqp
 from qpmpc import MPCQP, MPCProblem, Plan
 from qpmpc.systems import WheeledInvertedPendulum
 from upkie.logging import logger
@@ -39,7 +39,7 @@ def get_target_states(
 
 class ProxQPWorkspace:
     r"""!
-    ProxQP solver with workspace data.
+    ProxQP solver instance with corresponding workspace data.
     """
 
     def __init__(
@@ -59,11 +59,11 @@ class ProxQPWorkspace:
         n_eq = 0
         n_in = mpc_qp.h.size // 2  # WheeledInvertedPendulum structure
         n = mpc_qp.P.shape[1]
-        solver = proxqp.dense.QP(
+        solver = proxsuite.proxqp.dense.QP(
             n,
             n_eq,
             n_in,
-            dense_backend=proxqp.dense.DenseBackend.PrimalDualLDLT,
+            dense_backend=proxsuite.proxqp.dense.DenseBackend.PrimalDualLDLT,
         )
         solver.settings.eps_abs = 1e-3
         solver.settings.eps_rel = 0.0
@@ -81,7 +81,7 @@ class ProxQPWorkspace:
         self.__update_preconditioner = update_preconditioner
         self.__solver = solver
 
-    def solve(self, mpc_qp: MPCQP) -> qpsolvers.Solution:
+    def solve_with_warm_start(self, mpc_qp: MPCQP) -> qpsolvers.Solution:
         r"""!
         Solve a given MPC QP.
 
@@ -95,7 +95,9 @@ class ProxQPWorkspace:
         self.__solver.solve()
         result = self.__solver.results
         qpsol = qpsolvers.Solution(mpc_qp.problem)
-        qpsol.found = result.info.status == proxqp.QPSolverOutput.PROXQP_SOLVED
+        qpsol.found = (
+            result.info.status == proxsuite.proxqp.QPSolverOutput.PROXQP_SOLVED
+        )
         qpsol.x = self.__solver.results.x
         return qpsol
 
@@ -137,9 +139,9 @@ class MPCBalancer:
     ## Flag to enable warm-starting the QP solver.
     warm_start: bool
 
-    ## \var proxqp_workspace
+    ## \var proxqp
     ## ProxQP solver workspace for the MPC optimization.
-    proxqp_workspace: ProxQPWorkspace
+    proxqp: ProxQPWorkspace
 
     def __init__(
         self,
@@ -184,7 +186,7 @@ class MPCBalancer:
         )
         mpc_problem.initial_state = np.zeros(4)
         mpc_qp = MPCQP(mpc_problem)
-        proxqp_workspace = ProxQPWorkspace(mpc_qp)
+        proxqp = ProxQPWorkspace(mpc_qp)
         self.commanded_velocity = 0.0
         self.fall_pitch = fall_pitch
         self.fallen = False
@@ -192,8 +194,8 @@ class MPCBalancer:
         self.mpc_problem = mpc_problem
         self.mpc_qp = mpc_qp
         self.pendulum = pendulum
+        self.proxqp = proxqp
         self.warm_start = warm_start
-        self.proxqp_workspace = proxqp_workspace
 
     def compute_ground_velocity(
         self,
@@ -243,7 +245,7 @@ class MPCBalancer:
 
         self.mpc_qp.update_cost_vector(self.mpc_problem)
         if self.warm_start:
-            qpsol = self.proxqp_workspace.solve(self.mpc_qp)
+            qpsol = self.proxqp.solve_with_warm_start(self.mpc_qp)
         else:  # not self.warm_start
             qpsol = qpsolvers.solve_problem(
                 self.mpc_qp.problem,
