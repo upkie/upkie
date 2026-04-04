@@ -6,8 +6,10 @@
 ## \namespace upkie.controllers
 ## \brief Functions and classes related to balance control.
 
+from .joystick_gyropod_controller import JoystickGyropodController
 from .mpc_balancer import MPCBalancer
 
 __all__ = [
+    "JoystickGyropodController",
     "MPCBalancer",
 ]
