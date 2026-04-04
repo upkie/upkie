@@ -42,10 +42,6 @@ class JoystickGyropodController:
     ## zero to one and conversely.
     turning_decision_time: float
 
-    ## \var turning_probability
-    ## Probability the user wants to turn based on the joystick axis value.
-    turning_probability: float
-
     def __init__(
         self,
         max_linear_accel: float = 1.2,
