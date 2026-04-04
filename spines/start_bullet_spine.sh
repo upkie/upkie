@@ -4,16 +4,18 @@
 # SPDX-License-Identifier: Apache-2.0
 
 SCRIPT=$(realpath "$0")
-SCRIPTDIR=$(dirname "${SCRIPT}")
+SCRIPT_DIR=$(dirname "${SCRIPT}")
+PARENT_DIR=$(dirname "${SCRIPT_DIR}")
+DOXYFILE=${PARENT_DIR}/docs/Doxyfile
 
 DOWNLOAD_URL="https://github.com/upkie/upkie/releases/download"
 
-if [ ! -f docs/Doxyfile ]; then
+if [ ! -f ${DOXYFILE} ]; then
     echo "❌ Unable to find file 'docs/Doxyfile' for version number"
     exit
 fi
 # no v at start of version number here
-VERSION=$(awk '/^PROJECT_NUMBER/{print $3}' docs/Doxyfile)
+VERSION=$(awk '/^PROJECT_NUMBER/{print $3}' ${DOXYFILE})
 
 SYSTEM=$(uname -s)
 ARCH=$(uname -m)
@@ -107,5 +109,5 @@ fi
 
 if [[ -n "${REBUILD}" ]]; then
     echo "🏗️  Building the simulation spine from source..."
-    (cd "${SCRIPTDIR}" && "${SCRIPTDIR}"/tools/bazelisk run //spines:bullet_spine -- "${SPINE_ARGS[@]}")
+    (cd "${SCRIPT_DIR}" && "${SCRIPT_DIR}"/tools/bazelisk run //spines:bullet_spine -- "${SPINE_ARGS[@]}")
 fi
