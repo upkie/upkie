@@ -78,6 +78,14 @@ class JoystickGyropodController:
         self.__linear_velocity = 0.0
         self.__yaw_velocity = 0.0
 
+    def reset(self) -> None:
+        r"""!
+        Reset the internal state of the controller.
+        """
+        self.__linear_velocity = 0.0
+        self.__yaw_velocity = 0.0
+        self.turning_probability = 0.0
+
     def update_linear_velocity(self, observation: dict, dt: float) -> None:
         r"""!
         Update linear velocity from joystick input.
