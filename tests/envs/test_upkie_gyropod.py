@@ -119,12 +119,8 @@ class GyropodTestCase(unittest.TestCase):
         servo_action = spine_action["servo"]
         model = self.env.get_wrapper_attr("model")
         for joint in model.upper_leg_joints:
-            self.assertAlmostEqual(
-                servo_action[joint.name]["kp_scale"], 2.5
-            )
-            self.assertAlmostEqual(
-                servo_action[joint.name]["kd_scale"], 2.5
-            )
+            self.assertAlmostEqual(servo_action[joint.name]["kp_scale"], 2.5)
+            self.assertAlmostEqual(servo_action[joint.name]["kd_scale"], 2.5)
 
     def test_dtype_consistency(self):
         self.assertEqual(self.env.action_space.dtype, np.float32)
