@@ -64,23 +64,33 @@ class JoystickGyropodController:
             turning probability to switch from zero to one and conversely.
         """
         assert 0.0 <= turning_deadband <= 1.0
-        self.turning_deadband = turning_deadband
-        self.turning_decision_time = turning_decision_time
-        self.turning_probability = 0.0
+        self.__linear_velocity = 0.0
+        self.__turning_probability = 0.0
+        self.__yaw_velocity = 0.0
         self.max_linear_accel = max_linear_accel
         self.max_linear_velocity = max_linear_velocity
         self.max_yaw_accel = max_yaw_accel
         self.max_yaw_velocity = max_yaw_velocity
-        self.__linear_velocity = 0.0
-        self.__yaw_velocity = 0.0
+        self.turning_deadband = turning_deadband
+        self.turning_decision_time = turning_decision_time
+
+    @property
+    def turning_probability(self) -> float:
+        r"""!
+        Probability the user wants to turn based on the joystick axis value.
+
+        This is an extra output that not returned by the `step` function but
+        available if needed.
+        """
+        return self.__turning_probability
 
     def reset(self) -> None:
         r"""!
         Reset the internal state of the controller.
         """
         self.__linear_velocity = 0.0
+        self.__turning_probability = 0.0
         self.__yaw_velocity = 0.0
-        self.turning_probability = 0.0
 
     def update_linear_velocity(self, observation: dict, dt: float) -> None:
         r"""!
@@ -122,12 +132,12 @@ class JoystickGyropodController:
 
         turning_intent = joystick_abs / self.turning_deadband
         unclipped_probability = abs_bounded_derivative_filter(
-            prev_output=self.turning_probability,
+            prev_output=self.__turning_probability,
             new_input=turning_intent,  # might be > 1.0
             dt=dt,
             max_derivative=1.0 / self.turning_decision_time,
         )
-        self.turning_probability = clamp(unclipped_probability, 0.0, 1.0)
+        self.__turning_probability = clamp(unclipped_probability, 0.0, 1.0)
 
         velocity_ratio = (joystick_abs - self.turning_deadband) / (
             1.0 - self.turning_deadband
@@ -137,7 +147,7 @@ class JoystickGyropodController:
         velocity = max_yaw_velocity * joystick_sign * velocity_ratio
 
         turn_hasnt_started = abs(self.__yaw_velocity) < 0.01
-        turn_not_sure_yet = self.turning_probability < 0.99
+        turn_not_sure_yet = self.__turning_probability < 0.99
         if turn_hasnt_started and turn_not_sure_yet:
             velocity = 0.0
 
@@ -152,7 +162,7 @@ class JoystickGyropodController:
             self.max_yaw_velocity,
         )
         if abs(self.__yaw_velocity) > 0.01:  # still turning
-            self.turning_probability = 1.0
+            self.__turning_probability = 1.0
 
     def step(self, observation: dict, dt: float) -> tuple[float, float]:
         r"""!
