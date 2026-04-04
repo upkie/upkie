@@ -215,7 +215,7 @@ class Controller:
         \param dt Duration in seconds until the next cycle.
         """
         try:
-            joystick_value = observation["joystick"]["right_axis"][0]
+            joystick_value = observation["joystick"]["left_axis"][0]
         except KeyError:
             joystick_value = 0.0
         joystick_abs = abs(joystick_value)
