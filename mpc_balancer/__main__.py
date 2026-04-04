@@ -8,7 +8,7 @@ import numpy as np
 import upkie_description
 
 import upkie.envs
-from upkie.controllers import JoystickGyropodController, MPCBalancer
+from upkie.controllers import JoystickGyropodController
 from upkie.logging import logger
 from upkie.model import Model
 from upkie.utils.clamp import clamp
@@ -26,10 +26,6 @@ class Controller:
     ## \var model
     ## Robot model.
     model: Model
-
-    ## \var mpc_balancer
-    ## Internal controller for sagittal balance.
-    mpc_balancer: MPCBalancer
 
     def __init__(
         self,
@@ -53,47 +49,38 @@ class Controller:
         \param max_yaw_velocity Maximum yaw angular velocity in rad/s.
         \param turning_gain_scale Additional gain scaling applied when turning.
         """
+        self.fall_pitch = fall_pitch
         self.gain_scale = clamp(gain_scale, 0.1, 2.0)
         self.joystick_controller = JoystickGyropodController()
+        self.leg_length = leg_length
+        self.max_ground_accel = max_ground_accel
         self.max_ground_velocity = max_ground_velocity
         self.max_yaw_velocity = max_yaw_velocity
         self.model = model
-        self.mpc_balancer = MPCBalancer(
-            leg_length=leg_length,
-            fall_pitch=fall_pitch,
-            max_ground_accel=max_ground_accel,
-            max_ground_velocity=max_ground_velocity,
-        )
         self.turning_gain_scale = clamp(turning_gain_scale, 0.0, 3.0)
 
     def run(self, frequency: float = 200.0) -> None:
         r"""!
-        Run agent on a gyropod Upkie environment.
+        Run agent on a base-velocity Upkie environment.
 
         \param frequency Control frequency in Hz.
         """
-
         with gym.make(
-            "Upkie-Spine-Gyropod",
+            "Upkie-Spine-BaseVelocity",
             frequency=frequency,
+            fall_pitch=self.fall_pitch,
             max_ground_velocity=self.max_ground_velocity,
             max_yaw_velocity=self.max_yaw_velocity,
+            leg_length=self.leg_length,
+            max_ground_accel=self.max_ground_accel,
         ) as env:
             dt = env.unwrapped.dt
             _, info = env.reset()
             spine_observation = info["spine_observation"]
 
             while True:
-                # Update velocity targets from joystick
-                target_ground_velocity, yaw_velocity = (
-                    self.joystick_controller.step(spine_observation, dt)
-                )
-
-                # MPC computes commanded ground velocity
-                ground_velocity = self.mpc_balancer.step(
-                    target_ground_velocity,
-                    spine_observation,
-                    dt,
+                linear_velocity, yaw_velocity = self.joystick_controller.step(
+                    spine_observation, dt
                 )
 
                 # Update leg gain scaling based on turning probability
@@ -105,7 +92,7 @@ class Controller:
 
                 action = np.array(
                     [
-                        ground_velocity,
+                        linear_velocity,
                         yaw_velocity,
                     ]
                 )
@@ -116,7 +103,6 @@ class Controller:
                     _, info = env.reset()
                     spine_observation = info["spine_observation"]
                     self.joystick_controller.reset()
-                    self.mpc_balancer.reset()
 
 
 if __name__ == "__main__":
