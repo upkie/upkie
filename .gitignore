@@ -3,13 +3,13 @@
 __pycache__
 activate.sh
 bazel-*
-cache/
 dist/
 docs/html/
 env/
 environment.tar
 logs/
 sandbox/
+spines/cache/
 tools/bazel
 tools/logs/**/*.0
 tools/logs/**/*.csv

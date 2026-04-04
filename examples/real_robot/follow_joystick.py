@@ -30,7 +30,6 @@ class Controller:
     def __init__(
         self,
         model: Model,
-        fall_pitch: float = 1.0,
         gain_scale: float = 2.0,
         leg_length: float = 0.58,
         max_ground_accel: float = 10.0,
@@ -41,7 +40,6 @@ class Controller:
         r"""!
         Initialize balancer.
 
-        \param fall_pitch Fall pitch threshold, in radians.
         \param gain_scale PD gain scale for hip and knee joints.
         \param leg_length Leg length in meters.
         \param max_ground_accel Maximum commanded ground acceleration in m/s².
@@ -49,7 +47,6 @@ class Controller:
         \param max_yaw_velocity Maximum yaw angular velocity in rad/s.
         \param turning_gain_scale Additional gain scaling applied when turning.
         """
-        self.fall_pitch = fall_pitch
         self.gain_scale = clamp(gain_scale, 0.1, 2.0)
         self.joystick_controller = JoystickGyropodController()
         self.leg_length = leg_length
@@ -68,7 +65,6 @@ class Controller:
         with gym.make(
             "Upkie-Spine-BaseVelocity",
             frequency=frequency,
-            fall_pitch=self.fall_pitch,
             max_ground_velocity=self.max_ground_velocity,
             max_yaw_velocity=self.max_yaw_velocity,
             leg_length=self.leg_length,

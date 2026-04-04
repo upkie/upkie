@@ -39,6 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - logs: Move template log Makefile to tools/
 - mpc_balancer: Merge `RemoteControl` parameters into the new `JoystickGyropodController`
 - mpc_balancer: Merge `WheelController` into `Controller` class
+- mpc_balancer: Moved to `examples/real_robot/follow_joystick.py`
 - mpc_balancer: Use left rather than right joystick's left-right axis for yaw control
 
 ### Fixed
