@@ -79,8 +79,6 @@ def make_upkie_pybullet_servos(**kwargs):
     backend_kwargs = {
         key: value for key, value in kwargs.items() if key in backend_keys
     }
-    backend_kwargs.setdefault("torque_control_kp", 20.0)
-    backend_kwargs.setdefault("torque_control_kd", 1.0)
     env_kwargs = {
         key: value for key, value in kwargs.items() if key not in backend_keys
     }
@@ -401,8 +399,6 @@ def make_cookie_pybullet_servos(**kwargs):
     backend_kwargs = {
         key: value for key, value in kwargs.items() if key in backend_keys
     }
-    backend_kwargs.setdefault("torque_control_kp", 60.0)
-    backend_kwargs.setdefault("torque_control_kd", 4.0)
     env_kwargs = {
         key: value for key, value in kwargs.items() if key not in backend_keys
     }
