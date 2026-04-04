@@ -514,7 +514,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/cpython-3.13.12-py313hd8ed1ab_100.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/cycler-0.12.1-pyhcf101f3_2.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/dbus-1.16.2-h24cb091_1.conda
-      - conda: https://conda.anaconda.org/conda-forge/linux-64/doxygen-1.9.5-h583eb01_0.tar.bz2
+      - conda: https://conda.anaconda.org/conda-forge/linux-64/doxygen-1.13.2-h8e693c7_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/epoxy-1.5.10-hb03c661_2.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/farama-notifications-0.0.4-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/filelock-3.25.2-pyhd8ed1ab_0.conda
@@ -685,7 +685,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/cpython-3.13.12-py313hd8ed1ab_100.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/cycler-0.12.1-pyhcf101f3_2.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-aarch64/dbus-1.16.2-h70963c4_1.conda
-      - conda: https://conda.anaconda.org/conda-forge/linux-aarch64/doxygen-1.9.5-h04155f4_0.tar.bz2
+      - conda: https://conda.anaconda.org/conda-forge/linux-aarch64/doxygen-1.13.2-h5e0f5ae_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-aarch64/epoxy-1.5.10-he30d5cf_2.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/farama-notifications-0.0.4-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/filelock-3.25.2-pyhd8ed1ab_0.conda
@@ -853,7 +853,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/contourpy-1.3.3-py313h2af2deb_4.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/cpython-3.13.12-py313hd8ed1ab_100.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/cycler-0.12.1-pyhcf101f3_2.conda
-      - conda: https://conda.anaconda.org/conda-forge/osx-arm64/doxygen-1.9.5-hd78112f_0.tar.bz2
+      - conda: https://conda.anaconda.org/conda-forge/osx-arm64/doxygen-1.13.2-h493aca8_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/epoxy-1.5.10-hc919400_2.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/farama-notifications-0.0.4-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/filelock-3.25.2-pyhd8ed1ab_0.conda
@@ -4630,41 +4630,43 @@ packages:
   - objgraph>=1.7.2 ; extra == 'graph'
   - gprof2dot>=2022.7.29 ; extra == 'profile'
   requires_python: '>=3.9'
-- conda: https://conda.anaconda.org/conda-forge/linux-64/doxygen-1.9.5-h583eb01_0.tar.bz2
-  sha256: f8379387abdb1c51ec72165fbd7e2c54b83c40224ea9eed825a18895ab60273f
-  md5: a94d4fb8005f9d8d286e06bbb1bec448
+- conda: https://conda.anaconda.org/conda-forge/linux-64/doxygen-1.13.2-h8e693c7_0.conda
+  sha256: 349c4c872357b4a533e127b2ade8533796e8e062abc2cd685756a1a063ae1e35
+  md5: 0869f41ea5c64643dd2f5b47f32709ca
   depends:
-  - libgcc-ng >=12
-  - libiconv >=1.16,<2.0.0a0
-  - libstdcxx-ng >=12
+  - __glibc >=2.17,<3.0.a0
+  - libgcc >=13
+  - libiconv >=1.17,<2.0a0
+  - libstdcxx >=13
   license: GPL-2.0-only
   license_family: GPL
   purls: []
-  size: 7758595
-  timestamp: 1662056949515
-- conda: https://conda.anaconda.org/conda-forge/linux-aarch64/doxygen-1.9.5-h04155f4_0.tar.bz2
-  sha256: 4ccd5a8f2434ba04fcda419e690dec233f381432e23adceb0f2fe11029b67770
-  md5: 8b648aebf430cde9aa32cc55a51dc3b2
+  size: 13148627
+  timestamp: 1738164137421
+- conda: https://conda.anaconda.org/conda-forge/linux-aarch64/doxygen-1.13.2-h5e0f5ae_0.conda
+  sha256: 671fc9849fcdb9138daf2ab6b2d45b0650055ba1496cda19c415f57cabc381b8
+  md5: 9091aa1c92ed01d5fe3d34d7e585b6a1
   depends:
-  - libgcc-ng >=12
-  - libiconv >=1.16,<2.0.0a0
-  - libstdcxx-ng >=12
+  - libgcc >=13
+  - libiconv >=1.17,<2.0a0
+  - libstdcxx >=13
   license: GPL-2.0-only
   license_family: GPL
   purls: []
-  size: 6964591
-  timestamp: 1662056799962
-- conda: https://conda.anaconda.org/conda-forge/osx-arm64/doxygen-1.9.5-hd78112f_0.tar.bz2
-  sha256: 48a4bafdacca69e6ee38ea635d81e300bad86eda34869600fbdeff50ed74976f
-  md5: 0b5059999731cad5ca96b597f0b6c77b
+  size: 13227405
+  timestamp: 1738171320483
+- conda: https://conda.anaconda.org/conda-forge/osx-arm64/doxygen-1.13.2-h493aca8_0.conda
+  sha256: 2327ad4e6214accc1e71aea371aee9b9fed864ec36c20f829fd1cb71d4c85202
+  md5: 3f5795e9004521711fa3a586b65fde05
   depends:
-  - libcxx >=14.0.4
-  - libiconv >=1.16,<2.0.0a0
+  - __osx >=11.0
+  - libcxx >=18
+  - libiconv >=1.17,<2.0a0
   license: GPL-2.0-only
   license_family: GPL
   purls: []
-  size: 5757771
-  timestamp: 1662057573456
+  size: 11260324
+  timestamp: 1738164659
 - conda: https://conda.anaconda.org/conda-forge/linux-64/eigen-3.4.0-h54a6638_2.conda
   sha256: a627704a4dc57459dbcdec8296c3f7f1801e53d441b7cadb56a2caa57920a5b3
   md5: 00f77958419a22c6a41568c6decd4719
@@ -15748,15 +15750,15 @@ packages:
 - pypi: ./
   name: upkie
   version: 10.1.0
-  sha256: 834528953d94f1a31fe189d1ec375e40bf4ce0d5dd0eaa21abe062b84e37f198
+  sha256: 59a417e303fb479a5c2494448427fe8b0cb388ebc4f1184afb5d8c25e29a4bb9
   requires_dist:
-  - gymnasium>=1.0.0
-  - loop-rate-limiters>=1.2.0
-  - msgpack>=1.0.2
-  - numpy>=1.24.3
-  - pyyaml>=5.3.1
-  - scipy>=1.10.0
-  - upkie-description>=2.1.0
+  - gymnasium
+  - loop-rate-limiters
+  - msgpack
+  - numpy
+  - pyyaml
+  - scipy
+  - upkie-description
   - cookie-description>=1.0 ; extra == 'cookie'
   requires_python: '>=3.10'
 - conda: https://conda.anaconda.org/conda-forge/noarch/upkie_description-2.2.0-pyhd8ed1ab_0.conda
