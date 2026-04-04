@@ -103,7 +103,7 @@ coverage = { cmd = "tools/bazelisk coverage --combined_report=lcov --compilation
 coverage-open = { cmd = "xdg-open bazel-out/_coverage/index.html", depends-on = ["coverage"] }
 
 [tool.pixi.feature.docs.dependencies]
-doxygen = ">=1.13.2,<2"
+doxygen = ">=1.8,<1.9"
 graphviz = ">=14.1.2,<15"
 make = ">=4.4.1,<5"
 "stable-baselines3" = ">=2.7.1,<3"
