@@ -48,19 +48,10 @@ class Controller:
         \param fall_pitch Fall pitch threshold, in radians.
         \param gain_scale PD gain scale for hip and knee joints.
         \param leg_length Leg length in meters.
-        \param turning_deadband Joystick axis value between 0.0 and 1.0 below
-            which legs stiffen but the turning motion doesn't start.
-        \param turning_decision_time Minimum duration in seconds for the
-            turning probability to switch from zero to one and conversely.
-        \param turning_gain_scale Additional gain scaling applied when turning.
-        \param max_ground_accel Maximum commanded ground acceleration.
-        \param max_ground_velocity Maximum commanded ground velocity.
-        \param max_linear_accel Maximum acceleration for the ground position
-            target, in m/s². Does not affect the commanded ground velocity.
-        \param max_linear_velocity Maximum velocity for the ground position
-            target, in m/s. Indirectly affects the commanded ground velocity.
-        \param max_yaw_accel Maximum yaw angular acceleration in rad/s².
+        \param max_ground_accel Maximum commanded ground acceleration in m/s².
+        \param max_ground_velocity Maximum commanded ground velocity in m/s.
         \param max_yaw_velocity Maximum yaw angular velocity in rad/s.
+        \param turning_gain_scale Additional gain scaling applied when turning.
         """
         self.gain_scale = clamp(gain_scale, 0.1, 2.0)
         self.joystick_controller = JoystickGyropodController()
