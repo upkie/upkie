@@ -26,13 +26,13 @@ classifiers = [
     "Topic :: Scientific/Engineering",
 ]
 dependencies = [
-    "gymnasium >= 1.0.0",
-    "loop-rate-limiters >= 1.2.0",
-    "msgpack >= 1.0.2",
-    "numpy >= 1.24.3",
-    "pyyaml >=5.3.1",
-    "scipy >= 1.10.0",
-    "upkie_description >= 2.1.0",
+    "gymnasium",
+    "loop-rate-limiters",
+    "msgpack",
+    "numpy",
+    "pyyaml",
+    "scipy",
+    "upkie-description",
 ]
 keywords = ["wheeled", "biped", "robot", "balance", "motion", "control", "robotics"]
 
@@ -77,36 +77,36 @@ platforms = ["linux-64", "linux-aarch64", "osx-arm64"]
 upkie = { path = ".", editable = true }
 
 [tool.pixi.dependencies]
-gymnasium = ">=1.0.0"
-loop-rate-limiters = ">=1.2.0"
-msgpack-python = ">=1.0.2"
-numpy = ">=1.24.3"
-pyyaml = ">=5.3.1"
-scipy = ">=1.10.0"
-upkie_description = ">=2.1.0"
+gymnasium = ">=1.2.3,<2"
+loop-rate-limiters = ">=1.2.0,<2"
+msgpack-python = ">=1.1.2,<2"
+numpy = ">=2.2.6,<3"
+pyyaml = ">=6.0.3,<7"
+scipy = ">=1.15.2,<2"
+upkie_description = ">=2.2.0,<3"
 
 [tool.pixi.feature.cookie.dependencies]
-pybullet = ">=3"
-qpmpc = ">=3.0.1,<4"
+pybullet = ">=3.25,<4"
+qpmpc = ">=3.1.0,<4"
 
 [tool.pixi.feature.cookie.pypi-dependencies]
-cookie_description = ">=1.1"
+cookie_description = ">=1.1.0, <2"
 
 [tool.pixi.feature.cookie.tasks]
 examples-cookie-going-forward = "python examples/going_forward.py --robot cookie"
 
 [tool.pixi.feature.coverage.dependencies]
-lcov = "*"
+lcov = ">=1.16,<2"
 
 [tool.pixi.feature.coverage.tasks]
 coverage = { cmd = "tools/bazelisk coverage --combined_report=lcov --compilation_mode=fastbuild --instrument_test_targets //... && genhtml bazel-out/_coverage/_coverage_report.dat -o bazel-out/_coverage" }
 coverage-open = { cmd = "xdg-open bazel-out/_coverage/index.html", depends-on = ["coverage"] }
 
 [tool.pixi.feature.docs.dependencies]
-doxygen = "<=1.9.5"
-graphviz = "*"
-make = "*"
-"stable-baselines3" = ">=2.3.0"
+doxygen = ">=1.13.2,<2"
+graphviz = ">=14.1.2,<15"
+make = ">=4.4.1,<5"
+"stable-baselines3" = ">=2.7.1,<3"
 
 [tool.pixi.feature.docs.tasks]
 docs = "doxygen --version && cd docs && make"
@@ -117,19 +117,19 @@ platforms = ["linux-64", "osx-arm64"]
 
 [tool.pixi.feature.genesis.dependencies]
 python = "3.10.*"
-qpmpc = ">=3.0.1,<4"
+qpmpc = ">=3.1.0,<4"
 
 [tool.pixi.feature.genesis.pypi-dependencies]
-genesis-world = ">=0.3.0"
-torch = ">=2.6.0"
-torchvision = ">=0.21.0"
+genesis-world = ">=0.4.4, <0.5"
+torch = ">=2.10.0, <3"
+torchvision = ">=0.25.0, <0.26"
 
 [tool.pixi.feature.genesis.tasks]
 simulator-genesis = "python examples/genesis/mpc_balancing.py"
 
 [tool.pixi.feature.lint.dependencies]
-six = "*"
-ruff = ">=0.4.3"
+six = ">=1.17.0,<2"
+ruff = ">=0.15.9,<0.16"
 
 [tool.pixi.feature.lint.tasks]
 format = { cmd = "ruff format upkie" }
@@ -139,20 +139,20 @@ lint-python-fix = { cmd = "ruff check --fix upkie" }
 lint = { depends-on = ["lint-cpp", "lint-python"] }
 
 [tool.pixi.feature.mpc-balancer.dependencies]
-meshcat-shapes = ">=0.3.0"
-proxsuite = ">=0.4.1"
-qpmpc = ">=3.0.1,<4"
+meshcat-shapes = ">=1.0.0,<2"
+proxsuite = ">=0.7.2,<0.8"
+qpmpc = ">=3.1.0,<4"
 
 [tool.pixi.feature.mpc-balancer.tasks]
 mpc-balancer = "python -m mpc_balancer"
 
 [tool.pixi.feature.pack.dependencies]
-gin-config = ">=0.5.0"
-meshcat-shapes = ">=0.3.0"
-pixi-pack = ">=0.7.2"
-proxsuite = ">=0.4.1"
-qpmpc = ">=3.0.1,<4"
-stable-baselines3 = ">=2.3.0"
+gin-config = ">=0.5.0,<0.6"
+meshcat-shapes = ">=1.0.0,<2"
+pixi-pack = ">=0.7.6,<0.8"
+proxsuite = ">=0.7.2,<0.8"
+qpmpc = ">=3.1.0,<4"
+stable-baselines3 = ">=2.7.1,<3"
 
 [tool.pixi.feature.pack.tasks]
 pack = "pixi-pack --environment pack --platform linux-aarch64 --ignore-pypi-non-wheel"
@@ -167,19 +167,19 @@ dependencies = { python = "3.11.*" }
 dependencies = { python = "3.12.*" }
 
 [tool.pixi.feature.pybullet.dependencies]
-gin-config = ">=0.5.0"
-proxsuite = ">=0.4.1"
-pybullet = ">=3"
-qpmpc = ">=3.0.1,<4"
+gin-config = ">=0.5.0,<0.6"
+proxsuite = ">=0.7.2,<0.8"
+pybullet = ">=3.25,<4"
+qpmpc = ">=3.1.0,<4"
 
 [tool.pixi.feature.pybullet.tasks]
 examples-upkie-going-forward = "python examples/going_forward.py"
 simulator-pybullet = "python examples/pybullet/mpc_balancing.py"
 
 [tool.pixi.feature.test.dependencies]
-pybullet = ">=3"
-pytest = "*"
-"stable-baselines3" = ">2.3.0"
+pybullet = ">=3.25,<4"
+pytest = ">=9.0.2,<10"
+"stable-baselines3" = ">=2.7.1,<3"
 
 [tool.pixi.feature.test.tasks]
 test = "pytest tests/"
