@@ -13,7 +13,7 @@ from typing import Dict, Optional, Tuple
 import gymnasium as gym
 import numpy as np
 
-from upkie.envs.upkie_env import UpkieEnv
+from upkie.envs.upkie_servos import UpkieServos
 from upkie.exceptions import UpkieException
 from upkie.logging import logger
 from upkie.utils.clamp import clamp_and_warn
@@ -91,10 +91,6 @@ class UpkieGyropod(gym.Wrapper):
     ## Action space.
     action_space: gym.spaces.Box
 
-    ## \var env
-    ## Internal \ref upkie.envs.upkie_env.UpkieEnv environment.
-    env: UpkieEnv
-
     ## \var fall_pitch
     ## Fall detection pitch angle, in radians.
     fall_pitch: float
@@ -110,7 +106,7 @@ class UpkieGyropod(gym.Wrapper):
 
     def __init__(
         self,
-        env: UpkieEnv,
+        servos_env: UpkieServos,
         fall_pitch: float = 1.0,
         leg_gain_scale: float = 1.0,
         max_ground_velocity: float = 3.0,
@@ -119,15 +115,15 @@ class UpkieGyropod(gym.Wrapper):
         r"""!
         Initialize environment.
 
-        \param env Upkie environment to command servomotors.
+        \param servos Upkie environment to command servomotors.
         \param fall_pitch Fall detection pitch angle, in radians.
         \param leg_gain_scale Gain scale applied to upper leg kp_scale and
             kd_scale servo parameters.
         \param max_ground_velocity Maximum commanded ground velocity in m/s.
         \param max_yaw_velocity Maximum commanded yaw velocity in rad/s.
         """
-        super().__init__(env)
-        if env.frequency is None:
+        super().__init__(servos_env)
+        if self.env.frequency is None:
             raise UpkieException("This environment needs a loop frequency")
 
         MAX_GROUND_POSITION: float = float("inf")
@@ -170,10 +166,9 @@ class UpkieGyropod(gym.Wrapper):
 
         # Instance attributes
         self.__leg_gain_scale = leg_gain_scale
-        self.__leg_servo_action = env.get_neutral_action()
+        self.__leg_servo_action = self.env.get_neutral_action()
         self.__yaw_angle = 0.0  # rad
         self.__yaw_velocity = 0.0  # rad/s
-        self.env = env
         self.fall_pitch = fall_pitch
 
     @property
@@ -266,12 +261,12 @@ class UpkieGyropod(gym.Wrapper):
                 dt=self.env.dt,
             )
             self.__leg_servo_action[joint.name]["position"] = new_position
-            self.__leg_servo_action[joint.name]["kp_scale"] = (
-                self.__leg_gain_scale
-            )
-            self.__leg_servo_action[joint.name]["kd_scale"] = (
-                self.__leg_gain_scale
-            )
+            self.__leg_servo_action[joint.name][
+                "kp_scale"
+            ] = self.__leg_gain_scale
+            self.__leg_servo_action[joint.name][
+                "kd_scale"
+            ] = self.__leg_gain_scale
         return self.__leg_servo_action
 
     def __get_wheel_servo_action(

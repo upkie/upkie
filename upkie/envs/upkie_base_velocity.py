@@ -14,11 +14,11 @@ from typing import TYPE_CHECKING, Dict, Optional, Tuple
 import gymnasium as gym
 import numpy as np
 
-from upkie.envs.upkie_env import UpkieEnv
 from upkie.envs.upkie_gyropod import UpkieGyropod
 
 if TYPE_CHECKING:
     from upkie.controllers.mpc_balancer import MPCBalancer
+    from upkie.envs.upkie_servos import UpkieServos
 
 
 class UpkieBaseVelocity(gym.Wrapper):
@@ -77,7 +77,7 @@ class UpkieBaseVelocity(gym.Wrapper):
 
     def __init__(
         self,
-        env: UpkieEnv,
+        servos_env: UpkieServos,
         fall_pitch: float = 1.0,
         max_ground_velocity: float = 3.0,
         max_yaw_velocity: float = 1.0,
@@ -87,7 +87,7 @@ class UpkieBaseVelocity(gym.Wrapper):
         r"""!
         Initialize environment.
 
-        \param env Upkie environment to command servomotors.
+        \param servos Upkie environment to command servomotors.
         \param fall_pitch Fall detection pitch angle, in radians.
         \param max_ground_velocity Maximum commanded ground velocity in m/s.
         \param max_yaw_velocity Maximum commanded yaw velocity in rad/s.
@@ -96,13 +96,13 @@ class UpkieBaseVelocity(gym.Wrapper):
         \param max_ground_accel Maximum ground acceleration in m/s², forwarded
             to the internal MPC balancer.
         """
-        gyropod = UpkieGyropod(
-            env,
+        gyropod_env = UpkieGyropod(
+            servos_env,
             fall_pitch=fall_pitch,
             max_ground_velocity=max_ground_velocity,
             max_yaw_velocity=max_yaw_velocity,
         )
-        super().__init__(gyropod)
+        super().__init__(gyropod_env)
 
         observation_limit = np.full(3, float("inf"), dtype=np.float32)
         self.observation_space = gym.spaces.Box(
