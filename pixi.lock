@@ -1444,7 +1444,6 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/linux-64/elfutils-0.194-h849f50c_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/executing-2.2.1-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/farama-notifications-0.0.4-pyhd8ed1ab_0.conda
-      - conda: https://conda.anaconda.org/conda-forge/noarch/gin-config-0.5.0-pyhd8ed1ab_0.tar.bz2
       - conda: https://conda.anaconda.org/conda-forge/linux-64/gmp-6.3.0-hac33072_2.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/gnutls-3.8.11-h18acefa_1.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/gymnasium-1.2.3-np2py313h6b35a55_0.conda
@@ -1622,7 +1621,6 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/linux-aarch64/elfutils-0.194-h7d8af26_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/executing-2.2.1-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/farama-notifications-0.0.4-pyhd8ed1ab_0.conda
-      - conda: https://conda.anaconda.org/conda-forge/noarch/gin-config-0.5.0-pyhd8ed1ab_0.tar.bz2
       - conda: https://conda.anaconda.org/conda-forge/linux-aarch64/gmp-6.3.0-h0a1ffab_2.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-aarch64/gnutls-3.8.11-hfe111f1_1.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-aarch64/gymnasium-1.2.3-np2py313hc713eec_0.conda
@@ -1800,7 +1798,6 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/farama-notifications-0.0.4-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/gettext-0.25.1-h3dcc1bd_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/gettext-tools-0.25.1-h493aca8_0.conda
-      - conda: https://conda.anaconda.org/conda-forge/noarch/gin-config-0.5.0-pyhd8ed1ab_0.tar.bz2
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/gmp-6.3.0-h7bae524_2.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/gymnasium-1.2.3-np2py313hb0da385_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/hpp-fcl-3.0.2-pyh2537366_0.conda
@@ -18789,7 +18786,7 @@ packages:
 - pypi: ./
   name: upkie
   version: 10.1.0
-  sha256: 14ba26ed17ad0af6bacb724cff55987090155387e6185beedfcc1029a18a3a52
+  sha256: c99220988d54fe350c5545b68f45af69310aa899a151179b058839a8ec43064b
   requires_dist:
   - gymnasium>=1.0.0
   - loop-rate-limiters>=1.2.0

@@ -1,5 +1,0 @@
-# -*- python -*-
-#
-# SPDX-License-Identifier: Apache-2.0
-
-run.leg_length = 0.58     # m

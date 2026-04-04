@@ -5,7 +5,6 @@
 
 """Control wheels to track ground and yaw velocity targets."""
 
-import gin
 import numpy as np
 
 from upkie.controllers.mpc_balancer import MPCBalancer
@@ -16,7 +15,6 @@ from upkie.utils.filters import abs_bounded_derivative_filter
 from .remote_control import RemoteControl
 
 
-@gin.configurable
 class WheelController:
     r"""!
     Base class for wheel balancers.
@@ -55,12 +53,12 @@ class WheelController:
     def __init__(
         self,
         model: Model,
-        fall_pitch: float,
-        leg_length: float,
-        max_ground_accel: float,
-        max_ground_velocity: float,
-        turning_deadband: float,
-        turning_decision_time: float,
+        fall_pitch: float = 1.0,
+        leg_length: float = 0.58,
+        max_ground_accel: float = 10.0,
+        max_ground_velocity: float = 3.0,
+        turning_deadband: float = 0.3,
+        turning_decision_time: float = 0.2,
     ):
         r"""!
         Initialize balancer.

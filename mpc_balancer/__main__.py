@@ -9,7 +9,7 @@ from importlib import import_module
 from pathlib import Path
 from typing import Optional
 
-import gin
+
 import gymnasium as gym
 import numpy as np
 
@@ -142,11 +142,10 @@ def update_target_yaw_velocity(
     return target_yaw_velocity, turning_probability
 
 
-@gin.configurable
 def run(
     model: Model,
-    gain_scale: float,
-    turning_gain_scale: float,
+    gain_scale: float = 2.0,
+    turning_gain_scale: float = 2.0,
     fall_pitch: float = 1.0,
     leg_length: float = 0.58,
     max_ground_accel: float = 10.0,
@@ -236,28 +235,8 @@ def run(
                 turning_probability = 0.0
 
 
-def read_gin_configuration(cli_config: Optional[str]):
-    config_dir = Path(__file__).parent / "config"
-
-    default_config = config_dir / "default.gin"
-    gin.parse_config_file(default_config)
-
-    hostname = socket.gethostname()
-    hostname_config = config_dir / f"{hostname}.gin"
-    if hostname_config.exists():
-        gin.parse_config_file(hostname_config)
-
-    local_config = Path.home() / ".config" / "upkie" / "mpc_balancer.gin"
-    if local_config.exists():
-        gin.parse_config_file(local_config)
-
-    if cli_config is not None:
-        gin.parse_config_file(config_dir / f"{cli_config}.gin")
-
-
 if __name__ == "__main__":
     args = parse_command_line_arguments()
-    read_gin_configuration(args.config)
 
     # On Raspberry Pi, configure the process to run on a separate CPU core
     if on_raspi():
