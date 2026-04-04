@@ -833,9 +833,9 @@ WARN_LOGFILE           =
 
 INPUT                  = README.md \
                          docs/gym-environments.md \
-                         docs/kinematics.md \
-                         docs/observations.md \
                          docs/sensors.md \
+                         docs/observations.md \
+                         docs/kinematics.md \
                          docs/spines.md \
                          docs/dev-notes.md \
                          upkie \
