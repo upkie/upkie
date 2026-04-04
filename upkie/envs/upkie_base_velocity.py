@@ -23,19 +23,15 @@ if TYPE_CHECKING:
 
 class UpkieBaseVelocity(gym.Wrapper):
     r"""!
-    Wrapper where Upkie is balanced internally and controlled via base
+    Wrapper where the Upkie balances itself and the action is directly a base
     velocity.
 
     \anchor upkie_base_velocity_description
 
     This wrapper embeds an \ref upkie.controllers.mpc_balancer.MPCBalancer
     "MPCBalancer" to handle sagittal balance internally. The user commands
-    the robot's base velocity and observes its SE(2) pose in the horizontal
-    plane.
-
-    The wrapper chain is: \ref upkie.envs.upkie_servos.UpkieServos
-    "UpkieServos" \f$\to\f$ \ref upkie.envs.upkie_gyropod.UpkieGyropod
-    "UpkieGyropod" \f$\to\f$ UpkieBaseVelocity.
+    the robot's base velocity in se(2) and observes its SE(2) pose in the
+    horizontal plane.
 
     ### Action space
 
