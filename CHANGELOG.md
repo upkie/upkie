@@ -33,6 +33,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - envs: Set `terminated` and `truncated` when joystick A/cross button is pressed
 - examples: Move PyBullet PD balancing example to pybullet/ sub-directory
 - logs: Move template log Makefile to tools/
+- mpc_balancer: Merge `RemoteControl` parameters into the new `JoystickGyropodController`
+- mpc_balancer: Merge `WheelController` into `Controller` class
+- mpc_balancer: Use left rather than right joystick's left-right axis for yaw control
 
 ### Fixed
 
@@ -49,6 +52,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - config: Remove `wheel_radius` as it is now a property of `Model` and parsed from the URDF collision geometry
 - config: Remove robot configuration dictionary as it has become unused
 - cpp: Remove unused `follower_camera` parameter from the Bullet interface
+- mpc_balancer: Remove `RemoteControl` class as it is now in `JoystickGyropodController`
+- mpc_balancer: Remove `WheelController` class as it is now in the `UpkieGyropod` environment
 
 ## [10.1.0] - 2026-03-11
 
