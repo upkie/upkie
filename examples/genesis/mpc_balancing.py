@@ -45,7 +45,7 @@ if __name__ == "__main__":
             print("Press Ctrl+C to stop early.\n")
 
             for step in range(NB_STEPS):
-                action[0] = mpc_balancer.compute_ground_velocity(
+                action[0] = mpc_balancer.step(
                     target_ground_velocity=TARGET_GROUND_VELOCITY,  # m/s
                     spine_observation=info["spine_observation"],
                     dt=env.unwrapped.dt,

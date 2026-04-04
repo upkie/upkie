@@ -63,7 +63,7 @@ if __name__ == "__main__":
             print("Press Ctrl+C to stop early.\n")
 
             for step in range(NB_STEPS):
-                action[0] = mpc_balancer.compute_ground_velocity(
+                action[0] = mpc_balancer.step(
                     target_ground_velocity=TARGET_GROUND_VELOCITY,
                     spine_observation=info["spine_observation"],
                     dt=env.unwrapped.dt,
@@ -71,12 +71,12 @@ if __name__ == "__main__":
                 _, _, terminated, truncated, info = env.step(action)
 
                 if (step + 1) % 500 == 0:
-                    ground_pos = info["spine_observation"][
-                        "wheel_odometry"
-                    ]["position"]
-                    base_pitch = info["spine_observation"][
-                        "base_orientation"
-                    ]["pitch"]
+                    ground_pos = info["spine_observation"]["wheel_odometry"][
+                        "position"
+                    ]
+                    base_pitch = info["spine_observation"]["base_orientation"][
+                        "pitch"
+                    ]
                     print(
                         f"Step {step + 1:5d}: "
                         f"Ground position = {ground_pos:6.3f} m "
