@@ -140,7 +140,6 @@ lint = { depends-on = ["lint-cpp", "lint-python"] }
 
 [tool.pixi.feature.mpc-balancer.dependencies]
 meshcat-shapes = ">=0.3.0"
-pink = ">=3.0.0,<4"
 proxsuite = ">=0.4.1"
 qpmpc = ">=3.0.1,<4"
 
@@ -150,7 +149,6 @@ mpc-balancer = "python -m mpc_balancer"
 [tool.pixi.feature.pack.dependencies]
 gin-config = ">=0.5.0"
 meshcat-shapes = ">=0.3.0"
-pink = ">=3.0.0,<4"
 pixi-pack = ">=0.7.2"
 proxsuite = ">=0.4.1"
 qpmpc = ">=3.0.1,<4"
@@ -170,7 +168,6 @@ dependencies = { python = "3.12.*" }
 
 [tool.pixi.feature.pybullet.dependencies]
 gin-config = ">=0.5.0"
-pink = ">=3.0.0,<4"
 proxsuite = ">=0.4.1"
 pybullet = ">=3"
 qpmpc = ">=3.0.1,<4"
