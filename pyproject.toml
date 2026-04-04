@@ -62,7 +62,6 @@ exclude = [
     "docs/",
     "examples/",
     "logs/",
-    "mpc_balancer/",
     "pixi.lock",
     "spines/",
     "tools/",
@@ -73,8 +72,9 @@ exclude = [
 channels = ["conda-forge"]
 platforms = ["linux-64", "linux-aarch64", "osx-arm64"]
 
-[tool.pixi.pypi-dependencies]
-upkie = { path = ".", editable = true }
+# ================
+# Feature: default
+# ================
 
 [tool.pixi.dependencies]
 gymnasium = ">=1.2.3,<2"
@@ -85,6 +85,24 @@ pyyaml = ">=6.0.3,<7"
 scipy = ">=1.15.2,<2"
 upkie_description = ">=2.2.0,<3"
 
+[tool.pixi.pypi-dependencies]
+upkie = { path = ".", editable = true }
+
+# ============
+# Environments
+# ============
+
+# Environments in Pixi are defined as sets of features. In this configuration,
+# most environments have a corresponding feature and run in the default solve
+# group, except simulator environments which run in their own solve groups.
+
+# -------------------
+# Environment: cookie
+# -------------------
+
+[tool.pixi.environments.cookie]
+features = ["cookie", "default"]
+
 [tool.pixi.feature.cookie.dependencies]
 pybullet = ">=3.25,<4"
 qpmpc = ">=3.1.0,<4"
@@ -93,7 +111,15 @@ qpmpc = ">=3.1.0,<4"
 cookie_description = ">=1.1.0, <2"
 
 [tool.pixi.feature.cookie.tasks]
-examples-cookie-going-forward = "python examples/going_forward.py --robot cookie"
+cookie-follow-joystick = "python examples/follow_joystick.py --robot cookie"
+cookie-go-forward = "python examples/go_forward.py --robot cookie"
+
+# ---------------------
+# Environment: coverage
+# ---------------------
+
+[tool.pixi.environments.coverage]
+features = ["coverage", "default"]
 
 [tool.pixi.feature.coverage.dependencies]
 lcov = ">=1.16,<2"
@@ -101,6 +127,13 @@ lcov = ">=1.16,<2"
 [tool.pixi.feature.coverage.tasks]
 coverage = { cmd = "tools/bazelisk coverage --combined_report=lcov --compilation_mode=fastbuild --instrument_test_targets //... && genhtml bazel-out/_coverage/_coverage_report.dat -o bazel-out/_coverage" }
 coverage-open = { cmd = "xdg-open bazel-out/_coverage/index.html", depends-on = ["coverage"] }
+
+# -----------------
+# Environment: docs
+# -----------------
+
+[tool.pixi.environments.docs]
+features = ["docs", "default"]
 
 [tool.pixi.feature.docs.dependencies]
 doxygen = ">=1.8,<1.9"
@@ -112,10 +145,19 @@ make = ">=4.4.1,<5"
 docs = "doxygen --version && cd docs && make"
 docs-open = { cmd = "xdg-open docs/html/index.html", depends-on = ["docs"] }
 
+# --------------------
+# Environment: genesis
+# --------------------
+
+[tool.pixi.environments.genesis]
+features = ["genesis", "default"]
+solve-group = "genesis"
+
 [tool.pixi.feature.genesis]
 platforms = ["linux-64", "osx-arm64"]
 
 [tool.pixi.feature.genesis.dependencies]
+proxsuite = ">=0.7.2,<0.8"
 python = "3.10.*"
 qpmpc = ">=3.1.0,<4"
 
@@ -126,6 +168,13 @@ torchvision = ">=0.25.0, <0.26"
 
 [tool.pixi.feature.genesis.tasks]
 simulator-genesis = "python examples/genesis/mpc_balancing.py"
+
+# -----------------
+# Environment: lint
+# -----------------
+
+[tool.pixi.environments.lint]
+features = ["lint", "default"]
 
 [tool.pixi.feature.lint.dependencies]
 six = ">=1.17.0,<2"
@@ -138,43 +187,46 @@ lint-python = { cmd = "ruff check upkie && ruff format --check upkie" }
 lint-python-fix = { cmd = "ruff check --fix upkie" }
 lint = { depends-on = ["lint-cpp", "lint-python"] }
 
-[tool.pixi.feature.mpc-balancer.dependencies]
-meshcat-shapes = ">=1.0.0,<2"
-proxsuite = ">=0.7.2,<0.8"
-qpmpc = ">=3.1.0,<4"
+# -----------------
+# Environment: real
+# -----------------
 
-[tool.pixi.feature.mpc-balancer.tasks]
-mpc-balancer = "python -m mpc_balancer"
+[tool.pixi.environments.real]
+features = ["real", "default"]
 
-[tool.pixi.feature.pack.dependencies]
-gin-config = ">=0.5.0,<0.6"
-meshcat-shapes = ">=1.0.0,<2"
+[tool.pixi.feature.real.dependencies]
 pixi-pack = ">=0.7.6,<0.8"
 proxsuite = ">=0.7.2,<0.8"
 qpmpc = ">=3.1.0,<4"
-stable-baselines3 = ">=2.7.1,<3"
 
-[tool.pixi.feature.pack.tasks]
-pack = "pixi-pack --environment pack --platform linux-aarch64 --ignore-pypi-non-wheel"
+[tool.pixi.feature.real.tasks]
+pack = "pixi-pack --environment real --platform linux-aarch64 --ignore-pypi-non-wheel"
+real-follow-joystick = "python examples/real_robot/follow_joystick.py"
 
-[tool.pixi.feature.py310]
-dependencies = { python = "3.10.*" }
+# ---------------------
+# Environment: pybullet
+# ---------------------
 
-[tool.pixi.feature.py311]
-dependencies = { python = "3.11.*" }
-
-[tool.pixi.feature.py312]
-dependencies = { python = "3.12.*" }
+[tool.pixi.environments.pybullet]
+features = ["pybullet", "default"]
+solve-group = "pybullet"
 
 [tool.pixi.feature.pybullet.dependencies]
-gin-config = ">=0.5.0,<0.6"
 proxsuite = ">=0.7.2,<0.8"
 pybullet = ">=3.25,<4"
 qpmpc = ">=3.1.0,<4"
 
 [tool.pixi.feature.pybullet.tasks]
-examples-upkie-going-forward = "python examples/going_forward.py"
+example-follow-joystick = "python examples/follow_joystick.py"
+example-go-forward = "python examples/go_forward.py"
 simulator-pybullet = "python examples/pybullet/mpc_balancing.py"
+
+# -----------------
+# Environment: test
+# -----------------
+
+[tool.pixi.environments.test]
+features = ["test", "test-py", "default"]
 
 [tool.pixi.feature.test.dependencies]
 proxsuite = ">=0.7.2,<0.8"
@@ -183,22 +235,50 @@ pytest = ">=9.0.2,<10"
 qpmpc = ">=3.1.0,<4"
 "stable-baselines3" = ">=2.7.1,<3"
 
-[tool.pixi.feature.test.tasks]
+[tool.pixi.feature.test-py.tasks]
 test = "pytest tests/"
 
-[tool.pixi.environments]
-cookie = { features = ["cookie"], solve-group = "cookie" }
-coverage = { features = ["coverage"], solve-group = "default" }
-default = { features = [], solve-group = "default" }
-docs = { features = ["docs"], solve-group = "default" }
-genesis = { features = ["genesis"], solve-group = "genesis" }
-lint = { features = ["lint"], solve-group = "default" }
-mpc-balancer = { features = ["mpc-balancer"], solve-group = "mpc-balancer" }
-pack = { features = ["pack"], solve-group = "default" }
-pybullet = { features = ["pybullet"], solve-group = "pybullet" }
-test-py310 = { features = ["py310", "test"], solve-group = "py310" }
-test-py311 = { features = ["py311", "test"], solve-group = "py311" }
-test-py312 = { features = ["py312", "test"], solve-group = "py312" }
+# -----------------------
+# Environment: test-py310
+# -----------------------
+
+[tool.pixi.environments.test-py310]
+features = ["test", "test-py310", "default"]
+solve-group = "py310"
+
+[tool.pixi.feature.test-py310.dependencies]
+python = "3.10.*"
+
+[tool.pixi.feature.test-py310.tasks]
+test-py310 = "pytest tests/"
+
+# -----------------------
+# Environment: test-py311
+# -----------------------
+
+[tool.pixi.environments.test-py311]
+features = ["test", "test-py311", "default"]
+solve-group = "py311"
+
+[tool.pixi.feature.test-py311.dependencies]
+python = "3.11.*"
+
+[tool.pixi.feature.test-py311.tasks]
+test-py311 = "pytest tests/"
+
+# -----------------------
+# Environment: test-py312
+# -----------------------
+
+[tool.pixi.environments.test-py312]
+features = ["test", "test-py312", "default"]
+solve-group = "py312"
+
+[tool.pixi.feature.test-py312.dependencies]
+python = "3.12.*"
+
+[tool.pixi.feature.test-py312.tasks]
+test-py312 = "pytest tests/"
 
 [tool.ruff]
 line-length = 79
