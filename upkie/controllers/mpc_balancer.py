@@ -6,15 +6,13 @@
 """Wheel balancing using model predictive control with the ProxQP solver."""
 
 import numpy as np
+import qpsolvers
+from proxsuite import proxqp
 from qpmpc import MPCQP, MPCProblem, Plan
 from qpmpc.systems import WheeledInvertedPendulum
-from qpsolvers import solve_problem
-
 from upkie.logging import logger
 from upkie.utils.clamp import clamp_abs
 from upkie.utils.filters import low_pass_filter
-
-from .proxqp_workspace import ProxQPWorkspace
 
 
 def get_target_states(
@@ -37,6 +35,69 @@ def get_target_states(
         target_states[k * nx] = state[0] + (k * T) * target_ground_velocity
         target_states[k * nx + 2] = target_ground_velocity
     return target_states
+
+
+class ProxQPWorkspace:
+    r"""!
+    ProxQP solver with workspace data.
+    """
+
+    def __init__(
+        self,
+        mpc_qp: MPCQP,
+        update_preconditioner: bool = True,
+        verbose: bool = False,
+    ):
+        r"""!
+        Initialize the workspace.
+
+        \param mpc_qp Model predictive control problem.
+        \param update_preconditioner If set, ask ProxQP to update
+            preconditioners at each solve.
+        \param verbose If set, print out debug information.
+        """
+        n_eq = 0
+        n_in = mpc_qp.h.size // 2  # WheeledInvertedPendulum structure
+        n = mpc_qp.P.shape[1]
+        solver = proxqp.dense.QP(
+            n,
+            n_eq,
+            n_in,
+            dense_backend=proxqp.dense.DenseBackend.PrimalDualLDLT,
+        )
+        solver.settings.eps_abs = 1e-3
+        solver.settings.eps_rel = 0.0
+        solver.settings.verbose = verbose
+        solver.settings.compute_timings = True
+        solver.settings.primal_infeasibility_solving = True
+        solver.init(
+            H=mpc_qp.P,
+            g=mpc_qp.q,
+            C=mpc_qp.G[::2, :],  # WheeledInvertedPendulum structure
+            l=-mpc_qp.h[1::2],  # WheeledInvertedPendulum structure
+            u=mpc_qp.h[::2],  # WheeledInvertedPendulum structure
+        )
+        solver.solve()
+        self.__update_preconditioner = update_preconditioner
+        self.__solver = solver
+
+    def solve(self, mpc_qp: MPCQP) -> qpsolvers.Solution:
+        r"""!
+        Solve a given MPC QP.
+
+        \param mpc_qp Model predictive control problem to solve.
+        \return Solution found by the solver.
+        """
+        self.__solver.update(
+            g=mpc_qp.q,
+            update_preconditioner=self.__update_preconditioner,
+        )
+        self.__solver.solve()
+        result = self.__solver.results
+        qpsol = qpsolvers.Solution(mpc_qp.problem)
+        qpsol.found = result.info.status == proxqp.QPSolverOutput.PROXQP_SOLVED
+        qpsol.x = self.__solver.results.x
+        return qpsol
 
 
 class MPCBalancer:
@@ -76,9 +137,9 @@ class MPCBalancer:
     ## Flag to enable warm-starting the QP solver.
     warm_start: bool
 
-    ## \var workspace
+    ## \var proxqp_workspace
     ## ProxQP solver workspace for the MPC optimization.
-    workspace: ProxQPWorkspace
+    proxqp_workspace: ProxQPWorkspace
 
     def __init__(
         self,
@@ -123,7 +184,7 @@ class MPCBalancer:
         )
         mpc_problem.initial_state = np.zeros(4)
         mpc_qp = MPCQP(mpc_problem)
-        workspace = ProxQPWorkspace(mpc_qp)
+        proxqp_workspace = ProxQPWorkspace(mpc_qp)
         self.commanded_velocity = 0.0
         self.fall_pitch = fall_pitch
         self.fallen = False
@@ -132,13 +193,14 @@ class MPCBalancer:
         self.mpc_qp = mpc_qp
         self.pendulum = pendulum
         self.warm_start = warm_start
-        self.workspace = workspace
+        self.proxqp_workspace = proxqp_workspace
 
     def compute_ground_velocity(
         self,
         target_ground_velocity: float,
         spine_observation: dict,
         dt: float,
+        qp_solver: str = "proxqp",
     ) -> float:
         r"""!
         Compute a new ground velocity.
@@ -146,6 +208,7 @@ class MPCBalancer:
         \param target_ground_velocity Target ground velocity in m/s.
         \param spine_observation Latest observation dictionary from a spine.
         \param dt Duration in seconds until the next cycle.
+        \param qp_solver Alternative QP solver to use when not warm-starting.
         \return New ground velocity, in m/s.
         """
         floor_contact = spine_observation["floor_contact"]["contact"]
@@ -180,9 +243,12 @@ class MPCBalancer:
 
         self.mpc_qp.update_cost_vector(self.mpc_problem)
         if self.warm_start:
-            qpsol = self.workspace.solve(self.mpc_qp)
+            qpsol = self.proxqp_workspace.solve(self.mpc_qp)
         else:  # not self.warm_start
-            qpsol = solve_problem(self.mpc_qp.problem, solver="proxqp")
+            qpsol = qpsolvers.solve_problem(
+                self.mpc_qp.problem,
+                solver=qp_solver,
+            )
         if not qpsol.found:
             logger.warning("No solution found to the MPC problem")
         plan = Plan(self.mpc_problem, qpsol)
