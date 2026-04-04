@@ -70,12 +70,13 @@ class Controller:
         assert 0.0 <= turning_deadband <= 1.0
         self.gain_scale = clamp(gain_scale, 0.1, 2.0)
         self.joystick_controller = JoystickGyropodController(
+            joystick_axis="left_axis",
+            max_linear_accel=max_linear_accel,
+            max_linear_velocity=max_linear_velocity,
+            max_yaw_accel=max_yaw_accel,
+            max_yaw_velocity=max_yaw_velocity,
             turning_deadband=turning_deadband,
             turning_decision_time=turning_decision_time,
-            max_linear_velocity=max_linear_velocity,
-            max_linear_accel=max_linear_accel,
-            max_yaw_velocity=max_yaw_velocity,
-            max_yaw_accel=max_yaw_accel,
         )
         self.model = model
         self.mpc_balancer = MPCBalancer(
