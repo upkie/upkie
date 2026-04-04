@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CICD: Test joystick usage in the PyBullet backend.
 - config: Allow both .yaml and .yml file extensions
 - controllers: Add `JoystickGyropodController` mapping joystick inputs to gyropod actions
+- controllers: Add `reset` function to `MPCBalancer`
 - controllers: Rename MPCBalancer stepping function to `step`
 - envs: Add `*-*-Gyropod` environments
 - envs: Add `Cookie-*-*` environments
