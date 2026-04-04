@@ -92,7 +92,9 @@ class Controller:
         \param dt Duration in seconds until the next cycle.
         \return New ground velocity, in m/s.
         """
-        target_ground_velocity, target_yaw_velocity = self.joystick_controller.step(observation, dt)
+        target_ground_velocity, target_yaw_velocity = (
+            self.joystick_controller.step(observation, dt)
+        )
 
         ground_velocity = self.mpc_balancer.step(
             target_ground_velocity, observation, dt
@@ -109,12 +111,8 @@ class Controller:
         delta = observation["height_controller"]["position_right_in_left"]
         contact_radius = 0.5 * np.linalg.norm(delta)
         yaw_to_wheel = left_sign * contact_radius / self.model.wheel_radius
-        left_wheel_velocity += (
-            yaw_to_wheel * target_yaw_velocity
-        )
-        right_wheel_velocity += (
-            yaw_to_wheel * target_yaw_velocity
-        )
+        left_wheel_velocity += yaw_to_wheel * target_yaw_velocity
+        right_wheel_velocity += yaw_to_wheel * target_yaw_velocity
 
         servo_action = {
             "left_wheel": {
@@ -145,23 +143,24 @@ class Controller:
 
         gain_scale = clamp(gain_scale, 0.1, 2.0)
         dt = 1.0 / frequency
+        max_linear_velocity = (
+            1.5 * self.joystick_controller.max_linear_velocity
+        )
+        max_yaw_velocity = 1.5 * self.joystick_controller.max_yaw_velocity
 
         with gym.make(
             "Upkie-Spine-Gyropod",
             frequency=frequency,
-            max_ground_velocity=self.joystick_controller.max_linear_velocity,
-            max_yaw_velocity=self.joystick_controller.max_yaw_velocity,
+            max_ground_velocity=max_linear_velocity,
+            max_yaw_velocity=max_yaw_velocity,
         ) as env:
             _, info = env.reset()
             spine_observation = info["spine_observation"]
 
             while True:
                 # Update velocity targets from joystick
-                self.joystick_controller.update_target_ground_velocity(
-                    spine_observation, dt
-                )
-                target_ground_velocity, target_yaw_velocity = self.joystick_controller.step(
-                    spine_observation, dt
+                target_ground_velocity, target_yaw_velocity = (
+                    self.joystick_controller.step(spine_observation, dt)
                 )
 
                 # MPC computes commanded ground velocity
