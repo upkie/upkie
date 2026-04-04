@@ -12,10 +12,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CICD: Add unit tests for the Python `Joystick` class
 - CICD: Test joystick usage in the PyBullet backend.
 - config: Allow both .yaml and .yml file extensions
-- envs: Add `Cookie-<Backend>-<ActionSpace>` environments
+- envs: Add `*-*-Gyropod` environments
+- envs: Add `Cookie-*-*` environments
 - envs: Connect to joystick if available in the PyBullet backend.
 - model: Add `JointProperties` class for per-joint simulation properties
 - model: Add `left_wheeled` property
+- model: Add `wheel_base` property
 - model: Read orientation of the IMU frame in the base frame from URDF
 - model: Read wheel radius from URDF
 
