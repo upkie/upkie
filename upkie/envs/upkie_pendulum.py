@@ -11,8 +11,8 @@ from typing import Dict, Optional, Tuple
 import gymnasium as gym
 import numpy as np
 
-from upkie.envs.upkie_env import UpkieEnv
 from upkie.envs.upkie_gyropod import UpkieGyropod
+from upkie.envs.upkie_servos import UpkieServos
 
 ## Indices into the 6D gyropod observation to extract the 4D pendulum
 ## observation in the original order: [pitch, ground_position,
@@ -69,25 +69,25 @@ class UpkiePendulum(gym.Wrapper):
 
     def __init__(
         self,
-        env: UpkieEnv,
+        servos_env: UpkieServos,
         fall_pitch: float = 1.0,
         max_ground_velocity: float = 3.0,
     ):
         r"""!
         Initialize environment.
 
-        \param env Upkie environment to command servomotors.
+        \param servos Upkie environment to command servomotors.
         \param fall_pitch Fall detection pitch angle, in radians.
         \param max_ground_velocity Maximum commanded ground velocity in m/s.
         """
-        gyropod = UpkieGyropod(
-            env,
+        gyropod_env = UpkieGyropod(
+            servos_env,
             fall_pitch=fall_pitch,
             max_ground_velocity=max_ground_velocity,
         )
-        super().__init__(gyropod)
+        super().__init__(gyropod_env)
 
-        gyropod_obs_high = gyropod.observation_space.high
+        gyropod_obs_high = gyropod_env.observation_space.high
         obs_limit = gyropod_obs_high[_PENDULUM_OBS_INDICES]
         self.observation_space = gym.spaces.Box(
             -obs_limit,
