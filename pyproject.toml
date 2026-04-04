@@ -93,7 +93,7 @@ qpmpc = ">=3.0.1,<4"
 cookie_description = ">=1.1"
 
 [tool.pixi.feature.cookie.tasks]
-go-forward-cookie = "python examples/go_forward_cookie.py"
+examples-cookie-going-forward = "python examples/going_forward.py --robot cookie"
 
 [tool.pixi.feature.coverage.dependencies]
 lcov = "*"
@@ -132,7 +132,7 @@ six = "*"
 ruff = ">=0.4.3"
 
 [tool.pixi.feature.lint.tasks]
-format-python = { cmd = "ruff format upkie" }
+format = { cmd = "ruff format upkie" }
 lint-cpp = { cmd = "tools/bazelisk test --config lint //upkie/..." }
 lint-python = { cmd = "ruff check upkie && ruff format --check upkie" }
 lint-python-fix = { cmd = "ruff check --fix upkie" }
@@ -179,8 +179,8 @@ pybullet = ">=3"
 qpmpc = ">=3.0.1,<4"
 
 [tool.pixi.feature.pybullet.tasks]
-go-forward-upkie = "python examples/go_forward_upkie.py"
-simulator-pybullet = "python examples/go_forward_upkie.py"
+examples-upkie-going-forward = "python examples/going_forward.py"
+simulator-pybullet = "python examples/pybullet/mpc_balancing.py"
 
 [tool.pixi.feature.test.dependencies]
 pybullet = ">=3"

@@ -9,6 +9,8 @@
 
 """Balancing with the wheels by model predictive control in PyBullet."""
 
+import argparse
+
 import gymnasium as gym
 import numpy as np
 
@@ -21,7 +23,21 @@ NB_STEPS = 5_000
 TARGET_GROUND_VELOCITY = 0.3  # m/s
 
 
+def parse_command_line_arguments() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--robot",
+        help="Robot to simulate (default: upkie)",
+        choices=["upkie", "cookie"],
+        default="upkie",
+    )
+    return parser.parse_args()
+
+
 if __name__ == "__main__":
+    args = parse_command_line_arguments()
+    robot = args.robot.capitalize()
+
     # Leg length is a key parameter of the model predictive controller. Start
     # from the leg length of the wheeled biped, but don't hesitate to tune this
     # value afterwards for better performance on your real robot.
@@ -35,8 +51,9 @@ if __name__ == "__main__":
             "nb_substeps": 5,
         }
 
-        print("\nStarting balancing an Upkie by MPC in PyBullet...")
-        with gym.make("Upkie-PyBullet-Pendulum", **env_kwargs) as env:
+        env_id = f"{robot}-PyBullet-Pendulum"
+        print(f"\nStarting balancing a {robot} by MPC in PyBullet...")
+        with gym.make(env_id, **env_kwargs) as env:
             _, info = env.reset()  # connects to the spine
             action = np.zeros(env.action_space.shape)
 
@@ -47,24 +64,24 @@ if __name__ == "__main__":
 
             for step in range(NB_STEPS):
                 action[0] = mpc_balancer.compute_ground_velocity(
-                    target_ground_velocity=TARGET_GROUND_VELOCITY,  # m/s
+                    target_ground_velocity=TARGET_GROUND_VELOCITY,
                     spine_observation=info["spine_observation"],
                     dt=env.unwrapped.dt,
                 )
                 _, _, terminated, truncated, info = env.step(action)
 
-                # Print progress every 1000 steps
-                if (step + 1) % (NB_STEPS // 10) == 0:
-                    ground_pos = info["spine_observation"]["wheel_odometry"][
-                        "position"
-                    ]
-                    base_pitch = info["spine_observation"]["base_orientation"][
-                        "pitch"
-                    ]
+                if (step + 1) % 500 == 0:
+                    ground_pos = info["spine_observation"][
+                        "wheel_odometry"
+                    ]["position"]
+                    base_pitch = info["spine_observation"][
+                        "base_orientation"
+                    ]["pitch"]
                     print(
                         f"Step {step + 1:5d}: "
-                        f"Ground position = {ground_pos:6.3f} m, "
-                        f"Base pitch = {base_pitch:6.3f} rad"
+                        f"Ground position = {ground_pos:6.3f} m "
+                        f"at t = {step * env.unwrapped.dt:4.1f} s, "
+                        f"Base pitch = {base_pitch:5.3f} rad"
                     )
 
                 if terminated or truncated:
