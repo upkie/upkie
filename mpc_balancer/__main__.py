@@ -128,16 +128,16 @@ class Controller:
 
     def run(
         self,
+        frequency: float = 200.0,
         gain_scale: float = 2.0,
         turning_gain_scale: float = 2.0,
-        frequency: float = 200.0,
     ) -> None:
         r"""!
         Run agent using a gyropod environment.
 
+        \param frequency Control frequency in Hz.
         \param gain_scale PD gain scale for hip and knee joints.
         \param turning_gain_scale Additional gain scaling applied when turning.
-        \param frequency Control frequency in Hz.
         """
         upkie.envs.register()
 
@@ -172,10 +172,9 @@ class Controller:
 
                 # Update leg gain scaling based on turning probability
                 set_leg_gain_scale = env.get_wrapper_attr("set_leg_gain_scale")
+                turning_prob = self.joystick_controller.turning_probability
                 set_leg_gain_scale(
-                    gain_scale
-                    + turning_gain_scale
-                    * self.joystick_controller.turning_probability
+                    gain_scale + turning_gain_scale * turning_prob
                 )
 
                 action = np.array(
@@ -190,9 +189,8 @@ class Controller:
                 if terminated or truncated:
                     _, info = env.reset()
                     spine_observation = info["spine_observation"]
-                    self.joystick_controller.target_ground_velocity = 0.0
-                    self.joystick_controller.target_yaw_velocity = 0.0
-                    self.joystick_controller.turning_probability = 0.0
+                    self.joystick_controller.reset()
+                    self.mpc_balancer.reset()
 
 
 def parse_command_line_arguments() -> argparse.Namespace:
