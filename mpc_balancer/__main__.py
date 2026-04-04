@@ -4,11 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import argparse
-import socket
 from importlib import import_module
-from pathlib import Path
-from typing import Optional
-
 
 import gymnasium as gym
 import numpy as np
@@ -20,8 +16,6 @@ from upkie.model import Model
 from upkie.utils.clamp import clamp, clamp_abs
 from upkie.utils.filters import abs_bounded_derivative_filter
 from upkie.utils.raspi import configure_agent_process, on_raspi
-
-from .remote_control import RemoteControl
 
 
 class Controller:
@@ -59,6 +53,24 @@ class Controller:
     ## Probability the user wants to turn based on the joystick axis value.
     turning_probability: float
 
+    ## \var max_linear_accel
+    ## Maximum acceleration for the ground position target, in m/s². Does
+    ## not affect the commanded ground velocity.
+    max_linear_accel: float
+
+    ## \var max_linear_velocity
+    ## Maximum velocity for the ground position target, in m/s.
+    ## Indirectly affects the commanded ground velocity.
+    max_linear_velocity: float
+
+    ## \var max_yaw_accel
+    ## Maximum yaw angular acceleration in rad/s².
+    max_yaw_accel: float
+
+    ## \var max_yaw_velocity
+    ## Maximum yaw angular velocity in rad/s.
+    max_yaw_velocity: float
+
     def __init__(
         self,
         model: Model,
@@ -68,6 +80,10 @@ class Controller:
         max_ground_velocity: float = 3.0,
         turning_deadband: float = 0.3,
         turning_decision_time: float = 0.2,
+        max_linear_velocity: float = 1.5,
+        max_linear_accel: float = 1.2,
+        max_yaw_velocity: float = 1.0,
+        max_yaw_accel: float = 10.0,
     ):
         r"""!
         Initialize balancer.
@@ -80,6 +96,12 @@ class Controller:
             turning probability to switch from zero to one and conversely.
         \param max_ground_accel Maximum commanded ground acceleration.
         \param max_ground_velocity Maximum commanded ground velocity.
+        \param max_linear_accel Maximum acceleration for the ground position
+            target, in m/s². Does not affect the commanded ground velocity.
+        \param max_linear_velocity Maximum velocity for the ground position
+            target, in m/s. Indirectly affects the commanded ground velocity.
+        \param max_yaw_accel Maximum yaw angular acceleration in rad/s².
+        \param max_yaw_velocity Maximum yaw angular velocity in rad/s.
         """
         assert 0.0 <= turning_deadband <= 1.0
         mpc_balancer = MPCBalancer(
@@ -88,7 +110,6 @@ class Controller:
             max_ground_accel=max_ground_accel,
             max_ground_velocity=max_ground_velocity,
         )
-        self.remote_control = RemoteControl()
         self.model = model
         self.mpc_balancer = mpc_balancer
         self.target_ground_velocity = 0.0
@@ -96,6 +117,10 @@ class Controller:
         self.turning_deadband = turning_deadband
         self.turning_decision_time = turning_decision_time
         self.turning_probability = 0.0
+        self.max_linear_accel = max_linear_accel
+        self.max_linear_velocity = max_linear_velocity
+        self.max_yaw_accel = max_yaw_accel
+        self.max_yaw_velocity = max_yaw_velocity
 
     def log(self) -> dict:
         r"""!
@@ -167,7 +192,7 @@ class Controller:
         """
         try:
             axis_value = observation["joystick"]["left_axis"][1]
-            max_velocity = self.remote_control.max_linear_velocity
+            max_velocity = self.max_linear_velocity
             unfiltered_velocity = -max_velocity * axis_value
         except KeyError:
             unfiltered_velocity = 0.0
@@ -175,11 +200,11 @@ class Controller:
             prev_output=self.target_ground_velocity,
             new_input=unfiltered_velocity,
             dt=dt,
-            max_derivative=self.remote_control.max_linear_accel,
+            max_derivative=self.max_linear_accel,
         )
         self.target_ground_velocity = clamp_abs(
             unclipped_ground_velocity,
-            self.remote_control.max_linear_velocity,
+            self.max_linear_velocity,
         )
 
     def update_target_yaw_velocity(self, observation: dict, dt: float) -> None:
@@ -209,7 +234,7 @@ class Controller:
             1.0 - self.turning_deadband
         )
         velocity_ratio = max(0.0, velocity_ratio)
-        max_yaw_velocity = self.remote_control.max_yaw_velocity
+        max_yaw_velocity = self.max_yaw_velocity
         velocity = max_yaw_velocity * joystick_sign * velocity_ratio
         turn_hasnt_started = abs(self.target_yaw_velocity) < 0.01
         turn_not_sure_yet = self.turning_probability < 0.99
@@ -219,11 +244,11 @@ class Controller:
             prev_output=self.target_yaw_velocity,
             new_input=velocity,
             dt=dt,
-            max_derivative=self.remote_control.max_yaw_accel,
+            max_derivative=self.max_yaw_accel,
         )
         self.target_yaw_velocity = clamp_abs(
             unclipped_yaw_velocity,
-            self.remote_control.max_yaw_velocity,
+            self.max_yaw_velocity,
         )
         if abs(self.target_yaw_velocity) > 0.01:  # still turning
             self.turning_probability = 1.0
@@ -249,8 +274,8 @@ class Controller:
         with gym.make(
             "Upkie-Spine-Gyropod",
             frequency=frequency,
-            max_ground_velocity=self.remote_control.max_linear_velocity,
-            max_yaw_velocity=self.remote_control.max_yaw_velocity,
+            max_ground_velocity=self.max_linear_velocity,
+            max_yaw_velocity=self.max_yaw_velocity,
         ) as env:
             _, info = env.reset()
             spine_observation = info["spine_observation"]
@@ -316,14 +341,13 @@ if __name__ == "__main__":
     description = import_module(args.description)
     model = Model(description.URDF_PATH)
 
-    remote_control = RemoteControl()
-    logger.info(
-        f"Max. remote-control velocity: "
-        f"{remote_control.max_linear_velocity} m/s"
-    )
     logger.info(f"Wheel radius: {model.wheel_radius} m")
 
     controller = Controller(model)
+    logger.info(
+        f"Max. commanded linear velocity: "
+        f"{controller.max_linear_velocity} m/s"
+    )
     try:
         controller.run()
     except KeyboardInterrupt:
