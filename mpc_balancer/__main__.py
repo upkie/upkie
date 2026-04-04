@@ -39,12 +39,7 @@ class Controller:
         leg_length: float = 0.58,
         max_ground_accel: float = 10.0,
         max_ground_velocity: float = 3.0,
-        max_linear_accel: float = 1.2,
-        max_linear_velocity: float = 1.5,
-        max_yaw_accel: float = 10.0,
-        max_yaw_velocity: float = 1.0,
-        turning_deadband: float = 0.3,
-        turning_decision_time: float = 0.2,
+        max_yaw_velocity: float = 3.0,
         turning_gain_scale: float = 2.0,
     ):
         r"""!
@@ -67,17 +62,10 @@ class Controller:
         \param max_yaw_accel Maximum yaw angular acceleration in rad/s².
         \param max_yaw_velocity Maximum yaw angular velocity in rad/s.
         """
-        assert 0.0 <= turning_deadband <= 1.0
         self.gain_scale = clamp(gain_scale, 0.1, 2.0)
-        self.joystick_controller = JoystickGyropodController(
-            joystick_axis="left_axis",
-            max_linear_accel=max_linear_accel,
-            max_linear_velocity=max_linear_velocity,
-            max_yaw_accel=max_yaw_accel,
-            max_yaw_velocity=max_yaw_velocity,
-            turning_deadband=turning_deadband,
-            turning_decision_time=turning_decision_time,
-        )
+        self.joystick_controller = JoystickGyropodController()
+        self.max_ground_velocity = max_ground_velocity
+        self.max_yaw_velocity = max_yaw_velocity
         self.model = model
         self.mpc_balancer = MPCBalancer(
             leg_length=leg_length,
@@ -97,10 +85,8 @@ class Controller:
         with gym.make(
             "Upkie-Spine-Gyropod",
             frequency=frequency,
-            max_ground_velocity=(
-                1.5 * self.joystick_controller.max_linear_velocity
-            ),
-            max_yaw_velocity=(1.5 * self.joystick_controller.max_yaw_velocity),
+            max_ground_velocity=self.max_ground_velocity,
+            max_yaw_velocity=self.max_yaw_velocity,
         ) as env:
             dt = env.unwrapped.dt
             _, info = env.reset()
