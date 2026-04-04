@@ -92,10 +92,10 @@ class Controller:
         \param dt Duration in seconds until the next cycle.
         \return New ground velocity, in m/s.
         """
-        self.joystick_controller.step(observation, dt)
+        target_ground_velocity, target_yaw_velocity = self.joystick_controller.step(observation, dt)
 
         ground_velocity = self.mpc_balancer.step(
-            self.joystick_controller.target_ground_velocity, observation, dt
+            target_ground_velocity, observation, dt
         )
 
         # Sagittal translation
@@ -110,10 +110,10 @@ class Controller:
         contact_radius = 0.5 * np.linalg.norm(delta)
         yaw_to_wheel = left_sign * contact_radius / self.model.wheel_radius
         left_wheel_velocity += (
-            yaw_to_wheel * self.joystick_controller.target_yaw_velocity
+            yaw_to_wheel * target_yaw_velocity
         )
         right_wheel_velocity += (
-            yaw_to_wheel * self.joystick_controller.target_yaw_velocity
+            yaw_to_wheel * target_yaw_velocity
         )
 
         servo_action = {
@@ -160,13 +160,13 @@ class Controller:
                 self.joystick_controller.update_target_ground_velocity(
                     spine_observation, dt
                 )
-                self.joystick_controller.update_target_yaw_velocity(
+                target_ground_velocity, target_yaw_velocity = self.joystick_controller.step(
                     spine_observation, dt
                 )
 
                 # MPC computes commanded ground velocity
                 ground_velocity = self.mpc_balancer.step(
-                    self.joystick_controller.target_ground_velocity,
+                    target_ground_velocity,
                     spine_observation,
                     dt,
                 )
@@ -182,7 +182,7 @@ class Controller:
                 action = np.array(
                     [
                         ground_velocity,
-                        self.joystick_controller.target_yaw_velocity,
+                        target_yaw_velocity,
                     ]
                 )
                 _, _, terminated, truncated, info = env.step(action)
