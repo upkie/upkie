@@ -19,6 +19,14 @@ class SE3:
     and Mink libraries.
     """
 
+    ## \var rotation
+    ## Rotation matrix of the transform.
+    rotation: np.ndarray
+
+    ## \var translation
+    ## Translation vector of the transform.
+    translation: np.ndarray
+
     def __init__(self, rotation: np.ndarray, translation: np.ndarray):
         r"""!
         Construct an SE3 transform from a rotation matrix and translation.

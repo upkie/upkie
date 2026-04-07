@@ -154,7 +154,6 @@ class KinematicTree:
 
         \param frame Name of the link.
         \return SE3 transform such that base_point = T * frame_point.
-        \raise ModelError If the frame name is not found.
         """
         if frame not in self._transform_link_to_base:
             raise ModelError(f"Unknown frame: '{frame}'")
@@ -169,7 +168,6 @@ class KinematicTree:
         \param source Name of the source link frame.
         \param dest Name of the destination link frame.
         \return SE3 transform_source_to_dest.
-        \raise ModelError If either frame name is not found.
         """
         transform_source_to_base = self.get_transform_frame_to_base(source)
         transform_dest_to_base = self.get_transform_frame_to_base(dest)
