@@ -57,6 +57,15 @@ class ModelTestCase(unittest.TestCase):
                 nb_joints += 1
             self.assertEqual(nb_joints, 6)
 
+    def test_rotation_ars_to_world(self):
+        """Check that the ARS orientation matches the pi3hat specification."""
+        rotation_ars_to_world = np.diag([1.0, -1.0, -1.0])
+        np.testing.assert_allclose(
+            self.model.rotation_ars_to_world,
+            rotation_ars_to_world,
+            atol=1e-10,
+        )
+
     def test_rotation_base_to_imu_from_urdf(self):
         """Check that rotation_base_to_imu is parsed from the URDF."""
         np.testing.assert_allclose(
