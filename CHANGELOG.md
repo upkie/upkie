@@ -28,7 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - model: Add `JointProperties` class for per-joint simulation properties
 - model: Add `KinematicTree` class for URDF processing
 - model: Add `Link` dataclass
-- model: Add `Model.left_wheeled` property
+- model: Add `Model.left_wheeled` property parsed from URDF
 - model: Add `Model.wheel_base` property
 - model: Add link properties to `Joint` class
 - model: Add small `SE3` class to manipulate transforms

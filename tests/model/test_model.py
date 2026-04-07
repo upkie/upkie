@@ -10,6 +10,7 @@ import unittest
 import numpy as np
 import upkie_description
 
+import cookie_description
 from upkie.model import Model
 
 
@@ -85,6 +86,15 @@ class ModelTestCase(unittest.TestCase):
         """Check that wheel_radius is parsed from collision geometry."""
         upkie_wheel_radius = 0.05  # meters
         self.assertAlmostEqual(self.model.wheel_radius, upkie_wheel_radius)
+
+    def test_upkie_is_left_wheeled(self):
+        """Upkie robots are left-wheeled."""
+        self.assertTrue(self.model.left_wheeled)
+
+    def test_cookie_is_right_wheeled(self):
+        """Cookie robots are right-wheeled."""
+        cookie_model = Model(cookie_description.URDF_PATH)
+        self.assertFalse(cookie_model.left_wheeled)
 
     def test_wheel_tires_have_collision(self):
         for wheel_tire in ("left_wheel_tire", "right_wheel_tire"):
