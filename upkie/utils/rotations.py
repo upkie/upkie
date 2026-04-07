@@ -16,32 +16,24 @@ import numpy as np
 from scipy.spatial.transform import Rotation as ScipyRotation
 
 
-def rotation_matrix_from_rpy(
-    rpy: Tuple[float, float, float],
-) -> np.ndarray:
+def quaternion_from_rotation_matrix(rotation_matrix: np.ndarray) -> np.ndarray:
     r"""!
-    Convert URDF roll-pitch-yaw angles to a rotation matrix.
+    Convert a rotation matrix to a unit quaternion for the same rotation.
 
-    URDF uses fixed-axis XYZ convention, so the resulting rotation matrix is:
-
-    \f[
-        R = R_z(\mathrm{yaw}) R_y(\mathrm{pitch}) R_x(\mathrm{roll})
-    \f]
-
-    \param rpy Tuple of (roll, pitch, yaw) angles in radians.
-    \return Rotation matrix.
+    \param rotation_matrix Rotation matrix to convert.
+    \return Unit quaternion in `[w, x, y, z]` format.
     """
-    roll, pitch, yaw = rpy
-    cr, sr = np.cos(roll), np.sin(roll)
-    cp, sp = np.cos(pitch), np.sin(pitch)
-    cy, sy = np.cos(yaw), np.sin(yaw)
-    return np.array(
-        [
-            [cy * cp, cy * sp * sr - sy * cr, cy * sp * cr + sy * sr],
-            [sy * cp, sy * sp * sr + cy * cr, sy * sp * cr - cy * sr],
-            [-sp, cp * sr, cp * cr],
-        ]
-    )
+    if rotation_matrix.shape != (3, 3):
+        raise ValueError(f"Expected 3x3 matrix, got {rotation_matrix.shape}")
+    rotation = ScipyRotation.from_matrix(rotation_matrix)
+    try:
+        return rotation.as_quat(scalar_first=True)
+    except TypeError:
+        # Fallback for older scipy: as_quat() returns [x, y, z, w]
+        quat_xyzw = rotation.as_quat()
+        return np.array(
+            [quat_xyzw[3], quat_xyzw[0], quat_xyzw[1], quat_xyzw[2]]
+        )
 
 
 def rotation_matrix_from_quaternion(
@@ -82,21 +74,45 @@ def rotation_matrix_from_quaternion(
     )
 
 
-def quaternion_from_rotation_matrix(rotation_matrix: np.ndarray) -> np.ndarray:
+def rotation_matrix_from_rpy(
+    rpy: Tuple[float, float, float],
+) -> np.ndarray:
     r"""!
-    Convert a rotation matrix to a unit quaternion for the same rotation.
+    Convert URDF roll-pitch-yaw angles to a rotation matrix.
 
-    \param rotation_matrix Rotation matrix to convert.
-    \return Unit quaternion in `[w, x, y, z]` format.
+    URDF uses fixed-axis XYZ convention, so the resulting rotation matrix is:
+
+    \f[
+        R = R_z(\mathrm{yaw}) R_y(\mathrm{pitch}) R_x(\mathrm{roll})
+    \f]
+
+    \param rpy Tuple of (roll, pitch, yaw) angles in radians.
+    \return Rotation matrix.
     """
-    if rotation_matrix.shape != (3, 3):
-        raise ValueError(f"Expected 3x3 matrix, got {rotation_matrix.shape}")
-    rotation = ScipyRotation.from_matrix(rotation_matrix)
-    try:
-        return rotation.as_quat(scalar_first=True)
-    except TypeError:
-        # Fallback for older scipy: as_quat() returns [x, y, z, w]
-        quat_xyzw = rotation.as_quat()
-        return np.array(
-            [quat_xyzw[3], quat_xyzw[0], quat_xyzw[1], quat_xyzw[2]]
-        )
+    roll, pitch, yaw = rpy
+    cr, sr = np.cos(roll), np.sin(roll)
+    cp, sp = np.cos(pitch), np.sin(pitch)
+    cy, sy = np.cos(yaw), np.sin(yaw)
+    return np.array(
+        [
+            [cy * cp, cy * sp * sr - sy * cr, cy * sp * cr + sy * sr],
+            [sy * cp, sy * sp * sr + cy * cr, sy * sp * cr - cy * sr],
+            [-sp, cp * sr, cp * cr],
+        ]
+    )
+
+
+def skew(v: np.ndarray) -> np.ndarray:
+    r"""!
+    Skew-symmetric matrix from a 3D vector.
+
+    \param v 3D vector in the Lie algebra se(3).
+    \return 3x3 skew-symmetric matrix such that `skew(v) @ w == cross(v, w)`.
+    """
+    return np.array(
+        [
+            [0.0, -v[2], v[1]],
+            [v[2], 0.0, -v[0]],
+            [-v[1], v[0], 0.0],
+        ]
+    )

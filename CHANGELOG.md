@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - model: Add `wheel_base` property
 - model: Read orientation of the IMU frame in the base frame from URDF
 - model: Read wheel radius from URDF
+- utils: Add `skew` to rotation utility functions
 
 ### Changed
 
