@@ -96,6 +96,19 @@ upkie = { path = ".", editable = true }
 # most environments have a corresponding feature and run in the default solve
 # group, except simulator environments which run in their own solve groups.
 
+# ---------------
+# Environment: ci
+# ---------------
+
+[tool.pixi.environments.ci]
+features = ["ci", "default"]
+
+[tool.pixi.feature.ci.dependencies]
+pre-commit = ">=4.0.0,<5"
+
+[tool.pixi.feature.ci.tasks]
+pre-commit-checks = "pre-commit run --all-files"
+
 # -------------------
 # Environment: cookie
 # -------------------

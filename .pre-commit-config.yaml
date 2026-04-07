@@ -1,0 +1,56 @@
+default_stages: [pre-commit]
+default_install_hook_types: [pre-commit]
+
+fail_fast: false
+
+repos:
+  # Standard pre-commit hooks for common checks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      # Check for files > 1 MB on commit (ignores git-lfs tracked files)
+      - id: check-added-large-files
+        args: ['--enforce-all', '--maxkb', '1024']
+      # Detect any unresolved merge conflicts remaining in files
+      - id: check-merge-conflict
+      # Check for broken symlinks that should not be checked in
+      - id: check-symlinks
+      # Check TOML files
+      - id: check-toml
+      # Attempt to parse/load YAML files to verify they have no obvious issues
+      - id: check-yaml
+        args: ['--allow-multiple-documents']
+      # Fix end-of-file inconsistencies caused by different editors
+      - id: end-of-file-fixer
+      # Fix trailing whitespace in files of all types
+      - id: trailing-whitespace
+
+  # Check that pixi.lock is up-to-date with pyproject.toml
+  - repo: local
+    hooks:
+      - id: pixi-lock
+        name: check pixi.lock is up-to-date
+        entry: pixi install --locked
+        language: system
+        files: (pyproject\.toml|pixi\.lock)
+        pass_filenames: false
+
+  # Run Python linter
+  - repo: local
+    hooks:
+      - id: lint-python-fix
+        name: run Python linter
+        entry: pixi run -e lint lint-python-fix
+        language: system
+        types: [python]
+        pass_filenames: false
+
+  # Run Python formatter
+  - repo: local
+    hooks:
+      - id: format-python
+        name: run Python formatter
+        entry: pixi run -e lint format
+        language: system
+        types: [python]
+        pass_filenames: false
