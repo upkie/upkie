@@ -57,6 +57,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- CICD: Run both C++ and Python unit tests in `pixi run test`
 - cpp: Clean up unused `reset_joint_properties` function
 - cpp: Remove joint properties from Bullet interface
 - docs: Clean up obsolete Doxygen configuration parameters
