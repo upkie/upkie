@@ -81,6 +81,19 @@ For instance:
 - Check unit tests: `pixi run -e test-py12 test`
 - Open a shell in a fully configured environment: `pixi shell`
 
+### Pre-commit hooks {#pre-commit}
+
+Pre-commit hooks are automated sanity checks that can optionally be configured to run on every commit. They take care, for instance, of updating `pixi.lock` if dependencies have changed. There are two options to run them:
+
+1. Run checks manually before pushing: `pixi run pre-commit-checks`
+2. Install hooks to run checks automatically on every commit: `pixi run -e ci pre-commit install`
+
+Once installed, the hooks also run linting and formatting on staged Python files, and carry out a set of general file-quality checks. To uninstall the hooks later on, run:
+
+```bash
+pixi run -e ci pre-commit uninstall
+```
+
 ## Inter-process communication
 
 Upkie implements an action-observation loop to control robot actuators from a standalone "agent" process. The inter-process communication (IPC) protocol between the agent and the "spine" process that talks to actuators looks like this:
