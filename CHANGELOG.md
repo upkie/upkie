@@ -7,13 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [11.0.0] - 2026-04-07
+
 ### Added
 
 - CICD: Add optional pre-commit checks
 - CICD: Add unit tests for the Python `Joystick` class
 - CICD: Test joystick usage in the PyBullet backend.
 - config: Allow both .yaml and .yml file extensions
-- controllers: Add `JoystickGyropodController` mapping joystick inputs to gyropod actions
+- controllers: Add `JoystickController` mapping joystick inputs to linear-angular velocities
 - controllers: Add `reset` function to `MPCBalancer`
 - controllers: Rename MPCBalancer stepping function to `step`
 - envs: Add `UpkieBaseVelocity` environment
@@ -50,7 +52,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - model: Derive `Model.wheel_base` from robot descriptions
 - model: Derive `Model.wheel_radius` from robot descriptions
 - model: Move URDF processing to `KinematicTree` class
-- mpc_balancer: Merge `RemoteControl` parameters into the new `JoystickGyropodController`
+- mpc_balancer: Merge `RemoteControl` parameters into the new `JoystickController`
 - mpc_balancer: Merge `WheelController` into `Controller` class
 - mpc_balancer: Moved to `examples/real_robot/follow_joystick.py`
 - mpc_balancer: Use left rather than right joystick's left-right axis for yaw control
@@ -73,7 +75,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - config: Remove robot configuration dictionary as it has become unused
 - cpp: Remove unused `follower_camera` parameter from the Bullet interface
 - examples: Remove PI balancing variant from real-robot examples
-- mpc_balancer: Remove `RemoteControl` class as it is now in `JoystickGyropodController`
+- mpc_balancer: Remove `RemoteControl` class as it is now in `JoystickController`
 - mpc_balancer: Remove `WheelController` class as it is now in the `UpkieGyropod` environment
 
 ## [10.1.0] - 2026-03-11
@@ -1032,42 +1034,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Starting this changelog.
 
-[unreleased]: https://github.com/upkie/upkie/compare/v10.1.0...HEAD
-[10.1.0]: https://github.com/upkie/upkie/compare/v10.0.0...v10.1.0
-[10.0.0]: https://github.com/upkie/upkie/compare/v9.0.1...v10.0.0
-[9.0.1]: https://github.com/upkie/upkie/compare/v9.0.0...v9.0.1
-[9.0.0]: https://github.com/upkie/upkie/compare/v8.1.1...v9.0.0
-[8.1.1]: https://github.com/upkie/upkie/compare/v8.1.0...v8.1.1
-[8.1.0]: https://github.com/upkie/upkie/compare/v8.0.0...v8.1.0
-[8.0.0]: https://github.com/upkie/upkie/compare/v7.0.0...v8.0.0
-[7.0.0]: https://github.com/upkie/upkie/compare/v6.1.0...v7.0.0
-[6.1.0]: https://github.com/upkie/upkie/compare/v6.0.0...v6.1.0
-[6.0.0]: https://github.com/upkie/upkie/compare/v5.2.0...v6.0.0
-[5.2.0]: https://github.com/upkie/upkie/compare/v5.1.0...v5.2.0
-[5.1.0]: https://github.com/upkie/upkie/compare/v5.0.1...v5.1.0
-[5.0.1]: https://github.com/upkie/upkie/compare/v5.0.0...v5.0.1
-[5.0.0]: https://github.com/upkie/upkie/compare/v4.0.0...v5.0.0
-[4.0.0]: https://github.com/upkie/upkie/compare/v3.4.0...v4.0.0
-[3.4.0]: https://github.com/upkie/upkie/compare/v3.3.0...v3.4.0
-[3.3.0]: https://github.com/upkie/upkie/compare/v3.2.0...v3.3.0
-[3.2.0]: https://github.com/upkie/upkie/compare/v3.1.0...v3.2.0
-[3.1.0]: https://github.com/upkie/upkie/compare/v3.0.0...v3.1.0
-[3.0.0]: https://github.com/upkie/upkie/compare/v2.0.0...v3.0.0
-[2.0.0]: https://github.com/upkie/upkie/compare/v1.5.0...v2.0.0
-[1.5.0]: https://github.com/upkie/upkie/compare/v1.4.0...v1.5.0
-[1.4.0]: https://github.com/upkie/upkie/compare/v1.3.4...v1.4.0
-[1.3.4]: https://github.com/upkie/upkie/compare/v1.3.3...v1.3.4
-[1.3.3]: https://github.com/upkie/upkie/compare/v1.3.2...v1.3.3
-[1.3.2]: https://github.com/upkie/upkie/compare/v1.3.1...v1.3.2
-[1.3.1]: https://github.com/upkie/upkie/compare/v1.3.0...v1.3.1
-[1.3.0]: https://github.com/upkie/upkie/compare/v1.2.1...v1.3.0
-[1.2.1]: https://github.com/upkie/upkie/compare/v1.2.0...v1.2.1
-[1.2.0]: https://github.com/upkie/upkie/compare/v1.1.0...v1.2.0
-[1.1.0]: https://github.com/upkie/upkie/compare/v1.0.0...v1.1.0
-[1.0.0]: https://github.com/upkie/upkie/compare/v0.5.0...v1.0.0
-[0.5.0]: https://github.com/upkie/upkie/compare/v0.4.0...v0.5.0
-[0.4.0]: https://github.com/upkie/upkie/compare/v0.3.1...v0.4.0
-[0.3.1]: https://github.com/upkie/upkie/compare/v0.3.0...v0.3.1
-[0.3.0]: https://github.com/upkie/upkie/compare/v0.2.0...v0.3.0
-[0.2.0]: https://github.com/upkie/upkie/compare/v0.1.0...v0.2.0
+[unreleased]: https://github.com/upkie/upkie/compare/v11.0.0...HEAD
+[11.0.0]: https://github.com/upkie/upkie/releases/tag/v11.0.0
+[10.1.0]: https://github.com/upkie/upkie/releases/tag/v10.1.0
+[10.0.0]: https://github.com/upkie/upkie/releases/tag/v10.0.0
+[9.0.1]: https://github.com/upkie/upkie/releases/tag/v9.0.1
+[9.0.0]: https://github.com/upkie/upkie/releases/tag/v9.0.0
+[8.1.1]: https://github.com/upkie/upkie/releases/tag/v8.1.1
+[8.1.0]: https://github.com/upkie/upkie/releases/tag/v8.1.0
+[8.0.0]: https://github.com/upkie/upkie/releases/tag/v8.0.0
+[7.0.0]: https://github.com/upkie/upkie/releases/tag/v7.0.0
+[6.1.0]: https://github.com/upkie/upkie/releases/tag/v6.1.0
+[6.0.0]: https://github.com/upkie/upkie/releases/tag/v6.0.0
+[5.2.0]: https://github.com/upkie/upkie/releases/tag/v5.2.0
+[5.1.0]: https://github.com/upkie/upkie/releases/tag/v5.1.0
+[5.0.1]: https://github.com/upkie/upkie/releases/tag/v5.0.1
+[5.0.0]: https://github.com/upkie/upkie/releases/tag/v5.0.0
+[4.0.0]: https://github.com/upkie/upkie/releases/tag/v4.0.0
+[3.4.0]: https://github.com/upkie/upkie/releases/tag/v3.4.0
+[3.3.0]: https://github.com/upkie/upkie/releases/tag/v3.3.0
+[3.2.0]: https://github.com/upkie/upkie/releases/tag/v3.2.0
+[3.1.0]: https://github.com/upkie/upkie/releases/tag/v3.1.0
+[3.0.0]: https://github.com/upkie/upkie/releases/tag/v3.0.0
+[2.0.0]: https://github.com/upkie/upkie/releases/tag/v2.0.0
+[1.5.0]: https://github.com/upkie/upkie/releases/tag/v1.5.0
+[1.4.0]: https://github.com/upkie/upkie/releases/tag/v1.4.0
+[1.3.4]: https://github.com/upkie/upkie/releases/tag/v1.3.4
+[1.3.3]: https://github.com/upkie/upkie/releases/tag/v1.3.3
+[1.3.2]: https://github.com/upkie/upkie/releases/tag/v1.3.2
+[1.3.1]: https://github.com/upkie/upkie/releases/tag/v1.3.1
+[1.3.0]: https://github.com/upkie/upkie/releases/tag/v1.3.0
+[1.2.1]: https://github.com/upkie/upkie/releases/tag/v1.2.1
+[1.2.0]: https://github.com/upkie/upkie/releases/tag/v1.2.0
+[1.1.0]: https://github.com/upkie/upkie/releases/tag/v1.1.0
+[1.0.0]: https://github.com/upkie/upkie/releases/tag/v1.0.0
+[0.5.0]: https://github.com/upkie/upkie/releases/tag/v0.5.0
+[0.4.0]: https://github.com/upkie/upkie/releases/tag/v0.4.0
+[0.3.1]: https://github.com/upkie/upkie/releases/tag/v0.3.1
+[0.3.0]: https://github.com/upkie/upkie/releases/tag/v0.3.0
+[0.2.0]: https://github.com/upkie/upkie/releases/tag/v0.2.0
 [0.1.0]: https://github.com/upkie/upkie/releases/tag/v0.1.0
