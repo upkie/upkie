@@ -29,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - model: Add `Link` dataclass
 - model: Add `Model.left_wheeled` property
 - model: Add `Model.wheel_base` property
+- model: Add link properties to `Joint` class
 - model: Add small `SE3` class to manipulate transforms
 - model: Read orientation of the IMU frame in the base frame from URDF
 - model: Read wheel radius from URDF
