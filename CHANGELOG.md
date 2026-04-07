@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - model: Add `JointProperties` class for per-joint simulation properties
 - model: Add `left_wheeled` property
 - model: Add `wheel_base` property
+- model: Add small `SE3` class to manipulate transforms
 - model: Read orientation of the IMU frame in the base frame from URDF
 - model: Read wheel radius from URDF
 - utils: Add `skew` to rotation utility functions
