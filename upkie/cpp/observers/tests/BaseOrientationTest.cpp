@@ -119,7 +119,7 @@ TEST_F(BaseOrientationTest, NeutralValues) {
        params_->rotation_base_to_imu);
   auto rotation_base_to_world =
       output.get<Eigen::Matrix3d>("rotation_base_to_world");
-  ASSERT_TRUE(rotation_base_to_world.isApprox(expected_rotation));
+  ASSERT_TRUE(rotation_base_to_world.is_approx(expected_rotation));
 }
 
 }  // namespace upkie::cpp::observers
