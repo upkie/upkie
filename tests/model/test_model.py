@@ -74,6 +74,29 @@ class ModelTestCase(unittest.TestCase):
             atol=1e-10,
         )
 
+    def test_wheel_base(self):
+        """Check that wheel_base is computed from the kinematic tree."""
+        upkie_wheel_base = 0.3048  # meters
+        self.assertAlmostEqual(
+            self.model.wheel_base, upkie_wheel_base, places=2
+        )
+
+    def test_wheel_radius(self):
+        """Check that wheel_radius is parsed from collision geometry."""
+        upkie_wheel_radius = 0.05  # meters
+        self.assertAlmostEqual(self.model.wheel_radius, upkie_wheel_radius)
+
+    def test_wheel_tires_have_collision(self):
+        for wheel_tire in ("left_wheel_tire", "right_wheel_tire"):
+            link = self.tree.links[wheel_tire]
+            self.assertTrue(len(link.collision_geometries) > 0)
+            cylinder = link.collision_geometries[0]
+            self.assertEqual(cylinder.shape, "cylinder")
+            radius = cylinder.params["radius"]
+            self.assertTrue(isinstance(radius, float))
+            self.assertGreater(radius, 0.0)
+            self.assertLess(radius, 1.0)
+
 
 if __name__ == "__main__":
     unittest.main()
