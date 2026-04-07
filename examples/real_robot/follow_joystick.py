@@ -8,7 +8,7 @@ import numpy as np
 import upkie_description
 
 import upkie.envs
-from upkie.controllers import JoystickGyropodController
+from upkie.controllers import JoystickController
 from upkie.logging import logger
 from upkie.model import Model
 from upkie.utils.clamp import clamp
@@ -20,8 +20,8 @@ class Controller:
     """
 
     ## \var joystick_controller
-    ## Joystick controller for gyropod.
-    joystick_controller: JoystickGyropodController
+    ## Joystick controller.
+    joystick_controller: JoystickController
 
     ## \var model
     ## Robot model.
@@ -48,7 +48,7 @@ class Controller:
         \param turning_gain_scale Additional gain scaling applied when turning.
         """
         self.gain_scale = clamp(gain_scale, 0.1, 2.0)
-        self.joystick_controller = JoystickGyropodController()
+        self.joystick_controller = JoystickController()
         self.leg_length = leg_length
         self.max_ground_accel = max_ground_accel
         self.max_ground_velocity = max_ground_velocity

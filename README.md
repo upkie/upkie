@@ -18,37 +18,37 @@ Upkies come with [step by step build instructions](https://github.com/upkie/upki
 
 ## Getting started
 
-Upkies come with a model predictive controller that can balance and roam around. You can try it out in simulation by:
+Upkies come out-of-the-box with balancing and locomotion capabilities. You can try them out in simulation using [pixi](https://pixi.prefix.dev/):
+
+<img src="https://raw.githubusercontent.com/upkie/upkie/refs/heads/main/docs/images/bullet-spine.png" height="100" align="right" />
 
 ```console
-./start_mpc_balancer.sh
+pixi run example-follow-joystick
+```
+
+Or using [uv](https://docs.astral.sh/uv/):
+
+```console
+uv run examples/follow_joystick.py
 ```
 
 Once the agent is running, you can direct your Upkie using a gamepad 🎮
 
-- **Left joystick:** go forward right backward
-- **Right joystick:** turn left or right
-- **Directional pad:** down to crouch, up to stand up
-- **Right button:** (B on an Xbox controller, red circle on a PS4 controller) emergency stop 🚨 all motors will turn off
+- **Left joystick ⬆️ ⬇️:** go forward or backward
+- **Left joystick ⬅️  ➡️:** turn left or right
+- **Right button:** (B on an Xbox controller, red circle on a PS4 controller) emergency stop 🚨
 
 Click on the robot in the simulator window to apply external forces and see how the robot reacts.
 
 ## Creating your own behaviors
 
-Software for Upkies comes is packaged in an `upkie` Python library. You can install it:
-
-- From conda-forge: `conda install -c conda-forge upkie`
-- From PyPI: `pip install upkie`
-
-When running on the real robot, your code will command the robot's actuators via another process called the *spine*. There are also simulation spines for testing before deploying to a robot. Let's start a Bullet simulation spine:
-
-<img src="https://raw.githubusercontent.com/upkie/upkie/refs/heads/main/docs/images/bullet-spine.png" height="100" align="right" />
+Software for Upkies comes is packaged in an `upkie` Python library that you can install from `conda` or `pip`:
 
 ```console
-./start_simulation.sh
+pip install upkie
 ```
 
-Now that we have a spine is running, we can control the robot in Python. For example:
+This library provides [Gymnasium environments](https://upkie.github.io/upkie/gym-environments.html) to control real and simulation robots with the same code. For instance, the following example balances the robot like a wheeled inverted pendulum in PyBullet:
 
 ```python
 import gymnasium as gym
@@ -57,7 +57,7 @@ import upkie.envs
 
 upkie.envs.register()
 
-with gym.make("Upkie-Spine-Pendulum", frequency=200.0) as env:
+with gym.make("Upkie-PyBullet-Pendulum", frequency=200.0) as env:
     observation, _ = env.reset()
     gain = np.array([10.0, 1.0, 0.0, 0.1])
     for step in range(1_000_000):
@@ -67,11 +67,9 @@ with gym.make("Upkie-Spine-Pendulum", frequency=200.0) as env:
             observation, _ = env.reset()
 ```
 
-Other Gymnasium environments provide various levels of absraction to control the robot. They are listed in the [Gym environments](https://upkie.github.io/upkie/gym-environments.html) page of the documentation.
+To switch to the real robot, replace "PyBullet" by "Spine" in the environment name.
 
-## Going further
-
-### Examples
+## Examples
 
 There are smaller standalone examples in the [examples](https://github.com/upkie/upkie/tree/main/examples) directory. For instance:
 
@@ -80,31 +78,7 @@ There are smaller standalone examples in the [examples](https://github.com/upkie
 - Model predictive control: a self-contained MPC balancer
 - PD balancer: balance by proportional-derivative feedback to wheel velocities.
 
-Some examples have optional dependencies, like those for the Genesis and PyBullet simulators. You can activate a virtual environment and install them as optional dependencies, or use Pixi:
-
-```console
-pixi run --environment genesis ./examples/genesis_balancing.py
-```
-
-### Tasks
-
-Upkies come with a set of default behaviors that you can executed as Pixi tasks. To get started, make sure you have [installed `pixi`](https://pixi.sh/latest/#installation).
-
-| Name                    | Task                                                     |
-|-------------------------|----------------------------------------------------------|
-| `mpc-balancer`          | Run the MPC balancer with a running spine / real robot   |
-| `mpc-balancer-genesis`  | Run the MPC balancer in Genesis                          |
-| `mpc-balancer-pybullet` | Run the MPC balancer in PyBullet                         |
-
-You can execute a task by `pixi run <task-name>`, for instance:
-
-```console
-pixi run mpc-balancer-pybullet
-```
-
-Tasks are available both on your machine and on your Upkie's Raspberry Pi (Pixi comes pre-installed on the SD card image). They are implemented by [agents](https://github.com/upkie/upkie/tree/main/agents). You can make your own agents by forking this repository or using the [new\_agent](https://github.com/upkie/new_agent) template to get started.
-
-### Contributing
+## Contributing
 
 Contributions are welcome to both the hardware and software of Upkies! Check out the [contribution guidelines](CONTRIBUTING.md).
 
@@ -118,7 +92,7 @@ If you built an Upkie or use parts of this project in your works, please cite th
   author = {Caron, St\'{e}phane and Perrin-Gilbert, Nicolas and Ledoux, Viviane and G\"{o}kbakan, \"{U}mit Bora and Raverdy, Pierre-Guillaume and Raffin, Antonin and Tordjman{-}{-}Levavasseur, Valentin and Arlaud, Etienne and Duclusaud, Marc},
   url = {https://github.com/upkie/upkie},
   license = {Apache-2.0},
-  version = {10.1.0},
+  version = {11.0.0},
   year = {2026}
 }
 ```

@@ -15,7 +15,7 @@ import gymnasium as gym
 import numpy as np
 
 import upkie.envs
-from upkie.controllers import JoystickGyropodController
+from upkie.controllers import JoystickController
 from upkie.utils.clamp import clamp
 
 upkie.envs.register()
@@ -27,7 +27,7 @@ def main(
     turning_gain_scale: float = 2.0,
 ) -> None:
     gain_scale = clamp(gain_scale, 0.1, 2.0)
-    joystick_controller = JoystickGyropodController()
+    joystick_controller = JoystickController()
     turning_gain_scale = clamp(turning_gain_scale, 0.0, 3.0)
 
     with gym.make(

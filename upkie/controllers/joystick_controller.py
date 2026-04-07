@@ -3,7 +3,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-"""Joystick controller for gyropod."""
+"""Joystick controller."""
 
 from typing import Literal
 
@@ -13,9 +13,9 @@ from upkie.utils.clamp import clamp, clamp_abs
 from upkie.utils.filters import abs_bounded_derivative_filter
 
 
-class JoystickGyropodController:
+class JoystickController:
     r"""!
-    Joystick controller for gyropod.
+    Controller that maps joystick inputs to linear and angular velocities.
     """
 
     ## \var max_linear_accel
