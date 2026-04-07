@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - examples: Follow joystick inputs mapped to a base-velocity environment
 - model: Add `CollisionGeometry` dataclass
 - model: Add `JointProperties` class for per-joint simulation properties
+- model: Add `KinematicTree` class for URDF processing
 - model: Add `Link` dataclass
 - model: Add `Model.left_wheeled` property
 - model: Add `Model.wheel_base` property
@@ -44,6 +45,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - envs: Set `terminated` and `truncated` when joystick A/cross button is pressed
 - examples: Move PyBullet PD balancing example to pybullet/ sub-directory
 - logs: Move template log Makefile to tools/
+- model: Derive `Model.wheel_base` from robot descriptions
+- model: Derive `Model.wheel_radius` from robot descriptions
+- model: Move URDF processing to `KinematicTree` class
 - mpc_balancer: Merge `RemoteControl` parameters into the new `JoystickGyropodController`
 - mpc_balancer: Merge `WheelController` into `Controller` class
 - mpc_balancer: Moved to `examples/real_robot/follow_joystick.py`
