@@ -125,7 +125,7 @@ pybullet = ">=3.25,<4"
 qpmpc = ">=3.1.0,<4"
 
 [tool.pixi.feature.cookie.pypi-dependencies]
-cookie_description = ">=1.1.0, <2"
+cookie_description = ">=1.1.0,<2"
 
 [tool.pixi.feature.cookie.tasks]
 cookie-follow-joystick = "python examples/follow_joystick.py --robot cookie"
@@ -253,6 +253,9 @@ pybullet = ">=3.25,<4"
 pytest = ">=9.0.2,<10"
 qpmpc = ">=3.1.0,<4"
 "stable-baselines3" = ">=2.7.1,<3"
+
+[tool.pixi.feature.test.pypi-dependencies]
+cookie_description = ">=1.1.0,<2"
 
 [tool.pixi.feature.test-cpp.tasks]
 test-cpp = "tools/bazelisk test //upkie/..."

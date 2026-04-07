@@ -75,7 +75,6 @@ class Model:
         self.urdf_path = urdf_path
 
         tree = KinematicTree(urdf_path)
-        is_cookie = "cookie" in str(urdf_path).lower()
         pos_left = tree.get_transform_frame_to_base(
             "left_wheel_tire"
         ).translation
@@ -93,9 +92,19 @@ class Model:
         )
         wheel_radius = self._read_wheel_radius(tree)
 
+        z_axis_wheel_hub = tree.get_transform_frame_to_base(
+            "left_wheel_hub"
+        ).rotation[:, 2]
+        if abs(z_axis_wheel_hub[0]) > 1e-4 or abs(z_axis_wheel_hub[2]) > 1e-4:
+            raise ModelError(
+                "cannot determine wheeledness as the z-axis of the "
+                f"left-wheel hub {z_axis_wheel_hub} is not aligned with the "
+                "y-axis of the base frame"
+            )
+
         # Instance attributes
         self.kinematic_tree = tree
-        self.left_wheeled = not is_cookie
+        self.left_wheeled = bool(z_axis_wheel_hub[1] < 0)
         self.rotation_ars_to_world = np.diag([1.0, -1.0, -1.0])
         self.rotation_base_to_imu = tree.get_transform("base", "imu").rotation
         self.upper_leg_joints = upper_leg_joints
