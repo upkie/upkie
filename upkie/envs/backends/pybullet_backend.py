@@ -135,7 +135,7 @@ class PyBulletBackend(Backend):
         for bullet_idx in range(pybullet.getNumJoints(self.__robot_id)):
             joint_info = pybullet.getJointInfo(self.__robot_id, bullet_idx)
             joint_name = joint_info[1].decode("utf-8")
-            if joint_name in Model.JOINT_NAMES:
+            if joint_name in self.__model.joint_names:
                 self._joint_indices[joint_name] = bullet_idx
                 # Initialize joint properties with defaults
                 self._joint_properties[joint_name] = (

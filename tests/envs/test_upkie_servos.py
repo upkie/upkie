@@ -9,9 +9,9 @@ import unittest
 
 import gymnasium as gym
 import numpy as np
+
 from upkie.envs.backends import MockBackend
 from upkie.envs.upkie_servos import UpkieServos
-from upkie.model import Model
 from upkie.utils.robot_state import RobotState
 
 
@@ -26,6 +26,14 @@ class UpkieServosTestCase(unittest.TestCase):
             frequency=100.0,
             regulate_frequency=False,  # Disable for testing
         )
+        self.expected_joint_names = {
+            "left_hip",
+            "left_knee",
+            "left_wheel",
+            "right_hip",
+            "right_knee",
+            "right_wheel",
+        }
 
     def tearDown(self):
         """Clean up test fixture."""
@@ -45,7 +53,7 @@ class UpkieServosTestCase(unittest.TestCase):
         self.assertIsInstance(self.env.action_space, gym.spaces.Dict)
 
         # Check that expected joints are present
-        expected_joints = set(Model.JOINT_NAMES)
+        expected_joints = self.expected_joint_names
         self.assertEqual(
             set(self.env.action_space.spaces.keys()), expected_joints
         )
@@ -71,7 +79,7 @@ class UpkieServosTestCase(unittest.TestCase):
         self.assertIsInstance(self.env.observation_space, gym.spaces.Dict)
 
         # Check all expected joints are present
-        expected_joints = set(Model.JOINT_NAMES)
+        expected_joints = self.expected_joint_names
         self.assertEqual(
             set(self.env.observation_space.spaces.keys()), expected_joints
         )
@@ -104,7 +112,7 @@ class UpkieServosTestCase(unittest.TestCase):
         self.assertTrue(self.env.observation_space.contains(observation))
 
         # Check all joints are in observation
-        expected_joints = set(Model.JOINT_NAMES)
+        expected_joints = self.expected_joint_names
         self.assertEqual(set(observation.keys()), expected_joints)
 
         # Check servo observation values are arrays
@@ -154,7 +162,7 @@ class UpkieServosTestCase(unittest.TestCase):
         neutral_action = self.env.get_neutral_action()
 
         # Check structure
-        expected_joints = set(Model.JOINT_NAMES)
+        expected_joints = self.expected_joint_names
         self.assertEqual(set(neutral_action.keys()), expected_joints)
 
         # Neutral action should have NaN position (no position control)
@@ -176,7 +184,7 @@ class UpkieServosTestCase(unittest.TestCase):
 
         # Create action with extreme values
         extreme_action = {}
-        for joint_name in Model.JOINT_NAMES:
+        for joint_name in self.expected_joint_names:
             extreme_action[joint_name] = {
                 "position": 1000.0,  # Very large value
                 "velocity": -1000.0,  # Very large negative value
@@ -202,7 +210,7 @@ class UpkieServosTestCase(unittest.TestCase):
 
         # Check joint names
         joint_names = [joint.name for joint in model.joints]
-        expected_joints = Model.JOINT_NAMES
+        expected_joints = self.expected_joint_names
         self.assertEqual(set(joint_names), set(expected_joints))
 
     def test_frequency_property(self):
@@ -266,13 +274,13 @@ class UpkieServosTestCase(unittest.TestCase):
         self.assertAlmostEqual(left_hip_action["maximum_torque"], 5.0)
 
         # Check that all joints are present in spine action
-        expected_joints = set(Model.JOINT_NAMES)
+        expected_joints = self.expected_joint_names
         self.assertEqual(set(spine_action["servo"].keys()), expected_joints)
 
     def test_dtype_consistency(self):
         """Test that action and observation spaces use float32 dtype."""
         # Check action space dtypes for all joints
-        for joint_name in Model.JOINT_NAMES:
+        for joint_name in self.expected_joint_names:
             joint_action_space = self.env.action_space[joint_name]
             for key in [
                 "position",
@@ -285,7 +293,7 @@ class UpkieServosTestCase(unittest.TestCase):
                 self.assertEqual(joint_action_space[key].dtype, np.float32)
 
         # Check observation space dtypes for all joints
-        for joint_name in Model.JOINT_NAMES:
+        for joint_name in self.expected_joint_names:
             joint_obs_space = self.env.observation_space[joint_name]
             for key in [
                 "position",
@@ -298,7 +306,7 @@ class UpkieServosTestCase(unittest.TestCase):
 
         # Check that observations returned are float32
         observation, _ = self.env.reset()
-        for joint_name in Model.JOINT_NAMES:
+        for joint_name in self.expected_joint_names:
             joint_obs = observation[joint_name]
             for key in [
                 "position",
@@ -312,7 +320,7 @@ class UpkieServosTestCase(unittest.TestCase):
         # Check observations from step are float32
         action = self.env.get_neutral_action()
         observation, _, _, _, _ = self.env.step(action)
-        for joint_name in Model.JOINT_NAMES:
+        for joint_name in self.expected_joint_names:
             joint_obs = observation[joint_name]
             for key in [
                 "position",

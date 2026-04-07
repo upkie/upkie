@@ -95,10 +95,14 @@ class PyBulletBackendJoystickTestCase(unittest.TestCase):
         mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
         mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
         mock_model.return_value.urdf_path = "/mock/urdf/path"
-        mock_model.JOINT_NAMES = (
-            "left_hip", "left_knee", "left_wheel",
-            "right_hip", "right_knee", "right_wheel",
-        )
+        mock_model.joint_names = {
+            "left_hip",
+            "left_knee",
+            "left_wheel",
+            "right_hip",
+            "right_knee",
+            "right_wheel",
+        }
 
         backend = PyBulletBackend(
             dt=0.01,
@@ -112,10 +116,8 @@ class PyBulletBackendJoystickTestCase(unittest.TestCase):
     @patch("upkie.envs.backends.pybullet_backend.Path")
     @patch("upkie.envs.backends.pybullet_backend.pybullet_data")
     @patch("upkie.envs.backends.pybullet_backend.pybullet")
-    @patch("upkie.envs.backends.pybullet_backend.Model")
     def test_b_button_raises_in_step(
         self,
-        mock_model,
         mock_pybullet,
         mock_pybullet_data,
         mock_path_cls,
@@ -127,11 +129,6 @@ class PyBulletBackendJoystickTestCase(unittest.TestCase):
         button is pressed."""
         mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
         mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
-        mock_model.return_value.urdf_path = "/mock/urdf/path"
-        mock_model.JOINT_NAMES = (
-            "left_hip", "left_knee", "left_wheel",
-            "right_hip", "right_knee", "right_wheel",
-        )
 
         # Make Path(js_path).exists() return True so the Joystick is created
         mock_path_instance = MagicMock()
@@ -144,6 +141,16 @@ class PyBulletBackendJoystickTestCase(unittest.TestCase):
             "Stop button pressed"
         )
         mock_joystick_cls.return_value = mock_joystick_instance
+
+        mock_model = MagicMock()
+        mock_model.joint_names = {
+            "left_hip",
+            "left_knee",
+            "left_wheel",
+            "right_hip",
+            "right_knee",
+            "right_wheel",
+        }
 
         backend = PyBulletBackend(dt=0.01, gui=False, js_path="/dev/input/js0")
         self.assertIsNotNone(backend.joystick)
