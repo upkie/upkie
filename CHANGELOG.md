@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- utils: Fix square and triangle button observations in Python
 - utils: Match joystick observations computed in C++ and Python
 
 ## [11.0.0] - 2026-04-07
