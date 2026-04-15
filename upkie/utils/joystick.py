@@ -171,10 +171,6 @@ class Joystick:
             "y": 0,
             "tl": 0,
             "tr": 0,
-            "dpad_up": 0,
-            "dpad_down": 0,
-            "dpad_left": 0,
-            "dpad_right": 0,
         }
         for btn in buf[:num_buttons]:
             btn_name = Joystick.BUTTON_NAMES.get(btn, "unknown(0x%03x)" % btn)
@@ -213,17 +209,17 @@ class Joystick:
             raise UpkieRuntimeError("Stop button pressed")
 
         observation[self.prefix] = {
-            "left_axis": [self.axis_states["x"], self.axis_states["y"]],
-            "right_axis": [self.axis_states["rx"], self.axis_states["ry"]],
-            "left_trigger": self.axis_states["throttle"],
-            "right_trigger": self.axis_states["brake"],
             "cross_button": self.button_states["a"],
+            "left_axis": [self.axis_states["x"], self.axis_states["y"]],
             "left_button": self.button_states["tl"],
+            "left_trigger": self.axis_states["throttle"],
+            "pad_axis": [
+                self.axis_states.get("hat0x", 0.0),
+                self.axis_states.get("hat0y", 0.0),
+            ],
+            "right_axis": [self.axis_states["rx"], self.axis_states["ry"]],
             "right_button": self.button_states["tr"],
+            "right_trigger": self.axis_states["brake"],
             "square_button": self.button_states["x"],
             "triangle_button": self.button_states["y"],
-            "dpad_up": self.button_states["dpad_up"],
-            "dpad_down": self.button_states["dpad_down"],
-            "dpad_left": self.button_states["dpad_left"],
-            "dpad_right": self.button_states["dpad_right"],
         }

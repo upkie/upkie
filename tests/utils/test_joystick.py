@@ -43,13 +43,10 @@ class JoystickTestCase(unittest.TestCase):
         self.assertIn("joystick", observation)
         expected_keys = {
             "cross_button",
-            "dpad_down",
-            "dpad_left",
-            "dpad_right",
-            "dpad_up",
             "left_axis",
             "left_button",
             "left_trigger",
+            "pad_axis",
             "right_axis",
             "right_button",
             "right_trigger",
@@ -70,6 +67,7 @@ class JoystickTestCase(unittest.TestCase):
         self.assertEqual(joy["triangle_button"], 0)
         self.assertEqual(joy["left_axis"], [0.0, 0.0])
         self.assertEqual(joy["right_axis"], [0.0, 0.0])
+        self.assertEqual(joy["pad_axis"], [0.0, 0.0])
 
     def test_write_custom_prefix(self):
         """write() uses the prefix given at construction."""
@@ -106,81 +104,37 @@ class JoystickTestCase(unittest.TestCase):
         self.joystick.write(observation)  # must not raise
         self.assertIn("joystick", observation)
 
-    def test_dpad_up_state_appears_in_observation(self):
-        """write() reflects dpad_up button state in the observation."""
-        self.joystick.button_states["dpad_up"] = 1
-        observation = {}
-        self.joystick.write(observation)
-        self.assertEqual(observation["joystick"].get("dpad_up"), 1)
+    def test_pad_axis_event_appears_in_observation(self):
+        """write() reflects hat0x/hat0y axis events in pad_axis.
 
-    def test_dpad_down_state_appears_in_observation(self):
-        """write() reflects dpad_down button state in the observation."""
-        self.joystick.button_states["dpad_down"] = 1
-        observation = {}
-        self.joystick.write(observation)
-        self.assertEqual(observation["joystick"].get("dpad_down"), 1)
-
-    def test_dpad_up_event_appears_in_observation(self):
-        """write() reflects a dpad_up button event in the observation.
-
-        Button index 0 is mapped to 'dpad_up'. type=0x01 is JS_EVENT_BUTTON.
+        Axis numbers 0x10 (hat0x) and 0x11 (hat0y) map to pad_axis[0] and
+        pad_axis[1]. type=0x02 is JS_EVENT_AXIS. value=16383 → ~0.5.
         """
-        self.joystick.button_map = ["dpad_up"]
-        dpad_up_pressed = struct.pack("IhBB", 0, 1, 0x01, 0)
-        self.joystick.jsdev.read.return_value = dpad_up_pressed
+        self.joystick.axis_map = [
+            "x",
+            "y",
+            "z",
+            "rx",
+            "ry",
+            "rz",
+            "throttle",
+            "brake",
+            "hat0x",
+            "hat0y",
+        ]
+        # hat0x = 32767 → 1.0
+        hat0x_event = struct.pack("IhBB", 0, 32767, 0x02, 8)
+        self.joystick.jsdev.read.return_value = hat0x_event
         observation = {}
         self.joystick.write(observation)
-        self.assertEqual(observation["joystick"].get("dpad_up"), 1)
+        self.assertAlmostEqual(observation["joystick"]["pad_axis"][0], 1.0)
 
-    def test_dpad_down_event_appears_in_observation(self):
-        """write() reflects a dpad_down button event in the observation.
-
-        Button index 0 is mapped to 'dpad_down'. type=0x01 is JS_EVENT_BUTTON.
-        """
-        self.joystick.button_map = ["dpad_down"]
-        dpad_down_pressed = struct.pack("IhBB", 0, 1, 0x01, 0)
-        self.joystick.jsdev.read.return_value = dpad_down_pressed
+        # hat0y = -32767 → -1.0
+        hat0y_event = struct.pack("IhBB", 0, -32767, 0x02, 9)
+        self.joystick.jsdev.read.return_value = hat0y_event
         observation = {}
         self.joystick.write(observation)
-        self.assertEqual(observation["joystick"].get("dpad_down"), 1)
-
-    def test_dpad_left_state_appears_in_observation(self):
-        """write() reflects dpad_left button state in the observation."""
-        self.joystick.button_states["dpad_left"] = 1
-        observation = {}
-        self.joystick.write(observation)
-        self.assertEqual(observation["joystick"].get("dpad_left"), 1)
-
-    def test_dpad_right_state_appears_in_observation(self):
-        """write() reflects dpad_right button state in the observation."""
-        self.joystick.button_states["dpad_right"] = 1
-        observation = {}
-        self.joystick.write(observation)
-        self.assertEqual(observation["joystick"].get("dpad_right"), 1)
-
-    def test_dpad_left_event_appears_in_observation(self):
-        """write() reflects a dpad_left button event in the observation.
-
-        Button index 0 is mapped to 'dpad_left'. type=0x01 is JS_EVENT_BUTTON.
-        """
-        self.joystick.button_map = ["dpad_left"]
-        dpad_left_pressed = struct.pack("IhBB", 0, 1, 0x01, 0)
-        self.joystick.jsdev.read.return_value = dpad_left_pressed
-        observation = {}
-        self.joystick.write(observation)
-        self.assertEqual(observation["joystick"].get("dpad_left"), 1)
-
-    def test_dpad_right_event_appears_in_observation(self):
-        """write() reflects a dpad_right button event in the observation.
-
-        Button index 0 is mapped to 'dpad_right'. type=0x01 is JS_EVENT_BUTTON.
-        """
-        self.joystick.button_map = ["dpad_right"]
-        dpad_right_pressed = struct.pack("IhBB", 0, 1, 0x01, 0)
-        self.joystick.jsdev.read.return_value = dpad_right_pressed
-        observation = {}
-        self.joystick.write(observation)
-        self.assertEqual(observation["joystick"].get("dpad_right"), 1)
+        self.assertAlmostEqual(observation["joystick"]["pad_axis"][1], -1.0)
 
 
 if __name__ == "__main__":

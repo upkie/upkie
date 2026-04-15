@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- utils: Match joystick observations computed in C++ and Python
+
 ## [11.0.0] - 2026-04-07
 
 ### Added
