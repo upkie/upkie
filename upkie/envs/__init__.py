@@ -13,6 +13,7 @@ import gymnasium as gym
 from .upkie_base_velocity import UpkieBaseVelocity
 from .upkie_env import UpkieEnv
 from .upkie_gyropod import UpkieGyropod
+from .upkie_navigation import UpkieNavigation
 from .upkie_pendulum import UpkiePendulum
 from .upkie_servos import UpkieServos
 
@@ -51,6 +52,7 @@ __all__ = [
     "UpkieBaseVelocity",
     "UpkieEnv",
     "UpkieGyropod",
+    "UpkieNavigation",
     "UpkiePendulum",
     "UpkieServos",
     "register",
