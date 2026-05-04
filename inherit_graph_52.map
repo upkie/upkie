@@ -1,0 +1,9 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" title=" " alt="" coords="5,139,82,168"/>
+<area shape="rect" id="node2" href="$classupkie_1_1envs_1_1upkie__base__velocity_1_1UpkieBaseVelocity.html" title="Wrapper where the Upkie balances itself and the action is directly a base velocity." alt="" coords="130,5,274,34"/>
+<area shape="rect" id="node3" href="$classupkie_1_1envs_1_1upkie__gyropod_1_1UpkieGyropod.html" title="Wrapper to make Upkie act as a wheeled inverted pendulum with yaw control." alt="" coords="145,59,259,88"/>
+<area shape="rect" id="node4" href="$classupkie_1_1envs_1_1upkie__pendulum_1_1UpkiePendulum.html" title="Backward&#45;compatible wrapper around UpkieGyropod with 4D obs / 1D action." alt="" coords="140,112,264,141"/>
+<area shape="rect" id="node5" href="$classupkie_1_1envs_1_1wrappers_1_1add__lag__to__action_1_1AddLagToAction.html" title="Model lag by applying a low&#45;pass filter to the action of an environment." alt="" coords="140,165,264,194"/>
+<area shape="rect" id="node6" href="$classupkie_1_1envs_1_1wrappers_1_1differentiate__action_1_1DifferentiateAction.html" title="Act on the derivative of the action." alt="" coords="130,219,274,248"/>
+<area shape="rect" id="node7" href="$classupkie_1_1envs_1_1wrappers_1_1random__push_1_1RandomPush.html" title="At each step, with a given probability, apply a random push to the robot." alt="" coords="149,272,255,301"/>
+</map>
