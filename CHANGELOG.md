@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Expose rotation from base to world frame in the PyBullet backend
+
 ### Fixed
 
 - utils: Fix square and triangle button observations in Python
@@ -18,14 +22,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - CICD: Add optional pre-commit checks
 - CICD: Add unit tests for the Python `Joystick` class
-- CICD: Test joystick usage in the PyBullet backend.
+- CICD: Test joystick usage in the PyBullet backend
 - config: Allow both .yaml and .yml file extensions
 - controllers: Add `JoystickController` mapping joystick inputs to linear-angular velocities
 - controllers: Add `reset` function to `MPCBalancer`
 - controllers: Rename MPCBalancer stepping function to `step`
 - envs: Add `UpkieBaseVelocity` environment
 - envs: Add `UpkieGyropod` environment
-- envs: Connect to joystick if available in the PyBullet backend.
+- envs: Connect to joystick if available in the PyBullet backend
 - envs: Register `*-*-BaseVelocity` environments
 - envs: Register `*-*-Gyropod` environments
 - envs: Register `Cookie-*-*` environments
@@ -905,7 +909,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - build: Compile in optimized mode by default (previsouly: fast build)
-- envs: Observation vector reordered, angular velocity is now that of the base.
+- envs: Observation vector reordered, angular velocity is now that of the base
 
 ### Fixed
 

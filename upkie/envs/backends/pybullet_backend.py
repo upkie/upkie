@@ -361,9 +361,10 @@ class PyBulletBackend(Backend):
         )
 
         return {
-            "pitch": pitch,
             "angular_velocity": list(angular_velocity_base_in_base),
             "linear_velocity": list(linear_velocity_base_to_world_in_world),
+            "pitch": pitch,
+            "rotation_base_to_world": rotation_base_to_world.tolist(),
         }
 
     def __get_imu_observation(self) -> dict:
