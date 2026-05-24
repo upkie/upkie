@@ -433,7 +433,9 @@ def make_cookie_mock_servos(**kwargs):
     r"""!
     Create a Cookie servos environment with Mock backend.
     """
-    return make_mock_servos(**kwargs)
+    cookie_model = _get_cookie_model()
+    backend = MockBackend()
+    return UpkieServos(backend=backend, model=cookie_model, **kwargs)
 
 
 def make_cookie_pybullet_base_velocity(**kwargs):
