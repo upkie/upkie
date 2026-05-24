@@ -462,7 +462,11 @@ def make_cookie_spine_servos(**kwargs):
     Create a Cookie servos environment with Spine backend.
     """
     cookie_model = _get_cookie_model()
-    return make_spine_servos(model=cookie_model, **kwargs)
+    backend_keys = {"shm_name", "spine_config"}
+    backend_kwargs = {k: v for k, v in kwargs.items() if k in backend_keys}
+    env_kwargs = {k: v for k, v in kwargs.items() if k not in backend_keys}
+    backend = SpineBackend(model=cookie_model, **backend_kwargs)
+    return UpkieServos(backend=backend, model=cookie_model, **env_kwargs)
 
 
 def make_cookie_spine_base_velocity(**kwargs):

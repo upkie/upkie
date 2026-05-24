@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - cpp: Rate-limit CPU temperature sensing to 1 Hz
+- env: Fix registration of Cookie spine environments
 - env: Write joystick to observation when resetting PyBullet backend
 - utils: Fix joystick trigger axis mapping for Xbox controllers
 - utils: Fix square and triangle button observations in Python
