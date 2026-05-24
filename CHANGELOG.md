@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - cpp: Rate-limit CPU temperature sensing to 1 Hz
+- env: Write joystick to observation when resetting PyBullet backend
 - envs: Fix registration of Cookie mock servos environments
 - envs: Fix registration of Cookie spine servos environments
 - envs: Write joystick to observation when resetting PyBullet backend
