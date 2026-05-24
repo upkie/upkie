@@ -229,7 +229,10 @@ class PyBulletBackend(Backend):
         """
         self._reset_robot_state(init_state)
         pybullet.stepSimulation()
-        return self.get_spine_observation()
+        observation = self.get_spine_observation()
+        if self.joystick is not None:
+            self.joystick.write(observation)
+        return observation
 
     def _reset_robot_state(self, init_state: RobotState):
         r"""!
