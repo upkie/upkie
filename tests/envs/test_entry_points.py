@@ -74,6 +74,10 @@ class EntryPointsTestCase(unittest.TestCase):
         with gym.make("Upkie-PyBullet-Gyropod", gui=False) as env:
             self.assertIsNotNone(env)
 
+    def test_cookie_mock_servos_uses_cookie_model(self):
+        with gym.make("Cookie-Mock-Servos") as env:
+            self.assertIn("cookie", env.unwrapped.model.urdf_path)
+
     def test_unregistered(self):
         with self.assertRaises(gym.error.NameNotFound):
             gym.make("Upkie-Servos-NotFound")
