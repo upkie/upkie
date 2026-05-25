@@ -64,14 +64,6 @@ run_bullet_spine:  ## run the Bullet spine with an Upkie biped
 run_bullet_spine_cookie:  ## run the Bullet spine with a Cookie biped
 	$(BAZEL) run //spines:bullet_spine -- --show --robot-variant cookie
 
-.PHONY: set_date
-set_date: check_upkie_name  ## set Upkie's date if it is not connected to the Internet
-	ssh ${UPKIE_NAME} sudo date -s "$(CURDATE)"
-
-.PHONY: test_cpp
-test_cpp:  ## run C++ unit tests
-	$(BAZEL) test //upkie/...
-
 # Running `raspunzel -s` can create __pycache__ directories owned by root
 # that rsync is not allowed to remove. We therefore give permissions first.
 .PHONY: upload
@@ -80,23 +72,19 @@ upload: check_upkie_name build  ## upload built targets to the Raspberry Pi
 	ssh ${UPKIE_NAME} sudo find $(PROJECT_NAME) -type d -name __pycache__ -user root -exec chmod go+wx {} "\;"
 	rsync -Lrtu --delete-after \
 		--exclude .git* \
-		--exclude .mypy_cache \
 		--exclude .pixi \
 		--exclude .pytest_cache \
 		--exclude .ruff_cache \
-		--exclude .venv \
 		--exclude __pycache__ \
 		--exclude bazel-$(CURDIR_NAME) \
 		--exclude bazel-$(PROJECT_NAME)/ \
 		--exclude bazel-out/ \
 		--exclude bazel-testlogs/ \
-		--exclude cache/ \
-		--exclude docs/html \
-		--exclude logs/\*.mpack \
-		--exclude logs/ppo \
-		--exclude logs/tensorboard \
+		--exclude docs/ \
+		--exclude logs/ \
+		--exclude spines/cache/ \
 		--exclude tools/bazel \
-		--exclude tools/raspios \
+		--exclude tools/raspios/ \
 		--progress $(CURDIR)/ ${UPKIE_NAME}:$(PROJECT_NAME)/
 
 # REMOTE TARGETS
