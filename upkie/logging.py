@@ -7,6 +7,7 @@
 ## \brief Custom logging formatter and logger for the library.
 
 import logging
+import time
 
 
 class SpdlogFormatter(logging.Formatter):
@@ -62,6 +63,44 @@ logger.addHandler(handler)
 logger.propagate = False
 
 
+class RateLimitFilter(logging.Filter):
+    """!
+    Logging filter that rate-limits repeated warnings from the same source.
+
+    Useful for high-frequency loops where the same warning would otherwise
+    spam the terminal on every cycle.
+    """
+
+    def __init__(self, min_interval: float = 1.0):
+        r"""!
+        Initialize the filter.
+
+        \param min_interval Minimum seconds between successive emissions of a
+            warning from the same (filename, lineno) location.
+        """
+        super().__init__()
+        self._min_interval = min_interval
+        self._last_seen: dict = {}
+
+    def filter(self, record: logging.LogRecord) -> bool:
+        r"""!
+        Allow a record through only if enough time has passed since the last
+        emission from the same source line.
+
+        \param record Log record to evaluate.
+        \return True if the record should be emitted, False otherwise.
+        """
+        key = (record.filename, record.lineno)
+        now = time.monotonic()
+        if (
+            now - self._last_seen.get(key, -self._min_interval)
+            < self._min_interval
+        ):
+            return False
+        self._last_seen[key] = now
+        return True
+
+
 def disable_warnings() -> None:
     """!
     Disable all warnings from the upkie module.
@@ -69,7 +108,22 @@ def disable_warnings() -> None:
     logger.setLevel(logging.ERROR)
 
 
+def rate_limit_repeated_warnings(min_interval: float = 1.0) -> None:
+    r"""!
+    Rate-limit warnings that repeat from the same source line.
+
+    After calling this, each unique (file, line) warning is printed at most
+    once every ``min_interval`` seconds.
+
+    \param min_interval Minimum seconds between successive prints of the same
+        warning location (default: 1.0 s).
+    """
+    logger.addFilter(RateLimitFilter(min_interval))
+
+
 __all__ = [
+    "RateLimitFilter",
     "disable_warnings",
     "logger",
+    "rate_limit_repeated_warnings",
 ]
