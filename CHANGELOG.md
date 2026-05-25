@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Expose rotation from base to world frame in the PyBullet backend
 - cpp: Report faulty packets to the standard output
 - logging: Add `RateLimitFilter` and `rate_limit_repeated_warnings` to throttle high-frequency repeated warnings
 - setup: Configure wheel servo gains based on wheel radius
