@@ -9,7 +9,12 @@ import unittest
 
 import numpy as np
 
-from upkie.utils.clamp import clamp, clamp_abs, clamp_and_warn
+from upkie.utils.clamp import (
+    clamp,
+    clamp_abs,
+    clamp_abs_and_warn,
+    clamp_and_warn,
+)
 
 
 class ClampTestCase(unittest.TestCase):
@@ -24,6 +29,10 @@ class ClampTestCase(unittest.TestCase):
     def test_clamp_and_warn(self):
         self.assertAlmostEqual(clamp_and_warn(-2.1, -2.0, 2.0, "x"), -2.0)
         self.assertAlmostEqual(clamp_and_warn(3.1, -2.0, 2.0, "x"), 2.0)
+
+    def test_clamp_abs_and_warn(self):
+        self.assertAlmostEqual(clamp_abs_and_warn(-2.1, 2.0, "y"), -2.0)
+        self.assertAlmostEqual(clamp_abs_and_warn(3.1, 2.0, "y"), 2.0)
 
     def test_clamp_inf(self, x=1.42):
         self.assertAlmostEqual(clamp(x, -np.inf, np.inf), x)

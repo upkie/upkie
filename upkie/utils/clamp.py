@@ -59,3 +59,15 @@ def clamp_and_warn(value: float, lower: float, upper: float, label: str):
         logger.warning(f"{label}={value} clamped to {upper=}")
         return upper
     return value
+
+
+def clamp_abs_and_warn(value: float, bound: float, label: str):
+    r"""!
+    Clamp a value's absolute value, keeping its sign, warning if the value is
+    changed.
+
+    \param value Value to clamp.
+    \param bound Absolute value bound.
+    \param label Label to describe the value.
+    """
+    return clamp_and_warn(value, -bound, bound, label)
