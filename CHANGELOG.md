@@ -18,7 +18,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- logging: Add `RateLimitFilter` and `rate_limit_repeated_warnings` to throttle high-frequency repeated warnings
 - spines: Merge mock spine into pi3hat spine (`pi3hat_spine --mock`)
+- utils: Add `clamp_abs_and_warn` utility function
 
 ### Fixed
 
