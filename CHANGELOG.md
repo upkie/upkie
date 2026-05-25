@@ -39,6 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - CICD: Drop macOS ARM64 build from CI
 - Discontinue support for macOS
+- raspios: Remove micromamba from Raspberry Pi OS image
 - setup: Don't install `micromamba` on the raspi OS image
 - setup: Update setup script names
 - tools: Remove legacy Wi-Fi access point setup script
