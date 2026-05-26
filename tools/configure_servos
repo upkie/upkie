@@ -115,23 +115,46 @@ def configure_default_limits():
         configure_servo(servo, "servo.default_accel_limit", "NaN")
 
 
-def configure_gains():
+def configure_gains(wheel_radius: float):
+    """Configure PID gains for all servos.
+
+    Args:
+        wheel_radius: Wheel radius in meters, used to determine the wheel kd
+            gain.
+    """
     for hip_or_knee in UPPER_LEG_SERVOS:
         configure_servo(hip_or_knee, "servo.pid_position.kp", 400.0)
     for wheel in WHEEL_SERVOS:
         # Best value depends wheel radius (WR)
         # Values that have worked well: kd=0.3 for WR=5 cm, kd=0.6 for WR=7 cm
-        configure_servo(wheel, "servo.pid_position.kd", 0.3)
+        if wheel_radius <= 0.05:
+            kd = 0.3
+        elif wheel_radius <= 0.06:
+            kd = 0.45
+        else:  # wheel_radius > 6 cm
+            kd = 0.6
+        configure_servo(wheel, "servo.pid_position.kd", kd)
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description="Configure all servos connected to an Upkie wheeled biped."
+    )
+    parser.add_argument(
+        "--wheel-radius",
+        type=float,
+        required=True,
+        help="Wheel radius in meters",
+    )
+    args = parser.parse_args()
+
     if os.geteuid() != 0:
-        args = ["sudo", "-E", sys.executable] + sys.argv + [os.environ]
-        os.execlpe("sudo", *args)
+        cmd = ["sudo", "-E", sys.executable] + sys.argv + [os.environ]
+        os.execlpe("sudo", *cmd)
 
     configure_position_limits()
     configure_velocity_limits()
     configure_default_limits()
-    configure_gains()
+    configure_gains(args.wheel_radius)
     for servo in ALL_SERVOS:
         write_servo_configuration(servo)

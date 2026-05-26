@@ -25,6 +25,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - spines: Merge mock spine into pi3hat spine (`pi3hat_spine --mock`)
 - utils: Add `clamp_abs_and_warn` utility function
 
+### Changed
+
+- setup: Configure wheel servo gains based on wheel radius
+
 ### Fixed
 
 - cpp: Rate-limit CPU temperature sensing to 1 Hz
