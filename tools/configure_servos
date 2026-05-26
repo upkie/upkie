@@ -5,6 +5,7 @@
 
 """Configure all servos connected to an Upkie wheeled biped."""
 
+import argparse
 import os
 import subprocess
 import sys
@@ -84,6 +85,7 @@ def write_servo_configuration(servo_id: int):
 
 
 def configure_position_limits():
+    """Configure position limits for all servos."""
     for hip in (LEFT_HIP, RIGHT_HIP):
         configure_servo(hip, "servopos.position_max", 0.2)
         configure_servo(hip, "servopos.position_min", -0.2)
@@ -96,6 +98,7 @@ def configure_position_limits():
 
 
 def configure_velocity_limits():
+    """Configure velocity limits for all servos."""
     for hip_or_knee in UPPER_LEG_SERVOS:
         configure_servo(hip_or_knee, "servo.max_velocity", 2.0)
     for wheel in WHEEL_SERVOS:
@@ -103,7 +106,10 @@ def configure_velocity_limits():
 
 
 def configure_default_limits():
-    # https://github.com/mjbots/moteus/blob/38d688a933ce1584ee09f2628b5849d5e758ac21/docs/reference.md#servodefault_velocity_limit--servodefault_accel_limit
+    """Configure default velocity and acceleration limits for all servos.
+
+    See: https://github.com/mjbots/moteus/blob/38d688a933ce1584ee09f2628b5849d5e758ac21/docs/reference.md#servodefault_velocity_limit--servodefault_accel_limit
+    """
     for servo in ALL_SERVOS:
         configure_servo(servo, "servo.default_velocity_limit", "NaN")
         configure_servo(servo, "servo.default_accel_limit", "NaN")
