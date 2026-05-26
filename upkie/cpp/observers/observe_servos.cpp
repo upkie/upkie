@@ -3,6 +3,7 @@
 #include "upkie/cpp/observers/observe_servos.h"
 
 #include <map>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -26,7 +27,20 @@ void observe_servos(palimpsest::Dictionary& observation,
 
     const auto& joint_name = it->second;
     if (std::isnan(reply.result.torque)) {
-      throw ServoError(servo_id, joint_name, "torque measurement is NaN");
+      std::ostringstream packet;
+      packet << "torque measurement is NaN; full packet: {"
+             << "mode=" << static_cast<unsigned>(reply.result.mode)
+             << ", position=" << reply.result.position
+             << ", velocity=" << reply.result.velocity
+             << ", torque=" << reply.result.torque
+             << ", q_current=" << reply.result.q_current
+             << ", d_current=" << reply.result.d_current
+             << ", voltage=" << reply.result.voltage
+             << ", temperature=" << reply.result.temperature
+             << ", fault=" << reply.result.fault
+             << ", rezero_state=" << reply.result.rezero_state
+             << "}";
+      throw ServoError(servo_id, joint_name, packet.str());
     }
 
     // The moteus convention is that positive angles correspond to clockwise
