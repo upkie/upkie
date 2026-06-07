@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include <chrono>
 #include <string>
 
 #include "upkie/cpp/sensors/Sensor.h"
@@ -61,6 +62,9 @@ class CpuTemperature : public Sensor {
 
   //! Flag set to true when issuing a temperature warning.
   bool has_warned_;
+
+  //! Last time the temperature was read from the kernel.
+  std::chrono::steady_clock::time_point last_read_time_;
 };
 
 }  // namespace upkie::cpp::sensors

@@ -4,9 +4,15 @@
 
 namespace upkie::cpp::sensors {
 
-CpuTemperature::CpuTemperature(const char* temp_path) : has_warned_(false) {
+CpuTemperature::CpuTemperature(const char* temp_path)
+    : has_warned_(false),
+      last_read_time_(std::chrono::steady_clock::now()) {
   fd_ = ::open(temp_path, O_RDONLY | O_NONBLOCK);
   ::memset(buffer_, 0, sizeof(buffer_));
+  if (fd_ >= 0) {
+    ssize_t n = ::pread(fd_, buffer_, kCpuTemperatureBufferSize, 0);
+    (void)n;
+  }
 }
 
 CpuTemperature::~CpuTemperature() {
@@ -24,13 +30,23 @@ void CpuTemperature::write(Dictionary& observation) {
     return;
   }
 
-  ssize_t size = ::pread(fd_, buffer_, kCpuTemperatureBufferSize, 0);
-  if (size <= 0) {
-    spdlog::warn("Read {} bytes from temperature file", size);
-    return;
+  // Reading the thermal sensor at high frequency can saturate the Embedded
+  // Controller on some laptops, blocking keyboard input. Once per second is
+  // more than enough for temperature monitoring.
+  auto now = std::chrono::steady_clock::now();
+  bool should_read = (now - last_read_time_ >= std::chrono::seconds(1));
+  if (should_read) {
+    last_read_time_ = now;
+    ssize_t size = ::pread(fd_, buffer_, kCpuTemperatureBufferSize, 0);
+    if (size <= 0) {
+      spdlog::warn("Read {} bytes from temperature file", size);
+      return;
+    }
   }
   const double temperature = std::stol(buffer_) / 1000.;
-  check_temperature_warning(temperature);
+  if (should_read) {
+    check_temperature_warning(temperature);
+  }
   auto& output = observation(prefix());
   output = temperature;
 }
