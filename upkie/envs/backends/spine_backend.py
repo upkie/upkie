@@ -150,6 +150,12 @@ class SpineBackend(Backend):
             "right_wheel": -signed_radius,
         }
 
+        # Set base orientation from robot model so the spine's
+        # BaseOrientation observer uses the correct IMU mounting rotation
+        merged_spine_config["base_orientation"] = {
+            "rotation_base_to_imu": model.rotation_base_to_imu.flatten(),
+        }
+
         # Instance attributes
         self._spine = SpineInterface(shm_name, retries=10)
         self._spine_config = merged_spine_config
