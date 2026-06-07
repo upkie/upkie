@@ -5,8 +5,7 @@
 namespace upkie::cpp::sensors {
 
 CpuTemperature::CpuTemperature(const char* temp_path)
-    : has_warned_(false),
-      last_read_time_(std::chrono::steady_clock::now()) {
+    : has_warned_(false), last_read_time_(std::chrono::steady_clock::now()) {
   fd_ = ::open(temp_path, O_RDONLY | O_NONBLOCK);
   ::memset(buffer_, 0, sizeof(buffer_));
   if (fd_ >= 0) {
