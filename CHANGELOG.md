@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- CICD: Add C++ formatter call to pre-commit hooks
 - Expose rotation from base to world frame in the PyBullet backend
 
 ### Fixed
