@@ -41,7 +41,7 @@ def parse_command_line_arguments() -> argparse.Namespace:
     parser.add_argument(
         "command",
         help="Command to execute",
-        choices=("rezero", "stats", "stop", "update"),
+        choices=("rezero", "stats", "stop"),
     )
     return parser.parse_args()
 
@@ -230,33 +230,6 @@ def get_pi3hat_spine_version() -> str:
     return call.stdout.strip()
 
 
-def update_pi3hat_spine() -> None:
-    """Update the pi3hat spine."""
-    print("Updating the pi3hat spine...")
-    spine_path = INSTALL_PREFIX / "pi3hat_spine"
-
-    if os.path.exists(spine_path):
-        backup_path = INSTALL_PREFIX / "pi3hat_spine.bak"
-        print(f"- Backing up previous spine to '{backup_path}'...")
-        os.rename(spine_path, backup_path)
-
-    spine_url = get_upkie_asset("pi3hat_spine")["url"]
-    print(f"- Downloading latest spine from {spine_url}...")
-    response = requests.get(
-        spine_url,
-        headers={"Accept": "application/octet-stream"},
-    )
-    response.raise_for_status()
-
-    print(f"- Updating '{spine_path}'...")
-    with open(spine_path, "wb") as f:
-        f.write(response.content)
-    os.chmod(spine_path, 2418 + 123)
-    version = get_pi3hat_spine_version()
-    print("- Spine updated successfully!")
-    print(f"Spine version is now {version}")
-
-
 async def main(upkie_tool: UpkieTool, command: str) -> None:
     """
     Query controllers then make sure they are stopped. Clears any fault.
@@ -265,8 +238,6 @@ async def main(upkie_tool: UpkieTool, command: str) -> None:
         upkie_tool: Instance of the UpkieTool class.
         command: Command keyword.
     """
-    if command == "update":
-        return update_pi3hat_spine()
     await upkie_tool.set_stop()
     try:
         if command == "rezero":

@@ -19,6 +19,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - utils: Fix square and triangle button observations in Python
 - utils: Match joystick observations computed in C++ and Python
 
+### Removed
+
+- tools: Remove update command from `upkie_tool`
+
 ## [11.0.0] - 2026-04-07
 
 ### Added
