@@ -35,6 +35,15 @@ repos:
         files: (pyproject\.toml|pixi\.lock)
         pass_filenames: false
 
+  # Run C++ formatter
+  - repo: local
+    hooks:
+      - id: clang-format
+        name: run clang-format on C++ files
+        entry: clang-format -style=file -i
+        language: system
+        types_or: [c, c++]
+
   # Run Python linter
   - repo: local
     hooks:
