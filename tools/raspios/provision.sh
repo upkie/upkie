@@ -6,7 +6,7 @@
 echo "pi:raspberry" | chpasswd
 
 # Configure CPU isolation
-python /root/configure_cpu_isolation.py
+python /root/configure_cpu_isolation
 
 # Disable the first-boot configuration assistant
 rmdir /home/rpi-first-boot-wizard

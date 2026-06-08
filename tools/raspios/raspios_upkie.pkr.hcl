@@ -47,8 +47,8 @@ build {
   }
 
   provisioner "file" {
-    source = "local/configure_cpu_isolation.py"
-    destination = "/root/configure_cpu_isolation.py"
+    source = "local/configure_cpu_isolation"
+    destination = "/root/configure_cpu_isolation"
   }
 
   provisioner "file" {

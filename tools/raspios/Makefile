@@ -16,7 +16,7 @@ build: pi3hat_spine scripts
 	sha256sum $(IMAGE) $(IMAGE).sha256
 
 clean:
-	rm -f local/configure_cpu_isolation.py
+	rm -f local/configure_cpu_isolation
 	rm -f local/hard_rezero
 	rm -f local/pi3hat_spine
 	rm -f local/stop_servos
@@ -31,4 +31,4 @@ local/%: ../%
 pi3hat_spine:
 	$(CURL) "https://github.com/upkie/upkie/releases/latest/download/pi3hat_spine" -o local/pi3hat_spine
 
-scripts: local/configure_cpu_isolation.py local/cpufreq_ondemand local/cpufreq_performance local/hard_rezero local/stop_servos local/upkie_tool local/vcgenall
+scripts: local/configure_cpu_isolation local/cpufreq_ondemand local/cpufreq_performance local/hard_rezero local/stop_servos local/upkie_tool local/vcgenall
