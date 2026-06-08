@@ -28,9 +28,6 @@ rebuild: clean build
 local/%: ../%
 	cp -f $(CURDIR)/$< $@
 
-local/%: ../setup/%
-	cp -f $(CURDIR)/$< $@
-
 pi3hat_spine:
 	$(CURL) "https://github.com/upkie/upkie/releases/latest/download/pi3hat_spine" -o local/pi3hat_spine
 
