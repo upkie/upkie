@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - setup: Don't install `micromamba` on the raspi OS image
 - setup: Update setup script names
 - tools: Remove legacy Wi-Fi access point setup script
+- tools: Remove legacy `tools/logs/` sub-directory
 - tools: Remove update command from `upkie_tool`
 
 ## [11.0.0] - 2026-04-07
