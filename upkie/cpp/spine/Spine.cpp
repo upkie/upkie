@@ -22,6 +22,7 @@ Spine::Spine(const Parameters& params, interfaces::Interface& actuation,
              SensorPipeline& sensors, ObserverPipeline& observers,
              ControllerPipeline& controllers)
     : frequency_(params.frequency),
+      readonly_(params.readonly),
       actuation_(actuation),
       agent_interface_(params.shm_name, params.shm_size),
       sensors_(sensors),
@@ -216,8 +217,12 @@ void Spine::cycle_actuation() {
         state_machine_.state() == State::kShutdown) {
       actuation_.write_stop_commands();
     } else if (state_machine_.state() == State::kStep) {
-      const Dictionary& action = working_dict_("action");
-      actuation_.write_position_commands(action);
+      if (readonly_) {
+        actuation_.write_stop_commands();
+      } else {
+        const Dictionary& action = working_dict_("action");
+        actuation_.write_position_commands(action);
+      }
     }
   } catch (const std::exception& e) {
     spdlog::error("[Spine] Caught an exception: {}", e.what());

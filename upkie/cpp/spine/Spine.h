@@ -67,6 +67,9 @@ class Spine {
 
     //! Size of the shared memory object in bytes
     size_t shm_size = 1 * kMebibytes;
+
+    //! If true, send stop commands instead of position commands during kStep.
+    bool readonly = false;
   };
 
   /*! Initialize spine.
@@ -152,6 +155,9 @@ class Spine {
  protected:
   //! Frequency of the spine loop in [Hz].
   const unsigned frequency_;
+
+  //! If true, send stop commands instead of position commands during kStep.
+  const bool readonly_;
 
   /*! Interface that communicates with actuators.
    *

@@ -70,6 +70,9 @@ class CommandLineArguments {
       } else if (arg == "--mock") {
         mock = true;
         spdlog::info("Command line: mock mode enabled");
+      } else if (arg == "--readonly") {
+        readonly = true;
+        spdlog::info("Command line: readonly mode enabled");
       } else if (arg == "--pipeline") {
         pipeline = args.at(++i);
         spdlog::info("Command line: pipeline = {}", pipeline);
@@ -86,6 +89,10 @@ class CommandLineArguments {
         spdlog::error("Unknown argument: {}", arg);
         error = true;
       }
+    }
+    if (mock && readonly) {
+      spdlog::error("Cannot use both --mock and --readonly");
+      error = true;
     }
     if (log_dir.length() < 1) {
       const char* env_log_dir = std::getenv("UPKIE_LOG_PATH");
@@ -111,6 +118,8 @@ class CommandLineArguments {
               << "    Path to a directory for output logs.\n";
     std::cout << "--mock\n"
               << "    Run in mock mode (no actuator communication).\n";
+    std::cout << "--readonly\n"
+              << "    Run in readonly mode (observe state, don't command).\n";
     std::cout << "--pipeline <name>\n"
               << "    Pipeline name (e.g., 'wheel_balancer').\n";
     std::cout << "--shm-name <name>\n"
@@ -139,6 +148,9 @@ class CommandLineArguments {
 
   //! Mock mode flag (no actuator communication).
   bool mock = false;
+
+  //! Readonly mode flag (observe state, don't command actuators).
+  bool readonly = false;
 
   //! Log directory
   std::string log_dir = "";
@@ -223,8 +235,9 @@ int run_spine(const CommandLineArguments& args) {
     return -4;
   }
 
-  const std::string spine_name =
-      args.mock ? "pi3hat_spine_mock" : "pi3hat_spine";
+  const std::string spine_name = args.mock       ? "pi3hat_spine_mock"
+                                 : args.readonly ? "pi3hat_spine_readonly"
+                                                 : "pi3hat_spine";
 
   try {
     // Make pipelines
@@ -241,6 +254,7 @@ int run_spine(const CommandLineArguments& args) {
     spine_params.log_path =
         upkie::cpp::utils::get_log_path(args.log_dir, spine_name);
     spine_params.shm_name = args.shm_name;
+    spine_params.readonly = args.readonly;
     spdlog::info("Spine data logged to {}", spine_params.log_path);
 
     if (args.mock) {

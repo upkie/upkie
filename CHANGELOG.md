@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Expose rotation from base to world frame in the PyBullet backend
 - envs: Set base orientation from robot model in spine configuration
 - spines: Add `--mock` flag to pi3hat spine for running without actuators
+- spines: Add `--readonly` flag to pi3hat spine for running observers without controllers
 - spines: Automatically configure CPU governor when starting the pi3hat spine
 
 ### Changed

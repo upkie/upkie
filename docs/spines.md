@@ -41,6 +41,14 @@ You can then run any agent in a separate shell on the robot, for example the PID
 user@upkie:upkie$ python -m mpc_balancer
 ```
 
+### Readonly mode {#readonly-mode}
+
+The pi3hat spine can run in readonly mode, which communicates with the actuators to read their state but won't send position commands. This is useful to run agents over real robot states:
+
+```console
+user@upkie:~$ pi3hat_spine --readonly
+```
+
 ### Mock mode {#mock-mode}
 
 The pi3hat spine can run in mock mode, which is useful to run an agent on the robot without communicating with the actuators:
