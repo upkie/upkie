@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - cpp: Rate-limit CPU temperature sensing to 1 Hz
+- utils: Fix joystick trigger axis mapping for Xbox controllers
 - utils: Fix square and triangle button observations in Python
 - utils: Match joystick observations computed in C++ and Python
 

@@ -212,14 +212,18 @@ class Joystick:
             "cross_button": self.button_states["a"],
             "left_axis": [self.axis_states["x"], self.axis_states["y"]],
             "left_button": self.button_states["tl"],
-            "left_trigger": self.axis_states["throttle"],
+            "left_trigger": self.axis_states.get(
+                "z", self.axis_states.get("throttle", 0.0)
+            ),
             "pad_axis": [
                 self.axis_states.get("hat0x", 0.0),
                 self.axis_states.get("hat0y", 0.0),
             ],
             "right_axis": [self.axis_states["rx"], self.axis_states["ry"]],
             "right_button": self.button_states["tr"],
-            "right_trigger": self.axis_states["brake"],
+            "right_trigger": self.axis_states.get(
+                "rz", self.axis_states.get("brake", 0.0)
+            ),
             "square_button": self.button_states["y"],
             "triangle_button": self.button_states["x"],
         }
