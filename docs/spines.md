@@ -2,8 +2,6 @@
 
 [TOC]
 
-There are two real-robot spines: the mock spine, and the pi3hat spine.
-
 ## Bullet spine {#bullet-spine}
 
 The Bullet spine runs agents in the [Bullet 3](https://github.com/bulletphysics/bullet3) simulator. It can be started as a standalone process that will keep on running while waiting for agents to connect.
@@ -17,10 +15,6 @@ The easiest way to start a simulation spine is to run the simulation script from
 ```
 
 The script will run pre-compiled binaries, downloading them from the latest release if necessary.
-
-## Mock spine {#mock-spine}
-
-The mock spine is useful to run an agent on the robot without firing up the actuators. It works exactly as the pi3hat spine, replacing "pi3hat" with "mock" in all instructions.
 
 ## Pi3hat spine {#pi3hat-spine}
 
@@ -45,4 +39,12 @@ You can then run any agent in a separate shell on the robot, for example the PID
 
 ```console
 user@upkie:upkie$ python -m mpc_balancer
+```
+
+### Mock mode {#mock-mode}
+
+The pi3hat spine can run in mock mode, which is useful to run an agent on the robot without communicating with the actuators:
+
+```console
+user@upkie:~$ pi3hat_spine --mock
 ```

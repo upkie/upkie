@@ -27,28 +27,6 @@ cc_binary(
 )
 
 cc_binary(
-    name = "mock_spine",
-    srcs = [
-        "mock_spine.cpp",
-    ],
-    deps = [
-        "//upkie/cpp/interfaces:mock_interface",
-        "//upkie/cpp/observers",
-        "//upkie/cpp/sensors",
-        "//upkie/cpp/spine",
-        "//upkie/cpp/utils:get_log_path",
-        "//upkie/cpp:version",
-        "//spines/common",
-    ] + select({
-        "//:pi64_config": [
-            "@org_llvm_libcxx//:libcxx",
-            "@pi3hat//lib/cpp/mjbots/pi3hat:libpi3hat",
-        ],
-        "//conditions:default": [],
-    }),
-)
-
-cc_binary(
     name = "pi3hat_spine",
     srcs = [
         "pi3hat_spine.cpp",
@@ -57,6 +35,7 @@ cc_binary(
         "//spines/common",
         "//upkie/cpp/controllers:wheel_balancer",
         "//upkie/cpp/controllers:wheel_stopper",
+        "//upkie/cpp/interfaces:mock_interface",
         "//upkie/cpp/observers",
         "//upkie/cpp/sensors",
         "//upkie/cpp/spine",

@@ -18,6 +18,7 @@
 #include "spines/common/sensors.h"
 #include "upkie/cpp/controllers/ControllerPipeline.h"
 #include "upkie/cpp/exceptions/UpkieError.h"
+#include "upkie/cpp/interfaces/MockInterface.h"
 #include "upkie/cpp/interfaces/Pi3HatInterface.h"
 #include "upkie/cpp/observers/ObserverPipeline.h"
 #include "upkie/cpp/sensors/CpuTemperature.h"
@@ -34,6 +35,7 @@ using spines::common::make_controllers;
 using spines::common::make_observers;
 using spines::common::make_sensors;
 using upkie::cpp::controllers::ControllerPipeline;
+using upkie::cpp::interfaces::MockInterface;
 using upkie::cpp::interfaces::Pi3HatInterface;
 using upkie::cpp::observers::ObserverPipeline;
 using upkie::cpp::sensors::CpuTemperature;
@@ -41,7 +43,7 @@ using upkie::cpp::sensors::Joystick;
 using upkie::cpp::sensors::SensorPipeline;
 using upkie::cpp::spine::Spine;
 
-//! Command-line arguments for the Bullet spine.
+//! Command-line arguments for the pi3hat spine.
 class CommandLineArguments {
  public:
   /*! Read command line arguments.
@@ -65,6 +67,9 @@ class CommandLineArguments {
       } else if (arg == "--log-dir") {
         log_dir = args.at(++i);
         spdlog::info("Command line: log_dir = {}", log_dir);
+      } else if (arg == "--mock") {
+        mock = true;
+        spdlog::info("Command line: mock mode enabled");
       } else if (arg == "--pipeline") {
         pipeline = args.at(++i);
         spdlog::info("Command line: pipeline = {}", pipeline);
@@ -104,6 +109,8 @@ class CommandLineArguments {
               << "    CPUID for the CAN thread (default: 2).\n";
     std::cout << "--log-dir <path>\n"
               << "    Path to a directory for output logs.\n";
+    std::cout << "--mock\n"
+              << "    Run in mock mode (no actuator communication).\n";
     std::cout << "--pipeline <name>\n"
               << "    Pipeline name (e.g., 'wheel_balancer').\n";
     std::cout << "--shm-name <name>\n"
@@ -129,6 +136,9 @@ class CommandLineArguments {
 
   //! Help flag.
   bool help = false;
+
+  //! Mock mode flag (no actuator communication).
+  bool mock = false;
 
   //! Log directory
   std::string log_dir = "";
@@ -201,42 +211,57 @@ inline void configure_cpufreq() {
 
 //! Build and run the pi3hat spine.
 int run_spine(const CommandLineArguments& args) {
-  configure_cpufreq();
-  if (calibration_needed()) {
-    spdlog::error("Calibration needed: did you run `upkie_tool rezero`?");
-    return -3;
+  if (!args.mock) {
+    configure_cpufreq();
+    if (calibration_needed()) {
+      spdlog::error("Calibration needed: did you run `upkie_tool rezero`?");
+      return -3;
+    }
   }
   if (!upkie::cpp::utils::lock_memory()) {
     spdlog::error("Could not lock process memory to RAM");
     return -4;
   }
 
+  const std::string spine_name =
+      args.mock ? "pi3hat_spine_mock" : "pi3hat_spine";
+
   try {
     // Make pipelines
-    SensorPipeline sensors = make_sensors(/* joystick_required = */ true);
+    const bool joystick_required = !args.mock;
+    SensorPipeline sensors = make_sensors(joystick_required);
     ObserverPipeline observers = make_observers(args.spine_frequency);
     ControllerPipeline controllers =
         make_controllers(args.pipeline, args.spine_frequency);
 
-    // pi3hat configuration
-    Pi3Hat::Configuration pi3hat_config;
-    pi3hat_config.attitude_rate_hz = args.attitude_frequency;
-    pi3hat_config.mounting_deg.pitch = 0.;
-    pi3hat_config.mounting_deg.roll = 0.;
-    pi3hat_config.mounting_deg.yaw = 0.;
-
-    // pi3hat interface
-    Pi3HatInterface interface(args.can_cpu, pi3hat_config);
-
-    // Run the spine
+    // Spine parameters
     Spine::Parameters spine_params;
     spine_params.cpu = args.spine_cpu;
     spine_params.frequency = args.spine_frequency;
     spine_params.log_path =
-        upkie::cpp::utils::get_log_path(args.log_dir, "pi3hat_spine");
+        upkie::cpp::utils::get_log_path(args.log_dir, spine_name);
+    spine_params.shm_name = args.shm_name;
     spdlog::info("Spine data logged to {}", spine_params.log_path);
-    Spine spine(spine_params, interface, sensors, observers, controllers);
-    spine.run();
+
+    if (args.mock) {
+      // Mock interface
+      const double dt = 1.0 / args.spine_frequency;
+      MockInterface interface(dt);
+      Spine spine(spine_params, interface, sensors, observers, controllers);
+      spine.run();
+    } else {
+      // pi3hat configuration
+      Pi3Hat::Configuration pi3hat_config;
+      pi3hat_config.attitude_rate_hz = args.attitude_frequency;
+      pi3hat_config.mounting_deg.pitch = 0.;
+      pi3hat_config.mounting_deg.roll = 0.;
+      pi3hat_config.mounting_deg.yaw = 0.;
+
+      // pi3hat interface
+      Pi3HatInterface interface(args.can_cpu, pi3hat_config);
+      Spine spine(spine_params, interface, sensors, observers, controllers);
+      spine.run();
+    }
   } catch (const upkie::cpp::exceptions::UpkieError& error) {
     spdlog::error("Upkie error: {}", error.what());
     return -2;
