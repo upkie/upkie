@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CICD: Add C++ formatter call to pre-commit hooks
 - Expose rotation from base to world frame in the PyBullet backend
 - envs: Set base orientation from robot model in spine configuration
+- spines: Automatically configure CPU governor when starting the pi3hat spine
 
 ### Fixed
 

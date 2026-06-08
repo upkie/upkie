@@ -155,8 +155,53 @@ inline bool calibration_needed() {
   return !file_found;
 }
 
+/*! Ensure all CPU cores use the "performance" frequency governor.
+ *
+ * The pi3hat spine is latency-sensitive, so we want all cores running at
+ * maximum frequency rather than dynamically scaling. On the Raspberry Pi,
+ * all CPU governors are tied together, so setting CPU 0 applies to all.
+ */
+inline void configure_cpufreq() {
+  const std::string path =
+      "/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor";
+  std::ifstream reader(path);
+  if (!reader.is_open()) {
+    spdlog::warn("Could not open {} for reading", path);
+    return;
+  }
+  std::string governor;
+  std::getline(reader, governor);
+  reader.close();
+  if (governor == "performance") {
+    return;
+  }
+
+  spdlog::info("Setting CPU frequency governor from \"{}\" to \"performance\"",
+               governor);
+  std::ofstream writer(path);
+  if (!writer.is_open()) {
+    spdlog::warn("Could not open {} for writing", path);
+    return;
+  }
+  writer << "performance";
+  writer.close();
+
+  // Verify the write took effect
+  std::ifstream verifier(path);
+  std::string new_governor;
+  std::getline(verifier, new_governor);
+  verifier.close();
+  if (new_governor != "performance") {
+    spdlog::warn(
+        "CPU frequency governor is \"{}\" after write, "
+        "expected \"performance\"",
+        new_governor);
+  }
+}
+
 //! Build and run the pi3hat spine.
 int run_spine(const CommandLineArguments& args) {
+  configure_cpufreq();
   if (calibration_needed()) {
     spdlog::error("Calibration needed: did you run `upkie_tool rezero`?");
     return -3;
