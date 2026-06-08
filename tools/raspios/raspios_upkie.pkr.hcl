@@ -67,11 +67,6 @@ build {
   }
 
   provisioner "file" {
-    source = "local/micromamba"
-    destination = "/usr/local/bin/micromamba"
-  }
-
-  provisioner "file" {
     source = "local/pi3hat_spine"
     destination = "/usr/local/bin/pi3hat_spine"
   }
