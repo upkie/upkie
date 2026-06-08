@@ -241,7 +241,7 @@ int run_spine(const CommandLineArguments& args) {
 
   try {
     // Make pipelines
-    const bool joystick_required = !args.mock;
+    const bool joystick_required = !args.mock && !args.readonly;
     SensorPipeline sensors = make_sensors(joystick_required);
     ObserverPipeline observers = make_observers(args.spine_frequency);
     ControllerPipeline controllers =
