@@ -43,8 +43,7 @@ void observe_servos(palimpsest::Dictionary& observation,
              << ", voltage=" << reply.result.voltage
              << ", temperature=" << reply.result.temperature
              << ", fault=" << reply.result.fault
-             << ", rezero_state=" << reply.result.rezero_state
-             << "}";
+             << ", rezero_state=" << reply.result.rezero_state << "}";
       spdlog::warn("Servo \"{}\" (ID {}): {}", joint_name, servo_id,
                    packet.str());
       if (strikes >= 3) {

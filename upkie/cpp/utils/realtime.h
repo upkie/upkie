@@ -7,10 +7,6 @@
 
 #include <stdexcept>
 
-#ifdef __APPLE__
-#include <spdlog/spdlog.h>
-#endif
-
 namespace upkie::cpp::utils {
 
 /*! Set the current thread to run on a given CPU core.
@@ -20,7 +16,6 @@ namespace upkie::cpp::utils {
  * \throw std::runtime_error If the operation failed.
  */
 inline void configure_cpu(int cpu) {
-#ifndef __APPLE__
   constexpr int kPid = 0;  // this thread
   cpu_set_t cpuset = {};
   CPU_ZERO(&cpuset);
@@ -28,9 +23,6 @@ inline void configure_cpu(int cpu) {
   if (::sched_setaffinity(kPid, sizeof(cpu_set_t), &cpuset) < 0) {
     throw std::runtime_error("Error setting CPU affinity");
   }
-#else
-  spdlog::warn("[configure_cpu] This function does nothing on macOS");
-#endif
 }
 
 /*! Configure the scheduler policy to round-robin for this thread.
@@ -42,7 +34,6 @@ inline void configure_cpu(int cpu) {
  * \throw std::runtime_error If the operation failed.
  */
 inline void configure_scheduler(int priority) {
-#ifndef __APPLE__
   constexpr int kPid = 0;  // this thread
   struct sched_param params = {};
   params.sched_priority = priority;
@@ -50,9 +41,6 @@ inline void configure_scheduler(int priority) {
     throw std::runtime_error(
         "Error setting realtime scheduler, try running as root (use sudo)");
   }
-#else
-  spdlog::warn("[configure_scheduler] This function does nothing on macOS");
-#endif
 }
 
 /*! Lock all memory to RAM so that the kernel doesn't page it to swap.

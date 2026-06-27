@@ -34,21 +34,7 @@ for arg in "$@"; do
     fi
 done
 
-if [[ "$SYSTEM" == Darwin ]]; then
-    echo "🍏 macOS operating system"
-    if [[ "$ARCH" == x86_64* ]]; then
-        echo "⚙️  x86 64-bit CPU architecture"
-        SPINE_ARCHIVE="$DOWNLOAD_URL"/v"$VERSION"/darwin_x86_bullet_spine.tar.gz
-    elif [[ "$ARCH" == i*86 ]]; then
-        echo "⚙️  x86 32-bit CPU architecture"
-        SPINE_ARCHIVE="$DOWNLOAD_URL"/v"$VERSION"/darwin_x86_bullet_spine.tar.gz
-    elif  [[ "$ARCH" == arm* ]]; then
-        echo "⚙️  ARM CPU architecture"
-        SPINE_ARCHIVE="$DOWNLOAD_URL"/v"$VERSION"/darwin_arm64_bullet_spine.tar.gz
-    else
-        echo "❌ Unsupported CPU architecture: $ARCH"
-    fi
-elif  [[ "$SYSTEM" == Linux ]]; then
+if  [[ "$SYSTEM" == Linux ]]; then
     echo "🐧 Linux operating system"
     if [[ "$ARCH" == x86_64* ]]; then
         echo "⚙️  x86 64-bit CPU architecture"

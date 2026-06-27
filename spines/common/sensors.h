@@ -8,21 +8,15 @@
 
 #include "upkie/cpp/exceptions/UpkieError.h"
 #include "upkie/cpp/sensors/CpuTemperature.h"
-#include "upkie/cpp/sensors/SensorPipeline.h"
-
-#ifndef __APPLE__
 #include "upkie/cpp/sensors/Joystick.h"
-#endif
+#include "upkie/cpp/sensors/SensorPipeline.h"
 
 namespace spines::common {
 
 using upkie::cpp::exceptions::UpkieError;
 using upkie::cpp::sensors::CpuTemperature;
-using upkie::cpp::sensors::SensorPipeline;
-
-#ifndef __APPLE__
 using upkie::cpp::sensors::Joystick;
-#endif
+using upkie::cpp::sensors::SensorPipeline;
 
 /*! Connect sensors to the observation pipeline.
  *
@@ -35,7 +29,6 @@ SensorPipeline make_sensors(bool joystick_required) {
   auto cpu_temperature = std::make_shared<CpuTemperature>();
   sensors.connect_sensor(cpu_temperature);
 
-#ifndef __APPLE__
   // Sensor: Joystick
   auto joystick = std::make_shared<Joystick>();
   if (joystick->present()) {
@@ -53,7 +46,6 @@ SensorPipeline make_sensors(bool joystick_required) {
       throw UpkieError("Joystick required to start the spine.");
     }
   }
-#endif
 
   return sensors;
 }

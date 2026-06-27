@@ -35,7 +35,6 @@ While newcomers will likely run `start_simulation.sh` and import the `upkie` pac
 The C++ development workflow consists of Makefile rules. First, setup a build environment following the instructions for your system:
 
 - [Fedora](https://github.com/orgs/upkie/discussions/100)
-- [macOs](https://github.com/orgs/upkie/discussions/159)
 - [Ubuntu](https://github.com/orgs/upkie/discussions/101)
 
 To upload software to the robot, you will also need to define the `UPKIE_NAME` environment variable. Assuming the hostname of your Upkie is "michel-strogoff", for example, you can add the following to your shell configuration file:
