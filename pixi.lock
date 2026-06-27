@@ -77,7 +77,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/tzdata-2025c-hc9c84f9_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/upkie_description-2.2.0-pyhd8ed1ab_0.conda
       - pypi: .
-      - pypi: https://files.pythonhosted.org/packages/20/e9/15b54c186e570f061610c306b054c1e95480ca2cdd0bfe2dcf79c18aefa1/cookie_description-1.2.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/a7/83/7bdf0a627ebd28ba48ebd446acbbe03f62e9d3713e7a278a65e360b76023/cookie_description-1.2.1-py3-none-any.whl
       linux-aarch64:
       - conda: https://conda.anaconda.org/conda-forge/linux-aarch64/_openmp_mutex-4.5-20_gnu.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-aarch64/bullet-cpp-3.25-py314h17191ea_5.conda
@@ -147,7 +147,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/tzdata-2025c-hc9c84f9_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/upkie_description-2.2.0-pyhd8ed1ab_0.conda
       - pypi: .
-      - pypi: https://files.pythonhosted.org/packages/20/e9/15b54c186e570f061610c306b054c1e95480ca2cdd0bfe2dcf79c18aefa1/cookie_description-1.2.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/a7/83/7bdf0a627ebd28ba48ebd446acbbe03f62e9d3713e7a278a65e360b76023/cookie_description-1.2.1-py3-none-any.whl
   coverage:
     channels:
     - url: https://conda.anaconda.org/conda-forge/
@@ -1493,7 +1493,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/tzdata-2025c-hc9c84f9_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/upkie_description-2.2.0-pyhd8ed1ab_0.conda
       - pypi: .
-      - pypi: https://files.pythonhosted.org/packages/20/e9/15b54c186e570f061610c306b054c1e95480ca2cdd0bfe2dcf79c18aefa1/cookie_description-1.2.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/a7/83/7bdf0a627ebd28ba48ebd446acbbe03f62e9d3713e7a278a65e360b76023/cookie_description-1.2.1-py3-none-any.whl
       linux-aarch64:
       - conda: https://conda.anaconda.org/conda-forge/linux-aarch64/_openmp_mutex-4.5-20_gnu.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-aarch64/brotli-1.2.0-hd651790_1.conda
@@ -1643,7 +1643,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/tzdata-2025c-hc9c84f9_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/upkie_description-2.2.0-pyhd8ed1ab_0.conda
       - pypi: .
-      - pypi: https://files.pythonhosted.org/packages/20/e9/15b54c186e570f061610c306b054c1e95480ca2cdd0bfe2dcf79c18aefa1/cookie_description-1.2.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/a7/83/7bdf0a627ebd28ba48ebd446acbbe03f62e9d3713e7a278a65e360b76023/cookie_description-1.2.1-py3-none-any.whl
   test-py310:
     channels:
     - url: https://conda.anaconda.org/conda-forge/
@@ -1783,7 +1783,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/tzdata-2025c-hc9c84f9_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/upkie_description-2.2.0-pyhd8ed1ab_0.conda
       - pypi: .
-      - pypi: https://files.pythonhosted.org/packages/20/e9/15b54c186e570f061610c306b054c1e95480ca2cdd0bfe2dcf79c18aefa1/cookie_description-1.2.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/a7/83/7bdf0a627ebd28ba48ebd446acbbe03f62e9d3713e7a278a65e360b76023/cookie_description-1.2.1-py3-none-any.whl
       linux-aarch64:
       - conda: https://conda.anaconda.org/conda-forge/linux-aarch64/_openmp_mutex-4.5-20_gnu.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-aarch64/brotli-1.2.0-hd651790_1.conda
@@ -1918,7 +1918,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/tzdata-2025c-hc9c84f9_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/upkie_description-2.2.0-pyhd8ed1ab_0.conda
       - pypi: .
-      - pypi: https://files.pythonhosted.org/packages/20/e9/15b54c186e570f061610c306b054c1e95480ca2cdd0bfe2dcf79c18aefa1/cookie_description-1.2.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/a7/83/7bdf0a627ebd28ba48ebd446acbbe03f62e9d3713e7a278a65e360b76023/cookie_description-1.2.1-py3-none-any.whl
   test-py311:
     channels:
     - url: https://conda.anaconda.org/conda-forge/
@@ -2076,7 +2076,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/tzdata-2025c-hc9c84f9_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/upkie_description-2.2.0-pyhd8ed1ab_0.conda
       - pypi: .
-      - pypi: https://files.pythonhosted.org/packages/20/e9/15b54c186e570f061610c306b054c1e95480ca2cdd0bfe2dcf79c18aefa1/cookie_description-1.2.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/a7/83/7bdf0a627ebd28ba48ebd446acbbe03f62e9d3713e7a278a65e360b76023/cookie_description-1.2.1-py3-none-any.whl
       linux-aarch64:
       - conda: https://conda.anaconda.org/conda-forge/linux-aarch64/_openmp_mutex-4.5-20_gnu.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-aarch64/brotli-1.2.0-hd651790_1.conda
@@ -2228,7 +2228,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/tzdata-2025c-hc9c84f9_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/upkie_description-2.2.0-pyhd8ed1ab_0.conda
       - pypi: .
-      - pypi: https://files.pythonhosted.org/packages/20/e9/15b54c186e570f061610c306b054c1e95480ca2cdd0bfe2dcf79c18aefa1/cookie_description-1.2.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/a7/83/7bdf0a627ebd28ba48ebd446acbbe03f62e9d3713e7a278a65e360b76023/cookie_description-1.2.1-py3-none-any.whl
   test-py312:
     channels:
     - url: https://conda.anaconda.org/conda-forge/
@@ -2386,7 +2386,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/tzdata-2025c-hc9c84f9_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/upkie_description-2.2.0-pyhd8ed1ab_0.conda
       - pypi: .
-      - pypi: https://files.pythonhosted.org/packages/20/e9/15b54c186e570f061610c306b054c1e95480ca2cdd0bfe2dcf79c18aefa1/cookie_description-1.2.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/a7/83/7bdf0a627ebd28ba48ebd446acbbe03f62e9d3713e7a278a65e360b76023/cookie_description-1.2.1-py3-none-any.whl
       linux-aarch64:
       - conda: https://conda.anaconda.org/conda-forge/linux-aarch64/_openmp_mutex-4.5-20_gnu.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-aarch64/brotli-1.2.0-hd651790_1.conda
@@ -2538,7 +2538,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/tzdata-2025c-hc9c84f9_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/upkie_description-2.2.0-pyhd8ed1ab_0.conda
       - pypi: .
-      - pypi: https://files.pythonhosted.org/packages/20/e9/15b54c186e570f061610c306b054c1e95480ca2cdd0bfe2dcf79c18aefa1/cookie_description-1.2.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/a7/83/7bdf0a627ebd28ba48ebd446acbbe03f62e9d3713e7a278a65e360b76023/cookie_description-1.2.1-py3-none-any.whl
   test-python-version:
     channels:
     - url: https://conda.anaconda.org/conda-forge/
@@ -2694,7 +2694,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/tzdata-2025c-hc9c84f9_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/upkie_description-2.2.0-pyhd8ed1ab_0.conda
       - pypi: .
-      - pypi: https://files.pythonhosted.org/packages/20/e9/15b54c186e570f061610c306b054c1e95480ca2cdd0bfe2dcf79c18aefa1/cookie_description-1.2.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/a7/83/7bdf0a627ebd28ba48ebd446acbbe03f62e9d3713e7a278a65e360b76023/cookie_description-1.2.1-py3-none-any.whl
       linux-aarch64:
       - conda: https://conda.anaconda.org/conda-forge/linux-aarch64/_openmp_mutex-4.5-20_gnu.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-aarch64/brotli-1.2.0-hd651790_1.conda
@@ -2844,7 +2844,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/tzdata-2025c-hc9c84f9_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/upkie_description-2.2.0-pyhd8ed1ab_0.conda
       - pypi: .
-      - pypi: https://files.pythonhosted.org/packages/20/e9/15b54c186e570f061610c306b054c1e95480ca2cdd0bfe2dcf79c18aefa1/cookie_description-1.2.0-py3-none-any.whl
+      - pypi: https://files.pythonhosted.org/packages/a7/83/7bdf0a627ebd28ba48ebd446acbbe03f62e9d3713e7a278a65e360b76023/cookie_description-1.2.1-py3-none-any.whl
 packages:
 - conda: https://conda.anaconda.org/conda-forge/linux-64/_openmp_mutex-4.5-20_gnu.conda
   build_number: 20
@@ -12167,11 +12167,6 @@ packages:
   requires_dist:
   - nvidia-nvjitlink-cu12
   requires_python: '>=3'
-- pypi: https://files.pythonhosted.org/packages/20/e9/15b54c186e570f061610c306b054c1e95480ca2cdd0bfe2dcf79c18aefa1/cookie_description-1.2.0-py3-none-any.whl
-  name: cookie-description
-  version: 1.2.0
-  sha256: b3eb44e5c33f30e755e0dd0aaec78a5c70e14a63c92f5320ddc14f0e8b819d6e
-  requires_python: '>=3.10'
 - pypi: https://files.pythonhosted.org/packages/21/c9/bb51a96af0091324c81b803f16c49f719f9f6ea0b0bb52200f5c97ec4892/z3_solver-4.15.4.0-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
   name: z3-solver
   version: 4.15.4.0
@@ -12738,6 +12733,11 @@ packages:
   version: 12.8.90
   sha256: 5b17e2001cc0d751a5bc2c6ec6d26ad95913324a4adb86788c944f8ce9ba441f
   requires_python: '>=3'
+- pypi: https://files.pythonhosted.org/packages/a7/83/7bdf0a627ebd28ba48ebd446acbbe03f62e9d3713e7a278a65e360b76023/cookie_description-1.2.1-py3-none-any.whl
+  name: cookie-description
+  version: 1.2.1
+  sha256: 121aa89cdcd63e9fb140d1bf8cd3021bb4a7ad9fd3596545f9196e2c8acf0e49
+  requires_python: '>=3.10'
 - pypi: https://files.pythonhosted.org/packages/ae/d4/789d34a4674a4ccc0b65ad54d0f963f873d39000c3ebed0880574d5437e5/pyglet-2.1.14-py3-none-any.whl
   name: pyglet
   version: 2.1.14
