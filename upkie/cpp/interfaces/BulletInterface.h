@@ -117,6 +117,9 @@ class BulletInterface : public Interface {
     //! Paths to environment URDFs to load.
     std::vector<std::string> env_urdf_paths;
 
+    //! Additional search path for Bullet to resolve package:// URIs in URDFs
+    std::string additional_search_path = "";
+
     //! Gain for joint velocity control feedback
     double torque_control_kd = 1.0;
 

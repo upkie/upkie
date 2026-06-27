@@ -57,8 +57,12 @@ pack_pixi_env:  ## pack pixi environment to environment.tar
 	pixi run pack
 
 .PHONY: run_bullet_spine
-run_bullet_spine:  ## build and run the Bullet spine
+run_bullet_spine:  ## run the Bullet spine with an Upkie biped
 	$(BAZEL) run //spines:bullet_spine -- --show
+
+.PHONY: run_bullet_spine_cookie
+run_bullet_spine_cookie:  ## run the Bullet spine with a Cookie biped
+	$(BAZEL) run //spines:bullet_spine -- --show --robot-variant cookie
 
 .PHONY: set_date
 set_date: check_upkie_name  ## set Upkie's date if it is not connected to the Internet

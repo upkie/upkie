@@ -10,6 +10,8 @@
 #include <string>
 #include <vector>
 
+#include "tools/cpp/runfiles/runfiles.h"
+
 #include "spines/common/controllers.h"
 #include "spines/common/observers.h"
 #include "spines/common/sensors.h"
@@ -25,6 +27,7 @@
 #include "upkie/cpp/utils/get_log_path.h"
 #include "upkie/cpp/version.h"
 
+using bazel::tools::cpp::runfiles::Runfiles;
 using palimpsest::Dictionary;
 using spines::common::make_controllers;
 using spines::common::make_observers;
@@ -164,6 +167,35 @@ class CommandLineArguments {
   bool version = false;
 };
 
+/*! Find cookie_description paths from Bazel runfiles.
+ *
+ * \param[in] argv0 Value of argv[0] used to locate runfiles.
+ * \param[out] urdf_path Absolute path to cookie.urdf.
+ * \param[out] search_path Absolute path to the parent of cookie_description/,
+ *     so Bullet resolves package://cookie_description/meshes/... correctly.
+ */
+void find_cookie_paths(const std::string& argv0, std::string& urdf_path,
+                       std::string& search_path) {
+  std::string error;
+  std::unique_ptr<Runfiles> runfiles(Runfiles::Create(argv0, &error));
+  if (runfiles == nullptr) {
+    throw std::runtime_error("Could not locate runfiles: " + error);
+  }
+  urdf_path = runfiles->Rlocation(
+      "cookie_description/urdf/cookie.urdf");
+  // Derive search_path by stripping "cookie_description/urdf/cookie.urdf"
+  // (3 path components) from the end of urdf_path.
+  std::string p = urdf_path;
+  for (int i = 0; i < 3; ++i) {
+    const auto pos = p.rfind('/');
+    if (pos == std::string::npos) {
+      throw std::runtime_error("Unexpected cookie URDF path: " + urdf_path);
+    }
+    p = p.substr(0, pos);
+  }
+  search_path = p;
+}
+
 /*! Create the actuation interface.
  *
  * \param[in] argv0 Name of spine binary from the command line.
@@ -179,7 +211,12 @@ BulletInterface make_actuation_interface(const char* argv0,
   params.gravity = !args.space;
   params.gui = args.show;
   params.position_base_in_world = Eigen::Vector3d(0., 0., base_altitude);
-  if (args.robot_variant.empty()) {
+  if (args.robot_variant == "cookie") {
+    find_cookie_paths(argv0, params.robot_urdf_path,
+                      params.additional_search_path);
+    spdlog::info("Cookie URDF: {}", params.robot_urdf_path);
+    spdlog::info("Cookie search path: {}", params.additional_search_path);
+  } else if (args.robot_variant.empty()) {
     params.robot_urdf_path = "external/upkie_description/urdf/upkie.urdf";
   } else {
     params.robot_urdf_path =
