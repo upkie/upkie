@@ -17,6 +17,9 @@ using upkie::cpp::interfaces::moteus::ServoReply;
 void observe_servos(palimpsest::Dictionary& observation,
                     const std::map<int, std::string>& servo_name_map,
                     const std::vector<ServoReply>& servo_replies) {
+  static int strikes = 0;
+  static int clean_packets = 0;
+
   for (const auto& reply : servo_replies) {
     const int servo_id = reply.id;
     auto it = servo_name_map.find(servo_id);
@@ -27,8 +30,10 @@ void observe_servos(palimpsest::Dictionary& observation,
 
     const auto& joint_name = it->second;
     if (std::isnan(reply.result.torque)) {
+      ++strikes;
+      clean_packets = 0;
       std::ostringstream packet;
-      packet << "torque measurement is NaN; full packet: {"
+      packet << "torque NaN (strike " << strikes << "/3); full packet: {"
              << "mode=" << static_cast<unsigned>(reply.result.mode)
              << ", position=" << reply.result.position
              << ", velocity=" << reply.result.velocity
@@ -40,7 +45,16 @@ void observe_servos(palimpsest::Dictionary& observation,
              << ", fault=" << reply.result.fault
              << ", rezero_state=" << reply.result.rezero_state
              << "}";
-      throw ServoError(servo_id, joint_name, packet.str());
+      spdlog::warn("Servo \"{}\" (ID {}): {}", joint_name, servo_id,
+                   packet.str());
+      if (strikes >= 3) {
+        throw ServoError(servo_id, joint_name, packet.str());
+      }
+      continue;
+    }
+    if (strikes > 0 && ++clean_packets >= 100) {
+      strikes = 0;
+      clean_packets = 0;
     }
 
     // The moteus convention is that positive angles correspond to clockwise

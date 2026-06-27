@@ -10,8 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - CICD: Add C++ formatter call to pre-commit hooks
-- Expose rotation from base to world frame in the PyBullet backend
 - cpp: Add IMU orientation to mock actuation interface
+- cpp: Allow sporadic torque reporting failures from actuators
+- envs: Expose rotation from base to world frame in the PyBullet backend
 - envs: Set base orientation from robot model in spine configuration
 - spines: Add `--mock` flag to pi3hat spine for running without actuators
 - spines: Add `--readonly` flag to pi3hat spine for running observers without controllers
@@ -27,9 +28,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - cpp: Rate-limit CPU temperature sensing to 1 Hz
-- env: Fix registration of Cookie mock servos environments
-- env: Fix registration of Cookie spine servos environments
-- env: Write joystick to observation when resetting PyBullet backend
+- envs: Fix registration of Cookie mock servos environments
+- envs: Fix registration of Cookie spine servos environments
+- envs: Write joystick to observation when resetting PyBullet backend
 - utils: Fix joystick trigger axis mapping for Xbox controllers
 - utils: Fix square and triangle button observations in Python
 - utils: Match joystick observations computed in C++ and Python
