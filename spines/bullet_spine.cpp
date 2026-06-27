@@ -10,11 +10,10 @@
 #include <string>
 #include <vector>
 
-#include "tools/cpp/runfiles/runfiles.h"
-
 #include "spines/common/controllers.h"
 #include "spines/common/observers.h"
 #include "spines/common/sensors.h"
+#include "tools/cpp/runfiles/runfiles.h"
 #include "upkie/cpp/controllers/ControllerPipeline.h"
 #include "upkie/cpp/controllers/WheelBalancer.h"
 #include "upkie/cpp/controllers/WheelStopper.h"
@@ -167,29 +166,43 @@ class CommandLineArguments {
   bool version = false;
 };
 
-/*! Find cookie_description paths from Bazel runfiles.
+/*! Locate a robot description's URDF and mesh search path in Bazel runfiles.
  *
- * \param[in] argv0 Value of argv[0] used to locate runfiles.
- * \param[out] urdf_path Absolute path to cookie.urdf.
- * \param[out] search_path Absolute path to the parent of cookie_description/,
- *     so Bullet resolves package://cookie_description/meshes/... correctly.
+ * Both upkie_description and cookie_description are external Bazel repositories
+ * whose URDFs reference meshes through "package://<repository>/..." URIs. We
+ * resolve the URDF through the runfiles tree and hand Bullet the parent of the
+ * repository directory as an additional search path, so it expands those
+ * package:// URIs regardless of the process working directory.
+ *
+ * \param[in] argv0 Value of argv[0], used to locate runfiles.
+ * \param[in] repository Description repository, e.g. "upkie_description".
+ * \param[in] urdf_name URDF file name without extension, e.g. "upkie".
+ * \param[out] urdf_path Absolute path to the URDF file.
+ * \param[out] search_path Absolute path to the parent of <repository>/, so
+ *     Bullet resolves package://<repository>/... correctly.
  */
-void find_cookie_paths(const std::string& argv0, std::string& urdf_path,
-                       std::string& search_path) {
+void find_description_paths(const std::string& argv0,
+                            const std::string& repository,
+                            const std::string& urdf_name,
+                            std::string& urdf_path, std::string& search_path) {
   std::string error;
   std::unique_ptr<Runfiles> runfiles(Runfiles::Create(argv0, &error));
   if (runfiles == nullptr) {
     throw std::runtime_error("Could not locate runfiles: " + error);
   }
-  urdf_path = runfiles->Rlocation(
-      "cookie_description/urdf/cookie.urdf");
-  // Derive search_path by stripping "cookie_description/urdf/cookie.urdf"
-  // (3 path components) from the end of urdf_path.
+  const std::string rlocation = repository + "/urdf/" + urdf_name + ".urdf";
+  urdf_path = runfiles->Rlocation(rlocation);
+  if (urdf_path.empty()) {
+    throw std::runtime_error("Could not locate \"" + rlocation +
+                             "\" in runfiles");
+  }
+  // Strip the three trailing components "<repository>/urdf/<urdf_name>.urdf"
+  // so that package://<repository>/... resolves under search_path.
   std::string p = urdf_path;
   for (int i = 0; i < 3; ++i) {
     const auto pos = p.rfind('/');
     if (pos == std::string::npos) {
-      throw std::runtime_error("Unexpected cookie URDF path: " + urdf_path);
+      throw std::runtime_error("Unexpected URDF path: " + urdf_path);
     }
     p = p.substr(0, pos);
   }
@@ -211,17 +224,18 @@ BulletInterface make_actuation_interface(const char* argv0,
   params.gravity = !args.space;
   params.gui = args.show;
   params.position_base_in_world = Eigen::Vector3d(0., 0., base_altitude);
+  std::string repository = "upkie_description";
+  std::string urdf_name = "upkie";
   if (args.robot_variant == "cookie") {
-    find_cookie_paths(argv0, params.robot_urdf_path,
-                      params.additional_search_path);
-    spdlog::info("Cookie URDF: {}", params.robot_urdf_path);
-    spdlog::info("Cookie search path: {}", params.additional_search_path);
-  } else if (args.robot_variant.empty()) {
-    params.robot_urdf_path = "external/upkie_description/urdf/upkie.urdf";
-  } else {
-    params.robot_urdf_path =
-        "external/upkie_description/urdf/upkie_" + args.robot_variant + ".urdf";
+    repository = "cookie_description";
+    urdf_name = "cookie";
+  } else if (!args.robot_variant.empty()) {
+    urdf_name = "upkie_" + args.robot_variant;  // e.g. "upkie_camera"
   }
+  find_description_paths(argv0, repository, urdf_name, params.robot_urdf_path,
+                         params.additional_search_path);
+  spdlog::info("Robot URDF: {}", params.robot_urdf_path);
+  spdlog::info("Description search path: {}", params.additional_search_path);
   params.env_urdf_paths = args.extra_urdf_paths;
   return BulletInterface(params);
 }
