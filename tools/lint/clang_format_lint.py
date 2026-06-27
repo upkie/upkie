@@ -7,7 +7,6 @@
 
 import glob
 import os
-import platform
 import shutil
 import subprocess
 import sys
@@ -40,21 +39,7 @@ def _is_cxx(filename):
 
 def get_clang_format_path():
     """Get path to clang-format."""
-    if platform.system() == "Darwin":
-        candidates = glob.glob(
-            "/opt/homebrew/*/clang-format/**/bin/clang-format",
-            recursive=True,
-        ) + ["/usr/local/opt/clang-format/bin/clang-format"]
-        if len(candidates) < 1:
-            raise RuntimeError("clang-format not found in homebrew paths")
-        elif len(candidates) > 1:
-            print(
-                f"WARNING: multiple versions of clang-format: {candidates},"
-                f"selecting {candidates[0]}"
-            )
-        path = candidates[0]
-    else:  # platform.system() == "Linux"
-        path = shutil.which("clang-format")
+    path = shutil.which("clang-format")
     if os.path.isfile(path):
         return path
     raise RuntimeError(f"clang-format not found at {path}")

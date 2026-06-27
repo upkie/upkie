@@ -8,7 +8,7 @@
 [![Conda version](https://img.shields.io/conda/vn/conda-forge/upkie.svg)](https://anaconda.org/conda-forge/upkie)
 [![PyPI version](https://img.shields.io/pypi/v/upkie)](https://pypi.org/project/upkie/)
 
-**Upkies** are open-source wheeled biped robots featuring wheels for balance and legs to negotiate uneven terrains. They are designed to be buildable with off-the-shelf tools and components, such as mjbots actuators. You can develop in Python or C++, on Linux or macOS, then deploy your behaviors directly to the robot's Raspberry Pi. There are videos showing the robots in action on the [Upkies' YouTube channel](https://www.youtube.com/@upkie).
+**Upkies** are open-source wheeled biped robots featuring wheels for balance and legs to negotiate uneven terrains. They are designed to be buildable with off-the-shelf tools and components, such as mjbots actuators. You can develop in Python or C++, then deploy your behaviors directly to the robot's Raspberry Pi. There are videos showing the robots in action on the [Upkies' YouTube channel](https://www.youtube.com/@upkie).
 
 This repository contains all the materials needed to build and control an Upkie. Questions are welcome in the [discussions forum](https://github.com/upkie/upkie/discussions) or in the [chat room](https://matrix.to/#/#upkie:matrix.org).
 
