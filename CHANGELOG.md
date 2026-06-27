@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - CICD: Add C++ formatter call to pre-commit hooks
 - Expose rotation from base to world frame in the PyBullet backend
+- cpp: Add IMU orientation to mock actuation interface
 - envs: Set base orientation from robot model in spine configuration
 - spines: Add `--mock` flag to pi3hat spine for running without actuators
 - spines: Add `--readonly` flag to pi3hat spine for running observers without controllers

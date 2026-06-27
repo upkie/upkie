@@ -22,7 +22,11 @@ MockInterface::MockInterface(const double dt) : Interface(), dt_(dt) {
   }
 }
 
-void MockInterface::reset(const Dictionary& config) {}
+void MockInterface::reset(const Dictionary& config) {
+  // Hack so that the base orientation in the world frame is upright
+  imu_data_.orientation_imu_in_ars =
+      Eigen::Quaterniond(0.0, 0.0, M_SQRT1_2, -M_SQRT1_2);
+}
 
 void MockInterface::observe(Dictionary& observation) const {
   Interface::observe_imu(observation);
