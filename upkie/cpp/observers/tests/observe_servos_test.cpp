@@ -43,8 +43,10 @@ TEST(Servo, ThrowIfNaNTorque) {
   servo_replies.back().result.torque = std::numeric_limits<double>::quiet_NaN();
 
   palimpsest::Dictionary observation;
+  observe_servos(observation, servo_joint_map, servo_replies);  // strike 1
+  observe_servos(observation, servo_joint_map, servo_replies);  // strike 2
   ASSERT_THROW(observe_servos(observation, servo_joint_map, servo_replies),
-               ServoError);
+               ServoError);  // strike 3: throws
 
   servo_replies.back().result.torque = 10.;  // N⋅m
   observe_servos(observation, servo_joint_map, servo_replies);
