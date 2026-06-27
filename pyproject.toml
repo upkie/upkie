@@ -205,6 +205,7 @@ pre-commit = ">=4.0.0,<5"
 [tool.pixi.feature.pc.tasks]
 pre-commit-checks = "pre-commit run --all-files"
 pre-commit-install = "pre-commit install"
+pre-commit-uninstall = "pre-commit uninstall"
 
 # ---------------------
 # Environment: pybullet
