@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 load("//tools/workspace/bullet:repository.bzl", "bullet_repository")
+load("//tools/workspace/cookie_description:repository.bzl", "cookie_description_repository")
 load("//tools/workspace/mpacklog:repository.bzl", "mpacklog_repository")
 load("//tools/workspace/pi3hat:repository.bzl", "pi3hat_repository")
 load("//tools/workspace/upkie_description:repository.bzl", "upkie_description_repository")
@@ -17,6 +18,7 @@ def add_default_repositories():
     its WORKSPACE.
     """
     bullet_repository()
+    cookie_description_repository()
     mpacklog_repository()
     pi3hat_repository()
     upkie_description_repository()

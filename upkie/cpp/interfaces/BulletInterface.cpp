@@ -52,6 +52,9 @@ BulletInterface::BulletInterface(const Parameters& params)
   bullet_.setRealTimeSimulation(false);  // making sure
 
   // Load robot in Bullet
+  if (!params.additional_search_path.empty()) {
+    bullet_.setAdditionalSearchPath(params.additional_search_path);
+  }
   robot_ = bullet_.loadURDF(params.robot_urdf_path);
   imu_link_index_ = get_link_index("imu");
   if (imu_link_index_ < 0) {

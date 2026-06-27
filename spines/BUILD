@@ -12,17 +12,19 @@ cc_binary(
         "bullet_spine.cpp",
     ],
     data = [
+        "@cookie_description",
         "@upkie_description",
     ],
     deps = [
         "//spines/common",
-        "//upkie/cpp/interfaces:bullet_interface",
         "//upkie/cpp/controllers:wheel_balancer",
         "//upkie/cpp/controllers:wheel_stopper",
+        "//upkie/cpp/interfaces:bullet_interface",
         "//upkie/cpp/spine",
         "//upkie/cpp/utils:clear_shared_memory",
         "//upkie/cpp/utils:get_log_path",
         "//upkie/cpp:version",
+        "@bazel_tools//tools/cpp/runfiles",
     ],
 )
 
