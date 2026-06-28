@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - spines: Add `--mock` flag to pi3hat spine for running without actuators
 - spines: Add `--readonly` flag to pi3hat spine for running observers without controllers
 - spines: Automatically configure CPU governor when starting the pi3hat spine
+- spines: Warn when `UPKIE_LOG_PATH` is not set
 
 ### Changed
 
@@ -43,7 +44,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - CICD: Drop macOS ARM64 build from CI
 - Discontinue support for macOS
-- raspios: Remove micromamba from Raspberry Pi OS image
 - setup: Don't install `micromamba` on the raspi OS image
 - setup: Update setup script names
 - tools: Remove legacy Wi-Fi access point setup script

@@ -96,6 +96,9 @@ class CommandLineArguments {
     }
     if (log_dir.length() < 1) {
       const char* env_log_dir = std::getenv("UPKIE_LOG_PATH");
+      if (env_log_dir == nullptr) {
+        spdlog::warn("UPKIE_LOG_PATH environment variable not set: the spine will default to logging in /tmp, however for better performance it is recommended to log to RAM at /dev/shm. You can disable this warning by setting UPKIE_LOG_PATH.");
+      }
       log_dir = (env_log_dir != nullptr) ? env_log_dir : "/tmp";
     }
   }
