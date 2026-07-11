@@ -23,12 +23,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - cpp: Report faulty packets to the standard output
 - logging: Add `RateLimitFilter` and `rate_limit_repeated_warnings` to throttle high-frequency repeated warnings
+- setup: Configure wheel servo gains based on wheel radius
 - spines: Merge mock spine into pi3hat spine (`pi3hat_spine --mock`)
 - utils: Add `clamp_abs_and_warn` utility function
-
-### Changed
-
-- setup: Configure wheel servo gains based on wheel radius
 
 ### Fixed
 
