@@ -4,7 +4,6 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from upkie.envs.backends import (
-    GenesisBackend,
     MockBackend,
     PyBulletBackend,
     SpineBackend,
@@ -16,32 +15,6 @@ from upkie.exceptions import MissingOptionalDependency
 from upkie.model import Model
 
 from .upkie_servos import UpkieServos
-
-
-def make_upkie_genesis_servos(**kwargs):
-    r"""!
-    Create an Upkie servos environment with Genesis backend.
-
-    This function is meant to be called by `gymnasium.make()` rather than to be
-    called directly.
-
-    \param kwargs Keyword arguments forwarded to the environment and backend.
-    \return UpkieServos with GenesisBackend.
-    """
-    backend_keys = {"genesis_init", "gui", "substeps"}
-    backend_kwargs = {
-        key: value for key, value in kwargs.items() if key in backend_keys
-    }
-    env_kwargs = {
-        key: value for key, value in kwargs.items() if key not in backend_keys
-    }
-
-    # Create backend with appropriate dt from frequency
-    frequency = env_kwargs.get("frequency", 200.0)
-    dt = 1.0 / frequency if frequency is not None else 0.005
-    backend = GenesisBackend(dt=dt, **backend_kwargs)
-
-    return UpkieServos(backend=backend, **env_kwargs)
 
 
 def make_mock_servos(**kwargs):
@@ -217,27 +190,6 @@ def make_upkie_spine_servos(**kwargs):
     return make_spine_servos(**kwargs)
 
 
-def make_upkie_genesis_base_velocity(**kwargs):
-    r"""!
-    Add base velocity wrapper around an UpkieServos with Genesis backend.
-    """
-    return wrap_base_velocity(make_upkie_genesis_servos, **kwargs)
-
-
-def make_upkie_genesis_gyropod(**kwargs):
-    r"""!
-    Add gyropod wrapper around an UpkieServos with Genesis backend.
-    """
-    return wrap_gyropod(make_upkie_genesis_servos, **kwargs)
-
-
-def make_upkie_genesis_pendulum(**kwargs):
-    r"""!
-    Add pendulum wrapper around an UpkieServos with Genesis backend.
-    """
-    return wrap_pendulum(make_upkie_genesis_servos, **kwargs)
-
-
 def wrap_mock_pendulum(**kwargs):
     r"""!
     Add pendulum wrapper around an UpkieServos with Mock backend.
@@ -359,27 +311,6 @@ def _get_cookie_model():
     return Model(urdf_path=cookie_description.URDF_PATH)
 
 
-def make_cookie_genesis_servos(**kwargs):
-    r"""!
-    Create a Cookie servos environment with Genesis backend.
-
-    \param kwargs Keyword arguments forwarded to the environment and backend.
-    \return UpkieServos with GenesisBackend and Cookie URDF.
-    """
-    cookie_model = _get_cookie_model()
-    backend_keys = {"genesis_init", "gui", "substeps"}
-    backend_kwargs = {
-        key: value for key, value in kwargs.items() if key in backend_keys
-    }
-    env_kwargs = {
-        key: value for key, value in kwargs.items() if key not in backend_keys
-    }
-    frequency = env_kwargs.get("frequency", 200.0)
-    dt = 1.0 / frequency if frequency is not None else 0.005
-    backend = GenesisBackend(dt=dt, model=cookie_model, **backend_kwargs)
-    return UpkieServos(backend=backend, model=cookie_model, **env_kwargs)
-
-
 def make_cookie_pybullet_servos(**kwargs):
     r"""!
     Create a Cookie servos environment with PyBullet backend.
@@ -406,27 +337,6 @@ def make_cookie_pybullet_servos(**kwargs):
     dt = 1.0 / frequency if frequency is not None else 0.005
     backend = PyBulletBackend(dt=dt, model=cookie_model, **backend_kwargs)
     return UpkieServos(backend=backend, model=cookie_model, **env_kwargs)
-
-
-def make_cookie_genesis_base_velocity(**kwargs):
-    r"""!
-    Add base velocity wrapper around a Cookie servos env with Genesis backend.
-    """
-    return wrap_base_velocity(make_cookie_genesis_servos, **kwargs)
-
-
-def make_cookie_genesis_gyropod(**kwargs):
-    r"""!
-    Add gyropod wrapper around a Cookie servos env with Genesis backend.
-    """
-    return wrap_gyropod(make_cookie_genesis_servos, **kwargs)
-
-
-def make_cookie_genesis_pendulum(**kwargs):
-    r"""!
-    Add pendulum wrapper around a Cookie servos env with Genesis backend.
-    """
-    return wrap_pendulum(make_cookie_genesis_servos, **kwargs)
 
 
 def make_cookie_mock_servos(**kwargs):

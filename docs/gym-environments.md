@@ -6,8 +6,6 @@ Upkie has environments compatible with the [Gymnasium API](https://gymnasium.far
 
 | Environment ID            | Backend                                                                | Action and observation spaces               |
 |---------------------------|------------------------------------------------------------------------|---------------------------------------------|
-| `Upkie-Genesis-Pendulum`  | [Genesis](\ref upkie.envs.backends.genesis_backend.GenesisBackend)     | [Pendulum](\ref upkie_pendulum_description) |
-| `Upkie-Genesis-Servos`    | [Genesis](\ref upkie.envs.backends.genesis_backend.GenesisBackend)     | [Servos](\ref upkie_servos_description)     |
 | `Upkie-Mock-Pendulum`     | [Mock](\ref upkie.envs.backends.mock_backend.MockBackend)              | [Pendulum](\ref upkie_pendulum_description) |
 | `Upkie-Mock-Servos`       | [Mock](\ref upkie.envs.backends.mock_backend.MockBackend)              | [Servos](\ref upkie_servos_description)     |
 | `Upkie-PyBullet-Pendulum` | [PyBullet](\ref upkie.envs.backends.pybullet_backend.PyBulletBackend)  | [Pendulum](\ref upkie_pendulum_description) |
