@@ -32,7 +32,7 @@ def register() -> None:
     """
     for robot in ["upkie", "cookie"]:
         robot_cap = robot.capitalize()
-        for backend in ["genesis", "mock", "pybullet", "spine"]:
+        for backend in ["mock", "pybullet", "spine"]:
             backend_cap = (
                 "PyBullet" if backend == "pybullet" else backend.capitalize()
             )
