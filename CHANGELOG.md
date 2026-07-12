@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [12.0.0] - 2026-07-12
+
 ### Added
 
 - CICD: Add C++ formatter call to pre-commit hooks
@@ -14,35 +16,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - cpp: Allow sporadic torque reporting failures from actuators
 - envs: Expose rotation from base to world frame in the PyBullet backend
 - envs: Set base orientation from robot model in spine configuration
+- logging: Add `RateLimitFilter` and `rate_limit_repeated_warnings` to throttle high-frequency repeated warnings
 - spines: Add `--mock` flag to pi3hat spine for running without actuators
 - spines: Add `--readonly` flag to pi3hat spine for running observers without controllers
 - spines: Automatically configure CPU governor when starting the pi3hat spine
 - spines: Warn when `UPKIE_LOG_PATH` is not set
+- utils: Add `clamp_abs_and_warn` utility function
 
 ### Changed
 
-- Expose rotation from base to world frame in the PyBullet backend
+- **Breaking:** spines: Merge mock spine into pi3hat spine (`pi3hat_spine --mock`)
 - cpp: Report faulty packets to the standard output
-- logging: Add `RateLimitFilter` and `rate_limit_repeated_warnings` to throttle high-frequency repeated warnings
 - setup: Configure wheel servo gains based on wheel radius
-- spines: Merge mock spine into pi3hat spine (`pi3hat_spine --mock`)
-- utils: Add `clamp_abs_and_warn` utility function
-
-### Fixed
-
-- cpp: Rate-limit CPU temperature sensing to 1 Hz
-- envs: Fix registration of Cookie mock servos environments
-- envs: Fix registration of Cookie spine servos environments
-- envs: Write joystick to observation when resetting PyBullet backend
-- utils: Fix joystick trigger axis mapping for Xbox controllers
-- utils: Fix square and triangle button observations in Python
-- utils: Match joystick observations computed in C++ and Python
 
 ### Removed
 
+- **Breaking:** Discontinue support for macOS
+- **Breaking:** envs: Remove Genesis backend and its Gymnasium environments
 - CICD: Drop macOS ARM64 build from CI
-- Discontinue support for macOS
-- envs: Remove Genesis backend and its Gymnasium environments
 - examples: Remove Genesis simulation examples
 - setup: Don't install `micromamba` on the raspi OS image
 - setup: Remove the `genesis` Pixi environment
@@ -50,6 +41,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - tools: Remove legacy Wi-Fi access point setup script
 - tools: Remove legacy `tools/logs/` sub-directory
 - tools: Remove update command from `upkie_tool`
+
+### Fixed
+
+- cpp: Rate-limit CPU temperature sensing to 1 Hz
+- envs: Fix registration of Cookie mock and spine servos environments
+- envs: Write joystick to observation when resetting PyBullet backend
+- utils: Fix joystick trigger axis mapping for Xbox controllers
+- utils: Fix square and triangle button observations in Python
+- utils: Match joystick observations computed in C++ and Python
 
 ## [11.0.0] - 2026-04-07
 
@@ -101,14 +101,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - mpc_balancer: Moved to `examples/real_robot/follow_joystick.py`
 - mpc_balancer: Use left rather than right joystick's left-right axis for yaw control
 
-### Fixed
-
-- CICD: Run both C++ and Python unit tests in `pixi run test`
-- cpp: Clean up unused `reset_joint_properties` function
-- cpp: Remove joint properties from Bullet interface
-- docs: Clean up obsolete Doxygen configuration parameters
-- utils: Handle directional pad (D-pad) inputs in `Joystick` class
-
 ### Removed
 
 - **Breaking:** Remove `upkie.config` submodule entirely
@@ -121,6 +113,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - examples: Remove PI balancing variant from real-robot examples
 - mpc_balancer: Remove `RemoteControl` class as it is now in `JoystickController`
 - mpc_balancer: Remove `WheelController` class as it is now in the `UpkieGyropod` environment
+
+### Fixed
+
+- CICD: Run both C++ and Python unit tests in `pixi run test`
+- cpp: Clean up unused `reset_joint_properties` function
+- cpp: Remove joint properties from Bullet interface
+- docs: Clean up obsolete Doxygen configuration parameters
+- utils: Handle directional pad (D-pad) inputs in `Joystick` class
 
 ## [10.1.0] - 2026-03-11
 
@@ -140,15 +140,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Report pitch rather than absolute pitch in fall detection warning
 - tools: Check actuators sequentially when running `upkie_tool stats`
 
-### Fixed
-
-- Fix failing unit test on macOS with Python 3.12
-
 ### Removed
 
 - CICD: Remove jobs that relied on `macos-13` runner images
 - Move `rlb3_trainer` to its [own repository](https://github.com/stephane-caron/rlb3_upkie)
 - Move `trajectory_player` to its own repository
+
+### Fixed
+
+- Fix failing unit test on macOS with Python 3.12
 
 ## [10.0.0] - 2025-10-20
 
@@ -173,11 +173,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - examples: Reorganize examples into backend-specific sub-directories
 - examples: Update PyBullet external-force to new backend
 
-### Fixed
-
-- envs: Add back `UpkieEnv.log` function to log data in Python
-- utils: Compatibility with old SciPy API with Python 3.9
-
 ### Removed
 
 - **Breaking:** cpp: Remove contact monitoring from Bullet interface
@@ -190,6 +185,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breaking:** envs: Remove `get_bullet_action` function
 - **Breaking:** envs: Remove `set_bullet_action` function
 - **Breaking:** spines: Remove inertia randomization from Bullet spine
+
+### Fixed
+
+- envs: Add back `UpkieEnv.log` function to log data in Python
+- utils: Compatibility with old SciPy API with Python 3.9
 
 ## [9.0.1] - 2025-09-10
 
@@ -271,6 +271,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - utils: Generalize `bounded_derivative_filter` to vector inputs
 - utils: Use `pathlib` rather than `os.path` in Raspberry Pi detection
 
+### Removed
+
+- **Breaking:** Remove output bound from `abs_bounded_derivative_filter`
+- **Breaking:** Remove output bound from `bounded_derivative_filter`
+- cpp: Remove palimpsest Bazel package that is already upstream from mpacklog
+
 ### Fixed
 
 - exceptions: Fix error message reporting of UpkieError base class
@@ -279,12 +285,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - spines: Handle empty user replies when no joystick is found
 - utils: Fix incorrect check on inability to set affinity from an interpreter
 - utils: Remove unnecessary requirement to configure the agent process as root
-
-### Removed
-
-- **Breaking:** Remove output bound from `abs_bounded_derivative_filter`
-- **Breaking:** Remove output bound from `bounded_derivative_filter`
-- cpp: Remove palimpsest Bazel package that is already upstream from mpacklog
 
 ## [8.1.1] - 2025-07-21
 
@@ -304,17 +304,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - cpp: Spines now take a controller pipeline as constructor argument
 - envs: Wait one second when resetting environments on the Raspberry Pi (thanks to @Tordjx)
 
-### Fixed
-
-- CICD: Update release workflow images to `ubuntu-latest`
-- Spine: Fix full-logger issue when substepping a simulation spine
-
 ### Removed
 
 - envs: Remove UpkieServoPositions and UpkieServoTorques environments
 - envs: Remove UpkieServoPositions and UpkieServoTorques environments
 - envs: Remove `log` function from spine environment
 - envs: Remove observation-based reward wrapper
+
+### Fixed
+
+- CICD: Update release workflow images to `ubuntu-latest`
+- Spine: Fix full-logger issue when substepping a simulation spine
 
 ## [8.0.0] - 2025-05-08
 
@@ -337,15 +337,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - envs: Hard-code spine retries to ten attempts
 - envs: Rename `env.bullet_extra` to `env.set_bullet_action`
 
-### Fixed
-
-- examples: Fix warning in model predictive control example
-- Spine: Fix logging when substepping a simulation spine
-
 ### Removed
 
 - **Breaking:** envs: Remove `upkie.envs.rewards` submodule
 - envs: Remove unused `WheeledInvertedPendulum` environment
+
+### Fixed
+
+- examples: Fix warning in model predictive control example
+- Spine: Fix logging when substepping a simulation spine
 
 ## [7.0.0] - 2025-03-10
 
@@ -364,15 +364,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - envs: Unit test for the base `step` function
 - examples: Group simulation-related examples in a sub-directory
 
-### Fixed
-
-- Bazel: Ignore `.pixi` directory as it can contain unrelated Bazel files
-- Fix unused variable warning in Bullet interface
-
 ### Removed
 
 - **Breaking:** Remove `get_reward` functions from all environments
 - Makefile: Remove conda packing rules, now deprecated in favor of Pixi
+
+### Fixed
+
+- Bazel: Ignore `.pixi` directory as it can contain unrelated Bazel files
+- Fix unused variable warning in Bullet interface
 
 ## [6.1.0] - 2024-12-12
 
@@ -398,18 +398,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - actuation: Rename `Interface::servo_joint_map` to `Interface::servo_name_map`
 - deps: Upate to palimpsest 2.2.1
 
-### Fixed
-
-- examples: Lying genuflection example (thanks to @one-for-all)
-- examples: Unwrap environments to get their neutral actions
-- Update `start_simulation.sh` for systems where `-v` is not defined
-
 ### Removed
 
 - envs: Remove unused `leg_return_period` and hard-code it to one second
 - envs: Replace contingent `parse_first_observation` by a reset override
 - model: Remove C++ `upkie::model` namespace
 - observers: Remove upper-leg and wheel joints from configurable parameters
+
+### Fixed
+
+- examples: Lying genuflection example (thanks to @one-for-all)
+- examples: Unwrap environments to get their neutral actions
+- Update `start_simulation.sh` for systems where `-v` is not defined
 
 ## [6.0.0] - 2024-11-01
 
@@ -438,13 +438,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - tools: Make output directory an argument in `dump_servo_configs`
 - tools: Simplify servo configuration script
 
-### Fixed
-
-- BulletInterface: Fix typo in a comment
-- CICD: Install Doxygen with specific version from conda-forge
-- Spine: Fix observation consistency between `run` and `simulate`
-- envs: Clamp ground velocity action in `UpkieGroundVelocity`
-
 ### Removed
 
 - Bazel: Remove legacy rules for PyPI dependencies
@@ -452,6 +445,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - deps: Remove dependency on PyYAML
 - examples: Remove Bazel BUILD file
 - model: Remove duplicate maximum torque constant
+
+### Fixed
+
+- BulletInterface: Fix typo in a comment
+- CICD: Install Doxygen with specific version from conda-forge
+- Spine: Fix observation consistency between `run` and `simulate`
+- envs: Clamp ground velocity action in `UpkieGroundVelocity`
 
 ## [5.2.0] - 2024-09-30
 
@@ -479,6 +479,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - actuation: Log simulation groundtruth to `sim`
 - CI: Do not install Python packages in the system environment on runners
 
+### Removed
+
+- CICD: Remove pycodestyle as we now use ruff for Python linting
+- BulletInterface: Remove unused orientation/position unit-test getters
+
 ### Fixed
 
 - BulletInterface: Fix application of external forces
@@ -487,11 +492,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - docs: Document Gym environment wrappers
 - envs: Handle spine errors raised in base env constructor
 - envs: Register UpkieServoPositions and UpkieServoTorques environments
-
-### Removed
-
-- CICD: Remove pycodestyle as we now use ruff for Python linting
-- BulletInterface: Remove unused orientation/position unit-test getters
 
 ## [5.1.0] - 2024-08-14
 
@@ -526,6 +526,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - examples: wheeled inverted pendulum model example
 - exceptions: Move to the top-level Python module
 
+### Removed
+
+- MockInterface: Remove unused IMU data from mock interface
+
 ### Fixed
 
 - BulletInterface: Correct inline of two Bullet utility functions
@@ -534,10 +538,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - exceptions: Make all exceptions derive from UpkieError
 - model: Fix type of upper-leg and wheel joint lists
 - spine: Handle deserialization exceptions when beginning a cycle
-
-### Removed
-
-- MockInterface: Remove unused IMU data from mock interface
 
 ## [5.0.1] - 2024-08-01
 
@@ -578,6 +578,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - envs: Warn when a fall is detected
 - examples: Rename direct servo control example
 
+### Removed
+
+- utils: Pinocchio utility functions
+- deps: Dependency on separate Vulp project
+- docs: Remove PID balancer from the documentation
+
 ### Fixed
 
 - CICD: Release jobs for x86 and ARM64 macOS spines
@@ -586,12 +592,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - observers: Read configuration matrix in base orientation observer
 - raspunzel: argv0 when executing the target is now the same as `bazel run`
 - setup: Fix configuration-write order in servo config script
-
-### Removed
-
-- utils: Pinocchio utility functions
-- deps: Dependency on separate Vulp project
-- docs: Remove PID balancer from the documentation
 
 ## [4.0.0] - 2024-06-12
 
@@ -611,16 +611,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - deps: Update Vulp to 2.5.0
 - envs: Bump `UpkieServos` version number to 4
 
+### Removed
+
+- **Breaking:** observers: Python version of the base orientation observer
+- Optional dependencies for balancers that now have their own repositories
+
 ### Fixed
 
 - PID balancer: Fix shared-memory opening in standalone Bullet script
 - dist: Exclude unnecessary files from Python packages
 - envs: Stop the spine when deleting an environment instance
-
-### Removed
-
-- **Breaking:** observers: Python version of the base orientation observer
-- Optional dependencies for balancers that now have their own repositories
 
 ## [3.4.0] - 2024-03-21
 
@@ -640,16 +640,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - palinode: Rename `run_pid_balancer.sh` to `try_pid_balancer.sh` 😊
 - Rename top-level run script to `run_pid_balancer.sh`
 
+### Removed
+
+- Move MPC balancer to its own repository
+- Move PPO balancer to its own repository
+
 ### Fixed
 
 - Fix Gymnasium API in the readme example (thanks to @araffin)
 - Handle closing of GUI window in simulation script
 - Make sure all `UpkieServos` box observations are proper arrays
-
-### Removed
-
-- Move MPC balancer to its own repository
-- Move PPO balancer to its own repository
 
 ## [3.3.0] - 2024-02-20
 
@@ -691,16 +691,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - palinode: Rename `try_pid_balancer.sh` to `start_pid_balancer.sh` 😊
 - Simulation script downloads a binary if available, o/w compiles from source (thanks to @pgraverdy)
 
+### Removed
+
+- Bazel: dependencies based on `pip_parse` from `rules_python`
+- Pink balancer: moved to a separate repository
+
 ### Fixed
 
 - envs: typo in `UpkieServos` dictionary key
 - MPC balancer: add missing dependencies to requirements.txt
 - PPO balancer: add missing initial state randomization to `--training` mode
-
-### Removed
-
-- Bazel: dependencies based on `pip_parse` from `rules_python`
-- Pink balancer: moved to a separate repository
 
 ## [3.1.0] - 2023-12-22
 
@@ -784,13 +784,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - spines: Add `_spine` suffix to binary names, e.g. `pi3hat_spine`
 - spines: Allow pi3hat spine to run without joystick if user validates
 
-### Fixed
-
-- Make Makefile date command more portable (thanks to @ubgk)
-- PPO balancer: Correct save frequency during training
-- PPO balancer: Run policy deterministically after training
-- envs: Merge default and runtime configuration dictionaries
-
 ### Removed
 
 - **Breaking:** `async_step` function and `asyncio` logic
@@ -798,6 +791,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breaking:** `upkie.utils.log_path` submodule and its utility function
 - deps: Dependency on mpacklog.cpp (already in Vulp)
 - deps: Dependency on mpacklog.py
+
+### Fixed
+
+- Make Makefile date command more portable (thanks to @ubgk)
+- PPO balancer: Correct save frequency during training
+- PPO balancer: Run policy deterministically after training
+- envs: Merge default and runtime configuration dictionaries
 
 ## [1.5.0] - 2023-09-29
 
@@ -828,14 +828,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - agents: Retry connecting to the spine several times at startup
 - envs: Retry connecting to the spine several times at startup
 
+### Removed
+
+- envs: Remove `get_range` from rewards as it is deprecated from Gymnasium
+
 ### Fixed
 
 - Wheel balancer: Configure spine properly
 - Wheel odometry: Check that observer is configured properly
-
-### Removed
-
-- envs: Remove `get_range` from rewards as it is deprecated from Gymnasium
 
 ## [1.4.0] - 2023-08-24
 
@@ -1078,7 +1078,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Starting this changelog.
 
-[unreleased]: https://github.com/upkie/upkie/compare/v11.0.0...HEAD
+[unreleased]: https://github.com/upkie/upkie/compare/v12.0.0...HEAD
+[12.0.0]: https://github.com/upkie/upkie/releases/tag/v12.0.0
 [11.0.0]: https://github.com/upkie/upkie/releases/tag/v11.0.0
 [10.1.0]: https://github.com/upkie/upkie/releases/tag/v10.1.0
 [10.0.0]: https://github.com/upkie/upkie/releases/tag/v10.0.0
