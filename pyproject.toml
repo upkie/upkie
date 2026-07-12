@@ -54,6 +54,7 @@ exclude = [
     ".bazel*",
     ".clang-format",
     ".git*",
+    ".pre-commit*",
     "CITATION.cff",
     "CONTRIBUTING.md",
     "CPPLINT.cfg",
