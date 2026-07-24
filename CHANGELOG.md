@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Removed
+
+- Remove pixi-pack rules from the Makefile and pixi configuration
+
 ## [12.0.0] - 2026-07-12
 
 ### Added

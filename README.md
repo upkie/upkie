@@ -84,7 +84,7 @@ Contributions are welcome to both the hardware and software of Upkies! Check out
 
 ## Citation
 
-If you built an Upkie or use parts of this project in your works, please cite the project and its contributors:
+If you built an Upkie or use parts of this project in your work, please cite the project and its contributors:
 
 ```bibtex
 @software{upkie,

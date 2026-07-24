@@ -211,12 +211,10 @@ simulator-pybullet = "python examples/pybullet/mpc_balancing.py"
 features = ["real", "default"]
 
 [tool.pixi.feature.real.dependencies]
-pixi-pack = ">=0.7.6,<0.8"
 proxsuite = ">=0.7.2,<0.8"
 qpmpc = ">=3.1.0,<4"
 
 [tool.pixi.feature.real.tasks]
-pack = "pixi-pack --environment real --platform linux-aarch64 --ignore-pypi-non-wheel"
 real-follow-joystick = "python examples/real_robot/follow_joystick.py"
 
 # -----------------
