@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -130,7 +129,7 @@ class KinematicTree:
                 )
 
         self.joints = joints
-        self.joint_names = set(joint.name for joint in joints)
+        self.joint_names = {joint.name for joint in joints}
 
         # Root is the first link in the URDF
         self._root = first_link_name

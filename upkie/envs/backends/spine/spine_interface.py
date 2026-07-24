@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -44,7 +43,7 @@ class SpineInterface:
         self._mmap = shared_memory._mmap
         self._packer = msgpack.Packer(default=serialize, use_bin_type=True)
         self._shared_memory = shared_memory
-        self._stop_waiting = set([Request.kNone, Request.kError])
+        self._stop_waiting = {Request.kNone, Request.kError}
         self._unpacker = msgpack.Unpacker(raw=False)
         if perf_checks:
             self.__perf_checks()

@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -424,7 +423,7 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
         )
 
         # Check that different samples have different values
-        unique_torques = set(round(t, 6) for t in left_hip_torques[:10])
+        unique_torques = {round(t, 6) for t in left_hip_torques[:10]}
         self.assertGreater(
             len(unique_torques),
             5,
@@ -719,7 +718,7 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
         )
 
         # Check that different samples have different values
-        unique_torques = set(round(t, 6) for t in left_hip_torques[:10])
+        unique_torques = {round(t, 6) for t in left_hip_torques[:10]}
         self.assertGreater(
             len(unique_torques),
             5,
@@ -1136,7 +1135,7 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
             inertias.append(kwargs["localInertiaDiagonal"])
 
         # Should have different values (very unlikely to be all the same)
-        unique_masses = set(round(m, 8) for m in masses)
+        unique_masses = {round(m, 8) for m in masses}
         self.assertGreater(
             len(unique_masses),
             5,

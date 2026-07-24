@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 #
 # SPDX-License-Identifier: Apache-2.0
 #
@@ -9,7 +8,7 @@
 from __future__ import annotations
 
 import math
-from typing import TYPE_CHECKING, Dict, Optional, Tuple
+from typing import TYPE_CHECKING
 
 import gymnasium as gym
 import numpy as np
@@ -141,9 +140,9 @@ class UpkieBaseVelocity(gym.Wrapper):
     def reset(
         self,
         *,
-        seed: Optional[int] = None,
-        options: Optional[dict] = None,
-    ) -> Tuple[np.ndarray, Dict]:
+        seed: int | None = None,
+        options: dict | None = None,
+    ) -> tuple[np.ndarray, dict]:
         r"""!
         Resets the environment and get an initial observation.
 
@@ -167,7 +166,7 @@ class UpkieBaseVelocity(gym.Wrapper):
     def step(
         self,
         action: np.ndarray,
-    ) -> Tuple[np.ndarray, float, bool, bool, dict]:
+    ) -> tuple[np.ndarray, float, bool, bool, dict]:
         r"""!
         Run one timestep of the environment's dynamics.
 

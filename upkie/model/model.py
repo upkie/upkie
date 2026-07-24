@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-#
 # SPDX-License-Identifier: Apache-2.0
 
 from typing import List, Optional, Tuple
@@ -86,7 +83,7 @@ class Model:
             for joint in tree.joints
             if "hip" in joint.name or "knee" in joint.name
         )
-        wheel_base = float(np.linalg.norm((pos_left - pos_right)))
+        wheel_base = float(np.linalg.norm(pos_left - pos_right))
         wheel_joints = tuple(
             joint for joint in tree.joints if "wheel" in joint.name
         )
