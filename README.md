@@ -73,7 +73,6 @@ To switch to the real robot, replace "PyBullet" by "Spine" in the environment na
 
 There are smaller standalone examples in the [examples](https://github.com/upkie/upkie/tree/main/examples) directory. For instance:
 
-- Domain randomization: shows how to add domain-randomization wrappers to an Upkie environment.
 - Lying genuflection: genuflect while lying on a horizontal floor.
 - Model predictive control: a self-contained MPC balancer
 - PD balancer: balance by proportional-derivative feedback to wheel velocities.

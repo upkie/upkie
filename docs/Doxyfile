@@ -853,7 +853,6 @@ INPUT                  = README.md \
                          upkie/envs \
                          upkie/envs/backends \
                          upkie/envs/backends/spine \
-                         upkie/envs/wrappers \
                          upkie/model \
                          upkie/utils \
                          CONTRIBUTING.md
