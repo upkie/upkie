@@ -13,7 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+- **Breaking:** envs: Remove the `upkie.envs.wrappers` submodule
 - Remove pixi-pack rules from the Makefile and pixi configuration
+- examples: Remove domain-randomization wrapper example
 
 ## [12.0.0] - 2026-07-12
 
