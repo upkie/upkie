@@ -229,7 +229,7 @@ class UpkieEnv(gym.Env, ABC):
 
         # Get observation
         observation = self.get_env_observation(spine_observation)
-        reward = 1.0  # reward can be decided by a wrapper
+        reward = 0.0  # to be decided by agents, for instance via wrappers
         terminated = False
         truncated = False  # will be handled by e.g. a TimeLimit wrapper
 

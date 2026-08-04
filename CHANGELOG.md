@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **Breaking:** envs: Set rewards of all environments to zero, left to be decided by agents
+
 ### Removed
 
 - Remove pixi-pack rules from the Makefile and pixi configuration
