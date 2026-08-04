@@ -141,7 +141,7 @@ class UpkieServosTestCase(unittest.TestCase):
 
         # Check return types
         self.assertIsInstance(observation, dict)
-        self.assertIsInstance(reward, (int, float))
+        self.assertIsInstance(reward, float)
         self.assertIsInstance(terminated, bool)
         self.assertIsInstance(truncated, bool)
         self.assertIsInstance(info, dict)
@@ -149,8 +149,8 @@ class UpkieServosTestCase(unittest.TestCase):
         # Check observation is valid
         self.assertTrue(self.env.observation_space.contains(observation))
 
-        # Default reward should be 1.0 (survival reward)
-        self.assertEqual(reward, 1.0)
+        # Default reward should be 0.0 (left to be decided by agents)
+        self.assertEqual(reward, 0.0)
 
         # Episode shouldn't terminate by default
         self.assertFalse(terminated)

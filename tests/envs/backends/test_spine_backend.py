@@ -67,7 +67,7 @@ class SpineBackendTestCase(unittest.TestCase):
             for joint in self.env.model.joints
         }
         _, reward, _, _, _ = self.env.step(action)
-        self.assertAlmostEqual(reward, 1.0)  # survival reward
+        self.assertAlmostEqual(reward, 0.0)
 
     def test_action_clamping(self):
         action = {

@@ -45,15 +45,7 @@ class PendulumTestCase(unittest.TestCase):
         observation, _ = self.env.reset()
         action = np.zeros(self.env.action_space.shape)
         observation, reward, terminated, truncated, _ = self.env.step(action)
-        self.assertNotEqual(reward, 0.0)  # non-zero base velocity
-
-        spine_observation = self.backend._spine.observation
-        base_orientation = spine_observation["base_orientation"]
-        base_orientation["pitch"] = 0.0
-        base_orientation["angular_velocity"] = [0.0, 0.0, 0.0]
-        base_orientation["linear_velocity"] = [0.0, 0.0, 0.0]
-        observation, reward, terminated, truncated, _ = self.env.step(action)
-        self.assertAlmostEqual(reward, 1.0)  # ideal base state
+        self.assertAlmostEqual(reward, 0.0)
 
     def test_check_env(self):
         try:
