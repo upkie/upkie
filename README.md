@@ -106,8 +106,8 @@ Don't forget to add yourself to the BibTeX above and to `CITATION.cff` if you co
 <img src="https://github.com/user-attachments/assets/f6293fbc-5c59-4e56-bc7f-0ee930503f11" align="right" height="300px">
 
 - [MjLab Upkie](https://github.com/MarcDcls/mjlab_upkie): GPU-accelerated playground based on MjLab and MuJoCo Warp (requires an Nvidia GPU). Can train whole-body policies such as the one depicted to the right.
-- [RLB3 upkie](https://github.com/upkie/rlb3_upkie): new CPU playground to train policies for Upkie-Pendulum environments via RL Baselines3 Zoo
-- [PPO balancer](https://github.com/upkie/ppo_balancer): legacy CPU playground to train policies for Upkie-Pendulum environments using Stable-Baselines3 ([video](https://www.youtube.com/shorts/bvWgYso1dzI))
+- [RL Baselines3 Zoo balancer](https://codeberg.org/upkie/rl_zoo3_balancer): CPU playground to train policies for `Upkie-Pendulum` environments via RL Baselines3 Zoo
+- [PPO balancer](https://codeberg.org/upkie/ppo_balancer): legacy CPU playground to train policies for Upkie-Pendulum environments using Stable-Baselines3 ([video](https://www.youtube.com/shorts/bvWgYso1dzI))
 
 ### Open-source robotics
 
