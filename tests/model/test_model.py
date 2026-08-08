@@ -1,15 +1,13 @@
-#!/usr/bin/env python3
-#
 # SPDX-License-Identifier: Apache-2.0
 
 """Test Model class."""
 
 import unittest
 
+import cookie_description
 import numpy as np
 import upkie_description
 
-import cookie_description
 from upkie.model import Model
 
 

@@ -1,13 +1,10 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-#
 # SPDX-License-Identifier: Apache-2.0
 #
 # /// script
 # dependencies = ["upkie"]
 # ///
 
-"""This example simply makes Upkie go to its neutral configuration."""
+"""Make Upkie go to its neutral configuration."""
 
 import gymnasium as gym
 

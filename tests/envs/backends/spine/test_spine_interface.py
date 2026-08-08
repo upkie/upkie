@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-#
 # SPDX-License-Identifier: Apache-2.0
 
 """!
@@ -104,7 +102,8 @@ class SpineInterfaceTestCase(unittest.TestCase):
         """
         Read dictionary from the memory shared with the spine interface.
 
-        Returns:
+        Returns
+        -------
             Dictionary read from shared memory.
         """
         self._mmap.seek(0)

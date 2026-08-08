@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-#
 # SPDX-License-Identifier: Apache-2.0
 
 """Tests covering joystick usage in the PyBullet backend."""
@@ -125,7 +123,8 @@ class PyBulletBackendJoystickTestCase(unittest.TestCase):
         """Check that step() calls self.joystick.write when it exists.
 
         In this test, write raises an UpkieRuntimeError, as happens when the B
-        button is pressed."""
+        button is pressed.
+        """
         mock_pybullet.configure_mock(**self.pybullet_mock.__dict__)
         mock_pybullet_data.configure_mock(**self.pybullet_data_mock.__dict__)
 

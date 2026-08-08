@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-#
 # SPDX-License-Identifier: Apache-2.0
 
 """Test rotation conversion utilities."""
@@ -58,11 +56,13 @@ class RotationMatrixFromRpyTestCase(unittest.TestCase):
 
     def test_yaw_half_pi(self):
         """Yaw of pi/2 rotates x to y."""
-        expected = np.array([
-            [0.0, -1.0, 0.0],
-            [1.0, 0.0, 0.0],
-            [0.0, 0.0, 1.0],
-        ])
+        expected = np.array(
+            [
+                [0.0, -1.0, 0.0],
+                [1.0, 0.0, 0.0],
+                [0.0, 0.0, 1.0],
+            ]
+        )
         np.testing.assert_allclose(
             rotation_matrix_from_rpy((0.0, 0.0, np.pi / 2)),
             expected,

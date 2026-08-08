@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-#
 # SPDX-License-Identifier: Apache-2.0
 
 """Tests for PyBullet backend functionality with a mock pybullet module."""
@@ -98,9 +96,7 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
         )
 
         # Check that joint properties were initialized correctly
-        self.assertEqual(
-            backend._joint_properties["left_hip"].friction, 0.1
-        )
+        self.assertEqual(backend._joint_properties["left_hip"].friction, 0.1)
         self.assertEqual(
             backend._joint_properties["left_hip"].torque_control_noise, 0.05
         )
@@ -122,9 +118,7 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
         )  # default
 
         # Joint without specific config should have default values
-        self.assertEqual(
-            backend._joint_properties["left_knee"].friction, 0.0
-        )
+        self.assertEqual(backend._joint_properties["left_knee"].friction, 0.0)
         self.assertEqual(
             backend._joint_properties["left_knee"].torque_control_noise, 0.0
         )
@@ -1183,7 +1177,8 @@ class PyBulletBackendMockTestCase(unittest.TestCase):
         # Define external forces
         external_forces = {
             "left_hip_link": ExternalForce(  # Valid link from mock setup
-                [10.0, 20.0, 30.0], local=False  # world frame
+                [10.0, 20.0, 30.0],
+                local=False,  # world frame
             ),
             "imu": ExternalForce(  # Valid link from mock setup
                 [5.0, 15.0, 25.0], local=False

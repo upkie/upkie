@@ -169,13 +169,10 @@ All C++ source files should start with the license line:
 // SPDX-License-Identifier: Apache-2.0
 ```
 
-All Python source files should start with the following four lines:
+All Python source files should start with an SPDX license identifier comment:
 
 ```py
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-#
 # SPDX-License-Identifier: Apache-2.0
 ```
 
-Optionally, license lines can be followed by copyright lines corresponding to the various contributions to the file (those are optional as in most legal systems copyright is automatically conferred upon the creation of an original work, without the need for a notice), and author lines to identify the individuals who contributed them.
+Optionally, the license line can be followed by copyright lines corresponding to the various contributions to the file (those are optional as in most legal systems copyright is automatically conferred upon the creation of an original work, without the need for a notice), and author lines to identify the individuals who contributed them. But the copyright lines should rather go to the `NOTICE` file at the root of the repository.
