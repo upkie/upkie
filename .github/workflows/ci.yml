@@ -155,7 +155,7 @@ jobs:
         strategy:
             matrix:
                 os: [ubuntu-latest]
-                pyenv: [py310, py311, py312]
+                pyenv: [py310, py311, py312, py313]
 
         steps:
             - name: "Checkout sources"

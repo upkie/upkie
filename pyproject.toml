@@ -23,6 +23,7 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Topic :: Scientific/Engineering",
 ]
 dependencies = [
@@ -293,6 +294,17 @@ solve-group = "py312"
 
 [tool.pixi.feature.py312.dependencies]
 python = "3.12.*"
+
+# -----------------------
+# Environment: test-py313
+# -----------------------
+
+[tool.pixi.environments.test-py313]
+features = ["test-python-version", "py313", "default"]
+solve-group = "py313"
+
+[tool.pixi.feature.py313.dependencies]
+python = "3.13.*"
 
 [tool.ruff]
 line-length = 79
