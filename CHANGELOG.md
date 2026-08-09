@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- CICD: Support Python 3.13
+
 ### Changed
 
 - **Breaking:** envs: Set rewards of all environments to zero, left to be decided by agents
