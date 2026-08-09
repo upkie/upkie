@@ -6,6 +6,7 @@ import unittest
 from multiprocessing.shared_memory import SharedMemory
 
 import gymnasium as gym
+import numpy as np
 
 from upkie.exceptions import UpkieTimeoutError
 
@@ -74,6 +75,23 @@ class EntryPointsTestCase(unittest.TestCase):
     def test_cookie_mock_servos_uses_cookie_model(self):
         with gym.make("Cookie-Mock-Servos") as env:
             self.assertIn("cookie", env.unwrapped.model.urdf_path)
+
+    @unittest.skip(
+        "cookie_description's imu_placement joint currently yields the "
+        "same rotation_base_to_imu as the stock Upkie mounting "
+        "(diag(-1, 1, -1)), which is wrong for Cookie's actual IMU "
+        "mounting (should be [-1, 0, 0, 0, 0, 1, 0, 1, 0], see "
+        "~/.config/upkie/config.yml's base_orientation override on the "
+        "real robot). Re-enable once cookie_description's URDF is fixed "
+        "upstream."
+    )
+    def test_cookie_and_upkie_base_orientations_differ(self):
+        """Cookie's IMU is not mounted the same way as the stock Upkie."""
+        with gym.make("Upkie-Mock-Servos") as upkie_env:
+            upkie_rotation = upkie_env.unwrapped.model.rotation_base_to_imu
+        with gym.make("Cookie-Mock-Servos") as cookie_env:
+            cookie_rotation = cookie_env.unwrapped.model.rotation_base_to_imu
+        self.assertFalse(np.array_equal(upkie_rotation, cookie_rotation))
 
     def test_unregistered(self):
         with self.assertRaises(gym.error.NameNotFound):
