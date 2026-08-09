@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: Apache-2.0
 
-"""Tests for UpkieServos environment with SpineBackend."""
+"""Tests for the spine backend."""
 
 import tempfile
 import unittest
@@ -279,6 +279,73 @@ class SpineBackendTestCase(unittest.TestCase):
                 }
             }
             self.assertEqual(result, expected)
+
+    def test_user_config_overrides_model_base_orientation(self):
+        """User config.yml overrides for base_orientation must win over the
+        model-derived default.
+
+        Regression test: rotation_base_to_imu used to be force-applied
+        after the user config merge, silently discarding any IMU-mounting
+        calibration set in config.yml.
+        """
+        with tempfile.NamedTemporaryFile(
+            mode="w", suffix=".yml", delete=False
+        ) as f:
+            f.write(
+                "spine:\n"
+                "  base_orientation:\n"
+                "    rotation_base_to_imu: "
+                "[-1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0]\n"
+            )
+            f.flush()
+            config_path = Path(f.name)
+
+        with patch(
+            "upkie.envs.backends.spine_backend._get_user_config_path",
+            return_value=config_path,
+        ):
+            shared_memory = SharedMemory(name=None, size=42, create=True)
+            backend = SpineBackend(shm_name=shared_memory._name)
+            shared_memory.close()
+
+        rotation = backend._spine_config["base_orientation"][
+            "rotation_base_to_imu"
+        ]
+        np.testing.assert_array_equal(
+            np.asarray(rotation).flatten(),
+            [-1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0],
+        )
+
+    def test_user_config_overrides_model_wheel_odometry(self):
+        """User config.yml overrides for wheel_odometry must win over the
+        model-derived default (same clobbering bug as base_orientation).
+        """
+        with tempfile.NamedTemporaryFile(
+            mode="w", suffix=".yml", delete=False
+        ) as f:
+            f.write(
+                "spine:\n"
+                "  wheel_odometry:\n"
+                "    signed_radius:\n"
+                "      left_wheel: 0.123\n"
+            )
+            f.flush()
+            config_path = Path(f.name)
+
+        with patch(
+            "upkie.envs.backends.spine_backend._get_user_config_path",
+            return_value=config_path,
+        ):
+            shared_memory = SharedMemory(name=None, size=42, create=True)
+            backend = SpineBackend(shm_name=shared_memory._name)
+            shared_memory.close()
+
+        signed_radius = backend._spine_config["wheel_odometry"][
+            "signed_radius"
+        ]
+        self.assertAlmostEqual(signed_radius["left_wheel"], 0.123)
+        # Untouched sibling key must still come from the model default
+        self.assertNotEqual(signed_radius["right_wheel"], 0.0)
 
 
 if __name__ == "__main__":

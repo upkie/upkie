@@ -3,6 +3,7 @@
 ## \namespace upkie.envs.backends.spine_backend
 ## \brief Backend connected to a simulation or real spine.
 
+import copy
 import time
 from pathlib import Path
 from typing import Any, Dict, Optional
@@ -132,26 +133,36 @@ class SpineBackend(Backend):
         """
         model = model if model is not None else Model()
 
+        # Wheel odometry signed radius and base orientation rotation are
+        # derived from the robot model, but only as defaults: a user
+        # config.yml (loaded below) must be able to override them, e.g. to
+        # calibrate the actual IMU mounting of a specific robot instance.
+        sign = +1.0 if model.left_wheeled else -1.0
+        signed_radius = sign * model.wheel_radius
+        default_config = copy.deepcopy(_DEFAULT_SPINE_CONFIG)
+        nested_update(
+            default_config,
+            {
+                "wheel_odometry": {
+                    "signed_radius": {
+                        "left_wheel": signed_radius,
+                        "right_wheel": -signed_radius,
+                    }
+                },
+                "base_orientation": {
+                    "rotation_base_to_imu": (
+                        model.rotation_base_to_imu.flatten()
+                    ),
+                },
+            },
+        )
+
         merged_spine_config = merge_user_spine_config(
-            default_config=_DEFAULT_SPINE_CONFIG,
+            default_config=default_config,
             user_config=_load_yaml_config(_get_user_config_path()),
         )
         if spine_config is not None:
             nested_update(merged_spine_config, spine_config)
-
-        # Set wheel odometry signed radius from robot model
-        sign = +1.0 if model.left_wheeled else -1.0
-        signed_radius = sign * model.wheel_radius
-        merged_spine_config["wheel_odometry"]["signed_radius"] = {
-            "left_wheel": signed_radius,
-            "right_wheel": -signed_radius,
-        }
-
-        # Set base orientation from robot model so the spine's
-        # BaseOrientation observer uses the correct IMU mounting rotation
-        merged_spine_config["base_orientation"] = {
-            "rotation_base_to_imu": model.rotation_base_to_imu.flatten(),
-        }
 
         # Instance attributes
         self._spine = SpineInterface(shm_name, retries=10)
