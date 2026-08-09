@@ -76,19 +76,10 @@ upload: build  ## upload built targets to the Raspberry Pi
 # REMOTE TARGETS
 # ==============
 
-run_mpc_balancer:  ### run agent
-	@if [ -f ${MAMBA_ROOT_PREFIX}/envs/upkie/activate.sh ]; then \
-		echo "Running the MPC balancer in the unpacked Python environment..."; \
-		. ${MAMBA_ROOT_PREFIX}/envs/upkie/activate.sh && $(PYTHON) -m mpc_balancer; \
-	else \
-		echo "Running the MPC balancer in the current Python environment..."; \
-		$(PYTHON) -m mpc_balancer; \
-	fi
-
 run_mock_spine:  ### run the pi3hat spine in mock mode on the Raspberry Pi
 	$(RASPUNZEL) run -s //spines:pi3hat_spine -- --mock
 
-# NB: run_pi3hat_spine is used in build instructions
+# NB: `make run_pi3hat_spine` appears in build instructions
 run_pi3hat_spine:  ### run the pi3hat spine on the Raspberry Pi
 	$(RASPUNZEL) run -s //spines:pi3hat_spine
 
