@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: Apache-2.0
-#
+
 ## \namespace upkie.envs.upkie_gyropod
 ## \brief Environment where Upkie behaves like a wheeled inverted pendulum
 ## with yaw control.

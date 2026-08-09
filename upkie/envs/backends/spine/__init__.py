@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: Apache-2.0
-#
+
 ## \namespace upkie.envs.backends.spine
 ## \brief Python interface to interact with a spine.
 

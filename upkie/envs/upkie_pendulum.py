@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: Apache-2.0
-#
+
 ## \namespace upkie.envs.upkie_pendulum
 ## \brief Backward-compatible pendulum wrapper (no yaw control).
 

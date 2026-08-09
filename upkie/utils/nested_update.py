@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: Apache-2.0
-#
+
 ## \namespace upkie.utils.nested_update
 ## \brief Functions to work with nested dictionaries.
 

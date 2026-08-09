@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: Apache-2.0
-#
+
 ## \namespace upkie.envs.upkie_base_velocity
 ## \brief Environment where Upkie is balanced and controlled via base velocity.
 

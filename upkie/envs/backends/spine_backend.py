@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: Apache-2.0
-#
+
 ## \namespace upkie.envs.backends.spine_backend
 ## \brief Backend connected to a simulation or real spine.
 

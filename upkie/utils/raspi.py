@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: Apache-2.0
-#
+
 ## \namespace upkie.utils.raspi
 ## \brief Functions to work on the onboard Raspberry Pi.
 
