@@ -17,6 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Remove pixi-pack rules from the Makefile and pixi configuration
 - examples: Remove domain-randomization wrapper example
 
+### Fixed
+
+- controllers: Define MPC balancer references at construction
+
 ## [12.0.0] - 2026-07-12
 
 ### Added

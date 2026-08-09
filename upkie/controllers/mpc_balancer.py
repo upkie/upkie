@@ -206,7 +206,13 @@ class MPCBalancer:
             stage_state_cost_weight=stage_state_cost_weight,
             stage_input_cost_weight=stage_input_cost_weight,
         )
-        mpc_problem.initial_state = np.zeros(4)
+        mpc_problem.initial_state = np.zeros(pendulum.STATE_DIM)
+        # Goal state and reference trajectory will be updated at every step,
+        # but qpmpc requires them to be already defined to build the QP.
+        mpc_problem.update_goal_state(np.zeros(pendulum.STATE_DIM))
+        mpc_problem.update_target_states(
+            np.zeros(nb_timesteps * pendulum.STATE_DIM)
+        )
         mpc_qp = MPCQP(mpc_problem)
         proxqp = ProxQPWorkspace(mpc_qp)
         self.commanded_velocity = 0.0
