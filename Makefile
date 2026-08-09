@@ -5,6 +5,9 @@
 # Project name needs to match the one in WORKSPACE
 PROJECT_NAME = upkie
 
+# Configure a Host with this name in your ~/.ssh/config
+UPKIE_HOST = upkie
+
 BAZEL = $(CURDIR)/tools/bazelisk
 COVERAGE_DIR = $(CURDIR)/bazel-out/_coverage
 CURDATE = $(shell date -Iseconds)
@@ -29,18 +32,6 @@ help:
 build: clean_broken_links  ## build Raspberry Pi targets
 	$(BAZEL) build --config=pi64 //spines:pi3hat_spine
 
-.PHONY: check_upkie_name
-check_upkie_name:
-	@if [ -z "${UPKIE_NAME}" ]; then \
-		echo "ERROR: Environment variable UPKIE_NAME is not set.\n"; \
-		echo "This variable should contain the robot's hostname or IP address for SSH. "; \
-		echo "You can define it inline for a one-time use:\n"; \
-		echo "    make some_target UPKIE_NAME=your_robot_hostname\n"; \
-		echo "Or add the following line to your shell configuration:\n"; \
-		echo "    export UPKIE_NAME=your_robot_hostname\n"; \
-		exit 1; \
-	fi
-
 .PHONY: clean
 clean: clean_broken_links  ## clean all local build and intermediate files
 	$(BAZEL) clean --expunge
@@ -62,9 +53,9 @@ run_bullet_spine_cookie:  ## run the Bullet spine with a Cookie biped
 # Running `raspunzel -s` can create __pycache__ directories owned by root
 # that rsync is not allowed to remove. We therefore give permissions first.
 .PHONY: upload
-upload: check_upkie_name build  ## upload built targets to the Raspberry Pi
-	ssh ${UPKIE_NAME} mkdir -p $(PROJECT_NAME)
-	ssh ${UPKIE_NAME} sudo find $(PROJECT_NAME) -type d -name __pycache__ -user root -exec chmod go+wx {} "\;"
+upload: build  ## upload built targets to the Raspberry Pi
+	ssh $(UPKIE_HOST) mkdir -p $(PROJECT_NAME)
+	ssh $(UPKIE_HOST) sudo find $(PROJECT_NAME) -type d -name __pycache__ -user root -exec chmod go+wx {} "\;"
 	rsync -Lrtu --delete-after \
 		--exclude .git* \
 		--exclude .pixi \
@@ -80,7 +71,7 @@ upload: check_upkie_name build  ## upload built targets to the Raspberry Pi
 		--exclude spines/cache/ \
 		--exclude tools/bazel \
 		--exclude tools/raspios/ \
-		--progress $(CURDIR)/ ${UPKIE_NAME}:$(PROJECT_NAME)/
+		--progress $(CURDIR)/ $(UPKIE_HOST):$(PROJECT_NAME)/
 
 # REMOTE TARGETS
 # ==============

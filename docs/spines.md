@@ -23,8 +23,8 @@ The pi3hat spine is the one that runs on the real robot, where a [pi3hat r4.5](h
 To download the latest release, assuming your robot is connected to the Internet, you use the `upkie_tool` command-line utility:
 
 ```console
-$ ssh user@upkie
-user@upkie:~$ upkie_tool update
+$ ssh pi@upkie
+pi@upkie:~$ upkie_tool update
 ```
 
 Alternatively, you can manually go to the [Release page](https://github.com/upkie/upkie/releases), download `pi3hat_spine` from the assets of the latest release and `scp` it to `/usr/local/bin` on your robot.
@@ -32,13 +32,13 @@ Alternatively, you can manually go to the [Release page](https://github.com/upki
 Once the spine is installed, start it from the command line:
 
 ```console
-user@upkie:~$ pi3hat_spine
+pi@upkie:~$ pi3hat_spine
 ```
 
 You can then run any agent in a separate shell on the robot, for example the PID balancer from the examples directory:
 
 ```console
-user@upkie:upkie$ python -m mpc_balancer
+pi@upkie:upkie$ python -m mpc_balancer
 ```
 
 ### Read-only mode {#readonly-mode}
@@ -46,7 +46,7 @@ user@upkie:upkie$ python -m mpc_balancer
 The pi3hat spine can run in read-only mode, which communicates with the actuators to read their state but won't send position commands. This is useful to run agents over real robot states:
 
 ```console
-user@upkie:~$ pi3hat_spine --readonly
+pi@upkie:~$ pi3hat_spine --readonly
 ```
 
 ### Mock mode {#mock-mode}
@@ -54,5 +54,5 @@ user@upkie:~$ pi3hat_spine --readonly
 The pi3hat spine can run in mock mode, which is useful to run an agent on the robot without communicating with the actuators:
 
 ```console
-user@upkie:~$ pi3hat_spine --mock
+pi@upkie:~$ pi3hat_spine --mock
 ```

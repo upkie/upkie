@@ -37,32 +37,30 @@ The C++ development workflow consists of Makefile rules. First, setup a build en
 - [Fedora](https://github.com/orgs/upkie/discussions/100)
 - [Ubuntu](https://github.com/orgs/upkie/discussions/101)
 
-To upload software to the robot, you will also need to define the `UPKIE_NAME` environment variable. Assuming the hostname of your Upkie is "michel-strogoff", for example, you can add the following to your shell configuration file:
-
-```
-export UPKIE_NAME="michel-strogoff"
-```
-
-An IP address will also work.
-
 To make sure your build environment works, try to rebuild the [pi3hat spine](\ref pi3hat-spine) from source:
 
 ```
 make build
 ```
 
-You can then upload it by `make upload` and check that it runs on the Raspberry Pi of your Upkie:
+To upload your build to your Upkie, you should configure your SSH (hostname, IP address, remote user) in `~/.config/ssh` so that `ssh upkie` works as is. Once that is the case, you can run:
+
+```
+make upload
+```
+
+Check that it runs on the Raspberry Pi of your Upkie as follows (here we assume you kept the default `pi` user):
 
 ```console
-$ ssh user@upkie
-user@upkie:~$ cd upkie
-user@upkie:upkie$ make run_pi3hat_spine
+$ ssh upkie
+pi@upkie:~$ cd upkie
+pi@upkie:upkie$ make run_pi3hat_spine
 ```
 
 Once the spine is running, you can run any agent in a separate shell on the robot, for example the PID balancer from the examples directory:
 
 ```console
-user@upkie:upkie$ python -m mpc_balancer
+pi@upkie:upkie$ python -m mpc_balancer
 ```
 
 ### Python development {#python-dev-workflow}
