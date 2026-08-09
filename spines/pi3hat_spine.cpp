@@ -97,7 +97,11 @@ class CommandLineArguments {
     if (log_dir.length() < 1) {
       const char* env_log_dir = std::getenv("UPKIE_LOG_PATH");
       if (env_log_dir == nullptr) {
-        spdlog::warn("UPKIE_LOG_PATH environment variable not set: the spine will default to logging in /tmp, however for better performance it is recommended to log to RAM at /dev/shm. You can disable this warning by setting UPKIE_LOG_PATH.");
+        spdlog::warn(
+            "UPKIE_LOG_PATH environment variable not set: the spine will "
+            "default to logging in /tmp, however for better performance it is "
+            "recommended to log to RAM at /dev/shm. You can disable this "
+            "warning by setting UPKIE_LOG_PATH.");
       }
       log_dir = (env_log_dir != nullptr) ? env_log_dir : "/tmp";
     }
@@ -152,7 +156,7 @@ class CommandLineArguments {
   //! Mock mode flag (no actuator communication).
   bool mock = false;
 
-  //! Readonly mode flag (observe state, don't command actuators).
+  //! Read-only mode flag (observe state, don't command actuators).
   bool readonly = false;
 
   //! Log directory

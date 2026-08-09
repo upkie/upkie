@@ -100,3 +100,6 @@ run_mock_spine:  ### run the pi3hat spine in mock mode on the Raspberry Pi
 # NB: run_pi3hat_spine is used in build instructions
 run_pi3hat_spine:  ### run the pi3hat spine on the Raspberry Pi
 	$(RASPUNZEL) run -s //spines:pi3hat_spine
+
+run_readonly_spine:  ### run the pi3hat spine in read-only mode on the Raspberry Pi
+	$(RASPUNZEL) run -s //spines:pi3hat_spine -- --readonly

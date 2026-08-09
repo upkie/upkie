@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - CICD: Support Python 3.13
+- Makefile rule for read-only mode of the pi3hat spine
 
 ### Changed
 
