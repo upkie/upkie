@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: Apache-2.0
-#
+
 ## \namespace upkie.utils.robot_state
 ## \brief Robot state with optional randomization.
 

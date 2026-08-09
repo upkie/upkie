@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: Apache-2.0
-#
+
 ## \namespace upkie.envs.upkie_env
 ## \brief Base class with features shared by all Upkie environments.
 

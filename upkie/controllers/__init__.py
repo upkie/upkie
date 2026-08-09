@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: Apache-2.0
-#
+
 ## \namespace upkie.controllers
 ## \brief Functions and classes related to balance control.
 

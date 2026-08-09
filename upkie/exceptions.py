@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: Apache-2.0
-#
+
 ## \namespace upkie.exceptions
 ## \brief Exceptions raised by the Python library.
 

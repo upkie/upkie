@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: Apache-2.0
-#
+
 ## \namespace upkie.envs.upkie_servos
 ## \brief Upkie environment where actions command servomotors directly.
 
