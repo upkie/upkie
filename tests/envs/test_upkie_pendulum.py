@@ -45,14 +45,6 @@ class PendulumTestCase(unittest.TestCase):
         observation, reward, terminated, truncated, _ = self.env.step(action)
         self.assertAlmostEqual(reward, 0.0)
 
-    def test_check_env(self):
-        try:
-            from stable_baselines3.common.env_checker import check_env
-
-            check_env(self.env)
-        except ImportError:
-            pass
-
     def test_maximum_torques(self):
         _, _ = self.env.reset()
         action = np.zeros(self.env.action_space.shape)

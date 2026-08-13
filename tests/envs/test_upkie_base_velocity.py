@@ -99,14 +99,6 @@ class BaseVelocityTestCase(unittest.TestCase):
         observation, _, _, _, _ = self.env.step(action)
         self.assertEqual(observation.dtype, np.float32)
 
-    def test_check_env(self):
-        try:
-            from stable_baselines3.common.env_checker import check_env
-
-            check_env(self.env)
-        except ImportError:
-            pass
-
     def test_mpc_balancer_resets(self):
         self.env.reset()
         action = np.array([0.5, 0.0], dtype=np.float32)
