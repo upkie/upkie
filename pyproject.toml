@@ -24,6 +24,7 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Scientific/Engineering",
 ]
 dependencies = [
@@ -146,7 +147,6 @@ features = ["docs", "default"]
 doxygen = ">=1.8,<1.9"
 graphviz = ">=14.1.2,<15"
 make = ">=4.4.1,<5"
-"stable-baselines3" = ">=2.7.1,<3"
 
 [tool.pixi.feature.docs.tasks]
 docs = "doxygen --version && cd docs && make"
@@ -230,7 +230,6 @@ proxsuite = ">=0.7.2,<0.8"
 pybullet = ">=3.25,<4"
 pytest = ">=9.0.2,<10"
 qpmpc = ">=3.1.0,<4"
-"stable-baselines3" = ">=2.7.1,<3"
 
 [tool.pixi.feature.test.pypi-dependencies]
 cookie_description = ">=1.1.0,<2"
@@ -254,7 +253,6 @@ proxsuite = ">=0.7.2,<0.8"
 pybullet = ">=3.25,<4"
 pytest = ">=9.0.2,<10"
 qpmpc = ">=3.1.0,<4"
-"stable-baselines3" = ">=2.7.1,<3"
 
 [tool.pixi.feature.test-python-version.pypi-dependencies]
 cookie_description = ">=1.1.0,<2"
@@ -305,6 +303,17 @@ solve-group = "py313"
 
 [tool.pixi.feature.py313.dependencies]
 python = "3.13.*"
+
+# -----------------------
+# Environment: test-py314
+# -----------------------
+
+[tool.pixi.environments.test-py314]
+features = ["test-python-version", "py314", "default"]
+solve-group = "py314"
+
+[tool.pixi.feature.py314.dependencies]
+python = "3.14.*"
 
 [tool.ruff]
 line-length = 79

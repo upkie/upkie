@@ -85,14 +85,6 @@ class GyropodTestCase(unittest.TestCase):
         # And they should be non-zero
         self.assertNotAlmostEqual(left_vel, 0.0)
 
-    def test_check_env(self):
-        try:
-            from stable_baselines3.common.env_checker import check_env
-
-            check_env(self.env)
-        except ImportError:
-            pass
-
     def test_maximum_torques(self):
         self.env.reset()
         action = np.zeros(self.env.action_space.shape)

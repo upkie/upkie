@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - CICD: Support Python 3.13
+- CICD: Support Python 3.14
 - Makefile rule for read-only mode of the pi3hat spine
 
 ### Changed
@@ -21,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Breaking:** envs: Remove the `upkie.envs.wrappers` submodule
 - Remove pixi-pack rules from the Makefile and pixi configuration
+- deps: Remove Stable-Baselines3 and move its tests to [rl_zoo3_balancer](https://codeberg.org/upkie/rl_zoo3_balancer)
 - examples: Remove domain-randomization wrapper example
 
 ### Fixed
