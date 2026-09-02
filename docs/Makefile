@@ -6,12 +6,16 @@
 DOXYGEN = doxygen
 OUTPUTDIR = html
 
+# Figures generated from docs/figures/, as opposed to images committed to
+# docs/images/ (photographs from the build instructions, screenshots, ...)
+GENERATED_FIGURES = images/action-observation-loop images/floor-contact images/observers images/state-machine images/wheel-odometry
+
 .PHONY: html
 html: figures  ## build the documentation
 	(cd .. && $(DOXYGEN) $(CURDIR)/Doxyfile)
 
 .PHONY: figures
-figures: images/action-observation-loop.eps images/action-observation-loop.png images/floor-contact.eps images/floor-contact.png images/observers.eps images/observers.png images/state-machine.eps images/state-machine.png images/wheel-odometry.eps images/wheel-odometry.png
+figures: $(addsuffix .eps,$(GENERATED_FIGURES)) $(addsuffix .png,$(GENERATED_FIGURES))
 
 images/%.eps : figures/%.dot
 	dot $< -Teps -o $@
@@ -37,7 +41,7 @@ help:
 .PHONY: clean
 clean:  ## remove all generated files
 	rm -rf $(OUTPUTDIR)
-	rm -f $(wildcard images/*.eps) $(wildcard images/*.png)
+	rm -f $(addsuffix .eps,$(GENERATED_FIGURES)) $(addsuffix .png,$(GENERATED_FIGURES))
 
 .PHONY: open
 open:  ## open the locally built documentation in the default Web browser
