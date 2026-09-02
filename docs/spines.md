@@ -20,14 +20,15 @@ The script will run pre-compiled binaries, downloading them from the latest rele
 
 The pi3hat spine is the one that runs on the real robot, where a [pi3hat r4.5](https://mjbots.com/products/mjbots-pi3hat-r4-5) is mounted on top of the onboard Raspberry Pi computer. To run this spine, you can either download it from GitHub, or [build it locally from source](\ref cpp-dev-workflow).
 
-To download the latest release, assuming your robot is connected to the Internet, you use the `upkie_tool` command-line utility:
+To install the latest release, go to the [Release page](https://github.com/upkie/upkie/releases), download `pi3hat_spine` from the assets of the latest release, `scp` it to your robot and install it to `/usr/local/bin`:
 
 ```console
+$ scp pi3hat_spine pi@upkie:
 $ ssh pi@upkie
-pi@upkie:~$ upkie_tool update
+pi@upkie:~$ sudo install --owner=root --group=root --mode=4755 pi3hat_spine /usr/local/bin/pi3hat_spine
 ```
 
-Alternatively, you can manually go to the [Release page](https://github.com/upkie/upkie/releases), download `pi3hat_spine` from the assets of the latest release and `scp` it to `/usr/local/bin` on your robot.
+The spine needs root privileges to run in the real-time scheduler and talk to the pi3hat, hence the setuid bit (`4` in `4755`) that allows regular users to run it. If you [build the spine from source](\ref cpp-dev-workflow), running `make install_pi3hat_spine` from the repository installs it the same way.
 
 Once the spine is installed, start it from the command line:
 

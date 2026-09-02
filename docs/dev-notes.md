@@ -57,11 +57,19 @@ pi@upkie:~$ cd upkie
 pi@upkie:upkie$ make run_pi3hat_spine
 ```
 
-Once the spine is running, you can run any agent in a separate shell on the robot, for example the PID balancer from the examples directory:
+Once the spine is running, you can run any agent in a separate shell on the robot, for example the default joystick controller:
 
 ```console
-pi@upkie:upkie$ python -m mpc_balancer
+pi@upkie:upkie$ pixi run real-follow-joystick
 ```
+
+If the spine works well, you can install it so that `pi3hat_spine` starts the spine from any directory on the robot:
+
+```console
+pi@upkie:upkie$ make install_pi3hat_spine
+```
+
+This rule installs the uploaded spine `/usr/local/bin`, backing up any previously-installed one.
 
 ### Python development {#python-dev-workflow}
 
