@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - controllers: Define MPC balancer references at construction
 - envs: User configuration overrides model-derived defaults for base orientation and wheel odometry
+- raspios: Set the setuid bit on the pi3hat spine installed in the OS image
 
 ## [12.0.0] - 2026-07-12
 

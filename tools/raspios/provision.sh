@@ -27,8 +27,8 @@ apt-get update && apt-get install -y python3-numpy python3-pip tmux vim
 pip install moteus-pi3hat upkie
 
 # Set binary permissions
+chmod 4755 /usr/local/bin/pi3hat_spine
 chmod 755 /usr/local/bin/hard_rezero
-chmod 755 /usr/local/bin/pi3hat_spine
 chmod 755 /usr/local/bin/stop_servos
 chmod 755 /usr/local/bin/upkie_tool
 chmod 755 /usr/local/bin/vcgenall
