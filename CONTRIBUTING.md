@@ -2,7 +2,7 @@
 
 There are many ways you can contribute to the project. Here are some ideas:
 
-- Build your own Upkie following the [build instructions](https://github.com/upkie/upkie/wiki)
+- Build your own Upkie following the [build instructions](https://upkie.github.io/upkie/build-your-own.html)
 - Develop a custom wrapper and train a new behavior by reinforcement learning
 - Show your robot in [Show and tell](https://github.com/upkie/upkie/discussions/categories/show-and-tell)
 

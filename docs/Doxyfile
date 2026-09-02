@@ -832,6 +832,15 @@ WARN_LOGFILE           =
 # Note: If this tag is empty the current directory is searched.
 
 INPUT                  = README.md \
+                         docs/assembly/build-your-own.md \
+                         docs/assembly/getting-started.md \
+                         docs/assembly/3d-printing.md \
+                         docs/assembly/raspberry-pi-setup.md \
+                         docs/assembly/electronics-testing.md \
+                         docs/assembly/motion-control-software.md \
+                         docs/assembly/assembly.md \
+                         docs/assembly/bill-of-materials.md \
+                         docs/assembly/cables.md \
                          docs/gym-environments.md \
                          docs/sensors.md \
                          docs/observations.md \

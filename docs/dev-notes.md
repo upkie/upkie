@@ -4,7 +4,7 @@
 
 ## Custom hardware {#custom-hardware}
 
-Upkie's motion control software can apply to other wheeled-biped robots with different hardware, as long as they use the same mjbots actuators and electronics. When making a custom robot, the step by step instructions from the Wiki should work, replacing of course Step 2 on 3D printing with your own parts. The Raspberry Pi setup and electronics testing will be the unchanged. This section details the requirements to be able to pass the [motion control software step](https://github.com/upkie/upkie/wiki/5%29-Motion-control-software). See also [#517](https://github.com/orgs/upkie/discussions/517).
+Upkie's motion control software can apply to other wheeled-biped robots with different hardware, as long as they use the same mjbots actuators and electronics. When making a custom robot, the step by step \ref build-your-own instructions should work, replacing of course Step 2 on 3D printing with your own parts. The Raspberry Pi setup and electronics testing will be the unchanged. This section details the requirements to be able to pass the \ref motion-control-software step. See also [#517](https://github.com/orgs/upkie/discussions/517).
 
 ### URDF requirements
 

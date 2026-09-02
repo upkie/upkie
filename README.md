@@ -14,7 +14,7 @@ This repository contains all the materials needed to build and control an Upkie.
 
 ## Building your own
 
-Upkies come with [step by step build instructions](https://github.com/upkie/upkie/wiki).
+Upkies come with [step by step build instructions](https://upkie.github.io/upkie/build-your-own.html).
 
 ## Getting started
 
