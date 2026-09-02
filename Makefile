@@ -9,9 +9,11 @@ PROJECT_NAME = upkie
 UPKIE_HOST = upkie
 
 BAZEL = $(CURDIR)/tools/bazelisk
+BUILT_SPINE = $(CURDIR)/bazel-bin/spines/pi3hat_spine
 COVERAGE_DIR = $(CURDIR)/bazel-out/_coverage
 CURDATE = $(shell date -Iseconds)
 CURDIR_NAME = $(shell basename $(CURDIR))
+INSTALLED_SPINE = /usr/local/bin/pi3hat_spine
 PYTHON = python3
 RASPUNZEL = $(CURDIR)/tools/raspunzel
 
@@ -29,7 +31,7 @@ help:
 # ============
 
 .PHONY: build
-build: clean_broken_links  ## build Raspberry Pi targets
+build: clean_broken_links  ## build the pi3hat spine for the robot
 	$(BAZEL) build --config=pi64 //spines:pi3hat_spine
 
 .PHONY: clean
@@ -75,6 +77,20 @@ upload: build  ## upload built targets to the Raspberry Pi
 
 # REMOTE TARGETS
 # ==============
+
+install_pi3hat_spine:  ### install the uploaded pi3hat spine
+	@test -f $(BUILT_SPINE) || { \
+		echo "Spine not found at $(BUILT_SPINE)"; \
+		echo "Did \`make build\` and \`make upload\` run successfully?"; \
+		exit 1; \
+	}
+	@if [ -f $(INSTALLED_SPINE) ]; then \
+		echo "Backing up previous spine to $(INSTALLED_SPINE).bak"; \
+		sudo mv $(INSTALLED_SPINE) $(INSTALLED_SPINE).bak; \
+	fi
+	sudo install --owner=root --group=root --mode=4755 \
+		$(BUILT_SPINE) $(INSTALLED_SPINE)
+	@$(INSTALLED_SPINE) --version
 
 run_mock_spine:  ### run the pi3hat spine in mock mode on the Raspberry Pi
 	$(RASPUNZEL) run -s //spines:pi3hat_spine -- --mock

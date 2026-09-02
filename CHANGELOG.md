@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CICD: Support Python 3.13
 - CICD: Support Python 3.14
 - Makefile rule for read-only mode of the pi3hat spine
+- Makefile rule to install the pi3hat spine to `/usr/local/bin` on the robot
 
 ### Changed
 
