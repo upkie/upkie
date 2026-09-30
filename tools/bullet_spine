@@ -68,12 +68,12 @@ if [[ -n "$SPINE_ARCHIVE" ]] && [[ -z "${REBUILD}" ]]; then
         CURL_TAR_RC=$?
     fi
 
-    # Archives prior to v12.0.0 used to put descriptions in external/ rather
-    # than in the runfiles tree where the spine looks for them
-    for description in cache/external/*_description; do
+    # Archives up to v12.0.0 only have descriptions under the legacy runfiles
+    # path upkie/external/, rather than at the root where the spine looks
+    for description in cache/bullet_spine.runfiles/upkie/external/*_description; do
         runfiles_path="cache/bullet_spine.runfiles/$(basename "${description}")"
         if [ -d "${description}" ] && [ ! -e "${runfiles_path}" ]; then
-            ln -s "../external/$(basename "${description}")" "${runfiles_path}"
+            ln -s "upkie/external/$(basename "${description}")" "${runfiles_path}"
         fi
     done
 
