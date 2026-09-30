@@ -68,6 +68,15 @@ if [[ -n "$SPINE_ARCHIVE" ]] && [[ -z "${REBUILD}" ]]; then
         CURL_TAR_RC=$?
     fi
 
+    # Archives prior to v12.0.0 used to put descriptions in external/ rather
+    # than in the runfiles tree where the spine looks for them
+    for description in cache/external/*_description; do
+        runfiles_path="cache/bullet_spine.runfiles/$(basename "${description}")"
+        if [ -d "${description}" ] && [ ! -e "${runfiles_path}" ]; then
+            ln -s "../external/$(basename "${description}")" "${runfiles_path}"
+        fi
+    done
+
     if [[ $CURL_TAR_RC -eq 0 ]]; then
         echo "✅ Simulation spine downloaded to cache, let's roll!"
         cd cache || exit
@@ -85,6 +94,7 @@ if [[ -n "$SPINE_ARCHIVE" ]] && [[ -z "${REBUILD}" ]]; then
             fi
         elif [ $SPINE_RC -ne 0 ] && [ $SPINE_RC -ne 1 ]; then
             echo "⚠️ Simulation spine exited with code $SPINE_RC"
+            echo "${OUTPUT}" | tail -n 20
             echo "If this was unexpected, you can also try \`$0 --build\`"
         fi
     else
