@@ -3,6 +3,7 @@
 __pycache__
 activate.sh
 bazel-*
+cache/
 dist/
 docs/html/
 env/
