@@ -4,6 +4,7 @@
 
 import tempfile
 import unittest
+from multiprocessing import resource_tracker
 from multiprocessing.shared_memory import SharedMemory
 from pathlib import Path
 from unittest.mock import patch
@@ -23,6 +24,18 @@ from upkie.envs.upkie_servos import UpkieServos
 from upkie.exceptions import UpkieTimeoutError
 
 
+def _unlink_shared_memory(shared_memory: SharedMemory) -> None:
+    """Close and unlink shared memory that was connected to by a backend.
+
+    The spine interface unregisters shared memory from the resource tracker,
+    as the spine is normally the one that unlinks it. We register it back so
+    that unlinking it here does not make the resource tracker complain.
+    """
+    shared_memory.close()
+    resource_tracker.register(shared_memory._name, "shared_memory")
+    shared_memory.unlink()
+
+
 class SpineBackendTestCase(unittest.TestCase):
     def setUp(self):
         shared_memory = SharedMemory(name=None, size=42, create=True)
@@ -31,7 +44,7 @@ class SpineBackendTestCase(unittest.TestCase):
             backend=self.backend,
             frequency=100.0,
         )
-        shared_memory.close()
+        _unlink_shared_memory(shared_memory)
         self.backend._spine = MockSpine()
 
     def test_reset(self):
@@ -121,7 +134,7 @@ class SpineBackendTestCase(unittest.TestCase):
             del env  # we delete it explicitly
         except UpkieTimeoutError:  # to catch this exception
             pass  # which is ok: there is no spine, thus no response
-        shm.close()
+        _unlink_shared_memory(shm)
 
     def test_default_spine_config_structure(self):
         """Test that default spine config has expected structure."""
@@ -280,6 +293,22 @@ class SpineBackendTestCase(unittest.TestCase):
             }
             self.assertEqual(result, expected)
 
+    def _make_backend_with_user_config(self, user_config: str):
+        """Build a spine backend with the given user config.yml contents."""
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_path = Path(temp_dir) / "config.yml"
+            config_path.write_text(user_config)
+            with patch(
+                "upkie.envs.backends.spine_backend._get_user_config_path",
+                return_value=config_path,
+            ):
+                shared_memory = SharedMemory(name=None, size=42, create=True)
+                try:
+                    backend = SpineBackend(shm_name=shared_memory._name)
+                finally:
+                    _unlink_shared_memory(shared_memory)
+        return backend
+
     def test_user_config_overrides_model_base_orientation(self):
         """User config.yml overrides for base_orientation must win over the
         model-derived default.
@@ -288,25 +317,12 @@ class SpineBackendTestCase(unittest.TestCase):
         after the user config merge, silently discarding any IMU-mounting
         calibration set in config.yml.
         """
-        with tempfile.NamedTemporaryFile(
-            mode="w", suffix=".yml", delete=False
-        ) as f:
-            f.write(
-                "spine:\n"
-                "  base_orientation:\n"
-                "    rotation_base_to_imu: "
-                "[-1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0]\n"
-            )
-            f.flush()
-            config_path = Path(f.name)
-
-        with patch(
-            "upkie.envs.backends.spine_backend._get_user_config_path",
-            return_value=config_path,
-        ):
-            shared_memory = SharedMemory(name=None, size=42, create=True)
-            backend = SpineBackend(shm_name=shared_memory._name)
-            shared_memory.close()
+        backend = self._make_backend_with_user_config(
+            "spine:\n"
+            "  base_orientation:\n"
+            "    rotation_base_to_imu: "
+            "[-1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0]\n"
+        )
 
         rotation = backend._spine_config["base_orientation"][
             "rotation_base_to_imu"
@@ -320,25 +336,12 @@ class SpineBackendTestCase(unittest.TestCase):
         """User config.yml overrides for wheel_odometry must win over the
         model-derived default (same clobbering bug as base_orientation).
         """
-        with tempfile.NamedTemporaryFile(
-            mode="w", suffix=".yml", delete=False
-        ) as f:
-            f.write(
-                "spine:\n"
-                "  wheel_odometry:\n"
-                "    signed_radius:\n"
-                "      left_wheel: 0.123\n"
-            )
-            f.flush()
-            config_path = Path(f.name)
-
-        with patch(
-            "upkie.envs.backends.spine_backend._get_user_config_path",
-            return_value=config_path,
-        ):
-            shared_memory = SharedMemory(name=None, size=42, create=True)
-            backend = SpineBackend(shm_name=shared_memory._name)
-            shared_memory.close()
+        backend = self._make_backend_with_user_config(
+            "spine:\n"
+            "  wheel_odometry:\n"
+            "    signed_radius:\n"
+            "      left_wheel: 0.123\n"
+        )
 
         signed_radius = backend._spine_config["wheel_odometry"][
             "signed_radius"
