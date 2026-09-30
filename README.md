@@ -42,7 +42,7 @@ Click on the robot in the simulator window to apply external forces and see how 
 
 ## Creating your own behaviors
 
-Software for Upkies comes is packaged in an `upkie` Python library that you can install from `conda` or `pip`:
+Software for Upkies comes as an `upkie` Python library that you can install *e.g.* from PyPI:
 
 ```console
 pip install upkie
