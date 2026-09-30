@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Breaking:** envs: Set rewards of all environments to zero, left to be decided by agents
 - Makefile: Remove `UPKIE_NAME` env variable, we now expect an `upkie` host in the SSH config
+- tools: Moved script to start a Bullet spine to the tools directory
 
 ### Removed
 
