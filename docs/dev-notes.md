@@ -28,7 +28,7 @@ See also [#527](https://github.com/upkie/upkie/issues/527).
 
 ## Development workflow {#dev-workflow}
 
-While newcomers will likely run `start_simulation.sh` and import the `upkie` package in Python, as you get acquainted with the robot and develop your own agents (in your fork of the repository or using the [new\_agent](https://github.com/upkie/new_agent) template), you may want to contribute some features back upstream. Here is a short guide on compiling from source to do that.
+While newcomers will likely run `tools/bullet_spine` and import the `upkie` package in Python, as you get acquainted with the robot and develop your own agents (in your fork of the repository or using the [new\_agent](https://github.com/upkie/new_agent) template), you may want to contribute some features back upstream. Here is a short guide on compiling from source to do that.
 
 ### C++ development {#cpp-dev-workflow}
 

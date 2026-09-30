@@ -11,7 +11,7 @@ The easiest way to start a simulation spine is to run the simulation script from
 <img src="bullet-spine.png" height="100" align="right" />
 
 ```console
-./start_simulation.sh
+tools/bullet_spine
 ```
 
 The script will run pre-compiled binaries, downloading them from the latest release if necessary.
