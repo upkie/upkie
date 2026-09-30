@@ -4,14 +4,15 @@
 
 SCRIPT=$(realpath "$0")
 SCRIPT_DIR=$(dirname "${SCRIPT}")
-PARENT_DIR=$(dirname "${SCRIPT_DIR}")
-DOXYFILE=${PARENT_DIR}/docs/Doxyfile
+PROJECT_DIR=$(dirname "${SCRIPT_DIR}")
+CACHE_DIR=${PROJECT_DIR}/cache
+DOXYFILE=${PROJECT_DIR}/docs/Doxyfile
 
 DOWNLOAD_URL="https://github.com/upkie/upkie/releases/download"
 
 if [ ! -f "${DOXYFILE}" ]; then
     echo "❌ Unable to find file 'docs/Doxyfile' for version number"
-    exit
+    exit 1
 fi
 # no v at start of version number here
 VERSION=$(awk '/^PROJECT_NUMBER/{print $3}' "${DOXYFILE}")
@@ -46,32 +47,32 @@ else
 fi
 
 if [[ -n "$SPINE_ARCHIVE" ]] && [[ -z "${REBUILD}" ]]; then
-    if [ -f cache/bullet_spine ]; then
-        OUTPUT=$(./cache/bullet_spine --version 2>/dev/null)
+    if [ -f "${CACHE_DIR}/bullet_spine" ]; then
+        OUTPUT=$("${CACHE_DIR}/bullet_spine" --version 2>/dev/null)
         CACHE_RC=$?
         if [ "${CACHE_RC}" -eq 0 ]; then
             CACHE_VERSION=$(echo "${OUTPUT}" | awk '/bullet spine/{print $4}')
             if [ "${CACHE_VERSION}" != "${VERSION}" ]; then
                 echo "⚠️ Cached version of the simulation spine (${CACHE_VERSION}) is not ${VERSION}"
-                rm -f cache/bullet_spine
+                rm -f "${CACHE_DIR}/bullet_spine"
             fi
         fi
     fi
 
     CURL_TAR_RC=0
-    if [ ! -f cache/bullet_spine ]; then
+    if [ ! -f "${CACHE_DIR}/bullet_spine" ]; then
         echo "📥 Downloading the simulation spine from $SPINE_ARCHIVE..."
-        mkdir -p cache
+        mkdir -p "${CACHE_DIR}"
 
         # check that the full operation works - use pipefail as it works for bash/zsh
-        (set -o pipefail; curl -s -L "$SPINE_ARCHIVE" | tar -C ./cache/ -zxf -)
+        (set -o pipefail; curl -s -L "$SPINE_ARCHIVE" | tar -C "${CACHE_DIR}" -zxf -)
         CURL_TAR_RC=$?
     fi
 
     # Archives up to v12.0.0 only have descriptions under the legacy runfiles
     # path upkie/external/, rather than at the root where the spine looks
-    for description in cache/bullet_spine.runfiles/upkie/external/*_description; do
-        runfiles_path="cache/bullet_spine.runfiles/$(basename "${description}")"
+    for description in "${CACHE_DIR}"/bullet_spine.runfiles/upkie/external/*_description; do
+        runfiles_path="${CACHE_DIR}/bullet_spine.runfiles/$(basename "${description}")"
         if [ -d "${description}" ] && [ ! -e "${runfiles_path}" ]; then
             ln -s "upkie/external/$(basename "${description}")" "${runfiles_path}"
         fi
@@ -79,7 +80,7 @@ if [[ -n "$SPINE_ARCHIVE" ]] && [[ -z "${REBUILD}" ]]; then
 
     if [[ $CURL_TAR_RC -eq 0 ]]; then
         echo "✅ Simulation spine downloaded to cache, let's roll!"
-        cd cache || exit
+        cd "${CACHE_DIR}" || exit 1
         OUTPUT=$(./bullet_spine "${SPINE_ARGS[@]}" 2>&1)
         SPINE_RC=$?
         # Return code 0 is from Ctrl-C (normal exit)

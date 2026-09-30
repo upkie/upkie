@@ -70,7 +70,7 @@ upload: build  ## upload built targets to the Raspberry Pi
 		--exclude bazel-testlogs/ \
 		--exclude docs/ \
 		--exclude logs/ \
-		--exclude spines/cache/ \
+		--exclude /cache/ \
 		--exclude tools/bazel \
 		--exclude tools/raspios/ \
 		--progress $(CURDIR)/ $(UPKIE_HOST):$(PROJECT_NAME)/
