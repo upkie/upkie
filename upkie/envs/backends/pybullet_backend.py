@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: Apache-2.0
-#
+
 ## \namespace upkie.envs.backends.pybullet_backend
 ## \brief Backend using PyBullet physics simulation.
 
