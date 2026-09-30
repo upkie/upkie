@@ -48,11 +48,9 @@ jobs:
 
           - name: "Prepare artifacts directory"
             run: |
-                mkdir -p linux_amd64_bullet_spine/external
-                mkdir -p linux_amd64_bullet_spine/bullet_spine.runfiles
+                mkdir -p linux_amd64_bullet_spine
                 cp ./bazel-bin/spines/bullet_spine ./linux_amd64_bullet_spine/
-                cp -Lr ./bazel-bin/spines/bullet_spine.runfiles/upkie ./linux_amd64_bullet_spine/bullet_spine.runfiles/
-                cp -Lr ./bazel-bin/spines/bullet_spine.runfiles/upkie_description ./linux_amd64_bullet_spine/external/
+                cp -Lr ./bazel-bin/spines/bullet_spine.runfiles ./linux_amd64_bullet_spine/
                 tar -C linux_amd64_bullet_spine -zcvf linux_amd64_bullet_spine.tar.gz .
 
           - name: "Add the spine to release assets"
