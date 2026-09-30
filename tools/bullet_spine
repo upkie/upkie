@@ -20,19 +20,18 @@ VERSION=$(awk '/^PROJECT_NUMBER/{print $3}' "${DOXYFILE}")
 SYSTEM=$(uname -s)
 ARCH=$(uname -m)
 
+# Arguments are forwarded to the spine, except --build which is ours
 SPINE_ARGS=()
-if [ $# -eq 0 ]; then
-    SPINE_ARGS=("--show")
-else
-    SPINE_ARGS=("$@")
-fi
-
 for arg in "$@"; do
     if [ "$arg" == "--build" ]; then
         REBUILD=1
-        break
+    else
+        SPINE_ARGS+=("$arg")
     fi
 done
+if [ ${#SPINE_ARGS[@]} -eq 0 ]; then
+    SPINE_ARGS=("--show")
+fi
 
 if  [[ "$SYSTEM" == Linux ]]; then
     echo "🐧 Linux operating system"

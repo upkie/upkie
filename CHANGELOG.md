@@ -36,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - envs: User configuration overrides model-derived defaults for base orientation and wheel odometry
 - raspios: Set the setuid bit on the pi3hat spine installed in the OS image
 - tools: Correct version processing in Bullet spine script
+- tools: Stop forwarding the `--build` flag to the Bullet spine binary
 
 ## [12.0.0] - 2026-07-12
 
