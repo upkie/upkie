@@ -31,7 +31,7 @@ if __name__ == "__main__":
         }
 
         print("\nStarting MPC balancing with Upkie-Spine-Pendulum...")
-        print("Make sure a spine is running, e.g. from ./start_simulation.sh")
+        print("Make sure a spine is running, e.g. from tools/bullet_spine")
         with gym.make("Upkie-Spine-Pendulum", **env_kwargs) as env:
             _, info = env.reset()  # connects to the spine
             action = np.zeros(env.action_space.shape)
@@ -77,7 +77,7 @@ if __name__ == "__main__":
             print(f"\nConnection error: {e}")
             print(
                 "Make sure a spine is running, for instance "
-                "a simulation started with: ./start_simulation.sh"
+                "a simulation started with: tools/bullet_spine"
             )
         else:
             print(f"\nError: {e}")
