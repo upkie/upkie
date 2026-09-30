@@ -37,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - raspios: Set the setuid bit on the pi3hat spine installed in the OS image
 - tools: Correct version processing in Bullet spine script
 - tools: Stop forwarding the `--build` flag to the Bullet spine binary
+- tools: Exit with an error code when the Bullet spine script cannot run the spine
 
 ## [12.0.0] - 2026-07-12
 

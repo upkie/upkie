@@ -38,11 +38,14 @@ if  [[ "$SYSTEM" == Linux ]]; then
     if [[ "$ARCH" == x86_64* ]]; then
         echo "⚙️  x86 64-bit CPU architecture"
         SPINE_ARCHIVE="$DOWNLOAD_URL"/v"$VERSION"/linux_amd64_bullet_spine.tar.gz
-    else
-        echo "❌ Unsupported CPU architecture: $ARCH"
+    elif [[ -z "${REBUILD}" ]]; then
+        echo "❌ No pre-compiled spine for CPU architecture: $ARCH"
+        echo "You can try building it from source with \`$0 --build\`"
+        exit 1
     fi
 else
     echo "❌ Unsupported operating system: $SYSTEM"
+    exit 1
 fi
 
 if [[ -n "$SPINE_ARCHIVE" ]] && [[ -z "${REBUILD}" ]]; then
