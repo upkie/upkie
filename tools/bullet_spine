@@ -47,10 +47,10 @@ fi
 
 if [[ -n "$SPINE_ARCHIVE" ]] && [[ -z "${REBUILD}" ]]; then
     if [ -f cache/bullet_spine ]; then
-        OUTPUT=$(./cache/bullet_spine --version)
+        OUTPUT=$(./cache/bullet_spine --version 2>/dev/null)
         CACHE_RC=$?
         if [ "${CACHE_RC}" -eq 0 ]; then
-            CACHE_VERSION=$(echo "${OUTPUT}" | awk '{print $4}')
+            CACHE_VERSION=$(echo "${OUTPUT}" | awk '/bullet spine/{print $4}')
             if [ "${CACHE_VERSION}" != "${VERSION}" ]; then
                 echo "⚠️ Cached version of the simulation spine (${CACHE_VERSION}) is not ${VERSION}"
                 rm -f cache/bullet_spine
