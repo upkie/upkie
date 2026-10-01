@@ -91,7 +91,7 @@ If you built an Upkie or use parts of this project in your work, please cite the
   author = {Caron, St\'{e}phane and Perrin-Gilbert, Nicolas and Ledoux, Viviane and G\"{o}kbakan, \"{U}mit Bora and Raverdy, Pierre-Guillaume and Raffin, Antonin and Tordjman{-}{-}Levavasseur, Valentin and Arlaud, Etienne and Duclusaud, Marc},
   url = {https://github.com/upkie/upkie},
   license = {Apache-2.0},
-  version = {12.0.0},
+  version = {13.0.0},
   year = {2026}
 }
 ```
