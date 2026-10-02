@@ -1,0 +1,38 @@
+#!/bin/bash
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+# Package the Bullet spine built in bazel-bin into a standalone archive.
+#
+# Usage: tools/package_bullet_spine <output.tar.gz>
+
+set -euo pipefail
+
+if [ $# -ne 1 ]; then
+    echo "Usage: $0 <output.tar.gz>"
+    exit 1
+fi
+
+SCRIPT=$(realpath "$0")
+PROJECT_DIR=$(dirname "$(dirname "${SCRIPT}")")
+BAZEL_BIN=${PROJECT_DIR}/bazel-bin/spines
+OUTPUT=$(realpath -m "$1")
+
+if [ ! -f "${BAZEL_BIN}/bullet_spine" ]; then
+    echo "❌ Spine not found in ${BAZEL_BIN}, build //spines:bullet_spine first"
+    exit 1
+fi
+
+STAGING=$(mktemp -d)
+trap 'rm -rf "${STAGING}"' EXIT
+
+cp "${BAZEL_BIN}/bullet_spine" "${STAGING}/"
+cp -Lr "${BAZEL_BIN}/bullet_spine.runfiles" "${STAGING}/"
+
+# The runfiles manifest maps runfiles to absolute paths on the build machine,
+# and the spine prefers it to the runfiles directory when present. Remove it
+# so that the packaged spine finds its runfiles on any machine.
+rm -f "${STAGING}/bullet_spine.runfiles/MANIFEST"
+
+tar -C "${STAGING}" -zcf "${OUTPUT}" .
+echo "📦 Bullet spine packaged to ${OUTPUT}"
