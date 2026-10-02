@@ -107,6 +107,9 @@ class Spine {
   //! Spin one cycle of the spine loop.
   void cycle();
 
+  //! Current state of the internal state machine.
+  const State& state() const noexcept { return state_machine_.state(); }
+
   /*! Alternative to \ref run where the actuation interface is cycled a fixed
    * number of times, and communication cycles are not frequency-regulated.
    *
