@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 #include <algorithm>
+#include <cmath>
 #include <cstdlib>
 #include <future>
 #include <iostream>
@@ -38,8 +39,15 @@ using upkie::cpp::interfaces::BulletInterface;
 using upkie::cpp::observers::ObserverPipeline;
 using upkie::cpp::sensors::SensorPipeline;
 using upkie::cpp::spine::Spine;
+using upkie::cpp::spine::State;
 using upkie::cpp::utils::clear_shared_memory;
 using upkie::cpp::utils::get_log_path;
+
+//! Number of spine cycles stepped by the sanity check.
+constexpr unsigned kSanityCheckCycles = 1000u;
+
+//! Minimum base displacement in [m] for the sanity check to pass.
+constexpr double kSanityCheckMinDisplacement = 1e-3;
 
 //! Command-line arguments for the Bullet spine.
 class CommandLineArguments {
@@ -65,6 +73,8 @@ class CommandLineArguments {
       } else if (arg == "--nb-substeps") {
         nb_substeps = std::stol(args.at(++i));
         spdlog::info("Command line: nb_substeps = {}", nb_substeps);
+      } else if (arg == "--sanity-check") {
+        sanity_check = true;
       } else if (arg == "--pipeline") {
         pipeline = args.at(++i);
         spdlog::info("Command line: pipeline = {}", pipeline);
@@ -85,6 +95,11 @@ class CommandLineArguments {
         spdlog::error("Unknown argument: {}", arg);
         error = true;
       }
+    }
+    if (sanity_check && space) {
+      spdlog::error(
+          "The sanity check needs gravity, so it cannot run with --space");
+      error = true;
     }
     if (log_dir.length() < 1) {
       const char* env_log_dir = std::getenv("UPKIE_LOG_PATH");
@@ -122,6 +137,10 @@ class CommandLineArguments {
               << "    Pipeline name (e.g., 'wheel_balancer').\n";
     std::cout << "--robot-variant <variant>\n"
               << "    Robot variant (default: '').\n";
+    std::cout << "--sanity-check\n"
+              << "    Step the simulation " << kSanityCheckCycles
+              << " times without an agent and exit with\n"
+              << "    code zero if the robot was properly simulated.\n";
     std::cout << "--shm-name <name>\n"
               << "    Name for IPC shared memory file.\n";
     std::cout << "--show\n"
@@ -156,6 +175,9 @@ class CommandLineArguments {
 
   //! Robot variant
   std::string robot_variant;
+
+  //! Sanity check flag
+  bool sanity_check = false;
 
   //! Name for the shared memory file
   std::string shm_name = "/upkie";
@@ -247,6 +269,42 @@ BulletInterface make_actuation_interface(const char* argv0,
   return BulletInterface(params);
 }
 
+/*! Step the simulation without an agent and check that the robot moved.
+ *
+ * Without an agent, the spine sends stop commands at every cycle, so the robot
+ * falls under gravity from its initial pose. Errors during a cycle interrupt
+ * the spine, which then transitions to its shutdown state.
+ *
+ * \param[in] spine Spine connected to the Bullet interface.
+ * \param[in] interface Bullet interface.
+ * \return EXIT_SUCCESS if all cycles ran and the robot base moved,
+ *     EXIT_FAILURE otherwise.
+ */
+int run_sanity_check(Spine& spine, const BulletInterface& interface) {
+  const Eigen::Vector3d initial_position =
+      interface.get_transform_base_to_world().block<3, 1>(0, 3);
+  for (unsigned cycle = 1; cycle <= kSanityCheckCycles; ++cycle) {
+    spine.cycle();
+    if (spine.state() == State::kShutdown || spine.state() == State::kOver) {
+      spdlog::error("Sanity check failed: spine interrupted at cycle {} / {}",
+                    cycle, kSanityCheckCycles);
+      return EXIT_FAILURE;
+    }
+  }
+  const Eigen::Vector3d final_position =
+      interface.get_transform_base_to_world().block<3, 1>(0, 3);
+  const double displacement = (final_position - initial_position).norm();
+  if (!std::isfinite(displacement) ||
+      displacement < kSanityCheckMinDisplacement) {
+    spdlog::error("Sanity check failed: robot base moved by {} m in {} cycles",
+                  displacement, kSanityCheckCycles);
+    return EXIT_FAILURE;
+  }
+  spdlog::info("Sanity check passed: robot base moved by {:.3f} m in {} cycles",
+               displacement, kSanityCheckCycles);
+  return EXIT_SUCCESS;
+}
+
 /*! Build and run the simulation spine.
  *
  * \param[in] argv0 Name of spine binary from the command line.
@@ -279,7 +337,9 @@ int run_spine(const char* argv0, const CommandLineArguments& args) {
 
     // Run the spine
     Spine spine(params, interface, sensors, observers, controllers);
-    if (args.nb_substeps == 0u) {
+    if (args.sanity_check) {
+      return run_sanity_check(spine, interface);
+    } else if (args.nb_substeps == 0u) {
       spine.run();
     } else /* args.nb_substeps > 0 */ {
       spdlog::set_level(spdlog::level::warn);
@@ -288,6 +348,9 @@ int run_spine(const char* argv0, const CommandLineArguments& args) {
   } catch (const upkie::cpp::exceptions::UpkieError& error) {
     spdlog::error("Upkie error: {}", error.what());
     return -2;
+  } catch (const std::exception& error) {
+    spdlog::error("Error: {}", error.what());
+    return EXIT_FAILURE;
   }
 
   return EXIT_SUCCESS;
