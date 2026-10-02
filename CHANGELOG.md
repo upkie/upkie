@@ -9,12 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- CICD: Sanity check the packaged Bullet spine before adding it to release assets
 - spines: Add sanity-check feature to the Bullet spine
 - spine: Expose the current state of the internal state machine
 - tools: Add script to package the Bullet spine with its runfiles
 
 ### Fixed
 
+- CICD: Remove runfiles manifest with build-machine paths from the Bullet spine archive
 - spines: Exit with an error code rather than aborting on Bullet spine setup errors
 
 ## [13.0.0] - 2026-10-01
