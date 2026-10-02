@@ -31,7 +31,7 @@ jobs:
                   asset_path: ${{ github.workspace }}/bazel-bin/spines/pi3hat_spine
 
     bullet_ubuntu_spine:
-      name: "Add Bullet Linux spine to release assets"
+      name: "Build Bullet Linux spine"
       runs-on: ubuntu-22.04
       steps:
           - name: "Checkout sources"
@@ -46,12 +46,33 @@ jobs:
             run: |
                 tools/bazelisk build --verbose_failures  //spines:bullet_spine
 
-          - name: "Prepare artifacts directory"
+          - name: "Package the spine"
             run: |
-                mkdir -p linux_amd64_bullet_spine
-                cp ./bazel-bin/spines/bullet_spine ./linux_amd64_bullet_spine/
-                cp -Lr ./bazel-bin/spines/bullet_spine.runfiles ./linux_amd64_bullet_spine/
-                tar -C linux_amd64_bullet_spine -zcvf linux_amd64_bullet_spine.tar.gz .
+                tools/package_bullet_spine linux_amd64_bullet_spine.tar.gz
+
+          - name: "Upload the packaged spine"
+            uses: actions/upload-artifact@v4
+            with:
+                name: linux_amd64_bullet_spine
+                path: linux_amd64_bullet_spine.tar.gz
+
+    bullet_ubuntu_spine_release:
+      name: "Check and release Bullet Linux spine"
+      runs-on: ubuntu-22.04
+      needs: bullet_ubuntu_spine
+      steps:
+          # This job runs on a fresh runner, without the Bazel cache from the
+          # build job, so that the check only relies on the archive contents
+          - name: "Download the packaged spine"
+            uses: actions/download-artifact@v4
+            with:
+                name: linux_amd64_bullet_spine
+
+          - name: "Sanity check the packaged spine"
+            run: |
+                mkdir -p "${RUNNER_TEMP}/bullet_spine"
+                tar -C "${RUNNER_TEMP}/bullet_spine" -zxf linux_amd64_bullet_spine.tar.gz
+                cd "${RUNNER_TEMP}/bullet_spine" && ./bullet_spine --sanity-check
 
           - name: "Add the spine to release assets"
             uses: shogo82148/actions-upload-release-asset@v1
