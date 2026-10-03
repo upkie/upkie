@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [13.0.1] - 2026-10-03
+
 ### Added
 
 - CICD: Sanity check the packaged Bullet spine before adding it to release assets
@@ -1124,7 +1126,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Starting this changelog.
 
-[unreleased]: https://github.com/upkie/upkie/compare/v13.0.0...HEAD
+[unreleased]: https://github.com/upkie/upkie/compare/v13.0.1...HEAD
+[13.0.1]: https://github.com/upkie/upkie/releases/tag/v13.0.1
 [13.0.0]: https://github.com/upkie/upkie/releases/tag/v13.0.0
 [12.0.0]: https://github.com/upkie/upkie/releases/tag/v12.0.0
 [11.0.0]: https://github.com/upkie/upkie/releases/tag/v11.0.0
