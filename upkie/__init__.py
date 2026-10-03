@@ -5,7 +5,7 @@
 from . import envs, model, utils
 from .model import Model
 
-__version__ = "13.0.0"
+__version__ = "13.0.1"
 
 __all__ = [
     "Model",
