@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- utils: Add `PerformanceCpuGovernor` class to set CPU governors while in scope
+
 ### Changed
 
 - spines: Exit with an error if the pi3hat spine fails to set the CPU governor

@@ -42,6 +42,7 @@ cc_binary(
         "//upkie/cpp/sensors",
         "//upkie/cpp/spine",
         "//upkie/cpp/utils:get_log_path",
+        "//upkie/cpp/utils:performance_cpu_governor",
         "//upkie/cpp:version",
     ] + select({
         "//:pi64_config": ["//upkie/cpp/interfaces:pi3hat_interface"],
