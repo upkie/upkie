@@ -206,10 +206,86 @@ inline std::string read_cpu_governor(int cpu) {
   return governor;
 }
 
+/*! Write the frequency governor of a CPU core.
+ *
+ * \param[in] cpu CPU core index.
+ * \param[in] governor Governor name.
+ * \return True if and only if the governor reads back as expected.
+ */
+inline bool write_cpu_governor(int cpu, const std::string& governor) {
+  {
+    std::ofstream writer(cpu_governor_path(cpu));
+    writer << governor << std::flush;
+    if (!writer.good()) {
+      return false;
+    }
+  }
+  return read_cpu_governor(cpu) == governor;
+}
+
+/*! Set all CPU cores to the "performance" frequency governor while in scope.
+ *
+ * The pi3hat spine is latency-sensitive, so we want all cores running at
+ * maximum frequency rather than dynamically scaling. The governors found at
+ * startup are restored when this object is destroyed.
+ */
+class PerformanceCpuGovernor {
+ public:
+  //! Number of CPU cores on the Raspberry Pi.
+  static constexpr int kNbCpus = 4;
+
+  //! Restore the CPU governors found at startup.
+  ~PerformanceCpuGovernor() {
+    for (const auto& [cpu, governor] : initial_governors_) {
+      if (write_cpu_governor(cpu, governor)) {
+        spdlog::info("Restored CPU {} frequency governor to \"{}\"", cpu,
+                     governor);
+      } else {
+        spdlog::warn("Could not restore CPU {} frequency governor to \"{}\"",
+                     cpu, governor);
+      }
+    }
+  }
+
+  /*! Set the "performance" governor on all CPU cores.
+   *
+   * \return True if and only if all cores now use the "performance" governor.
+   */
+  bool configure() {
+    for (int cpu = 0; cpu < kNbCpus; ++cpu) {
+      const std::string governor = read_cpu_governor(cpu);
+      if (governor.empty()) {
+        spdlog::error("Could not read CPU {} frequency governor", cpu);
+        return false;
+      } else if (governor == "performance") {
+        continue;
+      }
+      spdlog::info(
+          "Setting CPU {} frequency governor from \"{}\" to \"performance\"",
+          cpu, governor);
+      if (!write_cpu_governor(cpu, "performance")) {
+        spdlog::error(
+            "Could not set CPU {} frequency governor to \"performance\"", cpu);
+        return false;
+      }
+      initial_governors_[cpu] = governor;
+    }
+    return true;
+  }
+
+ private:
+  //! Governors of the CPU cores we switched, as found at startup.
+  std::map<int, std::string> initial_governors_;
+};
+
 //! Build and run the pi3hat spine.
 int run_spine(const CommandLineArguments& args) {
+  PerformanceCpuGovernor cpu_governor;
   if (!args.mock) {
-    configure_cpufreq();
+    if (!cpu_governor.configure()) {
+      spdlog::info("did you run with sudo?");
+      return -6;
+    }
     if (calibration_needed()) {
       spdlog::error("Calibration needed: did you run `upkie_tool rezero`?");
       return -3;

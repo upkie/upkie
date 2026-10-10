@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- spines: Exit with an error if the pi3hat spine fails to set the CPU governor
+- spines: Restore initial CPU governors when the pi3hat spine exits
+- spines: Set the CPU governor of all four cores in the pi3hat spine
+
 ## [13.0.1] - 2026-10-03
 
 ### Added
