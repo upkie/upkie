@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <cstdlib>
 #include <filesystem>
+#include <fstream>
 #include <future>
 #include <iostream>
 #include <map>
@@ -184,48 +185,25 @@ inline bool calibration_needed() {
   return !file_found;
 }
 
-/*! Ensure all CPU cores use the "performance" frequency governor.
+/*! Path to the sysfs file holding the frequency governor of a CPU core.
  *
- * The pi3hat spine is latency-sensitive, so we want all cores running at
- * maximum frequency rather than dynamically scaling. On the Raspberry Pi,
- * all CPU governors are tied together, so setting CPU 0 applies to all.
+ * \param[in] cpu CPU core index.
  */
-inline void configure_cpufreq() {
-  const std::string path =
-      "/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor";
-  std::ifstream reader(path);
-  if (!reader.is_open()) {
-    spdlog::warn("Could not open {} for reading", path);
-    return;
-  }
+inline std::string cpu_governor_path(int cpu) {
+  return "/sys/devices/system/cpu/cpu" + std::to_string(cpu) +
+         "/cpufreq/scaling_governor";
+}
+
+/*! Read the frequency governor of a CPU core.
+ *
+ * \param[in] cpu CPU core index.
+ * \return Governor name, or an empty string if it could not be read.
+ */
+inline std::string read_cpu_governor(int cpu) {
+  std::ifstream reader(cpu_governor_path(cpu));
   std::string governor;
   std::getline(reader, governor);
-  reader.close();
-  if (governor == "performance") {
-    return;
-  }
-
-  spdlog::info("Setting CPU frequency governor from \"{}\" to \"performance\"",
-               governor);
-  std::ofstream writer(path);
-  if (!writer.is_open()) {
-    spdlog::warn("Could not open {} for writing", path);
-    return;
-  }
-  writer << "performance";
-  writer.close();
-
-  // Verify the write took effect
-  std::ifstream verifier(path);
-  std::string new_governor;
-  std::getline(verifier, new_governor);
-  verifier.close();
-  if (new_governor != "performance") {
-    spdlog::warn(
-        "CPU frequency governor is \"{}\" after write, "
-        "expected \"performance\"",
-        new_governor);
-  }
+  return governor;
 }
 
 //! Build and run the pi3hat spine.
