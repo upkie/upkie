@@ -5,7 +5,6 @@
 #include <algorithm>
 #include <cstdlib>
 #include <filesystem>
-#include <fstream>
 #include <future>
 #include <iostream>
 #include <map>
@@ -26,6 +25,7 @@
 #include "upkie/cpp/sensors/Joystick.h"
 #include "upkie/cpp/sensors/SensorPipeline.h"
 #include "upkie/cpp/spine/Spine.h"
+#include "upkie/cpp/utils/PerformanceCpuGovernor.h"
 #include "upkie/cpp/utils/get_log_path.h"
 #include "upkie/cpp/utils/realtime.h"
 #include "upkie/cpp/version.h"
@@ -43,6 +43,7 @@ using upkie::cpp::sensors::CpuTemperature;
 using upkie::cpp::sensors::Joystick;
 using upkie::cpp::sensors::SensorPipeline;
 using upkie::cpp::spine::Spine;
+using upkie::cpp::utils::PerformanceCpuGovernor;
 
 //! Command-line arguments for the pi3hat spine.
 class CommandLineArguments {
@@ -184,99 +185,6 @@ inline bool calibration_needed() {
   const bool file_found = file.is_open();
   return !file_found;
 }
-
-/*! Path to the sysfs file holding the frequency governor of a CPU core.
- *
- * \param[in] cpu CPU core index.
- */
-inline std::string cpu_governor_path(int cpu) {
-  return "/sys/devices/system/cpu/cpu" + std::to_string(cpu) +
-         "/cpufreq/scaling_governor";
-}
-
-/*! Read the frequency governor of a CPU core.
- *
- * \param[in] cpu CPU core index.
- * \return Governor name, or an empty string if it could not be read.
- */
-inline std::string read_cpu_governor(int cpu) {
-  std::ifstream reader(cpu_governor_path(cpu));
-  std::string governor;
-  std::getline(reader, governor);
-  return governor;
-}
-
-/*! Write the frequency governor of a CPU core.
- *
- * \param[in] cpu CPU core index.
- * \param[in] governor Governor name.
- * \return True if and only if the governor reads back as expected.
- */
-inline bool write_cpu_governor(int cpu, const std::string& governor) {
-  {
-    std::ofstream writer(cpu_governor_path(cpu));
-    writer << governor << std::flush;
-    if (!writer.good()) {
-      return false;
-    }
-  }
-  return read_cpu_governor(cpu) == governor;
-}
-
-/*! Set all CPU cores to the "performance" frequency governor while in scope.
- *
- * The pi3hat spine is latency-sensitive, so we want all cores running at
- * maximum frequency rather than dynamically scaling. The governors found at
- * startup are restored when this object is destroyed.
- */
-class PerformanceCpuGovernor {
- public:
-  //! Number of CPU cores on the Raspberry Pi.
-  static constexpr int kNbCpus = 4;
-
-  //! Restore the CPU governors found at startup.
-  ~PerformanceCpuGovernor() {
-    for (const auto& [cpu, governor] : initial_governors_) {
-      if (write_cpu_governor(cpu, governor)) {
-        spdlog::info("Restored CPU {} frequency governor to \"{}\"", cpu,
-                     governor);
-      } else {
-        spdlog::warn("Could not restore CPU {} frequency governor to \"{}\"",
-                     cpu, governor);
-      }
-    }
-  }
-
-  /*! Set the "performance" governor on all CPU cores.
-   *
-   * \return True if and only if all cores now use the "performance" governor.
-   */
-  bool configure() {
-    for (int cpu = 0; cpu < kNbCpus; ++cpu) {
-      const std::string governor = read_cpu_governor(cpu);
-      if (governor.empty()) {
-        spdlog::error("Could not read CPU {} frequency governor", cpu);
-        return false;
-      } else if (governor == "performance") {
-        continue;
-      }
-      spdlog::info(
-          "Setting CPU {} frequency governor from \"{}\" to \"performance\"",
-          cpu, governor);
-      if (!write_cpu_governor(cpu, "performance")) {
-        spdlog::error(
-            "Could not set CPU {} frequency governor to \"performance\"", cpu);
-        return false;
-      }
-      initial_governors_[cpu] = governor;
-    }
-    return true;
-  }
-
- private:
-  //! Governors of the CPU cores we switched, as found at startup.
-  std::map<int, std::string> initial_governors_;
-};
 
 //! Build and run the pi3hat spine.
 int run_spine(const CommandLineArguments& args) {

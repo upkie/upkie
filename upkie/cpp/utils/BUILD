@@ -46,6 +46,15 @@ cc_library(
 )
 
 cc_library(
+    name = "performance_cpu_governor",
+    hdrs = ["PerformanceCpuGovernor.h"],
+    srcs = ["PerformanceCpuGovernor.cpp"],
+    deps = [
+        "@spdlog",
+    ],
+)
+
+cc_library(
     name = "random_string",
     hdrs = ["random_string.h"],
 )
@@ -74,6 +83,7 @@ cc_library(
         ":handle_interrupts",
         ":low_pass_filter",
         ":math",
+        ":performance_cpu_governor",
         ":random_string",
         ":realtime",
         ":synchronous_clock",
