@@ -2,19 +2,14 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-# Project name needs to match the one in WORKSPACE
-PROJECT_NAME = upkie
-
 # Configure a Host with this name in your ~/.ssh/config
-UPKIE_HOST = upkie
+REMOTE_HOST = upkie
+REMOTE_PATH = src/upkie
 
 BAZEL = $(CURDIR)/tools/bazelisk
 BUILT_SPINE = $(CURDIR)/bazel-bin/spines/pi3hat_spine
-COVERAGE_DIR = $(CURDIR)/bazel-out/_coverage
-CURDATE = $(shell date -Iseconds)
 CURDIR_NAME = $(shell basename $(CURDIR))
 INSTALLED_SPINE = /usr/local/bin/pi3hat_spine
-PYTHON = python3
 RASPUNZEL = $(CURDIR)/tools/raspunzel
 
 # Help snippet adapted from:
@@ -56,8 +51,8 @@ run_bullet_spine_cookie:  ## run the Bullet spine with a Cookie biped
 # that rsync is not allowed to remove. We therefore give permissions first.
 .PHONY: upload
 upload: build  ## upload built targets to the Raspberry Pi
-	ssh $(UPKIE_HOST) mkdir -p $(PROJECT_NAME)
-	ssh $(UPKIE_HOST) sudo find $(PROJECT_NAME) -type d -name __pycache__ -user root -exec chmod go+wx {} "\;"
+	ssh $(UPKIE_HOST) mkdir -p $(REMOTE_PATH)
+	ssh $(UPKIE_HOST) sudo find $(REMOTE_PATH) -type d -name __pycache__ -user root -exec chmod go+wx {} "\;"
 	rsync -Lrtu --delete-after \
 		--exclude .git* \
 		--exclude .pixi \
@@ -65,20 +60,20 @@ upload: build  ## upload built targets to the Raspberry Pi
 		--exclude .ruff_cache \
 		--exclude __pycache__ \
 		--exclude bazel-$(CURDIR_NAME) \
-		--exclude bazel-$(PROJECT_NAME)/ \
 		--exclude bazel-out/ \
 		--exclude bazel-testlogs/ \
+		--exclude bazel-upkie/ \
 		--exclude docs/ \
 		--exclude logs/ \
 		--exclude /cache/ \
 		--exclude tools/bazel \
 		--exclude tools/raspios/ \
-		--progress $(CURDIR)/ $(UPKIE_HOST):$(PROJECT_NAME)/
+		--progress $(CURDIR)/ $(UPKIE_HOST):$(REMOTE_PATH)/
 
 # REMOTE TARGETS
 # ==============
 
-install_pi3hat_spine:  ### install the uploaded pi3hat spine
+install_pi3hat_spine:  ### install the built pi3hat spine
 	@test -f $(BUILT_SPINE) || { \
 		echo "Spine not found at $(BUILT_SPINE)"; \
 		echo "Did \`make build\` and \`make upload\` run successfully?"; \
