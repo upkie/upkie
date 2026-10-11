@@ -4,6 +4,8 @@
 
 # Configure a Host with this name in your ~/.ssh/config
 REMOTE_HOST = upkie
+
+# Path to the upkie directory on your robot
 REMOTE_PATH = src/upkie
 
 BAZEL = $(CURDIR)/tools/bazelisk
@@ -64,7 +66,7 @@ upload: build  ## upload built targets to the Raspberry Pi
 		--exclude /cache/ \
 		--exclude tools/bazel \
 		--exclude tools/raspios/ \
-		--progress $(CURDIR)/ $(UPKIE_HOST):$(REMOTE_PATH)/
+		--progress $(CURDIR)/ $(REMOTE_HOST):$(REMOTE_PATH)/
 
 # REMOTE TARGETS
 # ==============
