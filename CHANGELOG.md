@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [13.1.0] - 2026-10-11
+
 ### Added
 
 - utils: Add `PerformanceCpuGovernor` class to set CPU governors while in scope
@@ -1140,7 +1142,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Starting this changelog.
 
-[unreleased]: https://github.com/upkie/upkie/compare/v13.0.1...HEAD
+[unreleased]: https://github.com/upkie/upkie/compare/v13.1.0...HEAD
+[13.1.0]: https://github.com/upkie/upkie/releases/tag/v13.1.0
 [13.0.1]: https://github.com/upkie/upkie/releases/tag/v13.0.1
 [13.0.0]: https://github.com/upkie/upkie/releases/tag/v13.0.0
 [12.0.0]: https://github.com/upkie/upkie/releases/tag/v12.0.0
