@@ -31,6 +31,8 @@ bool PerformanceCpuGovernor::configure() {
       spdlog::error("Could not read CPU {} frequency governor", cpu);
       return false;
     } else if (governor == "performance") {
+      spdlog::info("CPU {} frequency governor is already on \"performance\"",
+                   cpu, governor);
       continue;
     }
     spdlog::info(
