@@ -47,12 +47,8 @@ run_bullet_spine:  ## run the Bullet spine with an Upkie biped
 run_bullet_spine_cookie:  ## run the Bullet spine with a Cookie biped
 	$(BAZEL) run //spines:bullet_spine -- --show --robot-variant cookie
 
-# Running `raspunzel -s` can create __pycache__ directories owned by root
-# that rsync is not allowed to remove. We therefore give permissions first.
 .PHONY: upload
 upload: build  ## upload built targets to the Raspberry Pi
-	ssh $(UPKIE_HOST) mkdir -p $(REMOTE_PATH)
-	ssh $(UPKIE_HOST) sudo find $(REMOTE_PATH) -type d -name __pycache__ -user root -exec chmod go+wx {} "\;"
 	rsync -Lrtu --delete-after \
 		--exclude .git* \
 		--exclude .pixi \
