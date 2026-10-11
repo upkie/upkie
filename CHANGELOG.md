@@ -17,6 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - spines: Restore initial CPU governors when the pi3hat spine exits
 - spines: Set the CPU governor of all four cores in the pi3hat spine
 
+### Removed
+
+- tools: Remove `cpufreq_ondemand` and `cpufreq_performance` scripts
+
 ## [13.0.1] - 2026-10-03
 
 ### Added
