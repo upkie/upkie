@@ -12,7 +12,7 @@ maintainers = [
     {name = "Stéphane Caron", email = "stephane.caron@normalesup.org"},
 ]
 dynamic = ["version", "description"]
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 classifiers = [
     "Development Status :: 4 - Beta",
     "Framework :: Robot Framework :: Library",
@@ -20,7 +20,6 @@ classifiers = [
     "Intended Audience :: Science/Research",
     "License :: OSI Approved :: Apache Software License",
     "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
@@ -259,17 +258,6 @@ cookie_description = ">=1.1.0,<2"
 
 [tool.pixi.feature.test-python-version.tasks]
 _test-python-version = "pytest tests/"
-
-# -----------------------
-# Environment: test-py310
-# -----------------------
-
-[tool.pixi.environments.test-py310]
-features = ["test-python-version", "py310", "default"]
-solve-group = "py310"
-
-[tool.pixi.feature.py310.dependencies]
-python = "3.10.*"
 
 # -----------------------
 # Environment: test-py311
