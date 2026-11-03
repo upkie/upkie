@@ -86,7 +86,7 @@ platforms = ["linux-64", "linux-aarch64"]
 [tool.pixi.dependencies]
 gymnasium = ">=1.2.3,<2"
 loop-rate-limiters = ">=1.2.0,<2"
-msgpack-python = ">=1.1.2,<2"
+msgpack-python = ">=1.2.3,<2"
 numpy = ">=2.2.6,<3"
 pyyaml = ">=6.0.3,<7"
 scipy = ">=1.15.2,<2"
