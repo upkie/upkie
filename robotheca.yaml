@@ -1,0 +1,16 @@
+# Proposed by Robotheca for this repository. Every line is yours to
+# change: check it before merging.
+
+format_version: "1.0"
+name: Upkie
+summary: Open-source wheeled biped that balances on its wheels and uses its legs on uneven terrain. Runs in simulation and on the real robot.
+category: rover
+difficulty: advanced
+license:
+  hardware: Apache-2.0
+  software: Apache-2.0
+source:
+  repository: https://github.com/upkie/upkie
+files:
+  bom: docs/assembly/bill-of-materials.md
+  docs: docs/assembly/
