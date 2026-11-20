@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- envs: Add `crouching_height` parameter to the gyropod, pendulum and base-velocity environments
+- envs: Add `UpkieGyropod.set_crouching_height` to change the crouching height while balancing
+- examples: Crouch up and down while balancing in place
+- model: Add `Model.compute_crouching_posture` from the kinematics of a symmetric leg
+- model: Add `Model.leg_segment_length`
+
 ### Fixed
 
 - envs: Pass the robot model to servos environments properly
