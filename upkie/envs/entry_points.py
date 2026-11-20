@@ -80,7 +80,8 @@ def make_spine_servos(**kwargs):
     }
 
     backend = SpineBackend(**backend_kwargs)
-    return UpkieServos(backend=backend, **env_kwargs)
+    model = backend_kwargs.get("model")  # also needed by the servos env
+    return UpkieServos(backend=backend, model=model, **env_kwargs)
 
 
 def wrap_pendulum(make_env_func, **kwargs):

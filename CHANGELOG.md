@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- envs: Pass the robot model to servos environments properly
+
 ### Changed
 
 - Bump minimum Python version to 3.11

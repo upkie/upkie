@@ -32,6 +32,23 @@ class EntryPointsTestCase(unittest.TestCase):
         finally:
             shm.close()
 
+    def test_spine_servos_model(self):
+        """The robot model reaches both the spine backend and the servos env."""
+        from upkie.envs.entry_points import make_spine_servos
+        from upkie.model import Model
+
+        model = Model()
+        shm = SharedMemory(name=None, size=42, create=True)
+        try:
+            env = make_spine_servos(shm_name=shm._name, model=model)
+            self.assertIs(env.model, model)
+            try:
+                del env  # we delete it explicitly
+            except UpkieTimeoutError:  # to catch this exception
+                pass  # which is ok: there is no spine, thus no response
+        finally:
+            shm.close()
+
     def test_spine_pendulum(self):
         shm = SharedMemory(name=None, size=42, create=True)
         try:
