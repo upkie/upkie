@@ -69,6 +69,7 @@ class UpkiePendulum(gym.Wrapper):
         servos_env: UpkieServos,
         fall_pitch: float = 1.0,
         max_ground_velocity: float = 3.0,
+        crouching_height: float = 0.0,
     ):
         r"""!
         Initialize environment.
@@ -76,11 +77,15 @@ class UpkiePendulum(gym.Wrapper):
         \param servos_env Upkie environment to command servomotors.
         \param fall_pitch Fall detection pitch angle, in radians.
         \param max_ground_velocity Maximum commanded ground velocity in m/s.
+        \param crouching_height Height by which the robot crouches, in
+            meters. Defaults to zero, straight legs. See \ref
+            upkie.envs.upkie_gyropod.UpkieGyropod.
         """
         gyropod_env = UpkieGyropod(
             servos_env,
             fall_pitch=fall_pitch,
             max_ground_velocity=max_ground_velocity,
+            crouching_height=crouching_height,
         )
         super().__init__(gyropod_env)
 

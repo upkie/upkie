@@ -100,6 +100,7 @@ def wrap_pendulum(make_env_func, **kwargs):
     pendulum_keys = {
         "fall_pitch",
         "max_ground_velocity",
+        "crouching_height",
     }
     pendulum_kwargs = {
         key: value for key, value in kwargs.items() if key in pendulum_keys
@@ -129,6 +130,7 @@ def wrap_gyropod(make_env_func, **kwargs):
         "leg_gain_scale",
         "max_ground_velocity",
         "max_yaw_velocity",
+        "crouching_height",
     }
     gyropod_kwargs = {
         key: value for key, value in kwargs.items() if key in gyropod_keys
@@ -159,6 +161,7 @@ def wrap_base_velocity(make_env_func, **kwargs):
         "max_yaw_velocity",
         "leg_length",
         "max_ground_accel",
+        "crouching_height",
     }
     base_velocity_kwargs = {
         key: value

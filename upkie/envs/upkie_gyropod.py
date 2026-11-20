@@ -23,8 +23,10 @@ class UpkieGyropod(gym.Wrapper):
 
     \anchor upkie_gyropod_description
 
-    When this wrapper is applied, Upkie keeps its legs straight and actions
-    affect wheel velocity commands. Overall, the robot behaves like a <a
+    When this wrapper is applied, Upkie holds its legs in a fixed crouching
+    posture (straight by default, see the `crouching_height` parameter of the
+    constructor) and actions affect wheel velocity commands. Overall, the
+    robot behaves like a <a
     href="https://scaron.info/robotics/wheeled-inverted-pendulum-model.html">wheeled
     inverted pendulum</a> in the sagittal plane, and turns by <a
     href="https://en.wikipedia.org/wiki/Differential_wheeled_robot">differential
@@ -108,6 +110,7 @@ class UpkieGyropod(gym.Wrapper):
         leg_gain_scale: float = 1.0,
         max_ground_velocity: float = 3.0,
         max_yaw_velocity: float = 1.0,
+        crouching_height: float = 0.0,
     ):
         r"""!
         Initialize environment.
@@ -118,10 +121,27 @@ class UpkieGyropod(gym.Wrapper):
             kd_scale servo parameters.
         \param max_ground_velocity Maximum commanded ground velocity in m/s.
         \param max_yaw_velocity Maximum commanded yaw velocity in rad/s.
+        \param crouching_height Height by which the robot crouches, in
+            meters. Hip and knee angles are computed from it by \ref
+            upkie.model.model.Model.compute_crouching_posture.
+        \throw UpkieException If the crouching height is out of reach, or if
+            the resulting angle of a joint is outside of its limits.
         """
         super().__init__(servos_env)
         if self.env.frequency is None:
             raise UpkieException("This environment needs a loop frequency")
+
+        leg_targets = self.env.model.compute_crouching_posture(
+            crouching_height
+        )
+        for joint in self.env.model.upper_leg_joints:
+            target = leg_targets[joint.name]
+            if not joint.limit.lower <= target <= joint.limit.upper:
+                raise UpkieException(
+                    f"Crouching at {crouching_height} m requires angle "
+                    f"{target} rad for joint {joint.name}, outside of its "
+                    f"limits [{joint.limit.lower}, {joint.limit.upper}]"
+                )
 
         MAX_GROUND_POSITION: float = float("inf")
         MAX_BASE_PITCH: float = np.pi
@@ -162,8 +182,10 @@ class UpkieGyropod(gym.Wrapper):
         )
 
         # Instance attributes
+        self.__crouching_height = crouching_height
         self.__leg_gain_scale = leg_gain_scale
         self.__leg_servo_action = self.env.get_neutral_action()
+        self.__leg_targets = leg_targets
         self.__yaw_angle = 0.0  # rad
         self.__yaw_velocity = 0.0  # rad/s
         self.fall_pitch = fall_pitch
@@ -174,6 +196,13 @@ class UpkieGyropod(gym.Wrapper):
         Get the current kp/kd scale upplied to hip and knee joints.
         """
         return self.__leg_gain_scale
+
+    @property
+    def crouching_height(self) -> float:
+        r"""!
+        Get the crouching height of the robot, in meters.
+        """
+        return self.__crouching_height
 
     def set_leg_gain_scale(self, leg_gain_scale: float) -> None:
         r"""!
@@ -253,7 +282,7 @@ class UpkieGyropod(gym.Wrapper):
             prev_position = self.__leg_servo_action[joint.name]["position"]
             new_position = low_pass_filter(
                 prev_output=prev_position,
-                new_input=0.0,  # go to neutral configuration
+                new_input=self.__leg_targets[joint.name],
                 cutoff_period=1.0,  # in roughly one second
                 dt=self.env.dt,
             )
