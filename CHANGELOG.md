@@ -17,6 +17,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - pixi: Bump minimum msgpack version to 1.2.3
 - spines: Update Cookie description to 1.3.0
 
+### Removed
+
+- examples: Remove PyBullet MPC example since MPC has become the default
+- examples: Remove spine examples
+
 ## [13.1.0] - 2026-10-11
 
 ### Added
@@ -31,7 +36,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
-- examples: Remove PyBullet MPC example since MPC has become the default
 - tools: Remove `cpufreq_ondemand` and `cpufreq_performance` scripts
 
 ## [13.0.1] - 2026-10-03
