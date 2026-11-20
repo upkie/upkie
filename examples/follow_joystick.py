@@ -23,6 +23,7 @@ def main(
     gain_scale: float = 2.0,
     turning_gain_scale: float = 2.0,
 ) -> None:
+    """Drive the robot in simulation from joystick commands."""
     gain_scale = clamp(gain_scale, 0.1, 2.0)
     joystick_controller = JoystickController()
     turning_gain_scale = clamp(turning_gain_scale, 0.0, 3.0)
@@ -57,6 +58,7 @@ def main(
 
 
 def parse_command_line_arguments() -> argparse.Namespace:
+    """Parse command-line arguments."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--robot",

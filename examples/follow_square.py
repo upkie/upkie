@@ -26,6 +26,7 @@ def main(
     gain_scale: float = 2.0,
     turning_gain_scale: float = 2.0,
 ):
+    """Drive the robot along a square on the ground."""
     print(f"\nFollowing a ground square with {robot} in PyBullet...")
     with gym.make(
         f"{robot}-PyBullet-BaseVelocity",
@@ -104,7 +105,8 @@ def main(
                 finished = True
 
 
-def pick_upkie_description() -> argparse.Namespace:
+def pick_upkie_description() -> str:
+    """Pick the robot to simulate from command-line arguments."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--robot",
