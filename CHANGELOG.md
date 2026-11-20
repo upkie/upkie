@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+- examples: Remove PyBullet MPC example since MPC has become the default
 - tools: Remove `cpufreq_ondemand` and `cpufreq_performance` scripts
 
 ## [13.0.1] - 2026-10-03
