@@ -11,5 +11,5 @@ def cookie_description_repository():
     git_repository(
         name = "cookie_description",
         remote = "https://codeberg.org/upkie/cookie_description",
-        commit = "46f5e1bb724f4ef06c16d6280b907a6e24e8400d"
+        commit = "488ef000029999c31d24be4800f58b65cf1f5448",
     )
