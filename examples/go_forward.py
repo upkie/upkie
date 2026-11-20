@@ -17,10 +17,10 @@ from upkie.controllers import MPCBalancer
 upkie.envs.register()
 
 NB_STEPS = 5_000
-TARGET_GROUND_VELOCITY = 0.3  # m/s
 
 
-def pick_upkie_description() -> argparse.Namespace:
+def parse_command_line_arguments() -> argparse.Namespace:
+    """Parse command-line arguments."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--robot",
@@ -28,10 +28,17 @@ def pick_upkie_description() -> argparse.Namespace:
         choices=["upkie", "cookie"],
         default="upkie",
     )
+    parser.add_argument(
+        "--velocity",
+        help="Forward velocity, in m/s",
+        default=0.3,
+        type=float,
+    )
     return parser.parse_args()
 
 
-def main(robot: str):
+def main(robot: str, target_velocity: float):
+    """Track the target ground velocity."""
     # Leg length is a key parameter of the model predictive controller. Start
     # from the leg length of the wheeled biped, but don't hesitate to tune this
     # value afterwards for better performance on your real robot.
@@ -50,12 +57,12 @@ def main(robot: str):
 
         print("\n--\n")
         print(f"Going forward for {NB_STEPS} steps...")
-        print(f"Target ground velocity: {TARGET_GROUND_VELOCITY} m/s")
+        print(f"Target ground velocity: {target_velocity} m/s")
         print("Press Ctrl+C to stop early.\n")
 
         for step in range(NB_STEPS):
             action[0] = mpc_balancer.step(
-                target_ground_velocity=TARGET_GROUND_VELOCITY,
+                target_ground_velocity=target_velocity,
                 spine_observation=info["spine_observation"],
                 dt=env.unwrapped.dt,
             )
@@ -83,10 +90,11 @@ def main(robot: str):
 
 
 if __name__ == "__main__":
-    args = pick_upkie_description()
-    robot = args.robot.capitalize()
-
+    args = parse_command_line_arguments()
     try:
-        main(robot)
+        main(
+            robot=args.robot.capitalize(),
+            target_velocity=args.velocity,
+        )
     except KeyboardInterrupt:
         print("Terminating in response to keyboard interrupt")
