@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: Apache-2.0
 
-from typing import List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple
 
 import numpy as np
 import upkie_description
@@ -15,6 +15,13 @@ class Model:
     r"""!
     Upkie robot model parsed from its URDF description.
     """
+
+    ## \var leg_segment_length
+    ## Length \f$\ell\f$ of the upper and lower segments of a <a
+    ## href="https://scaron.info/robotics/kinematics-of-a-symmetric-leg.html">symmetric
+    ## leg</a> model of the legs, in meters: half the vertical distance from
+    ## the hip joint to the wheel axle with straight legs.
+    leg_segment_length: float
 
     ## \var left_wheeled
     ## True if the robot is left-wheeled, that is, a positive turn of the left
@@ -99,8 +106,17 @@ class Model:
                 "y-axis of the base frame"
             )
 
+        hip_height = tree.get_transform_frame_to_base(
+            "left_hip_qdd100_rotor"
+        ).translation[2]
+        axle_height = tree.get_transform_frame_to_base(
+            "left_wheel_hub"
+        ).translation[2]
+        leg_segment_length = 0.5 * abs(hip_height - axle_height)
+
         # Instance attributes
         self.kinematic_tree = tree
+        self.leg_segment_length = leg_segment_length
         self.left_wheeled = bool(z_axis_wheel_hub[1] < 0)
         self.rotation_ars_to_world = np.diag([1.0, -1.0, -1.0])
         self.rotation_base_to_imu = tree.get_transform("base", "imu").rotation
@@ -108,6 +124,42 @@ class Model:
         self.wheel_base = wheel_base
         self.wheel_joints = wheel_joints
         self.wheel_radius = wheel_radius
+
+    def compute_crouching_posture(
+        self, crouching_height: float
+    ) -> Dict[str, float]:
+        r"""!
+        Compute hip and knee angles to crouch by a given height.
+
+        The legs follow the inverse kinematics of a <a
+        href="https://scaron.info/robotics/kinematics-of-a-symmetric-leg.html">symmetric
+        leg</a> with segment length \f$\ell\f$ (\ref leg_segment_length):
+        crouching by \f$c\f$ brings the hip-to-axle distance from \f$2 \ell\f$
+        down to \f$h = 2 \ell - c\f$, with hip angle \f$q_1 = \arccos(h / 2
+        \ell)\f$ and knee angle \f$q_2 = -2 q_1\f$ for the left leg. The
+        wheel axles stay right below the hips while the knees, hence the
+        center of mass, move forward.
+
+        \param crouching_height Crouching height \f$c\f$, in meters.
+        \return Angles of the hip and knee joints, in radians, by joint name.
+            The right leg mirrors the left leg.
+        \raise ModelError If the crouching height is negative or not below
+            \f$2 \ell\f$.
+        """
+        ell = self.leg_segment_length
+        if not 0.0 <= crouching_height < 2.0 * ell:
+            raise ModelError(
+                f"Crouching height {crouching_height} m is outside of "
+                f"[0, {2.0 * ell}) m"
+            )
+        hip = float(np.arccos((2.0 * ell - crouching_height) / (2.0 * ell)))
+        knee = -2.0 * hip
+        return {
+            "left_hip": hip,
+            "left_knee": knee,
+            "right_hip": -hip,
+            "right_knee": -knee,
+        }
 
     @property
     def joints(self) -> List[Joint]:

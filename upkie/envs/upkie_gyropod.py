@@ -131,17 +131,7 @@ class UpkieGyropod(gym.Wrapper):
         if self.env.frequency is None:
             raise UpkieException("This environment needs a loop frequency")
 
-        leg_targets = self.env.model.compute_crouching_posture(
-            crouching_height
-        )
-        for joint in self.env.model.upper_leg_joints:
-            target = leg_targets[joint.name]
-            if not joint.limit.lower <= target <= joint.limit.upper:
-                raise UpkieException(
-                    f"Crouching at {crouching_height} m requires angle "
-                    f"{target} rad for joint {joint.name}, outside of its "
-                    f"limits [{joint.limit.lower}, {joint.limit.upper}]"
-                )
+        self.set_crouching_height(crouching_height)
 
         MAX_GROUND_POSITION: float = float("inf")
         MAX_BASE_PITCH: float = np.pi
@@ -182,10 +172,8 @@ class UpkieGyropod(gym.Wrapper):
         )
 
         # Instance attributes
-        self.__crouching_height = crouching_height
         self.__leg_gain_scale = leg_gain_scale
         self.__leg_servo_action = self.env.get_neutral_action()
-        self.__leg_targets = leg_targets
         self.__yaw_angle = 0.0  # rad
         self.__yaw_velocity = 0.0  # rad/s
         self.fall_pitch = fall_pitch
@@ -203,6 +191,33 @@ class UpkieGyropod(gym.Wrapper):
         Get the crouching height of the robot, in meters.
         """
         return self.__crouching_height
+
+    def set_crouching_height(self, crouching_height: float) -> None:
+        r"""!
+        Set a new crouching height.
+
+        Hip and knee targets are updated right away, and legs reach them in
+        roughly one second.
+
+        \param crouching_height Height by which the robot crouches, in
+            meters. Hip and knee angles are computed from it by \ref
+            upkie.model.model.Model.compute_crouching_posture.
+        \throw UpkieException If the crouching height is out of reach, or if
+            the resulting angle of a joint is outside of its limits.
+        """
+        leg_targets = self.env.model.compute_crouching_posture(
+            crouching_height
+        )
+        for joint in self.env.model.upper_leg_joints:
+            target = leg_targets[joint.name]
+            if not joint.limit.lower <= target <= joint.limit.upper:
+                raise UpkieException(
+                    f"Crouching at {crouching_height} m requires angle "
+                    f"{target} rad for joint {joint.name}, outside of its "
+                    f"limits [{joint.limit.lower}, {joint.limit.upper}]"
+                )
+        self.__crouching_height = crouching_height
+        self.__leg_targets = leg_targets
 
     def set_leg_gain_scale(self, leg_gain_scale: float) -> None:
         r"""!
