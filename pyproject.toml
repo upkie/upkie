@@ -38,7 +38,7 @@ dependencies = [
 keywords = ["wheeled", "biped", "robot", "balance", "motion", "control", "robotics"]
 
 [project.optional-dependencies]
-cookie = ["cookie_description >= 1.0"]
+cookie = ["cookie_description >= 1.2.0"]
 
 [project.urls]
 Homepage = "https://hackaday.io/project/185729-upkie-wheeled-biped-robots"
@@ -102,25 +102,6 @@ upkie = { path = ".", editable = true }
 # most environments have a corresponding feature and run in the default solve
 # group, except simulator environments which run in their own solve groups.
 
-# -------------------
-# Environment: cookie
-# -------------------
-
-[tool.pixi.environments.cookie]
-features = ["cookie", "default"]
-
-[tool.pixi.feature.cookie.dependencies]
-pybullet = ">=3.25,<4"
-qpmpc = ">=3.1.0,<4"
-
-[tool.pixi.feature.cookie.pypi-dependencies]
-cookie_description = ">=1.1.0,<2"
-
-[tool.pixi.feature.cookie.tasks]
-cookie-follow-joystick = "python examples/follow_joystick.py --robot cookie"
-cookie-follow-square = "python examples/follow_square.py --robot cookie"
-cookie-go-forward = "python examples/go_forward.py --robot cookie"
-
 # ---------------------
 # Environment: coverage
 # ---------------------
@@ -133,7 +114,7 @@ lcov = ">=1.16,<2"
 
 [tool.pixi.feature.coverage.tasks]
 coverage = { cmd = "tools/bazelisk coverage --combined_report=lcov --compilation_mode=fastbuild --instrument_test_targets //... && genhtml bazel-out/_coverage/_coverage_report.dat -o bazel-out/_coverage" }
-coverage-open = { cmd = "xdg-open bazel-out/_coverage/index.html", depends-on = ["coverage"] }
+open-coverage = { cmd = "xdg-open bazel-out/_coverage/index.html", depends-on = ["coverage"] }
 
 # -----------------
 # Environment: docs
@@ -149,7 +130,7 @@ make = ">=4.4.1,<5"
 
 [tool.pixi.feature.docs.tasks]
 docs = "doxygen --version && cd docs && make"
-docs-open = { cmd = "xdg-open docs/html/index.html", depends-on = ["docs"] }
+open-docs = { cmd = "xdg-open docs/html/index.html", depends-on = ["docs"] }
 
 # -----------------
 # Environment: lint
@@ -163,11 +144,11 @@ six = ">=1.17.0,<2"
 ruff = ">=0.15.9,<0.16"
 
 [tool.pixi.feature.lint.tasks]
+_lint-cpp = { cmd = "tools/bazelisk test --config lint //upkie/..." }
+_lint-python = { cmd = "ruff check upkie && ruff format --check upkie" }
+_lint-python-fix = { cmd = "ruff check --fix upkie" }
 format = { cmd = "ruff format upkie" }
-lint-cpp = { cmd = "tools/bazelisk test --config lint //upkie/..." }
-lint-python = { cmd = "ruff check upkie && ruff format --check upkie" }
-lint-python-fix = { cmd = "ruff check --fix upkie" }
-lint = { depends-on = ["lint-cpp", "lint-python"] }
+lint = { depends-on = ["_lint-cpp", "_lint-python"] }
 
 # -----------------------
 # Environment: pre-commit
@@ -193,29 +174,14 @@ features = ["pybullet", "default"]
 solve-group = "pybullet"
 
 [tool.pixi.feature.pybullet.dependencies]
+cookie_description = ">=1.2.0"
 proxsuite = ">=0.7.2,<0.8"
 pybullet = ">=3.25,<4"
 qpmpc = ">=3.1.0,<4"
 
 [tool.pixi.feature.pybullet.tasks]
-example-follow-joystick = "python examples/follow_joystick.py"
-example-follow-square = "python examples/follow_square.py"
-example-go-forward = "python examples/go_forward.py"
-simulator-pybullet = "python examples/pybullet/mpc_balancing.py"
-
-# -----------------
-# Environment: real
-# -----------------
-
-[tool.pixi.environments.real]
-features = ["real", "default"]
-
-[tool.pixi.feature.real.dependencies]
-proxsuite = ">=0.7.2,<0.8"
-qpmpc = ">=3.1.0,<4"
-
-[tool.pixi.feature.real.tasks]
-real-follow-joystick = "python examples/real_robot/follow_joystick.py"
+pybullet-cookie = "python examples/go_forward.py --robot cookie --velocity 0"
+pybullet-upkie = "python examples/go_forward.py --robot upkie --velocity 0"
 
 # -----------------
 # Environment: test
@@ -225,20 +191,18 @@ real-follow-joystick = "python examples/real_robot/follow_joystick.py"
 features = ["test", "test-cpp", "test-py", "default"]
 
 [tool.pixi.feature.test.dependencies]
+cookie_description = ">=1.2.0"
 proxsuite = ">=0.7.2,<0.8"
 pybullet = ">=3.25,<4"
 pytest = ">=9.0.2,<10"
 qpmpc = ">=3.1.0,<4"
 
-[tool.pixi.feature.test.pypi-dependencies]
-cookie_description = ">=1.1.0,<2"
-
 [tool.pixi.feature.test-cpp.tasks]
-test-cpp = "tools/bazelisk test //upkie/..."
+_test-cpp = "tools/bazelisk test //upkie/..."
 
 [tool.pixi.feature.test-py.tasks]
-test-python = "pytest tests/"
-test = { depends-on = ["test-cpp", "test-python"] }
+_test-python = "pytest tests/"
+test = { depends-on = ["_test-cpp", "_test-python"] }
 
 # --------------------------------
 # Environment: test-python-version
@@ -248,13 +212,11 @@ test = { depends-on = ["test-cpp", "test-python"] }
 features = ["test", "default"]
 
 [tool.pixi.feature.test-python-version.dependencies]
+cookie_description = ">=1.2.0"
 proxsuite = ">=0.7.2,<0.8"
 pybullet = ">=3.25,<4"
 pytest = ">=9.0.2,<10"
 qpmpc = ">=3.1.0,<4"
-
-[tool.pixi.feature.test-python-version.pypi-dependencies]
-cookie_description = ">=1.1.0,<2"
 
 [tool.pixi.feature.test-python-version.tasks]
 _test-python-version = "pytest tests/"
