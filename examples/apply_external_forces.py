@@ -23,6 +23,26 @@ def get_lifting_force(
     delta: float = 0.1,
     hold_steps: int = 400,
 ) -> float:
+    """Compute the vertical lifting force at a given step of the cycle.
+
+    Parameters
+    ----------
+    step : int
+        Step index in the current lifting cycle.
+    start : int
+        Step at which lifting starts.
+    lift_steps : int
+        Number of steps spent lifting the robot.
+    delta : float
+        Relative force excess (then deficit) applied while lifting.
+    hold_steps : int
+        Number of steps holding the robot in the air after lifting.
+
+    Returns
+    -------
+    float
+        Upward force to apply to the torso, in [N].
+    """
     lift: float = 0.0  # 0 = no force, 1 => apply -mg
     if step < start:
         lift = 0.0
@@ -39,6 +59,7 @@ def get_lifting_force(
 
 
 def run(env: UpkiePendulum, nb_steps: int = 5000):
+    """Balance the robot while periodically lifting it in the air."""
     torso_force_in_world = np.zeros(3)
     gain = np.array([10.0, 1.0, 0.0, 0.1])
     simulator = env.unwrapped.backend

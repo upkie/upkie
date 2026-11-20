@@ -16,6 +16,7 @@ GAIN = 10.0  # base pitch to wheel torque, in N⋅m/rad
 
 
 def run(env: upkie.envs.UpkieServos):
+    """Balance by mapping base pitch to wheel torques."""
     action = env.unwrapped.get_neutral_action()
 
     # Position commands to keep the legs extended
