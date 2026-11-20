@@ -76,6 +76,7 @@ class UpkieBaseVelocity(gym.Wrapper):
         max_yaw_velocity: float = 1.0,
         leg_length: float = 0.58,
         max_ground_accel: float = 10.0,
+        crouching_height: float = 0.0,
     ):
         r"""!
         Initialize environment.
@@ -84,16 +85,23 @@ class UpkieBaseVelocity(gym.Wrapper):
         \param fall_pitch Fall detection pitch angle, in radians.
         \param max_ground_velocity Maximum commanded ground velocity in m/s.
         \param max_yaw_velocity Maximum commanded yaw velocity in rad/s.
-        \param leg_length Leg length in meters, forwarded to the internal
-            MPC balancer.
+        \param leg_length Pendulum leg-length parameter in meters, forwarded to
+            the internal MPC balancer. This is an estimate of the distance
+            between the center of mass and wheel contacts, rather than the
+            actual length of extended legs.
         \param max_ground_accel Maximum ground acceleration in m/s², forwarded
             to the internal MPC balancer.
+        \param crouching_height Height by which the robot crouches, in
+            meters. Defaults to zero, straight legs. See \ref
+            upkie.envs.upkie_gyropod.UpkieGyropod. Crouching shortens the
+            pendulum length parameter: adapt `leg_length` accordingly.
         """
         gyropod_env = UpkieGyropod(
             servos_env,
             fall_pitch=fall_pitch,
             max_ground_velocity=max_ground_velocity,
             max_yaw_velocity=max_yaw_velocity,
+            crouching_height=crouching_height,
         )
         super().__init__(gyropod_env)
 
