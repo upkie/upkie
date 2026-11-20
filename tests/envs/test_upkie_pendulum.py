@@ -72,6 +72,11 @@ class PendulumTestCase(unittest.TestCase):
             ground_velocity = np.abs(wheel_velocity * model.wheel_radius)
             self.assertLess(ground_velocity, max_ground_velocity + 1e-6)
 
+    def test_crouching_height(self):
+        self.assertEqual(self.env.get_wrapper_attr("crouching_height"), 0.0)
+        env = UpkiePendulum(self.servos_env, crouching_height=0.05)
+        self.assertEqual(env.get_wrapper_attr("crouching_height"), 0.05)
+
     def test_dtype_consistency(self):
         """Test that action and observation spaces use float32 dtype."""
         self.assertEqual(self.env.action_space.dtype, np.float32)

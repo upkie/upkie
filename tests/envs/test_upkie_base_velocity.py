@@ -88,6 +88,11 @@ class BaseVelocityTestCase(unittest.TestCase):
         self.assertAlmostEqual(obs[0], expected_x, places=4)
         self.assertAlmostEqual(obs[1], expected_y, places=4)
 
+    def test_crouching_height(self):
+        self.assertEqual(self.env.get_wrapper_attr("crouching_height"), 0.0)
+        env = UpkieBaseVelocity(self.servos_env, crouching_height=0.05)
+        self.assertEqual(env.get_wrapper_attr("crouching_height"), 0.05)
+
     def test_dtype_consistency(self):
         self.assertEqual(self.env.action_space.dtype, np.float32)
         self.assertEqual(self.env.observation_space.dtype, np.float32)

@@ -73,6 +73,14 @@ class EntryPointsTestCase(unittest.TestCase):
         with gym.make("Upkie-Mock-Gyropod") as env:
             self.assertIsNotNone(env)
 
+    def test_crouching_height(self):
+        """The crouching height keyword argument reaches the gyropod."""
+        for action in ("Pendulum", "Gyropod", "BaseVelocity"):
+            env_id = f"Upkie-Mock-{action}"
+            with gym.make(env_id, crouching_height=0.05) as env:
+                height = env.get_wrapper_attr("crouching_height")
+                self.assertEqual(height, 0.05, msg=action)
+
     def test_spine_gyropod(self):
         shm = SharedMemory(name=None, size=42, create=True)
         try:
