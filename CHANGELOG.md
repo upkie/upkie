@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Bump minimum Python version to 3.11
+- examples: Extend go-forward example to take velocity as argument
 - pixi: Bump minimum msgpack version to 1.2.3
 - spines: Update Cookie description to 1.3.0
 
