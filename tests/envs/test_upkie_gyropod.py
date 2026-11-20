@@ -11,6 +11,7 @@ from upkie.envs.backends import SpineBackend
 from upkie.envs.testing import MockSpine
 from upkie.envs.upkie_gyropod import UpkieGyropod
 from upkie.envs.upkie_servos import UpkieServos
+from upkie.exceptions import UpkieException
 
 
 class GyropodTestCase(unittest.TestCase):
@@ -111,6 +112,77 @@ class GyropodTestCase(unittest.TestCase):
         for joint in model.upper_leg_joints:
             self.assertAlmostEqual(servo_action[joint.name]["kp_scale"], 2.5)
             self.assertAlmostEqual(servo_action[joint.name]["kd_scale"], 2.5)
+
+    def leg_targets_after(self, env: UpkieGyropod, nb_steps: int) -> dict:
+        """Reset an environment and step it with zero actions.
+
+        Args:
+            env: Gyropod environment around the mock spine.
+            nb_steps: Number of steps.
+
+        Returns:
+            Position targets of the upper leg joints in the last spine action.
+        """
+        env.reset()
+        action = np.zeros(env.action_space.shape)
+        for _ in range(nb_steps):
+            env.step(action)
+        servo_action = self.backend._spine.action["servo"]
+        joints = ("left_hip", "left_knee", "right_hip", "right_knee")
+        return {joint: servo_action[joint]["position"] for joint in joints}
+
+    def test_default_crouching_is_straight(self):
+        self.assertEqual(self.env.crouching_height, 0.0)
+        targets = self.leg_targets_after(self.env, nb_steps=1000)
+        for joint, target in targets.items():
+            self.assertAlmostEqual(target, 0.0, msg=joint)
+
+    def test_crouching_posture(self):
+        env = UpkieGyropod(self.servos_env, crouching_height=0.05)
+        self.assertEqual(env.crouching_height, 0.05)
+        expected = self.servos_env.model.compute_crouching_posture(0.05)
+        targets = self.leg_targets_after(env, nb_steps=1000)  # 10 s
+        for joint, target in targets.items():
+            self.assertAlmostEqual(target, expected[joint], places=4)
+        self.assertGreater(targets["left_hip"], 0.0)  # knees forward
+        self.assertLess(targets["left_knee"], 0.0)
+        self.assertAlmostEqual(targets["right_hip"], -targets["left_hip"])
+        self.assertAlmostEqual(targets["right_knee"], -targets["left_knee"])
+
+    def test_crouching_reached_progressively(self):
+        env = UpkieGyropod(self.servos_env, crouching_height=0.05)
+        expected = self.servos_env.model.compute_crouching_posture(0.05)
+        targets = self.leg_targets_after(env, nb_steps=1)
+        for joint, target in targets.items():  # mock spine starts at zero
+            self.assertGreater(abs(target), 0.0, msg=joint)
+            self.assertLess(abs(target), abs(expected[joint]) / 10, msg=joint)
+
+    def test_crouching_out_of_reach(self):
+        with self.assertRaises(UpkieException):
+            UpkieGyropod(self.servos_env, crouching_height=-0.01)
+        with self.assertRaises(UpkieException):
+            UpkieGyropod(
+                self.servos_env, crouching_height=0.4
+            )  # 2 ell = 0.343
+
+    def test_crouching_outside_joint_limits(self):
+        with self.assertRaises(UpkieException):  # hip 1.30 rad > 1.26 rad
+            UpkieGyropod(self.servos_env, crouching_height=0.25)
+
+    def test_set_crouching_height(self):
+        env = UpkieGyropod(self.servos_env)
+        env.set_crouching_height(0.05)
+        self.assertEqual(env.crouching_height, 0.05)
+        expected = self.servos_env.model.compute_crouching_posture(0.05)
+        targets = self.leg_targets_after(env, nb_steps=1000)  # 10 s
+        for joint, target in targets.items():
+            self.assertAlmostEqual(target, expected[joint], places=4)
+
+    def test_set_crouching_height_outside_joint_limits(self):
+        env = UpkieGyropod(self.servos_env, crouching_height=0.05)
+        with self.assertRaises(UpkieException):
+            env.set_crouching_height(0.25)
+        self.assertEqual(env.crouching_height, 0.05)  # unchanged
 
     def test_dtype_consistency(self):
         self.assertEqual(self.env.action_space.dtype, np.float32)

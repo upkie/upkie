@@ -8,6 +8,7 @@ import cookie_description
 import numpy as np
 import upkie_description
 
+from upkie.exceptions import ModelError
 from upkie.model import Model
 
 
@@ -103,6 +104,36 @@ class ModelTestCase(unittest.TestCase):
             self.assertTrue(isinstance(radius, float))
             self.assertGreater(radius, 0.0)
             self.assertLess(radius, 1.0)
+
+    def test_leg_segment_length(self):
+        """Segment lengths are half the hip-to-axle distance."""
+        self.assertAlmostEqual(self.model.leg_segment_length, 0.1715)
+        cookie_model = Model(cookie_description.URDF_PATH)
+        self.assertAlmostEqual(cookie_model.leg_segment_length, 0.227)
+
+    def test_zero_crouching_height_is_straight(self):
+        angles = self.model.compute_crouching_posture(0.0)
+        for joint in self.model.upper_leg_joints:
+            self.assertEqual(angles[joint.name], 0.0)
+
+    def test_crouching_posture(self):
+        """Symmetric legs shorten by the crouching height, knees forward."""
+        ell = self.model.leg_segment_length
+        for height in (0.01, 0.05, 0.1, 0.2, 0.3):
+            angles = self.model.compute_crouching_posture(height)
+            hip, knee = angles["left_hip"], angles["left_knee"]
+            self.assertGreater(hip, 0.0)
+            self.assertAlmostEqual(knee, -2.0 * hip)
+            self.assertAlmostEqual(2.0 * ell * np.cos(hip), 2.0 * ell - height)
+            self.assertEqual(angles["right_hip"], -hip)
+            self.assertEqual(angles["right_knee"], -knee)
+
+    def test_crouching_out_of_reach(self):
+        ell = self.model.leg_segment_length
+        with self.assertRaises(ModelError):
+            self.model.compute_crouching_posture(-0.01)
+        with self.assertRaises(ModelError):
+            self.model.compute_crouching_posture(2.0 * ell)
 
 
 if __name__ == "__main__":
