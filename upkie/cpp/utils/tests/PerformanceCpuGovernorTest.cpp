@@ -47,9 +47,7 @@ class PerformanceCpuGovernorTest : public ::testing::Test {
 };
 
 TEST_F(PerformanceCpuGovernorTest, ConstructorChangesNothing) {
-  {
-    PerformanceCpuGovernor governor(4, cpu_dir_.string());
-  }
+  { PerformanceCpuGovernor governor(4, cpu_dir_.string()); }
   for (int cpu = 0; cpu < 4; ++cpu) {
     ASSERT_EQ(read(cpu), "ondemand");
   }
