@@ -386,20 +386,18 @@ def make_cookie_spine_base_velocity(**kwargs):
     r"""!
     Add base velocity wrapper around a Cookie servos env with Spine backend.
     """
-    cookie_model = _get_cookie_model()
-    return wrap_base_velocity(make_spine_servos, model=cookie_model, **kwargs)
+    return wrap_base_velocity(make_cookie_spine_servos, **kwargs)
 
 
 def make_cookie_spine_gyropod(**kwargs):
     r"""!
     Add gyropod wrapper around a Cookie servos env with Spine backend.
     """
-    cookie_model = _get_cookie_model()
-    return wrap_spine_gyropod(model=cookie_model, **kwargs)
+    return wrap_gyropod(make_cookie_spine_servos, **kwargs)
 
 
 def make_cookie_spine_pendulum(**kwargs):
     r"""!
     Add pendulum wrapper around a Cookie servos env with Spine backend.
     """
-    return wrap_spine_pendulum(**kwargs)
+    return wrap_pendulum(make_cookie_spine_servos, **kwargs)
