@@ -4,6 +4,6 @@ There are many ways you can contribute to the project. Here are some ideas:
 
 - Build your own Upkie following the [build instructions](https://upkie.github.io/upkie/build-your-own.html)
 - Develop a custom wrapper and train a new behavior by reinforcement learning
-- Show your robot in [Show and tell](https://github.com/upkie/upkie/discussions/categories/show-and-tell)
+- Add your robot to the list of [Real robots](https://github.com/upkie/upkie/discussions/categories/real-robots)
 
 Feel free to join the [chat](https://app.element.io/#/room/#upkie:matrix.org) to catch up with other Upkie makers.
