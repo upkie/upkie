@@ -202,21 +202,21 @@ def make_cookie_mock_base_velocity(**kwargs):
     r"""!
     Add base velocity wrapper around a Cookie servos env with Mock backend.
     """
-    return wrap_base_velocity(make_mock_servos, **kwargs)
+    return wrap_base_velocity(make_cookie_mock_servos, **kwargs)
 
 
 def make_cookie_mock_gyropod(**kwargs):
     r"""!
     Add gyropod wrapper around a Cookie servos env with Mock backend.
     """
-    return wrap_gyropod(make_mock_servos, **kwargs)
+    return wrap_gyropod(make_cookie_mock_servos, **kwargs)
 
 
 def make_cookie_mock_pendulum(**kwargs):
     r"""!
     Add pendulum wrapper around a Cookie servos env with Mock backend.
     """
-    return wrap_mock_pendulum(**kwargs)
+    return wrap_pendulum(make_cookie_mock_servos, **kwargs)
 
 
 def make_upkie_mock_base_velocity(**kwargs):
