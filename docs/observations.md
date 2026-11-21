@@ -4,7 +4,7 @@
 
 Spines compute observation dictionaries from sensor measurements by applying *observers* one after the other in a sequence called the *observer pipeline*. This page lists the outputs of available observers, using shorthands `a.b.c` for nested dictionary keys `observation["a"]["b"]["c"]`.
 
-## Base orientation
+## Base orientation {#base-orientation}
 
 - Observer: [BaseOrientation](\ref upkie::cpp::observers::BaseOrientation)
 - Spine observation key: `base_orientation`
@@ -19,7 +19,7 @@ The base orientation observer estimates the orientation of the floating base wit
 
 <img src="https://upkie.github.io/upkie/observers.png" align="right">
 
-## Floor contact
+## Floor contact {#floor-contact}
 
 - Observer: [FloorContact](\ref upkie::cpp::observers::FloorContact)
 - Spine observation key: `floor_contact`
@@ -33,7 +33,7 @@ The floor contact observer detects contact between the wheels and the floor. The
 | `right_wheel`      | Wheel contact observation for the right wheel |
 | `upper_leg_torque` | Mean squared upper-leg torques in N⋅m |
 
-### Wheel contact
+### Wheel contact {#wheel-contact}
 
 - Observer: [WheelContact](\ref upkie::cpp::observers::WheelContact)
 - Spine observation key: `floor_contact.left_wheel` and `floor_contact.right_wheel`
@@ -73,7 +73,7 @@ auto linear_acceleration_history =
 observer_pipeline.append_observer(linear_acceleration_history);
 ```
 
-## IMU
+## IMU {#imu-observations}
 
 - Observer: always reported
 - See also: [ImuData](\ref upkie::cpp::interfaces::ImuData)
@@ -91,17 +91,23 @@ The inertial measurement unit (IMU) mounted on the [pi3hat](https://mjbots.com/p
 
 There are three main frames to keep in mind when considering the IMU: the frame of the IMU sensor itself, the world frame, and the [attitude reference system](\ref ars) (ARS) frame. The world frame is an inertial frame of reference we refer to in various observers. It has an x-axis pointing forward, a y-axis pointing to the left and a z-axis vertical and pointing up (*i.e.*, against the gravity vector).
 
-## Servo
+## Servo {#servo-observations}
 
 - Observer: always reported
 - Spine observation key: `servo`
 
-| Observation key         | Description |
-|-------------------------|-------------|
-| `<servo_name>`          | Observations for a given servo, *e.g. `left_hip` |
-| `<servo_name>.position` | Angle between the stator and the rotor in radians |
-| `<servo_name>.torque`   | Joint torque in N⋅m |
-| `<servo_name>.velocity` | Angular velocity of the rotor w.r.t. stator in rotor, in rad/s |
+| Observation key            | Description |
+|----------------------------|-------------|
+| `<servo_name>`             | Observations for a given servo, *e.g.* `left_hip` |
+| `<servo_name>.d_current`   | D-axis current in A |
+| `<servo_name>.fault`       | Fault code reported by the moteus controller (zero when there is no fault) |
+| `<servo_name>.mode`        | Current [mode](https://github.com/mjbots/moteus/blob/main/docs/reference.md#0x000---mode) of the moteus controller |
+| `<servo_name>.position`    | Angle between the stator and the rotor in radians |
+| `<servo_name>.q_current`   | Q-axis current in A |
+| `<servo_name>.temperature` | Temperature of the moteus controller board in °C |
+| `<servo_name>.torque`      | Joint torque in N⋅m |
+| `<servo_name>.velocity`    | Angular velocity of the rotor w.r.t. stator in rotor, in rad/s |
+| `<servo_name>.voltage`     | Input voltage of the moteus controller board in V |
 
 Actuators on the robot are [qdd100 beta 3](https://mjbots.com/products/qdd100-beta-3) (hips and knees) and [mj5208 brushless motors](https://mjbots.com/products/mj5208) (wheels). All of them have [moteus](https://mjbots.com/products/moteus-r4-11) controller boards that provide the above measurements. They are estimated as follows:
 
@@ -109,14 +115,14 @@ Actuators on the robot are [qdd100 beta 3](https://mjbots.com/products/qdd100-be
 - Joint velocity, obtained by filtering joint angle measurements (not a direct measurement)
 - Joint torque, estimated from sensed phase currents (with a model that includes [stator magnetic saturation](https://jpieper.com/2020/07/31/dealing-with-stator-magnetic-saturation/))
 
-## Simulation-only
+## Simulation-only {#sim-observations}
 
 - Observer: when using a simulation interface
 - Spine observation key: `sim`
 
 Simulation spines may report the following additional observations.
 
-### Floating base
+### Floating base {#sim-floating-base}
 
 - Spine observation key: `sim.base`
 
@@ -125,11 +131,11 @@ Positions and velocities of the base frame:
 | Observation key    | Description |
 |--------------------|-------------|
 | `position`         | Position of the base frame in the world frame, in meters |
-| `orientation`      | Unit quaternion (q, x, y, z) of the orientation of the base frame in the world frame |
+| `orientation`      | Unit quaternion (w, x, y, z) of the orientation of the base frame in the world frame |
 | `linear_velocity`  | Linear velocity from base to world in world, in m/s |
 | `angular_velocity` | Angular velocity from base to world in world, in rad/s |
 
-### IMU non-observables
+### IMU non-observables {#sim-imu}
 
 - Spine observation key: `sim.imu`
 
@@ -139,7 +145,7 @@ Non-observable quantities related to the IMU:
 |-------------------|-------------|
 | `linear_velocity` | Linear velocity of the IMU frame in the world frame, in m/s |
 
-### Rigid bodies
+### Rigid bodies {#sim-bodies}
 
 - Spine observation key: `sim.bodies`
 
@@ -149,9 +155,16 @@ Coordinates of some rigid bodies in the world frame:
 |-------------------|-------------|
 | `YYY`             | Positions and velocities of the extra body YYY |
 | `YYY.position`    | Position of YYY in the world frame, in meters |
-| `YYY.orientation` | Unit quaternion (q, x, y, z) of the orientation of YYY in the world frame |
+| `YYY.orientation` | Unit quaternion (w, x, y, z) of the orientation of YYY in the world frame |
 
-## Wheel odometry
+## Time {#time-observation}
+
+- Observer: always reported
+- Spine observation key: `time`
+
+The spine timestamps each observation with the time at which it was computed, in seconds since the epoch.
+
+## Wheel odometry {#wheel-odometry}
 
 - Observer: [WheelOdometry](\ref upkie::cpp::observers::WheelOdometry)
 - Spine observation key: `wheel_odometry`
@@ -162,3 +175,70 @@ This observer measures the relative motion of the robot with respect to the floo
 |-----------------|------------------------------|
 | `position`      | Ground position in meters    |
 | `velocity`      | Ground velocity in m/s       |
+
+## All observations {#all-observations}
+
+The following table lists all observation keys that spines can report, along with the section that details them. Placeholders in angle brackets depend on the robot or spine configuration: `<servo_name>` is a servo name such as `left_hip`, `<body_name>` is the name of an extra body in the simulation, and `<keys>` are the keys of a signal reported by a [history observer](\ref history-observer). Sensor observations are only reported when the corresponding [sensor](\ref sensors) is enabled in the spine, and simulation observations only by simulation spines.
+
+| Key                                          | Source                                    |
+|----------------------------------------------|-------------------------------------------|
+| `base_orientation.angular_velocity`          | [Base orientation](\ref base-orientation) |
+| `base_orientation.pitch`                     | [Base orientation](\ref base-orientation) |
+| `base_orientation.rotation_base_to_world`    | [Base orientation](\ref base-orientation) |
+| `cpu_temperature`                            | [CPU temperature](\ref cpu-temperature)   |
+| `floor_contact.contact`                      | [Floor contact](\ref floor-contact)       |
+| `floor_contact.left_wheel.abs_acceleration`  | [Wheel contact](\ref wheel-contact)       |
+| `floor_contact.left_wheel.abs_torque`        | [Wheel contact](\ref wheel-contact)       |
+| `floor_contact.left_wheel.contact`           | [Wheel contact](\ref wheel-contact)       |
+| `floor_contact.left_wheel.inertia`           | [Wheel contact](\ref wheel-contact)       |
+| `floor_contact.right_wheel.abs_acceleration` | [Wheel contact](\ref wheel-contact)       |
+| `floor_contact.right_wheel.abs_torque`       | [Wheel contact](\ref wheel-contact)       |
+| `floor_contact.right_wheel.contact`          | [Wheel contact](\ref wheel-contact)       |
+| `floor_contact.right_wheel.inertia`          | [Wheel contact](\ref wheel-contact)       |
+| `floor_contact.upper_leg_torque`             | [Floor contact](\ref floor-contact)       |
+| `history.<keys>`                             | [History observer](\ref history-observer) |
+| `imu.angular_velocity`                       | [IMU](\ref imu-observations)              |
+| `imu.linear_acceleration`                    | [IMU](\ref imu-observations)              |
+| `imu.orientation`                            | [IMU](\ref imu-observations)              |
+| `imu.raw_angular_velocity`                   | [IMU](\ref imu-observations)              |
+| `imu.raw_linear_acceleration`                | [IMU](\ref imu-observations)              |
+| `joystick.cross_button`                      | [Joystick](\ref joystick-sensor)          |
+| `joystick.left_axis`                         | [Joystick](\ref joystick-sensor)          |
+| `joystick.left_button`                       | [Joystick](\ref joystick-sensor)          |
+| `joystick.left_trigger`                      | [Joystick](\ref joystick-sensor)          |
+| `joystick.pad_axis`                          | [Joystick](\ref joystick-sensor)          |
+| `joystick.right_axis`                        | [Joystick](\ref joystick-sensor)          |
+| `joystick.right_button`                      | [Joystick](\ref joystick-sensor)          |
+| `joystick.right_trigger`                     | [Joystick](\ref joystick-sensor)          |
+| `joystick.square_button`                     | [Joystick](\ref joystick-sensor)          |
+| `joystick.triangle_button`                   | [Joystick](\ref joystick-sensor)          |
+| `keyboard.a`                                 | [Keyboard](\ref keyboard-sensor)          |
+| `keyboard.d`                                 | [Keyboard](\ref keyboard-sensor)          |
+| `keyboard.down`                              | [Keyboard](\ref keyboard-sensor)          |
+| `keyboard.key_pressed`                       | [Keyboard](\ref keyboard-sensor)          |
+| `keyboard.left`                              | [Keyboard](\ref keyboard-sensor)          |
+| `keyboard.right`                             | [Keyboard](\ref keyboard-sensor)          |
+| `keyboard.s`                                 | [Keyboard](\ref keyboard-sensor)          |
+| `keyboard.unknown`                           | [Keyboard](\ref keyboard-sensor)          |
+| `keyboard.up`                                | [Keyboard](\ref keyboard-sensor)          |
+| `keyboard.w`                                 | [Keyboard](\ref keyboard-sensor)          |
+| `keyboard.x`                                 | [Keyboard](\ref keyboard-sensor)          |
+| `servo.<servo_name>.d_current`               | [Servo](\ref servo-observations)          |
+| `servo.<servo_name>.fault`                   | [Servo](\ref servo-observations)          |
+| `servo.<servo_name>.mode`                    | [Servo](\ref servo-observations)          |
+| `servo.<servo_name>.position`                | [Servo](\ref servo-observations)          |
+| `servo.<servo_name>.q_current`               | [Servo](\ref servo-observations)          |
+| `servo.<servo_name>.temperature`             | [Servo](\ref servo-observations)          |
+| `servo.<servo_name>.torque`                  | [Servo](\ref servo-observations)          |
+| `servo.<servo_name>.velocity`                | [Servo](\ref servo-observations)          |
+| `servo.<servo_name>.voltage`                 | [Servo](\ref servo-observations)          |
+| `sim.base.angular_velocity`                  | [Floating base](\ref sim-floating-base)   |
+| `sim.base.linear_velocity`                   | [Floating base](\ref sim-floating-base)   |
+| `sim.base.orientation`                       | [Floating base](\ref sim-floating-base)   |
+| `sim.base.position`                          | [Floating base](\ref sim-floating-base)   |
+| `sim.bodies.<body_name>.orientation`         | [Rigid bodies](\ref sim-bodies)           |
+| `sim.bodies.<body_name>.position`            | [Rigid bodies](\ref sim-bodies)           |
+| `sim.imu.linear_velocity`                    | [IMU non-observables](\ref sim-imu)       |
+| `time`                                       | [Time](\ref time-observation)             |
+| `wheel_odometry.position`                    | [Wheel odometry](\ref wheel-odometry)     |
+| `wheel_odometry.velocity`                    | [Wheel odometry](\ref wheel-odometry)     |
