@@ -13,6 +13,7 @@ from upkie.exceptions import UpkieTimeoutError
 
 ACT_OBS_SPACES = ("Servos", "Pendulum", "Gyropod", "BaseVelocity")
 
+
 class EntryPointsTestCase(unittest.TestCase):
     def test_mock_servos(self):
         with gym.make("Upkie-Mock-Servos") as env:
@@ -35,7 +36,7 @@ class EntryPointsTestCase(unittest.TestCase):
             shm.close()
 
     def test_spine_servos_model(self):
-        """The robot model reaches both the spine backend and the servos env."""
+        """The robot model reaches both the spine backend and servos env."""
         from upkie.envs.entry_points import make_spine_servos
         from upkie.model import Model
 
