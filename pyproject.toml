@@ -145,9 +145,9 @@ ruff = ">=0.15.9,<0.16"
 
 [tool.pixi.feature.lint.tasks]
 _lint-cpp = { cmd = "tools/bazelisk test --config lint //upkie/..." }
-_lint-python = { cmd = "ruff check upkie && ruff format --check upkie" }
-_lint-python-fix = { cmd = "ruff check --fix upkie" }
-format = { cmd = "ruff format upkie" }
+_lint-python = { cmd = "ruff check upkie tests && ruff format --check upkie tests" }
+_lint-python-fix = { cmd = "ruff check --fix upkie tests" }
+format = { cmd = "ruff format upkie tests" }
 lint = { depends-on = ["_lint-cpp", "_lint-python"] }
 
 # -----------------------
@@ -278,7 +278,7 @@ ignore = [
     "D401",  # good for methods but not for class docstrings
     "D405",  # British-style section names are also "proper"!
 ]
-per-file-ignores = { "*/tests/*.py" = ["D"] }
+per-file-ignores = { "tests/**/*.py" = ["D"] }
 pydocstyle = { convention = "numpy" }
 select = [
     # pyflakes
