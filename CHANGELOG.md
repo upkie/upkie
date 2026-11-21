@@ -18,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - envs: Pass the robot model to servos environments properly
+- envs: Use the Cookie model in Cookie-Mock environments
+- envs: Use the Cookie model in Cookie-Spine environments
 
 ### Changed
 
