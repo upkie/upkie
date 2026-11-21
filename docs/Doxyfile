@@ -841,7 +841,7 @@ INPUT                  = README.md \
                          docs/assembly/assembly.md \
                          docs/assembly/bill-of-materials.md \
                          docs/assembly/cables.md \
-                         docs/gym-environments.md \
+                         docs/environments.md \
                          docs/sensors.md \
                          docs/observations.md \
                          docs/kinematics.md \

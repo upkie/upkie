@@ -48,7 +48,7 @@ Software for Upkies comes as an `upkie` Python library that you can install *e.g
 pip install upkie
 ```
 
-This library provides [Gymnasium environments](https://upkie.github.io/upkie/gym-environments.html) to control real and simulation robots with the same code. For instance, the following example balances the robot like a wheeled inverted pendulum in PyBullet:
+This library provides [environments](https://upkie.github.io/upkie/environments.html), compatible with the Gymnasium API, to control real and simulation robots with the same code. For instance, the following example balances the robot like a wheeled inverted pendulum in PyBullet:
 
 ```python
 import gymnasium as gym
