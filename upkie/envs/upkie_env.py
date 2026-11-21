@@ -129,10 +129,10 @@ class UpkieEnv(gym.Env, ABC):
     @abstractmethod
     def get_env_observation(self, spine_observation: dict):
         r"""!
-        Get Gym environment observation from spine observation.
+        Get environment observation from spine observation.
 
         \param[in] spine_observation Spine observation dictionary.
-        \return Gym environment observation.
+        \return Environment observation.
         """
 
     @abstractmethod
@@ -144,9 +144,9 @@ class UpkieEnv(gym.Env, ABC):
     @abstractmethod
     def get_spine_action(self, env_action) -> dict:
         r"""!
-        Get spine action from Gym environment action.
+        Get spine action from environment action.
 
-        \param[in] env_action Gym environment action.
+        \param[in] env_action Environment action.
         \return Spine action dictionary.
         """
 

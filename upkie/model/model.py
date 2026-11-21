@@ -143,7 +143,7 @@ class Model:
         \param crouching_height Crouching height \f$c\f$, in meters.
         \return Angles of the hip and knee joints, in radians, by joint name.
             The right leg mirrors the left leg.
-        \raise ModelError If the crouching height is negative or not below
+        \throw ModelError If the crouching height is negative or not below
             \f$2 \ell\f$.
         """
         ell = self.leg_segment_length
@@ -178,7 +178,7 @@ class Model:
 
         \param tree Kinematic tree with parsed links.
         \return Wheel radius in meters.
-        \raise ModelError If the "left_wheel_tire" link is missing or lacks the
+        \throw ModelError If the "left_wheel_tire" link is missing or lacks the
             expected collision cylinder geometry.
         """
         if "left_wheel_tire" not in tree.links:

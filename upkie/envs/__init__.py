@@ -3,7 +3,7 @@
 ## \namespace upkie.envs
 ## \brief Gymnasium environments.
 ##
-## See the [list of environments](\ref gym-environments) for more details.
+## See the [list of environments](\ref environments) for more details.
 
 import gymnasium as gym
 

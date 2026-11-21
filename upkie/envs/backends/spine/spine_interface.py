@@ -132,7 +132,7 @@ class SpineInterface:
 
         \param timeout_ns Don't wait for more than this duration in
             nanoseconds.
-        \raise SpineError If the request read from spine has an error flag.
+        \throw SpineError If the request read from spine has an error flag.
         """
         timeout_counter = perf_counter_ns() + timeout_ns
         while self._read_request() not in self._stop_waiting:  # sets are fast
