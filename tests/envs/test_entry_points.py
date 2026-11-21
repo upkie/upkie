@@ -5,11 +5,13 @@
 import unittest
 from multiprocessing.shared_memory import SharedMemory
 
+import cookie_description
 import gymnasium as gym
 import numpy as np
 
 from upkie.exceptions import UpkieTimeoutError
 
+ACT_OBS_SPACES = ("Servos", "Pendulum", "Gyropod", "BaseVelocity")
 
 class EntryPointsTestCase(unittest.TestCase):
     def test_mock_servos(self):
@@ -97,9 +99,41 @@ class EntryPointsTestCase(unittest.TestCase):
         with gym.make("Upkie-PyBullet-Gyropod", gui=False) as env:
             self.assertIsNotNone(env)
 
-    def test_cookie_mock_servos_uses_cookie_model(self):
-        with gym.make("Cookie-Mock-Servos") as env:
-            self.assertIn("cookie", env.unwrapped.model.urdf_path)
+    def test_cookie_mock_envs_use_cookie_model(self):
+        for act_obs in ACT_OBS_SPACES:
+            env_id = f"Cookie-Mock-{act_obs}"
+            with self.subTest(env_id=env_id), gym.make(env_id) as env:
+                self.assertEqual(
+                    env.unwrapped.model.urdf_path,
+                    cookie_description.URDF_PATH,
+                )
+
+    def test_upkie_mock_envs_do_not_use_cookie_model(self):
+        for act_obs in ACT_OBS_SPACES:
+            env_id = f"Upkie-Mock-{act_obs}"
+            with self.subTest(env_id=env_id), gym.make(env_id) as env:
+                self.assertNotEqual(
+                    env.unwrapped.model.urdf_path,
+                    cookie_description.URDF_PATH,
+                )
+
+    def test_cookie_spine_envs_use_cookie_model(self):
+        for act_obs in ACT_OBS_SPACES:
+            env_id = f"Cookie-Spine-{act_obs}"
+            with self.subTest(env_id=env_id):
+                shm = SharedMemory(name=None, size=42, create=True)
+                try:
+                    env = gym.make(env_id, shm_name=shm._name)
+                    self.assertEqual(
+                        env.unwrapped.model.urdf_path,
+                        cookie_description.URDF_PATH,
+                    )
+                    try:
+                        del env  # we delete it explicitly
+                    except UpkieTimeoutError:  # to catch this exception
+                        pass  # which is ok: there is no spine to respond
+                finally:
+                    shm.close()
 
     @unittest.skip(
         "cookie_description's imu_placement joint currently yields the "
