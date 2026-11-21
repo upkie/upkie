@@ -4,7 +4,7 @@
 
 Spines pull sensor measurements directly from host devices and files. This page lists the outputs of available sensors, using shorthands `a.b.c` for nested dictionary keys `observation["a"]["b"]["c"]`.
 
-## CPU Temperature
+## CPU temperature {#cpu-temperature}
 
 - Sensor: [CpuTemperature](\ref upkie::cpp::sensors::CpuTemperature)
 - Spine observation key: `cpu_temperature`
@@ -13,7 +13,7 @@ Spines pull sensor measurements directly from host devices and files. This page 
 |-----------------|-------------|
 | `cpu_temperature` | CPU temperature in degrees Celsius |
 
-## Joystick
+## Joystick {#joystick-sensor}
 
 - Sensor: [Joystick](\ref upkie::cpp::sensors::Joystick)
 - Spine observation key: `joystick`
@@ -31,7 +31,7 @@ Spines pull sensor measurements directly from host devices and files. This page 
 | `joystick.square_button` | Left button (square on PS4, Y on Xbox) |
 | `joystick.triangle_button` | Top button (triangle on PS4, X on Xbox) |
 
-## Keyboard
+## Keyboard {#keyboard-sensor}
 
 - Sensor: [Keyboard](\ref upkie::cpp::sensors::Keyboard)
 - Spine observation key: `keyboard`
