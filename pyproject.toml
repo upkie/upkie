@@ -180,6 +180,7 @@ pybullet = ">=3.25,<4"
 qpmpc = ">=3.1.0,<4"
 
 [tool.pixi.feature.pybullet.tasks]
+example-follow-joystick = "python examples/follow_joystick.py"
 pybullet-cookie = "python examples/go_forward.py --robot cookie --velocity 0"
 pybullet-upkie = "python examples/go_forward.py --robot upkie --velocity 0"
 
