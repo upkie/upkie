@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [13.2.0] - 2026-11-22
+
 ### Added
 
 - docs: Add table listing all available observations at runtime
@@ -15,12 +17,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - examples: Crouch up and down while balancing in place
 - model: Add `Model.compute_crouching_posture` from the kinematics of a symmetric leg
 - model: Add `Model.leg_segment_length`
-
-### Fixed
-
-- envs: Pass the robot model to servos environments properly
-- envs: Use the Cookie model in Cookie-Mock environments
-- envs: Use the Cookie model in Cookie-Spine environments
 
 ### Changed
 
@@ -33,6 +29,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - examples: Remove PyBullet MPC example since MPC has become the default
 - examples: Remove spine examples
+
+### Fixed
+
+- envs: Pass the robot model to servos environments properly
+- envs: Use the Cookie model in Cookie-Mock environments
+- envs: Use the Cookie model in Cookie-Spine environments
 
 ## [13.1.0] - 2026-10-11
 
@@ -1169,7 +1171,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Starting this changelog.
 
-[unreleased]: https://github.com/upkie/upkie/compare/v13.1.0...HEAD
+[unreleased]: https://github.com/upkie/upkie/compare/v13.2.0...HEAD
+[13.2.0]: https://github.com/upkie/upkie/releases/tag/v13.2.0
 [13.1.0]: https://github.com/upkie/upkie/releases/tag/v13.1.0
 [13.0.1]: https://github.com/upkie/upkie/releases/tag/v13.0.1
 [13.0.0]: https://github.com/upkie/upkie/releases/tag/v13.0.0
