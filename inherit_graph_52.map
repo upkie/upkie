@@ -1,0 +1,6 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" title=" " alt="" coords="5,59,82,88"/>
+<area shape="rect" id="node2" href="$classupkie_1_1envs_1_1upkie__base__velocity_1_1UpkieBaseVelocity.html" title="Wrapper where the Upkie balances itself and the action is directly a base velocity." alt="" coords="130,5,273,34"/>
+<area shape="rect" id="node3" href="$classupkie_1_1envs_1_1upkie__gyropod_1_1UpkieGyropod.html" title="Wrapper to make Upkie act as a wheeled inverted pendulum with yaw control." alt="" coords="144,59,258,88"/>
+<area shape="rect" id="node4" href="$classupkie_1_1envs_1_1upkie__pendulum_1_1UpkiePendulum.html" title="Backward&#45;compatible wrapper around UpkieGyropod with 4D obs / 1D action." alt="" coords="139,112,264,141"/>
+</map>
